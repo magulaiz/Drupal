@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Module;
 
 /**
@@ -15,9 +17,9 @@ class VersionTest extends ModuleTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test version dependencies.
+   * Tests version dependencies.
    */
-  public function testModuleVersions() {
+  public function testModuleVersions(): void {
     $dependencies = [
       // Alternating between being compatible and incompatible with 8.x-2.4-beta3.
       // The first is always a compatible.

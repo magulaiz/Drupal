@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\editor\Functional;
 
 use Drupal\Component\Serialization\Json;
@@ -41,9 +43,7 @@ class EditorSecurityTest extends BrowserTestBase {
   protected static $sampleContentSecuredEmbedAllowed = '<p>Hello, Dumbo Octopus!</p>alert(0)<embed type="image/svg+xml" src="image.svg" />';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['filter', 'editor', 'editor_test', 'node'];
 
@@ -62,8 +62,7 @@ class EditorSecurityTest extends BrowserTestBase {
   protected $normalUser;
 
   /**
-   * User with access to Restricted HTML text format, dangerous tags allowed
-   * with text editor.
+   * User with access to Restricted HTML and tags considered dangerous.
    *
    * @var \Drupal\user\UserInterface
    */
@@ -76,15 +75,18 @@ class EditorSecurityTest extends BrowserTestBase {
    */
   protected $privilegedUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
     // Create 5 text formats, to cover all potential use cases:
-    //  1. restricted_without_editor (untrusted: anonymous)
-    //  2. restricted_with_editor (normal: authenticated)
-    //  3. restricted_plus_dangerous_tag_with_editor (privileged: trusted)
-    //  4. unrestricted_without_editor (privileged: admin)
-    //  5. unrestricted_with_editor (privileged: admin)
+    // 1. restricted_without_editor (untrusted: anonymous)
+    // 2. restricted_with_editor (normal: authenticated)
+    // 3. restricted_plus_dangerous_tag_with_editor (privileged: trusted)
+    // 4. unrestricted_without_editor (privileged: admin)
+    // 5. unrestricted_with_editor (privileged: admin)
     // With text formats 2, 3 and 5, we also associate a text editor that does
     // not guarantee XSS safety. "restricted" means the text format has XSS
     // filters on output, "unrestricted" means the opposite.
@@ -121,6 +123,9 @@ class EditorSecurityTest extends BrowserTestBase {
     $editor = Editor::create([
       'format' => 'restricted_with_editor',
       'editor' => 'unicorn',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     $editor->save();
     $format = FilterFormat::create([
@@ -141,6 +146,9 @@ class EditorSecurityTest extends BrowserTestBase {
     $editor = Editor::create([
       'format' => 'restricted_plus_dangerous_tag_with_editor',
       'editor' => 'unicorn',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     $editor->save();
     $format = FilterFormat::create([
@@ -160,6 +168,9 @@ class EditorSecurityTest extends BrowserTestBase {
     $editor = Editor::create([
       'format' => 'unrestricted_with_editor',
       'editor' => 'unicorn',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     $editor->save();
 
@@ -170,12 +181,12 @@ class EditorSecurityTest extends BrowserTestBase {
     ]);
 
     // Create 4 users, each with access to different text formats/editors:
-    //   - "untrusted": restricted_without_editor
-    //   - "normal": restricted_with_editor,
-    //   - "trusted": restricted_plus_dangerous_tag_with_editor
-    //   - "privileged": restricted_without_editor, restricted_with_editor,
-    //     restricted_plus_dangerous_tag_with_editor,
-    //     unrestricted_without_editor and unrestricted_with_editor
+    // - "untrusted": restricted_without_editor
+    // - "normal": restricted_with_editor,
+    // - "trusted": restricted_plus_dangerous_tag_with_editor
+    // - "privileged": restricted_without_editor, restricted_with_editor,
+    //   restricted_plus_dangerous_tag_with_editor,
+    //   unrestricted_without_editor and unrestricted_with_editor
     $this->untrustedUser = $this->drupalCreateUser([
       'create article content',
       'edit any article content',
@@ -226,7 +237,7 @@ class EditorSecurityTest extends BrowserTestBase {
    *
    * Tests 8 scenarios. Tests only with a text editor that is not XSS-safe.
    */
-  public function testInitialSecurity() {
+  public function testInitialSecurity(): void {
     $expected = [
       [
         'node_id' => 1,
@@ -302,7 +313,7 @@ class EditorSecurityTest extends BrowserTestBase {
    * format and contains a <script> tag to the Full HTML text format, the
    * <script> tag would be executed. Unless we apply appropriate filtering.
    */
-  public function testSwitchingSecurity() {
+  public function testSwitchingSecurity(): void {
     $expected = [
       [
         'node_id' => 1,
@@ -387,8 +398,8 @@ class EditorSecurityTest extends BrowserTestBase {
     ];
 
     // Log in as the privileged user, and for every sample, do the following:
-    //  - switch to every other text format/editor
-    //  - assert the XSS-filtered values that we get from the server
+    // - switch to every other text format/editor
+    // - assert the XSS-filtered values that we get from the server
     $this->drupalLogin($this->privilegedUser);
     $cookies = $this->getSessionCookies();
 
@@ -428,7 +439,7 @@ class EditorSecurityTest extends BrowserTestBase {
   /**
    * Tests the standard text editor XSS filter being overridden.
    */
-  public function testEditorXssFilterOverride() {
+  public function testEditorXssFilterOverride(): void {
     // First: the Standard text editor XSS filter.
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('node/2/edit');

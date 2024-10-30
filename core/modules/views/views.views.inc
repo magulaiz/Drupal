@@ -22,14 +22,14 @@ function views_views_data() {
   $data['views']['table']['group'] = t('Global');
   $data['views']['table']['join'] = [
   // #global is a special flag which allows a table to appear all the time.
-  '#global' => [],
+    '#global' => [],
   ];
 
   $data['views']['random'] = [
-  'title' => t('Random'),
-  'help' => t('Randomize the display order.'),
-  'sort' => [
-    'id' => 'random',
+    'title' => t('Random'),
+    'help' => t('Randomize the display order.'),
+    'sort' => [
+      'id' => 'random',
     ],
   ];
 
@@ -116,7 +116,7 @@ function views_views_data() {
   ];
 
   $data['views']['combine'] = [
-   'title' => t('Combine fields filter'),
+    'title' => t('Combine fields filter'),
     'help' => t('Combine multiple fields together and search by them.'),
     'filter' => [
       'id' => 'combine',
@@ -190,7 +190,8 @@ function views_views_data() {
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
       if (_views_field_get_entity_type_storage($field_storage)) {
-        $result = (array) $module_handler->invoke($field_storage->getTypeProvider(), 'field_views_data', [$field_storage]);
+        $provider = $field_storage->getTypeProvider();
+        $result = (array) $module_handler->invoke($provider === 'core' ? 'views' : $provider, 'field_views_data', [$field_storage]);
         if (empty($result)) {
           $result = views_field_default_views_data($field_storage);
         }
@@ -280,7 +281,7 @@ function views_entity_field_label($entity_type, $field_name) {
     if ($label_counter[$a] === $label_counter[$b]) {
       return strcmp($a, $b);
     }
-    return $label_counter[$a] > $label_counter[$b] ? -1 : 1;
+    return $label_counter[$b] <=> $label_counter[$a];
   });
   $label_counter = array_keys($label_counter);
   return [$label_counter[0], $all_labels];
@@ -507,7 +508,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
   // Determine the label to use for the field. We don't have a label available
   // at the field level, so we just go through all fields and take the one
   // which is used the most frequently.
-  list($label, $all_labels) = views_entity_field_label($entity_type_id, $field_name);
+  [$label, $all_labels] = views_entity_field_label($entity_type_id, $field_name);
 
   // Expose data for the field as a whole.
   foreach ($field_tables as $type => $table_info) {
@@ -520,7 +521,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
     }
     else {
       $group = t('@group (historical data)', ['@group' => $group_name]);
-      $field_alias = $field_name . '-revision_id';
+      $field_alias = $field_name . '__revision_id';
     }
 
     $data[$table_alias][$field_alias] = [
@@ -578,7 +579,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
       'field_name' => $field_name,
       'entity_type' => $entity_type_id,
       // Provide a real field for group by.
-      'real field' => $field_alias . '_' . $real_field,
+      'real field' => $field_name . '_' . $real_field,
       'additional fields' => $add_fields,
       // Default the element type to div, let the UI change it if necessary.
       'element type' => 'div',
@@ -767,11 +768,12 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
 /**
  * Implements hook_field_views_data().
  *
- * The function implements the hook in behalf of 'core' because it adds a
+ * The function implements the hook on behalf of 'core' because it adds a
  * relationship and a reverse relationship to entity_reference field type, which
- * is provided by core.
+ * is provided by core. This function also provides an argument plugin for
+ * entity_reference fields that handles title token replacement.
  */
-function core_field_views_data(FieldStorageConfigInterface $field_storage) {
+function views_field_views_data(FieldStorageConfigInterface $field_storage) {
   $data = views_field_default_views_data($field_storage);
 
   // The code below only deals with the Entity reference field type.
@@ -838,6 +840,11 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
         ],
       ];
     }
+
+    // Provide an argument plugin that has a meaningful titleQuery()
+    // implementation getting the entity label.
+    $data[$table_name][$field_name . '_target_id']['argument']['id'] = 'entity_target_id';
+    $data[$table_name][$field_name . '_target_id']['argument']['target_entity_type_id'] = $target_entity_type_id;
   }
 
   return $data;

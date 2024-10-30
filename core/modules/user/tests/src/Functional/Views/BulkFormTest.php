@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Functional\Views;
 
+use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\views\Views;
@@ -15,9 +18,7 @@ use Drupal\views\Views;
 class BulkFormTest extends UserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views_ui'];
 
@@ -36,7 +37,7 @@ class BulkFormTest extends UserTestBase {
   /**
    * Tests the user bulk form.
    */
-  public function testBulkForm() {
+  public function testBulkForm(): void {
     // Log in as a user without 'administer users'.
     $this->drupalLogin($this->drupalCreateUser(['administer permissions']));
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
@@ -50,12 +51,14 @@ class BulkFormTest extends UserTestBase {
     $edit = [
       'action' => 'user_block_user_action',
     ];
-    $this->drupalPostForm('test-user-bulk-form', $edit, 'Apply to selected items');
-    $this->assertText('No users selected.');
+    $this->drupalGet('test-user-bulk-form');
+    $this->submitForm($edit, 'Apply to selected items');
+    $this->assertSession()->pageTextContains('No users selected.');
 
     // Assign a role to a user.
     $account = $user_storage->load($this->users[0]->id());
-    $roles = user_role_names(TRUE);
+    $roles = Role::loadMultiple();
+    unset($roles[RoleInterface::ANONYMOUS_ID]);
     unset($roles[RoleInterface::AUTHENTICATED_ID]);
     $role = key($roles);
 
@@ -82,7 +85,7 @@ class BulkFormTest extends UserTestBase {
 
     // Block a user using the bulk form.
     $this->assertTrue($account->isActive(), 'The user is not blocked.');
-    $this->assertRaw($account->label());
+    $this->assertSession()->pageTextContains($account->label());
     $edit = [
       'user_bulk_form[1]' => TRUE,
       'action' => 'user_block_user_action',
@@ -92,7 +95,7 @@ class BulkFormTest extends UserTestBase {
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertTrue($account->isBlocked(), 'The user is blocked.');
-    $this->assertNoRaw($account->label());
+    $this->assertSession()->pageTextNotContains($account->label());
 
     // Remove the user status filter from the view.
     $view = Views::getView('test_user_bulk_form');
@@ -101,7 +104,7 @@ class BulkFormTest extends UserTestBase {
 
     // Ensure the anonymous user is found.
     $this->drupalGet('test-user-bulk-form');
-    $this->assertText($this->config('user.settings')->get('anonymous'));
+    $this->assertSession()->pageTextContains($this->config('user.settings')->get('anonymous'));
 
     // Attempt to block the anonymous user.
     $edit = [
@@ -123,12 +126,14 @@ class BulkFormTest extends UserTestBase {
       'options[include_exclude]' => 'exclude',
       "options[selected_actions][$action_id]" => $action_id,
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form');
+    $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
     $this->drupalGet('test-user-bulk-form');
     $this->assertSession()->optionNotExists('edit-action', $action_id);
     $edit['options[include_exclude]'] = 'include';
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form');
+    $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
     $this->drupalGet('test-user-bulk-form');
     $this->assertSession()->optionExists('edit-action', $action_id);
@@ -137,12 +142,12 @@ class BulkFormTest extends UserTestBase {
   /**
    * Tests the user bulk form with a combined field filter on the bulk column.
    */
-  public function testBulkFormCombineFilter() {
+  public function testBulkFormCombineFilter(): void {
     // Add a user.
     User::load($this->users[0]->id());
     $view = Views::getView('test_user_bulk_form_combine_filter');
     $errors = $view->validate();
-    $this->assertEqual(t('Field %field set in %filter is not usable for this filter type. Combined field filter only works for simple fields.', ['%field' => 'User: Bulk update', '%filter' => 'Global: Combine fields filter']), reset($errors['default']));
+    $this->assertEquals(sprintf('Field User: Bulk update set in Global: Combine fields filter is not usable for this filter type. Combined field filter only works for simple fields.'), reset($errors['default']));
   }
 
 }

@@ -4,10 +4,13 @@ namespace Drupal\field\Plugin\migrate\source\d6;
 
 use Drupal\node\Plugin\migrate\source\d6\ViewModeBase;
 
+// cspell:ignore cnfi
+
 /**
  * Drupal 6 field instance per view mode source from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *

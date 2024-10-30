@@ -22,6 +22,7 @@ use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\ResourceType\ResourceTypeRelationship;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * A service that evaluates external path expressions against Drupal fields.
@@ -108,6 +109,13 @@ class FieldResolver {
   protected $moduleHandler;
 
   /**
+   * The current user account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Creates a FieldResolver instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -120,8 +128,11 @@ class FieldResolver {
    *   The resource type repository.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user account.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ResourceTypeRepositoryInterface $resource_type_repository, ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ResourceTypeRepositoryInterface $resource_type_repository, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
+    $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldManager = $field_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
@@ -277,7 +288,7 @@ class FieldResolver {
     $parts = explode('.', $external_field_name);
     $unresolved_path_parts = $parts;
     $reference_breadcrumbs = [];
-    /* @var \Drupal\jsonapi\ResourceType\ResourceType[] $resource_types */
+    /** @var \Drupal\jsonapi\ResourceType\ResourceType[] $resource_types */
     $resource_types = [$resource_type];
     // This complex expression is needed to handle the string, "0", which would
     // otherwise be evaluated as FALSE.
@@ -337,13 +348,13 @@ class FieldResolver {
           $is_data_reference_definition = $property_definition instanceof DataReferenceTargetDefinition;
           if (!$property_definition->isInternal()) {
             // Entity reference fields are special: their reference property
-            // (usually `target_id`) is never exposed in the JSON:API
-            // representation. Hence it must also not be exposed in 400
-            // responses' error messages.
+            // (usually `target_id`) is exposed in the JSON:API representation
+            // with a prefix.
             $property_names[] = $is_data_reference_definition ? 'id' : $property_name;
           }
           if ($is_data_reference_definition) {
             $at_least_one_entity_reference_field = TRUE;
+            $property_names[] = "drupal_internal__$property_name";
           }
           return $property_names;
         }, []);
@@ -447,7 +458,9 @@ class FieldResolver {
    */
   protected function constructInternalPath(array $references, array $property_path = []) {
     // Reconstruct the path parts that are referencing sub-properties.
-    $field_path = implode('.', $property_path);
+    $field_path = implode('.', array_map(function ($part) {
+      return str_replace('drupal_internal__', '', $part);
+    }, $property_path));
 
     // This rebuilds the path from the real, internal field names that have
     // been traversed so far. It joins them with the "entity" keyword as
@@ -471,7 +484,7 @@ class FieldResolver {
    */
   protected function getFieldItemDefinitions(array $resource_types, $field_name) {
     return array_reduce($resource_types, function ($result, ResourceType $resource_type) use ($field_name) {
-      /* @var \Drupal\jsonapi\ResourceType\ResourceType $resource_type */
+      /** @var \Drupal\jsonapi\ResourceType\ResourceType $resource_type */
       $entity_type = $resource_type->getEntityTypeId();
       $bundle = $resource_type->getBundle();
       $definitions = $this->fieldManager->getFieldDefinitions($entity_type, $bundle);
@@ -531,7 +544,8 @@ class FieldResolver {
    */
   protected function isMemberFilterable($external_name, array $resource_types) {
     return array_reduce($resource_types, function ($carry, ResourceType $resource_type) use ($external_name) {
-      // @todo: remove the next line and uncomment the following one in https://www.drupal.org/project/drupal/issues/3017047.
+      // @todo Remove the next line and uncomment the following one in
+      //   https://www.drupal.org/project/drupal/issues/3017047.
       return $carry ?: $external_name === 'id' || $resource_type->isFieldEnabled($resource_type->getInternalName($external_name));
       /*return $carry ?: in_array($external_name, ['id', 'type']) || $resource_type->isFieldEnabled($resource_type->getInternalName($external_name));*/
     }, FALSE);
@@ -670,8 +684,15 @@ class FieldResolver {
   protected static function isCandidateDefinitionProperty($part, array $candidate_definitions) {
     $part = static::getPathPartPropertyName($part);
     foreach ($candidate_definitions as $definition) {
-      if ($definition->getPropertyDefinition($part)) {
-        return TRUE;
+      $property_definitions = $definition->getPropertyDefinitions();
+
+      foreach ($property_definitions as $property_name => $property_definition) {
+        $property_name = $property_definition instanceof DataReferenceTargetDefinition
+          ? "drupal_internal__$property_name"
+          : $property_name;
+        if ($part === $property_name) {
+          return TRUE;
+        }
       }
     }
     return FALSE;
@@ -716,7 +737,7 @@ class FieldResolver {
    *   The property name from a path part.
    */
   protected static function getPathPartPropertyName($part) {
-    return strpos($part, ':') !== FALSE ? explode(':', $part)[0] : $part;
+    return str_contains($part, ':') ? explode(':', $part)[0] : $part;
   }
 
   /**
@@ -734,7 +755,7 @@ class FieldResolver {
     $definitions = $this->fieldManager->getFieldDefinitions($resource_type->getEntityTypeId(), $resource_type->getBundle());
     assert(isset($definitions[$internal_field_name]), 'The field name should have already been validated.');
     $field_definition = $definitions[$internal_field_name];
-    $filter_access_results = $this->moduleHandler->invokeAll('jsonapi_entity_field_filter_access', [$field_definition, \Drupal::currentUser()]);
+    $filter_access_results = $this->moduleHandler->invokeAll('jsonapi_entity_field_filter_access', [$field_definition, $this->currentUser]);
     $filter_access_result = array_reduce($filter_access_results, function (AccessResultInterface $combined_result, AccessResultInterface $result) {
       return $combined_result->orIf($result);
     }, AccessResult::neutral());

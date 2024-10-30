@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional\Views;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -42,8 +44,8 @@ class BulkFormTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['node_test_views']): void {
+    parent::setUp($import_test_views, $modules);
 
     ConfigurableLanguage::createFromLangcode('en-gb')->save();
     ConfigurableLanguage::createFromLangcode('it')->save();
@@ -68,7 +70,7 @@ class BulkFormTest extends NodeTestBase {
       foreach ($langcodes as $langcode) {
         if (!$node->hasTranslation($langcode)) {
           $title = $this->randomMachineName() . ' [' . $node->id() . ':' . $langcode . ']';
-          $translation = $node->addTranslation($langcode, ['title' => $title, 'promote' => FALSE]);
+          $node->addTranslation($langcode, ['title' => $title, 'promote' => FALSE]);
         }
       }
       $node->save();
@@ -78,7 +80,7 @@ class BulkFormTest extends NodeTestBase {
     $node = $this->nodes[2];
     $langcode = 'en';
     $title = $this->randomMachineName() . ' [' . $node->id() . ':' . $langcode . ']';
-    $translation = $node->addTranslation($langcode, ['title' => $title]);
+    $node->addTranslation($langcode, ['title' => $title]);
     $node->save();
 
     // Check that all created translations are selected by the test view.
@@ -94,13 +96,13 @@ class BulkFormTest extends NodeTestBase {
     ]));
     $this->drupalGet('test-node-bulk-form');
     $elements = $this->assertSession()->selectExists('edit-action')->findAll('css', 'option');
-    $this->assertCount(8, $elements, 'All node operations are found.');
+    $this->assertCount(9, $elements, 'All node operations are found.');
   }
 
   /**
    * Tests the node bulk form.
    */
-  public function testBulkForm() {
+  public function testBulkForm(): void {
     // Unpublish a node using the bulk form.
     $node = reset($this->nodes);
     $this->assertTrue($node->isPublished(), 'Node is initially published');
@@ -219,9 +221,9 @@ class BulkFormTest extends NodeTestBase {
   }
 
   /**
-   * Test multiple deletion.
+   * Tests multiple deletion.
    */
-  public function testBulkDeletion() {
+  public function testBulkDeletion(): void {
     // Select a bunch of translated and untranslated nodes and check that
     // nodes and individual translations are properly deleted.
     $edit = [
@@ -254,15 +256,15 @@ class BulkFormTest extends NodeTestBase {
     $this->submitForm($edit, 'Apply to selected items');
 
     $label = $this->loadNode(1)->label();
-    $this->assertText("$label (Original translation) - The following content item translations will be deleted:");
+    $this->assertSession()->pageTextContains("$label (Original translation) - The following content item translations will be deleted:");
     $label = $this->loadNode(2)->label();
-    $this->assertText("$label (Original translation) - The following content item translations will be deleted:");
+    $this->assertSession()->pageTextContains("$label (Original translation) - The following content item translations will be deleted:");
     $label = $this->loadNode(3)->getTranslation('en')->label();
-    $this->assertText($label);
-    $this->assertNoText("$label (Original translation) - The following content item translations will be deleted:");
+    $this->assertSession()->pageTextContains($label);
+    $this->assertSession()->pageTextNotContains("$label (Original translation) - The following content item translations will be deleted:");
     $label = $this->loadNode(4)->label();
-    $this->assertText($label);
-    $this->assertNoText("$label (Original translation) - The following content item translations will be deleted:");
+    $this->assertSession()->pageTextContains($label);
+    $this->assertSession()->pageTextNotContains("$label (Original translation) - The following content item translations will be deleted:");
 
     $this->submitForm([], 'Delete');
 
@@ -278,7 +280,7 @@ class BulkFormTest extends NodeTestBase {
     $node = $this->loadNode(5);
     $this->assertNotEmpty($node, '5: Node has not been deleted');
 
-    $this->assertText('Deleted 8 content items.');
+    $this->assertSession()->pageTextContains('Deleted 8 content items.');
   }
 
   /**

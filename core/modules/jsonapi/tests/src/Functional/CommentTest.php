@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
@@ -72,9 +74,14 @@ class CommentTest extends ResourceTestBase {
   protected $entity;
 
   /**
+   * @var \Drupal\entity_test\Entity\EntityTest
+   */
+  private $commentedEntity;
+
+  /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access comments', 'view test entity']);
@@ -106,11 +113,12 @@ class CommentTest extends ResourceTestBase {
     $this->addDefaultCommentField('entity_test', 'bar', 'comment');
 
     // Create a "Camelids" test entity that the comment will be assigned to.
-    $commented_entity = EntityTest::create([
+    $this->commentedEntity = EntityTest::create([
       'name' => 'Camelids',
       'type' => 'bar',
+      'comment' => CommentItemInterface::OPEN,
     ]);
-    $commented_entity->save();
+    $this->commentedEntity->save();
 
     // Create a "Llama" comment.
     $comment = Comment::create([
@@ -118,7 +126,7 @@ class CommentTest extends ResourceTestBase {
         'value' => 'The name "llama" was adopted by European settlers from native Peruvians.',
         'format' => 'plain_text',
       ],
-      'entity_id' => $commented_entity->id(),
+      'entity_id' => $this->commentedEntity->id(),
       'entity_type' => 'entity_test',
       'field_name' => 'comment',
     ]);
@@ -135,7 +143,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/comment/comment/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     $author = User::load($this->entity->getOwnerId());
     return [
@@ -173,12 +181,15 @@ class CommentTest extends ResourceTestBase {
           'status' => TRUE,
           'subject' => 'Llama',
           'thread' => '01/',
-          'drupal_internal__cid' => 1,
+          'drupal_internal__cid' => (int) $this->entity->id(),
         ],
         'relationships' => [
           'uid' => [
             'data' => [
               'id' => $author->uuid(),
+              'meta' => [
+                'drupal_internal__target_id' => (int) $author->id(),
+              ],
               'type' => 'user--user',
             ],
             'links' => [
@@ -189,6 +200,9 @@ class CommentTest extends ResourceTestBase {
           'comment_type' => [
             'data' => [
               'id' => CommentType::load('comment')->uuid(),
+              'meta' => [
+                'drupal_internal__target_id' => 'comment',
+              ],
               'type' => 'comment_type--comment_type',
             ],
             'links' => [
@@ -198,7 +212,10 @@ class CommentTest extends ResourceTestBase {
           ],
           'entity_id' => [
             'data' => [
-              'id' => EntityTest::load(1)->uuid(),
+              'id' => $this->commentedEntity->uuid(),
+              'meta' => [
+                'drupal_internal__target_id' => (int) $this->commentedEntity->id(),
+              ],
               'type' => 'entity_test--bar',
             ],
             'links' => [
@@ -221,14 +238,14 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     return [
       'data' => [
         'type' => 'comment--comment',
         'attributes' => [
           'entity_type' => 'entity_test',
           'field_name' => 'comment',
-          'subject' => 'Dramallama',
+          'subject' => 'Drama llama',
           'comment_body' => [
             'value' => 'Llamas are awesome.',
             'format' => 'plain_text',
@@ -238,6 +255,9 @@ class CommentTest extends ResourceTestBase {
           'entity_id' => [
             'data' => [
               'type' => 'entity_test--bar',
+              'meta' => [
+                'drupal_internal__target_id' => 1,
+              ],
               'id' => EntityTest::load(1)->uuid(),
             ],
           ],
@@ -249,7 +269,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedCacheTags(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheTags(?array $sparse_fieldset = NULL) {
     $tags = parent::getExpectedCacheTags($sparse_fieldset);
     if ($sparse_fieldset === NULL || in_array('comment_body', $sparse_fieldset)) {
       $tags = Cache::mergeTags($tags, ['config:filter.format.plain_text']);
@@ -260,7 +280,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
     $contexts = parent::getExpectedCacheContexts($sparse_fieldset);
     if ($sparse_fieldset === NULL || in_array('comment_body', $sparse_fieldset)) {
       $contexts = Cache::mergeContexts($contexts, ['languages:language_interface', 'theme']);
@@ -288,88 +308,6 @@ class CommentTest extends ResourceTestBase {
   }
 
   /**
-   * Tests POSTing a comment without critical base fields.
-   *
-   * Note that testPostIndividual() is testing with the most minimal
-   * normalization possible: the one returned by ::getNormalizedPostEntity().
-   *
-   * But Comment entities have some very special edge cases:
-   * - base fields that are not marked as required in
-   *   \Drupal\comment\Entity\Comment::baseFieldDefinitions() yet in fact are
-   *   required.
-   * - base fields that are marked as required, but yet can still result in
-   *   validation errors other than "missing required field".
-   */
-  public function testPostIndividualDxWithoutCriticalBaseFields() {
-    $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
-
-    $url = Url::fromRoute(sprintf('jsonapi.%s.collection.post', static::$resourceTypeName));
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    $request_options[RequestOptions::HEADERS]['Content-Type'] = 'application/vnd.api+json';
-    $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
-
-    $remove_field = function (array $normalization, $type, $attribute_name) {
-      unset($normalization['data'][$type][$attribute_name]);
-      return $normalization;
-    };
-
-    // DX: 422 when missing 'entity_type' field.
-    $request_options[RequestOptions::BODY] = Json::encode($remove_field($this->getPostDocument(), 'attributes', 'entity_type'));
-    $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(422, 'entity_type: This value should not be null.', NULL, $response, '/data/attributes/entity_type');
-
-    // DX: 422 when missing 'entity_id' field.
-    $request_options[RequestOptions::BODY] = Json::encode($remove_field($this->getPostDocument(), 'relationships', 'entity_id'));
-    // @todo Remove the try/catch in https://www.drupal.org/node/2820364.
-    try {
-      $response = $this->request('POST', $url, $request_options);
-      $this->assertResourceErrorResponse(422, 'entity_id: This value should not be null.', NULL, $response, '/data/attributes/entity_id');
-    }
-    catch (\Exception $e) {
-      $this->assertSame("Error: Call to a member function get() on null\nDrupal\\comment\\Plugin\\Validation\\Constraint\\CommentNameConstraintValidator->getAnonymousContactDetailsSetting()() (Line: 96)\n", $e->getMessage());
-    }
-
-    // DX: 422 when missing 'field_name' field.
-    $request_options[RequestOptions::BODY] = Json::encode($remove_field($this->getPostDocument(), 'attributes', 'field_name'));
-    $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(422, 'field_name: This value should not be null.', NULL, $response, '/data/attributes/field_name');
-  }
-
-  /**
-   * Tests POSTing a comment with and without 'skip comment approval'.
-   */
-  public function testPostIndividualSkipCommentApproval() {
-    $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
-
-    // Create request.
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    $request_options[RequestOptions::HEADERS]['Content-Type'] = 'application/vnd.api+json';
-    $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
-    $request_options[RequestOptions::BODY] = Json::encode($this->getPostDocument());
-
-    $url = Url::fromRoute('jsonapi.comment--comment.collection.post');
-
-    // Status should be FALSE when posting as anonymous.
-    $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceResponse(201, FALSE, $response);
-    $this->assertFalse(Json::decode((string) $response->getBody())['data']['attributes']['status']);
-    $this->assertFalse($this->entityStorage->loadUnchanged(2)->isPublished());
-
-    // Grant anonymous permission to skip comment approval.
-    $this->grantPermissionsToTestedRole(['skip comment approval']);
-
-    // Status must be TRUE when posting as anonymous and skip comment approval.
-    $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceResponse(201, FALSE, $response);
-    $this->assertTrue(Json::decode((string) $response->getBody())['data']['attributes']['status']);
-    $this->assertTrue($this->entityStorage->loadUnchanged(3)->isPublished());
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessCacheability() {
@@ -391,7 +329,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static function getIncludePermissions() {
+  protected static function getIncludePermissions(): array {
     return [
       'type' => ['administer comment types'],
       'uid' => ['access user profiles'],
@@ -401,7 +339,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     // Verify the expected behavior in the common case.
     $this->doTestCollectionFilterAccessForPublishableEntities('subject', 'access comments', 'administer comments');
 
@@ -419,21 +357,21 @@ class CommentTest extends ResourceTestBase {
     // ::doTestCollectionFilterAccessForPublishableEntities().
     $collection_filter_url = $collection_url->setOption('query', ["filter[spotlight.subject]" => $this->entity->label()]);
     $response = $this->request('GET', $collection_filter_url, $request_options);
-    $doc = Json::decode((string) $response->getBody());
+    $doc = $this->getDocumentFromResponse($response);
     $this->assertCount(1, $doc['data']);
     // Mark the commented entity as inaccessible.
     \Drupal::state()->set('jsonapi__entity_test_filter_access_blacklist', [$this->entity->getCommentedEntityId()]);
     Cache::invalidateTags(['state:jsonapi__entity_test_filter_access_blacklist']);
     // ?filter[spotlight.LABEL]: 0 results.
     $response = $this->request('GET', $collection_filter_url, $request_options);
-    $doc = Json::decode((string) $response->getBody());
+    $doc = $this->getDocumentFromResponse($response);
     $this->assertCount(0, $doc['data']);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, array $sparse_fieldset = NULL, $filtered = FALSE) {
+  protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, ?array $sparse_fieldset = NULL, $filtered = FALSE) {
     $cacheability = parent::getExpectedCollectionCacheability($account, $collection, $sparse_fieldset, $filtered);
     if ($filtered) {
       $cacheability->addCacheTags(['state:jsonapi__entity_test_filter_access_blacklist']);
@@ -444,7 +382,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPatchIndividual() {
+  protected function doTestPatchIndividual(): void {
     // Ensure ::getModifiedEntityForPatchTesting() can pick an alternative value
     // for the 'entity_id' field.
     EntityTest::create([
@@ -452,7 +390,7 @@ class CommentTest extends ResourceTestBase {
       'type' => 'bar',
     ])->save();
 
-    return parent::testPatchIndividual();
+    parent::doTestPatchIndividual();
   }
 
 }

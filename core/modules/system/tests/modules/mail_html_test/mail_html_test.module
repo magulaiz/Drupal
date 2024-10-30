@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Helper module for the html mail and url conversion tests.
+ * Helper module for the html mail and URL conversion tests.
  */
+
+declare(strict_types=1);
 
 /**
  * Implements hook_mail().
@@ -11,7 +13,7 @@
 function mail_html_test_mail($key, &$message, $params) {
   switch ($key) {
     case 'render_from_message_param':
-      $message['body'][] = \Drupal::service('renderer')->renderPlain($params['message']);
+      $message['body'][] = \Drupal::service('renderer')->renderInIsolation($params['message']);
       break;
   }
 }

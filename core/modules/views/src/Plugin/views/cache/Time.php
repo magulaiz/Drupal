@@ -2,23 +2,24 @@
 
 namespace Drupal\views\Plugin\views\cache;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Cache\Cache;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsCache;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Simple caching of query results for Views displays.
  *
  * @ingroup views_cache_plugins
- *
- * @ViewsCache(
- *   id = "time",
- *   title = @Translation("Time-based"),
- *   help = @Translation("Simple time-based caching of data.")
- * )
  */
+#[ViewsCache(
+  id: 'time',
+  title: new TranslatableMarkup('Time-based'),
+  help: new TranslatableMarkup('Simple time-based caching of data.'),
+)]
 class Time extends CachePluginBase {
 
   /**
@@ -34,31 +35,22 @@ class Time extends CachePluginBase {
   protected $dateFormatter;
 
   /**
-   * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
    * Constructs a Time cache plugin object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
+   *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatterInterface $date_formatter, Request $request) {
-    $this->dateFormatter = $date_formatter;
-    $this->request = $request;
-
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatterInterface $date_formatter, protected TimeInterface $time) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -70,7 +62,7 @@ class Time extends CachePluginBase {
       $plugin_id,
       $plugin_definition,
       $container->get('date.formatter'),
-      $container->get('request_stack')->getCurrentRequest()
+      $container->get('datetime.time'),
     );
   }
 
@@ -156,7 +148,7 @@ class Time extends CachePluginBase {
   protected function cacheExpire($type) {
     $lifespan = $this->getLifespan($type);
     if ($lifespan) {
-      $cutoff = REQUEST_TIME - $lifespan;
+      $cutoff = $this->time->getRequestTime() - $lifespan;
       return $cutoff;
     }
     else {

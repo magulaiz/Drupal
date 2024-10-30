@@ -5,7 +5,6 @@ namespace Drupal\Core\Entity\Sql;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -14,16 +13,17 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityBundleListenerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Utility\Error;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -342,7 +342,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * {@inheritdoc}
    */
-  public function getTableMapping(array $storage_definitions = NULL) {
+  public function getTableMapping(?array $storage_definitions = NULL) {
     // If a new set of field storage definitions is passed, for instance when
     // comparing old and new storage schema, we compute the table mapping
     // without caching.
@@ -384,7 +384,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * {@inheritdoc}
    */
-  protected function doLoadMultiple(array $ids = NULL) {
+  protected function doLoadMultiple(?array $ids = NULL) {
     // Attempt to load entities from the persistent cache. This will remove IDs
     // that were loaded from $ids.
     $entities_from_cache = $this->getFromPersistentCache($ids);
@@ -408,7 +408,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @return \Drupal\Core\Entity\ContentEntityInterface[]
    *   Array of entities from the storage.
    */
-  protected function getFromStorage(array $ids = NULL) {
+  protected function getFromStorage(?array $ids = NULL) {
     $entities = [];
 
     if (!empty($ids)) {
@@ -503,9 +503,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
     $entities = [];
     foreach ($values as $id => $entity_values) {
-      $bundle = $this->bundleKey ? $entity_values[$this->bundleKey][LanguageInterface::LANGCODE_DEFAULT] : FALSE;
+      $bundle = $this->bundleKey ? $entity_values[$this->bundleKey][LanguageInterface::LANGCODE_DEFAULT] : NULL;
       // Turn the record into an entity class.
-      $entities[$id] = new $this->entityClass($entity_values, $this->entityTypeId, $bundle, array_keys($translations[$id]));
+      $entity_class = $this->getEntityClass($bundle);
+      $entities[$id] = new $entity_class($entity_values, $this->entityTypeId, $bundle, array_keys($translations[$id]));
     }
 
     return $entities;
@@ -559,8 +560,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             // returns an array keyed by property names so remove the keys
             // before array_merge() to avoid losing data with fields having the
             // same columns i.e. value.
-            $column_names = array_merge($column_names, array_values($table_mapping->getColumnNames($data_field)));
+            $column_names[] = array_values($table_mapping->getColumnNames($data_field));
           }
+          $column_names = array_merge(...$column_names);
           $query->fields('data', $column_names);
         }
 
@@ -745,16 +747,18 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       return;
     }
 
-    $transaction = $this->database->startTransaction();
     try {
+      $transaction = $this->database->startTransaction();
       parent::delete($entities);
 
       // Ignore replica server temporarily.
       \Drupal::service('database.replica_kill_switch')->trigger();
     }
     catch (\Exception $e) {
-      $transaction->rollBack();
-      watchdog_exception($this->entityTypeId, $e);
+      if (isset($transaction)) {
+        $transaction->rollBack();
+      }
+      Error::logException(\Drupal::logger($this->entityTypeId), $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }
@@ -796,8 +800,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * {@inheritdoc}
    */
   public function save(EntityInterface $entity) {
-    $transaction = $this->database->startTransaction();
     try {
+      $transaction = $this->database->startTransaction();
       $return = parent::save($entity);
 
       // Ignore replica server temporarily.
@@ -805,8 +809,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       return $return;
     }
     catch (\Exception $e) {
-      $transaction->rollBack();
-      watchdog_exception($this->entityTypeId, $e);
+      if (isset($transaction)) {
+        $transaction->rollBack();
+      }
+      Error::logException(\Drupal::logger($this->entityTypeId), $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }
@@ -815,8 +821,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * {@inheritdoc}
    */
   public function restore(EntityInterface $entity) {
-    $transaction = $this->database->startTransaction();
     try {
+      $transaction = $this->database->startTransaction();
       // Insert the entity data in the base and data tables only for default
       // revisions.
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
@@ -852,8 +858,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       \Drupal::service('database.replica_kill_switch')->trigger();
     }
     catch (\Exception $e) {
-      $transaction->rollBack();
-      watchdog_exception($this->entityTypeId, $e);
+      if (isset($transaction)) {
+        $transaction->rollBack();
+      }
+      Error::logException(\Drupal::logger($this->entityTypeId), $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }
@@ -932,7 +940,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       }
       else {
         $insert_id = $this->database
-          ->insert($this->baseTable, ['return' => Database::RETURN_INSERT_ID])
+          ->insert($this->baseTable)
           ->fields((array) $record)
           ->execute();
         // Even if this is a new entity the ID key might have been set, in which
@@ -1047,7 +1055,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $value = ($item = $entity->$field_name->first()) ? $item->getValue() : [];
         }
         else {
-          $value = isset($entity->$field_name->$column_name) ? $entity->$field_name->$column_name : NULL;
+          $value = $entity->$field_name->$column_name ?? NULL;
         }
         if (!empty($definition->getSchema()['columns'][$column_name]['serialize'])) {
           $value = serialize($value);
@@ -1057,7 +1065,14 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // SQL database drivers.
         // @see https://www.drupal.org/node/2279395
         $value = SqlContentEntityStorageSchema::castValue($definition->getSchema()['columns'][$column_name], $value);
-        if (!(empty($value) && $this->isColumnSerial($table_name, $schema_name))) {
+        $empty_serial = empty($value) && $this->isColumnSerial($table_name, $schema_name);
+        // The user entity is a very special case where the ID field is a serial
+        // but we need to insert a row with an ID of 0 to represent the
+        // anonymous user.
+        // @todo https://drupal.org/i/3222123 implement a generic fix for all
+        //   entity types.
+        $user_zero = $this->entityTypeId === 'user' && $value === 0;
+        if (!$empty_serial || $user_zero) {
           $record->$schema_name = $value;
         }
       }
@@ -1128,7 +1143,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
     if ($entity->isNewRevision()) {
       $insert_id = $this->database
-        ->insert($this->revisionTable, ['return' => Database::RETURN_INSERT_ID])
+        ->insert($this->revisionTable)
         ->fields((array) $record)
         ->execute();
       // Even if this is a new revision, the revision ID key might have been
@@ -1282,6 +1297,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
 
     $original = !empty($entity->original) ? $entity->original : NULL;
+
+    // Use the loaded revision instead of default one to check for data change.
+    if ($original && !$entity->isNewRevision() && !$entity->isDefaultRevision()) {
+      $original = $this->loadRevision($entity->getLoadedRevisionId());
+    }
 
     // Determine which fields should be actually stored.
     $definitions = $this->entityFieldManager->getFieldDefinitions($entity_type, $bundle);
@@ -1502,7 +1522,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * {@inheritdoc}
    */
-  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, array &$sandbox = NULL) {
+  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, ?array &$sandbox = NULL) {
     $this->wrapSchemaException(function () use ($entity_type, $original, $field_storage_definitions, $original_field_storage_definitions, &$sandbox) {
       $this->getStorageSchema()->onFieldableEntityTypeUpdate($entity_type, $original, $field_storage_definitions, $original_field_storage_definitions, $sandbox);
     });
@@ -1655,8 +1675,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         if (!isset($entities[$item_row['revision_id']])) {
           // Create entity with the right revision id and entity id combination.
           $item_row['entity_type'] = $this->entityTypeId;
-          // @todo: Replace this by an entity object created via an entity
-          // factory, see https://www.drupal.org/node/1867228.
+          // @todo Replace this by an entity object created via an entity
+          //   factory. https://www.drupal.org/node/1867228.
           $entities[$item_row['revision_id']] = _field_create_entity_from_ids((object) $item_row);
         }
         $item = [];

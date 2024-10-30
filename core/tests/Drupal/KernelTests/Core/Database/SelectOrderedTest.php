@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
 
 /**
@@ -12,7 +14,7 @@ class SelectOrderedTest extends DatabaseTestBase {
   /**
    * Tests basic ORDER BY.
    */
-  public function testSimpleSelectOrdered() {
+  public function testSimpleSelectOrdered(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $age_field = $query->addField('test', 'age', 'age');
@@ -28,13 +30,13 @@ class SelectOrderedTest extends DatabaseTestBase {
       $last_age = $record->age;
     }
 
-    $this->assertEqual(4, $num_records, 'Returned the correct number of rows.');
+    $this->assertEquals(4, $num_records, 'Returned the correct number of rows.');
   }
 
   /**
    * Tests multiple ORDER BY.
    */
-  public function testSimpleSelectMultiOrdered() {
+  public function testSimpleSelectMultiOrdered(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $age_field = $query->addField('test', 'age', 'age');
@@ -59,13 +61,13 @@ class SelectOrderedTest extends DatabaseTestBase {
         }
       }
     }
-    $this->assertEqual(4, $num_records, 'Returned the correct number of rows.');
+    $this->assertEquals(4, $num_records, 'Returned the correct number of rows.');
   }
 
   /**
    * Tests ORDER BY descending.
    */
-  public function testSimpleSelectOrderedDesc() {
+  public function testSimpleSelectOrderedDesc(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $age_field = $query->addField('test', 'age', 'age');
@@ -81,7 +83,7 @@ class SelectOrderedTest extends DatabaseTestBase {
       $last_age = $record->age;
     }
 
-    $this->assertEqual(4, $num_records, 'Returned the correct number of rows.');
+    $this->assertEquals(4, $num_records, 'Returned the correct number of rows.');
   }
 
 }

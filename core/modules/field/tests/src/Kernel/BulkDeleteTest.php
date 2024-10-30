@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Database\Database;
@@ -59,12 +61,12 @@ class BulkDeleteTest extends FieldKernelTestBase {
    * @param $actual_hooks
    *   The array of actual hook invocations recorded by field_test_memorize().
    */
-  public function checkHooksInvocations($expected_hooks, $actual_hooks) {
+  public function checkHooksInvocations($expected_hooks, $actual_hooks): void {
     foreach ($expected_hooks as $hook => $invocations) {
       $actual_invocations = $actual_hooks[$hook];
 
       // Check that the number of invocations is correct.
-      $this->assertSame(count($invocations), count($actual_invocations), "$hook() was called the expected number of times.");
+      $this->assertSameSize($invocations, $actual_invocations, "$hook() was called the expected number of times.");
 
       // Check that the hook was called for each expected argument.
       foreach ($invocations as $argument) {
@@ -88,6 +90,9 @@ class BulkDeleteTest extends FieldKernelTestBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -152,6 +157,8 @@ class BulkDeleteTest extends FieldKernelTestBase {
   }
 
   /**
+   * Tests deleting fields.
+   *
    * Verify that deleting a field leaves the field data items in the database
    * and that the appropriate Field API functions can operate on the deleted
    * data and field definition.
@@ -159,7 +166,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
    * This tests how EntityFieldQuery interacts with field deletion and could be
    * moved to FieldCrudTestCase, but depends on this class's setUp().
    */
-  public function testDeleteField() {
+  public function testDeleteField(): void {
     $bundle = reset($this->bundles);
     $field_storage = reset($this->fieldStorages);
     $field_name = $field_storage->getName();
@@ -181,7 +188,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
     $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['field_storage_uuid' => $field_storage->uuid(), 'deleted' => TRUE, 'include_deleted' => TRUE]);
     $this->assertCount(1, $fields, 'There is one deleted field');
     $field = $fields[$field->uuid()];
-    $this->assertEqual($bundle, $field->getTargetBundle(), 'The deleted field is for the correct bundle');
+    $this->assertEquals($bundle, $field->getTargetBundle(), 'The deleted field is for the correct bundle');
 
     // Check that the actual stored content did not change during delete.
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
@@ -192,7 +199,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       ->fields('t')
       ->execute();
     foreach ($result as $row) {
-      $this->assertEqual($row->{$column}, $this->entities[$row->entity_id]->{$field_name}->value);
+      $this->assertEquals($row->{$column}, $this->entities[$row->entity_id]->{$field_name}->value);
     }
 
     // There are 0 entities of this bundle with non-deleted data.
@@ -220,7 +227,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
   /**
    * Tests that recreating a field with the name as a deleted field works.
    */
-  public function testPurgeWithDeletedAndActiveField() {
+  public function testPurgeWithDeletedAndActiveField(): void {
     $bundle = reset($this->bundles);
     // Create another field storage.
     $field_name = 'bf_3';
@@ -307,14 +314,16 @@ class BulkDeleteTest extends FieldKernelTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual(10, $count);
+    $this->assertEquals(10, $count);
   }
 
   /**
+   * Tests purging fields.
+   *
    * Verify that field data items and fields are purged when a field storage is
    * deleted.
    */
-  public function testPurgeField() {
+  public function testPurgeField(): void {
     // Start recording hook invocations.
     field_test_memorize();
 
@@ -370,10 +379,12 @@ class BulkDeleteTest extends FieldKernelTestBase {
   }
 
   /**
+   * Tests purging field storages.
+   *
    * Verify that field storages are preserved and purged correctly as multiple
    * fields are deleted and purged.
    */
-  public function testPurgeFieldStorage() {
+  public function testPurgeFieldStorage(): void {
     // Start recording hook invocations.
     field_test_memorize();
 

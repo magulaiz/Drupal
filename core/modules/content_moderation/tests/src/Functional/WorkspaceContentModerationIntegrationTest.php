@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Tests\workspaces\Functional\WorkspaceTestUtilities;
@@ -19,6 +21,14 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
    * {@inheritdoc}
    */
   protected static $modules = ['node', 'workspaces'];
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   * @see https://www.drupal.org/project/drupal/issues/3437620
+   */
+  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
@@ -42,16 +52,18 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
   /**
    * Tests moderating nodes in a workspace.
    */
-  public function testModerationInWorkspace() {
+  public function testModerationInWorkspace(): void {
     $stage = Workspace::load('stage');
     $this->switchToWorkspace($stage);
 
     // Create two nodes, a published and a draft one.
-    $this->drupalPostForm('node/add/article', [
+    $this->drupalGet('node/add/article');
+    $this->submitForm([
       'title[0][value]' => 'First article - published',
       'moderation_state[0][state]' => 'published',
     ], 'Save');
-    $this->drupalPostForm('node/add/article', [
+    $this->drupalGet('node/add/article');
+    $this->submitForm([
       'title[0][value]' => 'Second article - draft',
       'moderation_state[0][state]' => 'draft',
     ], 'Save');
@@ -65,8 +77,8 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
     // Check that neither of them are visible in Live.
     $this->switchToLive();
     $this->drupalGet('<front>');
-    $this->assertNoText('First article');
-    $this->assertNoText('Second article');
+    $this->assertSession()->pageTextNotContains('First article');
+    $this->assertSession()->pageTextNotContains('Second article');
 
     // Switch back to Stage.
     $this->switchToWorkspace($stage);
@@ -81,7 +93,7 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
     ], 'Save');
 
     $this->drupalGet('/node/1');
-    $this->assertText('First article - draft');
+    $this->assertSession()->pageTextContains('First article - draft');
 
     $this->drupalGet('/node/1/edit');
     $this->assertEquals('Current state Draft', $this->cssSelect('#edit-moderation-state-0-current')[0]->getText());
@@ -91,17 +103,19 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
       'moderation_state[0][state]' => 'published',
     ], 'Save');
 
-    $this->drupalPostForm('/node/1/edit', [
+    $this->drupalGet('/node/1/edit');
+    $this->submitForm([
       'title[0][value]' => 'First article - archived',
       'moderation_state[0][state]' => 'archived',
     ], 'Save');
 
     $this->drupalGet('/node/1');
-    $this->assertText('First article - archived');
+    $this->assertSession()->pageTextContains('First article - archived');
 
     // Get the second node to a default revision state and publish the
     // workspace.
-    $this->drupalPostForm('/node/2/edit', [
+    $this->drupalGet('/node/2/edit');
+    $this->submitForm([
       'title[0][value]' => 'Second article - published',
       'moderation_state[0][state]' => 'published',
     ], 'Save');
@@ -110,10 +124,10 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
 
     // The admin user can see unpublished nodes.
     $this->drupalGet('/node/1');
-    $this->assertText('First article - archived');
+    $this->assertSession()->pageTextContains('First article - archived');
 
     $this->drupalGet('/node/2');
-    $this->assertText('Second article - published');
+    $this->assertSession()->pageTextContains('Second article - published');
   }
 
 }

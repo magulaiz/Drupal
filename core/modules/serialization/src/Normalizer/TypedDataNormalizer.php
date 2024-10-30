@@ -12,12 +12,7 @@ class TypedDataNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = TypedDataInterface::class;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     $this->addCacheableDependency($context, $object);
     $value = $object->getValue();
     // Support for stringable value objects: avoid numerous custom normalizers.
@@ -25,6 +20,15 @@ class TypedDataNormalizer extends NormalizerBase {
       $value = (string) $value;
     }
     return $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      TypedDataInterface::class => TRUE,
+    ];
   }
 
 }

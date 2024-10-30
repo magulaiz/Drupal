@@ -7,7 +7,7 @@ use Drupal\Component\EventDispatcher\Event;
 /**
  * An event during file upload that lets subscribers sanitize the filename.
  *
- * @see _file_save_upload_single()
+ * @see \Drupal\file\Upload\FileUploadHandler::handleFileUpload()
  * @see \Drupal\file\Plugin\rest\resource\FileUploadResource::prepareFilename()
  * @see \Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber::sanitizeName()
  */
@@ -118,7 +118,7 @@ class FileUploadSanitizeNameEvent extends Event {
    *
    * @see \Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber
    */
-  public function stopPropagation() {
+  public function stopPropagation(): void {
     throw new \RuntimeException('Propagation cannot be stopped for the FileUploadSanitizeNameEvent');
   }
 

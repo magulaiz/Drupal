@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
@@ -9,14 +11,14 @@ use Drupal\user\RoleInterface;
 /**
  * JSON:API integration test for the "Action" config entity type.
  *
- * @group jsonapi
+ * @group Action
  */
-class ActionTest extends ResourceTestBase {
+class ActionTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['user'];
+  protected static $modules = [];
 
   /**
    * {@inheritdoc}
@@ -43,7 +45,7 @@ class ActionTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     $this->grantPermissionsToTestedRole(['administer actions']);
   }
 
@@ -54,7 +56,7 @@ class ActionTest extends ResourceTestBase {
     $action = Action::create([
       'id' => 'user_add_role_action.' . RoleInterface::ANONYMOUS_ID,
       'type' => 'user',
-      'label' => t('Add the anonymous role to the selected users'),
+      'label' => 'Add the anonymous role to the selected users',
       'configuration' => [
         'rid' => RoleInterface::ANONYMOUS_ID,
       ],
@@ -68,7 +70,7 @@ class ActionTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/action/action/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -110,8 +112,9 @@ class ActionTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
 }

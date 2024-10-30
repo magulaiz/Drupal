@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Database\Query;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 
@@ -104,15 +103,15 @@ class Merge extends Query implements ConditionInterface {
   /**
    * Array of fields to update to an expression in case of a duplicate record.
    *
+   * @var array
+   *
    * This variable is a nested array in the following format:
    * @code
-   * <some field> => array(
+   * <some field> => [
    *  'condition' => <condition to execute, as a string>,
    *  'arguments' => <array of arguments for condition, or NULL for none>,
-   * );
+   * ];
    * @endcode
-   *
-   * @var array
    */
   protected $expressionFields = [];
 
@@ -134,7 +133,6 @@ class Merge extends Query implements ConditionInterface {
    *   Array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
-    $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
     $this->conditionTable = $table;
@@ -191,7 +189,7 @@ class Merge extends Query implements ConditionInterface {
    * @return $this
    *   The called object.
    */
-  public function expression($field, $expression, array $arguments = NULL) {
+  public function expression($field, $expression, ?array $arguments = NULL) {
     $this->expressionFields[$field] = [
       'expression' => $expression,
       'arguments' => $arguments,
@@ -329,81 +327,75 @@ class Merge extends Query implements ConditionInterface {
    * @see \Drupal\Core\Database\Query\Merge::keys()
    */
   public function key($field, $value = NULL) {
-    // @todo D9: Remove this backwards-compatibility shim.
-    if (is_array($field)) {
-      $this->keys($field, isset($value) ? $value : []);
-    }
-    else {
-      $this->keys([$field => $value]);
-    }
+    assert(is_string($field));
+    $this->keys([$field => $value]);
     return $this;
   }
 
   /**
-   * Implements PHP magic __toString method to convert the query to a string.
-   *
-   * In the degenerate case, there is no string-able query as this operation
-   * is potentially two queries.
-   *
-   * @return string
-   *   The prepared query statement.
+   * {@inheritdoc}
    */
   public function __toString() {
+    // In the degenerate case, there is no string-able query as this operation
+    // is potentially two queries.
+    throw new \BadMethodCallException('The merge query can not be converted to a string');
   }
 
+  /**
+   * Executes the merge database query.
+   *
+   * @return int|null
+   *   One of the following values:
+   *   - Merge::STATUS_INSERT: If the entry does not already exist,
+   *     and an INSERT query is executed.
+   *   - Merge::STATUS_UPDATE: If the entry already exists,
+   *     and an UPDATE query is executed.
+   *
+   * @throws \Drupal\Core\Database\Query\InvalidMergeQueryException
+   *   When there are no conditions found to merge.
+   */
   public function execute() {
-    // Default options for merge queries.
-    $this->queryOptions += [
-      'throw_exception' => TRUE,
-    ];
+    if (!count($this->condition)) {
+      throw new InvalidMergeQueryException('Invalid merge query: no conditions');
+    }
 
-    try {
-      if (!count($this->condition)) {
-        throw new InvalidMergeQueryException('Invalid merge query: no conditions');
+    $select = $this->connection->select($this->conditionTable)
+      ->condition($this->condition);
+    $select->addExpression('1');
+
+    if (!$select->execute()->fetchField()) {
+      try {
+        $insert = $this->connection->insert($this->table)->fields($this->insertFields);
+        if ($this->defaultFields) {
+          $insert->useDefaults($this->defaultFields);
+        }
+        $insert->execute();
+        return self::STATUS_INSERT;
       }
-      $select = $this->connection->select($this->conditionTable)
+      catch (IntegrityConstraintViolationException $e) {
+        // The insert query failed, maybe it's because a racing insert query
+        // beat us in inserting the same row. Retry the select query, if it
+        // returns a row, ignore the error and continue with the update
+        // query below.
+        if (!$select->execute()->fetchField()) {
+          throw $e;
+        }
+      }
+    }
+
+    if ($this->needsUpdate) {
+      $update = $this->connection->update($this->table)
+        ->fields($this->updateFields)
         ->condition($this->condition);
-      $select->addExpression('1');
-      if (!$select->execute()->fetchField()) {
-        try {
-          $insert = $this->connection->insert($this->table)->fields($this->insertFields);
-          if ($this->defaultFields) {
-            $insert->useDefaults($this->defaultFields);
-          }
-          $insert->execute();
-          return self::STATUS_INSERT;
-        }
-        catch (IntegrityConstraintViolationException $e) {
-          // The insert query failed, maybe it's because a racing insert query
-          // beat us in inserting the same row. Retry the select query, if it
-          // returns a row, ignore the error and continue with the update
-          // query below.
-          if (!$select->execute()->fetchField()) {
-            throw $e;
-          }
+      if ($this->expressionFields) {
+        foreach ($this->expressionFields as $field => $data) {
+          $update->expression($field, $data['expression'], $data['arguments']);
         }
       }
-      if ($this->needsUpdate) {
-        $update = $this->connection->update($this->table)
-          ->fields($this->updateFields)
-          ->condition($this->condition);
-        if ($this->expressionFields) {
-          foreach ($this->expressionFields as $field => $data) {
-            $update->expression($field, $data['expression'], $data['arguments']);
-          }
-        }
-        $update->execute();
-        return self::STATUS_UPDATE;
-      }
+      $update->execute();
+      return self::STATUS_UPDATE;
     }
-    catch (\Exception $e) {
-      if ($this->queryOptions['throw_exception']) {
-        throw $e;
-      }
-      else {
-        return NULL;
-      }
-    }
+    return NULL;
   }
 
 }

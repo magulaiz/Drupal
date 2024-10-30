@@ -12,13 +12,17 @@ class MarkupNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = MarkupInterface::class;
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
+    return (string) $object;
+  }
 
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
-    return (string) $object;
+  public function getSupportedTypes(?string $format): array {
+    return [
+      MarkupInterface::class => TRUE,
+    ];
   }
 
 }

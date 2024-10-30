@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Plugin\Discovery;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -37,13 +39,13 @@ abstract class DiscoveryTestBase extends KernelTestBase {
   /**
    * Tests getDefinitions() and getDefinition().
    */
-  public function testDiscoveryInterface() {
+  public function testDiscoveryInterface(): void {
     // Ensure that getDefinitions() returns the expected definitions.
     // For the arrays to be identical (instead of only equal), they must be
     // sorted equally, which seems unnecessary here.
     // The discovered definitions may contain circular references; use a custom
     // assertion message to prevent var_export() from getting called.
-    $this->assertEqual($this->expectedDefinitions, $this->discovery->getDefinitions(), 'Expected definitions found.');
+    $this->assertEquals($this->expectedDefinitions, $this->discovery->getDefinitions(), 'Expected definitions found.');
 
     // Ensure that getDefinition() returns the expected definition.
     foreach ($this->expectedDefinitions as $id => $definition) {

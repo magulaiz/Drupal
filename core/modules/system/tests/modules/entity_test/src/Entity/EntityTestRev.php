@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -17,12 +19,14 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestForm",
  *       "delete" = "Drupal\entity_test\EntityTestDeleteForm",
- *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm"
+ *       "delete-multiple-confirm" = \Drupal\Core\Entity\Form\DeleteMultipleForm::class,
+ *       "revision-delete" = \Drupal\Core\Entity\Form\RevisionDeleteForm::class,
+ *       "revision-revert" = \Drupal\Core\Entity\Form\RevisionRevertForm::class,
  *     },
- *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
  *     },
  *   },
  *   base_table = "entity_test_rev",
@@ -44,6 +48,9 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "delete-multiple-form" = "/entity_test_rev/delete_multiple",
  *     "edit-form" = "/entity_test_rev/manage/{entity_test_rev}/edit",
  *     "revision" = "/entity_test_rev/{entity_test_rev}/revision/{entity_test_rev_revision}/view",
+ *     "revision-delete-form" = "/entity_test_rev/{entity_test_rev}/revision/{entity_test_rev_revision}/delete",
+ *     "revision-revert-form" = "/entity_test_rev/{entity_test_rev}/revision/{entity_test_rev_revision}/revert",
+ *     "version-history" = "/entity_test_rev/{entity_test_rev}/revisions",
  *   }
  * )
  */

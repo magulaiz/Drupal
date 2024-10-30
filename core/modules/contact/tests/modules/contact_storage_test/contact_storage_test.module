@@ -5,6 +5,8 @@
  * Contains custom contact message functionality for ContactStorageTest.
  */
 
+declare(strict_types=1);
+
 use Drupal\contact\ContactFormInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -31,7 +33,7 @@ function contact_storage_test_entity_base_field_info(EntityTypeInterface $entity
  * Implements hook_entity_type_alter().
  */
 function contact_storage_test_entity_type_alter(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Set the controller class for nodes to an alternate implementation of the
   // Drupal\Core\Entity\EntityStorageInterface interface.
   $entity_types['contact_message']->setStorageClass('\Drupal\Core\Entity\Sql\SqlContentEntityStorage');

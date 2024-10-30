@@ -2,7 +2,11 @@
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
+use Drupal\Component\Utility\FilterArray;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\ComplexDataInterface;
+use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedData;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -16,13 +20,12 @@ use Drupal\Core\TypedData\TypedDataInterface;
  * Note: The class cannot be called "List" as list is a reserved PHP keyword.
  *
  * @ingroup typed_data
- *
- * @DataType(
- *   id = "list",
- *   label = @Translation("List of items"),
- *   definition_class = "\Drupal\Core\TypedData\ListDataDefinition"
- * )
  */
+#[DataType(
+  id: "list",
+  label: new TranslatableMarkup("List of items"),
+  definition_class: ListDataDefinition::class,
+)]
 class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
 
   /**
@@ -90,7 +93,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
       $strings[] = $item->getString();
     }
     // Remove any empty strings resulting from empty items.
-    return implode(', ', array_filter($strings, 'mb_strlen'));
+    return implode(', ', FilterArray::removeEmptyStrings($strings));
   }
 
   /**
@@ -100,7 +103,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
     if (!is_numeric($index)) {
       throw new \InvalidArgumentException('Unable to get a value with a non-numeric delta in a list.');
     }
-    return isset($this->list[$index]) ? $this->list[$index] : NULL;
+    return $this->list[$index] ?? NULL;
   }
 
   /**
@@ -120,7 +123,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
       $value = $value->getValue();
     }
     // If needed, create the item at the next position.
-    $item = isset($this->list[$index]) ? $this->list[$index] : $this->appendItem();
+    $item = $this->list[$index] ?? $this->appendItem();
     $item->setValue($value);
     return $this;
   }
@@ -168,7 +171,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   /**
    * {@inheritdoc}
    */
-  public function offsetExists($offset) {
+  public function offsetExists($offset): bool {
     // We do not want to throw exceptions here, so we do not use get().
     return isset($this->list[$offset]);
   }
@@ -176,21 +179,21 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   /**
    * {@inheritdoc}
    */
-  public function offsetUnset($offset) {
+  public function offsetUnset($offset): void {
     $this->removeItem($offset);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetGet($offset) {
+  public function offsetGet($offset): mixed {
     return $this->get($offset);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetSet($offset, $value) {
+  public function offsetSet($offset, $value): void {
     if (!isset($offset)) {
       // The [] operator has been used.
       $this->appendItem($value);
@@ -229,14 +232,14 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   /**
    * {@inheritdoc}
    */
-  public function getIterator() {
+  public function getIterator(): \ArrayIterator {
     return new \ArrayIterator($this->list);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function count() {
+  public function count(): int {
     return count($this->list);
   }
 

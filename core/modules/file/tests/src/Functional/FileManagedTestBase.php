@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -8,27 +10,26 @@ use Drupal\file\FileInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Base class for file tests that use the file_test module to test uploads and
- * hooks.
+ * Provides a base class for testing files with the file_test module.
  */
 abstract class FileManagedTestBase extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['file_test', 'file'];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
     // Clear out any hook calls.
     file_test_reset();
   }
 
   /**
-   * Assert that all of the specified hook_file_* hooks were called once, other
-   * values result in failure.
+   * Asserts that the specified file hooks were called only once.
    *
    * @param string[] $expected
    *   An array of strings containing with the hook name; for example, 'load',
@@ -43,16 +44,16 @@ abstract class FileManagedTestBase extends BrowserTestBase {
     // Determine if there were any expected that were not called.
     $uncalled = array_diff($expected, $actual);
     if (count($uncalled)) {
-      $this->assertTrue(FALSE, new FormattableMarkup('Expected hooks %expected to be called but %uncalled was not called.', ['%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled)]));
+      $this->assertTrue(FALSE, sprintf('Expected hooks %s to be called but %s was not called.', implode(', ', $expected), implode(', ', $uncalled)));
     }
     else {
-      $this->assertTrue(TRUE, new FormattableMarkup('All the expected hooks were called: %expected', ['%expected' => empty($expected) ? '(none)' : implode(', ', $expected)]));
+      $this->assertTrue(TRUE, sprintf('All the expected hooks were called: %s', empty($expected) ? '(none)' : implode(', ', $expected)));
     }
 
     // Determine if there were any unexpected calls.
     $unexpected = array_diff($actual, $expected);
     if (count($unexpected)) {
-      $this->assertTrue(FALSE, new FormattableMarkup('Unexpected hooks were called: %unexpected.', ['%unexpected' => empty($unexpected) ? '(none)' : implode(', ', $unexpected)]));
+      $this->assertTrue(FALSE, sprintf('Unexpected hooks were called: %s.', empty($unexpected) ? '(none)' : implode(', ', $unexpected)));
     }
     else {
       $this->assertTrue(TRUE, 'No unexpected hooks were called.');
@@ -83,7 +84,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
         $message = new FormattableMarkup('hook_file_@name was expected to be called %expected times but was called %actual times.', ['@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count]);
       }
     }
-    $this->assertEqual($expected_count, $actual_count, $message);
+    $this->assertEquals($expected_count, $actual_count, $message);
   }
 
   /**
@@ -95,13 +96,13 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    *   File object to compare.
    */
   public function assertFileUnchanged(FileInterface $before, FileInterface $after) {
-    $this->assertEqual($before->id(), $after->id(), t('File id is the same: %file1 == %file2.', ['%file1' => $before->id(), '%file2' => $after->id()]), 'File unchanged');
-    $this->assertEqual($before->getOwner()->id(), $after->getOwner()->id(), t('File owner is the same: %file1 == %file2.', ['%file1' => $before->getOwner()->id(), '%file2' => $after->getOwner()->id()]), 'File unchanged');
-    $this->assertEqual($before->getFilename(), $after->getFilename(), t('File name is the same: %file1 == %file2.', ['%file1' => $before->getFilename(), '%file2' => $after->getFilename()]), 'File unchanged');
-    $this->assertEqual($before->getFileUri(), $after->getFileUri(), t('File path is the same: %file1 == %file2.', ['%file1' => $before->getFileUri(), '%file2' => $after->getFileUri()]), 'File unchanged');
-    $this->assertEqual($before->getMimeType(), $after->getMimeType(), t('File MIME type is the same: %file1 == %file2.', ['%file1' => $before->getMimeType(), '%file2' => $after->getMimeType()]), 'File unchanged');
-    $this->assertEqual($before->getSize(), $after->getSize(), t('File size is the same: %file1 == %file2.', ['%file1' => $before->getSize(), '%file2' => $after->getSize()]), 'File unchanged');
-    $this->assertEqual($before->isPermanent(), $after->isPermanent(), t('File status is the same: %file1 == %file2.', ['%file1' => $before->isPermanent(), '%file2' => $after->isPermanent()]), 'File unchanged');
+    $this->assertEquals($before->id(), $after->id());
+    $this->assertEquals($before->getOwner()->id(), $after->getOwner()->id());
+    $this->assertEquals($before->getFilename(), $after->getFilename());
+    $this->assertEquals($before->getFileUri(), $after->getFileUri());
+    $this->assertEquals($before->getMimeType(), $after->getMimeType());
+    $this->assertEquals($before->getSize(), $after->getSize());
+    $this->assertEquals($before->isPermanent(), $after->isPermanent());
   }
 
   /**
@@ -113,8 +114,8 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    *   File object to compare.
    */
   public function assertDifferentFile(FileInterface $file1, FileInterface $file2) {
-    $this->assertNotEquals($file1->id(), $file2->id(), t('Files have different ids: %file1 != %file2.', ['%file1' => $file1->id(), '%file2' => $file2->id()]));
-    $this->assertNotEquals($file1->getFileUri(), $file2->getFileUri(), t('Files have different paths: %file1 != %file2.', ['%file1' => $file1->getFileUri(), '%file2' => $file2->getFileUri()]));
+    $this->assertNotEquals($file1->id(), $file2->id());
+    $this->assertNotEquals($file1->getFileUri(), $file2->getFileUri());
   }
 
   /**
@@ -126,13 +127,12 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    *   File object to compare.
    */
   public function assertSameFile(FileInterface $file1, FileInterface $file2) {
-    $this->assertEqual($file1->id(), $file2->id(), t('Files have the same ids: %file1 == %file2.', ['%file1' => $file1->id(), '%file2-fid' => $file2->id()]), 'Same file');
-    $this->assertEqual($file1->getFileUri(), $file2->getFileUri(), t('Files have the same path: %file1 == %file2.', ['%file1' => $file1->getFileUri(), '%file2' => $file2->getFileUri()]), 'Same file');
+    $this->assertEquals($file1->id(), $file2->id());
+    $this->assertEquals($file1->getFileUri(), $file2->getFileUri());
   }
 
   /**
-   * Create a file and save it to the files table and assert that it occurs
-   * correctly.
+   * Creates and saves a file, asserting that it was saved.
    *
    * @param string $filepath
    *   Optional string specifying the file path. If none is provided then a

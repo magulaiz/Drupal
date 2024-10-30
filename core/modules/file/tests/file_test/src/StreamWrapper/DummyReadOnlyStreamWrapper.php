@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\file_test\StreamWrapper;
 
 use Drupal\Core\StreamWrapper\LocalReadOnlyStream;
@@ -22,7 +24,7 @@ class DummyReadOnlyStreamWrapper extends LocalReadOnlyStream {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('Dummy wrapper for simpletest (readonly).');
+    return t('Dummy wrapper for testing (readonly).');
   }
 
   public function getDirectoryPath() {

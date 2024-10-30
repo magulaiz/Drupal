@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Datetime;
 
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -15,6 +17,8 @@ class DrupalDateTimeTest extends BrowserTestBase {
 
   /**
    * Set up required modules.
+   *
+   * @var string[]
    */
   protected static $modules = [];
 
@@ -32,26 +36,13 @@ class DrupalDateTimeTest extends BrowserTestBase {
   }
 
   /**
-   * Test that the AJAX Timezone Callback can deal with various formats.
-   */
-  public function testSystemTimezone() {
-    $options = [
-      'query' => [
-        'date' => 'Tue+Sep+17+2013+21%3A35%3A31+GMT%2B0100+(BST)#',
-      ],
-    ];
-    // Query the AJAX Timezone Callback with a long-format date.
-    $response = $this->drupalGet('system/timezone/BST/3600/1', $options);
-    $this->assertEqual('"Europe\\/London"', $response, 'Timezone AJAX callback successfully identifies and responds to a long-format date.');
-  }
-
-  /**
-   * Test that DrupalDateTime can detect the right timezone to use.
+   * Tests that DrupalDateTime can detect the right timezone to use.
+   *
    * Test with a variety of less commonly used timezone names to
    * help ensure that the system timezone will be different than the
    * stated timezones.
    */
-  public function testDateTimezone() {
+  public function testDateTimezone(): void {
     $date_string = '2007-01-31 21:00:00';
 
     // Make sure no site timezone has been set.
@@ -90,7 +81,8 @@ class DrupalDateTimeTest extends BrowserTestBase {
 
     // Set up the user with a different timezone than the site.
     $edit = ['mail' => $test_user->getEmail(), 'timezone' => 'Asia/Manila'];
-    $this->drupalPostForm('user/' . $test_user->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('user/' . $test_user->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Reload the user and reset the timezone in AccountProxy::setAccount().
     \Drupal::entityTypeManager()->getStorage('user')->resetCache();
@@ -106,19 +98,19 @@ class DrupalDateTimeTest extends BrowserTestBase {
   /**
    * Tests the ability to override the time zone in the format method.
    */
-  public function testTimezoneFormat() {
+  public function testTimezoneFormat(): void {
     // Create a date in UTC
     $date = DrupalDateTime::createFromTimestamp(87654321, 'UTC');
 
     // Verify that the date format method displays the default time zone.
-    $this->assertEqual('1972/10/11 12:25:21 UTC', $date->format('Y/m/d H:i:s e'), 'Date has default UTC time zone and correct date/time.');
+    $this->assertEquals('1972/10/11 12:25:21 UTC', $date->format('Y/m/d H:i:s e'), 'Date has default UTC time zone and correct date/time.');
 
     // Verify that the format method can override the time zone.
-    $this->assertEqual('1972/10/11 08:25:21 America/New_York', $date->format('Y/m/d H:i:s e', ['timezone' => 'America/New_York']), 'Date displayed overridden time zone and correct date/time');
+    $this->assertEquals('1972/10/11 08:25:21 America/New_York', $date->format('Y/m/d H:i:s e', ['timezone' => 'America/New_York']), 'Date displayed overridden time zone and correct date/time');
 
     // Verify that the date format method still displays the default time zone
     // for the date object.
-    $this->assertEqual('1972/10/11 12:25:21 UTC', $date->format('Y/m/d H:i:s e'), 'Date still has default UTC time zone and correct date/time');
+    $this->assertEquals('1972/10/11 12:25:21 UTC', $date->format('Y/m/d H:i:s e'), 'Date still has default UTC time zone and correct date/time');
   }
 
 }
