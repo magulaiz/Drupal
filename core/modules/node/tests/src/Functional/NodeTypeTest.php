@@ -116,6 +116,10 @@ class NodeTypeTest extends NodeTestBase {
     $field = FieldConfig::loadByName('node', 'page', 'body');
     $this->assertEquals('Body', $field->getLabel(), 'Body field was found.');
 
+    $node = $this->drupalCreateNode(['type' => 'page']);
+    $this->drupalGet($node->toUrl());
+    $this->assertSession()->statusCodeEquals(200);
+
     // Verify that title and body fields are displayed.
     $this->drupalGet('node/add/page');
     $assert->pageTextContains('Title');
@@ -124,9 +128,15 @@ class NodeTypeTest extends NodeTestBase {
     // Rename the title field.
     $edit = [
       'title_label' => 'Foo',
+      'page_display' => FALSE,
     ];
     $this->drupalGet('admin/structure/types/manage/page');
+    $this->assertSession()->checkboxChecked('page_display');
     $this->submitForm($edit, 'Save');
+
+    // Assert page display is disabled.
+    $this->drupalGet($node->toUrl());
+    $this->assertSession()->statusCodeEquals(404);
 
     $this->drupalGet('node/add/page');
     $assert->pageTextContains('Foo');
@@ -136,8 +146,10 @@ class NodeTypeTest extends NodeTestBase {
     $edit = [
       'name' => 'Bar',
       'description' => 'Lorem ipsum.',
+      'page_display' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/page');
+    $this->assertSession()->checkboxNotChecked('page_display');
     $this->submitForm($edit, 'Save');
 
     $this->drupalGet('node/add');

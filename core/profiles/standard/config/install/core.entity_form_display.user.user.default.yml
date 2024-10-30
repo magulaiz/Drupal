@@ -33,3 +33,4 @@ content:
       preview_image_style: thumbnail
     third_party_settings: {  }
 hidden: {  }
+pageDisplay: false

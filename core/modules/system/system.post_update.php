@@ -5,6 +5,9 @@
  * Post update functions for System.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
 /**
  * Implements hook_removed_post_updates().
  */
@@ -84,4 +87,14 @@ function system_post_update_sdc_uninstall() {
   if (\Drupal::moduleHandler()->moduleExists('sdc')) {
     \Drupal::service('module_installer')->uninstall(['sdc'], FALSE);
   }
+}
+
+/**
+ * Sets the page display flag on entity view modes.
+ */
+function system_post_update_set_entity_view_display_page_display(array &$sandbox): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $display) {
+    $display->setPageDisplay($display->getMode() === 'full');
+    return TRUE;
+  });
 }

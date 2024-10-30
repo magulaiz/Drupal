@@ -45,6 +45,7 @@ use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
     'mode',
     'content',
     'hidden',
+    'pageDisplay',
   ])]
 class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayInterface {
 
@@ -52,6 +53,13 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
    * {@inheritdoc}
    */
   protected $displayContext = 'view';
+
+  /**
+   * TRUE if this view display has an associated page display.
+   *
+   * @var bool
+   */
+  protected bool $pageDisplay = FALSE;
 
   /**
    * Returns the display objects used to render a set of entities.
@@ -184,6 +192,14 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
   public function __construct(array $values, $entity_type) {
     $this->pluginManager = \Drupal::service('plugin.manager.field.formatter');
 
+    if (!\array_key_exists('pageDisplay', $values)) {
+      // In this scenario we can only be loading an existing item as if this
+      // were being called from ::create we would have already set a value in
+      // ::preCreate.
+      // @see \Drupal\Core\Entity\Entity\EntityViewDisplay::preCreate
+      $values['pageDisplay'] = ($values['mode'] ?? 'default') === 'full';
+      @trigger_error('Creating an entity view display without a value for pageDisplay is deprecated in drupal:11.1.0 and will be required in drupal:12.0.0. Update install configuration to add this key. See https://www.drupal.org/node/3484529', E_USER_DEPRECATED);
+    }
     parent::__construct($values, $entity_type);
   }
 
@@ -315,6 +331,34 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
     return [
       'formatters' => new EntityDisplayPluginCollection($this->pluginManager, $configurations),
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasPageDisplay(): bool {
+    return $this->pageDisplay;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPageDisplay(bool $hasPageDisplay = TRUE): static {
+    $this->pageDisplay = $hasPageDisplay;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageInterface $storage, array &$values): void {
+    if (!\array_key_exists('pageDisplay', $values)) {
+      // Set a default value for calls to ::create. We do this to avoid
+      // triggering a deprecation error from __construct.
+      //
+      // @see \Drupal\Core\Entity\Entity\EntityViewDisplay::__construct
+      $values['pageDisplay'] = ($values['mode'] ?? 'default') === 'full';
+    }
   }
 
 }
