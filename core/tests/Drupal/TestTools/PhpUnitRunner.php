@@ -144,4 +144,35 @@ class PhpUnitRunner implements ContainerInjectionInterface {
     return $status;
   }
 
+  /**
+   * @todo Fix docs.
+   */
+  public function getTestsList(?string $suite = NULL): array {
+    $map = [
+      'PHPUnit-FunctionalJavascript' => 'functional-javascript',
+      'PHPUnit-Functional' => 'functional',
+      'PHPUnit-Kernel' => 'kernel',
+      'PHPUnit-Unit' => 'unit',
+      'PHPUnit-Build' => 'build',
+    ];
+    $suite = $suite ? ($map[$suite] ?? $suite) : NULL;
+
+    $xmlOutputFile = $this->workingDirectory . DIRECTORY_SEPARATOR . 'test-list.xml';
+    touch($xmlOutputFile);
+    $realXmlOutputFile = realpath($xmlOutputFile);
+    $command = [
+      '--list-tests-xml',
+      $realXmlOutputFile,
+    ];
+
+    if ($suite) {
+      $command[] = '--testsuite';
+      $command[] = $suite;
+    }
+
+    $status = $this->runPhpUnit($command, [], $output, $error);
+
+    return [$status, $output, $error];
+  }
+
 }

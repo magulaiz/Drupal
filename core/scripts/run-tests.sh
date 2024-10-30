@@ -924,6 +924,11 @@ function simpletest_script_get_test_list() {
     try {
       $groups = $test_discovery->getTestClasses($args['module'], $args['types'], $args['directory']);
       $types_processed = TRUE;
+      if ($args['types']) {
+        $runner = PhpUnitRunner::create(\Drupal::getContainer());
+        $cliTests = $runner->getTestsList($args['types']); 
+        var_export($cliTests);
+      }
     }
     catch (Exception $e) {
       echo (string) $e;
