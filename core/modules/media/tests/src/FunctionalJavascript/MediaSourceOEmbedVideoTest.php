@@ -26,7 +26,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['media_test_oembed', 'dblog'];
+  protected static $modules = ['media_test_oembed', 'dblog', 'link'];
 
   /**
    * {@inheritdoc}
@@ -89,6 +89,8 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
       'field_string_width' => 'string',
       'field_string_height' => 'string',
       'field_string_author_name' => 'string',
+      'field_link_author_url' => 'link',
+      'field_string_author_url' => 'string',
     ];
     $this->createMediaTypeFields($fields, $media_type_id);
 
@@ -101,6 +103,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $assert_session->selectExists('field_map[width]')->setValue('field_string_width');
     $assert_session->selectExists('field_map[height]')->setValue('field_string_height');
     $assert_session->selectExists('field_map[author_name]')->setValue('field_string_author_name');
+    $assert_session->selectExists('field_map[author_url]')->setValue('field_link_author_url');
     $assert_session->buttonExists('Save')->press();
 
     // Configure the iframe to be narrower than the actual video, so we can
@@ -118,6 +121,22 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     ResourceController::setResourceUrl($video_url, $this->getFixturesDirectory() . '/video_vimeo.json');
 
     // Create a media item.
+    $this->drupalGet("media/add/$media_type_id");
+    $assert_session->fieldExists('Remote video URL')->setValue($video_url);
+    $assert_session->buttonExists('Save')->press();
+
+    $assert_session->addressEquals('admin/content/media');
+
+    // Change the author_url mapping to a string field and create the
+    // media item again.
+    $this->drupalGet("admin/structure/media/manage/$media_type_id");
+    $assert_session->selectExists('field_map[author_url]')->setValue('field_string_author_url');
+    $assert_session->buttonExists('Save')->press();
+
+    $this->hijackProviderEndpoints();
+    $video_url = 'https://vimeo.com/7073899';
+    ResourceController::setResourceUrl($video_url, $this->getFixturesDirectory() . '/video_vimeo.json');
+
     $this->drupalGet("media/add/$media_type_id");
     $assert_session->fieldExists('Remote video URL')->setValue($video_url);
     $assert_session->buttonExists('Save')->press();
