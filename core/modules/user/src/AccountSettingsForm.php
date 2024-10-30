@@ -129,8 +129,8 @@ class AccountSettingsForm extends ConfigFormBase {
       '#description' => $this->t('The details users may use to identify themselves.'),
       '#options' => [
         UserInterface::USER_LOGIN_USERNAME_ONLY => $this->t('Username'),
-        UserInterface::USER_LOGIN_EMAIL_ONLY => $this->t('E-mail address'),
-        UserInterface::USER_LOGIN_USERNAME_OR_EMAIL => $this->t('Username or e-mail address'),
+        UserInterface::USER_LOGIN_EMAIL_ONLY => $this->t('Email address'),
+        UserInterface::USER_LOGIN_USERNAME_OR_EMAIL => $this->t('Username or email address'),
       ],
     ];
 

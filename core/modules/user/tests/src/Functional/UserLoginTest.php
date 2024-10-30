@@ -335,20 +335,20 @@ class UserLoginTest extends BrowserTestBase {
       $this->assertSession()->fieldValueEquals('pass', '');
       switch (\Drupal::config('user.settings')->get('user_login_method')) {
         case UserInterface::USER_LOGIN_USERNAME_ONLY:
-          $this->assertSession()->pageTextContains('Sorry, unrecognized username or password. Have you forgotten your password?');
+          $this->assertSession()->pageTextContains('Unrecognized username or password. Forgot your password?');
           break;
 
         case UserInterface::USER_LOGIN_EMAIL_ONLY:
           if (!$by_email) {
-            $this->assertSession()->pageTextContains('The e-mail address @email is not valid.', ['@email' => $account->getAccountName()]);
+            $this->assertSession()->pageTextContains('The email address @email is not valid.', ['@email' => $account->getAccountName()]);
           }
           else {
-            $this->assertSession()->pageTextContains('Sorry, unrecognized e-mail address or password. Have you forgotten your password?');
+            $this->assertSession()->pageTextContains('Unrecognized username or password. Forgot your password?');
           }
           break;
 
         case UserInterface::USER_LOGIN_USERNAME_OR_EMAIL:
-          $this->assertSession()->pageTextContains('Sorry, unrecognized username, e-mail address or password. Have you forgotten your password?');
+          $this->assertSession()->pageTextContains('Unrecognized username or password. Forgot your password?');
           break;
       }
     }
@@ -392,26 +392,26 @@ class UserLoginTest extends BrowserTestBase {
     $account = $this->drupalCreateUser([]);
 
     // Login test with username only, the default method.
-    // Using e-mail should fail with username only method.
+    // Using email should fail with username only method.
     $this->drupalLogin($account);
     // Using username should pass.
     $this->assertFailedLogin($account, NULL, TRUE);
 
-    // Login test with e-mail only method.
-    \Drupal::config('user.settings')
+    // Login test with email only method.
+    $this->config('user.settings')
       ->set('user_login_method', UserInterface::USER_LOGIN_EMAIL_ONLY)
       ->save();
-    // Using e-mail should pass.
+    // Using email should pass.
     $this->drupalLogin($account, TRUE);
     // Using username should fail.
     $this->assertFailedLogin($account);
 
-    // Login test with username or e-mail method.
-    \Drupal::config('user.settings')
+    // Login test with username or email method.
+    $this->config('user.settings')
       ->set('user_login_method', UserInterface::USER_LOGIN_USERNAME_OR_EMAIL)
       ->save();
 
-    // Using e-mail should pass.
+    // Using email should pass.
     $this->drupalLogin($account, TRUE);
     // Using username should pass.
     $this->drupalLogin($account);

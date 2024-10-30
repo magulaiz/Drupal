@@ -125,7 +125,7 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
     // Display login form:
     $form['name'] = [
       '#type' => 'textfield',
-      '#title' => $credentials == UserInterface::USER_LOGIN_USERNAME_ONLY ? $this->t('Username') : ($credentials == UserInterface::USER_LOGIN_EMAIL_ONLY ? $this->t('E-mail address') : $this->t('Username or e-mail address')),
+      '#title' => $credentials == UserInterface::USER_LOGIN_USERNAME_ONLY ? $this->t('Username') : ($credentials == UserInterface::USER_LOGIN_EMAIL_ONLY ? $this->t('Email address') : $this->t('Username or email address')),
       '#size' => 60,
       '#maxlength' => $credentials == UserInterface::USER_LOGIN_USERNAME_ONLY ? UserInterface::USERNAME_MAX_LENGTH : Email::EMAIL_MAX_LENGTH,
       '#required' => TRUE,

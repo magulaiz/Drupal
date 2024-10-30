@@ -19,12 +19,12 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
   const USER_LOGIN_USERNAME_ONLY = 'username_only';
 
   /**
-   * Users can login with e-mail address only.
+   * Users can login with email address only.
    */
   const USER_LOGIN_EMAIL_ONLY = 'email_only';
 
   /**
-   * Users can login using either username or e-mail address.
+   * Users can login using either username or email address.
    */
   const USER_LOGIN_USERNAME_OR_EMAIL = 'username_or_email';
 
