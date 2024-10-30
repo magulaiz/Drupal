@@ -23,53 +23,19 @@ namespace Drupal\Core\Database;
  */
 class Transaction {
 
-  /**
-   * The connection object for this transaction.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * A boolean value to indicate whether this transaction has been rolled back.
-   *
-   * @var bool
-   */
-  protected $rolledBack = FALSE;
-
-  /**
-   * The name of the transaction.
-   *
-   * This is used to label the transaction savepoint. It will be overridden to
-   * 'drupal_transaction' if there is no transaction depth.
-   *
-   * @var string
-   */
-  protected $name;
-
-  public function __construct(Connection $connection, $name = NULL) {
-    $this->connection = $connection;
-    // If there is no transaction depth, then no transaction has started. Name
-    // the transaction 'drupal_transaction'.
-    if (!$depth = $connection->transactionDepth()) {
-      $this->name = 'drupal_transaction';
-    }
-    // Within transactions, savepoints are used. Each savepoint requires a
-    // name. So if no name is present we need to create one.
-    elseif (!$name) {
-      $this->name = 'savepoint_' . $depth;
-    }
-    else {
-      $this->name = $name;
-    }
-    $this->connection->pushTransaction($this->name);
+  public function __construct(
+    protected readonly Connection $connection,
+    protected readonly string $name,
+    protected readonly string $id,
+  ) {
+    // Transactions rely on objects being destroyed in order to be committed.
+    // PHP makes no guarantee about the order in which objects are destroyed so
+    // ensure all transactions are committed on shutdown.
+    Database::commitAllOnShutdown();
   }
 
   public function __destruct() {
-    // If we rolled back then the transaction would have already been popped.
-    if (!$this->rolledBack) {
-      $this->connection->popTransaction($this->name);
-    }
+    $this->connection->transactionManager()->unpile($this->name, $this->id);
   }
 
   /**
@@ -90,8 +56,7 @@ class Transaction {
    * @see \Drupal\Core\Database\Connection::rollBack()
    */
   public function rollBack() {
-    $this->rolledBack = TRUE;
-    $this->connection->rollBack($this->name);
+    $this->connection->transactionManager()->rollback($this->name, $this->id);
   }
 
 }

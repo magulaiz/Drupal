@@ -9,10 +9,6 @@ use Drupal\Core\Entity\TranslatableInterface;
 
 /**
  * Provides a key value backend for content entities.
- *
- * @todo Complete the content entity storage implementation.
- *
- * @see https://www.drupal.org/node/2618436.
  */
 class KeyValueContentEntityStorage extends KeyValueEntityStorage implements ContentEntityStorageInterface {
 
@@ -20,7 +16,8 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
    * {@inheritdoc}
    */
   public function createTranslation(ContentEntityInterface $entity, $langcode, array $values = []) {
-    throw new \LogicException('Not implemented yet.');
+    // @todo Complete the content entity storage implementation in
+    //   https://www.drupal.org/node/2618436.
   }
 
   /**
@@ -34,15 +31,13 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
    * {@inheritdoc}
    */
   public function createRevision(RevisionableInterface $entity, $default = TRUE, $keep_untranslatable_fields = NULL) {
-    throw new \LogicException('Not implemented yet.');
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createWithSampleValues($bundle = FALSE, array $values = []) {
-    throw new \LogicException('Not implemented yet.');
-  }
+  public function createWithSampleValues($bundle = FALSE, array $values = []) {}
 
   /**
    * {@inheritdoc}
@@ -62,6 +57,20 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
    * {@inheritdoc}
    */
   public function getLatestTranslationAffectedRevisionId($entity_id, $langcode) {
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadRevision($revision_id) {
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteRevision($revision_id) {
     return NULL;
   }
 

@@ -5,6 +5,8 @@
  * Mock module for language layer tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
@@ -74,7 +76,7 @@ function language_test_store_language_negotiation() {
   foreach (\Drupal::languageManager()->getDefinedLanguageTypes() as $type) {
     $last[$type] = \Drupal::languageManager()->getCurrentLanguage($type)->getId();
   }
-  \Drupal::state()->set('language_test.language_negotiation_last', $last);
+  \Drupal::keyValue('language_test')->set('language_negotiation_last', $last);
 }
 
 /**

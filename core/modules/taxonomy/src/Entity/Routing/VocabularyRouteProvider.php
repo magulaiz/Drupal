@@ -27,18 +27,6 @@ class VocabularyRouteProvider extends AdminHtmlRouteProvider {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function getCollectionRoute(EntityTypeInterface $entity_type) {
-    if ($route = parent::getCollectionRoute($entity_type)) {
-      $route->setRequirement('_permission', 'access taxonomy overview+administer taxonomy');
-      return $route;
-    }
-
-    return NULL;
-  }
-
-  /**
    * Gets the reset page route.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -111,7 +113,7 @@ trait TestFileCreationTrait {
    *
    * @return int
    */
-  protected function compareFiles($file1, $file2) {
+  protected function compareFiles($file1, $file2): int {
     $compare_size = filesize($file1->uri) - filesize($file2->uri);
     if ($compare_size) {
       // Sort by file size.
@@ -145,7 +147,7 @@ trait TestFileCreationTrait {
    * @return string
    *   The name of the file, including the path.
    */
-  public static function generateFile($filename, $width, $lines, $type = 'binary-text') {
+  protected static function generateFile($filename, $width, $lines, $type = 'binary-text') {
     $text = '';
     for ($i = 0; $i < $lines; $i++) {
       // Generate $width - 1 characters to leave space for the "\n" character.
