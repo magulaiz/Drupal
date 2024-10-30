@@ -315,8 +315,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @param \Drupal\Core\Entity\Sql\TableMappingInterface $table_mapping
    *   The table mapping.
    *
-   * @internal Only to be used internally by Entity API. Expected to be removed
-   *   by https://www.drupal.org/node/2554235.
+   * @internal Only to be used internally by Entity API.
    */
   public function setTableMapping(TableMappingInterface $table_mapping) {
     $this->tableMapping = $table_mapping;
@@ -1290,7 +1289,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // Load field data.
     $langcodes = array_keys($this->languageManager->getLanguages(LanguageInterface::STATE_ALL));
     foreach ($storage_definitions as $field_name => $storage_definition) {
-      $column_attributes = $storage_definition->getColumns();
       $table = !$load_from_revision ? $table_mapping->getDedicatedDataTableName($storage_definition) : $table_mapping->getDedicatedRevisionTableName($storage_definition);
 
       // Ensure that only values having valid languages are retrieved. Since we
@@ -1323,6 +1321,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // languages are skipped.
         if ($langcode == LanguageInterface::LANGCODE_DEFAULT || $definitions[$bundle][$field_name]->isTranslatable()) {
           if ($storage_definition->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED || count($values[$value_key][$field_name][$langcode]) < $storage_definition->getCardinality()) {
+            $column_attributes = $storage_definition->getColumns();
             // Try field item mapping.
             if ($storage_definition instanceof StorageMapperInterface) {
               $item = $storage_definition->mapColumnsOnLoad(
@@ -1336,7 +1335,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               // prefixed database column.
               foreach ($column_attributes as $column => $attributes) {
                 $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
-                // Unserialize the value if specified in the column schema.
                 $item[$column] = $this->fromStoredValue($row->$column_name, $attributes);
               }
             }
@@ -1941,7 +1939,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   Array of values, keyed by property name.
    */
   protected function mapFromTableColumns(string $field_name, array $column_values, array $column_attributes): array {
-    $columns_to_properties = array_flip($this->tableMapping->getColumnNames($field_name));
+    $columns_to_properties = array_flip($this->getTableMapping()->getColumnNames($field_name));
     $propertyValues = [];
     foreach ($column_values as $column => $value) {
       if ($property = $columns_to_properties[$column] ?? NULL) {
