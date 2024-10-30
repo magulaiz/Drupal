@@ -30,6 +30,8 @@ final class PhpUnitRunner implements ContainerInjectionInterface {
    *   Path to the application root.
    * @param string $workingDirectory
    *   Path to the working directory.
+   * @param \Composer\Autoload\ClassLoader $classLoader
+   *   The class loader.
    */
   public function __construct(
     public readonly string $appRoot,

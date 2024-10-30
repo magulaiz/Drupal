@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Test;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestStatus;
@@ -80,7 +81,8 @@ class PhpUnitRunnerTest extends UnitTestCase {
    * @covers ::phpUnitCommand
    */
   public function testPhpUnitCommand(): void {
-    $runner = new PhpUnitRunner($this->root, sys_get_temp_dir());
+    $classLoader = $this->prophesize(ClassLoader::class);
+    $runner = new PhpUnitRunner($this->root, sys_get_temp_dir(), $classLoader->reveal());
     $invokableMethod = new \ReflectionMethod($runner, 'phpUnitCommand');
     $this->assertMatchesRegularExpression('/phpunit/', $invokableMethod->invoke($runner));
   }
