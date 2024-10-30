@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Provides Config module hook implementations for testing purposes.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\update_script_test\Hook\UpdateScriptTestHooks;
+
+#[LegacyHook]
+function update_script_test_cache_flush() {
+  \Drupal::service(UpdateScriptTestHooks::class)->cacheFlush();
+}
