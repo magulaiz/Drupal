@@ -9,6 +9,7 @@ use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\Registry;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Drupal\theme_test\Hook\ThemeTestHooks;
 
 /**
  * @coversDefaultClass \Drupal\Core\Theme\Registry
@@ -155,10 +156,10 @@ class RegistryTest extends UnitTestCase {
     // Include the module and theme files so that hook_theme can be called.
     include_once $this->root . '/core/modules/system/tests/modules/theme_test/theme_test.module';
     include_once $this->root . '/core/tests/fixtures/test_stable/test_stable.theme';
+    $themeTestTheme = new ThemeTestHooks();
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('invoke')
-      ->with('theme_test', 'theme')
-      ->willReturn(theme_test_theme(NULL, NULL, NULL, NULL));
+      ->willReturnCallback(fn ($x) => $x === 'theme_test' ? $themeTestTheme->theme(NULL, NULL, NULL, NULL) : []);
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('invokeAllWith')
       ->with('theme')
@@ -168,10 +169,13 @@ class RegistryTest extends UnitTestCase {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('getModuleList')
       ->willReturn([]);
-    $this->moduleList->expects($this->exactly(2))
+    $calls = ['system', 'theme_test', 'system', 'theme_test'];
+    $this->moduleList->expects($this->exactly(4))
       ->method('getPath')
-      ->with('theme_test')
-      ->willReturn('core/modules/system/tests/modules/theme_test');
+      ->with($this->callback(function ($module) use (&$calls) {
+        return $module === array_shift($calls);
+      }))
+      ->willReturnCallback(fn (string $module) => $module === 'theme_test' ? 'core/modules/system/tests/modules/theme_test' : '');
 
     $registry = $this->registry->get();
 
