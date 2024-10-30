@@ -335,7 +335,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    */
   public function getLoadedRevisionId(bool $cast_to_int = FALSE) {
     if (!$cast_to_int) {
-      @trigger_error('Returning the loaded revision identifier as a string value is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3476934', E_USER_DEPRECATED);
+      @trigger_error('Returning the loaded revision identifier as a string value when the loaded revision ID only contains numeric characters is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3476934', E_USER_DEPRECATED);
       return $this->loadedRevisionId;
     }
 
