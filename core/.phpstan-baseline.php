@@ -15846,6 +15846,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Function config_test_cache_flush\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/config/tests/config_test/config_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\config_test\\\\ConfigActionErrorEntity\\\\DuplicatePluralizedMethodName\\:\\:testMethod\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config/tests/config_test/src/ConfigActionErrorEntity/DuplicatePluralizedMethodName.php',
@@ -28699,6 +28705,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function _locale_refresh_translations\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/locale/locale.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function locale_cache_flush\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/locale.module',
 ];
@@ -46130,6 +46142,12 @@ $ignoreErrors[] = [
 	'message' => '#^Function update_script_test_update_last_removed\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/update_script_test/update_script_test.install',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function update_script_test_cache_flush\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/update_script_test/update_script_test.module',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
