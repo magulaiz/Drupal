@@ -89,6 +89,7 @@ abstract class EntityViewDisplayResourceTestBase extends ConfigEntityResourceTes
       'status' => TRUE,
       'targetEntityType' => 'node',
       'uuid' => $this->entity->uuid(),
+      'pageDisplay' => FALSE,
     ];
   }
 
