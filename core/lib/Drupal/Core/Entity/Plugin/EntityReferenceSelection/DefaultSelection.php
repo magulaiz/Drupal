@@ -4,6 +4,7 @@ namespace Drupal\Core\Entity\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginBase;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface;
@@ -466,6 +467,11 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     // Add the Selection handler for system_query_entity_reference_alter().
     $query->addTag('entity_reference');
     $query->addMetaData('entity_reference_selection_handler', $this);
+
+    if ($configuration['entity'] instanceof ContentEntityInterface && $configuration['entity']->isTranslatable()) {
+      $langcode = $configuration['entity']->language()->getId();
+      $query->addMetaData('langcode', $langcode);
+    }
 
     // Add the sort option.
     if ($configuration['sort']['field'] !== '_none') {
