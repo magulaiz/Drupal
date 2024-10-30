@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Component\HttpFoundation;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;

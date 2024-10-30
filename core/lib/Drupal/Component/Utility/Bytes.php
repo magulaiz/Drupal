@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Component\Utility;
 
 use Symfony\Component\Validator\Context\ExecutionContextInterface;

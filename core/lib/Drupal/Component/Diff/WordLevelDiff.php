@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Component\Diff;
 
 use Drupal\Component\Diff\Engine\HWLDFWordAccumulator;

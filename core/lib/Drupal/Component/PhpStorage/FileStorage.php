@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Component\PhpStorage;
 
 use Drupal\Component\FileSecurity\FileSecurity;

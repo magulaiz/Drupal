@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Component\Annotation\Reflection;
 
 use Drupal\Component\ClassFinder\ClassFinderInterface;
