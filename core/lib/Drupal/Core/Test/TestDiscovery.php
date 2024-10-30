@@ -7,6 +7,7 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
+use Drupal\TestTools\PhpUnitRunner;
 
 /**
  * Discovers available tests.
@@ -158,7 +159,8 @@ class TestDiscovery {
     }
     $list = [];
 
-    $classmap = $this->findAllClassFiles($extension, $directory);
+    $runner = PhpUnitRunner::create(\Drupal::getContainer());
+    $classmap = $runner->getTestClassMap($types, $extension, $directory);
 
     // Prevent expensive class loader lookups for each reflected test class by
     // registering the complete classmap of test classes to the class loader.
@@ -218,6 +220,7 @@ class TestDiscovery {
    *   fully-qualified classnames to path names.
    */
   public function findAllClassFiles($extension = NULL, ?string $directory = NULL) {
+    trigger_error(__METHOD__ . '() is deprecated in drupal:11.x.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/7654320', E_USER_DEPRECATED);
     $classmap = [];
     $namespaces = $this->registerTestNamespaces();
     if (isset($extension)) {
@@ -258,6 +261,7 @@ class TestDiscovery {
    * @see https://www.drupal.org/node/2296635
    */
   public static function scanDirectory($namespace_prefix, $path) {
+    trigger_error(__METHOD__ . '() is deprecated in drupal:11.x.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/7654320', E_USER_DEPRECATED);
     if (!str_ends_with($namespace_prefix, '\\')) {
       throw new \InvalidArgumentException("Namespace prefix for $path must contain a trailing namespace separator.");
     }

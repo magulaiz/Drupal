@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\TestRun;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -22,7 +23,7 @@ use Symfony\Component\Process\Process;
  *
  * @internal
  */
-class PhpUnitRunner implements ContainerInjectionInterface {
+final class PhpUnitRunner implements ContainerInjectionInterface {
 
   /**
    * @param string $appRoot
@@ -33,13 +34,15 @@ class PhpUnitRunner implements ContainerInjectionInterface {
   public function __construct(
     public readonly string $appRoot,
     public readonly string $workingDirectory,
+    private readonly ClassLoader $classLoader,
   ) {
   }
 
   public static function create(ContainerInterface $container): static {
     return new static(
       (string) $container->getParameter('app.root'),
-      (string) $container->get('file_system')->realpath('public://simpletest')
+      (string) $container->get('file_system')->realpath('public://simpletest'),
+      $container->get('class_loader'),
     );
   }
 
@@ -147,7 +150,7 @@ class PhpUnitRunner implements ContainerInjectionInterface {
   /**
    * @todo Fix docs.
    */
-  public function getTestsList(?string $suite = NULL): array {
+  public function getTestClassMap(?array $suites = NULL, ?string $extension = NULL, ?string $directory = NULL): array {
     $map = [
       'PHPUnit-FunctionalJavascript' => 'functional-javascript',
       'PHPUnit-Functional' => 'functional',
@@ -155,24 +158,49 @@ class PhpUnitRunner implements ContainerInjectionInterface {
       'PHPUnit-Unit' => 'unit',
       'PHPUnit-Build' => 'build',
     ];
-    $suite = $suite ? ($map[$suite] ?? $suite) : NULL;
+    if ($suites !== NULL) {
+      $tmp = [];
+      foreach ($suites as $i) {
+        $tmp[] = $map[$i] ?? $i;
+      }
+      $suites = $tmp;
+    }
 
     $xmlOutputFile = $this->workingDirectory . DIRECTORY_SEPARATOR . 'test-list.xml';
     touch($xmlOutputFile);
     $realXmlOutputFile = realpath($xmlOutputFile);
     $command = [
+      $this->phpUnitCommand(),
       '--list-tests-xml',
       $realXmlOutputFile,
     ];
 
-    if ($suite) {
+    if ($suites !== NULL) {
       $command[] = '--testsuite';
-      $command[] = $suite;
+      $command[] = implode(',', $suites);
     }
 
     $status = $this->runPhpUnit($command, [], $output, $error);
 
-    return [$status, $output, $error];
+    $phpUnitXmlList = new \DOMDocument();
+    $phpUnitXmlList->loadXML(file_get_contents($realXmlOutputFile));
+    @unlink($realXmlOutputFile);
+
+    $phpUnitList = [];
+    foreach ($phpUnitXmlList->getElementsByTagName('testCaseClass') as $node) {
+      $class = $node->getAttribute('name');
+      if ($extension !== NULL) {
+        // @todo To be completed.
+        continue;
+      }
+      $file = $this->classLoader->findFile($class);
+      if ($directory !== NULL && !str_contains($file, $directory)) {
+        continue;
+      }
+      $phpUnitList[$class] = $file;
+    }
+
+    return $phpUnitList;
   }
 
 }
