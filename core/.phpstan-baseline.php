@@ -20664,7 +20664,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method class@anonymous/core/modules/filter/src/Plugin/Filter/FilterHtml\\.php\\:265\\:\\:setTextMode\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method class@anonymous/core/modules/filter/src/Plugin/Filter/FilterHtml\\.php\\:267\\:\\:setTextMode\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/filter/src/Plugin/Filter/FilterHtml.php',
 ];

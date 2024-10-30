@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\toolbar\Element;
 
 use Drupal\Component\Utility\Html;

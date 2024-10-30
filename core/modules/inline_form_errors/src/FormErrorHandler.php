@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\inline_form_errors;
 
 use Drupal\Core\Form\FormElementHelper;

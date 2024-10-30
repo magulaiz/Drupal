@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\node\ConfigTranslation;
 
 use Drupal\config_translation\ConfigEntityMapper;

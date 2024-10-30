@@ -5,6 +5,8 @@
  * Contains post update hooks for the text module.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_removed_post_updates().
  */

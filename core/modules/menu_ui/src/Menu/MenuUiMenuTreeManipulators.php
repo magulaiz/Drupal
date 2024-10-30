@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\menu_ui\Menu;
 
 use Drupal\Core\Access\AccessResult;

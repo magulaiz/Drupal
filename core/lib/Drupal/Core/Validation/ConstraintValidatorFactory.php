@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Validation;
 
 use Drupal\Core\DependencyInjection\ClassResolverInterface;

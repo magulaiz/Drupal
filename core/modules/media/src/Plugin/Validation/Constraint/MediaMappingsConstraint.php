@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\media\Plugin\Validation\Constraint;
 
 use Symfony\Component\Validator\Constraint;

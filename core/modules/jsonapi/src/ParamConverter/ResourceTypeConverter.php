@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jsonapi\ParamConverter;
 
 use Drupal\Core\ParamConverter\ParamConverterInterface;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config_translation;
 
 use Drupal\Component\Plugin\PluginManagerInterface;

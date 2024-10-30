@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Entity\Plugin\DataType\Deriver;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

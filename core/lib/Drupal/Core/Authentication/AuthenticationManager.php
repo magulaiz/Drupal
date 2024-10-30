@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Authentication;
 
 use Drupal\Core\Routing\RouteMatch;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Core\Form\FormInterface;

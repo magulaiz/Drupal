@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config_translation\Plugin\Menu\LocalTask;
 
 use Drupal\Core\Menu\LocalTaskDefault;

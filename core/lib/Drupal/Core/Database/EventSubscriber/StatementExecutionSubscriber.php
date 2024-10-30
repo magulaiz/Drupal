@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Database\EventSubscriber;
 
 use Drupal\Core\Database\Database;

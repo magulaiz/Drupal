@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\content_moderation\Entity\Handler;
 
 use Drupal\Core\Entity\ContentEntityInterface;

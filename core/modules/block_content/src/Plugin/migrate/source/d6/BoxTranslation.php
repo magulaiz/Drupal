@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\block_content\Plugin\migrate\source\d6;
 
 use Drupal\block_content\Plugin\migrate\source\d7\BlockCustomTranslation as D7BlockCustomTranslation;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Archiver;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;

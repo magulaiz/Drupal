@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migrate\Plugin\migrate\source;
 
 use Drupal\Core\Database\ConnectionNotDefinedException;

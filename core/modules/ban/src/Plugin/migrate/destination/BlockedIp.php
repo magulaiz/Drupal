@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\ban\Plugin\migrate\destination;
 
 use Drupal\ban\BanIpManagerInterface;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\layout_builder\EventSubscriber;
 
 use Drupal\block_content\BlockContentEvents;

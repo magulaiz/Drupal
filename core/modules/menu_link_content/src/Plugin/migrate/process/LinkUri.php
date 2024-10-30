@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\menu_link_content\Plugin\migrate\process;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;

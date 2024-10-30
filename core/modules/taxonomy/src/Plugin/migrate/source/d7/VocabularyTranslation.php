@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
 // cspell:ignore objectid objectindex plid textgroup

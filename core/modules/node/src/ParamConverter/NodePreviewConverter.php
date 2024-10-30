@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\node\ParamConverter;
 
 use Drupal\Core\TempStore\PrivateTempStoreFactory;

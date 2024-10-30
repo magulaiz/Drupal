@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\node\Plugin\Action;
 
 use Drupal\Core\Action\Attribute\Action;

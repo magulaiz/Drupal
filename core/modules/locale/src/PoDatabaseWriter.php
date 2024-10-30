@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\locale;
 
 use Drupal\Component\Gettext\PoHeader;

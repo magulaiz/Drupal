@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jsonapi\DependencyInjection\Compiler;
 
 use Drupal\serialization\RegisterSerializationClassesCompilerPass as DrupalRegisterSerializationClassesCompilerPass;

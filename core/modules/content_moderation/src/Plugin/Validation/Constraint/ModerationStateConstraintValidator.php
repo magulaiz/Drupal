@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\content_moderation\Plugin\Validation\Constraint;
 
 use Drupal\content_moderation\StateTransitionValidationInterface;

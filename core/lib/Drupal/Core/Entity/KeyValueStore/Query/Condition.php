@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Entity\KeyValueStore\Query;
 
 use Drupal\Core\Config\Entity\Query\Condition as ConditionParent;

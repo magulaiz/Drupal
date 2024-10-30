@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\automated_cron\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

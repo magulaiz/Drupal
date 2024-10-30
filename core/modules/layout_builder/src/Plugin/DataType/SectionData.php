@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\layout_builder\Plugin\DataType;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;

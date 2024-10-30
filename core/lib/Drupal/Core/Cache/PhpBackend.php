@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Cache;
 
 use Drupal\Component\Assertion\Inspector;
@@ -252,7 +254,9 @@ class PhpBackend implements CacheBackendInterface {
    *   The cache item to store.
    */
   protected function writeItem($cidhash, \stdClass $item) {
-    $content = '<?php return unserialize(' . var_export(serialize($item), TRUE) . ');';
+    $content = '<?php
+
+declare(strict_types=1); return unserialize(' . var_export(serialize($item), TRUE) . ');';
     $this->storage()->save($cidhash, $content);
   }
 

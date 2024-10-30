@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jsonapi\ResourceType;
 
 use Drupal\Component\Assertion\Inspector;

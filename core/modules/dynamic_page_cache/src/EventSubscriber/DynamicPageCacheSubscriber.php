@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\dynamic_page_cache\EventSubscriber;
 
 use Drupal\Core\Cache\Cache;

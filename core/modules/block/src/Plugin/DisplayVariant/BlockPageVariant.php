@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\block\Plugin\DisplayVariant;
 
 use Drupal\block\BlockRepositoryInterface;

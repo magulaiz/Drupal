@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Messenger;
 
 use Drupal\Component\Render\MarkupInterface;

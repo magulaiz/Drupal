@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\block\EventSubscriber;
 
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;

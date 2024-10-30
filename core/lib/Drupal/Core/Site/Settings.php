@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Site;
 
 use Drupal\Component\Utility\Crypt;

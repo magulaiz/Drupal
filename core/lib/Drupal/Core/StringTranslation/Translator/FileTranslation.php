@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\StringTranslation\Translator;
 
 use Drupal\Component\Gettext\PoStreamReader;

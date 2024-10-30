@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\taxonomy\Plugin\views\argument_validator;
 
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;

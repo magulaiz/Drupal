@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\layout_builder;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;

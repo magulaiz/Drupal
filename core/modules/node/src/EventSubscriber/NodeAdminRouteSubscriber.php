@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\node\EventSubscriber;
 
 use Drupal\Core\Config\ConfigCrudEvent;

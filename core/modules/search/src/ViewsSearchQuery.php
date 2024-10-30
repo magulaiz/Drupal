@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\search;
 
 use Drupal\Core\Database\Query\ConditionInterface;

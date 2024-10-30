@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\media_library;
 
 use Drupal\Component\Utility\Crypt;

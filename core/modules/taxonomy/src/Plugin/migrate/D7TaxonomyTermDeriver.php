@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\taxonomy\Plugin\migrate;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;

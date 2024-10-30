@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\system\Plugin\Archiver;
 
 use Drupal\Core\Archiver\Attribute\Archiver;

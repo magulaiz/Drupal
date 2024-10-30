@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Command;
 
 use Drupal\Component\ProxyBuilder\ProxyBuilder;
@@ -71,6 +73,8 @@ class GenerateProxyClassCommand extends Command {
 
       $file_string = <<<EOF
 <?php
+
+declare(strict_types=1);
 // phpcs:ignoreFile
 
 /**

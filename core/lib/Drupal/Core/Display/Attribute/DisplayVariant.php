@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Display\Attribute;
 
 use Drupal\Component\Plugin\Attribute\Plugin;

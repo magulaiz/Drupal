@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Config\Entity\Query;
 
 use Drupal\Core\Config\Config;

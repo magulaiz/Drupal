@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Block\Attribute;
 
 use Drupal\Component\Plugin\Attribute\Plugin;

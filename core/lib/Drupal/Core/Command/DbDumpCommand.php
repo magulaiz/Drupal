@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Command;
 
 use Drupal\Component\Utility\Variable;
@@ -405,7 +407,6 @@ class DbDumpCommand extends DbCommandBase {
     // This is because the files can be huge and coding standards are
     // irrelevant.
     $script = <<<'END_OF_SCRIPT'
-<?php
 // phpcs:ignoreFile
 /**
  * @file

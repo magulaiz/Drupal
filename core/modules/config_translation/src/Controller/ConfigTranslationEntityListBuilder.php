@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config_translation\Controller;
 
 use Drupal\Core\Entity\EntityInterface;

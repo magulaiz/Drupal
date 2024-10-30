@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\dblog\Logger;
 
 use Drupal\Core\Database\Connection;

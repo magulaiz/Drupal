@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\workspaces\EventSubscriber;
 
 use Drupal\Core\Routing\CacheableRouteProviderInterface;

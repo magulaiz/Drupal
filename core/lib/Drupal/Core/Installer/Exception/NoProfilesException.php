@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Installer\Exception;
 
 use Drupal\Core\StringTranslation\TranslationInterface;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\shortcut\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;

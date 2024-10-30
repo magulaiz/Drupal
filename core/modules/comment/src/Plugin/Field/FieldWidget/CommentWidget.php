@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\comment\Plugin\Field\FieldWidget;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;

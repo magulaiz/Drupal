@@ -5,6 +5,8 @@
  * Post update functions for the comment module.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_removed_post_updates().
  */

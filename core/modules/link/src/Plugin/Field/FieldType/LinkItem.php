@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\link\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Random;

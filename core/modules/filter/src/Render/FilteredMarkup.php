@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\filter\Render;
 
 use Drupal\Component\Render\MarkupInterface;

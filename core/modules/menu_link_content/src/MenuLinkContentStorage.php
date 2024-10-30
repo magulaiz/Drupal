@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\menu_link_content;
 
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migrate\Plugin\Discovery;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\responsive_image\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\file\Validation;
 
 use Drupal\Component\Utility\Bytes;

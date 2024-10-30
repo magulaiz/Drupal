@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\history;
 
 use Drupal\Core\Render\Element\RenderCallbackInterface;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\system\Access;
 
 use Drupal\Core\Routing\Access\AccessInterface;

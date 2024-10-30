@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\user\Plugin\views\argument_default;
 
 use Drupal\Core\Cache\Cache;

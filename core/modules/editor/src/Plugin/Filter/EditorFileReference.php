@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\editor\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;

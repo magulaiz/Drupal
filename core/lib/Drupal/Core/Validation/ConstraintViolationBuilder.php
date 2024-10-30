@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Validation;
 
 // phpcs:ignoreFile Portions of this file are a direct copy of

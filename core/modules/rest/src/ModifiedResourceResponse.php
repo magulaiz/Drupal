@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\rest;
 
 use Symfony\Component\HttpFoundation\Response;

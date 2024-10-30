@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\link\Plugin\Validation\Constraint;
 
 use Drupal\Component\Utility\UrlHelper;

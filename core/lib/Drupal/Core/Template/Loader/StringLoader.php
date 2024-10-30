@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Template\Loader;
 
 use Twig\Loader\LoaderInterface;

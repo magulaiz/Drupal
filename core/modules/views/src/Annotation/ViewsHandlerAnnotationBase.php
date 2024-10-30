@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views\Annotation;
 
 use Drupal\Component\Annotation\PluginID;

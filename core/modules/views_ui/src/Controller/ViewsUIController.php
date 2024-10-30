@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views_ui\Controller;
 
 use Drupal\Component\Utility\Tags;

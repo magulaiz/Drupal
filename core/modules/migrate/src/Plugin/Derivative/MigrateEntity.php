@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migrate\Plugin\Derivative;
 
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;

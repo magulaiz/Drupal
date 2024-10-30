@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views\Plugin\views\row;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;

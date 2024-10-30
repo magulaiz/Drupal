@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\block_content\Plugin\Validation\Constraint;
 
 use Drupal\block_content\BlockContentInterface;

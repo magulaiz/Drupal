@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\workflows\Exception;
 
 use Drupal\Core\Config\ConfigException;

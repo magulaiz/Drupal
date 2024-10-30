@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\path\Plugin\migrate\source\d7;
 
 use Drupal\path\Plugin\migrate\source\UrlAliasBase;

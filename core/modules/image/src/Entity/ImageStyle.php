@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\image\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;

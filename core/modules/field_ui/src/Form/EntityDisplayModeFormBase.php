@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;

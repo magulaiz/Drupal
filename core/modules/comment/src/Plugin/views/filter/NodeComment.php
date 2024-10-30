@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\comment\Plugin\views\filter;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;

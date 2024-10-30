@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\content_translation\Plugin\migrate\source;
 
 use Drupal\migrate\Plugin\MigrateIdMapInterface;

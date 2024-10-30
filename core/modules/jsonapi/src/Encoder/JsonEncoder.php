@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jsonapi\Encoder;
 
 use Drupal\serialization\Encoder\JsonEncoder as SerializationJsonEncoder;

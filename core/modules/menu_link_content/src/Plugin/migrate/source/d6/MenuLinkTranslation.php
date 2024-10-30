@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\menu_link_content\Plugin\migrate\source\d6;
 
 use Drupal\content_translation\Plugin\migrate\source\I18nQueryTrait;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\system\Plugin\migrate\destination\d7;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;

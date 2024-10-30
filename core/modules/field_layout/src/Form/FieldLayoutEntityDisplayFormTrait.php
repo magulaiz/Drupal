@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\field_layout\Form;
 
 use Drupal\Core\Form\FormStateInterface;

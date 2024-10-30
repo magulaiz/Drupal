@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\content_translation;
 
 use Drupal\Core\Entity\EntityInterface;

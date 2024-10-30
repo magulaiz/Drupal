@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\file\Plugin\migrate\destination;
 
 use Drupal\Core\Field\Plugin\Field\FieldType\UriItem;

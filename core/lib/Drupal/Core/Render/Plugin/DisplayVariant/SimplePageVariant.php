@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Render\Plugin\DisplayVariant;
 
 use Drupal\Core\Display\Attribute\PageDisplayVariant;

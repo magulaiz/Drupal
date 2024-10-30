@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\field\Plugin\migrate\field;
 
 use Drupal\migrate\Plugin\MigrationInterface;

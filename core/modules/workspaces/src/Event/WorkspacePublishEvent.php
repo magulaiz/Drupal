@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\workspaces\Event;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;

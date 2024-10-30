@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jsonapi\Normalizer\Value;
 
 use Drupal\Component\Assertion\Inspector;

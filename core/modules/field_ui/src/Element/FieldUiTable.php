@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\field_ui\Element;
 
 use Drupal\Component\Utility\Html;

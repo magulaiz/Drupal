@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\comment\Plugin\migrate;
 
 use Drupal\migrate_drupal\Plugin\migrate\FieldMigration;

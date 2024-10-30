@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Action\Plugin\Action;
 
 use Drupal\Component\Render\PlainTextOutput;

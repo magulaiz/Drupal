@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\workflows\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;

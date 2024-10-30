@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config_translation\Plugin\Derivative;
 
 use Drupal\config_translation\ConfigMapperManagerInterface;

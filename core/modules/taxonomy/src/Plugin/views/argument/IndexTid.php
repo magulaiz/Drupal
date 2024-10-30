@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\taxonomy\Entity\Term;

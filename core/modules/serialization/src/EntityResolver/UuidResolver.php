@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\serialization\EntityResolver;
 
 use Drupal\Core\Entity\EntityRepositoryInterface;

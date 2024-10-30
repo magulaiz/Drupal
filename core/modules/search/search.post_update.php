@@ -5,6 +5,8 @@
  * Post update functions for Search module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\block\BlockInterface;
 

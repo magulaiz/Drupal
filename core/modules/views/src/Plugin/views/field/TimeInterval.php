@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Datetime\DateFormatterInterface;

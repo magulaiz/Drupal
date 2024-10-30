@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;

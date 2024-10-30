@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\file\Upload;
 
 use Symfony\Component\HttpFoundation\Request;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\search\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;

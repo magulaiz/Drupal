@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\TypedData\Type;
 
 use Drupal\Core\Datetime\DrupalDateTime;

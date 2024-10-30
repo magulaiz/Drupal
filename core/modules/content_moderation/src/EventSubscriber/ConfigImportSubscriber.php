@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\content_moderation\EventSubscriber;
 
 use Drupal\Core\Config\ConfigImporterEvent;

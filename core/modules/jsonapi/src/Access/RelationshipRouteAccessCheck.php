@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jsonapi\Access;
 
 use Drupal\Core\Access\AccessResult;

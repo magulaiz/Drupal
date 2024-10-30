@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\workspaces\EntityQuery;
 
 use Drupal\Core\Entity\Query\Sql\QueryAggregate as BaseQueryAggregate;

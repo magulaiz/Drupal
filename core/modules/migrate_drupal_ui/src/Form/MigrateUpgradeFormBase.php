@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migrate_drupal_ui\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

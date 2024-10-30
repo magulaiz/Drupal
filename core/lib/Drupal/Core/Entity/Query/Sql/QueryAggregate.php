@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Entity\Query\QueryAggregateInterface;

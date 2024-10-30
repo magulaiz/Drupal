@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\block_content\Plugin\views\wizard;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;

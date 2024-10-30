@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\settings_tray\Access;
 
 use Drupal\block\BlockInterface;

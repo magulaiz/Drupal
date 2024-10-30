@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\big_pipe\Controller;
 
 use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;

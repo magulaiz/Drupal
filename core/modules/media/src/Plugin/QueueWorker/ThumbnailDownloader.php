@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\media\Plugin\QueueWorker;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
