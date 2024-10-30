@@ -401,7 +401,7 @@ class UserLoginTest extends BrowserTestBase {
     \Drupal::config('user.settings')
       ->set('user_login_method', UserInterface::USER_LOGIN_EMAIL_ONLY)
       ->save();
-    // Using e-mail shoud pass.
+    // Using e-mail should pass.
     $this->drupalLogin($account, TRUE);
     // Using username should fail.
     $this->assertFailedLogin($account);
@@ -411,7 +411,7 @@ class UserLoginTest extends BrowserTestBase {
       ->set('user_login_method', UserInterface::USER_LOGIN_USERNAME_OR_EMAIL)
       ->save();
 
-      // Using e-mail should pass.
+    // Using e-mail should pass.
     $this->drupalLogin($account, TRUE);
     // Using username should pass.
     $this->drupalLogin($account);
