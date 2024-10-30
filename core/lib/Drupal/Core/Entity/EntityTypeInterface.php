@@ -487,8 +487,8 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * displays.
    *
    * @return string|null
-   *   The entity type for which this entity provides bundles, or NULL if does
-   *   not provide bundles for another entity type.
+   *   The entity type ID for which this entity provides bundles, or NULL if
+   *   does not provide bundles for another entity type.
    */
   public function getBundleOf();
 
