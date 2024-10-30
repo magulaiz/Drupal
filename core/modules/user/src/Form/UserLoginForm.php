@@ -64,7 +64,7 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
    *
    * @var \Drupal\Component\Utility\EmailValidatorInterface
    */
-  protected $emailValidator;
+  protected ?EmailValidatorInterface $emailValidator = NULL;
 
   /**
    * Constructs a new UserLoginForm.
