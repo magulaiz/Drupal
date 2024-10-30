@@ -48,3 +48,13 @@ function image_module_test_image_style_flush($style, $path = NULL) {
   $state = \Drupal::state();
   $state->set('image_module_test_image_style_flush.called', $path);
 }
+
+/**
+ * Implements hook_image_derivative_created().
+ */
+function image_module_test_image_derivative_created(string $original_uri, string $style, string $derivative_uri) {
+  $state = \Drupal::state();
+  $state->set('image_module_test_image_derivative_created.original_uri', $original_uri);
+  $state->set('image_module_test_image_derivative_created.style', $style);
+  $state->set('image_module_test_image_derivative_created.derivative_uri', $derivative_uri);
+}
