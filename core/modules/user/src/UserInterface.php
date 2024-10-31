@@ -233,7 +233,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    * 
    * An account is admin account if it has at least one admin role.
    * 
-   * @retun bool
+   * @return bool
    *   Whether this user is an admin user.
    */
   public function isAdmin(): bool;
