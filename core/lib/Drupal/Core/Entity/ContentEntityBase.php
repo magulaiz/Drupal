@@ -200,7 +200,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    *
    * @var string|null
    */
-  protected $fieldStorageTypeRevisionId;
+  protected $fieldStorageTypeRevisionField;
 
   /**
    * {@inheritdoc}
@@ -346,14 +346,14 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     }
 
     // Get the field storage type fo the revision field.
-    if (!$this->fieldStorageTypeRevisionId) {
+    if (!$this->fieldStorageTypeRevisionField) {
       $revisionKey = $this->getEntityType()->getKey('revision');
       if ($this->hasField($revisionKey)) {
-        $this->fieldStorageTypeRevisionId = $this->getFieldDefinition($revisionKey)->getType();
+        $this->fieldStorageTypeRevisionField = $this->getFieldDefinition($revisionKey)->getType();
       }
     }
 
-    if (($this->fieldStorageTypeRevisionId === 'integer') && !is_null($this->loadedRevisionId)) {
+    if (($this->fieldStorageTypeRevisionField === 'integer') && !is_null($this->loadedRevisionId)) {
       return (int) $this->loadedRevisionId;
     }
 
