@@ -78,11 +78,13 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   The event dispatcher.
    * @param array $hookImplementationsMap
    *   An array keyed by hook, classname, method and the value is the module.
+   * @param array $groupIncludes
+   *   An array of .inc files to get helpers from.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, array $module_list, protected EventDispatcherInterface $eventDispatcher, protected array $hookImplementationsMap) {
+  public function __construct($root, array $module_list, protected EventDispatcherInterface $eventDispatcher, protected array $hookImplementationsMap, protected array $groupIncludes = []) {
     $this->root = $root;
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
@@ -562,6 +564,11 @@ class ModuleHandler implements ModuleHandlerInterface {
           if (isset($this->moduleList[$module])) {
             $this->invokeMap[$hook][$module][] = $callable;
           }
+        }
+      }
+      if (isset($this->groupIncludes[$hook])) {
+        foreach ($this->groupIncludes[$hook] as $include) {
+          include_once $include;
         }
       }
     }
