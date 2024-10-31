@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\user\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
@@ -84,7 +86,7 @@ class SendWelcomeMessage extends ActionBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\user\UserInterface $object */
     $access = $object->status->access('edit', $account, TRUE)
       ->andIf($object->access('update', $account, TRUE));
