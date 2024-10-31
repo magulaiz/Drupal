@@ -111,11 +111,16 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    */
   protected function runCommand(string $test_class_name, string $log_junit_file_path, ?int &$status = NULL, ?array &$output = NULL): void {
     global $base_url;
-    // Setup an environment variable containing the database connection so that
-    // functional tests can connect to the database.
-    $process_environment_variables = [
-      'SIMPLETEST_DB' => Database::getConnectionInfoAsUrl(),
-    ];
+    $process_environment_variables = [];
+
+    // Setup an environment variable containing the database connection if
+    // available, so that non-unit tests can connect to the database.
+    try {
+      $process_environment_variables['SIMPLETEST_DB'] = Database::getConnectionInfoAsUrl();
+    }
+    catch (\RuntimeException) {
+      // Just continue with no variable set.
+    }
 
     // Setup an environment variable containing the base URL, if it is available.
     // This allows functional tests to browse the site under test. When running
