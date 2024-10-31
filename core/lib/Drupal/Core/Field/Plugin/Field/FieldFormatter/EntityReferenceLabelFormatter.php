@@ -62,18 +62,17 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $entity) {
       $label = $entity->label();
-      // If the link is to be displayed and the entity has a uri, display a
-      // link.
-      if ($output_as_link && !$entity->isNew()) {
+      // If the link is to be displayed and the entity has a URI and the user
+      // has view access (not just view label) then display a link.
+      if ($output_as_link && !$entity->isNew() && $entity->access('view')) {
         try {
           $uri = $entity->toUrl();
         }
-        catch (UndefinedLinkTemplateException) {
-          // This exception is thrown by
-          // \Drupal\Core\Entity\EntityInterface::toUrl() and it means that the
-          // entity type doesn't have a link template nor a valid
-          // "uri_callback", so don't bother trying to output a link for the
-          // rest of the referenced entities.
+        catch (UndefinedLinkTemplateException $e) {
+          // This exception is thrown by \Drupal\Core\Entity\Entity::urlInfo()
+          // and it means that the entity type doesn't have a link template nor
+          // a valid "uri_callback", so don't bother trying to output a link for
+          // the rest of the referenced entities.
           $output_as_link = FALSE;
         }
       }
