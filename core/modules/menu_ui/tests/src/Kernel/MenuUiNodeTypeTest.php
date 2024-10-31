@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\menu_ui\Kernel;
 
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\system\Entity\Menu;
@@ -56,7 +57,7 @@ class MenuUiNodeTypeTest extends KernelTestBase {
     Menu::create(['id' => 'a', 'label' => 'Z'])->save();
     Menu::create(['id' => 'b', 'label' => 'X'])->save();
     Menu::create(['id' => 'c', 'label' => 'Y'])->save();
-    $this->assertMenuNamesAreSorted(NodeType::create());
+    $this->assertMenuNamesAreSorted(NodeType::create(['type' => $this->randomMachineName()]));
     $this->assertMenuNamesAreSorted($this->createContentType());
   }
 

@@ -69,6 +69,7 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
       'hidden' => [
         'bar' => TRUE,
       ],
+      'pageDisplay' => FALSE,
     ];
     $this->assertEntityValues($expected, $entity_display->toArray());
 
