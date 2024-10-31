@@ -1,4 +1,4 @@
-# cspell:ignore cobertura drupaltestbot drupaltestbotpw Dwebdriver logfile testdox XVFB
+# cspell:ignore drupaltestbot drupaltestbotpw Dwebdriver logfile XVFB
 
 stages:
   - 🗜️ Test

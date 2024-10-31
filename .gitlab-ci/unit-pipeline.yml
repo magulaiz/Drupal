@@ -17,20 +17,6 @@ default:
       - stuck_or_timeout_failure
       - runner_system_failure
       - scheduler_failure
-  image:
-    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
-  before_script: 
-    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
-    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/ 
-  after_script:
-    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
-  artifacts:
-    when: always
-    expire_in: 6 mos
-    reports:
-      junit: ./sites/default/files/simpletest/phpunit-*.xml
-    paths:
-      - ./sites/default/files/simpletest/phpunit-*.xml
 
 .default-job-settings: &default-job-settings
   stage: 🗜️ Test
@@ -63,8 +49,20 @@ variables:
     TESTSUITE: PHPUnit-Unit
     KUBERNETES_CPU_REQUEST: "1"
     CONCURRENCY: 6
+  before_script:
+    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
+    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
   script:
     - sudo -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
+  after_script:
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: ./sites/default/files/simpletest/phpunit-*.xml
+    paths:
+      - ./sites/default/files/simpletest/phpunit-*.xml
 
 '✅️ PHPStan Tests':
   <<: [ *default-job-settings ]
@@ -78,15 +76,11 @@ variables:
         - composer/Metapackage/PinnedDevDependencies/composer.json
     - when: manual
       allow_failure: true
-  # Default job settings runs a script that expects vendor to exist.
-  before_script: []
   script:
     - docker-php-ext-enable pcov
     - cd core/tests/PHPStan
     - composer install
     - vendor/bin/phpunit tests --testdox --coverage-text --colors=always --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
-  # Default job settings runs a script that junit files in a specific location.
-  after_script: []
   artifacts:
     when: always
     reports:
