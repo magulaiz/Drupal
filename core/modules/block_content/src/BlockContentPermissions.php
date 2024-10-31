@@ -81,4 +81,22 @@ class BlockContentPermissions implements ContainerInjectionInterface {
     ];
   }
 
+  /**
+   * Gets permission for block bundle operation.
+   *
+   * @param string $block_bundle
+   *   The block bundle.
+   * @param string $operation
+   *   The operation performed.
+   *
+   * @return string
+   *   The required permission.
+   */
+  public static function getBundlePermission(string $block_bundle, string $operation): string {
+    if ($operation === 'create') {
+      return 'create ' . $block_bundle . ' block content';
+    }
+    return $operation . ' any ' . $block_bundle . ' block content';
+  }
+
 }
