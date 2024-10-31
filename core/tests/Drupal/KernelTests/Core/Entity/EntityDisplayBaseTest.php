@@ -38,6 +38,7 @@ class EntityDisplayBaseTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('comment');
     $this->installEntitySchema('entity_test');
+    $this->installConfig(['entity_test']);
     $this->installSchema('user', ['users_data']);
   }
 
