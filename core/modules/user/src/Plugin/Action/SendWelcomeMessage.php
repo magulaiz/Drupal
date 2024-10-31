@@ -64,7 +64,7 @@ final class SendWelcomeMessage extends ActionBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function execute(?ContentEntityInterface $entity = NULL): void {
+  public function execute(?AccountInterface $account = NULL): void {
 
     if (empty($account) || empty($account->getEmail())) {
       return;
