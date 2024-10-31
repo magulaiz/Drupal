@@ -17,6 +17,13 @@ default:
       - stuck_or_timeout_failure
       - runner_system_failure
       - scheduler_failure
+  parallel:
+    matrix:
+      - PHP_TARGET_ENV:
+        - "8.3-ubuntu"
+        - "8.4-ubuntu"
+  image:
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$PHP_TARGET_ENV-apache:production
 
 .default-job-settings: &default-job-settings
   stage: 🗜️ Test
