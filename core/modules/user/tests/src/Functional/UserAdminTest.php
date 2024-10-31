@@ -288,7 +288,7 @@ class UserAdminTest extends BrowserTestBase {
    *
    * @dataProvider awaitingApprovalNotifications
    */
-  public function testSendAwaitingApprovalEmailNotification($register_mode, $mail_id): void {
+  protected function testSendAwaitingApprovalEmailNotification($register_mode, $mail_id): void {
     $admin_user = $this->drupalCreateUser(['administer users']);
     $this->drupalLogin($admin_user);
 
