@@ -399,6 +399,14 @@ drupal.ajax:
     - core/loadjs
     - core/drupal.message
 
+drupal.ajax-error:
+  version: VERSION
+  js:
+    misc/ajax-error.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.message
+
 drupal.announce:
   version: VERSION
   js:
