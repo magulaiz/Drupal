@@ -69916,12 +69916,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Extension/InfoParserUnitTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Class Drupal\\\\Core\\\\Extension\\\\ModuleHandler constructor invoked with 5 parameters, 4 required\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Extension/ModuleHandlerTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function module_handler_test_hook_include\\(\\) has no return type specified\\.$#',
 	'count' => 1,
