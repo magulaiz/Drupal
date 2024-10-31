@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\menu_ui\Kernel;
 
-use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\system\Entity\Menu;

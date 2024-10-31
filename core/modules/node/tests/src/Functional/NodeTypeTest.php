@@ -110,7 +110,7 @@ class NodeTypeTest extends NodeTestBase {
       'bypass node access',
       'administer content types',
       'administer node fields',
-      'access content overview'
+      'access content overview',
     ]);
     $this->drupalLogin($web_user);
 
