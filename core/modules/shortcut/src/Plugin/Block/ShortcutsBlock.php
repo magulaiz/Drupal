@@ -27,7 +27,7 @@ class ShortcutsBlock extends BlockBase {
       '#create_placeholder' => TRUE,
       '#cache' => [
         'keys' => ['shortcut_set_block_links'],
-        'contexts' => ['user'],
+        'contexts' => ['user.shortcut_set'],
       ],
     ];
   }
