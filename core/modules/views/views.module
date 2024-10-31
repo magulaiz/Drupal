@@ -80,7 +80,7 @@ function views_views_pre_render($view) {
  * Register views theming functions and those that are defined via views plugin
  * definitions.
  */
-function views_theme($existing, $type, $theme, $path) {
+function views_theme($existing, $type, $theme, $path): array {
   \Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
 
   // Some quasi clever array merging here.
@@ -237,6 +237,10 @@ function views_preprocess_node(&$variables) {
   // \Drupal\views\Plugin\views\row\EntityRow::preRender().
   if (!empty($variables['node']->view) && $variables['node']->view->storage->id()) {
     $variables['view'] = $variables['node']->view;
+
+    // The view variable is deprecated.
+    $variables['deprecations']['view'] = "'view' is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3459903";
+
     // If a node is being rendered in a view, and the view does not have a path,
     // prevent drupal from accidentally setting the $page variable:
     if (!empty($variables['view']->current_display)
