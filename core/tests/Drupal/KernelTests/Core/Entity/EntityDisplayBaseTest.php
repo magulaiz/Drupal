@@ -204,7 +204,7 @@ class EntityDisplayBaseTest extends KernelTestBase {
     $this->assertSame('entity_test.entity_test.test', $copy->id());
     $another_copy = $display->createCopy('test', TRUE);
     $this->assertFalse($another_copy->isNew());
-    $this->assertSame('entity_test.entity_test.test', $another_copy->id());
+    $this->assertSame($copy->id(), $another_copy->id());
   }
 
 }
