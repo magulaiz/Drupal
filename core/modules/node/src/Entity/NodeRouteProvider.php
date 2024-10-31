@@ -19,7 +19,7 @@ class NodeRouteProvider implements EntityRouteProviderInterface {
     $route_collection = new RouteCollection();
     $route = (new Route('/node/{node}'))
       ->addDefaults([
-        '_controller' => '\Drupal\node\Controller\NodeViewController::view',
+        '_entity_view' => "node.full",
         '_title_callback' => '\Drupal\node\Controller\NodeViewController::title',
       ])
       ->setRequirement('node', '\d+')
