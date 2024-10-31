@@ -241,9 +241,3 @@ ckeditor5.plugin.ckeditor5_link_entity_suggestions:
       label: 'Allow download links'
       constraints:
         NotNull: ~
-    suggester:
-      type: string
-      label: 'The entity link suggester configuration to use'
-      constraints:
-        NotNull: ~
-        ConfigExists: []
