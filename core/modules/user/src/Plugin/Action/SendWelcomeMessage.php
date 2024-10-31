@@ -53,7 +53,7 @@ final class SendWelcomeMessage extends ActionBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function access($entity, ?AccountInterface $account = NULL, $return_as_object = FALSE): AccessResultInterface|bool {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE): AccessResultInterface|bool {
     /** @var \Drupal\user\UserInterface $object */
     $access = $object->status->access('edit', $account, TRUE)
       ->andIf($object->access('update', $account, TRUE));
