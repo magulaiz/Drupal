@@ -80,7 +80,6 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
           // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions::defaultConfiguration()
           'ckeditor5_link_entity_suggestions' => [
             'allow_download_links' => TRUE,
-            'suggester' => 'core.entity_link_suggester.everything',
           ],
         ],
       ],

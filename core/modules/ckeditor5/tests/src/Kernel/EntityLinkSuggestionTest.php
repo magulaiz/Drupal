@@ -8,7 +8,6 @@ namespace Drupal\Tests\ckeditor5\Kernel;
 
 use Drupal\ckeditor5\Controller\EntityLinkSuggestionsController;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
-use Drupal\Core\Entity\Entity\EntityLinkSuggester;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
@@ -50,8 +49,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Ensure core/modules/system/config/install/core.entity_link_suggester.everything.yml
-    // is installed.
     $this->installConfig(['system']);
     // Avoid needing to install the Stark theme.
     $this->config('system.theme')->delete();
@@ -88,7 +85,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
           // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions::defaultConfiguration()
           'ckeditor5_link_entity_suggestions' => [
             'allow_download_links' => TRUE,
-            'suggester' => 'core.entity_link_suggester.everything',
           ],
         ],
       ],
@@ -142,38 +138,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'title' => 'Deutsch foo',
     ])->setCreatedTime(1695058272);
     $translation->save();
-
-    // Create various other EntityLinkSuggesters:
-    EntityLinkSuggester::create([
-      'admin_label' => 'Nodes only',
-      'id' => 'nodes_only',
-      'entity_types' => [
-        'node' => [
-          'entity_type' => 'node',
-          'bundles' => NULL,
-        ],
-      ],
-    ])->save();
-    EntityLinkSuggester::create([
-      'admin_label' => 'Articles only',
-      'id' => 'articles_only',
-      'entity_types' => [
-        'node' => [
-          'entity_type' => 'node',
-          'bundles' => ['article'],
-        ],
-      ],
-    ])->save();
-    EntityLinkSuggester::create([
-      'admin_label' => 'Users only',
-      'id' => 'users_only',
-      'entity_types' => [
-        'node' => [
-          'entity_type' => 'user',
-          'bundles' => NULL,
-        ],
-      ],
-    ])->save();
   }
 
   /**
@@ -219,10 +183,9 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     ];
 
     // "f", multiple results, from node vs user.
-    yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="f"' => [
+    yield 'host entity type=node, host entity langcode=en, search term="f"' => [
       [
         'allow_download_links' => TRUE,
-        'suggester' => 'core.entity_link_suggester.everything',
       ],
       'f',
       'node',
@@ -232,10 +195,9 @@ class EntityLinkSuggestionTest extends KernelTestBase {
         $suggestion_user_1,
       ],
     ];
-    yield 'suggestions=default (everything), host entity type=user, host entity langcode=en, search term="f"' => [
+    yield 'host entity type=user, host entity langcode=en, search term="f"' => [
       [
         'allow_download_links' => TRUE,
-        'suggester' => 'core.entity_link_suggester.everything',
       ],
       'f',
       'user',
@@ -250,7 +212,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     yield 'suggestions=nodes only, host entity type=node, host entity langcode=en, search term="f"' => [
       [
         'allow_download_links' => TRUE,
-        'suggester' => 'core.entity_link_suggester.nodes_only',
       ],
       'f',
       'node',
@@ -262,7 +223,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     yield 'suggestions=users only, host entity type=node, host entity langcode=en, search term="f"' => [
       [
         'allow_download_links' => TRUE,
-        'suggester' => 'core.entity_link_suggester.users_only',
       ],
       'f',
       'node',
@@ -276,7 +236,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     yield 'suggestions=article nodes only, host entity type=node, host entity langcode=en, search term="f"' => [
       [
         'allow_download_links' => TRUE,
-        'suggester' => 'core.entity_link_suggester.articles_only',
       ],
       'f',
       'node',
@@ -292,10 +251,9 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     ];
 
     // "fo", single result, but different labels due to host entity langcode.
-    yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="fo"' => [
+    yield 'host entity type=node, host entity langcode=en, search term="fo"' => [
       [
         'allow_download_links' => TRUE,
-        'suggester' => 'core.entity_link_suggester.everything',
       ],
       'fo',
       'node',
@@ -304,10 +262,9 @@ class EntityLinkSuggestionTest extends KernelTestBase {
         $suggestion_node_1_en,
       ],
     ];
-    yield 'suggestions=default (everything), host entity type=node, host entity langcode=de, search term="fo"' => [
+    yield 'host entity type=node, host entity langcode=de, search term="fo"' => [
       [
         'allow_download_links' => TRUE,
-        'suggester' => 'core.entity_link_suggester.everything',
       ],
       'fo',
       'node',
@@ -319,10 +276,9 @@ class EntityLinkSuggestionTest extends KernelTestBase {
 
     // "Deutsch" (which appears only on a translation of an entity!), single
     // result, but different labels due to host entity langcode.
-    yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="Deutsch"' => [
+    yield 'host entity type=node, host entity langcode=en, search term="Deutsch"' => [
       [
         'allow_download_links' => TRUE,
-        'suggester' => 'core.entity_link_suggester.everything',
       ],
       'Deutsch',
       'node',
@@ -331,10 +287,9 @@ class EntityLinkSuggestionTest extends KernelTestBase {
         $suggestion_node_1_en,
       ],
     ];
-    yield 'suggestions=default (everything), host entity type=node, host entity langcode=de, search term="Deutsch"' => [
+    yield 'host entity type=node, host entity langcode=de, search term="Deutsch"' => [
       [
         'allow_download_links' => TRUE,
-        'suggester' => 'core.entity_link_suggester.everything',
       ],
       'Deutsch',
       'node',

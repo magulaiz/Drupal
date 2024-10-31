@@ -4,9 +4,3 @@ system.date_format_add:
   weight: -10
   appears_on:
     - entity.date_format.collection
-system.entity_link_suggester_add:
-  route_name: entity.entity_link_suggester.add_form
-  title: 'Add link suggester'
-  weight: -10
-  appears_on:
-    - entity.entity_link_suggester.collection

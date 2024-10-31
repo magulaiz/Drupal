@@ -1,6 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-id: everything
-admin_label: Everything!
-entity_types: null

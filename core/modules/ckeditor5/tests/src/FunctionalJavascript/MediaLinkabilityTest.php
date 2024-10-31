@@ -321,7 +321,6 @@ class MediaLinkabilityTest extends MediaTestBase {
 
     $settings['plugins']['ckeditor5_link_entity_suggestions'] = [
       'allow_download_links' => TRUE,
-      'suggester' => 'core.entity_link_suggester.everything',
     ];
 
     $editor->setSettings($settings);

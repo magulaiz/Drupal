@@ -92,7 +92,6 @@ class ConfigurablePluginTest extends KernelTestBase {
       ],
       'ckeditor5_link_entity_suggestions' => [
         'allow_download_links' => TRUE,
-        'suggester' => NULL,
       ],
       'ckeditor5_list' => [
         'properties' => [

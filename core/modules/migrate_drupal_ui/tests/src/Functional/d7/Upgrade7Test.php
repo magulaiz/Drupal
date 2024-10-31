@@ -89,7 +89,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'contact_form' => 3,
       'contact_message' => 0,
       'editor' => 2,
-      'entity_link_suggester' => 1,
       'field_config' => 90,
       'field_storage_config' => 69,
       'file' => 3,

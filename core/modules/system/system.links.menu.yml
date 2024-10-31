@@ -148,11 +148,6 @@ system.admin_config_content:
   parent: system.admin_config
   description: 'Configure content formatting and authoring.'
   weight: -15
-system.link_suggesters:
-  title: 'Link suggesters'
-  parent: system.admin_config_content
-  description: 'Configure link suggesters for use in text editors and link fields.'
-  route_name: entity.entity_link_suggester.collection
 system.admin_reports:
   title: Reports
   route_name: system.admin_reports
