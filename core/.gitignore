@@ -1,4 +1,4 @@
-# Ignore node_modules folder created when installing core's JavaScript
+# Ignore node_modules directory created when installing core's JavaScript
 # dependencies.
 node_modules
 yarn-error.log

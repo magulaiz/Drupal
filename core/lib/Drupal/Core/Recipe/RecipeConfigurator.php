@@ -42,7 +42,7 @@ final class RecipeConfigurator {
    */
   public static function getIncludedRecipe(string $include_path, string $name): Recipe {
     // In order to allow recipes to include core provided recipes, $name can be
-    // a Drupal root relative path to a recipe folder. For example, a recipe can
+    // a Drupal root relative path to a recipe directory. For example, a recipe can
     // include the core provided 'article_tags' recipe by listing the recipe as
     // 'core/recipes/article_tags'. It is strongly recommended not to rely on
     // relative paths for including recipes. Required recipes should be put in

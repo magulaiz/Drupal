@@ -26,7 +26,7 @@ class ConvertTest extends BrowserTestBase {
   protected static $modules = ['image'];
 
   /**
-   * Tests that files stored in the root folder are converted properly.
+   * Tests that files stored in the root directory are converted properly.
    */
   public function testConvertFileInRoot(): void {
     // Create the test image style with a Convert effect.

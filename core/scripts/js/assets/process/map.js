@@ -2,7 +2,7 @@
  * Process map files.
  *
  * In the `sources` member, remove all "../" values at the start of the file
- * names to avoid virtual files located outside of the library vendor folder.
+ * names to avoid virtual files located outside of the library vendor directory.
  *
  * @param {object} data
  *  Object passed to the callback.

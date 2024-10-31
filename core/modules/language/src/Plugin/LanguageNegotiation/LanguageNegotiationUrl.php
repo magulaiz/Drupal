@@ -182,7 +182,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
           }
         }
 
-        // Add Drupal's subfolder from the base_path if there is one.
+        // Add Drupal's subdirectory from the base_path if there is one.
         $options['base_url'] .= rtrim(base_path(), '/');
         if ($bubbleable_metadata) {
           $bubbleable_metadata->addCacheContexts(['languages:' . LanguageInterface::TYPE_URL, 'url.site']);

@@ -314,16 +314,16 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * {@inheritdoc}
    */
   public function createDerivative($original_uri, $derivative_uri) {
-    // If the source file doesn't exist, return FALSE without creating folders.
+    // If the source file doesn't exist, return FALSE without creating directories.
     $image = $this->getImageFactory()->get($original_uri);
     if (!$image->isValid()) {
       return FALSE;
     }
 
-    // Get the folder for the final location of this style.
+    // Get the directory for the final location of this style.
     $directory = \Drupal::service('file_system')->dirname($derivative_uri);
 
-    // Build the destination folder tree if it doesn't already exist.
+    // Build the destination directory tree if it doesn't already exist.
     if (!\Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
       \Drupal::logger('image')->error('Failed to create style directory: %directory', ['%directory' => $directory]);
       return FALSE;

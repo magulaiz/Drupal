@@ -4,7 +4,7 @@ media.settings:
   mapping:
     icon_base_uri:
       type: string
-      label: 'Full URI to a folder where the media icons will be installed'
+      label: 'Full URI to a directory where the media icons will be installed'
     iframe_domain:
       type: uri
       nullable: true

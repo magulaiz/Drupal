@@ -158,7 +158,7 @@ function views_theme($existing, $type, $theme, $path): array {
   // Register theme functions for all style plugins. It provides a basic auto
   // implementation of theme functions or template files by using the plugin
   // definitions (theme, theme_file, module, register_theme). Template files are
-  // assumed to be located in the templates folder.
+  // assumed to be located in the templates directory.
   foreach ($plugins as $type => $info) {
     foreach ($info as $def) {
       // Not all plugins have theme functions, and they can also explicitly
@@ -167,8 +167,8 @@ function views_theme($existing, $type, $theme, $path): array {
         continue;
       }
       // For each theme registration, we have a base directory to check for the
-      // templates folder. This will be relative to the root of the given module
-      // folder, so we always need a module definition.
+      // templates directory. This will be relative to the root of the given module
+      // directory, so we always need a module definition.
       // @todo Watchdog or exception?
       if (!isset($def['provider']) || !$module_handler->moduleExists($def['provider'])) {
         continue;
@@ -206,7 +206,7 @@ function views_theme($existing, $type, $theme, $path): array {
       }
 
       // By default any templates for a module are located in the /templates
-      // directory of the module's folder. If a module wants to define its own
+      // directory of the module's directory. If a module wants to define its own
       // location it has to set register_theme of the plugin to FALSE and
       // implement hook_theme() by itself.
       $hooks[$def['theme']]['path'] .= '/templates';

@@ -95,7 +95,7 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
           $expected_path = strtr($clean_path, $replacements);
 
           // Adjust the module asset paths to correspond with the Stable 9
-          // folder structure.
+          // directory structure.
           $replacements = [
             "core/modules/$extension/css/" => "core/themes/stable9/css/$extension/",
             "core/modules/$extension/layouts/" => "core/themes/stable9/layouts/$extension/",

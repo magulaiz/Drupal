@@ -34,7 +34,7 @@ class InstallStorage extends FileStorage {
   const CONFIG_SCHEMA_DIRECTORY = 'config/schema';
 
   /**
-   * Folder map indexed by configuration name.
+   * Directory map indexed by configuration name.
    *
    * @var array
    */
@@ -142,7 +142,7 @@ class InstallStorage extends FileStorage {
   }
 
   /**
-   * Returns a map of all config object names and their folders.
+   * Returns a map of all config object names and their directories.
    *
    * @return array
    *   An array mapping config object names with directories.
@@ -178,13 +178,13 @@ class InstallStorage extends FileStorage {
   }
 
   /**
-   * Get all configuration names and folders for a list of modules or themes.
+   * Get all configuration names and directories for a list of modules or themes.
    *
    * @param \Drupal\Core\Extension\Extension[] $list
    *   An associative array of Extension objects, keyed by extension name.
    *
    * @return array
-   *   Folders indexed by configuration name.
+   *   Directories indexed by configuration name.
    */
   public function getComponentNames(array $list) {
     $extension = '.' . $this->getFileExtension();
@@ -212,10 +212,10 @@ class InstallStorage extends FileStorage {
   }
 
   /**
-   * Get all configuration names and folders for Drupal core.
+   * Get all configuration names and directories for Drupal core.
    *
    * @return array
-   *   Folders indexed by configuration name.
+   *   Directories indexed by configuration name.
    */
   public function getCoreNames() {
     $extension = '.' . $this->getFileExtension();
@@ -239,23 +239,23 @@ class InstallStorage extends FileStorage {
   }
 
   /**
-   * Get folder inside each component that contains the files.
+   * Get directory inside each component that contains the files.
    *
    * @param \Drupal\Core\Extension\Extension $extension
    *   The Extension object for the component.
    *
    * @return string
-   *   The configuration folder name for this component.
+   *   The configuration directory name for this component.
    */
   protected function getComponentFolder(Extension $extension) {
     return $extension->getPath() . '/' . $this->getCollectionDirectory();
   }
 
   /**
-   * Get folder inside Drupal core that contains the files.
+   * Get directory inside Drupal core that contains the files.
    *
    * @return string
-   *   The configuration folder name for core.
+   *   The configuration directory name for core.
    */
   protected function getCoreFolder() {
     return 'core/' . $this->getCollectionDirectory();

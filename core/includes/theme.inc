@@ -96,7 +96,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
 
   // Collect paths to all sub-themes grouped by base themes. These will be
   // used for filtering. This allows base themes to have sub-themes in its
-  // folder hierarchy without affecting the base themes template discovery.
+  // directory hierarchy without affecting the base themes template discovery.
   $theme_paths = [];
   foreach (\Drupal::service('theme_handler')->listInfo() as $theme_info) {
     if (!empty($theme_info->base_theme)) {

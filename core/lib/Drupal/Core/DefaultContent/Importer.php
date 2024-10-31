@@ -103,7 +103,7 @@ final class Importer implements LoggerAwareInterface {
           $entity->setOwnerId($account->id());
         }
 
-        // If a file exists in the same folder, copy it to the designated
+        // If a file exists in the same directory, copy it to the designated
         // target URI.
         if ($entity instanceof FileInterface) {
           $this->copyFileAssociatedWithEntity(dirname($path), $entity);

@@ -41,7 +41,7 @@ globSync('**/tests/**/Nightwatch/**/*.js', {
     }
   });
 
-// Remove duplicate folders.
+// Remove duplicate directories.
 Object.keys(collectedFolders).forEach((folder) => {
   collectedFolders[folder] = Array.from(new Set(collectedFolders[folder]));
 });

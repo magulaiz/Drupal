@@ -72,7 +72,7 @@ class ExtensionInstallStorage extends InstallStorage {
   }
 
   /**
-   * Returns a map of all config object names and their folders.
+   * Returns a map of all config object names and their directories.
    *
    * The list is based on enabled modules and themes. The active configuration
    * storage is used rather than \Drupal\Core\Extension\ModuleHandler and

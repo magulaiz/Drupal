@@ -15,7 +15,7 @@ class InstallProfileUninstallValidator implements ModuleUninstallValidatorInterf
   use StringTranslationTrait;
 
   /**
-   * Extension discovery that scans all folders except profiles.
+   * Extension discovery that scans all directories except profiles.
    *
    * @var \Drupal\Core\Extension\ExtensionDiscovery
    */

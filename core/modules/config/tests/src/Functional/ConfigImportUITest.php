@@ -106,7 +106,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $system_theme['default'] = 'olivero';
     $sync->write('system.theme', $system_theme);
 
-    // Read the automated_cron config from module default config folder.
+    // Read the automated_cron config from module default config directory.
     $settings = $install_storage->read('automated_cron.settings');
     $settings['interval'] = 10000;
     $sync->write('automated_cron.settings', $settings);

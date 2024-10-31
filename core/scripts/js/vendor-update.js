@@ -1,7 +1,7 @@
 /**
  * @file
  * Copy files for JS vendor dependencies from node_modules to the assets/vendor
- * folder.
+ * directory.
  *
  * This script handles all dependencies except CKEditor, which require a custom
  * build step.
@@ -41,16 +41,16 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
   }
 
   /**
-   * Structure of the object defining a library to copy to the assets/ folder.
+   * Structure of the object defining a library to copy to the assets/ directory.
    *
    * @typedef DrupalLibraryAsset
    *
    * @prop {string} pack
-   *   The name of the npm package (used to get the name of the folder where
-   *   the files are situated inside of the node_modules folder). Note that we
+   *   The name of the npm package (used to get the name of the directory where
+   *   the files are situated inside of the node_modules directory). Note that we
    *   use `pack` and not `package` because `package` is a future reserved word.
    * @prop {string} [folder]
-   *   The folder under `assets/vendor/` where the files will be copied. If
+   *   The directory under `assets/vendor/` where the files will be copied. If
    *   this
    *   is not defined the value of `pack` is used.
    * @prop {string} [library]
@@ -58,9 +58,9 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
    * @prop {Array} [files]
    *   An array of files to be copied over.
    *     - A string if the file has the same name and is at the same level in
-   *   the source and target folder.
+   *   the source and target directory.
    *     - An object with a `from` and `to` property if the source and target
-   *   have a different name or if the folder nesting is different.
+   *   have a different name or if the directory nesting is different.
    * @prop {object} [process]
    *   An object containing a file extension as a key and a callback as the
    *   value. The callback will be called for each file matching the file
@@ -248,7 +248,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       try {
         await mkdir(path.dirname(destFile), { recursive: true });
       } catch (e) {
-        // Nothing to do if the folder already exists.
+        // Nothing to do if the directory already exists.
       }
 
       // There is a callback that transforms the file contents, we are not

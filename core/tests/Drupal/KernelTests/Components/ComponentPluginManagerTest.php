@@ -32,7 +32,7 @@ class ComponentPluginManagerTest extends ComponentKernelTestBase {
     $this->assertNotEmpty(
       $this->manager->find('sdc_theme_test:bar'),
     );
-    // Test that if the folder name does not match the machine name, the
+    // Test that if the directory name does not match the machine name, the
     // component is still available.
     $this->assertNotEmpty(
       $this->manager->find('sdc_theme_test:foo'),

@@ -299,7 +299,7 @@ class LocaleConfigManager {
     if ($components) {
       $names = [];
       foreach ($components as $type => $list) {
-        // InstallStorage::getComponentNames returns a list of folders keyed by
+        // InstallStorage::getComponentNames returns a list of directories keyed by
         // config name.
         $names = array_merge($names, $this->defaultConfigStorage->getComponentNames($type, $list));
       }

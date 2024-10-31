@@ -17,7 +17,7 @@ class InstallerExistingConfigDirectoryTest extends InstallerTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * The expected file perms of the folder.
+   * The expected file perms of the directory.
    *
    * @var int
    */

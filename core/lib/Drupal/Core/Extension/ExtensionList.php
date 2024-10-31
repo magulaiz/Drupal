@@ -84,17 +84,17 @@ abstract class ExtensionList {
   protected $extensionInfo;
 
   /**
-   * A list of extension folder names keyed by extension name.
+   * A list of extension directory names keyed by extension name.
    *
    * @var string[]|null
    */
   protected $pathNames;
 
   /**
-   * A list of extension folder names directly added in code (not discovered).
+   * A list of extension directory names directly added in code (not discovered).
    *
    * It is important to keep a separate list to ensure that it takes priority
-   * over the discovered extension folders.
+   * over the discovered extension directories.
    *
    * @var string[]
    *

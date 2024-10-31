@@ -99,15 +99,15 @@ chromedriver using port 4444, and keep it running:
   to manage your local versions of these.
 * Install
   [Google Chrome](https://www.google.com/chrome/browser/desktop/index.html)
-* Inside the `core` folder, run `yarn install`
+* Inside the `core` directory, run `yarn install`
 * Configure the nightwatch settings by copying `.env.example` to `.env` and
   editing as necessary.
 * Ensure you have a web server running (as instructed in `.env`)
-* Again inside the `core` folder, run `yarn test:nightwatch --env local` to run
+* Again inside the `core` directory, run `yarn test:nightwatch --env local` to run
   the tests.
   By default this will output reports to `core/reports`
 * Nightwatch will run tests for core, as well as contrib and custom modules and
-  themes. It will search for tests located under folders with the pattern
+  themes. It will search for tests located under directories with the pattern
   `**/tests/**/Nightwatch/(Tests|Commands|Assertions)`
 * To run only core tests, run `yarn test:nightwatch --tag core`
 * To skip running core tests, run `yarn test:nightwatch --skiptags core`
@@ -125,7 +125,7 @@ chromedriver using port 4444, and keep it running:
   `yarn test:nightwatch --tag a11y:admin --adminTheme claro`
 
 Nightwatch tests, as well as custom commands, assertions and pages, can be
-placed in any folder with the pattern
+placed in any directory with the pattern
 `**/tests/**/Nightwatch/(Tests|Commands|Assertions|Pages)`. For example:
 ```
 tests/Nightwatch/Tests
@@ -141,9 +141,9 @@ module they would go in `core/modules/action/tests/src/Nightwatch`.
 The Nightwatch configuration, as well as global tests, commands, and assertions
 which span many modules/systems, are located in `core/tests/Drupal/Nightwatch`.
 
-If your core directory is located in a subfolder (e.g. `docroot`), then you can
+If your core directory is located in a subdirectory (e.g. `docroot`), then you can
 edit the search directory in `.env` to pick up tests outside of your Drupal
-directory. Tests outside of the `core` folder will run in the version of node
+directory. Tests outside of the `core` directory will run in the version of node
 you have installed. If you want to transpile with babel (e.g. to use `import`
 statements) outside of core, then add your own babel config to the root of your
 project. For example, if core is located under `docroot/core`, then you could

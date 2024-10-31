@@ -129,7 +129,7 @@ class RecursiveExtensionFilterCallback {
       if ($name === 'config') {
         return str_ends_with($filesystem_directory->getPathname(), 'modules/config');
       }
-      // Accept the directory unless the folder is skipped.
+      // Accept the directory unless the directory is skipped.
       return !in_array($name, $this->skippedFolders, TRUE);
     }
     // Only accept extension info files.
