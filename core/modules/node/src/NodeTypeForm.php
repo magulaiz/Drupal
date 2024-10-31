@@ -172,13 +172,16 @@ class NodeTypeForm extends BundleEntityFormBase {
       '#title' => $this->t('Display settings'),
       '#group' => 'additional_settings',
     ];
-    $full_display = $this->entityDisplayRepository->getViewDisplay('node', $type->id(), 'full');
+    $full_display = NULL;
+    if (!$type->isNew()) {
+      $full_display = $this->entityDisplayRepository->getViewDisplay('node', $type->id(), 'full');
+    }
     $form['display']['page_display'] = [
       // @todo Move this to the entity view display edit form in
       // https://www.drupal.org/project/drupal/issues/3484255
       '#type' => 'checkbox',
       '#title' => $this->t('Create page display'),
-      '#default_value' => $full_display->hasPageDisplay() || $full_display->isNew(),
+      '#default_value' => $full_display === NULL || $full_display->hasPageDisplay() || $full_display->isNew(),
       '#description' => $this->t('Uncheck this to prevent the content-type from having a full page display.'),
     ];
     $form['display']['display_submitted'] = [
@@ -230,6 +233,8 @@ class NodeTypeForm extends BundleEntityFormBase {
     $type->set('type', trim($type->id()));
     $type->set('name', trim($type->label()));
 
+    $status = $type->save();
+
     // @todo Move this to the entity view display edit form in
     // https://www.drupal.org/project/drupal/issues/3484255
     $full_display = $this->entityDisplayRepository->getViewDisplay('node', $type->id(), 'full');
@@ -242,8 +247,6 @@ class NodeTypeForm extends BundleEntityFormBase {
       $full_display->setPageDisplay($new_display)->save();
       $this->routeBuilder->setRebuildNeeded();
     }
-
-    $status = $type->save();
 
     $t_args = ['%name' => $type->label()];
 
