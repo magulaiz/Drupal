@@ -7,8 +7,6 @@
 
 declare(strict_types=1);
 
-require_once dirname(__FILE__) . '/config_test.hooks.inc';
-
 /**
  * Implements hook_cache_flush().
  */
