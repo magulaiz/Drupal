@@ -201,7 +201,7 @@ class SystemHooks {
    */
   #[Hook('page_attachments')]
   public function pageAttachments(array &$page) {
-    _system_page_attachments();
+    _system_page_attachments($page);
   }
 
   /**
