@@ -135,10 +135,6 @@ variables:
 
 '⚡️ PHPUnit Unit via paratest':
   <<: [ *with-composer, *default-job-settings ]
-  services:
-    # There are some unit tests that need a database.
-    # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
-    - <<: *with-database
   variables:
     TESTSUITE: unit
     KUBERNETES_CPU_REQUEST: "1"
@@ -155,10 +151,6 @@ variables:
 
 '⚡️ PHPUnit Unit via PHPUnit':
   <<: [ *with-composer, *default-job-settings ]
-  services:
-    # There are some unit tests that need a database.
-    # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
-    - <<: *with-database
   variables:
     TESTSUITE: unit
     KUBERNETES_CPU_REQUEST: "1"
