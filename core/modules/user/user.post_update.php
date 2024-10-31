@@ -24,7 +24,7 @@ function user_removed_post_updates(): array {
 /**
  * Ensure permissions stored in role configuration are sorted using the schema.
  */
-function user_post_update_sort_permissions(&$sandbox = NULL) {
+function user_post_update_sort_permissions(&$sandbox = NULL): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'user_role', function (Role $role) {
     $permissions = $role->getPermissions();
     sort($permissions);
@@ -35,7 +35,7 @@ function user_post_update_sort_permissions(&$sandbox = NULL) {
 /**
  * Add an action to send activation emails to multiple users.
  */
-function user_post_update_add_send_action() {
+function user_post_update_add_send_action(): void {
   $action = Action::create([
     'id' => 'user_welcome_message_action',
     'type' => 'user',

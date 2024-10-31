@@ -8,6 +8,7 @@ use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use \Drupal\Core\Access\AccessResultInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -61,7 +62,7 @@ class SendWelcomeMessage extends ActionBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public function execute($account = NULL) {
+  public function execute($account = NULL): void {
     if (empty($account) || empty($account->getEmail())) {
       return;
     }
@@ -86,7 +87,7 @@ class SendWelcomeMessage extends ActionBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE): bool|AccessResultInterface {
     /** @var \Drupal\user\UserInterface $object */
     $access = $object->status->access('edit', $account, TRUE)
       ->andIf($object->access('update', $account, TRUE));
