@@ -197,6 +197,7 @@ class EntityDisplayBaseTest extends KernelTestBase {
     /** @var \Drupal\Core\Entity\Display\EntityDisplayInterface $display */
     $display = $this->container->get(EntityDisplayRepositoryInterface::class)
       ->getViewDisplay('entity_test', 'entity_test');
+    $this->assertFalse($display->isNew());
     $copy = $display->createCopy('test');
     $this->assertTrue($copy->isNew());
     $copy->save();
