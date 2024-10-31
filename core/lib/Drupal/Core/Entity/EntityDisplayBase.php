@@ -325,9 +325,19 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * {@inheritdoc}
    */
   #[ActionMethod(adminLabel: new TranslatableMarkup('Copy to another mode'), pluralize: FALSE)]
-  public function createCopy($mode) {
-    $display = $this->createDuplicate();
-    $display->mode = $display->originalMode = $mode;
+  public function createCopy($mode, bool $use_existing = FALSE) {
+    $display = NULL;
+    if ($use_existing) {
+      // Try first to load the target entity display. If it exists return it.
+      $display = $this->entityTypeManager()
+        ->getStorage($this->getEntityTypeId())
+        ->load($this->getTargetEntityTypeId() . '.' . $this->getTargetBundle() . '.' . $mode);
+    }
+    if (empty($display)) {
+      $display = $this->createDuplicate();
+      $display->mode = $display->originalMode = $mode;
+    }
+
     return $display;
   }
 
