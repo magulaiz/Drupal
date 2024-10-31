@@ -27,8 +27,8 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
    */
   public static function defaultSettings() {
     return [
-        'link' => TRUE,
-      ] + parent::defaultSettings();
+      'link' => TRUE,
+    ] + parent::defaultSettings();
   }
 
   /**
