@@ -6,8 +6,6 @@
  */
 
 use Drupal\system\Entity\Action;
-use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\user\Entity\Role;
 
 /**
  * Implements hook_removed_post_updates().
@@ -19,17 +17,6 @@ function user_removed_post_updates(): array {
     'user_post_update_sort_permissions' => '11.0.0',
     'user_post_update_sort_permissions_again' => '11.0.0',
   ];
-}
-
-/**
- * Ensure permissions stored in role configuration are sorted using the schema.
- */
-function user_post_update_sort_permissions(&$sandbox = NULL): void {
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'user_role', function (Role $role) {
-    $permissions = $role->getPermissions();
-    sort($permissions);
-    return $permissions !== $role->getPermissions();
-  });
 }
 
 /**
