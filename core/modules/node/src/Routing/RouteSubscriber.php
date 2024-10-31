@@ -36,7 +36,7 @@ class RouteSubscriber extends RouteSubscriberBase {
       ]);
     }
 
-    // @todo Move this to a subsriber in the Drupal\Core\Routing namespace
+    // @todo Move this to a subscriber in the Drupal\Core\Routing namespace
     // https://www.drupal.org/project/drupal/issues/3484255
     // Opt out of display for node-types without a page display.
     $route = $collection->get('entity.node.canonical');
