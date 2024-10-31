@@ -14,7 +14,6 @@ use Drupal\Core\Entity\Entity\EntityLinkSuggesterInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
@@ -89,7 +88,6 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
   public function defaultConfiguration() {
     return [
       'allow_download_links' => TRUE,
-      'suggester' => NULL,
     ];
   }
 
@@ -102,49 +100,6 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
       '#type' => 'checkbox',
       '#description' => $this->t('Allow content creators to create a download link on entities that support it, by adding a <a href=":url"><code>download</code></a> attribute that will cause the browser to download the linked file.', [':url' => 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download']),
       '#default_value' => $this->configuration['allow_download_links'],
-    ];
-
-    $modal_dialog_options = [
-      'attributes' => [
-        'class' => 'use-ajax',
-        'data-dialog-type' => 'modal',
-        'data-dialog-options' => Json::encode(['width' => '50em']),
-      ],
-      'query' => [
-        'destination' => Url::fromRoute(route_name: '<current>')->toString(),
-      ],
-    ];
-
-    $link_suggesters = EntityLinkSuggester::loadMultiple();
-    $form['suggester'] = [
-      '#title' => $this->t('Provide link suggestions for'),
-      '#type' => 'radios',
-      '#options' => array_combine(
-        // Keys: config dependency names.
-        array_map(
-          fn (EntityLinkSuggesterInterface $s) => $s->getConfigDependencyName(),
-          $link_suggesters,
-        ),
-        // Values: render arrays with `#title` and `#description`.
-        array_map(
-          fn (EntityLinkSuggesterInterface $s) => [
-            '#title' => $s->toLink(rel: 'edit-form', options: $modal_dialog_options)->toString(),
-            '#description' => $s->toRenderable(),
-          ],
-          $link_suggesters
-        ),
-      ),
-      '#default_value' => $this->configuration['suggester'],
-    ];
-    // An extra pseudo-option that cannot be selected by the end user, to allow
-    // creating a new link suggester..
-    $form['suggester']['#options'][] = [
-      '#disabled' => TRUE,
-      '#title' => Link::fromTextAndUrl(
-        $this->t('Create new link suggester'),
-        Url::fromRoute('entity.entity_link_suggester.add_form')->setOptions($modal_dialog_options)
-      )->toString(),
-      '#description' => $this->t('If none of the existing link suggesters are a good match, create a new one.'),
     ];
 
     return $form;
@@ -164,7 +119,6 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['allow_download_links'] = $form_state->getValue('allow_download_links');
-    $this->configuration['suggester'] = $form_state->getValue('suggester');
   }
 
   /**
