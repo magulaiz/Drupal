@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,6 +21,7 @@ class NodeTypeForm extends BundleEntityFormBase {
   public function __construct(
     protected EntityFieldManagerInterface $entityFieldManager,
     protected EntityDisplayRepositoryInterface $entityDisplayRepository,
+    protected RouteBuilderInterface $routeBuilder,
   ) {
   }
 
@@ -30,6 +32,7 @@ class NodeTypeForm extends BundleEntityFormBase {
     return new static(
       $container->get(EntityFieldManagerInterface::class),
       $container->get(EntityDisplayRepositoryInterface::class),
+      $container->get(RouteBuilderInterface::class),
     );
   }
 
@@ -237,6 +240,7 @@ class NodeTypeForm extends BundleEntityFormBase {
     if (($full_display->isNew() && !$new_display)
       || $original_display !== $new_display) {
       $full_display->setPageDisplay($new_display)->save();
+      $this->routeBuilder->setRebuildNeeded();
     }
 
     $status = $type->save();

@@ -23,7 +23,11 @@ class NodeRouteProvider implements EntityRouteProviderInterface {
         '_title_callback' => '\Drupal\node\Controller\NodeViewController::title',
       ])
       ->setRequirement('node', '\d+')
-      ->setRequirement('_entity_access', 'node.view');
+      ->setRequirement('_entity_access', 'node.view')
+      ->setOption('parameters', [
+        'node' => ['type' => 'entity:node'],
+      ]);
+
     $route_collection->add('entity.node.canonical', $route);
 
     $route = (new Route('/node/{node}/delete'))

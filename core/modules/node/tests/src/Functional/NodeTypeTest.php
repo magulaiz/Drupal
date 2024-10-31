@@ -110,6 +110,7 @@ class NodeTypeTest extends NodeTestBase {
       'bypass node access',
       'administer content types',
       'administer node fields',
+      'access content overview'
     ]);
     $this->drupalLogin($web_user);
 
@@ -141,6 +142,16 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalGet('node/add/page');
     $assert->pageTextContains('Foo');
     $assert->pageTextNotContains('Title');
+    $node_title = $this->randomMachineName();
+    $this->submitForm([
+      'title[0][value]' => $node_title,
+      'body[0][value]' => $this->randomMachineName(),
+    ], 'Save');
+    $node = $this->drupalGetNodeByTitle($node_title);
+    self::assertNotNull($node);
+    // Saving a node with no page display should return to the collection.
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals(Url::fromRoute('system.admin_content'));
 
     // Change the name and the description.
     $edit = [

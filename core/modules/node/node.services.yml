@@ -2,6 +2,7 @@ services:
   _defaults:
     autoconfigure: true
   node.route_subscriber:
+    autowire: true
     class: Drupal\node\Routing\RouteSubscriber
   node.grant_storage:
     class: Drupal\node\NodeGrantDatabaseStorage
