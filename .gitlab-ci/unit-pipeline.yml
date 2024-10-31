@@ -21,7 +21,7 @@ default:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   before_script: 
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
-    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor
+    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/ 
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
   artifacts:
@@ -31,7 +31,6 @@ default:
       junit: ./sites/default/files/simpletest/phpunit-*.xml
     paths:
       - ./sites/default/files/simpletest/phpunit-*.xml
-      - '*.log'
 
 .default-job-settings: &default-job-settings
   stage: 🗜️ Test
