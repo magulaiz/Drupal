@@ -196,6 +196,13 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   protected static $fieldsToSkipFromTranslationChangesCheck = [];
 
   /**
+   * The field storage type of the revision field.
+   *
+   * @var string|null
+   */
+  protected $fieldStorageTypeRevisionId;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = []) {
@@ -325,9 +332,8 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * @param bool $cast_to_int
    *   (optional) Indicator for how the revision identifier is returned. When
    *   set to TRUE it will return the revision identifier as an integer value
-   *   when the loaded revision ID only contains numeric characters. When the
-   *   indicator is not set or set to FALSE the revision identifier will return
-   *   a string value.
+   *   when the field storage type is integer. When the indicator is not set or
+   *   set to FALSE the revision identifier will return a string value.
    *
    * @return int|string|null
    *   The loaded Revision identifier of the entity, or NULL if the entity
@@ -335,11 +341,19 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    */
   public function getLoadedRevisionId(bool $cast_to_int = FALSE) {
     if (!$cast_to_int) {
-      @trigger_error('Returning the loaded revision identifier as a string value when the loaded revision ID only contains numeric characters is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3476934', E_USER_DEPRECATED);
+      @trigger_error('Returning the loaded revision identifier as a string value when it is of the field storage type integer is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3476934', E_USER_DEPRECATED);
       return $this->loadedRevisionId;
     }
 
-    if (is_string($this->loadedRevisionId) && ctype_digit($this->loadedRevisionId)) {
+    // Get the field storage type fo the revision field.
+    if (!$this->fieldStorageTypeRevisionId) {
+      $revisionKey = $this->getEntityType()->getKey('revision');
+      if ($this->hasField($revisionKey)) {
+        $this->fieldStorageTypeRevisionId = $this->getFieldDefinition($revisionKey)->getType();
+      }
+    }
+
+    if (($this->fieldStorageTypeRevisionId === 'integer') && !is_null($this->loadedRevisionId)) {
       return (int) $this->loadedRevisionId;
     }
 

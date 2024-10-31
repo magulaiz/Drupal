@@ -295,7 +295,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
    * @group legacy
    */
   public function testGetLoadedRevisionIdReturningString(): void {
-    $this->expectDeprecation('Returning the loaded revision identifier as a string value when the loaded revision ID only contains numeric characters is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3476934');
+    $this->expectDeprecation('Returning the loaded revision identifier as a string value when it is of the field storage type integer is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3476934');
     $entity = EntityTestMulRev::create();
     $entity->save();
     $this->assertIsString($entity->getLoadedRevisionId());
