@@ -138,6 +138,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
 
       // Second, find suggestions for all other entity types, in the specified
       // order.
+      $allowed_entity_type_ids = array_keys($allowed_bundles);
       foreach ($allowed_bundles as $entity_type_id => $bundles) {
         if ($host_entity_type_id === $entity_type_id) {
           continue;
