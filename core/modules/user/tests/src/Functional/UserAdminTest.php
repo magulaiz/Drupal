@@ -236,7 +236,7 @@ class UserAdminTest extends BrowserTestBase {
    *
    * @dataProvider welcomeNotifications
    */
-  public function testSendWelcomeEmailNotification($register_mode, $mail_id) {
+  public function testSendWelcomeEmailNotification($register_mode, $mail_id): void {
     $admin_user = $this->drupalCreateUser(['administer users']);
     $this->drupalLogin($admin_user);
 
@@ -266,7 +266,7 @@ class UserAdminTest extends BrowserTestBase {
    * @return array
    *   List of registration config & expected user mail.
    */
-  public function welcomeNotifications() {
+  public static function welcomeNotifications(): array {
     return [
       [
         UserInterface::REGISTER_VISITORS,
@@ -288,7 +288,7 @@ class UserAdminTest extends BrowserTestBase {
    *
    * @dataProvider awaitingApprovalNotifications
    */
-  public function testSendAwaitingApprovalEmailNotification($register_mode, $mail_id) {
+  public function testSendAwaitingApprovalEmailNotification($register_mode, $mail_id): void {
     $admin_user = $this->drupalCreateUser(['administer users']);
     $this->drupalLogin($admin_user);
 
@@ -318,7 +318,7 @@ class UserAdminTest extends BrowserTestBase {
    * @return array
    *   List of registration config & expected user mail.
    */
-  public function awaitingApprovalNotifications() {
+  public static function awaitingApprovalNotifications(): array {
     return [
       [
         UserInterface::REGISTER_VISITORS,
@@ -338,7 +338,7 @@ class UserAdminTest extends BrowserTestBase {
   /**
    * Tests the bulk action sending of welcome emails notifications.
    */
-  public function testBulkSendWelcomeEmailsNotifications() {
+  public function testBulkSendWelcomeEmailsNotifications(): void {
     $admin_user = $this->drupalCreateUser(['administer users']);
     $this->drupalLogin($admin_user);
 
@@ -374,7 +374,7 @@ class UserAdminTest extends BrowserTestBase {
   /**
    * Tests the bulk action sending of waiting approval email notification.
    */
-  public function testBulkSendAwaitingApprovalEmailNotification() {
+  public function testBulkSendAwaitingApprovalEmailNotification(): void {
     $admin_user = $this->drupalCreateUser(['administer users']);
     $this->drupalLogin($admin_user);
 

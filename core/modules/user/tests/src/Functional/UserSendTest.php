@@ -21,7 +21,7 @@ class UserSendTest extends BrowserTestBase {
   /**
    * Tests the access to email notifications form element.
    */
-  public function testSendWelcomeEmailAccess() {
+  public function testSendWelcomeEmailAccess(): void {
     $admin_user = $this->drupalCreateUser(['administer users']);
     $this->drupalLogin($admin_user);
 
