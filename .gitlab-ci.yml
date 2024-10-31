@@ -1,4 +1,4 @@
-# cspell:ignore codequality Micheh micheh webide updatedb stylelintrc unshallow
+# cspell:ignore cobertura codequality Micheh micheh testdox webide updatedb stylelintrc unshallow
 
 ################
 # Drupal GitLabCI template.
@@ -379,6 +379,33 @@ default:
       junit: phpstan-junit.xml
     paths:
       - core/.phpstan-baseline.php
+
+'✅️ PHPStan Tests':
+  <<: [ *default-job-settings-lint ]
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  # Run on push, if PHPStan files have changed, or manually.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - core/tests/PHPStan/*
+        - composer/Metapackage/PinnedDevDependencies/composer.json
+    - when: manual
+      allow_failure: true
+  script:
+    - docker-php-ext-enable pcov
+    - cd core/tests/PHPStan
+    - composer install
+    - vendor/bin/phpunit tests --testdox --coverage-text --colors=always --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
+  artifacts:
+    when: always
+    reports:
+      junit: core/tests/PHPStan/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: core/tests/PHPStan/coverage.cobertura.xml
 
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *default-job-settings-lint ]
