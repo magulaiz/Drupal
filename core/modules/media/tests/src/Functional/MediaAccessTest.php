@@ -227,7 +227,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $assert_session->statusCodeEquals(200);
     $assert_session->elementExists('css', '.views-element-container');
     // First row of the View contains media created by admin user.
-    $assert_session->elementTextEquals('xpath', '//div[@class="views-element-container"]//tbody/tr[1]/td[contains(@class, "views-field-uid")]/a', $this->adminUser->getDisplayName());
+    $assert_session->elementTextEquals('xpath', '//div[@class="views-element-container"]//tbody/tr[1]/td[contains(@class, "views-field-uid")]/text()', $this->adminUser->getDisplayName());
     $assert_session->elementTextEquals('xpath', "//div[@class='views-element-container']//tbody/tr[1]/td[contains(@class, 'views-field-name')]/a[contains(@href, '/media/{$media->id()}')]", 'Unnamed');
     // Second row of the View contains media created by non-admin user.
     $assert_session->elementTextEquals('xpath', '//div[@class="views-element-container"]//tbody/tr[2]/td[contains(@class, "views-field-uid")]/a', $this->nonAdminUser->getDisplayName());
