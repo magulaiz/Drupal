@@ -74,7 +74,7 @@ class ProfileForm extends AccountForm {
   /**
    * Provides a submit handler for the 'Send welcome message' button.
    */
-  public function editSendSubmit(array $form, FormStateInterface $form_state) {
+  public function editSendSubmit(array $form, FormStateInterface $form_state): void {
     $account = $this->entity;
 
     if (!$account->isActive()) {
