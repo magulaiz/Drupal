@@ -189,4 +189,20 @@ class EntityDisplayBaseTest extends KernelTestBase {
     $display->set('id', 'a.b');
   }
 
+  /**
+   * @covers ::createCopy
+   */
+  public function testCreateCopy(): void {
+    /** @var \Drupal\Core\Entity\Display\EntityDisplayInterface $display */
+    $display = $this->container->get(EntityDisplayRepositoryInterface::class)
+      ->getViewDisplay('entity_test', 'entity_test');
+    $copy = $display->createCopy('test');
+    $this->assertTrue($copy->isNew());
+    $copy->save();
+    $this->assertSame('entity_test.entity_test.test', $copy->id());
+    $another_copy = $display->createCopy('test', TRUE);
+    $this->assertFalse($another_copy->isNew());
+    $this->assertSame('entity_test.entity_test.test', $another_copy->id());
+  }
+
 }
