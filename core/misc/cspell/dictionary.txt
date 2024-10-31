@@ -40,9 +40,6 @@ backporting
 backports
 bakeware
 barchart
-basefield
-basepath
-basetheme
 beatle
 bebebe
 beforeclose
@@ -259,6 +256,7 @@ guzzlehttp
 hande
 hateoas
 hexcode
+hhvm
 hilited
 hmac
 hookname
@@ -274,6 +272,7 @@ imagecache
 imagetextalternative
 indexname
 inited
+inlines
 inno
 instantiator
 interactable
@@ -351,8 +350,6 @@ mojito
 msgctxt
 msgid
 msgstr
-mulrev
-mulrevpub
 multibuys
 multibyte
 multicardinality
@@ -487,8 +484,6 @@ revisionable
 revisioned
 revisionid
 revisioning
-revlog
-revpub
 ribisi
 rowspans
 rtsp
@@ -574,6 +569,7 @@ subvalues
 subview
 supercede
 svgz
+syncer
 synchronizable
 syrop
 tabbingmanager
