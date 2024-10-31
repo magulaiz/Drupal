@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\views\Functional\Update;
+namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
