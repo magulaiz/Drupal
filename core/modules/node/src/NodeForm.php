@@ -9,7 +9,6 @@ use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\Url;
@@ -331,7 +330,7 @@ class NodeForm extends ContentEntityForm {
    */
   protected function buildRedirectUrl(NodeInterface $node): Url {
     try {
-      $node_url = $node->getTranslation(LanguageInterface::LANGCODE_DEFAULT)->toUrl();
+      $node_url = $node->toUrl();
 
       if ($node_url->access()) {
         return $node_url;
