@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 
@@ -14,8 +13,6 @@ use Drupal\user\Entity\User;
  * @coversDefaultClass \Drupal\user\Entity\User
  */
 class UserRoleTest extends KernelTestBase {
-
-  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -34,9 +31,15 @@ class UserRoleTest extends KernelTestBase {
       'roles' => [$role1, $role2],
     ]);
     $this->assertFalse($account->isAdmin());
+
+    // Add an admin role.
     $role3 = Role::create(['id' => 'role3', 'is_admin' => TRUE]);
     $account->get('roles')->appendItem($role3);
     $this->assertTrue($account->isAdmin());
+
+    // Remove the admin role.
+    $account->set('roles', [$role1, $role2]);
+    $this->assertFalse($account->isAdmin());
   }
 
 }

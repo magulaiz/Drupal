@@ -230,9 +230,9 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
 
   /**
    * Checks whether this user is an admin user.
-   * 
+   *
    * An account is admin account if it has at least one admin role.
-   * 
+   *
    * @return bool
    *   Whether this user is an admin user.
    */
