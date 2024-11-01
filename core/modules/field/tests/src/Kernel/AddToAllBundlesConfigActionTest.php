@@ -101,7 +101,7 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
    * Tests that the action will ignore existing fields by default.
    */
   public function testIgnoreExistingFields(): void {
-    $this->installConfig('node');
+    $this->installConfig(['node', 'node_storage']);
 
     node_add_body_field(NodeType::load('one'))
       ->setLabel('Original label')
