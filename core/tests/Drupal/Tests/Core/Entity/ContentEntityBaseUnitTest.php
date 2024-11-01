@@ -230,11 +230,11 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   public function testIsNewRevision(): void {
     // Set up the entity type so that on the first call there is no revision key
     // and on the second call there is one.
-    $this->entityType->expects($this->exactly(4))
+    $this->entityType->expects($this->exactly(5))
       ->method('hasKey')
       ->with('revision')
-      ->willReturnOnConsecutiveCalls(FALSE, TRUE, TRUE, TRUE);
-    $this->entityType->expects($this->exactly(2))
+      ->willReturnOnConsecutiveCalls(FALSE, TRUE, TRUE, TRUE, TRUE);
+    $this->entityType->expects($this->exactly(4))
       ->method('getKey')
       ->with('revision')
       ->willReturn('revision_id');
