@@ -126,22 +126,7 @@
   <!-- Settings for coverage reports. -->
   <source ignoreSuppressionOfDeprecations="true">
     <include>
-      <directory>./includes</directory>
-      <directory>./lib</directory>
-      <directory>./modules</directory>
-      <directory>../modules</directory>
-      <directory>../sites</directory>
+      <directory>./lib/Drupal/Component</directory>
     </include>
-    <exclude>
-      <directory>./modules/*/src/Tests</directory>
-      <directory>./modules/*/tests</directory>
-      <directory>../modules/*/src/Tests</directory>
-      <directory>../modules/*/tests</directory>
-      <directory>../modules/*/*/src/Tests</directory>
-      <directory>../modules/*/*/tests</directory>
-      <directory suffix=".api.php">./lib/**</directory>
-      <directory suffix=".api.php">./modules/**</directory>
-      <directory suffix=".api.php">../modules/**</directory>
-    </exclude>
   </source>
 </phpunit>
