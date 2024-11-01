@@ -133,7 +133,7 @@ config:
       setComponents:
         - name: body
           options:
-            type: text_summary_or_trimmed
+            type: text_default
             label: hidden
             weight: 0
             region: content
