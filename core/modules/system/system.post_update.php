@@ -7,6 +7,7 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
 
 /**
  * Implements hook_removed_post_updates().
@@ -95,6 +96,16 @@ function system_post_update_sdc_uninstall() {
 function system_post_update_set_entity_view_display_page_display(array &$sandbox): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $display) {
     $display->setPageDisplay($display->getMode() === 'full');
+    return TRUE;
+  });
+}
+
+/**
+ * Sets the path on entity view modes.
+ */
+function system_post_update_set_entity_view_mode_path(array &$sandbox): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_mode', function (EntityViewModeInterface $display) {
+    $display->setPath(NULL);
     return TRUE;
   });
 }
