@@ -417,7 +417,7 @@ class Schema extends DatabaseSchema {
         'authorizedCollections' => TRUE,
         'maxTimeMS' => 1000,
         'filter' => [
-          'name' => $prefixed_table
+          'name' => $prefixed_table,
         ],
         'session' => $this->connection->getMongodbSession(),
       ]);
@@ -731,7 +731,7 @@ class Schema extends DatabaseSchema {
     foreach ($this->connection->getConnection()->listCollections([
       'authorizedCollections' => TRUE,
       'maxTimeMS' => 1000,
-      'session' => $this->connection->getMongodbSession()
+      'session' => $this->connection->getMongodbSession(),
     ]) as $collectionInfo) {
       if ($collectionInfo->getName() == $prefixInfo['table']) {
         $collectionOptions = $collectionInfo->getOptions();
