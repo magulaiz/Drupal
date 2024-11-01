@@ -94,9 +94,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
     Connection $connection,
     UpdateHookRegistry $update_registry,
     #[Autowire(service: 'logger.channel.default')]
-    protected LoggerInterface $logger,
+  protected LoggerInterface $logger,
     #[AutowireIterator(tag: 'module_install.uninstall_validator')]
-    protected ?\Traversable $uninstallValidators = NULL,
+  protected ?\Traversable $uninstallValidators = NULL,
   ) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
@@ -570,7 +570,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // Flush all persistent caches.
     // Any cache entry might implicitly depend on the uninstalled modules,
     // so clear all of them explicitly.
-    $this->invokeAll('cache_flush');
+    $this->moduleHandler->invokeAll('cache_flush');
     foreach (Cache::getBins() as $cache_backend) {
       $cache_backend->deleteAll();
     }
