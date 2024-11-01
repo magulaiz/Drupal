@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\ckeditor5\Plugin\CKEditor5Plugin;
 
-use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
-use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
-use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
-use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\editor\EditorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -43,10 +42,10 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
    *   The entity type bundle info.
    */
   public function __construct(
-    array                                            $configuration,
-                                                     $plugin_id,
-                                                     $plugin_definition,
-    protected readonly EntityTypeManagerInterface    $entityTypeManager,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly EntityTypeBundleInfoInterface $entityTypeBundleInfo,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -141,11 +140,11 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
                 ->getDefinition($entity_type->getBundleEntityType())
                 ->getPluralLabel(),
             ]),
-          ],[
+          ], [
             '#list_type' => 'ol',
             '#theme' => 'item_list',
             '#items' => $bundles_list,
-          ]
+          ],
         ],
       ];
       $form['entity_types'][$entity_type_id] = $row;
@@ -158,9 +157,10 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    // Match the config schema structure at ckeditor5.plugin.ckeditor5_link_entity_suggestions.
+    // Match the config schema structure at
+    // ckeditor5.plugin.ckeditor5_link_entity_suggestions.
     $form_value = $form_state->getValue('allow_download_links');
-    $form_state->setValue('allow_download_links', (bool)$form_value);
+    $form_state->setValue('allow_download_links', (bool) $form_value);
   }
 
   /**
