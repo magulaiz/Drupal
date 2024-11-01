@@ -23,10 +23,8 @@ content:
     weight: 2
     region: content
     settings:
-      rows: 9
-      summary_rows: 3
+      rows: 5
       placeholder: ''
-      show_summary: false
     third_party_settings: {  }
   comment:
     type: comment_default
