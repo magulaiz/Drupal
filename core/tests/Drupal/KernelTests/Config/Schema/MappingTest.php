@@ -499,7 +499,6 @@ class MappingTest extends KernelTestBase {
         'ckeditor5.plugin.ckeditor5_style' => ['styles'],
         'ckeditor5.plugin.ckeditor5_link_entity_suggestions' => [
           'allow_download_links',
-          'suggester',
         ],
       ],
     ];
