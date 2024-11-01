@@ -270,8 +270,8 @@ function node_type_get_description(NodeTypeInterface $node_type) {
  */
 function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
   // Add or remove the body field, as needed.
-  $field_storage = FieldStorageConfig::loadByName('node', 'field_body');
-  $field = FieldConfig::loadByName('node', $type->id(), 'field_body');
+  $field_storage = FieldStorageConfig::loadByName('node', 'body');
+  $field = FieldConfig::loadByName('node', $type->id(), 'body');
   if (empty($field)) {
     $field = FieldConfig::create([
       'field_storage' => $field_storage,
