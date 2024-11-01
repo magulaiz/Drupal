@@ -191,7 +191,7 @@ class TimestampFormatter extends FormatterBase {
     $form['custom_date_format'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Custom date format'),
-      '#description' => $this->t('See <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters" target="_blank">the documentation for PHP date formats</a>.'),
+      '#description' => $this->t('See <a href="!url" target="_blank">the documentation for PHP date formats</a>.', ['!url' => 'https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters']),
       '#default_value' => $this->getSetting('custom_date_format'),
       '#states' => $this->buildStates(['date_format'], [
         'value' => static::CUSTOM_DATE_FORMAT,
