@@ -12,7 +12,7 @@ use Drupal\node\Entity\Node;
  *
  * @group node
  */
-class ClaroRevisionsTabsUiTest extends WebDriverTestBase {
+class RevisionsTabsUiTest extends WebDriverTestBase {
 
   /**
    * An array of node revisions.
