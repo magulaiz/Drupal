@@ -176,7 +176,6 @@ default:
       when: manual
       allow_failure: true
 
-# Default configuration.
 'Unit tests':
   stage: 🗜️ Test
   trigger:
@@ -184,7 +183,7 @@ default:
     strategy: depend
     include:
       - local: .gitlab-ci/unit-pipeline.yml
-  # Run on MR, schedule, push, parent pipeline and performance test.
+  # Run on MR, schedule, push and parent pipeline.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
       allow_failure: true
