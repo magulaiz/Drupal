@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\StringFormatter;
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 
@@ -42,7 +43,8 @@ final class StringFormatterTest extends UnitTestCase {
   public function testLinkToEntity(bool $hasUrl, ?string $accessClass, bool $expectIsLinkElement): void {
     $fieldDefinition = $this->prophesize(FieldDefinitionInterface::class);
     $entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
-    $fieldFormatter = new StringFormatter('foobar', [], $fieldDefinition->reveal(), [], 'TestLabel', 'default', [], $entityTypeManager->reveal());
+    $languageManager = $this->prophesize(LanguageManagerInterface::class);
+    $fieldFormatter = new StringFormatter('foobar', [], $fieldDefinition->reveal(), [], 'TestLabel', 'default', [], $entityTypeManager->reveal(), $languageManager->reveal());
     $fieldFormatter->setSetting('link_to_entity', TRUE);
 
     $entityType = $this->prophesize(EntityTypeInterface::class);
