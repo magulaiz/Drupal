@@ -790,16 +790,13 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
         if ($errorOutput) {
           echo 'ERROR: ' . $errorOutput;
         }
-        if (in_array($child['process']->getExitCode(), [SIMPLETEST_SCRIPT_EXIT_FAILURE, SIMPLETEST_SCRIPT_EXIT_ERROR]) {
+        if (in_array($child['process']->getExitCode(), [SIMPLETEST_SCRIPT_EXIT_FAILURE, SIMPLETEST_SCRIPT_EXIT_ERROR])) {
           $total_status = max($child['process']->getExitCode(), $total_status);
         }
         elseif ($child['process']->getExitCode()) {
           $message = 'FATAL ' . $child['class'] . ': test runner returned an unexpected error code (' . $child['process']->getExitCode() . ').';
           echo $message . "\n";
-          // @todo Return SIMPLETEST_SCRIPT_EXIT_EXCEPTION instead, when
-          // DrupalCI supports this.
-          // @see https://www.drupal.org/node/2780087
-          $total_status = max(SIMPLETEST_SCRIPT_EXIT_FAILURE, $total_status);
+          $total_status = max(SIMPLETEST_SCRIPT_EXIT_EXCEPTION, $total_status);
           // Insert a fail for xml results.
           $child['test_run']->insertLogEntry([
             'test_class' => $child['class'],
@@ -1391,7 +1388,7 @@ function simpletest_script_format_result($result) {
 
   simpletest_script_print($summary, simpletest_script_color_code($result->status));
 
-  if ($result->message === '') {
+  if ($result->message === '' || in_array($result->status, ['pass', 'fail', 'error'])) {
     return;
   }
 
