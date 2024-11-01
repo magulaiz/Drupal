@@ -77,9 +77,6 @@
     </bootstrap>
   </extensions>
   <testsuites>
-    <testsuite name="component-unit">
-      <directory>tests/Drupal/Tests/Component</directory>
-    </testsuite>
     <testsuite name="unit">
       <directory>tests/Drupal/Tests</directory>
       <directory>modules/**/tests/src/Unit</directory>
