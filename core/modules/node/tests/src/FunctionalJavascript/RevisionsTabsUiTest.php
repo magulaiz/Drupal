@@ -8,9 +8,9 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\Node;
 
 /**
- * Runs tests on Revisions UI using Claro.
+ * Runs tests on Revisions UI using Stark.
  *
- * @group claro
+ * @group node
  */
 class ClaroRevisionsTabsUiTest extends WebDriverTestBase {
 
@@ -29,7 +29,7 @@ class ClaroRevisionsTabsUiTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
