@@ -21,7 +21,7 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
    *
    * @var string[]
    */
-  protected static $modules = ['node_test', 'node_storage'];
+  protected static $modules = ['node_test'];
 
   /**
    * {@inheritdoc}
