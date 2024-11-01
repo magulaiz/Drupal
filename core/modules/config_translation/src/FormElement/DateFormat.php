@@ -15,7 +15,7 @@ class DateFormat extends FormElementBase {
   public function getTranslationElement(LanguageInterface $translation_language, $source_config, $translation_config) {
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = \Drupal::service('date.formatter');
-    $description = $this->t('A user-defined date format. See the <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters">PHP manual</a> for available options.');
+    $description = $this->t('A user-defined date format. See the <a href="!url">PHP manual</a> for available options.', ['!url' => 'https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters']);
     $format = $this->t('Displayed as %date_format', ['%date_format' => $date_formatter->format(\Drupal::time()->getRequestTime(), 'custom', $translation_config)]);
 
     return [
