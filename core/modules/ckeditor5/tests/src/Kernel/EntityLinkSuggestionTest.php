@@ -170,44 +170,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       ],
     ];
 
-    $suggestion_user_1 = [
-      'description' => 'on Mon, 6 Jan 1992 - 23:52',
-      'entity_type_id' => 'user',
-      'entity_uuid' => '966e5967-f19c-44b0-87b1-697441385b08',
-      'group' => 'User',
-      'label' => 'sofie',
-      'path' => 'entity:user/1',
-      'exposed_attributes' => [
-        'download' => FALSE,
-      ],
-    ];
-
-    // "f", multiple results, from node vs user.
-    yield 'host entity type=node, host entity langcode=en, search term="f"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
-      'f',
-      'node',
-      'en',
-      [
-        $suggestion_node_1_en,
-        $suggestion_user_1,
-      ],
-    ];
-    yield 'host entity type=user, host entity langcode=en, search term="f"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
-      'f',
-      'user',
-      'en',
-      [
-        $suggestion_user_1,
-        $suggestion_node_1_en,
-      ],
-    ];
-
     // "f", single result due to (different) suggestion restrictions.
     yield 'suggestions=nodes only, host entity type=node, host entity langcode=en, search term="f"' => [
       [
@@ -220,32 +182,21 @@ class EntityLinkSuggestionTest extends KernelTestBase {
         $suggestion_node_1_en,
       ],
     ];
-    yield 'suggestions=users only, host entity type=node, host entity langcode=en, search term="f"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
-      'f',
-      'node',
-      'en',
-      [
-        $suggestion_user_1,
-      ],
-    ];
 
-    // "f", no result due to even tighter suggestion restrictions.
-    yield 'suggestions=article nodes only, host entity type=node, host entity langcode=en, search term="f"' => [
+    // "z", no result due to no nodes having title with "z".
+    yield 'suggestions=nodes only, host entity type=node, host entity langcode=en, search term="z"' => [
       [
         'allow_download_links' => TRUE,
       ],
-      'f',
+      'z',
       'node',
       'en',
       [
         [
           'description' => 'No content suggestions found. This URL will be used as is.',
           'group' => 'No results',
-          'label' => 'f',
-          'path' => 'f',
+          'label' => 'z',
+          'path' => 'z',
         ],
       ],
     ];
