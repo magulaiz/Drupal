@@ -586,7 +586,6 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
           'body' => [
             'value' => 'Custom value',
             'format' => 'plain_text',
-            'summary' => 'Custom summary',
           ],
         ],
         'relationships' => [
@@ -868,7 +867,6 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
           'body' => [
             'value' => 'Custom value',
             'format' => 'invalid_format',
-            'summary' => 'Custom summary',
           ],
         ],
       ],

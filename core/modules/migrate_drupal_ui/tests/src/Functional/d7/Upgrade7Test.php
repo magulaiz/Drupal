@@ -89,7 +89,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'contact_form' => 3,
       'contact_message' => 0,
       'editor' => 2,
-      'field_config' => 92,
+      'field_config' => 90,
       'field_storage_config' => 69,
       'file' => 3,
       'filter_format' => 7,
@@ -112,7 +112,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'date_format' => 12,
       'entity_form_display' => 23,
       'entity_form_mode' => 1,
-      'entity_view_display' => 34,
+      'entity_view_display' => 33,
       'entity_view_mode' => 11,
       'base_field_override' => 2,
     ];
