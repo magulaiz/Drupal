@@ -413,18 +413,16 @@ class Schema extends DatabaseSchema {
   public function tableExists($table, $add_prefix = TRUE) {
     try {
       $prefixed_table = $this->connection->getPrefix() . $table;
-      $options = [
+      $collections = $this->connection->getConnection()->listCollectionNames([
+        'authorizedCollections' => TRUE,
         'maxTimeMS' => 1000,
-        'filter' => ['name' => $prefixed_table],
-      ];
-      // The listing of tables in a multi-document transaction is not
-      // supported by MongoDB.
-      // @todo Fix this bug!
-      if (!$this->connection->getMongodbSession()->isInTransaction()) {
-        $options['session'] = $this->connection->getMongodbSession();
-      }
-      foreach ($this->connection->getConnection()->listCollections($options) as $collectionInfo) {
-        if ($collectionInfo->getName() == $prefixed_table) {
+        'filter' => [
+          'name' => $prefixed_table
+        ],
+        'session' => $this->connection->getMongodbSession(),
+      ]);
+      foreach ($collections as $collection) {
+        if ($collection === $prefixed_table) {
           return TRUE;
         }
       }
@@ -471,6 +469,8 @@ class Schema extends DatabaseSchema {
     $table_expression = $this->connection->getPrefix() . $table_expression;
     $pattern = SqlLikeToRegularExpression::convert($table_expression);
     $collections = $this->connection->getConnection()->listCollectionNames([
+      'authorizedCollections' => TRUE,
+      'maxTimeMS' => 1000,
       'filter' => [
         'name' => new Regex($pattern, 'i'),
       ],
@@ -728,7 +728,11 @@ class Schema extends DatabaseSchema {
    */
   public function getTableValidationFromDatabase($table) {
     $prefixInfo = $this->getPrefixInfo($table);
-    foreach ($this->connection->getConnection()->listCollections(['session' => $this->connection->getMongodbSession()]) as $collectionInfo) {
+    foreach ($this->connection->getConnection()->listCollections([
+      'authorizedCollections' => TRUE,
+      'maxTimeMS' => 1000,
+      'session' => $this->connection->getMongodbSession()
+    ]) as $collectionInfo) {
       if ($collectionInfo->getName() == $prefixInfo['table']) {
         $collectionOptions = $collectionInfo->getOptions();
         if (isset($collectionOptions['validator'])) {
