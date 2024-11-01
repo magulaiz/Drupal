@@ -67,7 +67,7 @@ class RowPluginTest extends ViewsKernelTestBase {
       'name' => 'Article',
     ]);
     $node_type->save();
-    node_add_body_field($node_type);
+    node_add_body_field($node_type, 'Body', 'text_with_summary');
 
     // Create two nodes.
     for ($i = 0; $i < 2; $i++) {
