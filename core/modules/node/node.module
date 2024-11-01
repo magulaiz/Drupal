@@ -308,7 +308,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
       $display_repository->getViewDisplay('node', $type->id(), 'teaser')
         ->setComponent('body', [
           'label' => 'hidden',
-          'type' => 'text_default',
+          'type' => 'text_trimmed',
         ])
         ->save();
     }
