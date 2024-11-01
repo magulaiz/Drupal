@@ -31,6 +31,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     'entity_test_operation',
     'field_ui',
     'node',
+    'node_storage',
     'views',
     'views_ui',
   ];
