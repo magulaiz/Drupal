@@ -79,13 +79,13 @@ variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
     - docker-php-ext-enable pcov
-    - vendor/bin/phpunit -c core --testsuite component-unit --testdox --coverage-text --colors=always --coverage-cobertura=coverage.cobertura.xml
+    - vendor/bin/phpunit -c core --testsuite component-unit --testdox --coverage-text --colors=always --coverage-cobertura=coverage.cobertura.xml --coverage-filter core/lib/Drupal/Component
   artifacts:
     when: always
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: core/tests/PHPStan/coverage.cobertura.xml
+        path: coverage.cobertura.xml
 
 '✅️ PHPStan Tests':
   <<: [ *default-job-settings ]
