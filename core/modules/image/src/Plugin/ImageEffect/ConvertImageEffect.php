@@ -21,7 +21,7 @@ class ConvertImageEffect extends ConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(ImageInterface $image) {
+  public function apply(ImageInterface $image) {
     if (!$image->convert($this->configuration['extension'])) {
       $this->logger->error('Image convert failed using the %toolkit toolkit on %path (%mimetype)', ['%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType()]);
       return FALSE;

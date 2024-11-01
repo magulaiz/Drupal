@@ -80,7 +80,7 @@ class AjaxTestImageEffect extends ConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(ImageInterface $image) {
+  public function apply(ImageInterface $image) {
     return TRUE;
   }
 

@@ -330,7 +330,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     }
 
     foreach ($this->getEffects() as $effect) {
-      $effect->applyEffect($image);
+      $effect->apply($image);
     }
 
     if (!$image->save($derivative_uri)) {

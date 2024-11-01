@@ -28,7 +28,7 @@ class UriDependentTestImageEffect extends ImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(ImageInterface $image) {
+  public function apply(ImageInterface $image) {
     $dimensions = $this->getUriDependentDimensions($image->getSource());
     return $image->resize($dimensions['width'], $dimensions['height']);
   }
