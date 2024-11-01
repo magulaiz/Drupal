@@ -281,13 +281,22 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body', $field_ty
   }
   $field = FieldConfig::loadByName('node', $type->id(), 'body');
   if (empty($field)) {
+    if ($field_type === 'text_with_summary') {
+      $settings = [
+        'display_summary' => TRUE,
+        'allowed_formats' => [],
+      ];
+    }
+    else {
+      $settings = [
+        'allowed_formats' => [],
+      ];
+    }
     $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $type->id(),
       'label' => $label,
-      'settings' => [
-        'allowed_formats' => [],
-      ],
+      'settings' => $settings,
     ]);
     $field->save();
 
@@ -297,7 +306,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body', $field_ty
     // Assign widget settings for the default form mode.
     $display_repository->getFormDisplay('node', $type->id())
       ->setComponent('body', [
-        'type' => 'text_textarea',
+        'type' => $field_type === 'text_with_summary' ? 'text_textarea_with_summary' : 'text_textarea',
       ])
       ->save();
 
@@ -316,7 +325,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body', $field_ty
       $display_repository->getViewDisplay('node', $type->id(), 'teaser')
         ->setComponent('body', [
           'label' => 'hidden',
-          'type' => 'text_trimmed',
+          'type' => $field_type === 'text_with_summary' ? 'text_summary_or_trimmed' : 'text_trimmed',
         ])
         ->save();
     }
