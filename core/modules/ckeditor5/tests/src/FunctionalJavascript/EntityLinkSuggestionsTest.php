@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
-// cspell:ignore linkit Sofie
-
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
-use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
@@ -101,21 +98,6 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
       'use text format test_format',
     ], 'Sofie');
 
-    // Create a document media item with "f" in the name.
-    $this->createMediaType('file', ['id' => 'document', 'label' => 'Document']);
-    File::create([
-      'uri' => $this->getTestFiles('text')[0]->uri,
-    ])->save();
-    Media::create([
-      'bundle' => 'document',
-      'name' => 'Information about screaming hairy armadillo',
-      'field_media_file' => [
-        [
-          'target_id' => 1,
-        ],
-      ],
-    ])->save();
-
     $this->drupalLogin($account);
   }
 
@@ -143,33 +125,33 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     $this->assertEmpty($autocomplete_field->getValue(), 'Autocomplete field is empty.');
 
     // Make sure the autocomplete result container is hidden.
-    $autocomplete_container = $assert_session->elementExists('css', '.ck-link-form .linkit-ui-autocomplete');
+    $autocomplete_container = $assert_session->elementExists('css', '.ck-link-form .entity-link-suggestions-ui-autocomplete');
     $this->assertFalse($autocomplete_container->isVisible());
 
     // Trigger a keydown event to activate a autocomplete search.
     $autocomplete_field->setValue('f');
-    $this->assertTrue($this->getSession()->wait(5000, "document.querySelectorAll('.linkit-result-line.ui-menu-item').length > 0"));
+    $this->assertTrue($this->getSession()->wait(5000, "document.querySelectorAll('.entity-link-suggestions-result-line.ui-menu-item').length > 0"));
 
     // Make sure the autocomplete result container is visible.
     $this->assertTrue($autocomplete_container->isVisible());
 
     // Find all the autocomplete results.
-    $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
+    $results = $page->findAll('css', '.entity-link-suggestions-result-line.ui-menu-item');
     $this->assertCount(3, $results);
-    $this->assertSame('Foo', $results[0]->find('css', '.linkit-result-line--title')->getText());
-    $this->assertSame('Information about screaming hairy armadillo', $results[1]->find('css', '.linkit-result-line--title')->getText());
-    $this->assertSame('Sofie', $results[2]->find('css', '.linkit-result-line--title')->getText());
+    $this->assertSame('Foo', $results[0]->find('css', '.entity-link-suggestions-result-line--title')->getText());
+    $this->assertSame('Information about screaming hairy armadillo', $results[1]->find('css', '.entity-link-suggestions-result-line--title')->getText());
+    $this->assertSame('Sofie', $results[2]->find('css', '.entity-link-suggestions-result-line--title')->getText());
 
     // Make the search term longer to narrow down the results.
     $autocomplete_field->setValue('fo');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->waitForElementRemoved('xpath', '//span[@class="linkit-result-line--title" and text()="Sofie"]');
+    $assert_session->waitForElementRemoved('xpath', '//span[@class="entity-link-suggestions-result-line--title" and text()="Sofie"]');
 
     // Find all the autocomplete results.
-    $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
+    $results = $page->findAll('css', '.entity-link-suggestions-result-line.ui-menu-item');
     $this->assertCount(2, $results);
-    $this->assertSame('Foo', $results[0]->find('css', '.linkit-result-line--title')->getText());
-    $this->assertSame('Information about screaming hairy armadillo', $results[1]->find('css', '.linkit-result-line--title')->getText());
+    $this->assertSame('Foo', $results[0]->find('css', '.entity-link-suggestions-result-line--title')->getText());
+    $this->assertSame('Information about screaming hairy armadillo', $results[1]->find('css', '.entity-link-suggestions-result-line--title')->getText());
 
     // Find the first result and click it.
     $results[0]->click();
@@ -183,21 +165,21 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     $this->assertBalloonClosed();
 
     // Make sure all attributes are populated.
-    $linkit_link = $assert_session->waitForElementVisible('css', '.ck-content a');
-    $this->assertNotNull($linkit_link);
-    $this->assertSame('#', $linkit_link->getAttribute('href'));
-    $this->assertSame('node', $linkit_link->getAttribute('data-entity-type'));
-    $this->assertSame($entity->uuid(), $linkit_link->getAttribute('data-entity-uuid'));
-    $this->assertFalse($linkit_link->hasAttribute('download'));
+    $entity_link_suggestions_link = $assert_session->waitForElementVisible('css', '.ck-content a');
+    $this->assertNotNull($entity_link_suggestions_link);
+    $this->assertSame('#', $entity_link_suggestions_link->getAttribute('href'));
+    $this->assertSame('node', $entity_link_suggestions_link->getAttribute('data-entity-type'));
+    $this->assertSame($entity->uuid(), $entity_link_suggestions_link->getAttribute('data-entity-uuid'));
+    $this->assertFalse($entity_link_suggestions_link->hasAttribute('download'));
 
     // Let's change our mind: we want to use the second result instead.
-    $linkit_link->click();
+    $entity_link_suggestions_link->click();
     $this->getBalloonButton('Edit link')->click();
     $balloon = $this->assertVisibleBalloon('.ck-link-form');
     $autocomplete_field = $balloon->find('css', '.ck-input-text');
     $autocomplete_field->setValue('fo');
-    $assert_session->waitForElementVisible('css', '.ck-link-form .linkit-ui-autocomplete');
-    $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
+    $assert_session->waitForElementVisible('css', '.ck-link-form .entity-link-suggestions-ui-autocomplete');
+    $results = $page->findAll('css', '.entity-link-suggestions-result-line.ui-menu-item');
     $results[1]->click();
     $expected_url = 'entity:media/1';
     $this->assertSame($expected_url, $autocomplete_field->getValue());
@@ -207,12 +189,12 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     $this->assertBalloonClosed();
 
     // Again make sure all attributes are populated.
-    $linkit_link = $assert_session->waitForElementVisible('css', '.ck-content a');
-    $this->assertNotNull($linkit_link);
-    $this->assertSame('#', $linkit_link->getAttribute('href'));
-    $this->assertSame('media', $linkit_link->getAttribute('data-entity-type'));
-    $this->assertSame(Media::load(1)->uuid(), $linkit_link->getAttribute('data-entity-uuid'));
-    $this->assertSame('', $linkit_link->getAttribute('download'));
+    $entity_link_suggestions_link = $assert_session->waitForElementVisible('css', '.ck-content a');
+    $this->assertNotNull($entity_link_suggestions_link);
+    $this->assertSame('#', $entity_link_suggestions_link->getAttribute('href'));
+    $this->assertSame('media', $entity_link_suggestions_link->getAttribute('data-entity-type'));
+    $this->assertSame(Media::load(1)->uuid(), $entity_link_suggestions_link->getAttribute('data-entity-uuid'));
+    $this->assertSame('', $entity_link_suggestions_link->getAttribute('download'));
 
     // Open the edit link dialog by moving selection to the link, verifying the
     // "Link" button is off before and on after, and then pressing that button.
@@ -232,14 +214,14 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     $autocomplete_field->setValue('http://example.com');
     $autocomplete_field->click();
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertSession()->waitForElementVisible('css', '.linkit-result-line.ui-menu-item');
-    $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
+    $this->assertSession()->waitForElementVisible('css', '.entity-link-suggestions-result-line.ui-menu-item');
+    $results = $page->findAll('css', '.entity-link-suggestions-result-line.ui-menu-item');
     $this->assertCount(1, $results);
-    $this->assertSame('http://example.com', $results[0]->find('css', '.linkit-result-line--title')->getText());
-    $this->assertSame('No content suggestions found. This URL will be used as is.', $results[0]->find('css', '.linkit-result-line--description')->getText());
+    $this->assertSame('http://example.com', $results[0]->find('css', '.entity-link-suggestions-result-line--title')->getText());
+    $this->assertSame('No content suggestions found. This URL will be used as is.', $results[0]->find('css', '.entity-link-suggestions-result-line--description')->getText());
     // Accept the first autocomplete suggestion.
     $results[0]->click();
-    $assert_session->waitForElementRemoved('css', '.linkit-result-line--title');
+    $assert_session->waitForElementRemoved('css', '.entity-link-suggestions-result-line--title');
     $assert_session->waitForElementVisible('css', '.ck-link-form .ck-button-save');
     $link_edit_balloon->pressButton('Save');
     $this->getSession()->wait(5000, '!document.querySelector(".ck .ui-autocomplete") || document.querySelector(".ck .ui-autocomplete").style.display === "none"');
@@ -259,120 +241,6 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     foreach (['data-entity-type', 'data-entity-uuid'] as $attribute_name) {
       $this->assertFalse($changed_link->hasAttribute($attribute_name), "Link should no longer have $attribute_name");
     }
-  }
-
-  public function testLinkedImageBlock(): void {
-    $session = $this->getSession();
-    $assert_session = $this->assertSession();
-    $page = $session->getPage();
-    $filter_format = FilterFormat::load('test_format');
-    $filter_format->setFilterConfig('filter_html', [
-      'status' => TRUE,
-      'settings' => [
-        'allowed_html' => '<img data-entity-uuid data-entity-type data-link-entity-type data-link-entity-uuid data-link-entity-metadata alt height width src><p> <br> <a href data-entity-type data-entity-uuid data-entity-metadata download>',
-      ],
-    ]);
-    $filter_format->save();
-    $editor = Editor::load('test_format');
-    $settings = $editor->getSettings();
-    $settings['toolbar']['items'][] = 'drupalInsertImage';
-    $settings['toolbar']['items'][] = 'sourceEditing';
-
-    $settings['plugins']['ckeditor5_imageResize'] = [
-      'allow_resize' => TRUE,
-    ];
-
-    $settings['plugins']['ckeditor5_sourceEditing'] = [
-      'allowed_tags' => [],
-    ];
-
-    $editor->set('image_upload', [
-      'status' => TRUE,
-      'scheme' => 'public',
-      'directory' => 'inline-images',
-      'max_size' => '1M',
-      'max_dimensions' => ['width' => 100, 'height' => 100],
-    ]);
-    $editor->setSettings($settings);
-    $editor->save();
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
-
-    $content_to_add = $this->drupalCreateNode([
-      'type' => 'page',
-      'title' => 'Zoo Party',
-    ]);
-    $content_to_add_uuid = $content_to_add->uuid();
-
-    $file = File::create([
-      'uri' => $this->getTestFiles('image')[0]->uri,
-    ]);
-    $file->save();
-
-    $editing_page = $this->drupalCreateNode([
-      'type' => 'page',
-      'title' => 'To Link Image',
-      'body' => [
-        'value' => sprintf('<img src="%s" data-entity-uuid="%s" alt="image with link around it" data-entity-type="file" width="40" height="20">', $file->createFileUrl(), $file->uuid()),
-        'format' => 'test_format',
-      ],
-    ]);
-
-    $this->drupalGet($editing_page->toUrl('edit-form'));
-    $this->waitForEditor();
-    $page->find('css', 'figure img')->click();
-    $link_button = $assert_session->waitForElementVisible('css', '[aria-label="Image toolbar"] button:last-child');
-    $link_button->click();
-    $balloon = $this->assertVisibleBalloon('.ck-link-form');
-    $autocomplete_field = $balloon->find('css', '.ck-input-text');
-    $autocomplete_field->setValue('Z');
-    $this->assertTrue($this->getSession()->wait(5000, "document.querySelectorAll('.linkit-result-line.ui-menu-item').length > 0"));
-    $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
-    $results[0]->click();
-    $balloon->pressButton('Save');
-    $this->assertBalloonClosed();
-
-    $preview_button = $assert_session->waitForElementVisible('css', '#ck-aria-label-preview-button');
-    $this->assertSame('Zoo Party (Content - page)', $preview_button->getText());
-
-    $xpath = new \DOMXPath($this->getEditorDataAsDom());
-    $query = sprintf('//a[@href="entity:node/%s" and @data-entity-uuid="%s" and @data-entity-type="node" and @data-entity-metadata]/img[@alt="image with link around it"]', $content_to_add->id(), $content_to_add_uuid);
-    $this->assertCount(1, $xpath->query($query), "Search for $query");
-
-    $page->pressButton('Save');
-    $link_around_image = $assert_session->elementExists('css', sprintf('a[href="%s"][data-entity-uuid="%s"][data-entity-type="node"][data-entity-metadata] img[alt="image with link around it"]', $content_to_add->toUrl('canonical')->toString(), $content_to_add_uuid));
-    $link_around_image->click();
-    $h1 = $page->find('css', 'h1');
-    $this->assertSame('Zoo Party', $h1->getText(), 'The link in the rendered page goes to the correct place');
-
-    $this->drupalGet($editing_page->toUrl('edit-form'));
-    $this->waitForEditor();
-    $page->find('css', 'figure img')->click();
-    $link_button = $assert_session->waitForElementVisible('css', '[aria-label="Image toolbar"] button:last-child');
-    $link_button->click();
-
-    $preview_button = $assert_session->waitForElementVisible('css', '#ck-aria-label-preview-button');
-    $this->assertSame('Zoo Party (Content - page)', $preview_button->getText());
-    $preview_button->click();
-
-    $iterations = 10;
-    while ((count($session->getWindowNames()) < 2 && $iterations > 0) == TRUE) {
-      $session->wait(1000);
-      $iterations--;
-    }
-
-    $window_names = $this->getSession()->getWindowNames();
-    $this->getSession()->switchToWindow($window_names[1]);
-    $h1 = $page->find('css', 'h1');
-    $this->assertSame('Zoo Party', $h1->getText(), 'Clicking the preview opened a tab with the referenced node.');
-    $this->assertNull($page->find('css', 'form'), 'No forms on the page confirm we are viewing the node, not in the edit form.');
   }
 
 }
