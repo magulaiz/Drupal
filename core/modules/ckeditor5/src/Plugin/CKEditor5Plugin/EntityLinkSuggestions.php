@@ -9,6 +9,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -42,10 +43,10 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
    *   The entity type bundle info.
    */
   public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    protected readonly EntityTypeManagerInterface $entityTypeManager,
+    array                                            $configuration,
+                                                     $plugin_id,
+                                                     $plugin_definition,
+    protected readonly EntityTypeManagerInterface    $entityTypeManager,
     protected readonly EntityTypeBundleInfoInterface $entityTypeBundleInfo,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -99,6 +100,57 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
       '#default_value' => $this->configuration['allow_download_links'],
     ];
 
+    $allowed_bundles = [];
+    $all_bundle_info = $this->entityTypeBundleInfo->getAllBundleInfo();
+    foreach ($all_bundle_info as $entity_type => $bundles) {
+      foreach ($bundles as $key => $bundle) {
+        if (!empty($bundle['ckeditor5_link_suggestions'])) {
+          $allowed_bundles[$entity_type][$key] = $key;
+        }
+      }
+    }
+
+    $header = [
+      'enabled' => $this->t('Provide link suggestions for entity type'),
+      'bundles' => $this->t('Bundles'),
+    ];
+    $form['entity_types'] = [
+      '#type' => 'table',
+      '#header' => $header,
+      '#title' => $this->t('Allowed entity types'),
+    ];
+
+    $entity_types = $this->entityTypeManager->getDefinitions();
+    foreach ($allowed_bundles as $entity_type_id => $bundles) {
+      $entity_type = $entity_types[$entity_type_id];
+      $bundles_for_entity_type = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
+      $bundles_list = [];
+      foreach ($bundles as $bundle) {
+        $bundles_list[] = $bundles_for_entity_type[$bundle]['label'];
+      }
+      $row = [
+        'enabled' => [
+          '#markup' => $entity_types[$entity_type_id]->isCommonReferenceTarget()
+            ? $this->t("@label <small>(commonly linked)</small>", ['@label' => $entity_type->getCollectionLabel()])
+            : $entity_type->getCollectionLabel(),
+        ],
+        'bundles' => [
+          [
+            '#markup' => $this->t('Included %bundles', [
+              '%bundles' => $this->entityTypeManager
+                ->getDefinition($entity_type->getBundleEntityType())
+                ->getPluralLabel(),
+            ]),
+          ],[
+            '#list_type' => 'ol',
+            '#theme' => 'item_list',
+            '#items' => $bundles_list,
+          ]
+        ],
+      ];
+      $form['entity_types'][$entity_type_id] = $row;
+    }
+
     return $form;
   }
 
@@ -108,7 +160,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Match the config schema structure at ckeditor5.plugin.ckeditor5_link_entity_suggestions.
     $form_value = $form_state->getValue('allow_download_links');
-    $form_state->setValue('allow_download_links', (bool) $form_value);
+    $form_state->setValue('allow_download_links', (bool)$form_value);
   }
 
   /**
