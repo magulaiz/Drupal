@@ -1,5 +1,3 @@
-// cspell:ignore linkit
-
 const $ = jQuery;
 
 /**
@@ -16,14 +14,16 @@ const $ = jQuery;
  *   jQuery collection of the ul element.
  */
 function renderItem(ul, item) {
-  const $line = $('<li class="linkit-result-line">');
-  const $wrapper = $('<div class="linkit-result-line-wrapper">');
+  const $line = $('<li class="entity-link-suggestions-result-line">');
+  const $wrapper = $(
+    '<div class="entity-link-suggestions-result-line-wrapper">',
+  );
   $wrapper.append(
-    `<span class="linkit-result-line--title">${item.label}</span>`,
+    `<span class="entity-link-suggestions-result-line--title">${item.label}</span>`,
   );
   if (item.hasOwnProperty('description')) {
     $wrapper.append(
-      `<span class="linkit-result-line--description">${item.description}</span>`,
+      `<span class="entity-link-suggestions-result-line--description">${item.description}</span>`,
     );
   }
   return $line.append($wrapper).appendTo(ul);
@@ -53,7 +53,7 @@ function renderMenu(ul, items) {
     const groupItems = groupedItems[groupLabel];
     if (groupLabel.length) {
       ul.append(
-        `<li class="linkit-result-line--group ui-menu-divider">${groupLabel}</li>`,
+        `<li class="entity-link-suggestions-result-line--group ui-menu-divider">${groupLabel}</li>`,
       );
     }
     groupItems.forEach((item) => {
@@ -127,13 +127,17 @@ export default function initializeAutocomplete(element, settings) {
   const instance = $auto.data('ui-autocomplete');
   instance
     .widget()
-    .menu('option', 'items', '> :not(.linkit-result-line--group)');
+    .menu(
+      'option',
+      'items',
+      '> :not(.entity-link-suggestions-result-line--group)',
+    );
   instance._renderMenu = renderMenu;
   instance._renderItem = renderItem;
 
   $auto
     .autocomplete('widget')
-    .addClass('ck-reset_all-excluded linkit-ui-autocomplete');
+    .addClass('ck-reset_all-excluded entity-link-suggestions-ui-autocomplete');
 
   $auto.on('click', () => {
     $auto.autocomplete('search', $auto[0].value);
