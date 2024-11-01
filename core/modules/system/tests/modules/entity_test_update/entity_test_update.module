@@ -17,9 +17,9 @@ use Drupal\Core\Entity\EntityTypeInterface;
  */
 function entity_test_update_entity_base_field_info(EntityTypeInterface $entity_type) {
   // Add a base field that will be used to test that fields added through
-  // hook_entity_base_field_info() are handled correctly during a schema
+  // hook_entity_base_field_info() are handled correctly during a schema.
   $fields = [];
-  // conversion (e.g. from non-revisionable to revisionable).
+  // Conversion (e.g. from non-revisionable to revisionable).
   if ($entity_type->id() == 'entity_test_update') {
     $fields['test_entity_base_field_info'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Field added by hook_entity_base_field_info()'))

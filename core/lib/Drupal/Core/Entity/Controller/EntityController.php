@@ -261,7 +261,7 @@ class EntityController implements ContainerInjectionInterface {
    * @return string|null
    *   The title for the entity view page, if an entity was found.
    */
-  public function title(RouteMatchInterface $route_match, EntityInterface $_entity = NULL) {
+  public function title(RouteMatchInterface $route_match, ?EntityInterface $_entity = NULL) {
     return $this
       ->doGetEntity($route_match, $_entity)
       ?->label();
