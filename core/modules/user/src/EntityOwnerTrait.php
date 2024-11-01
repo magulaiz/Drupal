@@ -46,6 +46,11 @@ trait EntityOwnerTrait {
    * {@inheritdoc}
    */
   public function getOwnerId() {
+    // Add temporary for MongoDB.
+    if (!is_null($this->getEntityKey('owner'))) {
+      return (int) $this->getEntityKey('owner');
+    }
+
     return $this->getEntityKey('owner');
   }
 

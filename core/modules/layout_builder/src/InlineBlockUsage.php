@@ -34,7 +34,7 @@ class InlineBlockUsage implements InlineBlockUsageInterface {
     $this->database->merge('inline_block_usage')
       ->keys([
         'block_content_id' => (int) $block_content_id,
-        'layout_entity_id' => $entity->id(),
+        'layout_entity_id' => (string) $entity->id(),
         'layout_entity_type' => $entity->getEntityTypeId(),
       ])->execute();
   }
@@ -60,7 +60,7 @@ class InlineBlockUsage implements InlineBlockUsageInterface {
         'layout_entity_id' => NULL,
       ]);
     $query->condition('layout_entity_type', $entity->getEntityTypeId());
-    $query->condition('layout_entity_id', $entity->id());
+    $query->condition('layout_entity_id', (string) $entity->id());
     $query->execute();
   }
 

@@ -54,7 +54,7 @@ class UserDeleteTest extends KernelTestBase {
         foreach ($user_translations as $user_translation) {
           if (isset($user_translation['user_translations__roles']) && is_array($user_translation['user_translations__roles'])) {
             foreach ($user_translation['user_translations__roles'] as $user_translations__role) {
-              if (in_array($user_translations__role['entity_id'], $uids, TRUE)) {
+              if (in_array($user_translations__role['entity_id'], $uids)) {
                 $roles[] = $user_translations__role['entity_id'];
               }
             }
