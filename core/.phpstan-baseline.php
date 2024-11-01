@@ -40243,12 +40243,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Form/ThemeSettingsForm.php',
 ];
 $ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Function _system_page_attachments invoked with 0 parameters, 1 required\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Hook/SystemHooks.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\system\\\\Hook\\\\SystemHooks\\:\\:archiverInfoAlter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
