@@ -71,7 +71,7 @@ class JUnitConverter {
    *
    * @internal
    */
-  public static function findTestCases(\SimpleXMLElement $element, ?\SimpleXMLElement $parent = NULL) {
+  public static function findTestCases(\SimpleXMLElement $element, ?\SimpleXMLElement $parent = NULL): array {
     if ($element->getName() === 'testcase') {
       return [$element];
     }
@@ -97,7 +97,7 @@ class JUnitConverter {
    *
    * @internal
    */
-  public static function convertTestCaseToSimpletestRow($test_id, \SimpleXMLElement $test_case) {
+  public static function convertTestCaseToSimpletestRow($test_id, \SimpleXMLElement $test_case): array {
     $status = static::getTestCaseResult($test_case);
     $attributes = $test_case->attributes();
 

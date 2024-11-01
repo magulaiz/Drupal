@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\TestTools;
 
 /**
- * @todo add doc.
+ * Enumeration of JUnit test result statuses.
  */
 enum PhpUnitTestCaseJUnitResult: string {
 
