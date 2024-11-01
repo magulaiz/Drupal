@@ -413,14 +413,20 @@ class Schema extends DatabaseSchema {
   public function tableExists($table, $add_prefix = TRUE) {
     try {
       $prefixed_table = $this->connection->getPrefix() . $table;
-      $collections = $this->connection->getConnection()->listCollectionNames([
+      $options = [
         'authorizedCollections' => TRUE,
         'maxTimeMS' => 1000,
         'filter' => [
           'name' => $prefixed_table,
         ],
-        'session' => $this->connection->getMongodbSession(),
-      ]);
+      ];
+      // The listing of tables in a multi-document transaction is not
+      // supported by MongoDB.
+      // @todo Fix this bug!
+      if (!$this->connection->getMongodbSession()->isInTransaction()) {
+        $options['session'] = $this->connection->getMongodbSession();
+      }
+      $collections = $this->connection->getConnection()->listCollectionNames($options);
       foreach ($collections as $collection) {
         if ($collection === $prefixed_table) {
           return TRUE;
