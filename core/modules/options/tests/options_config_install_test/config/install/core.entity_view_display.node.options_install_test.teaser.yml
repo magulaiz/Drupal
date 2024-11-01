@@ -18,7 +18,7 @@ content:
     weight: 100
     region: content
   body:
-    type: text_default
+    type: text_trimmed
     label: hidden
     settings:
       trim_length: 600

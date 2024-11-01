@@ -72,7 +72,7 @@ module.exports = {
           (result) => {
             browser.assert.ok(
               result.value,
-              'Editor height is set to 9 rows (default).',
+              'Editor height is set to 5 rows (default).',
             );
           },
         )
@@ -95,7 +95,7 @@ module.exports = {
           (result) => {
             browser.assert.ok(
               result.value,
-              'Source editing height is set to 9 rows (default).',
+              'Source editing height is set to 5 rows (default).',
             );
           },
         )
