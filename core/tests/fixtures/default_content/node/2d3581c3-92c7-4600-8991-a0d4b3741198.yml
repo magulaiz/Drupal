@@ -42,7 +42,6 @@ default:
     -
       value: "Here's the English version."
       format: plain_text
-      summary: ''
 translations:
   fr:
     status:
@@ -80,4 +79,3 @@ translations:
       -
         value: "Içi c'est la version français."
         format: plain_text
-        summary: ''

@@ -41,4 +41,3 @@ default:
     -
       value: 'This page was authored by a non-existent user.'
       format: plain_text
-      summary: ''

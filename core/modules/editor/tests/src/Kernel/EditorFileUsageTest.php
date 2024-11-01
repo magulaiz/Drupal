@@ -24,7 +24,13 @@ class EditorFileUsageTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['editor', 'editor_test', 'node', 'file'];
+  protected static $modules = [
+    'editor',
+    'editor_test',
+    'node',
+    'node_storage',
+    'file',
+  ];
 
   /**
    * {@inheritdoc}
@@ -34,7 +40,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     $this->installEntitySchema('file');
     $this->installSchema('node', ['node_access']);
     $this->installSchema('file', ['file_usage']);
-    $this->installConfig(['node']);
+    $this->installConfig(['node', 'node_storage']);
 
     // Add text formats.
     $filtered_html_format = FilterFormat::create([
