@@ -1384,7 +1384,7 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
 function simpletest_script_format_result($result) {
   global $args, $results_map, $color;
 
-  $summary = sprintf("%-9.9s %9.3fs %-80.80s\n", $results_map[$result->status], $result->time, $result->function);
+  $summary = sprintf("%-9.9s %9.3fs %-80.80s\n", $results_map[$result->status], $result->time, trim_with_ellipsis($result->function, 80, STR_PAD_LEFT));
 
   simpletest_script_print($summary, simpletest_script_color_code($result->status));
 

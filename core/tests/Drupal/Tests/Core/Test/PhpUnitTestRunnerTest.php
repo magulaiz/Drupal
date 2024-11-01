@@ -77,7 +77,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
       'status' => TestStatus::label(TestStatus::SYSTEM),
       'message' => 'A most serious error occurred.',
       'message_group' => 'Other',
-      'function' => '*** Execution output log ***',
+      'function' => '*** Process execution output ***',
       'line' => '0',
       'file' => $log_path,
     ];
