@@ -59,48 +59,6 @@ class EntityRouteProviderSubscriber implements EventSubscriberInterface {
         }
       }
     }
-    $viewModeStorage = $this->entityTypeManager->getStorage('entity_view_mode');
-    $mode_ids = $viewModeStorage->getQuery()
-      ->exists('path')
-      ->accessCheck(FALSE)
-      ->execute();
-    if (\count($mode_ids) === 0) {
-      return;
-    }
-    $modes = $viewModeStorage->loadMultiple($mode_ids);
-    /** @var \Drupal\Core\Entity\EntityViewModeInterface $mode */
-    foreach ($modes as $id => $mode) {
-      $path = $mode->getPath();
-      if ($path === NULL) {
-        continue;
-      }
-      [, $display_id] = \explode('.', $id);
-      $entity_type_id = $mode->getTargetType();
-      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-      $template = $entity_type->getLinkTemplate('canonical');
-      if ($template === FALSE) {
-        continue;
-      }
-      $route = new Route(\sprintf('%s/%s', $template, $path));
-      $route
-        ->addDefaults([
-          '_entity_view' => \sprintf('%s.%s', $entity_type_id, $display_id),
-          '_title_callback' => '\Drupal\Core\Entity\Controller\EntityController::title',
-        ])
-        ->setRequirement('_entity_access', \sprintf('%s.view', $entity_type_id))
-        ->setOption('parameters', [
-          $entity_type_id => ['type' => 'entity:' . $entity_type_id],
-        ]);
-
-      $canonical = $route_collection->get(\sprintf('entity:%s:canonical', $entity_type_id));
-      if ($canonical !== NULL) {
-        $requirement = $route->getRequirement($entity_type_id);
-        if ($requirement !== NULL) {
-          $route->setRequirement($entity_type_id, $requirement);
-        }
-      }
-      $route_collection->add(\sprintf('entity.%s.entity_view_display__%s', $entity_type_id, $display_id), $route);
-    }
   }
 
   /**
