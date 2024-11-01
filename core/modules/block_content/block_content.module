@@ -89,7 +89,6 @@ function block_content_add_body_field($block_type_id, $label = 'Body') {
       'bundle' => $block_type_id,
       'label' => $label,
       'settings' => [
-        'display_summary' => FALSE,
         'allowed_formats' => [],
       ],
     ]);
@@ -101,7 +100,7 @@ function block_content_add_body_field($block_type_id, $label = 'Body') {
     // Assign widget settings for the default form mode.
     $display_repository->getFormDisplay('block_content', $block_type_id)
       ->setComponent('body', [
-        'type' => 'text_textarea_with_summary',
+        'type' => 'text_textarea',
       ])
       ->save();
 
