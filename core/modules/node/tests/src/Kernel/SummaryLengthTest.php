@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Kernel;
 
 use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\EntityViewTrait;
@@ -77,21 +79,39 @@ class SummaryLengthTest extends KernelTestBase {
    * Tests the node summary length functionality.
    */
   public function testSummaryLength(): void {
+    $field_storage = FieldStorageConfig::create([
+      'entity_type' => 'node',
+      'type' => 'text_with_summary',
+      'field_name' => 'field_summarizable',
+    ]);
+    $field_storage->save();
+    FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => 'page',
+    ])->save();
+
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
     // Create a node to view.
     $settings = [
       // cSpell:disable-next-line
-      'body' => [['value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae arcu at leo cursus laoreet. Curabitur dui tortor, adipiscing malesuada tempor in, bibendum ac diam. Cras non tellus a libero pellentesque condimentum. What is a Drupalism? Suspendisse ac lacus libero. Ut non est vel nisl faucibus interdum nec sed leo. Pellentesque sem risus, vulputate eu semper eget, auctor in libero. Ut fermentum est vitae metus convallis scelerisque. Phasellus pellentesque rhoncus tellus, eu dignissim purus posuere id. Quisque eu fringilla ligula. Morbi ullamcorper, lorem et mattis egestas, tortor neque pretium velit, eget eleifend odio turpis eu purus. Donec vitae metus quis leo pretium tincidunt a pulvinar sem. Morbi adipiscing laoreet mauris vel placerat. Nullam elementum, nisl sit amet scelerisque malesuada, dolor nunc hendrerit quam, eu ultrices erat est in orci. Curabitur feugiat egestas nisl sed accumsan.']],
+      'field_summarizable' => [['value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae arcu at leo cursus laoreet. Curabitur dui tortor, adipiscing malesuada tempor in, bibendum ac diam. Cras non tellus a libero pellentesque condimentum. What is a Drupalism? Suspendisse ac lacus libero. Ut non est vel nisl faucibus interdum nec sed leo. Pellentesque sem risus, vulputate eu semper eget, auctor in libero. Ut fermentum est vitae metus convallis scelerisque. Phasellus pellentesque rhoncus tellus, eu dignissim purus posuere id. Quisque eu fringilla ligula. Morbi ullamcorper, lorem et mattis egestas, tortor neque pretium velit, eget eleifend odio turpis eu purus. Donec vitae metus quis leo pretium tincidunt a pulvinar sem. Morbi adipiscing laoreet mauris vel placerat. Nullam elementum, nisl sit amet scelerisque malesuada, dolor nunc hendrerit quam, eu ultrices erat est in orci. Curabitur feugiat egestas nisl sed accumsan.']],
       'promote' => 1,
     ];
     $node = $this->drupalCreateNode($settings);
     $this->assertNotEmpty(Node::load($node->id()), 'Node created.');
 
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', $node->getType(), 'teaser')
+      ->setComponent('field_summarizable', [
+        'type' => 'text_summary_or_trimmed',
+      ])
+      ->save();
+
     // Render the node as a teaser.
     $content = $this->drupalBuildEntityView($node, 'teaser');
-    $this->assertLessThan(600, strlen($content['body'][0]['#markup']));
+    $this->assertLessThan(600, strlen($content['field_summarizable'][0]['#markup']));
     $this->setRawContent($renderer->renderRoot($content));
     // The string 'What is a Drupalism?' is between the 200th and 600th
     // characters of the node body, so it should be included if the summary is
@@ -102,15 +122,15 @@ class SummaryLengthTest extends KernelTestBase {
     // Change the teaser length for "Basic page" content type.
     $display = \Drupal::service('entity_display.repository')
       ->getViewDisplay('node', $node->getType(), 'teaser');
-    $display_options = $display->getComponent('body');
+    $display_options = $display->getComponent('field_summarizable');
     $display_options['settings']['trim_length'] = 200;
-    $display->setComponent('body', $display_options)
+    $display->setComponent('field_summarizable', $display_options)
       ->save();
 
     // Render the node as a teaser again and check that the summary is now only
     // 200 characters in length and so does not include 'What is a Drupalism?'.
     $content = $this->drupalBuildEntityView($node, 'teaser');
-    $this->assertLessThan(200, strlen($content['body'][0]['#markup']));
+    $this->assertLessThan(200, strlen($content['field_summarizable'][0]['#markup']));
     $this->setRawContent($renderer->renderRoot($content));
     $this->assertText($node->label());
     $this->assertNoRaw($expected);
