@@ -18468,6 +18468,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\content_translation\\\\ContentTranslationServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/content_translation/src/ContentTranslationServiceProvider.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\content_translation\\\\Controller\\\\ContentTranslationController\\:\\:prepareTranslation\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_translation/src/Controller/ContentTranslationController.php',
@@ -27252,6 +27258,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\layout_builder\\\\LayoutBuilderServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/layout_builder/src/LayoutBuilderServiceProvider.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\layout_builder\\\\LayoutBuilderServiceProvider\\:\\:register\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/LayoutBuilderServiceProvider.php',
@@ -27525,6 +27537,12 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder_test\\\\Hook\\\\LayoutBuilderTestHooks\\:\\:systemBreadcrumbAlter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/tests/modules/layout_builder_test/src/Hook/LayoutBuilderTestHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\layout_builder_test\\\\LayoutBuilderTestServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/layout_builder/tests/modules/layout_builder_test/src/LayoutBuilderTestServiceProvider.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -34025,6 +34043,12 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\navigation\\\\NavigationContentLinks\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/navigation/src/NavigationContentLinks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\navigation\\\\NavigationServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/navigation/src/NavigationServiceProvider.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -41339,6 +41363,12 @@ $ignoreErrors[] = [
 	'message' => '#^Function olivero_drupal_alter_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/common_test/common_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\common_test\\\\CommonTestServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/common_test/src/CommonTestServiceProvider.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
