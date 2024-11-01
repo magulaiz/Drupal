@@ -80,7 +80,7 @@ function user_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function user_theme() {
+function user_theme(): array {
   return [
     'user' => [
       'render element' => 'elements',

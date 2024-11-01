@@ -341,7 +341,7 @@ function content_moderation_workspace_access(WorkspaceInterface $workspace, $ope
 /**
  * Implements hook_theme().
  */
-function content_moderation_theme() {
+function content_moderation_theme(): array {
   return ['entity_moderation_form' => ['render element' => 'form']];
 }
 
