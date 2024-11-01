@@ -271,7 +271,10 @@ function node_type_get_description(NodeTypeInterface $node_type) {
 function node_add_body_field(NodeTypeInterface $type, $label = 'Body', $field_type = 'text_long') {
   // Add or remove the body field, as needed.
   $field_storage = FieldStorageConfig::loadByName('node', 'body');
-  if (empty($field_storage)) {
+  if ($field_type === 'text_with_summary') {
+    // Delete default body storage of type text_long.
+    $field_storage->delete();
+    // Now recreate it to use text_with_summary.
     FieldStorageConfig::create([
       'field_name' => 'body',
       'entity_type' => 'node',
