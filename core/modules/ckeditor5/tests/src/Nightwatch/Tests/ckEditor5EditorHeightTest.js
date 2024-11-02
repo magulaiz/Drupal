@@ -6,7 +6,6 @@ module.exports = {
     browser
       .drupalInstall({ installProfile: 'minimal' })
       .drupalInstallModule('ckeditor5', true)
-      .drupalInstallModule('node_storage')
       .drupalInstallModule('field_ui');
 
     // Set fixed (desktop-ish) size to ensure a maximum viewport.
@@ -73,7 +72,7 @@ module.exports = {
           (result) => {
             browser.assert.ok(
               result.value,
-              'Editor height is set to 5 rows (default).',
+              'Editor height is set to 9 rows (default).',
             );
           },
         )
@@ -96,7 +95,7 @@ module.exports = {
           (result) => {
             browser.assert.ok(
               result.value,
-              'Source editing height is set to 5 rows (default).',
+              'Source editing height is set to 9 rows (default).',
             );
           },
         )
