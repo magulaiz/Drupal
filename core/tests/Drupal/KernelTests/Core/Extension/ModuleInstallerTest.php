@@ -80,7 +80,6 @@ class ModuleInstallerTest extends KernelTestBase {
 
     $module_installer->uninstall(['module_cache_bin']);
     $this->assertFalse($schema->tableExists($table));
-    // Verify the cache got cleared.
   }
 
   /**
@@ -95,7 +94,7 @@ class ModuleInstallerTest extends KernelTestBase {
   /**
    * Ensure that cache_flush is called on uninstall.
    */
-  public function testcacheFlushModuleUninstall(): void {
+  public function testCacheFlushModuleUninstall(): void {
     $module_installer = $this->container->get('module_installer');
     $this->assertTrue($module_installer->install(['module_test', 'cache_flush_uninstall']));
     $module_installer->uninstall(['module_test']);
