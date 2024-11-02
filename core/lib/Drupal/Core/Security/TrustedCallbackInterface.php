@@ -5,11 +5,6 @@ namespace Drupal\Core\Security;
 /**
  * Interface to declare trusted callbacks.
  *
- * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Instead,
- *    you should use \Drupal\Core\Security\Attribute\TrustedCallback attribute
- *    for the method.
- *
- * @see https://www.drupal.org/node/3349470
  * @see \Drupal\Core\Security\DoTrustedCallbackTrait
  */
 interface TrustedCallbackInterface {
