@@ -181,10 +181,10 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
       // IP address. This allows them to be cleared on successful reset (from
       // any IP).
       $identifier = $account->id();
-      if (!$this->flood->isAllowed('user.password_request_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
+      if (!$this->flood->isAllowed('user.password_request_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), (string) $identifier)) {
         return;
       }
-      $this->flood->register('user.password_request_user', $flood_config->get('user_window'), $identifier);
+      $this->flood->register('user.password_request_user', $flood_config->get('user_window'), (string) $identifier);
       $form_state->setValueForElement(['#parents' => ['account']], $account);
     }
   }

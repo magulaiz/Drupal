@@ -88,7 +88,7 @@ class TestPrepareLayout implements EventSubscriberInterface {
       }
 
       // Node 2: Stop event propagation.
-      if ($entity->id() === '2') {
+      if ($entity->id() == '2') {
         $event->stopPropagation();
       }
     }

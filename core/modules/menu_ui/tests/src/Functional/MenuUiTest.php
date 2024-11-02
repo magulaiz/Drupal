@@ -501,7 +501,7 @@ class MenuUiTest extends BrowserTestBase {
       'children' => [],
       'parents' => [$item6->getPluginId(), $item4->getPluginId()],
       'route_name' => 'entity.node.canonical',
-      'route_parameters' => ['node' => $node5->id()],
+      'route_parameters' => ['node' => (string) $node5->id()],
       'url' => '',
       // See above.
       'langcode' => 'en',
