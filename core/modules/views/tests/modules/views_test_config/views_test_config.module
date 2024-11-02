@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\ViewExecutable;
+use Drupal\Core\Database\Query\AlterableInterface;
 
 /**
  * Implements hook_ENTITY_TYPE_load().
@@ -20,6 +21,18 @@ function views_test_config_view_load(array $views) {
   if (isset($views[$broken_view_id])) {
     $display =& $views[$broken_view_id]->getDisplay('default');
     $display['display_options']['fields']['id_broken'] = NULL;
+  }
+}
+
+/**
+ * Implements hook_query_TAG_alter() for tag "views".
+ *
+ * @see \Drupal\Tests\views\Kernel\Plugin\CacheTest::testCachedQueryMetaData()
+ */
+function views_test_config_query_views_alter(AlterableInterface $query) {
+  global $_cache_test_get_query_meta_data;
+  if ($_cache_test_get_query_meta_data) {
+    $_cache_test_get_query_meta_data->views[] = $query->getMetaData('view');
   }
 }
 

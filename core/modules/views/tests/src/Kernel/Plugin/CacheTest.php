@@ -8,6 +8,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Render\RenderContext;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
 
@@ -407,6 +408,27 @@ class CacheTest extends ViewsKernelTestBase {
 
     $renderer->renderInIsolation($output);
     $this->assertEquals(['config:views.view.test_view', 'example_tag'], $output['#cache']['tags']);
+  }
+
+  /**
+   * Tests that the query meta data is correct when generating the results key.
+   *
+   * @see views_test_config_query_views_alter()
+   */
+  public function testCachedQueryMetaData(): void {
+    global $_cache_test_get_query_meta_data;
+
+    $view = Views::getView('test_cache');
+    $view->setDisplay();
+
+    // Get the information whether the query metadata contained the "view" key.
+    // See views_test_config_query_views_alter().
+    $_cache_test_get_query_meta_data = (object) ['views' => []];
+    $view->execute();
+    $seen_views = $_cache_test_get_query_meta_data->views;
+    $this->assertNotEmpty($seen_views);
+    $this->assertEmpty(array_filter($seen_views, 'is_null'));
+    $this->assertInstanceOf(ViewExecutable::class, $seen_views[0]);
   }
 
 }

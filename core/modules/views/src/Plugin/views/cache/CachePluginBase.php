@@ -204,6 +204,7 @@ abstract class CachePluginBase extends PluginBase {
         // the query objects.
         if ($build_info[$index] instanceof SelectInterface) {
           $query = clone $build_info[$index];
+          $query->addMetaData('view', $this->view);
           $query->preExecute();
           $build_info[$index] = [
             'query' => (string) $query,
