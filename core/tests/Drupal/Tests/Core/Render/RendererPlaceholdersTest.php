@@ -13,7 +13,6 @@ use Drupal\Core\Render\PlaceholderingRenderCache;
 use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\Renderer;
-use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer

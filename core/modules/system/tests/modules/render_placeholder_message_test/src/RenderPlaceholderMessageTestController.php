@@ -10,7 +10,7 @@ use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Render\RenderContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class RenderPlaceholderMessageTestController implements ContainerAwareInterface {
+class RenderPlaceholderMessageTestController implements ContainerInjectionInterface {
 
   /**
    * Constructs a new RenderPlaceholderMessageTestController object.
