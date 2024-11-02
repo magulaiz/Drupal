@@ -1670,9 +1670,13 @@
  * - hook_update_last_removed()
  * - hook_update_N()
  *
+ * Hooks that alter implementation.
+ * - hook_module_implements_alter
+ *
  * Theme hooks:
  * - hook_preprocess_HOOK()
  * - hook_process_HOOK()
+ * - hooks implemented by themes
  *
  * @subsection procedural-hooks Procedural hook implementation
  *

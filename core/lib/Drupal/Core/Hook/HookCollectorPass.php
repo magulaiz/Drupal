@@ -367,6 +367,7 @@ class HookCollectorPass implements CompilerPassInterface {
       'module_implements_alter',
       'module_preinstall',
       'module_preuninstall',
+      'module_implements_alter',
       'modules_installed',
       'modules_uninstalled',
       'requirements',
