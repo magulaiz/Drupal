@@ -62,9 +62,9 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $entity) {
       $label = $entity->label();
-      // If the link is to be displayed and the entity has a uri, display a
-      // link.
-      if ($output_as_link && !$entity->isNew()) {
+      // If the link is to be displayed and the entity has a URI and the user
+      // has view access (not just view label) then display a link.
+      if ($output_as_link && !$entity->isNew() && $entity->access('view')) {
         try {
           $uri = $entity->toUrl();
         }

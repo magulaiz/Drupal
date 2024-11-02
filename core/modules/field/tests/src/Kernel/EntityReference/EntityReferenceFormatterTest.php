@@ -405,6 +405,21 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
 
     $build = $this->buildRenderArray([$referenced_entity_with_no_link_template], $formatter, ['link' => TRUE]);
     $this->assertEquals($referenced_entity_with_no_link_template->label(), $build[0]['#plain_text'], sprintf('The markup returned by the %s formatter is correct for an entity type with no valid link template.', $formatter));
+
+    // Test when an entity type has view label access but does not have view
+    // entity access, so only the label is shown without triggering an
+    // exception, as in the previous test.
+    Role::load(RoleInterface::ANONYMOUS_ID)
+      ->revokePermission('view test entity')
+      ->save();
+
+    $referenced_entity_with_view_label_only = EntityTestLabel::create([
+      'name' => $this->randomMachineName(),
+    ]);
+    $referenced_entity_with_view_label_only->save();
+
+    $build = $this->buildRenderArray([$referenced_entity_with_view_label_only], $formatter, ['link' => TRUE]);
+    $this->assertEquals($referenced_entity_with_view_label_only->label(), $build[0]['#plain_text'], sprintf('The markup returned by the  %s formatter is correct for an entity type that has view label access but does not have view access.', $formatter));
   }
 
   /**
