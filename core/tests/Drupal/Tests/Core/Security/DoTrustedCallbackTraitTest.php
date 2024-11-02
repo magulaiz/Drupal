@@ -40,7 +40,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
 
     $tests['closure'] = [$closure];
     $tests['object_attribute'] = [[new TrustedMethods(), 'attributeCallback'], TrustedInterface::class];
-    $tests['subclass_attribute'] = [[new TrustedMethodsSubclass(), 'attributeCallback'], TrustedInterface::class, 'Discovery of overridden trusted methods is deprecated in drupal:11.1.0 and will throw an error from drupal:12.0.0. Add #[TrustedCallback] to the overridden method. See https://www.drupal.org/node/7654321'];
+    $tests['subclass_attribute'] = [[new TrustedMethodsSubclass(), 'attributeCallback'], TrustedInterface::class, 'Discovery of overridden trusted methods is deprecated in drupal:11.1.0 and will throw an error from drupal:12.0.0. Add #[TrustedCallback] to the overridden method. See https://www.drupal.org/node/3355686'];
     $tests['static_array_attribute'] = [[TrustedMethods::class, 'attributeCallback'], TrustedInterface::class];
     $tests['extra_trusted_interface_object'] = [[new TrustedObject(), 'callback'], TrustedInterface::class];
     $tests['extra_trusted_interface_subclass'] = [[new TrustedSubclass(), 'callback'], TrustedInterface::class];

@@ -75,7 +75,7 @@ trait DoTrustedCallbackTrait {
           $method = $method->getPrototype();
           $safe_callback = (bool) $method->getAttributes(TrustedCallback::class);
           if ($safe_callback) {
-            @trigger_error('Discovery of overridden trusted methods is deprecated in drupal:11.1.0 and will throw an error from drupal:12.0.0. Add #[TrustedCallback] to the overridden method. See https://www.drupal.org/node/7654321', E_USER_DEPRECATED);
+            @trigger_error('Discovery of overridden trusted methods is deprecated in drupal:11.1.0 and will throw an error from drupal:12.0.0. Add #[TrustedCallback] to the overridden method. See https://www.drupal.org/node/3355686', E_USER_DEPRECATED);
           }
         }
       }
