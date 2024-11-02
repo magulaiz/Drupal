@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -21,6 +22,18 @@ function views_entity_test_entity_base_field_info(EntityTypeInterface $entity_ty
   if ($entity_type->id() == 'entity_test') {
     $definitions['test_text_access'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Test access'))
+      ->setTranslatable(FALSE)
+      ->setSetting('max_length', 64)
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => 10,
+      ]);
+
+    // Create a new base field with unlimited cardinality for the test
+    // \Drupal\Tests\views\Functional\Entity\MultiValueBaseFieldRowTest.
+    $definitions['test_multi_value_base_field'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Test multi value base field'))
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setTranslatable(FALSE)
       ->setSetting('max_length', 64)
       ->setDisplayOptions('form', [
