@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\navigation;
 
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -14,7 +14,7 @@ use Drupal\Core\Url;
  *
  * @internal The navigation module is experimental.
  */
-final class UserLazyBuilder implements TrustedCallbackInterface {
+final class UserLazyBuilder {
 
   use StringTranslationTrait;
 
@@ -34,6 +34,7 @@ final class UserLazyBuilder implements TrustedCallbackInterface {
    * @return array
    *   A renderable array as expected by the renderer service.
    */
+  #[TrustedCallback]
   public function renderNavigationLinks() {
     return [
       '#theme' => 'menu_region__footer',
@@ -84,13 +85,6 @@ final class UserLazyBuilder implements TrustedCallbackInterface {
     }
 
     return $links;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['renderNavigationLinks'];
   }
 
 }
