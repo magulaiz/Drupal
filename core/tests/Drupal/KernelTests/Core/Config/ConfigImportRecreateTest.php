@@ -92,8 +92,8 @@ class ConfigImportRecreateTest extends KernelTestBase {
     // will be recreated.
     $creates = $this->configImporter->getUnprocessedConfiguration('create');
     $deletes = $this->configImporter->getUnprocessedConfiguration('delete');
-    $this->assertCount(6, $creates, 'There are 6 configuration items to create.');
-    $this->assertCount(6, $deletes, 'There are 6 configuration items to delete.');
+    $this->assertCount(5, $creates, 'There are 5 configuration items to create.');
+    $this->assertCount(5, $deletes, 'There are 5 configuration items to delete.');
     $this->assertCount(0, $this->configImporter->getUnprocessedConfiguration('update'), 'There are no configuration items to update.');
     $this->assertSame($creates, array_reverse($deletes), 'Deletes and creates contain the same configuration names in opposite orders due to dependencies.');
 
