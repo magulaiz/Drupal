@@ -275,6 +275,8 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body', $field_ty
     FieldStorageConfig::create([
       'field_name' => 'body',
       'entity_type' => 'node',
+      'translatable' => TRUE,
+      'persist_with_no_fields' => TRUE,
       'type' => $field_type,
     ])->save();
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
