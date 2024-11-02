@@ -3,7 +3,8 @@
 namespace Drupal\layout_builder;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\DependencyInjection\ServiceProviderInterface;
+use Drupal\Core\DependencyInjection\ServiceProviderBase;
+use Drupal\Core\Hook\HookOrder;
 use Drupal\layout_builder\EventSubscriber\SetInlineBlockDependency;
 use Drupal\layout_builder\Normalizer\LayoutEntityDisplayNormalizer;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -21,7 +22,7 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @see \Drupal\layout_builder\EventSubscriber\SetInlineBlockDependency
  */
-class LayoutBuilderServiceProvider implements ServiceProviderInterface {
+class LayoutBuilderServiceProvider extends ServiceProviderBase {
 
   /**
    * {@inheritdoc}
@@ -48,6 +49,13 @@ class LayoutBuilderServiceProvider implements ServiceProviderInterface {
         ->addTag('normalizer', ['priority' => 5]);
       $container->setDefinition('layout_builder.normalizer.layout_entity_display', $definition);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alter(ContainerBuilder $container) {
+    HookOrder::last($container, 'entity_view_alter', 'Drupal\\layout_builder\\Hook\\LayoutBuilderHooks::entityViewAlter');
   }
 
 }

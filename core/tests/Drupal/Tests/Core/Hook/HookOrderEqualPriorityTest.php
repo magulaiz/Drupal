@@ -26,7 +26,7 @@ class HookOrderEqualPriorityTest extends HookOrderTestBase {
    */
   public function testFirst(): void {
     // "c" was first, make "a" the first.
-    HookOrder::first($this->container, 'test', 'a::a');
+    HookOrder::first($this->container, 'test', 'a', 'a');
     $this->assertGreaterThan($this->getPriority('c'), $this->getPriority('a'));
     $this->assertGreaterThan($this->getPriority('b'), $this->getPriority('a'));
     // Nothing else can be asserted: by setting the same priority, the setup
@@ -39,7 +39,7 @@ class HookOrderEqualPriorityTest extends HookOrderTestBase {
    */
   public function testLast(): void {
     // "c" was first, make it the last.
-    HookOrder::last($this->container, 'test', 'c::c');
+    HookOrder::last($this->container, 'test', 'c', 'c');
     $this->assertGreaterThan($this->getPriority('c'), $this->getPriority('a'));
     $this->assertGreaterThan($this->getPriority('c'), $this->getPriority('b'));
     // Nothing else can be asserted: by setting the same priority, the setup
@@ -52,7 +52,7 @@ class HookOrderEqualPriorityTest extends HookOrderTestBase {
    */
   public function testBefore(): void {
     // "a" was last, move it before "b".
-    HookOrder::before($this->container, 'test', 'a::a', 'b::b');
+    HookOrder::before($this->container, 'test', 'a', 'a', 'b', 'b');
     $this->assertGreaterThan($this->getPriority('b'), $this->getPriority('a'));
     // Nothing else can be asserted: by setting the same priority, the setup
     // had undefined order and so the services not included in the helper call
@@ -64,7 +64,7 @@ class HookOrderEqualPriorityTest extends HookOrderTestBase {
    */
   public function testAfter(): void {
     // "c" was first, move it after "b".
-    HookOrder::after($this->container, 'test', 'c::c', 'b::b');
+    HookOrder::after($this->container, 'test', 'c', 'c', 'b', 'b');
     $this->assertGreaterThan($this->getPriority('c'), $this->getPriority('b'));
     // Nothing else can be asserted: by setting the same priority, the setup
     // had undefined order and so the services not included in the helper call

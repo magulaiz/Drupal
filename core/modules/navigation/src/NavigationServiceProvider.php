@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Drupal\navigation;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\DependencyInjection\ServiceProviderInterface;
+use Drupal\Core\DependencyInjection\ServiceProviderBase;
+use Drupal\Core\Hook\HookOrder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -13,7 +14,7 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @internal
  */
-final class NavigationServiceProvider implements ServiceProviderInterface {
+final class NavigationServiceProvider extends ServiceProviderBase {
 
   /**
    * {@inheritdoc}
@@ -25,6 +26,10 @@ final class NavigationServiceProvider implements ServiceProviderInterface {
         ->register('navigation.shortcut_lazy_builder', ShortcutLazyBuilder::class)
         ->addArgument(new Reference('shortcut.lazy_builders'));
     }
+  }
+
+  public function alter(ContainerBuilder $container) {
+    HookOrder::last($container, 'page_top', 'Drupal\\navigation\\Hook\\NavigationHooks::pageTop');
   }
 
 }
