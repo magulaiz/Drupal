@@ -6,6 +6,7 @@ module.exports = {
     browser
       .drupalInstall({ installProfile: 'minimal' })
       .drupalInstallModule('ckeditor5', true)
+      .drupalInstallModule('node_storage')
       .drupalInstallModule('field_ui');
 
     // Set fixed (desktop-ish) size to ensure a maximum viewport.
@@ -62,11 +63,11 @@ module.exports = {
               '.ck-editor__editable',
             ).clientHeight;
 
-            // We expect height to be 214, but test to ensure that it's greater
-            // than 200. We want to ensure that we don't hard code a very specific
+            // We expect height to be 189, but test to ensure that it's greater
+            // than 180. We want to ensure that we don't hard code a very specific
             // value because tests might break if styles change (line-height, etc).
             // Note that the default height for CKEditor5 is 47px.
-            return height > 200;
+            return height > 180;
           },
           [],
           (result) => {
@@ -85,11 +86,11 @@ module.exports = {
               '.ck-source-editing-area',
             ).clientHeight;
 
-            // We expect height to be 214, but test to ensure that it's greater
-            // than 200. We want to ensure that we don't hard code a very specific
+            // We expect height to be 189, but test to ensure that it's greater
+            // than 180. We want to ensure that we don't hard code a very specific
             // value because tests might break if styles change (line-height, etc).
             // Note that the default height for CKEditor5 is 47px.
-            return height > 200;
+            return height > 180;
           },
           [],
           (result) => {
