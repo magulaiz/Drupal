@@ -626,7 +626,7 @@ class SearchQuery extends SelectExtender {
     $count = $this->connection->select($inner->fields('i', ['sid']), NULL);
 
     // Add the COUNT() expression.
-    $count->addExpression('COUNT(*)');
+    $count->addExpressionCountAll();
 
     return $count;
   }

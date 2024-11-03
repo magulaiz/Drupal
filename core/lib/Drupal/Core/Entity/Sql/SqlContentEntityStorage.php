@@ -1780,7 +1780,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if ($as_bool) {
         $query
           ->range(0, 1)
-          ->addExpression('1');
+          ->addExpressionConstant('1');
       }
       else {
         // Otherwise count the number of rows.

@@ -216,7 +216,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
         $this->treeTerms[$vid] = [];
         $query = $this->database->select($this->getDataTable(), 't');
         $query->join('taxonomy_term__parent', 'p', '[t].[tid] = [p].[entity_id]');
-        $query->addExpression('[parent_target_id]', 'parent');
+        $query->addExpressionField('parent_target_id', 'parent');
         $result = $query
           ->addTag('taxonomy_term_access')
           ->fields('t')
@@ -307,7 +307,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function nodeCount($vid) {
     $query = $this->database->select('taxonomy_index', 'ti');
-    $query->addExpression('COUNT(DISTINCT [ti].[nid])');
+    $query->addExpressionCountDistinct('ti.nid');
     $query->leftJoin($this->getBaseTable(), 'td', '[ti].[tid] = [td].[tid]');
     $query->condition('td.vid', $vid);
     $query->addTag('vocabulary_node_count');
@@ -373,14 +373,14 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
 
     $query = $this->database->select($this->getRevisionDataTable(), 'tfr');
     $query->fields('tfr', [$id_field]);
-    $query->addExpression("MAX([tfr].[$revision_field])", $revision_field);
+    $query->addExpressionMax("tfr.$revision_field", $revision_field);
 
     $query->join($this->getRevisionTable(), 'tr', "[tfr].[$revision_field] = [tr].[$revision_field] AND [tr].[$revision_default_field] = 0");
 
     $inner_select = $this->database->select($this->getRevisionDataTable(), 't');
     $inner_select->condition("t.$rta_field", '1');
     $inner_select->fields('t', [$id_field, $langcode_field]);
-    $inner_select->addExpression("MAX([t].[$revision_field])", $revision_field);
+    $inner_select->addExpressionMax("t.$revision_field", $revision_field);
     $inner_select
       ->groupBy("t.$id_field")
       ->groupBy("t.$langcode_field");
@@ -408,8 +408,8 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     $delta_column = $table_mapping->getFieldColumnName($parent_field_storage, TableMappingInterface::DELTA);
 
     $query = $this->database->select($table_mapping->getFieldTableName('parent'), 'p');
-    $query->addExpression("MAX([$target_id_column])", 'max_parent_id');
-    $query->addExpression("MAX([$delta_column])", 'max_delta');
+    $query->addExpressionMax("$target_id_column", 'max_parent_id');
+    $query->addExpressionMax("$delta_column", 'max_delta');
     $query->condition('bundle', $vid);
 
     $result = $query->execute()->fetchAll();

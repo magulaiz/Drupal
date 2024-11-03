@@ -444,7 +444,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
    */
   public function updateIndexState() {
     $query = $this->database->select('help_search_items', 'hsi');
-    $query->addExpression('COUNT(DISTINCT([hsi].[sid]))');
+    $query->addExpressionCountDistinct('hsi.sid');
     $query->leftJoin('search_dataset', 'sd', '[hsi].[sid] = [sd].[sid] AND [sd].[type] = :type', [':type' => $this->getType()]);
     $query->isNull('sd.sid');
     $never_indexed = $query->execute()->fetchField();
@@ -470,7 +470,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
       ->fetchField();
 
     $query = $this->database->select('help_search_items', 'hsi');
-    $query->addExpression('COUNT(DISTINCT([hsi].[sid]))');
+    $query->addExpressionCountDistinct('hsi.sid');
     $query->leftJoin('search_dataset', 'sd', '[hsi].[sid] = [sd].[sid] AND [sd].[type] = :type', [':type' => $this->getType()]);
     $condition = $this->database->condition('OR');
     $condition->condition('sd.reindex', 0, '<>')

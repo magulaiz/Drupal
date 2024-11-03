@@ -243,6 +243,148 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   public function addExpression($expression, $alias = NULL, $arguments = []);
 
   /**
+   * Adds a constant as an expression to the list of "fields" to be SELECTed.
+   *
+   * @param string $constant
+   *   The field for which to create an expression.
+   * @param string $alias
+   *   The alias for this expression. If not specified, one will be generated
+   *   automatically in the form "expression_#". The alias will be checked for
+   *   uniqueness, so the requested alias may not be the alias that is assigned
+   *   in all cases.
+   *
+   * @return string
+   *   The unique alias that was assigned for this expression.
+   */
+  public function addExpressionConstant(string $constant, ?string $alias = NULL): string;
+
+  /**
+   * Adds a field expression to the list of "fields" to be SELECTed.
+   *
+   * @param string $field
+   *   The field for which to create a value.
+   * @param string $alias
+   *   The alias for this expression. If not specified, one will be generated
+   *   automatically in the form "expression_#". The alias will be checked for
+   *   uniqueness, so the requested alias may not be the alias that is assigned
+   *   in all cases.
+   *
+   * @return string
+   *   The unique alias that was assigned for this expression.
+   */
+  public function addExpressionField(string $field, ?string $alias = NULL): string;
+
+  /**
+   * Adds a maximum field expression to the list of "fields" to be SELECTed.
+   *
+   * @param string $field
+   *   The field for which to get the maximum value.
+   * @param string $alias
+   *   The alias for this expression. If not specified, one will be generated
+   *   automatically in the form "expression_#". The alias will be checked for
+   *   uniqueness, so the requested alias may not be the alias that is assigned
+   *   in all cases.
+   *
+   * @return string
+   *   The unique alias that was assigned for this expression.
+   */
+  public function addExpressionMax(string $field, ?string $alias = NULL): string;
+
+  /**
+   * Adds a minimum field expression to the list of "fields" to be SELECTed.
+   *
+   * @param string $field
+   *   The field for which to get the minimum value.
+   * @param string $alias
+   *   The alias for this expression. If not specified, one will be generated
+   *   automatically in the form "expression_#". The alias will be checked for
+   *   uniqueness, so the requested alias may not be the alias that is assigned
+   *   in all cases.
+   *
+   * @return string
+   *   The unique alias that was assigned for this expression.
+   */
+  public function addExpressionMin(string $field, ?string $alias = NULL): string;
+
+  /**
+   * Adds a sum field expression to the list of "fields" to be SELECTed.
+   *
+   * @param string $field
+   *   The field for which to get the sum value.
+   * @param string $alias
+   *   The alias for this expression. If not specified, one will be generated
+   *   automatically in the form "expression_#". The alias will be checked for
+   *   uniqueness, so the requested alias may not be the alias that is assigned
+   *   in all cases.
+   *
+   * @return string
+   *   The unique alias that was assigned for this expression.
+   */
+  public function addExpressionSum(string $field, ?string $alias = NULL): string;
+
+  /**
+   * Adds a count field expression to the list of "fields" to be SELECTed.
+   *
+   * @param string $field
+   *   The field for which to get the count value.
+   * @param string $alias
+   *   The alias for this expression. If not specified, one will be generated
+   *   automatically in the form "expression_#". The alias will be checked for
+   *   uniqueness, so the requested alias may not be the alias that is assigned
+   *   in all cases.
+   *
+   * @return string
+   *   The unique alias that was assigned for this expression.
+   */
+  public function addExpressionCount(string $field, ?string $alias = NULL): string;
+
+  /**
+   * Adds a count all expression to the list of "fields" to be SELECTed.
+   *
+   * @param string $alias
+   *   The alias for this expression. If not specified, one will be generated
+   *   automatically in the form "expression_#". The alias will be checked for
+   *   uniqueness, so the requested alias may not be the alias that is assigned
+   *   in all cases.
+   *
+   * @return string
+   *   The unique alias that was assigned for this expression.
+   */
+  public function addExpressionCountAll(?string $alias = NULL): string;
+
+  /**
+   * Adds a count distinct expression to the list of "fields" to be SELECTed.
+   *
+   * @param string $field
+   *   The field for which to get the count distinct value.
+   * @param string $alias
+   *   The alias for this expression. If not specified, one will be generated
+   *   automatically in the form "expression_#". The alias will be checked for
+   *   uniqueness, so the requested alias may not be the alias that is assigned
+   *   in all cases.
+   *
+   * @return string
+   *   The unique alias that was assigned for this expression.
+   */
+  public function addExpressionCountDistinct(string $field, ?string $alias = NULL): string;
+
+  /**
+   * Adds a coalesce expression to the list of "fields" to be SELECTed.
+   *
+   * @param array $fields
+   *   The fields for which to get the coalesce value.
+   * @param string $alias
+   *   The alias for this expression. If not specified, one will be generated
+   *   automatically in the form "expression_#". The alias will be checked for
+   *   uniqueness, so the requested alias may not be the alias that is assigned
+   *   in all cases.
+   *
+   * @return string
+   *   The unique alias that was assigned for this expression.
+   */
+  public function addExpressionCoalesce(array $fields, ?string $alias = NULL): string;
+
+  /**
    * Default Join against another table in the database.
    *
    * This method is a convenience method for innerJoin().

@@ -425,13 +425,13 @@ class DbLogController extends ControllerBase {
     ];
 
     $count_query = $this->database->select('watchdog');
-    $count_query->addExpression('COUNT(DISTINCT([message]))');
+    $count_query->addExpressionCountDistinct('message');
     $count_query->condition('type', $type);
 
     $query = $this->database->select('watchdog', 'w')
       ->extend(PagerSelectExtender::class)
       ->extend(TableSortExtender::class);
-    $query->addExpression('COUNT([wid])', 'count');
+    $query->addExpressionCount('wid', 'count');
     $query = $query
       ->fields('w', ['message', 'variables'])
       ->condition('w.type', $type)

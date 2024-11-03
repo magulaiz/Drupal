@@ -466,7 +466,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     $query->addField('n', 'nid');
     $query->leftJoin('search_dataset', 'sd', '[sd].[sid] = [n].[nid] AND [sd].[type] = :type', [':type' => $this->getPluginId()]);
     $query->addExpression('CASE MAX([sd].[reindex]) WHEN NULL THEN 0 ELSE 1 END', 'ex');
-    $query->addExpression('MAX([sd].[reindex])', 'ex2');
+    $query->addExpressionMax('sd.reindex', 'ex2');
     $query->condition(
         $query->orConditionGroup()
           ->where('[sd].[sid] IS NULL')
