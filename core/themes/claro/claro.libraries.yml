@@ -127,6 +127,7 @@ claro.drupal.dialog:
   css:
     theme:
       css/components/dialog.css: {}
+      css/components/button.css: {}
   dependencies:
     - claro/claro.jquery.ui
 
