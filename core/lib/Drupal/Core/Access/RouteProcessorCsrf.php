@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -21,13 +22,23 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
   protected $csrfToken;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs a RouteProcessorCsrf object.
    *
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    */
-  public function __construct(CsrfTokenGenerator $csrf_token) {
+  public function __construct(CsrfTokenGenerator $csrf_token, RequestStack $request_stack) {
     $this->csrfToken = $csrf_token;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -42,7 +53,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
       }
       // Adding this to the parameters means it will get merged into the query
       // string when the route is compiled.
-      if (!$bubbleable_metadata) {
+      if (!$bubbleable_metadata || $this->requestStack->getCurrentRequest()->getRequestFormat() != 'html') {
         $parameters['token'] = $this->csrfToken->get($path);
       }
       else {
