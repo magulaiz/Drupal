@@ -45,10 +45,10 @@ class DefaultTableMappingTest extends UnitTestCase {
     $table_mapping = new TestDefaultTableMapping($this->entityType, []);
     $this->assertSame([], $table_mapping->getTableNames());
 
-    $table_mapping->setFieldNames('foo', []);
+    $table_mapping->addFieldNames('foo', []);
     $this->assertSame(['foo'], $table_mapping->getTableNames());
 
-    $table_mapping->setFieldNames('bar', []);
+    $table_mapping->addFieldNames('bar', []);
     $this->assertSame(['foo', 'bar'], $table_mapping->getTableNames());
 
     $table_mapping->setExtraColumns('baz', []);
@@ -66,7 +66,8 @@ class DefaultTableMappingTest extends UnitTestCase {
    * @covers ::getAllColumns
    * @covers ::getFieldNames
    * @covers ::getColumnNames
-   * @covers ::setFieldNames
+   * @covers ::addFieldNames
+   * @covers ::removeFieldNames
    * @covers ::getExtraColumns
    * @covers ::setExtraColumns
    */
@@ -86,24 +87,19 @@ class DefaultTableMappingTest extends UnitTestCase {
     $this->assertSame($expected, $table_mapping->getAllColumns('test'));
 
     // Test adding field columns.
-    $table_mapping->setFieldNames('test', ['id']);
+    $table_mapping->addFieldNames('test', ['id']);
     $expected = ['id'];
     $this->assertSame($expected, $table_mapping->getAllColumns('test'));
 
-    $table_mapping->setFieldNames('test', ['id', 'name']);
+    $table_mapping->addFieldNames('test', ['name']);
     $expected = ['id', 'name'];
     $this->assertSame($expected, $table_mapping->getAllColumns('test'));
 
-    $table_mapping->setFieldNames('test', ['id', 'name', 'type']);
+    $table_mapping->addFieldNames('test', ['type']);
     $expected = ['id', 'name', 'type'];
     $this->assertSame($expected, $table_mapping->getAllColumns('test'));
 
-    $table_mapping->setFieldNames('test', [
-      'id',
-      'name',
-      'type',
-      'description',
-    ]);
+    $table_mapping->addFieldNames('test', ['description']);
     $expected = [
       'id',
       'name',
@@ -113,13 +109,7 @@ class DefaultTableMappingTest extends UnitTestCase {
     ];
     $this->assertSame($expected, $table_mapping->getAllColumns('test'));
 
-    $table_mapping->setFieldNames('test', [
-      'id',
-      'name',
-      'type',
-      'description',
-      'owner',
-    ]);
+    $table_mapping->addFieldNames('test', ['owner']);
     $expected = [
       'id',
       'name',
@@ -132,7 +122,13 @@ class DefaultTableMappingTest extends UnitTestCase {
     $this->assertSame($expected, $table_mapping->getAllColumns('test'));
 
     // Test adding extra columns.
-    $table_mapping->setFieldNames('test', []);
+    $table_mapping->removeFieldNames('test', [
+      'id',
+      'name',
+      'type',
+      'description',
+      'owner',
+    ]);
     $table_mapping->setExtraColumns('test', ['default_langcode']);
     $expected = ['default_langcode'];
     $this->assertSame($expected, $table_mapping->getAllColumns('test'));
@@ -145,7 +141,7 @@ class DefaultTableMappingTest extends UnitTestCase {
     $this->assertSame($expected, $table_mapping->getAllColumns('test'));
 
     // Test adding both field and extra columns.
-    $table_mapping->setFieldNames('test', [
+    $table_mapping->addFieldNames('test', [
       'id',
       'name',
       'type',
@@ -174,7 +170,8 @@ class DefaultTableMappingTest extends UnitTestCase {
    * Tests DefaultTableMapping::getFieldNames().
    *
    * @covers ::getFieldNames
-   * @covers ::setFieldNames
+   * @covers ::addFieldNames
+   * @covers ::removeFieldNames
    */
   public function testGetFieldNames(): void {
     // The storage definitions are only used in getColumnNames() so we do not
@@ -185,13 +182,13 @@ class DefaultTableMappingTest extends UnitTestCase {
     // fields have been added does not fail.
     $this->assertSame([], $table_mapping->getFieldNames('foo'));
 
-    $return = $table_mapping->setFieldNames('foo', ['id', 'name', 'type']);
+    $return = $table_mapping->addFieldNames('foo', ['id', 'name', 'type']);
     $this->assertSame($table_mapping, $return);
     $expected = ['id', 'name', 'type'];
     $this->assertSame($expected, $table_mapping->getFieldNames('foo'));
     $this->assertSame([], $table_mapping->getFieldNames('bar'));
 
-    $return = $table_mapping->setFieldNames('bar', ['description', 'owner']);
+    $return = $table_mapping->addFieldNames('bar', ['description', 'owner']);
     $this->assertSame($table_mapping, $return);
     $expected = ['description', 'owner'];
     $this->assertSame($expected, $table_mapping->getFieldNames('bar'));
@@ -403,7 +400,7 @@ class DefaultTableMappingTest extends UnitTestCase {
     // Add the field to all the defined tables to ensure the correct one is
     // picked.
     foreach ($table_names as $table_name) {
-      $table_mapping->setFieldNames($table_name, [$field_name]);
+      $table_mapping->addFieldNames($table_name, [$field_name]);
     }
 
     $this->assertEquals($expected, $table_mapping->getFieldTableName('test'));
@@ -613,8 +610,15 @@ class TestDefaultTableMapping extends DefaultTableMapping {
   /**
    * {@inheritdoc}
    */
-  public function setFieldNames($table_name, array $field_names) {
-    return parent::setFieldNames($table_name, $field_names);
+  public function addFieldNames($table_name, array $field_names): static {
+    return parent::addFieldNames($table_name, $field_names);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeFieldNames($table_name, array $field_names): static {
+    return parent::removeFieldNames($table_name, $field_names);
   }
 
   /**

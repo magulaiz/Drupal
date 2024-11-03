@@ -176,7 +176,7 @@ class DefaultTableMapping implements TableMappingInterface {
       return $table_mapping->allowsSharedTableStorage($definition);
     });
 
-    $key_fields = array_values(array_filter([$id_key, $revision_key, $bundle_key, $uuid_key, $langcode_key]));
+    $key_fields = array_filter([$id_key, $revision_key, $bundle_key, $uuid_key, $langcode_key]);
     $all_fields = array_keys($shared_table_definitions);
     $revisionable_fields = array_keys(array_filter($shared_table_definitions, function (FieldStorageDefinitionInterface $definition) {
       return $definition->isRevisionable();
@@ -184,21 +184,22 @@ class DefaultTableMapping implements TableMappingInterface {
     // Make sure the key fields come first in the list of fields.
     $all_fields = array_merge($key_fields, array_diff($all_fields, $key_fields));
 
-    $revision_metadata_fields = $revisionable ? array_values($entity_type->getRevisionMetadataKeys()) : [];
+    $revision_metadata_fields = $revisionable ? $entity_type->getRevisionMetadataKeys() : [];
     $revision_metadata_fields = array_intersect($revision_metadata_fields, array_keys($storage_definitions));
 
     if (!$revisionable && !$translatable) {
       // The base layout stores all the base field values in the base table.
-      $table_mapping->setFieldNames($table_mapping->baseTable, $all_fields);
+      $table_mapping->addFieldNames($table_mapping->baseTable, $all_fields);
     }
     elseif ($revisionable && !$translatable) {
       // The revisionable layout stores all the base field values in the base
       // table, except for revision metadata fields. Revisionable fields
       // denormalized in the base table but also stored in the revision table
       // together with the entity ID and the revision ID as identifiers.
-      $table_mapping->setFieldNames($table_mapping->baseTable, array_diff($all_fields, $revision_metadata_fields));
-      $revision_key_fields = [$id_key, $revision_key];
-      $table_mapping->setFieldNames($table_mapping->revisionTable, array_merge($revision_key_fields, $revisionable_fields));
+      $table_mapping
+        ->addFieldNames($table_mapping->baseTable, array_diff($all_fields, $revision_metadata_fields))
+        ->addFieldNames($table_mapping->revisionTable, [$id_key, $revision_key])
+        ->addFieldNames($table_mapping->revisionTable, $revisionable_fields);
     }
     elseif (!$revisionable && $translatable) {
       // Multilingual layouts store key field values in the base table. The
@@ -208,8 +209,8 @@ class DefaultTableMapping implements TableMappingInterface {
       // performant queries. This means that only the UUID is not stored on
       // the data table.
       $table_mapping
-        ->setFieldNames($table_mapping->baseTable, $key_fields)
-        ->setFieldNames($table_mapping->dataTable, array_values(array_diff($all_fields, [$uuid_key])));
+        ->addFieldNames($table_mapping->baseTable, $key_fields)
+        ->addFieldNames($table_mapping->dataTable, array_diff($all_fields, [$uuid_key]));
     }
     elseif ($revisionable && $translatable) {
       // The revisionable multilingual layout stores key field values in the
@@ -219,20 +220,22 @@ class DefaultTableMapping implements TableMappingInterface {
       // holds the data field values for all non-revisionable fields. The data
       // field values of revisionable fields are denormalized in the data
       // table, as well.
-      $table_mapping->setFieldNames($table_mapping->baseTable, $key_fields);
+      $table_mapping->addFieldNames($table_mapping->baseTable, $key_fields);
 
       // Like in the multilingual, non-revisionable case the UUID is not
       // in the data table. Additionally, do not store revision metadata
       // fields in the data table.
-      $data_fields = array_values(array_diff($all_fields, [$uuid_key], $revision_metadata_fields));
-      $table_mapping->setFieldNames($table_mapping->dataTable, $data_fields);
+      $data_fields = array_diff($all_fields, [$uuid_key], $revision_metadata_fields);
+      $table_mapping->addFieldNames($table_mapping->dataTable, $data_fields);
 
-      $revision_base_fields = array_merge([$id_key, $revision_key, $langcode_key], $revision_metadata_fields);
-      $table_mapping->setFieldNames($table_mapping->revisionTable, $revision_base_fields);
+      $table_mapping
+        ->addFieldNames($table_mapping->revisionTable, [$id_key, $revision_key, $langcode_key])
+        ->addFieldNames($table_mapping->revisionTable, $revision_metadata_fields);
 
-      $revision_data_key_fields = [$id_key, $revision_key, $langcode_key];
       $revision_data_fields = array_diff($revisionable_fields, $revision_metadata_fields, [$langcode_key]);
-      $table_mapping->setFieldNames($table_mapping->revisionDataTable, array_merge($revision_data_key_fields, $revision_data_fields));
+      $table_mapping
+        ->addFieldNames($table_mapping->revisionDataTable, [$id_key, $revision_key, $langcode_key])
+        ->addFieldNames($table_mapping->revisionDataTable, $revision_data_fields);
     }
 
     // Add dedicated tables.
@@ -253,8 +256,9 @@ class DefaultTableMapping implements TableMappingInterface {
         $tables[] = $table_mapping->getDedicatedRevisionTableName($definition);
       }
       foreach ($tables as $table_name) {
-        $table_mapping->setFieldNames($table_name, [$field_name]);
-        $table_mapping->setExtraColumns($table_name, $extra_columns);
+        $table_mapping
+          ->addFieldNames($table_name, [$field_name])
+          ->setExtraColumns($table_name, $extra_columns);
       }
     }
 
@@ -455,13 +459,37 @@ class DefaultTableMapping implements TableMappingInterface {
    *
    * @internal
    *
-   * @todo Make this method protected in drupal:9.0.0.
+   * @todo Make this method protected in drupal:11.0.0.
    * @see https://www.drupal.org/node/3067336
    */
-  public function setFieldNames($table_name, array $field_names) {
-    $this->fieldNames[$table_name] = $field_names;
+  public function addFieldNames($table_name, array $field_names): static {
+    if (!isset($this->fieldNames[$table_name])) {
+      $this->fieldNames[$table_name] = [];
+    }
+    $newFieldNames = array_merge($this->fieldNames[$table_name], $field_names);
+    $this->fieldNames[$table_name] = array_values(array_unique($newFieldNames));
     // Force the re-computation of the column list.
     unset($this->allColumns[$table_name]);
+    return $this;
+  }
+
+  /**
+   * Removes field columns for a table from the table mapping.
+   *
+   * @param string $table_name
+   *   The name of the table to add the field column for.
+   * @param string[] $field_names
+   *   A list of field names to add the columns for.
+   *
+   * @return $this
+   *
+   * @internal
+   *
+   * @todo Make this method protected in drupal:11.0.0.
+   * @see https://www.drupal.org/node/3067336
+   */
+  public function removeFieldNames($table_name, array $field_names): static {
+    $this->fieldNames[$table_name] = array_diff($this->fieldNames[$table_name], $field_names);
     return $this;
   }
 
