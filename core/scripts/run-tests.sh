@@ -797,23 +797,6 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
           $message = 'FATAL ' . $child['class'] . ': test runner returned an unexpected error code (' . $child['process']->getExitCode() . ').';
           echo $message . "\n";
           $total_status = max(SIMPLETEST_SCRIPT_EXIT_EXCEPTION, $total_status);
-          // Insert a fail for xml results.
-          $child['test_run']->insertLogEntry([
-            'test_class' => $child['class'],
-            'status' => 'fail',
-            'message' => $message,
-            'message_group' => 'run-tests.sh check',
-          ]);
-          // Ensure that an error line is displayed for the class.
-          simpletest_script_reporter_display_summary($child['class'], [
-            '#pass' => 0,
-            '#fail' => 0,
-            '#error' => 1,
-            '#skipped' => 0,
-            '#exception' => 0,
-            '#debug' => 0,
-            '#time' => 0,
-          ]);
           if ($args['die-on-fail']) {
             $test_db = new TestDatabase($child['test_run']->getDatabasePrefix());
             $test_directory = $test_db->getTestSitePath();
@@ -1396,7 +1379,7 @@ function simpletest_script_format_result($result) {
   if ($args['non-html']) {
     $message = Html::decodeEntities($message);
   }
-  $lines = explode("\n", wordwrap($message), 76);
+  $lines = explode("\n", $message);
   foreach ($lines as $line) {
     echo "    $line\n";
   }

@@ -100,16 +100,20 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *   A fully qualified test class name.
    * @param string $log_junit_file_path
    *   A filepath to use for PHPUnit's --log-junit option.
-   * @param int $status
+   * @param int|null $status
    *   (optional) The exit status code of the PHPUnit process will be assigned
    *   to this variable.
-   * @param string[] $output
+   * @param string[]|null $output
    *   (optional) The output by running the phpunit command. If provided, this
    *   array will contain the lines output by the command.
+   * @param string[]|null $error
+   *   (optional) The error returned by running the phpunit command. If
+   *   provided, this array will contain the error lines output by the
+   *   command.
    *
    * @internal
    */
-  protected function runCommand(string $test_class_name, string $log_junit_file_path, ?int &$status = NULL, ?array &$output = NULL): void {
+  protected function runCommand(string $test_class_name, string $log_junit_file_path, ?int &$status = NULL, ?array &$output = NULL, ?array &$error = NULL): void {
     global $base_url;
     // Setup an environment variable containing the database connection so that
     // functional tests can connect to the database.
@@ -149,6 +153,10 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     $process->setTimeout(NULL);
     $process->run();
     $output = explode("\n", $process->getOutput());
+    $errorOutput = $process->getErrorOutput();
+    if (!empty($errorOutput)) {
+      $error = explode("\n", $process->getErrorOutput());
+    }
     $status = $process->getExitCode();
   }
 
@@ -173,8 +181,9 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     $log_junit_file_path = $this->xmlLogFilePath($test_run->id());
     // Store output from our test run.
     $output = [];
+    $error = [];
     $start = microtime(TRUE);
-    $this->runCommand($test_class_name, $log_junit_file_path, $status, $output);
+    $this->runCommand($test_class_name, $log_junit_file_path, $status, $output, $error);
     $time = microtime(TRUE) - $start;
 
     if (file_exists($log_junit_file_path)) {
@@ -187,11 +196,16 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     // If not passed, add full PHPUnit run output since individual test cases
     // messages may not give full clarity (deprecations, warnings, etc.).
     if ($status > TestStatus::PASS) {
+      $message = implode("\n", $output);
+      if (!empty($error)) {
+        $message .= "\nERROR:\n";
+        $message .= implode("\n", $error);
+      }
       $results[] = [
         'test_id' => $test_run->id(),
         'test_class' => $test_class_name,
         'status' => $status < TestStatus::SYSTEM ? 'debug' : 'exception',
-        'message' => implode("\n", $output),
+        'message' => $message,
         'message_group' => 'Other',
         'function' => '*** Process execution output ***',
         'line' => '0',
