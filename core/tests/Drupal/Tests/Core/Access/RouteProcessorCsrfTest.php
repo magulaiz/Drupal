@@ -24,6 +24,13 @@ class RouteProcessorCsrfTest extends UnitTestCase {
   protected $csrfToken;
 
   /**
+   * The mock request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $requestStack;
+
+  /**
    * The route processor.
    *
    * @var \Drupal\Core\Access\RouteProcessorCsrf
@@ -40,7 +47,20 @@ class RouteProcessorCsrfTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->processor = new RouteProcessorCsrf($this->csrfToken);
+    $this->requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $request = $this->createMock('Symfony\Component\HttpFoundation\Request');
+    $request->expects($this->any())
+      ->method('getRequestFormat')
+      ->willReturn('html');
+
+    $this->requestStack->expects($this->any())
+      ->method('getCurrentRequest')
+      ->willReturn($request);
+
+    $this->processor = new RouteProcessorCsrf($this->csrfToken, $this->requestStack);
   }
 
   /**
