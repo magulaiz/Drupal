@@ -63,11 +63,7 @@ class SvgSpriteExtractorTest extends UnitTestCase {
    *   The test cases.
    */
   public static function providerDiscoverIconsSvgSprite(): iterable {
-    yield 'empty files' => [
-      [],
-      [],
-      [],
-    ];
+    yield 'empty' => [];
 
     yield 'svg not sprite is ignored' => [
       [
@@ -77,7 +73,7 @@ class SvgSpriteExtractorTest extends UnitTestCase {
         ],
       ],
       [
-        ['/path/baz.svg', '<svg><path d="M8 15a.5.5 0 0 0"/></svg>'],
+        ['/path/baz.svg', '<svg xmlns="https://www.w3.org/2000/svg"><path d="M8 15a.5.5 0 0 0"/></svg>'],
       ],
       [],
     ];
@@ -120,6 +116,25 @@ class SvgSpriteExtractorTest extends UnitTestCase {
       ],
       ['foo', 'bar'],
     ];
+
+    yield 'svg sprite with attributes' => [
+      [
+        [
+          'source' => 'source/baz',
+          'absolute_path' => '/path/baz.svg',
+        ],
+      ],
+      [
+        ['/path/baz.svg', '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-foo="bar" data-baz="foo"><symbol id="foo"></symbol></svg>'],
+      ],
+      ['foo'],
+      [
+        [
+          'data-foo' => 'bar',
+          'data-baz' => 'foo',
+        ],
+      ],
+    ];
   }
 
   /**
@@ -134,7 +149,7 @@ class SvgSpriteExtractorTest extends UnitTestCase {
    *
    * @dataProvider providerDiscoverIconsSvgSprite
    */
-  public function testDiscoverIconsSvgSprite(array $icons, array $contents_map, array $expected): void {
+  public function testDiscoverIconsSvgSprite(array $icons = [], array $contents_map = [], array $expected = []): void {
     $return_list = [];
     foreach ($icons as $icon) {
       $return_list[] = $this->createIconData($icon);

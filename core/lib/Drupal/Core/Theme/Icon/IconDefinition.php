@@ -148,7 +148,10 @@ class IconDefinition implements IconDefinitionInterface {
   /**
    * {@inheritdoc}
    */
-  public function getData(string $key): mixed {
+  public function getData(?string $key = NULL): mixed {
+    if (!$key) {
+      return $this->data;
+    }
     return $this->data[$key] ?? NULL;
   }
 

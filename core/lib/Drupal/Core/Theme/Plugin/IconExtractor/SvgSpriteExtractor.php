@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Theme\Plugin\IconExtractor;
 
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\Icon\Attribute\IconExtractor;
 use Drupal\Core\Theme\Icon\IconExtractorWithFinder;
@@ -40,9 +41,12 @@ class SvgSpriteExtractor extends IconExtractorWithFinder {
 
     $icons = [];
     foreach ($files as $file) {
-      $icon_ids = $this->extractIdsFromXml($file['absolute_path'] ?? '');
-      foreach ($icon_ids as $icon_id) {
-        $icons[] = $this->createIcon((string) $icon_id, $file['source'], $file['group'] ?? NULL);
+      $extractedData = $this->extractIdsFromXml($file['absolute_path'] ?? '');
+      if (!isset($extractedData['icon_ids'])) {
+        continue;
+      }
+      foreach ($extractedData['icon_ids'] as $icon_id) {
+        $icons[] = $this->createIcon((string) $icon_id, $file['source'], $file['group'] ?? NULL, ['attributes' => $extractedData['attributes']]);
       }
     }
 
@@ -56,7 +60,9 @@ class SvgSpriteExtractor extends IconExtractorWithFinder {
    *   Local path or url to the svg file.
    *
    * @return array
-   *   A list of icons ID.
+   *   A list of icons with keys:
+   *   - icon_ids: array of icon Id found
+   *   - attributes: Attribute object from the svg
    */
   private function extractIdsFromXml(string $source): array {
     if (!$content = $this->iconFinder->getFileContents($source)) {
@@ -69,26 +75,36 @@ class SvgSpriteExtractor extends IconExtractorWithFinder {
       // @todo do we need to log a warning with the xml error?
       return [];
     }
-    if ($svg->symbol) {
-      return $this->extractIdsFromSymbols($svg->symbol);
-    }
-    if ($svg->defs->symbol) {
-      return $this->extractIdsFromSymbols($svg->defs->symbol);
+
+    $return = [
+      'icon_ids' => [],
+      'attributes' => new Attribute(),
+    ];
+
+    // Add svg attributes to be available in the template.
+    foreach ($svg->attributes() as $name => $value) {
+      $return['attributes']->setAttribute($name, (string) $value);
     }
 
-    return [];
+    $return['icon_ids'] = $this->extractIdsFromSymbols($svg->symbol) ?: $this->extractIdsFromSymbols($svg->defs->symbol ?? NULL);
+
+    return $return;
   }
 
   /**
    * Extract icon ID from SVG symbols.
    *
-   * @param \SimpleXMLElement $wrapper
+   * @param \SimpleXMLElement|null $wrapper
    *   A SVG element.
    *
    * @return array
    *   A list of icons ID.
    */
-  private function extractIdsFromSymbols(\SimpleXMLElement $wrapper): array {
+  private function extractIdsFromSymbols(?\SimpleXMLElement $wrapper): array {
+    if ($wrapper === NULL) {
+      return [];
+    }
+
     $ids = [];
     foreach ($wrapper as $symbol) {
       if (isset($symbol['id'])) {

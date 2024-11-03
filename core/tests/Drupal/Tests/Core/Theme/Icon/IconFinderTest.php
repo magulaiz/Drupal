@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Icon;
 
-// cspell:ignore corge
+// cspell:ignore corge grault garply quux plugh
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Theme\Icon\IconFinder;
 use Drupal\Tests\UnitTestCase;
@@ -544,43 +544,43 @@ class IconFinderTest extends UnitTestCase {
     yield 'test icon_id extracted' => [
       ['icons/prefix_suffix/{icon_id}.svg'],
       [
-        ['foo', 'icons/prefix_suffix/foo.svg'],
-        ['foo_suffix', 'icons/prefix_suffix/foo_suffix.svg'],
-        ['prefix_foo', 'icons/prefix_suffix/prefix_foo.svg'],
-        ['prefix_foo_suffix', 'icons/prefix_suffix/prefix_foo_suffix.svg'],
+        ['grault', 'icons/prefix_suffix/grault.svg'],
+        ['garply_suffix', 'icons/prefix_suffix/garply_suffix.svg'],
+        ['prefix_quux', 'icons/prefix_suffix/prefix_quux.svg'],
+        ['prefix_corge_suffix', 'icons/prefix_suffix/prefix_corge_suffix.svg'],
       ],
     ];
 
     yield 'test icon_id extracted prefix' => [
         ['icons/prefix_suffix/prefix_{icon_id}.svg'],
         [
-          ['foo', 'icons/prefix_suffix/prefix_foo.svg'],
-          ['foo_suffix', 'icons/prefix_suffix/prefix_foo_suffix.svg'],
+          ['quux', 'icons/prefix_suffix/prefix_quux.svg'],
+          ['corge_suffix', 'icons/prefix_suffix/prefix_corge_suffix.svg'],
         ],
     ];
 
     yield 'test icon_id extracted suffix' => [
         ['icons/prefix_suffix/{icon_id}_suffix.svg'],
         [
-          ['foo', 'icons/prefix_suffix/foo_suffix.svg'],
-          ['prefix_foo', 'icons/prefix_suffix/prefix_foo_suffix.svg'],
+          ['garply', 'icons/prefix_suffix/garply_suffix.svg'],
+          ['prefix_corge', 'icons/prefix_suffix/prefix_corge_suffix.svg'],
         ],
     ];
 
     yield 'test icon_id extracted both' => [
         ['icons/prefix_suffix/prefix_{icon_id}_suffix.svg'],
         [
-          ['foo', 'icons/prefix_suffix/prefix_foo_suffix.svg'],
+          ['corge', 'icons/prefix_suffix/prefix_corge_suffix.svg'],
         ],
     ];
 
     yield 'test icon_id extracted with group' => [
         ['icons/prefix_suffix/{group}/{icon_id}.svg'],
         [
-          ['foo_group', 'icons/prefix_suffix/group/foo_group.svg', 'group'],
-          ['foo_group_suffix', 'icons/prefix_suffix/group/foo_group_suffix.svg', 'group'],
-          ['prefix_foo_group', 'icons/prefix_suffix/group/prefix_foo_group.svg', 'group'],
-          ['prefix_foo_group_suffix', 'icons/prefix_suffix/group/prefix_foo_group_suffix.svg', 'group'],
+          ['fred_group', 'icons/prefix_suffix/group/fred_group.svg', 'group'],
+          ['plugh_group_suffix', 'icons/prefix_suffix/group/plugh_group_suffix.svg', 'group'],
+          ['prefix_qux_group', 'icons/prefix_suffix/group/prefix_qux_group.svg', 'group'],
+          ['prefix_waldo_group_suffix', 'icons/prefix_suffix/group/prefix_waldo_group_suffix.svg', 'group'],
         ],
     ];
 
@@ -592,10 +592,10 @@ class IconFinderTest extends UnitTestCase {
           ['corge_group_2', 'icons/group/group_2/corge_group_2.svg', 'group_2'],
           ['foo_group_2', 'icons/group/group_2/foo_group_2.svg', 'group_2'],
           ['foo', 'icons/group_same_name/group_3/foo.svg', 'group_3'],
-          ['foo_group', 'icons/prefix_suffix/group/foo_group.svg', 'group'],
-          ['foo_group_suffix', 'icons/prefix_suffix/group/foo_group_suffix.svg', 'group'],
-          ['prefix_foo_group', 'icons/prefix_suffix/group/prefix_foo_group.svg', 'group'],
-          ['prefix_foo_group_suffix', 'icons/prefix_suffix/group/prefix_foo_group_suffix.svg', 'group'],
+          ['fred_group', 'icons/prefix_suffix/group/fred_group.svg', 'group'],
+          ['plugh_group_suffix', 'icons/prefix_suffix/group/plugh_group_suffix.svg', 'group'],
+          ['prefix_qux_group', 'icons/prefix_suffix/group/prefix_qux_group.svg', 'group'],
+          ['prefix_waldo_group_suffix', 'icons/prefix_suffix/group/prefix_waldo_group_suffix.svg', 'group'],
         ],
     ];
 

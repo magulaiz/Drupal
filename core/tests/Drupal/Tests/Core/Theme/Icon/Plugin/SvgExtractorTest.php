@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Theme\Icon\Plugin;
 
 // cspell:ignore corge
-use Drupal\Tests\UnitTestCase;
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Icon\IconFinder;
 use Drupal\Core\Theme\Plugin\IconExtractor\SvgExtractor;
 use Drupal\Tests\Core\Theme\Icon\IconTestTrait;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\Core\Theme\Plugin\IconExtractor\SvgExtractor
@@ -64,11 +66,7 @@ class SvgExtractorTest extends UnitTestCase {
    *   The test cases, icons data with content map and expected content.
    */
   public static function providerDiscoverIconsSvg() {
-    yield 'empty files' => [
-      [],
-      [],
-      [],
-    ];
+    yield 'empty' => [];
 
     yield 'svg file empty' => [
       [
@@ -93,10 +91,32 @@ class SvgExtractorTest extends UnitTestCase {
         ],
       ],
       [
-        ['/path/foo.svg', '<svg><g><path d="M8 15a.5.5 0 0 0"/></g></svg>'],
+        ['/path/foo.svg', '<svg xmlns="https://www.w3.org/2000/svg"><g><path d="M8 15a.5.5 0 0 0"/></g></svg>'],
       ],
       [
         '<g><path d="M8 15a.5.5 0 0 0"/></g>',
+      ],
+    ];
+
+    yield 'svg file with attributes' => [
+      [
+        [
+          'icon_id' => 'foo',
+          'source' => 'source/foo',
+          'absolute_path' => '/path/foo.svg',
+        ],
+      ],
+      [
+        ['/path/foo.svg', '<svg xmlns="https://www.w3.org/2000/svg" data-foo="bar" data-baz="foo"><g><path d="M8 15a.5.5 0 0 0"/></g></svg>'],
+      ],
+      [
+        '<g><path d="M8 15a.5.5 0 0 0"/></g>',
+      ],
+      [
+        [
+          'data-foo' => 'bar',
+          'data-baz' => 'foo',
+        ],
       ],
     ];
 
@@ -109,9 +129,8 @@ class SvgExtractorTest extends UnitTestCase {
         ],
       ],
       [
-        ['/path/foo.svg', '<svg><symbol id="foo"><g><path d="M8 15a.5.5 0 0 0"/></g></symbol>/svg>'],
+        ['/path/foo.svg', '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><symbol id="foo"><g><path d="M8 15a.5.5 0 0 0"/></g></symbol>/svg>'],
       ],
-      [],
     ];
 
     yield 'multiple files with group' => [
@@ -139,17 +158,26 @@ class SvgExtractorTest extends UnitTestCase {
           '/path/foo.svg', '<svg xmlns="http://www.w3.org/2000/svg"><g><path d="M8 15a.5.5 0 0 0"/></g></svg>',
         ],
         [
-          '/path/bar.svg', '<svg data-foo="bar"><path d="M8 15a.5.5 0 0 0"/></svg>',
+          '/path/bar.svg', '<svg xmlns="http://www.w3.org/2000/svg" data-foo="bar"><path d="M8 15a.5.5 0 0 0"/></svg>',
         ],
         // Valid but dummy content.
         [
-          '/path/empty.svg', '<svg data-foo="bar"><title>Foo</title><defs><g foo="bar"><bar/></g></defs></svg>',
+          '/path/empty.svg', '<svg xmlns="http://www.w3.org/2000/svg" data-bar="baz"><title>Foo</title><defs><g foo="bar"><bar/></g></defs></svg>',
         ],
       ],
       [
         '<g><path d="M8 15a.5.5 0 0 0"/></g>',
         '<path d="M8 15a.5.5 0 0 0"/>',
         '<title>Foo</title><defs><g foo="bar"><bar/></g></defs>',
+      ],
+      [
+        [],
+        [
+          'data-foo' => 'bar',
+        ],
+        [
+          'data-bar' => 'baz',
+        ],
       ],
     ];
   }
@@ -163,10 +191,12 @@ class SvgExtractorTest extends UnitTestCase {
    *   The content returned by fileGetContents() based on absolute_path.
    * @param array<string> $expected
    *   The icons expected.
+   * @param array<string, string> $expected_attributes
+   *   The attributes expected.
    *
    * @dataProvider providerDiscoverIconsSvg
    */
-  public function testDiscoverIconsSvg(array $icons, array $contents_map, array $expected): void {
+  public function testDiscoverIconsSvg(array $icons = [], array $contents_map = [], array $expected = [], array $expected_attributes = []): void {
     $return_list = [];
     foreach ($icons as $icon) {
       $return_list[] = $this->createIconData($icon);
@@ -183,7 +213,9 @@ class SvgExtractorTest extends UnitTestCase {
     }
 
     foreach ($result as $index => $icon) {
-      $this->assertSame($expected[$index], $icon->getData('content'));
+      $this->assertEquals(new FormattableMarkup($expected[$index], []), $icon->getData('content'));
+      $this->assertEquals(new Attribute($expected_attributes[$index] ?? []), $icon->getData('attributes'));
+
       // Basic data are not altered and can be compared directly.
       $this->assertSame($icons[$index]['icon_id'], $icon->getIconId());
       $this->assertSame($icons[$index]['source'], $icon->getSource());

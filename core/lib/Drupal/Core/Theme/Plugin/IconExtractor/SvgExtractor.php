@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Theme\Plugin\IconExtractor;
 
+use Drupal\Core\Template\Attribute;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\Icon\Attribute\IconExtractor;
 use Drupal\Core\Theme\Icon\IconExtractorWithFinder;
@@ -36,11 +38,10 @@ class SvgExtractor extends IconExtractorWithFinder {
     // Check is included in getFilesFromSources(), but we need to disallow
     // remote sources before.
     $this->checkRequiredConfigSources();
-    foreach ($this->configuration['config']['sources'] as $key => $source) {
-      if (!empty(parse_url($source, PHP_URL_SCHEME))) {
-        unset($this->configuration['config']['sources'][$key]);
-      }
-    }
+
+    $this->configuration['config']['sources'] = array_filter($this->configuration['config']['sources'], function ($source) {
+      return empty(parse_url($source, PHP_URL_SCHEME));
+    });
 
     if (empty($this->configuration['config']['sources'])) {
       return [];
@@ -54,16 +55,19 @@ class SvgExtractor extends IconExtractorWithFinder {
 
     $icons = [];
     foreach ($files as $file) {
-      if (!$content = $this->extractSvg($file['absolute_path'] ?? '')) {
+      if (!isset($file['absolute_path']) || empty($file['absolute_path'])) {
         continue;
       }
+
+      if (!$svg_data = $this->extractSvg($file['absolute_path'])) {
+        continue;
+      }
+
       $icons[] = $this->createIcon(
         $file['icon_id'],
         $file['source'],
         $file['group'] ?? NULL,
-        [
-          'content' => $content,
-        ],
+        $svg_data,
       );
     }
 
@@ -76,12 +80,10 @@ class SvgExtractor extends IconExtractorWithFinder {
    * @param string $source
    *   Local path or url to the svg file.
    *
-   * @return string|null
-   *   The inner SVG content as string.
-   *
-   * @todo allow some pattern for xpath to select children?
+   * @return array<string, string|null>|null
+   *   The SVG `content` as string and `viewbox` value if any.
    */
-  private function extractSvg(string $source): ?string {
+  private function extractSvg(string $source): ?array {
     if (!$content = $this->iconFinder->getFileContents($source)) {
       return NULL;
     }
@@ -93,12 +95,28 @@ class SvgExtractor extends IconExtractorWithFinder {
       return NULL;
     }
 
-    $content = '';
+    $return = [
+      'content' => '',
+      'attributes' => new Attribute(),
+    ];
     foreach ($svg as $child) {
-      $content .= $child->asXML();
+      $return['content'] .= $child->asXML();
     }
 
-    return $content;
+    if (!isset($return['content'])) {
+      return NULL;
+    }
+
+    // Content contain xml data and will be printed, we need to not escape it
+    // for rendering.
+    $return['content'] = new FormattableMarkup($return['content'], []);
+
+    // Add svg attributes to be available in the template.
+    foreach ($svg->attributes() as $name => $value) {
+      $return['attributes']->setAttribute($name, (string) $value);
+    }
+
+    return $return;
   }
 
 }

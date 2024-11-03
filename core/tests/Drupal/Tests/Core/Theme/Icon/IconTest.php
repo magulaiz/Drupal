@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Icon;
 
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Render\Element\Icon;
 use Drupal\Core\Theme\Icon\IconDefinition;
@@ -60,7 +61,7 @@ class IconTest extends UnitTestCase {
    *   - result array of render element
    */
   public static function providerPreRenderIcon(): iterable {
-    yield 'minimum icon definition' => [
+    yield 'minimum icon' => [
       [
         'pack_id' => 'pack_id',
         'icon_id' => 'icon_id',
@@ -73,21 +74,44 @@ class IconTest extends UnitTestCase {
         '#context' => [
           'icon_id' => 'icon_id',
           'source' => '/foo/bar',
+          'attributes' => new Attribute(),
         ],
       ],
     ];
 
-    yield 'full icon definition.' => [
+    yield 'icon with library' => [
       [
         'pack_id' => 'pack_id',
-        'pack_label' => 'Baz',
         'icon_id' => 'icon_id',
         'source' => '/foo/bar',
-        'group' => 'test_group',
-        'content' => 'test_content',
         'template' => 'my_template',
+        // Special library will be transformed to #attached.
         'library' => 'my_theme/my_library',
-        'icon_settings' => ['foo' => 'bar'],
+      ],
+      [
+        '#type' => 'inline_template',
+        '#template' => 'my_template',
+        '#attached' => ['library' => ['my_theme/my_library']],
+        '#context' => [
+          'icon_id' => 'icon_id',
+          'source' => '/foo/bar',
+          'attributes' => new Attribute(),
+        ],
+      ],
+    ];
+
+    yield 'icon with library and data without attributes.' => [
+      [
+        'pack_id' => 'pack_id',
+        'icon_id' => 'icon_id',
+        'template' => 'my_template',
+        'source' => '/foo/bar',
+        'group' => 'test_group',
+        // Special library will be transformed to #attached.
+        'library' => 'my_theme/my_library',
+        // Icon data will move to context.
+        'content' => 'test_content',
+        'baz' => 'qux',
       ],
       [
         '#type' => 'inline_template',
@@ -97,6 +121,54 @@ class IconTest extends UnitTestCase {
           'icon_id' => 'icon_id',
           'source' => '/foo/bar',
           'content' => 'test_content',
+          'baz' => 'qux',
+          'attributes' => new Attribute(),
+        ],
+      ],
+    ];
+
+    yield 'icon with attributes.' => [
+      [
+        'pack_id' => 'pack_id',
+        'icon_id' => 'icon_id',
+        'source' => '/foo/bar',
+        'template' => 'my_template',
+        'attributes' => new Attribute([
+          'foo' => 'bar',
+          'baz' => 'qux',
+        ]),
+      ],
+      [
+        '#type' => 'inline_template',
+        '#template' => 'my_template',
+        '#context' => [
+          'icon_id' => 'icon_id',
+          'source' => '/foo/bar',
+          'attributes' => new Attribute([
+            'foo' => 'bar',
+            'baz' => 'qux',
+          ]),
+        ],
+      ],
+    ];
+
+    yield 'icon with data and enabled removed.' => [
+      [
+        'pack_id' => 'pack_id',
+        'icon_id' => 'icon_id',
+        'source' => '/foo/bar',
+        'template' => 'my_template',
+        // Icon data will move to context.
+        'enabled' => 'foo',
+        'foo' => 'bar',
+      ],
+      [
+        '#type' => 'inline_template',
+        '#template' => 'my_template',
+        '#context' => [
+          'icon_id' => 'icon_id',
+          'source' => '/foo/bar',
+          'attributes' => new Attribute(),
           'foo' => 'bar',
         ],
       ],

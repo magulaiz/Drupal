@@ -89,6 +89,7 @@ class IconDefinitionTest extends UnitTestCase {
           'content' => 'corge',
           'label' => new TranslatableMarkup('Qux'),
           'library' => 'foo/bar',
+          'foo' => 'bar',
         ],
       ],
     ];
@@ -145,13 +146,14 @@ class IconDefinitionTest extends UnitTestCase {
     if ($icon_data) {
       if (isset($icon_data['library'])) {
         $this->assertEquals($icon_data['library'], $actual->getLibrary());
+        unset($icon_data['library']);
       }
-
       if (isset($icon_data['label'])) {
         $this->assertSame($icon_data['label'], $actual->getPackLabel());
+        unset($icon_data['label']);
       }
-      if (isset($icon_data['content'])) {
-        $this->assertEquals($icon_data['content'], $actual->getData('content'));
+      foreach ($icon_data as $key => $value) {
+        $this->assertEquals($icon_data[$key], $actual->getData($key));
       }
     }
   }

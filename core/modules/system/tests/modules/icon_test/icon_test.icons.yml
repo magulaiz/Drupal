@@ -62,12 +62,9 @@ test_svg:
       title: "Size"
       type: "integer"
   template: >
-    {{ icon_id }}: <svg
-      xmlns="https://www.w3.org/2000/svg"
-      viewBox="0 0 14 14"
-      width="{{ size|default(32) }}"
-      height="{{ size|default(32) }}"
-      aria-hidden="true"
+    {{ icon_id }}:
+    <svg xmlns="https://www.w3.org/2000/svg" aria-hidden="true"
+      {{ attributes.setAttribute('viewBox', attributes.viewBox|default('0 0 50 50')).setAttribute('width', size|default('32')).setAttribute('height', size|default('32')) }}
     >
       {{ content }}
     </svg>
@@ -89,11 +86,10 @@ test_svg_sprite:
       type: "integer"
       default: 32
   template: >
-    {{ icon_id }}: <svg
+    {{ icon_id }}:
+    <svg
       xmlns="https://www.w3.org/2000/svg"
-      width="{{ width|default(32) }}"
-      height="{{ height|default(32) }}"
-      aria-hidden="true"
+      {{ attributes.setAttribute('width', width|default('32')).setAttribute('height', height|default('32')) }}
     >
       <use xlink:href="{{ source }}#{{ icon_id }}"/>
     </svg>
@@ -203,24 +199,11 @@ test_url_svg:
   extractor: svg
   config:
     sources:
-      # This will be ignored.
+      # This will be ignored, remote svg not allowed.
       - https://www.drupal.org/files/drupal-wordmark.svg
   template: >
     {{ icon_id }}: <svg xmlns="https://www.w3.org/2000/svg">
       {{ content }}
-    </svg>
-
-test_url_svg_sprite:
-  enabled: false
-  label: Test svg sprite
-  extractor: svg_sprite
-  config:
-    sources:
-      - https://test.com/ignored.png
-      - https://test.com/ignored.gif
-  template: >
-    <svg xmlns="https://www.w3.org/2000/svg">
-      <use xlink:href="{{ source }}#{{ icon_id }}"/>
     </svg>
 
 test_no_icons:
@@ -232,7 +215,6 @@ test_no_icons:
       - icons/empty/*
   template: '{{ icon_id }}'
 
-# @todo enable and log error instead.
 test_invalid_path:
   enabled: true
   extractor: path

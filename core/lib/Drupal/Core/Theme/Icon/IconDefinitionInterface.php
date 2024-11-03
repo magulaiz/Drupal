@@ -130,13 +130,13 @@ interface IconDefinitionInterface {
   /**
    * Get the Icon data.
    *
-   * @param string $key
-   *   The ata key to find.
+   * @param string|null $key
+   *   The optional data key to find, if null return all data.
    *
    * @return mixed
    *   The icon data if exist or null.
    */
-  public function getData(string $key): mixed;
+  public function getData(?string $key = NULL): mixed;
 
   /**
    * Get the Icon renderable array.

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Render\Element;
 
-use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Theme\Icon\IconDefinition;
 
@@ -74,14 +74,26 @@ class Icon extends RenderElementBase {
       $context['source'] = $source;
     }
 
-    if ($content = $icon->getData('content')) {
-      // Because content is an HTML string, we need to not escape it for render.
-      $context['content'] = new FormattableMarkup($content, []);
+    // Pass all data to the template, extractors can add specific values.
+    foreach ($icon->getData() as $data_name => $data_value) {
+      if (!$data_value) {
+        continue;
+      }
+      $context[$data_name] = $data_value;
     }
+
+    // Inject attributes variable if not created by the extractor.
+    if (!isset($context['attributes'])) {
+      $context['attributes'] = new Attribute();
+    }
+
+    // Clean not needed definition values and library moved to #attached.
+    unset($context['enabled'], $context['template'], $context['library']);
 
     $element['inline-template'] = [
       '#type' => 'inline_template',
       '#template' => $icon->getTemplate(),
+      // Settings are added to be always from element and not extractor.
       '#context' => $context + $element['#settings'],
     ];
 
