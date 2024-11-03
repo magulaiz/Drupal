@@ -78,7 +78,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
    * @group legacy
    */
   public function testDeprecatedTrustedCallbacks($callback, $extra_trusted_interface = NULL): void {
-    $this->expectDeprecation('Usage of the Drupal\Core\Security\TrustedCallbackInterface is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Instead, you should use \Drupal\Core\Security\Attribute\TrustedCallback attribute for the method. See https://www.drupal.org/node/3349470');
+    $this->expectDeprecation('Usage of the Drupal\Core\Security\TrustedCallbackInterface is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Instead, you should use \Drupal\Core\Security\Attribute\TrustedCallback attribute for the method. See https://www.drupal.org/node/3355686');
     $return = $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::THROW_EXCEPTION, $extra_trusted_interface);
     $this->assertSame('test', $return);
   }

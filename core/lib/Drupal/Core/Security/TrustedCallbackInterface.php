@@ -34,7 +34,7 @@ interface TrustedCallbackInterface {
    *   you should use \Drupal\Core\Security\Attribute\TrustedCallback attribute
    *   for the method.
    *
-   * @see https://www.drupal.org/node/3349470
+   * @see https://www.drupal.org/node/3355686
    * @see \Drupal\Core\Security\DoTrustedCallbackTrait::doTrustedCallback()
    */
   public static function trustedCallbacks();
