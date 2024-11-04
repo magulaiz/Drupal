@@ -47,7 +47,7 @@
               // On very narrow viewports, Vertical Tabs are disabled.
               $filterSettings.show();
             }
-             // Show the table labels
+            // Show the table labels
             $tableLabels.show();
           } else {
             $row.hide();
