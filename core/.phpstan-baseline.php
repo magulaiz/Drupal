@@ -1546,7 +1546,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: property.notFound
 	'message' => '#^Access to an undefined property Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathItem\\:\\:\\$alias\\.$#',
-	'count' => 4,
+	'count' => 5,
 	'path' => __DIR__ . '/modules/path/src/Plugin/Field/FieldType/PathItem.php',
 ];
 $ignoreErrors[] = [
