@@ -62,7 +62,7 @@ class NodeViewsHooks {
    * Implements hook_views_data_alter().
    */
   #[Hook('views_data_alter')]
-  public function viewsDataAlter(&$data) {
+  public function viewsDataAlter(&$data): void {
     if (\Drupal::moduleHandler()->moduleExists('taxonomy')) {
       $data['node_field_data']['term_node_tid'] = [
         'title' => t('Taxonomy terms on node'),
@@ -114,7 +114,7 @@ class NodeViewsHooks {
    * @see views_field_default_views_data()
    */
   #[Hook('views_field_views_data_alter')]
-  public function viewsFieldViewsDataAlter(array &$data, FieldStorageConfigInterface $field_storage) {
+  public function viewsFieldViewsDataAlter(array &$data, FieldStorageConfigInterface $field_storage): void {
     if (\Drupal::moduleHandler()->moduleExists('taxonomy')) {
       if ($field_storage->getType() == 'entity_reference' && $field_storage->getSetting('target_type') == 'taxonomy_term') {
         foreach ($data as $table_name => $table_data) {
