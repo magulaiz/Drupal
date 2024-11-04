@@ -37,24 +37,24 @@ class FormatterPluginManagerImplementationTest extends UnitTestCase {
         'provider' => 'core',
         'id' => 'basic_string',
         'label' => 'Plain text',
-        'description' => null,
+        'description' => NULL,
         'field_types' => ['string_long', 'email'],
-        'weight' => null
+        'weight' => NULL,
       ],
       'daterange_default' => [
         'class' => DateRangeDefaultFormatter::class,
         'provider' => 'datetime_range',
         'id' => 'daterange_default',
         'label' => 'Default',
-        'description' => null,
+        'description' => NULL,
         'field_types' => ['daterange'],
-        'weight' => null
+        'weight' => NULL,
       ],
     ];
     // Use reflection to inject definitions variable.
     // This way we can keep all the other code unmocked.
     $reflection_definitions = new \ReflectionProperty(FormatterPluginManager::class, 'definitions');
-    $formatter_plugin_manager->method('getDefinitions')->willReturnCallback(function() use ($plugin_definitions, $reflection_definitions, $formatter_plugin_manager) {
+    $formatter_plugin_manager->method('getDefinitions')->willReturnCallback(function () use ($plugin_definitions, $reflection_definitions, $formatter_plugin_manager) {
         $reflection_definitions->setValue($formatter_plugin_manager, $plugin_definitions);
         return $plugin_definitions;
     });
@@ -116,7 +116,7 @@ class FormatterPluginManagerImplementationTest extends UnitTestCase {
   public function testDateRangeComponents(): void {
     $components = [
       'string_dummy' => ['type' => 'basic_string'],
-      'date_range_dummy' => ['type' => 'daterange_default']
+      'date_range_dummy' => ['type' => 'daterange_default'],
     ];
     $display = $this->getDisplayMock($components);
 
@@ -133,7 +133,7 @@ class FormatterPluginManagerImplementationTest extends UnitTestCase {
   public function testComponentsWithoutPluginDefinition(): void {
     $components = [
       'non_plugin_type' => ['type' => 'non_plugin_type'],
-      'date_range_dummy' => ['type' => 'daterange_default']
+      'date_range_dummy' => ['type' => 'daterange_default'],
     ];
     $display = $this->getDisplayMock($components);
 
@@ -144,9 +144,12 @@ class FormatterPluginManagerImplementationTest extends UnitTestCase {
     $anExceptionWasThrown = FALSE;
     try {
       datetime_range_entity_view_display_presave($display);
-    } catch (\Throwable) {
+    }
+    catch (\Throwable) {
       $anExceptionWasThrown = TRUE;
     }
+
     $this->assertFalse($anExceptionWasThrown, "Exception was thrown when it shouldn't have been");
   }
+
 }
