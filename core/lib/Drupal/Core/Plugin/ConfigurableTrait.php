@@ -29,8 +29,7 @@ trait ConfigurableTrait {
    * This property is declared in \Drupal\Component\Plugin\PluginBase as well,
    * which most classes using this trait will ultimately be extending. It is
    * re-declared here to make the trait self-contained and to permit use of the
-   * trait in classes that do not extend PluginBase. Re-declaring a class
-   * property in a trait is permitted since php 7.
+   * trait in classes that do not extend PluginBase.
    *
    * @var array
    */
@@ -40,7 +39,7 @@ trait ConfigurableTrait {
    * Gets this plugin's configuration.
    *
    * @return array
-   *   An array of this plugin's configuration.
+   *   An associative array containing the plugin's configuration.
    *
    * @see \Drupal\Component\Plugin\ConfigurableInterface::getConfiguration()
    */
@@ -56,8 +55,7 @@ trait ConfigurableTrait {
    * in both, then the provided configuration will override the default.
    *
    * @param array $configuration
-   *   An associative array containing the plugin's configuration. Provided
-   *   value is merged with default configuration.
+   *   An associative array containing the plugin's configuration.
    *
    * @return $this
    *
@@ -72,7 +70,7 @@ trait ConfigurableTrait {
    * Gets default configuration for this plugin.
    *
    * @return array
-   *   An associative array with the default configuration.
+   *   An associative array containing the default configuration.
    *
    * @see \Drupal\Component\Plugin\ConfigurableInterface::defaultConfiguration()
    */

@@ -62,7 +62,7 @@ class ConfigurableTraitTest extends TestCase {
    *
    * @dataProvider setConfigurationDataProvider
    */
-  public function testSetConfiguration(array $default_configuration, array $test_configuration, array $final_configuration) {
+  public function testSetConfiguration(array $default_configuration, array $test_configuration, array $final_configuration): void {
     $test_object = new ConfigurableTestClass();
     $test_object->setDefaultConfiguration($default_configuration);
     $test_object->setConfiguration($test_configuration);
