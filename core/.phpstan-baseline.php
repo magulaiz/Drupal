@@ -60154,12 +60154,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/ViewsKernelTestBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: phpunit.covers
-	'message' => '#^@covers value views_theme_suggestions_container_alter references an invalid class or function\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/ViewsTemplateTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Unit\\\\EventSubscriber\\\\TestRouteSubscriber\\:\\:getApplicableViews\\(\\) has no return type specified\\.$#',
 	'count' => 1,
