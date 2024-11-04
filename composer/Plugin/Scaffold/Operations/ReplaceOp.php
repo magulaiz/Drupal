@@ -98,7 +98,7 @@ class ReplaceOp extends AbstractOperation {
       try {
         chmod($destination_path, 0744);
       }
-      catch (\Error $e) {
+      catch (\Exception $e) {
         $io->write($interpolator->interpolate("Destination overwrite failed due to: " . $e->getMessage()));
       }
     }
@@ -121,7 +121,7 @@ class ReplaceOp extends AbstractOperation {
   protected function copyScaffold(ScaffoldFilePath $destination, IOInterface $io) {
     $interpolator = $destination->getInterpolator();
     $this->source->addInterpolationData($interpolator);
-    $success = file_put_contents($destination->fullPath(), $this->contents());
+    $success = file_put_contents($destination->fullPath(), $this->generateContents());
     if (!$success) {
       throw new \RuntimeException($interpolator->interpolate("Could not copy source file <info>[src-rel-path]</info> to <info>[dest-rel-path]</info>!"));
     }
@@ -145,6 +145,9 @@ class ReplaceOp extends AbstractOperation {
     try {
       $fs = new Filesystem();
       $fs->relativeSymlink($this->source->fullPath(), $destination->fullPath());
+      if (!is_link($destination->fullPath())) {
+        throw new \RuntimeException($interpolator->interpolate("Failed to create symlink from <info>[src-rel-path]</info> to <info>[dest-rel-path]</info>."));
+      }
     }
     catch (\Exception $e) {
       throw new \RuntimeException($interpolator->interpolate("Could not symlink source file <info>[src-rel-path]</info> to <info>[dest-rel-path]</info>!"), [], $e);
