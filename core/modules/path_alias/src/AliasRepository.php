@@ -30,7 +30,7 @@ class AliasRepository implements AliasRepositoryInterface {
   public function __construct(Connection $connection, protected ?LanguageManagerInterface $languageManager = NULL) {
     $this->connection = $connection;
     if (!$languageManager) {
-      @trigger_error('Calling AliasRepository::__construct() without the $languageManager argument is deprecated in drupal:10.3.0 and the $languageManager argument will be required in drupal:11.0.0. See https://www.drupal.org/node/3108585', E_USER_DEPRECATED);
+      @trigger_error('Calling AliasRepository::__construct() without the $languageManager argument is deprecated in drupal:11.1.0 and the $languageManager argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3108585', E_USER_DEPRECATED);
       $this->languageManager = \Drupal::service('language_manager');
     }
   }
