@@ -10,7 +10,7 @@ namespace Drupal\Core\Theme;
  * @todo This class exists as an iterative improvement to the Theme API but is
  *   marked internal and final until it is complete. For next steps, see
  *   https://www.drupal.org/node/2869859. For finalizing the removal of
- *   \ArrayAccess, see https://www.drupal.org/node/2873117.
+ *   \ArrayAccess, see https://www.drupal.org/i/2873117.
  */
 final class ThemeHook implements \ArrayAccess {
 
@@ -21,7 +21,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @var string
    */
-  protected $type;
+  protected string $type = '';
 
   /**
    * The provider of the theme hook.
@@ -30,7 +30,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @var string
    */
-  protected $provider;
+  protected string $provider = '';
 
   /**
    * The directory path of the theme or module.
@@ -39,35 +39,35 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @var string
    */
-  protected $theme_path;
+  protected string $themePath = '';
 
   /**
    * An array of default values to be passed to the template.
    *
    * @var mixed[]|null
    */
-  protected $variables;
+  protected ?array $variables = NULL;
 
   /**
    * The name of the renderable element to pass to the theme function.
    *
    * @var string
    */
-  protected $render_element;
+  protected string $renderElement = '';
 
   /**
    * A regular expression pattern.
    *
    * @var string|null
    */
-  protected $pattern;
+  protected ?string $pattern = NULL;
 
   /**
    * The base theme hook name, if one exists.
    *
    * @var string|null
    */
-  protected $base_hook;
+  protected ?string $base = NULL;
 
   /**
    * An array of files to be included.
@@ -76,7 +76,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @var string[]
    */
-  protected $includes = [];
+  protected array $includes = [];
 
   /**
    * The file the implementation resides in.
@@ -86,14 +86,14 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @var string
    */
-  protected $file;
+  protected string $file = '';
 
   /**
    * The template name for this theme implementation.
    *
    * @var string|null
    */
-  protected $template;
+  protected ?string $template = NULL;
 
   /**
    * The path to the theme implementation, if it exists.
@@ -102,47 +102,37 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @var string|null
    */
-  protected $path;
+  protected ?string $path = NULL;
 
   /**
    * A list of functions used to preprocess this data.
    *
    * @var string[]
    */
-  protected $preprocess_functions = [];
+  protected array $preprocessFunctions = [];
 
   /**
    * Whether the list of preprocess functions is incomplete.
    *
    * @var bool
    */
-  protected $incomplete_preprocess_functions = FALSE;
+  protected bool $incompletePreprocessFunctions = FALSE;
 
   /**
    * Whether standard preprocess functions should be ignored.
    *
    * @var bool
    */
-  protected $override_preprocess_functions = FALSE;
+  protected bool $overridePreprocessFunctions = FALSE;
 
   /**
    * Stores extra data.
    *
    * @var mixed[]
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Only used
-   *   as part of the \ArrayAccess backwards compatibility
-   *
-   * @see https://www.drupal.org/project/drupal/issues/2873117
+   * @todo Remove in https://www.drupal.org/i/2873117
    */
-  protected $extra = [];
-
-  /**
-   * The machine name of the theme hook.
-   *
-   * @var string
-   */
-  protected $name;
+  protected array $extra = [];
 
   /**
    * Constructs a new ThemeHook.
@@ -150,8 +140,7 @@ final class ThemeHook implements \ArrayAccess {
    * @param string $name
    *   The machine name of the theme hook.
    */
-  protected function __construct($name) {
-    $this->name = $name;
+  protected function __construct(protected string $name) {
   }
 
   /**
@@ -162,7 +151,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return static
    */
-  public static function create($name) {
+  public static function create(string $name) {
     return new static($name);
   }
 
@@ -193,11 +182,6 @@ final class ThemeHook implements \ArrayAccess {
    *   An array of values.
    *
    * @return static
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Stop using
-   *   this.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/2873117
    */
   public static function createFromLegacy(string $name, array $values) {
     $instance = static::create($name);
@@ -217,7 +201,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return static
    */
-  public function merge(ThemeHook $other) {
+  public function merge(ThemeHook $other): static {
     $result = clone $this;
 
     // If this object doesn't have a value, use the value from the other object.
@@ -334,8 +318,8 @@ final class ThemeHook implements \ArrayAccess {
    * @return string
    *   The directory path of the theme or module.
    */
-  public function getThemePath() {
-    return $this->theme_path;
+  public function getThemePath(): string {
+    return $this->themePath;
   }
 
   /**
@@ -346,8 +330,8 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function setThemePath($theme_path) {
-    $this->theme_path = $theme_path;
+  public function setThemePath(string $theme_path): static {
+    $this->themePath = $theme_path;
 
     return $this;
   }
@@ -365,7 +349,7 @@ final class ThemeHook implements \ArrayAccess {
    *   - 'base_theme': A base theme is being checked for theme implementations.
    *   - 'theme': The actual theme in use is being checked.
    */
-  public function getProviderType() {
+  public function getProviderType(): string {
     return $this->type;
   }
 
@@ -377,7 +361,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function setProviderType($type) {
+  public function setProviderType($type): static {
     $this->type = $type;
 
     return $this;
@@ -389,7 +373,7 @@ final class ThemeHook implements \ArrayAccess {
    * @return string
    *   The provider of the theme hook.
    */
-  public function getProvider() {
+  public function getProvider(): string {
     return $this->type;
   }
 
@@ -401,7 +385,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function setProvider($type) {
+  public function setProvider($type): static {
     $this->type = $type;
 
     return $this;
@@ -415,7 +399,7 @@ final class ThemeHook implements \ArrayAccess {
    *   values are the default values if they are not given in the render array.
    *   If this returns NULL, self::getRenderElement() will be used instead.
    */
-  public function getVariables() {
+  public function getVariables(): ?array {
     return $this->variables;
   }
 
@@ -434,7 +418,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function setVariables($variables) {
+  public function setVariables($variables): static {
     $this->variables = $variables;
 
     return $this;
@@ -446,7 +430,7 @@ final class ThemeHook implements \ArrayAccess {
    * @return bool
    *   TRUE if the theme hook uses variables, FALSE otherwise.
    */
-  public function hasVariables() {
+  public function hasVariables(): bool {
     return isset($this->variables);
   }
 
@@ -456,8 +440,8 @@ final class ThemeHook implements \ArrayAccess {
    * @return string
    *   The name of the renderable element to pass to the theme function.
    */
-  public function getRenderElement() {
-    return $this->render_element;
+  public function getRenderElement(): string {
+    return $this->renderElement;
   }
 
   /**
@@ -471,8 +455,8 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function setRenderElement($render_element) {
-    $this->render_element = $render_element;
+  public function setRenderElement(string $render_element): static {
+    $this->renderElement = $render_element;
 
     return $this;
   }
@@ -483,7 +467,7 @@ final class ThemeHook implements \ArrayAccess {
    * @return string|null
    *   A regular expression pattern, if one exists.
    */
-  public function getPattern() {
+  public function getPattern(): ?string {
     return $this->pattern;
   }
 
@@ -497,10 +481,10 @@ final class ThemeHook implements \ArrayAccess {
    * might be: 'forum__'. Then, when the forum is rendered, following render
    * array can be used:
    *   @code
-   *   $render_array = array(
-   *     '#theme' => array('forum__' . $tid, 'forum'),
+   *   $render_array = [
+   *     '#theme' => ['forum__' . $tid, 'forum'],
    *     '#forum' => $forum,
-   *   );
+   *   ];
    *   @endcode
    *
    * @param string|null $pattern
@@ -508,7 +492,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function setPattern($pattern) {
+  public function setPattern($pattern): static {
     $this->pattern = $pattern;
 
     return $this;
@@ -520,7 +504,7 @@ final class ThemeHook implements \ArrayAccess {
    * @return bool
    *   TRUE if a regular expression pattern is set, FALSE otherwise.
    */
-  public function hasPattern() {
+  public function hasPattern(): bool {
     return !is_null($this->pattern);
   }
 
@@ -531,8 +515,8 @@ final class ThemeHook implements \ArrayAccess {
    *   The name of a theme hook to use as the basis for this theme hook, or NULL
    *   if no base hook exists.
    */
-  public function getBaseHook() {
-    return $this->base_hook;
+  public function getBaseHook(): ?string {
+    return $this->base;
   }
 
   /**
@@ -556,8 +540,8 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function setBaseHook($base_hook) {
-    $this->base_hook = $base_hook;
+  public function setBaseHook(?string $base_hook): static {
+    $this->base = $base_hook;
 
     return $this;
   }
@@ -569,7 +553,7 @@ final class ThemeHook implements \ArrayAccess {
    *   An array of files to be included. The file paths are relative to the
    *   Drupal root directory.
    */
-  public function getIncludes() {
+  public function getIncludes(): array {
     return $this->includes;
   }
 
@@ -582,7 +566,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function setIncludes(array $includes) {
+  public function setIncludes(array $includes): static {
     $this->includes = $includes;
 
     return $this;
@@ -596,7 +580,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function addInclude($include) {
+  public function addInclude($include): static {
     $includes = $this->getIncludes();
     $includes[] = $include;
     $this->setIncludes($includes);
@@ -610,7 +594,7 @@ final class ThemeHook implements \ArrayAccess {
    * @return bool
    *   TRUE if files exist to be included, FALSE otherwise.
    */
-  public function hasIncludes() {
+  public function hasIncludes(): bool {
     return !empty($this->includes);
   }
 
@@ -620,7 +604,7 @@ final class ThemeHook implements \ArrayAccess {
    * @return string
    *   The file the theme implementation resides in.
    */
-  public function getFile() {
+  public function getFile(): string {
     return $this->file;
   }
 
@@ -635,7 +619,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function setFile($file) {
+  public function setFile($file): static {
     $this->file = $file;
 
     return $this;
@@ -647,7 +631,7 @@ final class ThemeHook implements \ArrayAccess {
    * @return string
    *   The template name for this theme implementation.
    */
-  public function getTemplate() {
+  public function getTemplate(): ?string {
     return $this->template;
   }
 
@@ -664,7 +648,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function setTemplate($template) {
+  public function setTemplate($template): static {
     $this->template = $template;
 
     return $this;
@@ -676,7 +660,7 @@ final class ThemeHook implements \ArrayAccess {
    * @return string|null
    *   A path relative to the Drupal root directory, or NULL if no path is set.
    */
-  public function getPath() {
+  public function getPath(): ?string {
     return $this->path;
   }
 
@@ -691,7 +675,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function setPath($path) {
+  public function setPath($path): static {
     $this->path = $path;
 
     return $this;
@@ -703,8 +687,8 @@ final class ThemeHook implements \ArrayAccess {
    * @return string[]
    *   An array of functions to be called during the preprocess phase.
    */
-  public function getPreprocessFunctions() {
-    return $this->preprocess_functions;
+  public function getPreprocessFunctions(): array {
+    return $this->preprocessFunctions;
   }
 
   /**
@@ -720,8 +704,8 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function setPreprocessFunctions(array $preprocess_functions) {
-    $this->preprocess_functions = array_values(array_unique($preprocess_functions));
+  public function setPreprocessFunctions(array $preprocess_functions): static {
+    $this->preprocessFunctions = array_values(array_unique($preprocess_functions));
 
     return $this;
   }
@@ -736,7 +720,7 @@ final class ThemeHook implements \ArrayAccess {
    *   TRUE if this preprocess function will be used for this theme hook,
    *   FALSE otherwise.
    */
-  public function hasPreprocessFunction($preprocess_function) {
+  public function hasPreprocessFunction($preprocess_function): bool {
     return in_array($preprocess_function, $this->getPreprocessFunctions());
   }
 
@@ -748,7 +732,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function addPreprocessFunction($preprocess_function) {
+  public function addPreprocessFunction($preprocess_function): static {
     $preprocess_functions = $this->getPreprocessFunctions();
     $preprocess_functions[] = $preprocess_function;
     $this->setPreprocessFunctions($preprocess_functions);
@@ -762,8 +746,8 @@ final class ThemeHook implements \ArrayAccess {
    * @return bool
    *   TRUE if standard preprocess functions should be ignored, FALSE otherwise.
    */
-  public function isPreprocessOverridden() {
-    return $this->override_preprocess_functions;
+  public function isPreprocessOverridden(): bool {
+    return $this->overridePreprocessFunctions;
   }
 
   /**
@@ -771,9 +755,9 @@ final class ThemeHook implements \ArrayAccess {
    *
    * This can be used to give a theme FULL control over how variables are set.
    * For example, if a theme wants total control over how certain variables in
-   * the page.html.twig are set, this can be set to true. Please keep in mind
-   * that when this is used by a theme, that theme becomes responsible for
-   * making sure necessary variables are set.
+   * the page.html.twig are set, this can be set to true. Keep in mind that when
+   * this is used by a theme, that theme becomes responsible for making sure
+   * necessary variables are set.
    *
    * @param bool $status
    *   (optional) TRUE if standard preprocess functions should be ignored, FALSE
@@ -781,8 +765,8 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function overridePreprocess($status = TRUE) {
-    $this->override_preprocess_functions = (bool) $status;
+  public function overridePreprocess($status = TRUE): static {
+    $this->overridePreprocessFunctions = (bool) $status;
 
     return $this;
   }
@@ -796,8 +780,8 @@ final class ThemeHook implements \ArrayAccess {
    * @return bool
    *   TRUE if the list of preprocess functions is incomplete.
    */
-  public function isIncomplete() {
-    return $this->incomplete_preprocess_functions;
+  public function isIncomplete(): bool {
+    return $this->incompletePreprocessFunctions;
   }
 
   /**
@@ -807,8 +791,8 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function markIncomplete() {
-    $this->incomplete_preprocess_functions = TRUE;
+  public function markIncomplete(): static {
+    $this->incompletePreprocessFunctions = TRUE;
 
     return $this;
   }
@@ -820,8 +804,8 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return $this
    */
-  public function markComplete() {
-    $this->incomplete_preprocess_functions = FALSE;
+  public function markComplete(): static {
+    $this->incompletePreprocessFunctions = FALSE;
 
     return $this;
   }
@@ -832,7 +816,7 @@ final class ThemeHook implements \ArrayAccess {
    * @return string
    *   The machine name of the theme hook.
    */
-  public function getName() {
+  public function getName(): string {
     return $this->name;
   }
 
@@ -852,7 +836,7 @@ final class ThemeHook implements \ArrayAccess {
    *
    * @return static
    */
-  public function process($root, $theme, array $module_list, ThemeHook $existing_theme_hook = NULL) {
+  public function process($root, $theme, array $module_list, ?ThemeHook $existing_theme_hook = NULL): static {
     $hook = $this->getName();
 
     // If a theme hook has a base hook, mark its preprocess functions always
@@ -890,9 +874,8 @@ final class ThemeHook implements \ArrayAccess {
     }
 
     if (!$result->getRenderElement() && !$result->hasVariables() && !$result->getBaseHook()) {
-      // @todo Convert this to an exception in
-      //   https://www.drupal.org/node/2873117.
-      @trigger_error(sprintf('The "%s" theme hook must have either a render element, variables, or a base hook', $result->getName()), E_USER_DEPRECATED);
+      // @todo Convert this to an exception in https://www.drupal.org/i/2873117.
+      @trigger_error(sprintf('Creating a "%s" theme hook without either a render element, variables, or a base hook is deprecated in drupal:11.1.0 and will throw exception in drupal:12.0.0. Define one of them. See https://www.drupal.org/node/2873756', $result->getName()), E_USER_DEPRECATED);
     }
     return $result;
   }
@@ -905,7 +888,7 @@ final class ThemeHook implements \ArrayAccess {
    * @param \Drupal\Core\Theme\ThemeHook|null $existing_theme_hook
    *   An existing theme hook, if it exists.
    */
-  protected function handleIncludes($root, ThemeHook $existing_theme_hook = NULL) {
+  protected function handleIncludes($root, ?ThemeHook $existing_theme_hook = NULL): void {
     if ($existing_theme_hook && $existing_theme_hook->hasIncludes()) {
       $this->setIncludes($existing_theme_hook->getIncludes());
     }
@@ -934,7 +917,7 @@ final class ThemeHook implements \ArrayAccess {
    * @param \Drupal\Core\Theme\ThemeHook $existing_theme_hook
    *   An existing theme hook.
    */
-  protected function handleDefaultValues(ThemeHook $existing_theme_hook) {
+  protected function handleDefaultValues(ThemeHook $existing_theme_hook): void {
     if ($existing_theme_hook->hasVariables() && !$this->hasVariables()) {
       $this->setVariables($existing_theme_hook->getVariables());
     }
@@ -957,7 +940,7 @@ final class ThemeHook implements \ArrayAccess {
    * @param array $module_list
    *   An array of module names.
    */
-  protected function handlePreprocess($theme, array $module_list) {
+  protected function handlePreprocess($theme, array $module_list): void {
     // Preprocess variables for all theming hooks. Ensure they are arrays.
     if (!$this->getPreprocessFunctions()) {
       $provider_name = $this->getProvider();

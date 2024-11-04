@@ -511,7 +511,7 @@ class Registry implements DestructableInterface {
         // $result[$hook] will only contain key/value pairs for information being
         // overridden.  Pull the rest of the information from what was defined by
         // an earlier hook.
-        $cached_info = isset($cache[$hook]) ? $cache[$hook] : NULL;
+        $cached_info = $cache[$hook] ?? NULL;
 
         // Fill in the name, type, and path of the module, theme, or engine that
         // implements this theme function.
@@ -593,11 +593,11 @@ class Registry implements DestructableInterface {
    * @param \Drupal\Core\Theme\ThemeHook[] $cache
    *   The theme registry, as documented in
    *   \Drupal\Core\Theme\Registry::processExtension().
-   * @param \Drupal\Core\Theme\ThemeHook $parent_hook
+   * @param \Drupal\Core\Theme\ThemeHook|null $parent_hook
    *   The parent hook if it exists. Either an incomplete hook from suggestions
    *   or a base hook.
    */
-  protected function mergeHookFromSuggestion($destination_hook_name, $source_hook_name, array &$cache, ThemeHook $parent_hook = NULL) {
+  protected function mergeHookFromSuggestion($destination_hook_name, $source_hook_name, array &$cache, ?ThemeHook $parent_hook = NULL): void {
     // If the source hook doesn't exist, do not continue.
     if (!isset($cache[$source_hook_name])) {
       return;
