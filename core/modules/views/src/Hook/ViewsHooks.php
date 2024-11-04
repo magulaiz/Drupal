@@ -311,12 +311,9 @@ class ViewsHooks {
   }
 
   /**
-   * Implements hook_form_alter() for the exposed form.
-   *
-   * Since the exposed form is a GET form, we don't want it to send a wide
-   * variety of information.
+   * Implements hook_form_FORM_ID_alter().
    */
-  #[Hook('form_alter', module: 'views_form_views_exposed')]
+  #[Hook('form_views_exposed_form_alter')]
   public function formViewsExposedFormAlter(&$form, FormStateInterface $form_state) {
     $form['form_build_id']['#access'] = FALSE;
     $form['form_token']['#access'] = FALSE;
