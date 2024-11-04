@@ -44,15 +44,11 @@ class FilterDateTest extends ViewTestBase {
   public $dateFormatter;
 
   /**
-   * The list of nodes.
-   *
    * @var array
    */
   protected array $nodes;
 
   /**
-   * The mapping nodes.
-   *
    * @var array
    */
   protected array $map;
