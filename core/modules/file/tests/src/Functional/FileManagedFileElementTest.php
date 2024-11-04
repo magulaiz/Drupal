@@ -261,4 +261,38 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $this->assertSession()->pageTextContains('The file ids are ' . $file->id());
   }
 
+  /**
+   * Test file replacement.
+   */
+  public function testFileReplace(): void {
+
+    $file_system = \Drupal::service('file_system');
+    $test_file_uri = 'private://test-file.txt';
+    $original_content = $this->randomString(32);
+    file_put_contents($test_file_uri, $original_content);
+    $file_field_name = 'files[nested_file][]';
+
+    $this->drupalGet('file/test/1/0/1');
+    $edit = [$file_field_name => $file_system->realpath($test_file_uri)];
+    $this->submitForm($edit, 'Upload');
+    $this->submitForm([], 'Save');
+    $fid = $this->getLastFileId();
+
+    // Replace file.
+    $this->drupalGet("file/$fid/edit");
+    $new_file_content = $this->randomString(32);
+    file_put_contents('public://new-file.txt', $new_file_content);
+    $edit = ['files[replacement_file]' => $file_system->realpath('public://new-file.txt')];
+    $this->submitForm($edit, 'Save');
+    $this->assertNotEquals($new_file_content, file_get_contents($file_system->realpath($test_file_uri)));
+
+    // Replace with different mime.
+    $file = $this->getTestFile('image');
+    $file->setPermanent();
+    $file->save();
+    $edit = ['files[replacement_file]' => $file_system->realpath($file->getFileUri())];
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains('The uploaded file is not the same type as the existing file.');
+  }
+
 }
