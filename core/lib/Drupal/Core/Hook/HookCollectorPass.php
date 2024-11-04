@@ -127,7 +127,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *   An associative array. Keys are the module names, values are relevant
    *   info yml file path.
    *
-   * @return \Drupal\Core\Extension\HookCollectorPass
+   * @return static
    *   A HookCollectorPass instance holding all hook implementations and
    *   include file information.
    *
@@ -361,8 +361,10 @@ class HookCollectorPass implements CompilerPassInterface {
    */
   public static function checkForProceduralOnlyHooks(Hook $hook, string $class): void {
     $staticDenyHooks = [
+      'cache_flush',
       'hook_info',
       'install',
+      'module_implements_alter',
       'module_preinstall',
       'module_preuninstall',
       'modules_installed',
