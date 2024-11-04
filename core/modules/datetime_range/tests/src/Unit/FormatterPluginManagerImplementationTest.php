@@ -68,7 +68,7 @@ class FormatterPluginManagerImplementationTest extends UnitTestCase {
   }
 
   /**
-   * @param array $components
+   * @param array $components List of components to return.
    *
    * @return \Drupal\Core\Entity\Entity\EntityViewDisplay|\PHPUnit\Framework\MockObject\MockObject
    */
