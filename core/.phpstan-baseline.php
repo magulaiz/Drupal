@@ -12791,18 +12791,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block/tests/modules/block_test/src/PluginForm/EmptyBlockForm.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$position might not be defined\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/block/tests/src/Functional/BlockRenderOrderTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$edit might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Functional/BlockUiTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\block\\\\Functional\\\\BlockWeightUpdateTest\\:\\:setDatabaseDumpFiles\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -19065,12 +19053,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\contextual\\\\FunctionalJavascript\\\\ContextualLinksTest\\:\\:toggleContextualTriggerVisibility\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$unrestricted_tab_count might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/EditModeTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -33847,18 +33829,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mysql/tests/src/Kernel/mysql/DbDumpTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$string_ascii_check might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mysql/tests/src/Kernel/mysql/SchemaTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$string_check might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mysql/tests/src/Kernel/mysql/SchemaTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function navigation_top_bar_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -46694,12 +46664,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Theme\\\\MaintenanceThemeUpdateRegistryTest\\:\\:updateRequirementsProblem\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/MaintenanceThemeUpdateRegistryTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$expected_required_list_items might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/ThemeUiTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -59830,24 +59794,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/SqlQueryTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$rand1 might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/StyleTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$rand2 might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/StyleTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$rand3 might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/StyleTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\StyleTestBase\\:\\:storeViewPreview\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -65102,12 +65048,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Archiver\\\\ArchiverTestBase\\:\\:assertArchiveNotContainsFile\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Archiver/ArchiverTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$found might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
