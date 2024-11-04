@@ -176,8 +176,8 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
     $this->assertNodeAlias('/foo-fallback', $node, 'fr');
     $this->assertNodeAlias(NULL, $node, 'de');
 
-    // Set the fallback language to the one having an alias and make sure that
-    // the alias appears in all the translations. This way editors will be
+    // Set the fallback language to the language having an alias and make sure
+    // that the alias appears in all the translations. This way editors will be
     // able to use it as a default value.
     $this->setPathAliasFallbackLanguage('fr');
     $node = $this->reloadNode($node);

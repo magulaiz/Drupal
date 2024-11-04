@@ -100,24 +100,22 @@ class PathItem extends FieldItemBase {
       $has_own_alias = $has_own_alias && $path_alias->language()->getId() === $this->getLangcode();
     }
 
-    // If we have an alias, we need to create or update a path alias entity.
-    if ($this->alias) {
-      if (!$has_own_alias) {
-        $path_alias = $path_alias_storage->create([
-          'path' => '/' . $entity->toUrl()->getInternalPath(),
-          'alias' => $this->alias,
-          'langcode' => $this->getLangcode(),
-        ]);
-        $path_alias->save();
-        $this->pid = $path_alias->id();
-      }
-      else {
-        $path_alias->setAlias($this->alias);
-        $path_alias->save();
-      }
+    // If we have an alias, we need to update or create a path alias entity.
+    if ($this->alias && $has_own_alias) {
+      $path_alias->setAlias($this->alias);
+      $path_alias->save();
     }
+    elseif ($this->alias && !$has_own_alias) {
+      $path_alias = $path_alias_storage->create([
+        'path' => '/' . $entity->toUrl()->getInternalPath(),
+        'alias' => $this->alias,
+        'langcode' => $this->getLangcode(),
+      ]);
+      $path_alias->save();
+      $this->pid = $path_alias->id();
+    }
+    // Otherwise, delete the old alias if the user erased it.
     elseif ($has_own_alias) {
-      // Otherwise, delete the old alias if the user erased it.
       $path_alias = $path_alias_storage->load($this->pid);
       if ($entity->isDefaultRevision()) {
         $path_alias_storage->delete([$path_alias]);
