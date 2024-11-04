@@ -142,4 +142,34 @@ class RouteProcessorCsrfTest extends UnitTestCase {
     $this->assertEquals((new BubbleableMetadata())->setAttachments(['placeholders' => [$placeholder => $placeholder_render_array]]), $bubbleable_metadata);
   }
 
+  /**
+   * Tests JSON requests to get no placeholders, but real tokens.
+   */
+  public function testProcessOutboundJsonFormat(): void {
+    // Create a new request mock that returns 'json' format.
+    $request = $this->createMock('Symfony\Component\HttpFoundation\Request');
+    $request->expects($this->once())
+      ->method('getRequestFormat')
+      ->willReturn('json');
+    $this->requestStack = $this->createMock('Symfony\Component\HttpFoundation\RequestStack');
+    $this->requestStack->expects($this->once())
+      ->method('getCurrentRequest')
+      ->willReturn($request);
+
+    // Mock that the CSRF token service should be called once with 'test-path'
+    // and return a test token.
+    $this->csrfToken->expects($this->once())
+      ->method('get')
+      ->with('test-path')
+      ->willReturn('real_token_value');
+
+    $this->processor = new RouteProcessorCsrf($this->csrfToken, $this->requestStack);
+
+    $route = new Route('/test-path', [], ['_csrf_token' => 'TRUE']);
+    $parameters = [];
+    // For JSON requests, the actual CSRF token should be in parameters.
+    $this->processor->processOutbound('test', $route, $parameters);
+    $this->assertEquals('real_token_value', $parameters['token']);
+  }
+
 }

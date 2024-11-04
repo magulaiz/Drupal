@@ -62,7 +62,6 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
         $placeholder_render_array = [
           '#lazy_builder' => ['route_processor_csrf:renderPlaceholderCsrfToken', [$path]],
         ];
-
         // Instead of setting an actual CSRF token as the query string, we set
         // the placeholder, which will be replaced at the very last moment. This
         // ensures links with CSRF tokens don't break cacheability.
