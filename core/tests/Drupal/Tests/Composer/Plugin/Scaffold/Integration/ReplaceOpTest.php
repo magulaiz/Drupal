@@ -73,18 +73,18 @@ class ReplaceOpTest extends TestCase {
    * @param string $path
    *   The directory path to check or create.
    *
-   * @throws RuntimeException
+   * @throws \RuntimeException
    *   If the directory cannot be created or isn’t writable.
    */
   public function prepareDirectory($path) {
     if (!is_dir($path)) {
       if (!mkdir($path, 0744, TRUE) && !is_dir($path)) {
-        throw new RuntimeException("Failed to create directory: $path");
+        throw new \RuntimeException("Failed to create directory: $path");
       }
     }
 
     if (!is_writable($path)) {
-      throw new RuntimeException("Directory is not writable: $path");
+      throw new \RuntimeException("Directory is not writable: $path");
     }
   }
 
