@@ -337,7 +337,7 @@ class FilterDateTest extends ViewTestBase {
     $this->submitForm([], 'Save');
     $this->assertConfigSchemaByName('views.view.test_filter_date_between');
 
-    // Access the view display and check for warnings.
+    // Access the view display and check for warnings related to undefined min and max values.
     $this->drupalGet($path);
     $this->submitForm(['created' => 'All'], 'Apply');
     $results = $this->cssSelect('.view-content .field-content');
