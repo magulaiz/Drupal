@@ -26,6 +26,8 @@ use Drupal\filter\FilterFormatInterface;
 use Drupal\system\Entity\Action;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use Drupal\user\Event\UserAuthenticationEvent;
+use Drupal\user\Event\UserEvents;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
@@ -416,6 +418,11 @@ function user_login_finalize(UserInterface $account) {
   $session->migrate();
   $session->set('uid', $account->id());
   $session->set('check_logged_in', TRUE);
+
+  // Call the user login event.
+  $event = new UserAuthenticationEvent($account);
+  \Drupal::service('event_dispatcher')->dispatch($event, UserEvents::USER_LOGIN);
+
   \Drupal::moduleHandler()->invokeAll('user_login', [$account]);
 }
 
@@ -1117,6 +1124,10 @@ function user_logout() {
   $user = \Drupal::currentUser();
 
   \Drupal::logger('user')->info('Session closed for %name.', ['%name' => $user->getAccountName()]);
+
+  // Call the user logout event.
+  $event = new UserAuthenticationEvent($user);
+  \Drupal::service('event_dispatcher')->dispatch($event, UserEvents::USER_LOGOUT);
 
   \Drupal::moduleHandler()->invokeAll('user_logout', [$user]);
 

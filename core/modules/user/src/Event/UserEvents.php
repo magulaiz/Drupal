@@ -40,4 +40,31 @@ final class UserEvents {
    */
   const FLOOD_BLOCKED_IP = 'user.flood_blocked_ip';
 
+
+  /**
+   * The name of the event fired when user login.
+   *
+   * Event allows modules to perform an action whenever user login. The event
+   * listener method receives a \Drupal\user\Event\UserAuthenticationEvent
+   * instance.
+   *
+   * @Event
+   *
+   * @see user_login_finalize()
+   */
+  const USER_LOGIN = 'user.login';
+
+  /**
+   * The name of the event fired when user logout.
+   *
+   * Event allows modules to perform an action whenever user logout. The event
+   * listener method receives a \Drupal\user\Event\UserAuthenticationEvent
+   * instance.
+   *
+   * @Event
+   *
+   * @see user_logout()
+   */
+  const USER_LOGOUT = 'user.logout';
+
 }
