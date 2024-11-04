@@ -162,7 +162,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
 
   public static function textfieldInsertHtmlCallback($form): AjaxResponse {
     $response = new AjaxResponse();
-    $response->addCommand(new HtmlCommand('#block-umami-content', $form));
+    $response->addCommand(new HtmlCommand('.form-item-textfield-4', $form['textfield_focus_tests']['textfield_4']));
     return $response;
   }
 
