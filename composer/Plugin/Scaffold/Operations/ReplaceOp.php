@@ -68,7 +68,7 @@ class ReplaceOp extends AbstractOperation {
       return new ScaffoldResult($destination, FALSE);
     }
 
-    // Process destination permissions
+    // Process destination permissions.
     $this->processDestinationPermissions(dirname($destination_path), $io, $interpolator);
 
     // Remove the destination if it exists,
@@ -94,11 +94,16 @@ class ReplaceOp extends AbstractOperation {
    *   The interpolator for writing messages.
    */
   public function processDestinationPermissions(string $destination_path, IOInterface $io, $interpolator): void {
-    try {
-      chmod($destination_path, 0744);
+    if (file_exists($destination_path)) {
+      try {
+        chmod($destination_path, 0744);
+      }
+      catch (\Error $e) {
+        $io->write($interpolator->interpolate("Destination overwrite failed due to: " . $e->getMessage()));
+      }
     }
-    catch (\Error $e) {
-      $io->write($interpolator->interpolate("Destination overwrite failed due to: " . $e->getMessage()));
+    else {
+      $io->write($interpolator->interpolate("Skipped setting permissions: $destination_path does not exist."));
     }
   }
 
