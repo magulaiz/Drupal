@@ -360,17 +360,6 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = []);
 
   /**
-   * Helper method for generation join conditions.
-   *
-   * @param string $conjunction
-   *   The operator to use to combine conditions: 'AND' or 'OR'.
-   *
-   * @return \Drupal\Core\Database\Query\ConditionInterface
-   *   An object holding a group of conditions.
-   */
-  // public function joinCondition(string $conjunction = 'AND');
-
-  /**
    * Orders the result set by a given field.
    *
    * If called multiple times, the query will order by each specified field in the
