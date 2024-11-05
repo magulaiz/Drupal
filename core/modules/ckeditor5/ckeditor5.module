@@ -17,6 +17,7 @@ use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
@@ -601,7 +602,22 @@ function _ckeditor5_theme_css($theme = NULL): array {
     $theme = \Drupal::config('system.theme')->get('default');
   }
   if (isset($theme) && $theme_path = \Drupal::service('extension.list.theme')->getPath($theme)) {
-    $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
+    try {
+      $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
+    }
+    catch (UnknownExtensionException $e) {
+      // Gracefully degrade if the default theme is not (yet) installed. (This
+      // is fine because `ckeditor5-stylesheets` in a theme is progressive
+      // enhancement.) This may occur when:
+      // 1. `system.theme:default`:
+      //    - is right, but the theme is not yet installed
+      //    - is wrong (the theme is not installed and never will be)
+      // 2. an install profile contains a module provides a `editor.editor.*`
+      //    config entity in `config/install` (not `config/optional`). A profile
+      //    first get its modules installed, and only then its themes.
+      // @see https://www.drupal.org/project/drupal/issues/3403394#comment-15336417
+      return $css;
+    }
     if (isset($info['ckeditor5-stylesheets']) && $info['ckeditor5-stylesheets'] !== FALSE) {
       $css = $info['ckeditor5-stylesheets'];
       foreach ($css as $key => $url) {
