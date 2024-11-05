@@ -348,7 +348,7 @@ function _views_query_tag_alter_condition(AlterableInterface $query, &$condition
       if (is_object($condition['value'])) {
         $subquery = $condition['value'];
         $subquery->addMetaData('views_substitutions', $query->getMetaData('views_substitutions'));
-        views_query_views_alter($condition['value']);
+        \Drupal::moduleHandler()->invoke('views', 'query_views_alter', [$condition['value']]);
       }
       elseif (isset($condition['value'])) {
         // We can not use a simple str_replace() here because it always returns
