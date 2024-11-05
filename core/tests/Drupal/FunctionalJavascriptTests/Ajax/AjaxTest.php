@@ -377,7 +377,7 @@ JS;
     // Test that after input on the second change textfield + focus on the second input textfield, the user is re-focused on the second input textfield.
     $textfield_input_second = $textfields_input[1];
     $textfield_change_second->focus();
-    $textfield_change_second->setValue('Lion says rawr');
+    $textfield_change_second->setValue('Lion says roar');
     $textfield_input_second->focus();
     $this->assertSession()->assertWaitOnAjaxRequest();
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
