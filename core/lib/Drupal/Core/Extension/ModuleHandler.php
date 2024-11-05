@@ -505,7 +505,7 @@ class ModuleHandler implements ModuleHandlerInterface {
           $functions[] = substr($listener, 1);
         }
         else {
-          $functions[] = get_class($listener[0]) . '->' . $listener[1];
+          $functions[] = get_class($listener[0]) . '::' . $listener[1];
         }
       }
       $message = 'The deprecated alter hook hook_' . $type . '_alter() is implemented in these locations: ' . implode(', ', $functions) . '.';
