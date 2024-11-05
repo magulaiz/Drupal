@@ -59,7 +59,7 @@ use Drupal\user\StatusItem;
  *   revision_metadata_keys = {
  *     "revision_user" = "revision_user",
  *     "revision_created" = "revision_created",
- *     "revision_log_message" = "revision_log_message",
+ *     "revision_log_message" = "revision_log",
  *   },
  *   bundle_entity_type = "taxonomy_vocabulary",
  *   field_ui_base_route = "entity.taxonomy_vocabulary.overview_form",
