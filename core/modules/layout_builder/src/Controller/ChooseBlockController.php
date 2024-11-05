@@ -90,7 +90,6 @@ class ChooseBlockController implements ContainerInjectionInterface {
    */
   public function build(SectionStorageInterface $section_storage, int $delta, $region) {
     if (!$section_storage->getPluginDefinition()->get('disable_inline_blocks') && $this->entityTypeManager->hasDefinition('block_content_type') && $types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple()) {
-//      if ($this->entityTypeManager->hasDefinition('block_content_type') && $types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple()) {
       if (count($types) === 1) {
         $type = reset($types);
         $plugin_id = 'inline_block:' . $type->id();

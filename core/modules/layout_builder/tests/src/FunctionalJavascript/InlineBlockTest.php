@@ -25,7 +25,7 @@ class InlineBlockTest extends InlineBlockTestBase {
    */
   protected static $modules = [
     'field_ui',
-    'navigation'
+    'navigation',
   ];
 
   /**
@@ -547,7 +547,7 @@ class InlineBlockTest extends InlineBlockTestBase {
       'administer node display',
       'administer node fields',
       'create and edit custom blocks',
-      'configure navigation layout'
+      'configure navigation layout',
     ]));
 
     // Enable layout builder and overrides.

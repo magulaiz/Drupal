@@ -31,7 +31,7 @@ class SectionStorage extends Plugin {
    *   When an entity with layout is rendered, all section storage plugins which
    *   match a particular set of contexts are checked, in order of their weight,
    *   to determine which plugin should be used to render the layout.
-   *   @param bool $handles_permission_check
+   * @param bool $handles_permission_check
    *   (optional) Indicates that this section storage handles its own
    *   permission checking. If FALSE, the 'configure any layout' permission
    *   will be required during routing access. If TRUE, Layout Builder will
