@@ -368,7 +368,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   An object holding a group of conditions.
    */
-  public function joinCondition(string $conjunction = 'AND');
+  // public function joinCondition(string $conjunction = 'AND');
 
   /**
    * Orders the result set by a given field.
