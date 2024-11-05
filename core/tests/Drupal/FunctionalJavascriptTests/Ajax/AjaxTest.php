@@ -344,4 +344,27 @@ JS;
     $this->assertEquals('edit-textfield-3', $has_focus_id);
   }
 
+  /**
+   * Tests ajax focus handling for duplicate forms.
+   */
+  public function testAjaxFocusDuplicate(): void {
+    $this->drupalGet('/ajax_forms_test_duplicate_forms');
+
+    $this->assertCount(
+      2,
+      $textfields = $this->getSession()->getPage()->findAll(
+        'css',
+        '[data-drupal-selector="edit-textfield"]',
+      ),
+    );
+
+    $textfield_second = $textfields[1];
+    $textfield_second->focus();
+    $textfield_second->setValue('Cow says moo');
+    $textfield_second->blur();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
+    $this->assertEquals($textfield_second->getAttribute('id'), $has_focus_id);
+  }
+
 }
