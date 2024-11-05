@@ -158,7 +158,7 @@ class RouteProcessorCsrfTest extends UnitTestCase {
 
     // Mock that the CSRF token service should be called once with 'test-path'
     // and return a test token.
-    $this->csrfToken->expects($this->once())
+    $this->csrfToken->expects($this->any())
       ->method('get')
       ->with('test-path')
       ->willReturn('real_token_value');
@@ -167,8 +167,11 @@ class RouteProcessorCsrfTest extends UnitTestCase {
 
     $route = new Route('/test-path', [], ['_csrf_token' => 'TRUE']);
     $parameters = [];
-    // For JSON requests, the actual CSRF token should be in parameters.
+    // For JSON requests, the actual CSRF token should be in parameters,
+    // regardless of whether cache metadata is present.
     $this->processor->processOutbound('test', $route, $parameters);
+    $this->assertEquals('real_token_value', $parameters['token']);
+    $this->processor->processOutbound('test', $route, $parameters, new BubbleableMetadata());
     $this->assertEquals('real_token_value', $parameters['token']);
   }
 
