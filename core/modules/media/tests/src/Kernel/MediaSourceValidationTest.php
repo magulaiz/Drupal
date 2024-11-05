@@ -20,6 +20,8 @@ use GuzzleHttp\Psr7\Response;
 
 /**
  * Tests media validation.
+ *
+ * @group media
  */
 final class MediaSourceValidationTest extends KernelTestBase {
 
