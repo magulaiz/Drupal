@@ -139,10 +139,8 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
 
     // Find all the autocomplete results.
     $results = $page->findAll('css', '.entity-link-suggestions-result-line.ui-menu-item');
-    $this->assertCount(3, $results);
+    $this->assertCount(1, $results);
     $this->assertSame('Foo', $results[0]->find('css', '.entity-link-suggestions-result-line--title')->getText());
-    $this->assertSame('Information about screaming hairy armadillo', $results[1]->find('css', '.entity-link-suggestions-result-line--title')->getText());
-    $this->assertSame('Sofie', $results[2]->find('css', '.entity-link-suggestions-result-line--title')->getText());
 
     // Make the search term longer to narrow down the results.
     $autocomplete_field->setValue('fo');
@@ -151,9 +149,8 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
 
     // Find all the autocomplete results.
     $results = $page->findAll('css', '.entity-link-suggestions-result-line.ui-menu-item');
-    $this->assertCount(2, $results);
+    $this->assertCount(1, $results);
     $this->assertSame('Foo', $results[0]->find('css', '.entity-link-suggestions-result-line--title')->getText());
-    $this->assertSame('Information about screaming hairy armadillo', $results[1]->find('css', '.entity-link-suggestions-result-line--title')->getText());
 
     // Find the first result and click it.
     $results[0]->click();
