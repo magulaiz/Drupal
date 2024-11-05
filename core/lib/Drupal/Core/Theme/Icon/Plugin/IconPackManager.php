@@ -15,6 +15,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 use Drupal\Core\Theme\Icon\IconExtractorPluginManager;
 use JsonSchema\Constraints\Constraint;
@@ -147,23 +148,6 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
   private const SCHEMA_VALIDATE = 'core/assets/schemas/v1/icon_pack.schema.json';
 
   /**
-   * Lookup array for icons by id for faster getIcon() access.
-   *
-   * Icons are not indexed by ID to simplify the Extractor plugin as much as
-   * possible. So we need to build a lookup table to speed up the lookup.
-   *
-   * @var array<string, \Drupal\Core\Theme\Icon\IconDefinitionInterface>
-   */
-  private array $iconLookup = [];
-
-  /**
-   * Whether the icon lookup has been built.
-   *
-   * @var bool
-   */
-  private bool $isLookupBuilt = FALSE;
-
-  /**
    * The schema validator.
    *
    * This property will only be set if the validator library is available.
@@ -196,7 +180,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     $this->moduleHandler = $module_handler;
     $this->factory = new ContainerFactory($this);
     $this->alterInfo('icon_pack');
-    $this->setCacheBackend($cacheBackend, 'icon_pack', ['icon_pack_plugin']);
+    $this->setCacheBackend($cacheBackend, 'icon_pack', ['icon_pack', 'icon_pack_plugin']);
   }
 
   /**
@@ -243,7 +227,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     // To avoid the need for appRoot in extractors.
     $definition['absolute_path'] = sprintf('%s/%s', $this->appRoot, $relative_path);
 
-    // Load all discovered icons in the definition so they are cached.
+    // Load all discovered icon ids in the definition so they are cached.
     $definition['icons'] = $this->getIconsFromDefinition($definition);
   }
 
@@ -265,28 +249,38 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
       $icons = array_merge($icons, $definition['icons'] ?? []);
     }
 
-    // Build the icon lookup array for faster access.
-    $this->iconLookup = array_reduce($icons, function ($carry, $icon) {
-      if ($icon instanceof IconDefinitionInterface) {
-        $carry[$icon->getId()] = $icon;
-      }
-      return $carry;
-    }, []);
-
-    $this->isLookupBuilt = TRUE;
-
     return $icons;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getIcon(string $icon_id): ?IconDefinitionInterface {
-    if (!$this->isLookupBuilt) {
-      $this->getIcons();
+  public function getIcon(string $icon_full_id): ?IconDefinitionInterface {
+    $icon_data = explode(IconDefinition::ICON_SEPARATOR, $icon_full_id);
+    if (!isset($icon_data[0]) || !isset($icon_data[1])) {
+      return NULL;
     }
 
-    return $this->iconLookup[$icon_id] ?? NULL;
+    [$pack_id, $icon_id] = $icon_data;
+    $definitions = $this->getDefinitions();
+
+    if (!isset($definitions[$pack_id])) {
+      return NULL;
+    }
+
+    $definition = $definitions[$pack_id];
+
+    if (!isset($definition['icons'][$icon_full_id])) {
+      return NULL;
+    }
+
+    $icon_data = $definition['icons'][$icon_full_id];
+    $icon_data['icon_id'] = $icon_id;
+    // Extracted list of icons is not needed by extractor.
+    unset($definition['icons']);
+    $icon = $this->loadIconFromExtractor($icon_data, $definition['extractor'], $definition);
+
+    return $icon;
   }
 
   /**
@@ -414,6 +408,25 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     /** @var \Drupal\Core\Theme\Icon\IconExtractorInterface $extractor */
     $extractor = $this->iconPackExtractorManager->createInstance($definition['extractor'], $definition);
     return $extractor->discoverIcons();
+  }
+
+  /**
+   * Load a icon from extractor.
+   *
+   * @param array $icon_data
+   *   The icon data from extractor discovery.
+   * @param string $extractor
+   *   The extractor plugin id.
+   * @param array $definition
+   *   The definition.
+   *
+   * @return array
+   *   Discovered icons.
+   */
+  private function loadIconFromExtractor(array $icon_data, string $extractor, array $definition) {
+    /** @var \Drupal\Core\Theme\Icon\IconExtractorInterface $extractor */
+    $extractor = $this->iconPackExtractorManager->createInstance($extractor, $definition);
+    return $extractor->loadIcon($icon_data);
   }
 
   /**

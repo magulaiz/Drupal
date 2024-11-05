@@ -8,6 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\Icon\Attribute\IconExtractor;
 use Drupal\Core\Theme\Icon\IconExtractorWithFinder;
 use Drupal\Core\Theme\Icon\IconPackExtractorForm;
+use Drupal\Core\Theme\Icon\IconDefinition;
 
 /**
  * Plugin implementation of the icon_extractor.
@@ -37,7 +38,11 @@ class PathExtractor extends IconExtractorWithFinder {
 
     $icons = [];
     foreach ($files as $file) {
-      $icons[] = $this->createIcon($file['icon_id'], $file['source'], $file['group'] ?? NULL);
+      $id = IconDefinition::createIconId($this->configuration['id'], $file['icon_id']);
+      $icons[$id] = [
+        'source' => $file['source'],
+        'group' => $file['group'] ?? NULL,
+      ];
     }
 
     return $icons;

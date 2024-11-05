@@ -96,6 +96,7 @@ class IconTest extends UnitTestCase {
           'icon_id' => 'icon_id',
           'source' => '/foo/bar',
           'attributes' => new Attribute(),
+          'library' => 'my_theme/my_library',
         ],
       ],
     ];
@@ -123,6 +124,7 @@ class IconTest extends UnitTestCase {
           'content' => 'test_content',
           'baz' => 'qux',
           'attributes' => new Attribute(),
+          'library' => 'my_theme/my_library',
         ],
       ],
     ];
@@ -170,6 +172,7 @@ class IconTest extends UnitTestCase {
           'source' => '/foo/bar',
           'attributes' => new Attribute(),
           'foo' => 'bar',
+          'enabled' => 'foo',
         ],
       ],
     ];

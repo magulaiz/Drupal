@@ -9,6 +9,7 @@ use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
 use Drupal\Core\Theme\Icon\IconDefinition;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 use Drupal\Core\Theme\Icon\IconFinder;
 use Drupal\icon_test\Plugin\IconExtractor\TestExtractor;
 use Drupal\icon_test\Plugin\IconExtractor\TestExtractorWithFinder;
@@ -109,7 +110,6 @@ class ExtractorTest extends UnitTestCase {
       NULL,
       [
         'id' => $this->pluginId,
-        'template' => '_bar_',
       ],
     );
 
@@ -125,7 +125,6 @@ class ExtractorTest extends UnitTestCase {
       'baz',
       [
         'id' => $this->pluginId,
-        'template' => '_bar_',
         'corge' => 'qux',
       ],
     );
@@ -146,6 +145,47 @@ class ExtractorTest extends UnitTestCase {
     $this->expectException(IconPackConfigErrorException::class);
     $this->expectExceptionMessage('Missing `template` in your definition, extractor test_extractor requires this value.');
     $extractorPlugin->createIcon('foo');
+  }
+
+  /**
+   * Test the IconExtractorBase:loadIcon.
+   */
+  public function testLoadIcon(): void {
+    $icon_data = [
+      'icon_id' => 'foo',
+      'source' => 'path/foo.svg',
+      'group' => 'bar',
+    ];
+
+    $extractorPlugin = new TestExtractor(
+      [
+        'id' => $this->pluginId,
+        'template' => '_bar_',
+      ],
+      $this->pluginId,
+      [],
+    );
+    $icon = $extractorPlugin->loadIcon($icon_data);
+    $this->assertInstanceOf(IconDefinitionInterface::class, $icon);
+    $this->assertSame($icon_data['icon_id'], $icon->getIconId());
+    $this->assertSame($icon_data['source'], $icon->getSource());
+    $this->assertSame($icon_data['group'] ?? NULL, $icon->getGroup());
+  }
+
+  /**
+   * Test the IconExtractorBase:loadIcon with missing data.
+   */
+  public function testLoadIconMissingData(): void {
+    $extractorPlugin = new TestExtractor(
+      [
+        'id' => $this->pluginId,
+        'template' => '_bar_',
+      ],
+      $this->pluginId,
+      [],
+    );
+    $icon = $extractorPlugin->loadIcon([]);
+    $this->assertNull($icon);
   }
 
   /**

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Icon\Plugin;
 
+// cspell:ignore corge
 use Drupal\Tests\UnitTestCase;
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\IconFinder;
 use Drupal\Core\Theme\Plugin\IconExtractor\SvgSpriteExtractor;
 use Drupal\Tests\Core\Theme\Icon\IconTestTrait;
@@ -67,65 +69,73 @@ class SvgSpriteExtractorTest extends UnitTestCase {
 
     yield 'svg not sprite is ignored' => [
       [
-        [
-          'source' => 'source/baz',
-          'absolute_path' => '/path/baz.svg',
+        'foo' => [
+          'icon_id' => 'foo',
+          'source' => 'source/foo.svg',
+          'absolute_path' => '/path/source/foo.svg',
         ],
       ],
       [
-        ['/path/baz.svg', '<svg xmlns="https://www.w3.org/2000/svg"><path d="M8 15a.5.5 0 0 0"/></svg>'],
+        ['/path/source/foo.svg', '<svg xmlns="https://www.w3.org/2000/svg"><path d="M8 15a.5.5 0 0 0"/></svg>'],
       ],
       [],
     ];
 
     yield 'svg sprite with one symbol' => [
       [
-        [
-          'source' => 'source/baz',
-          'absolute_path' => '/path/baz.svg',
+        'foo' => [
+          'icon_id' => 'foo',
+          'source' => 'source/foo.svg',
+          'absolute_path' => '/path/source/foo.svg',
+          'group' => NULL,
         ],
       ],
       [
-        ['/path/baz.svg', '<svg><symbol id="foo"></symbol></svg>'],
+        ['/path/source/foo.svg', '<svg><symbol id="bar"></symbol></svg>'],
       ],
-      ['foo'],
+      [
+        'bar',
+      ],
     ];
 
     yield 'single file with multiple symbol' => [
       [
-        [
-          'absolute_path' => '/path/baz.svg',
-          'source' => 'source/baz',
+        'foo' => [
+          'icon_id' => 'foo',
+          'source' => 'source/foo.svg',
+          'absolute_path' => '/path/source/foo.svg',
         ],
       ],
       [
-        ['/path/baz.svg', '<svg><symbol id="foo"></symbol><symbol id="bar"></symbol></svg>'],
+        ['/path/source/foo.svg', '<svg><symbol id="foo"></symbol><symbol id="bar"></symbol></svg>'],
       ],
       ['foo', 'bar'],
     ];
 
     yield 'single file with multiple symbol in defs' => [
       [
-        [
-          'absolute_path' => '/path/baz.svg',
-          'source' => 'source/baz',
+        'foo' => [
+          'icon_id' => 'foo',
+          'source' => 'source/foo.svg',
+          'absolute_path' => '/path/source/foo.svg',
         ],
       ],
       [
-        ['/path/baz.svg', '<svg><defs><symbol id="foo"></symbol><symbol id="bar"></symbol></defs></svg>'],
+        ['/path/source/foo.svg', '<svg><defs><symbol id="foo"></symbol><symbol id="bar"></symbol></defs></svg>'],
       ],
       ['foo', 'bar'],
     ];
 
     yield 'svg sprite with attributes' => [
       [
-        [
-          'source' => 'source/baz',
-          'absolute_path' => '/path/baz.svg',
+        'foo' => [
+          'icon_id' => 'foo',
+          'source' => 'source/foo.svg',
+          'absolute_path' => '/path/source/foo.svg',
         ],
       ],
       [
-        ['/path/baz.svg', '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-foo="bar" data-baz="foo"><symbol id="foo"></symbol></svg>'],
+        ['/path/source/foo.svg', '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-foo="bar" data-baz="foo"><symbol id="foo"></symbol></svg>'],
       ],
       ['foo'],
       [
@@ -140,8 +150,8 @@ class SvgSpriteExtractorTest extends UnitTestCase {
   /**
    * Test the SvgSpriteExtractor::discoverIcons() method.
    *
-   * @param array<array<string, string>> $icons
-   *   The icons to test.
+   * @param array<array<string, string>> $files
+   *   The files to test from IconFinder::getFilesFromSources.
    * @param array<int, array<int, mixed>> $contents_map
    *   The content returned by fileGetContents() based on absolute_path.
    * @param array<string> $expected
@@ -149,12 +159,8 @@ class SvgSpriteExtractorTest extends UnitTestCase {
    *
    * @dataProvider providerDiscoverIconsSvgSprite
    */
-  public function testDiscoverIconsSvgSprite(array $icons = [], array $contents_map = [], array $expected = []): void {
-    $return_list = [];
-    foreach ($icons as $icon) {
-      $return_list[] = $this->createIconData($icon);
-    }
-    $this->iconFinder->method('getFilesFromSources')->willReturn($return_list);
+  public function testDiscoverIconsSvgSprite(array $files = [], array $contents_map = [], array $expected = []): void {
+    $this->iconFinder->method('getFilesFromSources')->willReturn($files);
     $this->iconFinder->method('getFileContents')
       ->willReturnMap($contents_map);
 
@@ -165,19 +171,12 @@ class SvgSpriteExtractorTest extends UnitTestCase {
       return;
     }
 
-    $index = 0;
-    foreach ($icons as $index => $expected_icon) {
-      // Main test is to ensure the icon id is extracted.
-      $this->assertSame($expected[$index], $result[$index]->getIconId());
-    }
-
     // Basic data are not altered and can be compared directly.
-    foreach ($result as $icon) {
-      if (!isset($icons[$index])) {
-        continue;
-      }
-      $this->assertSame($icons[$index]['source'], $icon->getSource());
-      $this->assertSame($icons[$index]['group'] ?? NULL, $icon->getGroup());
+    $index = 0;
+    foreach ($result as $icon_id => $icon_data) {
+      $expected_id = $this->pluginId . IconDefinition::ICON_SEPARATOR . $expected[$index];
+      $this->assertSame($expected_id, $icon_id);
+      $index++;
     }
   }
 
@@ -185,9 +184,11 @@ class SvgSpriteExtractorTest extends UnitTestCase {
    * Test the SvgSpriteExtractor::discoverIcons() method with invalid svg.
    */
   public function testDiscoverIconsSvgSpriteInvalid(): void {
-    $this->iconFinder->method('getFilesFromSources')->willReturn([
-      $this->createIconData(),
-    ]);
+    $icon = [
+      'icon_id' => 'foo',
+      'source' => '/path/source/foo.svg',
+    ];
+    $this->iconFinder->method('getFilesFromSources')->willReturn($icon);
     $this->iconFinder->method('getFileContents')->willReturn('Not valid svg');
 
     $icons = $this->svgSpriteExtractorPlugin->discoverIcons();
@@ -201,9 +202,11 @@ class SvgSpriteExtractorTest extends UnitTestCase {
    * Test the SvgSpriteExtractor::discoverIcons() method with invalid content.
    */
   public function testDiscoverIconsSvgSpriteInvalidContent(): void {
-    $this->iconFinder->method('getFilesFromSources')->willReturn([
-      $this->createIconData(),
-    ]);
+    $icon = [
+      'icon_id' => 'foo',
+      'source' => '/path/source/foo.svg',
+    ];
+    $this->iconFinder->method('getFilesFromSources')->willReturn($icon);
     $this->iconFinder->method('getFileContents')->willReturn(FALSE);
     $icons = $this->svgSpriteExtractorPlugin->discoverIcons();
     $this->assertEmpty($icons);

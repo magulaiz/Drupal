@@ -7,6 +7,7 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Theme\Icon\IconDefinition;
+use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 
 /**
  * Provides a render element to display an icon.
@@ -62,33 +63,30 @@ class Icon extends RenderElementBase {
     /** @var \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface $pluginManagerIconPack */
     $pluginManagerIconPack = \Drupal::service('plugin.manager.icon_pack');
     $icon = $pluginManagerIconPack->getIcon($icon_full_id);
-    if (!$icon) {
+    if (!$icon instanceof IconDefinitionInterface) {
       return $element;
     }
-
     $context = [
       'icon_id' => $icon->getIconId(),
     ];
-
     if ($source = $icon->getSource()) {
       $context['source'] = $source;
     }
 
     // Pass all data to the template, extractors can add specific values.
-    foreach ($icon->getData() as $data_name => $data_value) {
-      if (!$data_value) {
-        continue;
+    if ($data = $icon->getData()) {
+      foreach ($data as $data_name => $data_value) {
+        if (!$data_value) {
+          continue;
+        }
+        $context[$data_name] = $data_value;
       }
-      $context[$data_name] = $data_value;
     }
 
     // Inject attributes variable if not created by the extractor.
     if (!isset($context['attributes'])) {
       $context['attributes'] = new Attribute();
     }
-
-    // Clean not needed definition values and library moved to #attached.
-    unset($context['enabled'], $context['template'], $context['library']);
 
     $element['inline-template'] = [
       '#type' => 'inline_template',

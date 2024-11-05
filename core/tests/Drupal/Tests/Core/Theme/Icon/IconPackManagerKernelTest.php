@@ -86,13 +86,15 @@ class IconPackManagerKernelTest extends KernelTestBase {
     $icons = $this->pluginManagerIconPack->getIcons();
     $this->assertCount(self::EXPECTED_TOTAL_TEST_ICONS, $icons);
     foreach ($icons as $icon) {
-      $this->assertInstanceOf(IconDefinitionInterface::class, $icon);
+      $this->assertArrayHasKey('source', $icon);
+      $this->assertArrayHasKey('group', $icon);
     }
 
     $icons = $this->pluginManagerIconPack->getIcons(['test_minimal']);
     $this->assertCount(1, $icons);
     foreach ($icons as $icon) {
-      $this->assertInstanceOf(IconDefinitionInterface::class, $icon);
+      $this->assertArrayHasKey('source', $icon);
+      $this->assertArrayHasKey('group', $icon);
     }
 
     $icons = $this->pluginManagerIconPack->getIcons(['do_not_exist']);

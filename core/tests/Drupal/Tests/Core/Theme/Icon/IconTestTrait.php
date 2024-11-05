@@ -13,25 +13,6 @@ use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 trait IconTestTrait {
 
   /**
-   * Creates icon data array.
-   *
-   * @param array<string, string> $data
-   *   The icon data to create for test.
-   *
-   * @return array<string, string|null>
-   *   The icon data array.
-   */
-  protected static function createIconData(array $data = []): array {
-    $icon_id = $data['icon_id'] ?? 'foo';
-    return [
-      'icon_id' => $icon_id,
-      'source' => $data['source'] ?? sprintf('foo/bar/%s.svg', $icon_id),
-      'absolute_path' => $data['absolute_path'] ?? sprintf('/_ROOT_/web/modules/my_module/foo/bar/%s.svg', $icon_id),
-      'group' => $data['group'] ?? NULL,
-    ];
-  }
-
-  /**
    * Create a mock icon.
    *
    * @param array<string, string>|null $iconData

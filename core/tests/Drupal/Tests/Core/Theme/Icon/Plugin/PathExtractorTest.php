@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Theme\Icon\Plugin;
 
 use Drupal\Tests\UnitTestCase;
+use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\IconFinder;
 use Drupal\Core\Theme\Plugin\IconExtractor\PathExtractor;
 use Drupal\Tests\Core\Theme\Icon\IconTestTrait;
@@ -66,34 +67,33 @@ class PathExtractorTest extends UnitTestCase {
   public static function providerDiscoverIconsPath(): iterable {
     yield 'empty files' => [
       [],
-      FALSE,
+      TRUE,
     ];
 
     yield 'single file' => [
       [
-        [
+        'foo' => [
           'icon_id' => 'foo',
-          'source' => 'source/foo',
+          'source' => 'source/foo.svg',
         ],
       ],
     ];
 
     yield 'multiple files with group' => [
       [
-        [
+        'foo' => [
           'icon_id' => 'foo',
-          'source' => 'source/foo',
+          'source' => 'source/foo.svg',
           'group' => 'baz',
         ],
-        [
+        'bar' => [
           'icon_id' => 'bar',
-          'source' => 'source/bar',
-          'group' => 'baz',
+          'source' => 'source/bar.svg',
+          'group' => NULL,
         ],
-        [
+        'baz' => [
           'icon_id' => 'baz',
-          'source' => 'source/baz',
-          'group' => 'qux',
+          'source' => 'source/baz.svg',
         ],
       ],
     ];
@@ -102,31 +102,34 @@ class PathExtractorTest extends UnitTestCase {
   /**
    * Test the PathExtractor::discoverIcons() method.
    *
-   * @param array<array<string, string>> $icons
-   *   The icons to test.
-   * @param bool $expected
-   *   Has icon result, default TRUE.
+   * @param array<array<string, string>> $files
+   *   The files to test from IconFinder::getFilesFromSources.
+   * @param bool $expected_empty
+   *   Has icon result, default FALSE.
    *
    * @dataProvider providerDiscoverIconsPath
    */
-  public function testDiscoverIconsPath(array $icons, bool $expected = TRUE): void {
-    $return_list = [];
-    foreach ($icons as $icon) {
-      $return_list[] = $this->createIconData($icon);
-    }
-    $this->iconFinder->method('getFilesFromSources')->willReturn($return_list);
+  public function testDiscoverIconsPath(array $files, bool $expected_empty = FALSE): void {
+    $this->iconFinder->method('getFilesFromSources')->willReturn($files);
 
     $result = $this->pathExtractorPlugin->discoverIcons();
-    if (FALSE === $expected) {
+
+    if (TRUE === $expected_empty) {
       $this->assertEmpty($result);
       return;
     }
 
-    foreach ($result as $index => $icon) {
-      $this->assertSame($this->pluginId . ':' . $icons[$index]['icon_id'], $icon->getId());
-      $this->assertSame($icons[$index]['source'], $icon->getSource());
-      $this->assertSame($icons[$index]['group'] ?? NULL, $icon->getGroup());
+    // Result expected is keyed by icon_id with values 'source' and 'group'.
+    $expected_result = [];
+    foreach ($files as $index => $icon) {
+      $expected_id = $this->pluginId . IconDefinition::ICON_SEPARATOR . $icon['icon_id'];
+      if (!isset($icon['group'])) {
+        $icon['group'] = NULL;
+      }
+      unset($icon['icon_id']);
+      $expected_result[$expected_id] = $icon;
     }
+    $this->assertEquals($expected_result, $result);
   }
 
 }

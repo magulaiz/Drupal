@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Theme\Plugin\IconExtractor;
 
-use Drupal\Core\Template\Attribute;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\Icon\Attribute\IconExtractor;
 use Drupal\Core\Theme\Icon\IconExtractorWithFinder;
 use Drupal\Core\Theme\Icon\IconPackExtractorForm;
+use Drupal\Core\Theme\Icon\IconDefinition;
 
 /**
  * Plugin implementation of the icon_extractor.
@@ -41,12 +41,13 @@ class SvgSpriteExtractor extends IconExtractorWithFinder {
 
     $icons = [];
     foreach ($files as $file) {
-      $extractedData = $this->extractIdsFromXml($file['absolute_path'] ?? '');
-      if (!isset($extractedData['icon_ids'])) {
-        continue;
-      }
-      foreach ($extractedData['icon_ids'] as $icon_id) {
-        $icons[] = $this->createIcon((string) $icon_id, $file['source'], $file['group'] ?? NULL, ['attributes' => $extractedData['attributes']]);
+      $icon_ids = $this->extractIdsFromXml($file['absolute_path'] ?? '');
+      foreach ($icon_ids as $icon_id) {
+        $id = IconDefinition::createIconId($this->configuration['id'], (string) $icon_id);
+        $icons[$id] = [
+          'source' => $file['source'],
+          'group' => $file['group'] ?? NULL,
+        ];
       }
     }
 
@@ -76,19 +77,7 @@ class SvgSpriteExtractor extends IconExtractorWithFinder {
       return [];
     }
 
-    $return = [
-      'icon_ids' => [],
-      'attributes' => new Attribute(),
-    ];
-
-    // Add svg attributes to be available in the template.
-    foreach ($svg->attributes() as $name => $value) {
-      $return['attributes']->setAttribute($name, (string) $value);
-    }
-
-    $return['icon_ids'] = $this->extractIdsFromSymbols($svg->symbol) ?: $this->extractIdsFromSymbols($svg->defs->symbol ?? NULL);
-
-    return $return;
+    return $this->extractIdsFromSymbols($svg->symbol) ?: $this->extractIdsFromSymbols($svg->defs->symbol ?? NULL);
   }
 
   /**

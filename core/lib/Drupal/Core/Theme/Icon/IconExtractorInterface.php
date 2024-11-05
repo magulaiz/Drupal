@@ -17,15 +17,24 @@ interface IconExtractorInterface extends PluginFormInterface {
   /**
    * Get a list of all the icons discovered by this extractor.
    *
-   * The icons must be provided as an associative array with values equal to the
-   * icon definition (IconDefinitionInterface).
-   * To ease the creation of IconDefinition, createIcon() method is provided.
+   * The icons must be provided as an associative array keyed by the icon id
+   * with values used to load the icon: source and group.
    *
-   * @return \Drupal\Core\Theme\Icon\IconDefinitionInterface[]
-   *   List of icons that are found by this extractor. Array values are the icon
-   *   definition for each of the icons discovered.
+   * @return array
+   *   List of icons that are found by this extractor. Keyed by icon full id.
    */
   public function discoverIcons(): array;
+
+  /**
+   * Load an Icon object.
+   *
+   * @param array $icon_data
+   *   The icon data build in the discoverIcons() method.
+   *
+   * @return \Drupal\Core\Theme\Icon\IconDefinitionInterface|null
+   *   The icon.
+   */
+  public function loadIcon(array $icon_data): ?IconDefinitionInterface;
 
   /**
    * Returns the translated plugin label.

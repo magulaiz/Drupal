@@ -11,7 +11,7 @@ use Drupal\Core\Plugin\PluginWithFormsTrait;
 use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
 
 /**
- * Base class for icon_extractor plugins.
+ * Base class for icon extractor plugins.
  *
  * @internal
  *   This API is experimental.
@@ -19,6 +19,33 @@ use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
 abstract class IconExtractorBase extends PluginBase implements IconExtractorInterface, PluginWithFormsInterface {
 
   use PluginWithFormsTrait;
+
+  // Remove internal values and allow extractor to add any needed values.
+  private const DEFINITION_REMOVE = [
+    'enabled',
+    'template',
+    // Definition label, remove to avoid confusion with icon label.
+    'label',
+    'description',
+    'links',
+    'config',
+    'library',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadIcon(array $icon_data): ?IconDefinitionInterface {
+    if (!isset($icon_data['icon_id']) || !isset($icon_data['source'])) {
+      return NULL;
+    }
+
+    return $this->createIcon(
+      $icon_data['icon_id'],
+      $icon_data['source'],
+      $icon_data['group'] ?? NULL,
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -65,13 +92,17 @@ abstract class IconExtractorBase extends PluginBase implements IconExtractorInte
       throw new IconPackConfigErrorException(sprintf('Missing `template` in your definition, extractor %s requires this value.', $this->getPluginId()));
     }
 
+    // Clean unused pack definition values as they will be passed to the context
+    // of the Twig.
+    $data_definition = array_diff_key($this->configuration, array_flip(self::DEFINITION_REMOVE));
+
     return IconDefinition::create(
       $this->configuration['id'],
       $icon_id,
       $this->configuration['template'],
       $source,
       $group,
-      $data ? array_merge($data, $this->configuration) : $this->configuration,
+      $data ? array_merge($data, $data_definition) : $data_definition,
     );
   }
 
