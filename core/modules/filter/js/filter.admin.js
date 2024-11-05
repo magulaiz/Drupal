@@ -61,7 +61,7 @@
             // Hide the table labels if there are no visible rows.
             let visibleRows = false;
             $table.find('tr').each(function () {
-              if ($(this).matches(':visible')) {
+              if ($(this).is(':visible')) {
                 visibleRows = true;
               }
             });
