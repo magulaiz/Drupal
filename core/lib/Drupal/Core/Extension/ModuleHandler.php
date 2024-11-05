@@ -389,10 +389,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     $modules = array_keys($this->getHookListeners($hook));
     if (!empty($modules)) {
       $message = 'The deprecated hook hook_' . $hook . '() is implemented in these modules: ';
-      $implementations = array_map(function ($module) {
-        return $module;
-      }, $modules);
-      @trigger_error($message . implode(', ', $implementations) . '. ' . $description, E_USER_DEPRECATED);
+      @trigger_error($message . implode(', ', $modules) . '. ' . $description, E_USER_DEPRECATED);
     }
   }
 
