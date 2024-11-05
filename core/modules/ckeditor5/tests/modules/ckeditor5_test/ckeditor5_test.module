@@ -1,0 +1,18 @@
+<?php
+/**
+* @file
+* Helper module for the CKEditor5 tests.
+*/
+
+declare(strict_types=1);
+
+/**
+* Implements hook_entity_bundle_info_alter().
+*/
+function ckeditor5_test_entity_bundle_info_alter(&$bundles) {
+  if (isset($bundles['taxonomy_term'])) {
+    foreach ($bundles['taxonomy_term'] as $key => $bundle) {
+      $bundles['taxonomy_term'][$key]['ckeditor5_link_suggestions'] = TRUE;
+    }
+  }
+}

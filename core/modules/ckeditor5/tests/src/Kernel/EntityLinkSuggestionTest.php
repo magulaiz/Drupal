@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
-// cspell:ignore Sofie Deutsch
+// cspell:ignore Sofie Deutsch doo
 
 use Drupal\ckeditor5\Controller\EntityLinkSuggestionsController;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
 use Drupal\editor\Entity\Editor;
 use Drupal\node\Entity\NodeType;
@@ -32,6 +34,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
   protected static $modules = [
     'node',
     'ckeditor5',
+    'ckeditor5_test',
     'filter',
     'editor',
     'system',
@@ -41,6 +44,8 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     'language',
     'content_translation',
     'system',
+    'taxonomy',
+    'text',
   ];
 
   /**
@@ -100,17 +105,27 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     ));
 
     // Create a node type for testing.
-    $node_type = NodeType::create([
+    $node_page_type = NodeType::create([
       'type' => 'page',
       'name' => 'Basic page',
     ]);
-    $node_type->save();
+    $node_page_type->save();
+    $node_article_type = NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ]);
+    $node_article_type->save();
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installEntitySchema('date_format');
     $this->installSchema('node', ['node_access']);
-    $this->container->get('content_translation.manager')->setEnabled('node', $node_type->id(), TRUE);
+    $this->container->get('content_translation.manager')->setEnabled('node', $node_page_type->id(), TRUE);
+    $this->container->get('content_translation.manager')->setEnabled('node', $node_article_type->id(), TRUE);
 
+    $this->installEntitySchema('taxonomy_vocabulary');
+    $this->installEntitySchema('taxonomy_term');
+    $vocabulary = Vocabulary::create(['name' => 'Tags', 'vid' => 'tags']);
+    $vocabulary->save();
     // Create an account with "f" in the username.
     $user = User::create([
       'name' => 'sofie',
@@ -127,17 +142,51 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     ConfigurableLanguage::createFromLangcode('de')->save();
 
     // Load the test node entity.
-    $node = Node::create([
+    $nodePage = Node::create([
       'type' => 'page',
       'title' => 'foo',
       'uuid' => '36c25329-6c3b-452e-82fa-e20c502f69ed',
     ]);
-    $node->setCreatedTime(1695058272);
-    $node->save();
-    $translation = $node->addTranslation('de', [
+    $nodePage->setCreatedTime(1695058272);
+    $nodePage->save();
+    $translation = $nodePage->addTranslation('de', [
       'title' => 'Deutsch foo',
     ])->setCreatedTime(1695058272);
     $translation->save();
+
+    $nodeArticle = Node::create([
+      'type' => 'article',
+      'title' => 'doo',
+      'uuid' => '36c25329-6c3b-452e-82fa-e20c502f69ef',
+    ]);
+    $nodeArticle->setCreatedTime(1695058372);
+    $nodeArticle->save();
+    $nodeArticleTranslation = $nodeArticle->addTranslation('de', [
+      'title' => 'Deutsch doo',
+    ])->setCreatedTime(1695058372);
+    $nodeArticleTranslation->save();
+
+    $term = Term::create([
+      'vid' => $vocabulary->id(),
+      'name' => 'tag',
+      'uuid' => '966e5967-f19c-44b0-87b1-697441385b10',
+    ]);
+    $term->save();
+    $termTranslation = $term->addTranslation('de', [
+      'name' => 'tag DE',
+    ]);
+    $termTranslation->save();
+
+    $term2 = Term::create([
+      'vid' => $vocabulary->id(),
+      'name' => 'doo term',
+      'uuid' => '966e5967-f19c-44b0-87b1-697441385b11',
+    ]);
+    $term2->save();
+    $termTranslation2 = $term2->addTranslation('de', [
+      'name' => 'doo term DE',
+    ]);
+    $termTranslation2->save();
   }
 
   /**
@@ -169,6 +218,76 @@ class EntityLinkSuggestionTest extends KernelTestBase {
         'download' => FALSE,
       ],
     ];
+    $suggestion_node_2_en = [
+      'description' => 'by sofie on Tue, 19 Sep 2023 - 03:32',
+      'entity_type_id' => 'node',
+      'entity_uuid' => '36c25329-6c3b-452e-82fa-e20c502f69ef',
+      'group' => 'Content - Article',
+      'label' => 'doo',
+      'path' => 'entity:node/2',
+      'exposed_attributes' => [
+        'download' => FALSE,
+      ],
+    ];
+    $suggestion_node_2_de = [
+      'description' => 'by sofie on Tue, 19 Sep 2023 - 03:32',
+      'entity_type_id' => 'node',
+      'entity_uuid' => '36c25329-6c3b-452e-82fa-e20c502f69ef',
+      'group' => 'Content - Article',
+      'label' => 'Deutsch doo',
+      'path' => 'entity:node/2',
+      'exposed_attributes' => [
+        'download' => FALSE,
+      ],
+    ];
+
+    $suggestion_tag_1_en = [
+      'description' => '',
+      'entity_type_id' => 'taxonomy_term',
+      'entity_uuid' => '966e5967-f19c-44b0-87b1-697441385b10',
+      'group' => 'Taxonomy term - Tags',
+      'label' => 'tag',
+      'path' => 'entity:taxonomy_term/1',
+      'exposed_attributes' => [
+        'download' => FALSE,
+      ],
+    ];
+
+    $suggestion_tag_1_de = [
+      'description' => '',
+      'entity_type_id' => 'taxonomy_term',
+      'entity_uuid' => '966e5967-f19c-44b0-87b1-697441385b10',
+      'group' => 'Taxonomy term - Tags',
+      'label' => 'tag DE',
+      'path' => 'entity:taxonomy_term/1',
+      'exposed_attributes' => [
+        'download' => FALSE,
+      ],
+    ];
+
+    $suggestion_tag_2_en = [
+      'description' => '',
+      'entity_type_id' => 'taxonomy_term',
+      'entity_uuid' => '966e5967-f19c-44b0-87b1-697441385b11',
+      'group' => 'Taxonomy term - Tags',
+      'label' => 'doo term',
+      'path' => 'entity:taxonomy_term/2',
+      'exposed_attributes' => [
+        'download' => FALSE,
+      ],
+    ];
+
+    $suggestion_tag_2_de = [
+      'description' => '',
+      'entity_type_id' => 'taxonomy_term',
+      'entity_uuid' => '966e5967-f19c-44b0-87b1-697441385b11',
+      'group' => 'Taxonomy term - Tags',
+      'label' => 'doo term DE',
+      'path' => 'entity:taxonomy_term/2',
+      'exposed_attributes' => [
+        'download' => FALSE,
+      ],
+    ];
 
     // "f", single result due to (different) suggestion restrictions.
     yield 'suggestions=nodes only, host entity type=node, host entity langcode=en, search term="f"' => [
@@ -184,7 +303,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     ];
 
     // "z", no result due to no nodes having title with "z".
-    yield 'suggestions=nodes only, host entity type=node, host entity langcode=en, search term="z"' => [
+    yield 'host entity type=node, host entity langcode=en, search term="z"' => [
       [
         'allow_download_links' => TRUE,
       ],
@@ -225,6 +344,58 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       ],
     ];
 
+    // "tag", single result (taxonomy term), but different labels due to host entity langcode.
+    yield 'host entity type=node, host entity langcode=en, search term="tag"' => [
+      [
+        'allow_download_links' => TRUE,
+      ],
+      'tag',
+      'node',
+      'en',
+      [
+        $suggestion_tag_1_en,
+      ],
+    ];
+    yield 'host entity type=node, host entity langcode=de, search term="tag"' => [
+      [
+        'allow_download_links' => TRUE,
+      ],
+      'tag',
+      'node',
+      'de',
+      [
+        $suggestion_tag_1_de,
+      ],
+    ];
+
+    // "oo", multi results, but different labels due to host entity langcode.
+    yield 'host entity type=node, host entity langcode=en, search term="oo"' => [
+      [
+        'allow_download_links' => TRUE,
+      ],
+      'oo',
+      'node',
+      'en',
+      [
+        $suggestion_node_1_en,
+        $suggestion_node_2_en,
+        $suggestion_tag_2_en,
+      ],
+    ];
+    yield 'host entity type=node, host entity langcode=de, search term="oo"' => [
+      [
+        'allow_download_links' => TRUE,
+      ],
+      'oo',
+      'node',
+      'de',
+      [
+        $suggestion_node_1_de,
+        $suggestion_node_2_de,
+        $suggestion_tag_2_de,
+      ],
+    ];
+
     // "Deutsch" (which appears only on a translation of an entity!), single
     // result, but different labels due to host entity langcode.
     yield 'host entity type=node, host entity langcode=en, search term="Deutsch"' => [
@@ -236,6 +407,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'en',
       [
         $suggestion_node_1_en,
+        $suggestion_node_2_en,
       ],
     ];
     yield 'host entity type=node, host entity langcode=de, search term="Deutsch"' => [
@@ -247,6 +419,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'de',
       [
         $suggestion_node_1_de,
+        $suggestion_node_2_de,
       ],
     ];
   }
