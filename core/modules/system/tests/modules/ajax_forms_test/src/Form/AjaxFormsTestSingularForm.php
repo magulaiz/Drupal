@@ -29,12 +29,21 @@ class AjaxFormsTestSingularForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = [];
 
-    $form['textfield'] = [
+    $form['textfield_change'] = [
       '#type' => 'textfield',
-      '#title' => 'Textfield',
+      '#title' => 'Textfield Change',
       '#ajax' => [
         'callback' => [static::class, 'textfieldCallback'],
         'event' => 'change',
+      ],
+    ];
+
+    $form['textfield_input'] = [
+      '#type' => 'textfield',
+      '#title' => 'Textfield Input',
+      '#ajax' => [
+        'callback' => [static::class, 'textfieldCallback'],
+        'event' => 'input',
       ],
     ];
 

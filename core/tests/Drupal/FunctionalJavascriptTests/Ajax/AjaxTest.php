@@ -352,19 +352,36 @@ JS;
 
     $this->assertCount(
       2,
-      $textfields = $this->getSession()->getPage()->findAll(
+      $textfields_change = $this->getSession()->getPage()->findAll(
         'css',
-        '[data-drupal-selector="edit-textfield"]',
+        '[data-drupal-selector="edit-textfield-change"]',
+      ),
+    );
+    $this->assertCount(
+      2,
+      $textfields_input = $this->getSession()->getPage()->findAll(
+        'css',
+        '[data-drupal-selector="edit-textfield-input"]',
       ),
     );
 
-    $textfield_second = $textfields[1];
-    $textfield_second->focus();
-    $textfield_second->setValue('Cow says moo');
-    $textfield_second->blur();
+    // Test that after input + blurring on the second change textfield, the user is re-focused on the same.
+    $textfield_change_second = $textfields_change[1];
+    $textfield_change_second->focus();
+    $textfield_change_second->setValue('Cow says moo');
+    $textfield_change_second->blur();
     $this->assertSession()->assertWaitOnAjaxRequest();
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
-    $this->assertEquals($textfield_second->getAttribute('id'), $has_focus_id);
+    $this->assertEquals($textfield_change_second->getAttribute('id'), $has_focus_id);
+
+    // Test that after input on the second change textfield + focus on the second input textfield, the user is re-focused on the second input textfield.
+    $textfield_input_second = $textfields_input[1];
+    $textfield_change_second->focus();
+    $textfield_change_second->setValue('Lion says rawr');
+    $textfield_input_second->focus();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
+    $this->assertEquals($textfield_input_second->getAttribute('id'), $has_focus_id);
   }
 
 }
