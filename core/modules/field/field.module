@@ -80,7 +80,7 @@ function field_form_field_config_edit_form_entity_builder($entity_type_id, $enti
     // @see field_field_storage_config_update().
     $entity->setSetting('handler_settings', []);
     // @see field_field_config_presave().
-    field_field_config_create($entity);
+    \Drupal::moduleHandler()->invoke('field', 'field_config_create', [$entity]);
 
     // Store updated settings in form state so that the form state can be copied
     // directly to the entity.

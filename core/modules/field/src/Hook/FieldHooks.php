@@ -377,7 +377,7 @@ class FieldHooks {
     if ($field->isSyncing()) {
       return;
     }
-    field_field_config_create($field);
+    $this->fieldConfigCreate($field);
     // Act on all sub-types of the entity_reference field type.
     /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
