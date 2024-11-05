@@ -64,11 +64,7 @@
    */
   function resetSize(event) {
     // Ensure the UI dialog instance exists/is valid.
-    if (
-      !event.data ||
-      !event.data.$element ||
-      !event.data.$element.data('ui-dialog')
-    ) {
+    if (!event.data?.$element?.data('ui-dialog')) {
       return;
     }
 
