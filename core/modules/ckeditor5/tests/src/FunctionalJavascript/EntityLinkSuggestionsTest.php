@@ -8,6 +8,7 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
+use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
@@ -34,6 +35,7 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     'node',
     'media',
     'ckeditor5',
+    'ckeditor5_test',
   ];
 
   /**
@@ -100,6 +102,21 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
       'use text format test_format',
     ], 'Sofie');
 
+    // Create a document media item with "f" in the name.
+    $this->createMediaType('file', ['id' => 'document', 'label' => 'Document']);
+    File::create([
+      'uri' => $this->getTestFiles('text')[0]->uri,
+    ])->save();
+    Media::create([
+      'bundle' => 'document',
+      'name' => 'Information about screaming hairy armadillo',
+      'field_media_file' => [
+        [
+          'target_id' => 1,
+        ],
+      ],
+    ])->save();
+
     $this->drupalLogin($account);
   }
 
@@ -139,8 +156,9 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
 
     // Find all the autocomplete results.
     $results = $page->findAll('css', '.entity-link-suggestions-result-line.ui-menu-item');
-    $this->assertCount(1, $results);
+    $this->assertCount(2, $results);
     $this->assertSame('Foo', $results[0]->find('css', '.entity-link-suggestions-result-line--title')->getText());
+    $this->assertSame('Information about screaming hairy armadillo', $results[1]->find('css', '.entity-link-suggestions-result-line--title')->getText());
 
     // Make the search term longer to narrow down the results.
     $autocomplete_field->setValue('fo');

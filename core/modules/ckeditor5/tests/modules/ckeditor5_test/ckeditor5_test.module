@@ -16,4 +16,10 @@ function ckeditor5_test_entity_bundle_info_alter(&$bundles) {
       $bundles['taxonomy_term'][$key]['ckeditor5_link_suggestions'] = TRUE;
     }
   }
+
+  if (isset($bundles['media'])) {
+    foreach ($bundles['media'] as $key => $bundle) {
+      $bundles['media'][$key]['ckeditor5_link_suggestions'] = TRUE;
+    }
+  }
 }

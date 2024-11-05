@@ -9,8 +9,6 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Symfony\Component\Validator\ConstraintViolation;
 
-// cspell:ignore linkit
-
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
  * @group ckeditor5
@@ -355,8 +353,8 @@ class MediaLinkabilityTest extends MediaTestBase {
     $balloon = $this->assertVisibleBalloon('.ck-link-form');
     $this->assertNotNull($autocomplete_field = $balloon->find('css', '.ck-input-text'));
     $autocomplete_field->setValue('Z');
-    $this->assertTrue($this->getSession()->wait(5000, "document.querySelectorAll('.linkit-result-line.ui-menu-item').length > 0"));
-    $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
+    $this->assertTrue($this->getSession()->wait(5000, "document.querySelectorAll('.entity-link-suggestions-result-line.ui-menu-item').length > 0"));
+    $results = $page->findAll('css', '.entity-link-suggestions-result-line.ui-menu-item');
     $results[0]->click();
 
     $page->find('css', '.ck-link-form .ck-button-save')->click();
