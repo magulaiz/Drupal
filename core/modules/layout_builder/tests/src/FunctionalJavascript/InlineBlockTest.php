@@ -601,6 +601,16 @@ class InlineBlockTest extends InlineBlockTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Choose a block');
     $assert_session->linkNotExists('Create content block');
+
+    // Confirm that internal routes for adding blocks are not accessible when
+    // inline block creation is disabled.
+    $this->drupalGet('/admin/config/user-interface/navigation-block');
+    $this->drupalGet('/layout_builder/choose/inline-block/navigation/navigation.block_layout/0/content');
+    $assert_session->pageTextContains('You are not authorized to access this page');
+    $this->drupalGet('/layout_builder/add/block/navigation/navigation.block_layout/0/content/inline_block');
+    $assert_session->pageTextContains('You are not authorized to access this page');
+    $this->drupalGet('/layout_builder/add/block/navigation/navigation.block_layout/0/content/inline_block%3Abanner_block');
+    $assert_session->pageTextContains('You are not authorized to access this page');
   }
 
   /**
