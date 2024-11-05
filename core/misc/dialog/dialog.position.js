@@ -63,11 +63,6 @@
    * @fires event:dialogContentResize
    */
   function resetSize(event) {
-    // Ensure the UI dialog instance exists/is valid.
-    if (!event.data?.$element?.data('ui-dialog')) {
-      return;
-    }
-
     const positionOptions = [
       'width',
       'height',
@@ -124,7 +119,7 @@
   }
 
   window.addEventListener('dialog:aftercreate', (e) => {
-    const autoResize = debounce(resetSize, 20, true);
+    const autoResize = debounce(resetSize, 20);
     const $element = $(e.target);
     const { settings } = e;
     const eventData = { settings, $element };
