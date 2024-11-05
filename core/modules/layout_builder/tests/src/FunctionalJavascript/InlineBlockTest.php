@@ -25,6 +25,7 @@ class InlineBlockTest extends InlineBlockTestBase {
    */
   protected static $modules = [
     'field_ui',
+    'navigation'
   ];
 
   /**
@@ -546,6 +547,7 @@ class InlineBlockTest extends InlineBlockTestBase {
       'administer node display',
       'administer node fields',
       'create and edit custom blocks',
+      'configure navigation layout'
     ]));
 
     // Enable layout builder and overrides.
@@ -592,6 +594,13 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->clickLink('Advanced block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->fieldExists('Title');
+
+    // Confirm that Create Content block opt out logic works for Navigation.
+    $this->drupalGet('/admin/config/user-interface/navigation-block');
+    $page->clickLink('Add block');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->pageTextContains('Choose a block');
+    $assert_session->linkNotExists('Create content block');
   }
 
   /**

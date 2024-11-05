@@ -61,6 +61,20 @@ class SectionStorage extends Plugin {
   public $handles_permission_check = FALSE;
 
   /**
+   * Indicates that this section storage allows inline block creation.
+   *
+   * If FALSE, the 'Create content block' link will be shown as part of the
+   * choose block off-canvas dialog. If TRUE, the link will be hidden and will
+   * not be possible to add new inline blocks from the Layout Builder UI.
+   * Defaults to FALSE.
+   *
+   * @var bool
+   *
+   * @see \Drupal\layout_builder\Controller\ChooseBlockController
+   */
+  public $disable_inline_blocks = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function get() {
