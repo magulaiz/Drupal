@@ -190,7 +190,6 @@ function comment_node_links_alter(array &$links, NodeInterface $node, array &$co
   // can do so by implementing a new field formatter.
   // @todo Make this configurable from the formatter. See
   //   https://www.drupal.org/node/1901110.
-
   $comment_links = \Drupal::service('comment.link_builder')->buildCommentedEntityLinks($node, $context);
   $links += $comment_links;
 }
@@ -701,32 +700,20 @@ function template_preprocess_comment(&$variables) {
 }
 
 /**
- * Prepares variables for comment field templates.
- *
- * Default template: field--comment.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: An associative array containing render arrays for the list of
- *     comments, and the comment form. Array keys: comments, comment_form.
- *
- * @todo Rename to template_preprocess_field__comment() once
- *   https://www.drupal.org/node/939462 is resolved.
+ * Implements hook_preprocess_HOOK() for Comment field templates.
  */
-function comment_preprocess_field(&$variables) {
+function template_preprocess_field__comment(&$variables) {
   $element = $variables['element'];
-  if ($element['#field_type'] == 'comment') {
-    // Provide contextual information.
-    $variables['comment_display_mode'] = $element[0]['#comment_display_mode'];
-    $variables['comment_type'] = $element[0]['#comment_type'];
+  // Provide contextual information.
+  $variables['comment_display_mode'] = $element[0]['#comment_display_mode'];
+  $variables['comment_type'] = $element[0]['#comment_type'];
 
-    // Append additional attributes from the first field item.
-    $variables['attributes'] += $variables['items'][0]['attributes']->storage();
+  // Append additional attributes (eg. RDFa) from the first field item.
+  $variables['attributes'] += $variables['items'][0]['attributes']->storage();
 
-    // Create separate variables for the comments and comment form.
-    $variables['comments'] = $element[0]['comments'];
-    $variables['comment_form'] = $element[0]['comment_form'];
-  }
+  // Create separate variables for the comments and comment form.
+  $variables['comments'] = $element[0]['comments'];
+  $variables['comment_form'] = $element[0]['comment_form'];
 }
 
 /**
