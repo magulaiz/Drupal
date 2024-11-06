@@ -61,6 +61,36 @@ class RenderTest extends KernelTestBase {
   }
 
   /**
+   * Tests that additional keys in #attached are allowed without exceptions.
+   */
+  public function testAllowValidAttachedKeys(): void {
+    // Create a render array with arbitrary keys in #attached.
+    $build = [
+      '#markup' => 'Test content',
+      '#attached' => [
+        'library' => [
+          'core/drupal.states',
+        ],
+        'drupalSettings' => [
+          'myModule' => [
+            'setting' => 'value',
+          ],
+        ],
+      ],
+    ];
+
+    // Render the page and assert that no exceptions are thrown.
+    try {
+      $renderer = $this->container->get('bare_html_page_renderer');
+      $renderer->renderBarePage($build, '', 'maintenance_page');
+      $this->assertTrue(TRUE, 'Rendered successfully with valid #attached keys.');
+    }
+    catch (\LogicException $e) {
+      $this->fail("An exception was thrown when rendering with valid #attached keys: " . $e->getMessage());
+    }
+  }
+
+  /**
    * Tests the deprecation of \Drupal\Core\Render\Renderer::renderPlain()
    *
    * @group legacy
