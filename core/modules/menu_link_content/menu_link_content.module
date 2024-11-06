@@ -55,6 +55,7 @@ function menu_link_content_menu_delete(MenuInterface $menu) {
  */
 function menu_link_content_path_alias_insert(PathAliasInterface $path_alias) {
   _menu_link_content_update_path_alias($path_alias->getAlias());
+  _menu_link_content_update_entity_path_alias($path_alias->getPath());
 }
 
 /**
@@ -76,15 +77,47 @@ function _menu_link_content_update_path_alias($path) {
 }
 
 /**
+ * Helper function to update plugin definition using entity scheme.
+ *
+ * @param string $path
+ *   The path alias.
+ */
+function _menu_link_content_update_entity_path_alias(string $path): void {
+  $url = Url::fromUserInput($path);
+  if (!$url->isRouted() || !preg_match('/^entity\.(\w+)\.canonical$/', $url->getRouteName(), $matches)) {
+    return;
+  }
+  /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $entity_type = $matches[1];
+  $parameters = $url->getRouteParameters();
+  if (!isset($parameters[$entity_type])) {
+    return;
+  }
+
+  /** @var \Drupal\menu_link_content\MenuLinkContentInterface[] $entities */
+  $entities = \Drupal::entityTypeManager()
+    ->getStorage('menu_link_content')
+    ->loadByProperties(['link.uri' => "entity:$entity_type/$parameters[$entity_type]"]);
+  foreach ($entities as $menu_link) {
+    $menu_link_manager->updateDefinition($menu_link->getPluginId(), $menu_link->getPluginDefinition(), FALSE);
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_update() for 'path_alias'.
  */
 function menu_link_content_path_alias_update(PathAliasInterface $path_alias) {
   if ($path_alias->getAlias() != $path_alias->original->getAlias()) {
     _menu_link_content_update_path_alias($path_alias->getAlias());
+    _menu_link_content_update_entity_path_alias($path_alias->getPath());
+
     _menu_link_content_update_path_alias($path_alias->original->getAlias());
+    _menu_link_content_update_entity_path_alias($path_alias->original->getPath());
   }
   elseif ($path_alias->getPath() != $path_alias->original->getPath()) {
     _menu_link_content_update_path_alias($path_alias->getAlias());
+    _menu_link_content_update_entity_path_alias($path_alias->getPath());
   }
 }
 
@@ -93,6 +126,7 @@ function menu_link_content_path_alias_update(PathAliasInterface $path_alias) {
  */
 function menu_link_content_path_alias_delete(PathAliasInterface $path_alias) {
   _menu_link_content_update_path_alias($path_alias->getAlias());
+  _menu_link_content_update_entity_path_alias($path_alias->getPath());
 }
 
 /**
