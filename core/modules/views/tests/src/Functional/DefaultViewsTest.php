@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Functional;
 
 use Drupal\comment\CommentInterface;
@@ -25,9 +27,7 @@ class DefaultViewsTest extends ViewTestBase {
   use EntityReferenceFieldCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'views',
@@ -50,7 +50,7 @@ class DefaultViewsTest extends ViewTestBase {
    * @var array
    */
   protected $viewArgMap = [
-    'backlinks' => [1],
+    'backlink' => [1],
     'taxonomy_term' => [1],
     'glossary' => ['all'],
   ];
@@ -136,7 +136,7 @@ class DefaultViewsTest extends ViewTestBase {
   /**
    * Tests that all Default views work as expected.
    */
-  public function testDefaultViews() {
+  public function testDefaultViews(): void {
     // Get all default views.
     $controller = $this->container->get('entity_type.manager')->getStorage('view');
     $views = $controller->loadMultiple();
@@ -183,7 +183,7 @@ class DefaultViewsTest extends ViewTestBase {
   /**
    * Tests the archive view.
    */
-  public function testArchiveView() {
+  public function testArchiveView(): void {
     // Create additional nodes compared to the one in the setup method.
     // Create two nodes in the same month, and one in each following month.
     $node = [

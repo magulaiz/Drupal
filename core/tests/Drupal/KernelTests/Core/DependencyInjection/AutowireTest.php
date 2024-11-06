@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\DependencyInjection;
 
 use Drupal\autowire_test\TestInjection;
@@ -60,6 +62,10 @@ class AutowireTest extends KernelTestBase {
           $aliases[$id] = substr($service, 1);
         }
         elseif (isset($service['class']) && class_exists($service['class'])) {
+          // Ignore services named by their own class.
+          if ($id === $service['class']) {
+            continue;
+          }
           // Ignore certain tagged services.
           if (isset($service['tags'])) {
             foreach ($service['tags'] as $tag) {
@@ -68,7 +74,6 @@ class AutowireTest extends KernelTestBase {
                 'cache.context',
                 'context_provider',
                 'event_subscriber',
-                'module_install.uninstall_validator',
               ])) {
                 continue 2;
               }
@@ -96,6 +101,11 @@ class AutowireTest extends KernelTestBase {
     foreach ($services as $id => $class) {
       // Skip services that share a class.
       if (count(array_keys($services, $class)) > 1) {
+        continue;
+      }
+
+      // Skip IDs that are interfaces already.
+      if (interface_exists($id)) {
         continue;
       }
 

@@ -5,6 +5,8 @@
  * Simulate a custom module with a local po file.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Url;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -160,7 +162,7 @@ function locale_test_language_fallback_candidates_locale_lookup_alter(array &$ca
 /**
  * Implements hook_theme().
  */
-function locale_test_theme() {
+function locale_test_theme(): array {
   $return = [];
 
   $return['locale_test_tokenized'] = [

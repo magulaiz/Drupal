@@ -98,7 +98,7 @@ function contact_entity_extra_field_info() {
  * email address configured.
  */
 function contact_menu_local_tasks_alter(&$data, $route_name) {
-  if ($route_name == 'entity.user.canonical') {
+  if ($route_name == 'entity.user.canonical' && isset($data['tabs'][0])) {
     foreach ($data['tabs'][0] as $href => $tab_data) {
       if ($href == 'entity.user.contact_form') {
         $link_params = $tab_data['#link']['url']->getRouteParameters();
@@ -144,7 +144,7 @@ function contact_mail($key, &$message, $params) {
       $build = \Drupal::entityTypeManager()
         ->getViewBuilder('contact_message')
         ->view($contact_message, 'mail');
-      $message['body'][] = \Drupal::service('renderer')->renderPlain($build);
+      $message['body'][] = \Drupal::service('renderer')->renderInIsolation($build);
       break;
 
     case 'page_autoreply':
@@ -161,17 +161,23 @@ function contact_mail($key, &$message, $params) {
       $message['subject'] .= t('[@site-name] @subject', $variables, $options);
       $message['body'][] = t('Hello @recipient-name,', $variables, $options);
       $message['body'][] = t("@sender-name (@sender-url) has sent you a message via your contact form at @site-name.", $variables, $options);
-      $message['body'][] = t("If you don't want to receive such emails, you can change your settings at @recipient-edit-url.", $variables, $options);
+      // Only include the opt-out line in the original email and not in the
+      // copy to the sender. Also exclude this if the email was sent from a
+      // user administrator because they can always send emails even if the
+      // contacted user has disabled their contact form.
+      if ($key === 'user_mail' && !$params['sender']->hasPermission('administer users')) {
+        $message['body'][] = t("If you don't want to receive such messages, you can change your settings at @recipient-edit-url.", $variables, $options);
+      }
       $build = \Drupal::entityTypeManager()
         ->getViewBuilder('contact_message')
         ->view($contact_message, 'mail');
-      $message['body'][] = \Drupal::service('renderer')->renderPlain($build);
+      $message['body'][] = \Drupal::service('renderer')->renderInIsolation($build);
       break;
   }
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for \Drupal\user\ProfileForm.
  *
  * Add the enable personal contact form to an individual user's account page.
  *
@@ -198,7 +204,9 @@ function contact_form_user_form_alter(&$form, FormStateInterface $form_state) {
 }
 
 /**
- * Submit callback for the user profile form to save the contact page setting.
+ * Form submission handler for \Drupal\user\ProfileForm.
+ *
+ * Saves the contact page setting.
  */
 function contact_user_profile_form_submit($form, FormStateInterface $form_state) {
   $account = $form_state->getFormObject()->getEntity();
@@ -208,11 +216,9 @@ function contact_user_profile_form_submit($form, FormStateInterface $form_state)
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for \Drupal\user\AccountSettingsForm.
  *
- * Add the default personal contact setting on the user settings page.
- *
- * @see \Drupal\user\AccountSettingsForm
+ * Adds the default personal contact setting on the user settings page.
  */
 function contact_form_user_admin_settings_alter(&$form, FormStateInterface $form_state) {
   $form['contact'] = [
@@ -232,7 +238,7 @@ function contact_form_user_admin_settings_alter(&$form, FormStateInterface $form
 }
 
 /**
- * Form submission handler for user_admin_settings().
+ * Form submission handler for \Drupal\user\AccountSettingsForm.
  *
  * @see contact_form_user_admin_settings_alter()
  */
