@@ -16,18 +16,6 @@ use Drupal\views\Entity\View;
 class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = [
-    'node',
-    'taxonomy',
-    'user',
-    'views',
-  ];
-
-  /**
    * Sets the path to database dumps.
    */
   protected function setDatabaseDumpFiles() {
@@ -42,8 +30,6 @@ class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->installModulesFromClassProperty($this->container);
   }
 
   /**
