@@ -259,7 +259,6 @@ $connection->insert('config')
 // Add help search items for the media module.
 $connection->insert('help_search_items')
   ->fields([
-    'sid',
     'section_plugin_id',
     'permission',
     'topic_id',
