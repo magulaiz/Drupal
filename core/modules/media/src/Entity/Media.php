@@ -46,7 +46,8 @@ use Drupal\user\EntityOwnerTrait;
  *     "route_provider" = {
  *       "html" = "Drupal\media\Routing\MediaRouteProvider",
  *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
- *     }
+ *     },
+ *     "translation" = "Drupal\media\MediaTranslationHandler"
  *   },
  *   base_table = "media",
  *   data_table = "media_field_data",
