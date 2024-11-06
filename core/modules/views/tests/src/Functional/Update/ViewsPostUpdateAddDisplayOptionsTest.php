@@ -44,7 +44,6 @@ class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
   public function testViewsAddDisplayOptionsUpdateForAllDisplays(): void {
     // Load the view to test the update on.
     $view = View::load('add_style_and_pager_options_update');
-    $data = $view->toArray();
 
     // Assert specific configurations are missing before the update for each display.
     foreach ($view->get('display') as $displayId => $display) {
