@@ -19,8 +19,10 @@ class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
 
   /**
    * Sets the path to database dumps.
+   *
+   * @return void
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-10.3.0.bare.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/add_style_and_pager_options_update.php',
@@ -36,6 +38,8 @@ class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
 
   /**
    * Tests the upgrade path for adding 'style_options' and 'pager_options'.
+   *
+   * @return void
    */
   public function testViewsAddDisplayOptionsUpdateForAllDisplays(): void {
     // Load the view to test the update on.
