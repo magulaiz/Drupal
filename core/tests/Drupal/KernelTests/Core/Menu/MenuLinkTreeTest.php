@@ -178,7 +178,7 @@ class MenuLinkTreeTest extends KernelTestBase {
   /**
    * Tests transforming a link tree from a contextual manipulator.
    */
-  public function testContextualManipulator() {
+  public function testContextualManipulator(): void {
     /** @var \Drupal\system\MenuStorage $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('menu');
     $storage->create(['id' => 'menu1', 'label' => 'Menu 1'])->save();
@@ -215,7 +215,7 @@ class MenuLinkTreeTest extends KernelTestBase {
    *
    * @group legacy
    */
-  public function testTransformWithoutContext() {
+  public function testTransformWithoutContext(): void {
     /** @var \Drupal\system\MenuStorage $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('menu');
     $storage->create(['id' => 'menu1', 'label' => 'Menu 1'])->save();
