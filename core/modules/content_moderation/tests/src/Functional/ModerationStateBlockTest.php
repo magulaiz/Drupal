@@ -13,7 +13,7 @@ use Drupal\block_content\Entity\BlockContentType;
  * @group content_moderation
  */
 class ModerationStateBlockTest extends ModerationStateTestBase {
-
+  
   /**
    * {@inheritdoc}
    *
