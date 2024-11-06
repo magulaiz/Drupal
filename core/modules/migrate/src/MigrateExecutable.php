@@ -85,9 +85,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
   /**
    * Migration message service.
    *
-   * @todo https://www.drupal.org/node/2822663 Make this protected.
-   *
    * @var \Drupal\migrate\MigrateMessageInterface
+   *
+   * @todo https://www.drupal.org/node/2822663 Make this protected.
    */
   public $message;
 
@@ -452,7 +452,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         try {
           $value = $plugin->transform($value, $this, $row, $destination);
         }
-        catch (MigrateSkipProcessException $e) {
+        catch (MigrateSkipProcessException) {
           $value = NULL;
           break;
         }
@@ -612,7 +612,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     // Entity storage can blow up with caches, so clear it out.
     \Drupal::service('entity.memory_cache')->deleteAll();
 
-    // @TODO: explore resetting the container.
+    // @todo Explore resetting the container.
 
     // Run garbage collector to further reduce memory.
     gc_collect_cycles();
