@@ -453,28 +453,27 @@ function comment_node_search_result(EntityInterface $node) {
 function comment_user_cancel($edit, UserInterface $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
-      $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);
-      foreach ($comments as $comment) {
-        $comment->setUnpublished();
-        $comment->save();
-      }
+      // Unpublish comments (current revisions).
+      $nids = \Drupal::entityQuery('comment')
+        ->condition('uid', $account->id())
+        ->accessCheck(FALSE)
+        ->execute();
+      \Drupal::moduleHandler()->loadInclude('comment', 'inc', 'comment.admin');
+      comment_mass_update($nids, ['status' => 0], NULL, TRUE);
       break;
 
     case 'user_cancel_reassign':
-      /** @var \Drupal\comment\CommentInterface[] $comments */
-      $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);
-      foreach ($comments as $comment) {
-        $langcodes = array_keys($comment->getTranslationLanguages());
-        // For efficiency manually save the original comment before applying any
-        // changes.
-        $comment->original = clone $comment;
-        foreach ($langcodes as $langcode) {
-          $comment_translated = $comment->getTranslation($langcode);
-          $comment_translated->setOwnerId(0);
-          $comment_translated->setAuthorName(\Drupal::config('user.settings')->get('anonymous'));
-        }
-        $comment->save();
-      }
+      $anonymous_name = \Drupal::config('user.settings')->get('anonymous');
+      // Anonymize all of the comments for this old account.
+      $nids = \Drupal::entityQuery('comment')
+        ->condition('uid', $account->id())
+        ->accessCheck(FALSE)
+        ->execute();
+      \Drupal::moduleHandler()->loadInclude('comment', 'inc', 'comment.admin');
+      comment_mass_update($nids, [
+        'uid' => 0,
+        'name' => $anonymous_name,
+      ], NULL, TRUE);
       break;
   }
 }
