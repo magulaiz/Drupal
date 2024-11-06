@@ -76,6 +76,6 @@ function views_post_update_add_style_and_pager_display_options(array &$sandbox):
   }
   else {
     $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
-    return null; // Indicate that processing is not yet complete.
+    return NULL;
   }
 }
