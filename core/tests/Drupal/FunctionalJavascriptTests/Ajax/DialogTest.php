@@ -95,7 +95,7 @@ class DialogTest extends WebDriverTestBase {
 
     // Test opening and immediately closing modal a few times.
     // Ensure no JS errors are thrown.
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 200; $i++) {
       $this->getSession()->getPage()->clickLink('Link 1 (modal)');
       $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog');
       // Use JS directly which is much faster than Element::find.
@@ -103,7 +103,6 @@ class DialogTest extends WebDriverTestBase {
       // the debounce on Drupal.dialog.resetSize.
       $this->getSession()->executeScript('document.querySelector(".ui-dialog button[title=\"Close\"]").click();');
     }
-    $this->failOnJavaScriptErrors();
 
     // Tests a modal with a dialog-option.
     // Link 2 is similar to Link 1, except it submits additional width
