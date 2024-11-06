@@ -103,6 +103,7 @@ class DialogTest extends WebDriverTestBase {
       // the debounce on Drupal.dialog.resetSize.
       $this->getSession()->executeScript('document.querySelector(".ui-dialog button[title=\"Close\"]").click();');
     }
+    $this->failOnJavaScriptErrors();
 
     // Tests a modal with a dialog-option.
     // Link 2 is similar to Link 1, except it submits additional width
