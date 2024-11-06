@@ -166,6 +166,9 @@ views_display:
         pager:
           type: boolean
           label: 'Use pager'
+        pager_options:
+          type: boolean
+          label: 'Pager options'
         use_more:
           type: boolean
           label: 'Create more link'
@@ -214,9 +217,6 @@ views_display:
         filter_groups:
           type: boolean
           label: 'Filter groups'
-        pager_options:
-          type: boolean
-          label: 'Pager options'
         header:
           type: boolean
           label: 'Header'
