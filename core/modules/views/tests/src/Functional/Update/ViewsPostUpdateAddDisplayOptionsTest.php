@@ -37,7 +37,7 @@ class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
   /**
    * Tests the upgrade path for adding 'style_options' and 'pager_options'.
    */
-  public function testViewsAddDisplayOptionsUpdateForAllDisplays() {
+  public function testViewsAddDisplayOptionsUpdateForAllDisplays(): void {
     // Load the view to test the update on.
     $view = View::load('add_style_and_pager_options_update');
     $data = $view->toArray();
