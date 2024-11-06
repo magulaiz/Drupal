@@ -265,7 +265,6 @@ $connection->insert('help_search_items')
     'topic_id',
   ])
   ->values(array(
-    'sid' => '86',
     'section_plugin_id' => 'help_topics',
     'permission' => '',
     'topic_id' => 'media.media_type',
