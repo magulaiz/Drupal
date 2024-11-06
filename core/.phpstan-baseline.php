@@ -23562,12 +23562,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\help\\\\Functional\\\\HelpTest\\:\\:verifyHelp\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/tests/src/Functional/HelpTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\help\\\\Functional\\\\HelpTopicSearchTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/help/tests/src/Functional/HelpTopicSearchTest.php',
