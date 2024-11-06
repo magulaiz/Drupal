@@ -20,7 +20,7 @@ class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-10.3.0.bare.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/add_style_and_pager_options_update.php',
     ];
   }
