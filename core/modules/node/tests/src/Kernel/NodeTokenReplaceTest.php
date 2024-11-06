@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\node\NodeInterface;
 use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 
 /**
@@ -131,25 +132,99 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     }
 
     // Repeat for a node without a summary.
+    // Length of this text is ~660 characters and it's longer than a default
+    // trim length setting (600).
+    $text = 'The Drupal coding standards apply to code within '
+      . 'Drupal and its contributed modules. These standards are version-independent '
+      . 'and "always-current". '
+      . 'All new code should follow the current standards, regardless of (core) version. '
+      . 'Existing code in older versions may be updated. For large code-bases (like Drupal core), '
+      . 'updating the code of a previous version for the current standards may be too huge of a task. '
+      . 'Comments and names should use US English spelling. '
+      . 'Coding standard fixes are done by rule not individual files. '
+      . 'The video tutorial, Understanding the Drupal Coding Standards, '
+      . 'explains the standards, why they are important, and how to use them.';
+
+    // Create a node.
     $node = Node::create([
       'type' => 'article',
       'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
-      'body' => [['value' => 'A string that looks random like TR5c2I', 'format' => 'plain_text']],
+      'body' => [['value' => $text, 'format' => 'plain_text']],
     ]);
     $node->save();
 
-    // Generate and test token - use full body as expected value.
-    $tests = [];
-    $tests['[node:summary]'] = $node->body->processed;
+    // Get teaser node view display.
+    /** @var \Drupal\Core\ $view_display_storage */
+    $view_display_storage = \Drupal::entityTypeManager()
+      ->getStorage('entity_view_display');
+    $view_display = $view_display_storage->load('node.article.teaser') ?? $view_display_storage->create([
+      'targetEntityType' => 'node',
+      'bundle' => 'article',
+      'mode' => 'teaser',
+      'status' => TRUE,
+    ]);
 
-    // Test to make sure that we generated something for each token.
-    $this->assertNotContains(0, array_map('strlen', $tests), 'No empty tokens generated for node without a summary.');
+    // Token [node:summary] should use trim settings of "Summary or trimmed"
+    // formatter of teaser view mode.
+    $view_display->setComponent('body', [
+      'type' => 'text_summary_or_trimmed',
+      'settings' => ['trim_length' => 160],
+    ]);
+    $view_display->save();
+    $expected_trimmed_to_160 = Html::escape('The Drupal coding standards apply to code within '
+      . 'Drupal and its contributed modules. These standards are version-independent '
+      . 'and "always-current".');
+    $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_160);
 
-    foreach ($tests as $input => $expected) {
-      $output = $this->tokenService->replace($input, ['node' => $node], ['language' => $this->interfaceLanguage]);
-      $this->assertSame((string) $expected, (string) $output, "Failed test case: {$input}");
-    }
+    // Token [node:summary] should use trim settings of "Trimmed"
+    // formatter of teaser view mode.
+    $view_display->setComponent('body', [
+      'type' => 'text_trimmed',
+      'settings' => ['trim_length' => 90],
+    ]);
+    $view_display->save();
+    $expected_trimmed_to_80 = Html::escape('The Drupal coding standards apply to code within '
+    . 'Drupal and its contributed modules.');
+    $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_80);
+
+    // Token [node:summary] should not pickup trim length setting of any other
+    // formatter rather than "Summary or trimmed" or "Trimmed", even if setting
+    // name matches.
+    // Fallbacks to default trim length setting (600).
+    $view_display->setComponent('body', [
+      'type' => 'text_default',
+      'settings' => ['trim_length' => 42],
+    ]);
+    $view_display->save();
+    $expected_trimmed_to_600 = Html::escape('The Drupal coding standards apply to code within '
+    . 'Drupal and its contributed modules. These standards are version-independent '
+    . 'and "always-current". '
+    . 'All new code should follow the current standards, regardless of (core) version. '
+    . 'Existing code in older versions may be updated. For large code-bases (like Drupal core), '
+    . 'updating the code of a previous version for the current standards may be too huge of a task. '
+    . 'Comments and names should use US English spelling. '
+    . 'Coding standard fixes are done by rule not individual files.');
+    $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_600);
+
+    // Token [node:summary] should not pickup trim length setting if teaser
+    // view mode does not exist.
+    // Fallbacks to "Summary or trimmed" default trim length setting (600).
+    $view_display->delete();
+    $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_600);
+  }
+
+  /**
+   * Asserts that [node:summary] token works as expected.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   Node to assert against.
+   * @param string $expected
+   *   Expected token replacement output.
+   */
+  protected function assertNodeSummaryTokenReplacement(NodeInterface $node, $expected) {
+    $output = $this->tokenService->replace('[node:summary]', ['node' => $node], ['langcode' => $this->interfaceLanguage->getId()]);
+    $this->assertEquals($expected, $output);
   }
 
 }

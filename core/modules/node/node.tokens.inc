@@ -142,15 +142,17 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           $translation = \Drupal::service('entity.repository')->getTranslationFromContext($node, $langcode, ['operation' => 'node_tokens']);
           if ($translation->hasField('body') && ($items = $translation->get('body')) && !$items->isEmpty()) {
             $item = $items[0];
-            // If the summary was requested and is not empty, use it.
-            if ($name == 'summary' && !empty($item->summary)) {
-              $output = $item->summary_processed;
-            }
-            // Attempt to provide a suitable version of the 'body' field.
-            else {
+
+            if ($name === 'body') {
               $output = $item->processed;
-              // A summary was requested.
-              if ($name == 'summary') {
+            }
+            else {
+              // If the summary was requested and is not empty, use it.
+              if (!empty($item->summary)) {
+                $output = $item->summary_processed;
+              }
+              // Attempt to provide a suitable version of the 'body' field.
+              else {
                 // Generate an optionally trimmed summary of the body field.
 
                 // Get the 'trim_length' size used for the 'teaser' mode, if
@@ -158,15 +160,12 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
                 $display_options = \Drupal::service('entity_display.repository')
                   ->getViewDisplay('node', $node->getType(), 'teaser')
                   ->getComponent('body');
-                if (isset($display_options['settings']['trim_length'])) {
+                if (isset($display_options['settings']['trim_length']) &&
+                    ($display_options['type'] === 'text_trimmed' || $display_options['type'] === 'text_summary_or_trimmed')) {
                   $length = $display_options['settings']['trim_length'];
                 }
-                else {
-                  $settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings('text_summary_or_trimmed');
-                  $length = $settings['trim_length'];
-                }
 
-                $output = text_summary($output, $item->format, $length);
+                $output = text_summary($item->value, $item->format, $length ?? NULL);
               }
             }
             // "processed" returns a \Drupal\Component\Render\MarkupInterface
