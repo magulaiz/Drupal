@@ -5,14 +5,17 @@
  * Provides hook implementations for Layout Builder.
  */
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
@@ -20,11 +23,10 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplayStorage;
 use Drupal\layout_builder\Form\DefaultsEntityForm;
 use Drupal\layout_builder\Form\LayoutBuilderEntityViewDisplayForm;
 use Drupal\layout_builder\Form\OverridesEntityForm;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\layout_builder\Plugin\Block\ExtraFieldBlock;
+use Drupal\layout_builder\FormElement\LayoutBuilderDisplayElement;
+use Drupal\layout_builder\FormElement\LayoutBuilderEntityDisplayElement;
 use Drupal\layout_builder\InlineBlockEntityOperations;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Access\AccessResult;
+use Drupal\layout_builder\Plugin\Block\ExtraFieldBlock;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 
 /**
@@ -179,10 +181,12 @@ function layout_builder_entity_build_defaults_alter(array &$build, EntityInterfa
  * Implements hook_module_implements_alter().
  */
 function layout_builder_module_implements_alter(&$implementations, $hook) {
-  if ($hook === 'entity_view_alter') {
+  if ($hook === 'entity_view_alter' || $hook == 'config_schema_info_alter') {
     // Ensure that this module's implementation of hook_entity_view_alter() runs
     // last so that other modules that use this hook to render extra fields will
-    // run before it.
+    // run before it. For hook_config_schema_info_alter() case, it's needed to
+    // run after field_ui module in order to perform our alterations for
+    // the form element once main logic is done.
     $group = $implementations['layout_builder'];
     unset($implementations['layout_builder']);
     $implementations['layout_builder'] = $group;
@@ -411,4 +415,24 @@ function layout_builder_theme_suggestions_field_alter(&$suggestions, array $vari
     $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'] . '__' . $element['#third_party_settings']['layout_builder']['view_mode'];
   }
   return $suggestions;
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function layout_builder_config_schema_info_alter(&$definitions): void {
+  $map = [
+    'core.entity_view_display.*.*.*.third_party.layout_builder' => LayoutBuilderDisplayElement::class,
+    'core.entity_form_display.*.*.*' => LayoutBuilderEntityDisplayElement::class,
+    'core.entity_view_display.*.*.*' => LayoutBuilderEntityDisplayElement::class,
+  ];
+
+  // Provide specific handling for entity view display layout builder settings
+  // and enhance entity view and form display definitions in order to
+  // generate translatable labels.
+  foreach ($definitions as $type => &$definition) {
+    if (isset($map[$type])) {
+      $definition['form_element_class'] = $map[$type];
+    }
+  }
 }
