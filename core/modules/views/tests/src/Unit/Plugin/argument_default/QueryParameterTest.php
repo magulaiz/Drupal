@@ -74,7 +74,7 @@ class QueryParameterTest extends UnitTestCase {
     $data[] = [
       ['query_param' => 'test', 'fallback' => ''],
       new Request([]),
-      '',
+      NULL,
     ];
 
     $data[] = [
