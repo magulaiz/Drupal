@@ -139,13 +139,17 @@ drupal.node.preview:
     theme:
       css/components/node-preview.css: {}
 
-media-form:
+content-entity-form:
   version: VERSION
   css:
     layout:
-      css/components/media.css: {}
-  dependencies:
-    - media/form
+      css/layout/content-entity-form.css: {}
+
+tour-styling:
+  version: VERSION
+  css:
+    theme:
+      css/theme/tour.theme.css: {}
 
 image.admin:
   version: VERSION

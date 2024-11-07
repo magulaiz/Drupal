@@ -27,20 +27,6 @@ class NodeForm extends ContentEntityForm {
   protected $tempStoreFactory;
 
   /**
-   * The Current User object.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
    * Constructs a NodeForm object.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
@@ -136,61 +122,6 @@ class NodeForm extends ContentEntityForm {
     ];
 
     $form = parent::form($form, $form_state);
-
-    $form['advanced']['#attributes']['class'][] = 'entity-meta';
-
-    $form['meta'] = [
-      '#type' => 'details',
-      '#group' => 'advanced',
-      '#weight' => -10,
-      '#title' => $this->t('Status'),
-      '#attributes' => ['class' => ['entity-meta__header']],
-      '#tree' => TRUE,
-      '#access' => $this->currentUser->hasPermission('administer nodes'),
-    ];
-    $form['meta']['published'] = [
-      '#type' => 'item',
-      '#markup' => $node->isPublished() ? $this->t('Published') : $this->t('Not published'),
-      '#access' => !$node->isNew(),
-      '#wrapper_attributes' => ['class' => ['entity-meta__title']],
-    ];
-    $form['meta']['changed'] = [
-      '#type' => 'item',
-      '#title' => $this->t('Last saved'),
-      '#markup' => !$node->isNew() ? $this->dateFormatter->format($node->getChangedTime(), 'short') : $this->t('Not saved yet'),
-      '#wrapper_attributes' => ['class' => ['entity-meta__last-saved']],
-    ];
-    $form['meta']['author'] = [
-      '#type' => 'item',
-      '#title' => $this->t('Author'),
-      '#markup' => $node->getOwner()->getAccountName(),
-      '#wrapper_attributes' => ['class' => ['entity-meta__author']],
-    ];
-
-    $form['status']['#group'] = 'footer';
-
-    // Node author information for administrators.
-    $form['author'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Authoring information'),
-      '#group' => 'advanced',
-      '#attributes' => [
-        'class' => ['node-form-author'],
-      ],
-      '#attached' => [
-        'library' => ['node/drupal.node'],
-      ],
-      '#weight' => 90,
-      '#optional' => TRUE,
-    ];
-
-    if (isset($form['uid'])) {
-      $form['uid']['#group'] = 'author';
-    }
-
-    if (isset($form['created'])) {
-      $form['created']['#group'] = 'author';
-    }
 
     // Node options for administrators.
     $form['options'] = [

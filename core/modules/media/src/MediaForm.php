@@ -27,20 +27,6 @@ class MediaForm extends ContentEntityForm {
       ]);
     }
 
-    // Media author information for administrators.
-    if (isset($form['uid']) || isset($form['created'])) {
-      $form['author'] = [
-        '#type' => 'details',
-        '#title' => $this->t('Authoring information'),
-        '#group' => 'advanced',
-        '#attributes' => [
-          'class' => ['media-form-author'],
-        ],
-        '#weight' => 90,
-        '#optional' => TRUE,
-      ];
-    }
-
     if (isset($form['uid'])) {
       $form['uid']['#group'] = 'author';
     }
