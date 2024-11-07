@@ -361,7 +361,6 @@ class HookCollectorPass implements CompilerPassInterface {
    */
   public static function checkForProceduralOnlyHooks(Hook $hook, string $class): void {
     $staticDenyHooks = [
-      'cache_flush',
       'hook_info',
       'install',
       'module_implements_alter',
