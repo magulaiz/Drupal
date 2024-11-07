@@ -76,6 +76,11 @@ class RenderTest extends KernelTestBase {
             'setting' => 'value',
           ],
         ],
+        'csp' => [
+          'img-src' => [
+            'cdn.example.com',
+          ],
+        ],
       ],
     ];
 
