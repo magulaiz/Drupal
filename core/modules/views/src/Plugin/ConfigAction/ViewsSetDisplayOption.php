@@ -63,7 +63,7 @@ class ViewsSetDisplayOption implements ConfigActionPluginInterface, ContainerFac
       throw new ConfigActionException(sprintf('%s is not view', $configName));
     }
     $view = $entity->getExecutable();
-    $display_id = NULL;
+    $display_id = 'default';
     if (!empty($value['display_id'])) {
       $display_id = $value['display_id'];
     }
@@ -73,10 +73,10 @@ class ViewsSetDisplayOption implements ConfigActionPluginInterface, ContainerFac
     }
     $view->setDisplay($display_id);
     if ($override) {
-      $view->displayHandlers->get('default')->overrideOption($option, $settings);
+      $view->displayHandlers->get($display_id)->overrideOption($option, $settings);
     }
     else {
-      $view->displayHandlers->get('default')->setOption($option, $settings);
+      $view->displayHandlers->get($display_id)->setOption($option, $settings);
     }
     $errors = $view->validate();
     if (!empty($errors)) {

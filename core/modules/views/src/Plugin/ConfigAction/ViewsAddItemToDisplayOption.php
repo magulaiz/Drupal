@@ -67,7 +67,7 @@ class ViewsAddItemToDisplayOption implements ConfigActionPluginInterface, Contai
       throw new ConfigActionException(sprintf('%s is not view', $configName));
     }
     $view = $entity->getExecutable();
-    $display_id = NULL;
+    $display_id = 'default';
     if (!empty($value['display_id'])) {
       $display_id = $value['display_id'];
     }
@@ -80,16 +80,16 @@ class ViewsAddItemToDisplayOption implements ConfigActionPluginInterface, Contai
       $allow_update = TRUE;
     }
     $view->setDisplay($display_id);
-    $option_settings = $view->displayHandlers->get('default')->getOption($option);
+    $option_settings = $view->displayHandlers->get($display_id)->getOption($option);
     if (!empty($option_settings[$item]) && !$allow_update) {
       throw new ConfigActionException(sprintf('Item %s already exists in %s display for %s', $item, $display_id, $option));
     }
     $option_settings[$item] = $settings;
     if ($override) {
-      $view->displayHandlers->get('default')->overrideOption($option, $option_settings);
+      $view->displayHandlers->get($display_id)->overrideOption($option, $option_settings);
     }
     else {
-      $view->displayHandlers->get('default')->setOption($option, $option_settings);
+      $view->displayHandlers->get($display_id)->setOption($option, $option_settings);
     }
     $errors = $view->validate();
     if (!empty($errors)) {

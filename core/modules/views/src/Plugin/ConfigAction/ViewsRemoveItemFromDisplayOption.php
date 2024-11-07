@@ -63,7 +63,7 @@ class ViewsRemoveItemFromDisplayOption implements ConfigActionPluginInterface, C
       throw new ConfigActionException(sprintf('%s is not view', $configName));
     }
     $view = $entity->getExecutable();
-    $display_id = NULL;
+    $display_id = 'default';
     if (!empty($value['display_id'])) {
       $display_id = $value['display_id'];
     }
@@ -72,14 +72,14 @@ class ViewsRemoveItemFromDisplayOption implements ConfigActionPluginInterface, C
       $override = TRUE;
     }
     $view->setDisplay($display_id);
-    $option_settings = $view->displayHandlers->get('default')->getOption($option);
+    $option_settings = $view->displayHandlers->get($display_id)->getOption($option);
     if (!empty($option_settings[$item])) {
       unset($option_settings[$item]);
       if ($override) {
-        $view->displayHandlers->get('default')->overrideOption($option, $option_settings);
+        $view->displayHandlers->get($display_id)->overrideOption($option, $option_settings);
       }
       else {
-        $view->displayHandlers->get('default')->setOption($option, $option_settings);
+        $view->displayHandlers->get($display_id)->setOption($option, $option_settings);
       }
       $errors = $view->validate();
       if (!empty($errors)) {
