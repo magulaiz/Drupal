@@ -241,8 +241,8 @@ EOS;
 
     // Preload modules to ensure that ::getAvailableUpdateFunctions filters out
     // not enabled modules.
-    include_once 'vfs://drupal/sites/default/modules/module_a/module_a.post_update.php';
-    include_once 'vfs://drupal/sites/default/modules/module_b/module_b.post_update.php';
+    include_once vfsStream::url('drupal/sites/default/modules/module_a/module_a.post_update.php');
+    include_once vfsStream::url('drupal/sites/default/modules/module_b/module_b.post_update.php');
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
       'module_a' =>
