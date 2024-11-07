@@ -96,8 +96,8 @@ class ModuleInstallerTest extends KernelTestBase {
    */
   public function testCacheFlushModuleUninstall(): void {
     $module_installer = $this->container->get('module_installer');
-    $this->assertTrue($module_installer->install(['module_test', 'cache_flush_uninstall']));
-    $module_installer->uninstall(['module_test']);
+    $this->assertTrue($module_installer->install(['cache_test', 'cache_flush_uninstall']));
+    $module_installer->uninstall(['cache_test']);
     $this->assertTrue(isset($GLOBALS['hook_cache_flush']));
   }
 
