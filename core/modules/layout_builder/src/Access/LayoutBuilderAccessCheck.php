@@ -43,7 +43,7 @@ class LayoutBuilderAccessCheck implements AccessInterface {
     }
 
     // Disables access to add_block routes if the section storage opts out.
-    if ($operation == 'add_block' && !$section_storage->getPluginDefinition()->get('allow_inline_blocks')) {
+    if ($operation == 'add_block' && !$section_storage->getPluginDefinition()->get('allow_inline_blocks') ?? TRUE) {
       $access = $access->andIf(AccessResult::forbidden());
     }
 
