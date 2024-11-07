@@ -70598,12 +70598,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Theme/RegistryTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function theme_test_theme not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Theme/RegistryTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Theme\\\\RegistryTest\\:\\:providerTestPostProcessExtension\\(\\) has no return type specified\\.$#',
 	'count' => 1,
