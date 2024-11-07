@@ -13,6 +13,7 @@ use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Update\UpdateHookRegistry;
 use Drupal\Core\Utility\Error;
+use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
@@ -366,8 +367,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
         catch (\Exception $e) {
           // In the rare case there is an exception, log this to watchdog
           // instead of just dumping the error...
-          // @todo Update after https://www.drupal.org/i/2932518 is fixed.
-          watchdog_exception('system', $e, 'Exception thrown by %module during hook_install', ['%module' => $module], E_ERROR);
+          $logger = \Drupal::logger('system');
+          Error::logException($logger, $e, 'Exception thrown by %module during hook_install', ['%module' => $module], LogLevel::ERROR);
           // ...and then throw it again so that the user knows and the
           // exception is not compounded with other modules installing.
           throw $e;
