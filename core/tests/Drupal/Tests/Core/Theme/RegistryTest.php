@@ -9,6 +9,7 @@ use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\Registry;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Drupal\theme_test\Hook\ThemeTestHooks;
 
 /**
  * @coversDefaultClass \Drupal\Core\Theme\Registry
@@ -155,10 +156,15 @@ class RegistryTest extends UnitTestCase {
     // Include the module and theme files so that hook_theme can be called.
     include_once $this->root . '/core/modules/system/tests/modules/theme_test/theme_test.module';
     include_once $this->root . '/core/tests/fixtures/test_stable/test_stable.theme';
-    $this->moduleHandler->expects($this->atLeastOnce())
+    $themeTestTheme = new ThemeTestHooks();
+    $invokeCalls = ['system', 'theme_test', 'system', 'theme_test'];
+    $this->moduleHandler->expects($this->exactly(4))
       ->method('invoke')
-      ->with('theme_test', 'theme')
-      ->willReturn(theme_test_theme(NULL, NULL, NULL, NULL));
+      ->with($this->callback(function ($module) use (&$invokeCalls) {
+        return $module === array_shift($invokeCalls);
+      }))
+      ->willReturnCallback(fn ($x) => $x === 'theme_test' ? $themeTestTheme->theme(NULL, NULL, NULL, NULL) : []);
+
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('invokeAllWith')
       ->with('theme')
@@ -168,10 +174,13 @@ class RegistryTest extends UnitTestCase {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('getModuleList')
       ->willReturn([]);
-    $this->moduleList->expects($this->exactly(2))
+    $getPathCalls = ['system', 'theme_test', 'system', 'theme_test'];
+    $this->moduleList->expects($this->exactly(4))
       ->method('getPath')
-      ->with('theme_test')
-      ->willReturn('core/modules/system/tests/modules/theme_test');
+      ->with($this->callback(function ($module) use (&$getPathCalls) {
+        return $module === array_shift($getPathCalls);
+      }))
+      ->willReturnCallback(fn (string $module) => $module === 'theme_test' ? 'core/modules/system/tests/modules/theme_test' : '');
 
     $registry = $this->registry->get();
 
