@@ -9,18 +9,18 @@ use Drupal\Core\Database\Exception\SchemaTableKeyTooLargeException;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Audit\HighestIdInterface;
-use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateIdMapMessageEvent;
+use Drupal\migrate\Event\MigrateMapDeleteEvent;
+use Drupal\migrate\Event\MigrateMapSaveEvent;
 use Drupal\migrate\MigrateException;
+use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\migrate\Row;
-use Drupal\migrate\Event\MigrateEvents;
-use Drupal\migrate\Event\MigrateMapSaveEvent;
-use Drupal\migrate\Event\MigrateMapDeleteEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -214,13 +214,13 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * Retrieves the hash of the source identifier values.
    *
-   * @internal
-   *
    * @param array $source_id_values
-   *   The source identifiers
+   *   The source identifiers.
    *
    * @return string
    *   A hash containing the hashed values of the source identifiers.
+   *
+   * @internal
    */
   public function getSourceIdsHash(array $source_id_values) {
     // When looking up the destination ID we require an array with both the

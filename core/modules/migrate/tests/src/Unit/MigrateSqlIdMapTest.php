@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
-use Drupal\sqlite\Driver\Database\sqlite\Connection;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
+use Drupal\sqlite\Driver\Database\sqlite\Connection;
 
 /**
  * Tests the SQL ID map plugin.
@@ -306,10 +306,22 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       4 => ['message' => $message, 'level' => MigrationInterface::MESSAGE_INFORMATIONAL],
     ];
     $expected_results = [
-      '7ad742edb7e866caa78ced1e4455d2e9cbd8adb2074e7c323d21b4e67732e755' => ['message' => $message, 'level' => MigrationInterface::MESSAGE_ERROR],
-      '2d3ec2b0c547e819346e6ae03f881fd9f5c978ff3cbe29dfb807d40735e53703' => ['message' => $message, 'level' => MigrationInterface::MESSAGE_WARNING],
-      '12a042f72cad9a2a8c7715df0c7695d762975f0687d87f5d480725dae1432a6f' => ['message' => $message, 'level' => MigrationInterface::MESSAGE_NOTICE],
-      'd9d1fd27a2447ace48f47a2e9ff649673f67b446d9381a7963c949fc083f8791' => ['message' => $message, 'level' => MigrationInterface::MESSAGE_INFORMATIONAL],
+      '7ad742edb7e866caa78ced1e4455d2e9cbd8adb2074e7c323d21b4e67732e755' => [
+        'message' => $message,
+        'level' => MigrationInterface::MESSAGE_ERROR,
+      ],
+      '2d3ec2b0c547e819346e6ae03f881fd9f5c978ff3cbe29dfb807d40735e53703' => [
+        'message' => $message,
+        'level' => MigrationInterface::MESSAGE_WARNING,
+      ],
+      '12a042f72cad9a2a8c7715df0c7695d762975f0687d87f5d480725dae1432a6f' => [
+        'message' => $message,
+        'level' => MigrationInterface::MESSAGE_NOTICE,
+      ],
+      'd9d1fd27a2447ace48f47a2e9ff649673f67b446d9381a7963c949fc083f8791' => [
+        'message' => $message,
+        'level' => MigrationInterface::MESSAGE_INFORMATIONAL,
+      ],
     ];
     $id_map = $this->getIdMap();
 
@@ -360,7 +372,10 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $row = [
       'sourceid1' => 'source_id_value_3',
       'sourceid2' => 'source_id_value_4',
-      'source_ids_hash' => $this->getIdMap()->getSourceIdsHash(['source_id_property' => 'source_id_value_3', 'sourceid2' => 'source_id_value_4']),
+      'source_ids_hash' => $this->getIdMap()->getSourceIdsHash([
+        'source_id_property' => 'source_id_value_3',
+        'sourceid2' => 'source_id_value_4',
+      ]),
       'destid1' => 'destination_id_value_2',
     ] + $this->idMapDefaults();
     $this->saveMap($row);
@@ -522,7 +537,10 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $this->assertEquals([[101, 'en'], [101, 'fr'], [101, 'de']], $id_map->lookupDestinationIds(['nid' => 1]));
     $this->assertEquals([[102, 'en']], $id_map->lookupDestinationIds(['nid' => 2]));
     $this->assertEquals([], $id_map->lookupDestinationIds(['nid' => 99]));
-    $this->assertEquals([[101, 'en'], [101, 'fr'], [101, 'de']], $id_map->lookupDestinationIds(['nid' => 1, 'language' => NULL]));
+    $this->assertEquals([[101, 'en'], [101, 'fr'], [101, 'de']], $id_map->lookupDestinationIds([
+      'nid' => 1,
+      'language' => NULL,
+    ]));
     $this->assertEquals([[102, 'en']], $id_map->lookupDestinationIds(['nid' => 2, 'language' => NULL]));
     // Out-of-order partial associative list.
     $this->assertEquals([[101, 'en'], [102, 'en']], $id_map->lookupDestinationIds(['language' => 'en']));
@@ -1090,7 +1108,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Provides data for testMapTableCreation.
    */
-  public function providerTestMapTableCreation() {
+  public static function providerTestMapTableCreation(): array {
     return [
       'short_name' => [
         'sql_idmap_test',
