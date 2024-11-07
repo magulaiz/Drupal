@@ -2,6 +2,7 @@
 
 namespace Drupal\content_moderation\Hook;
 
+use Drupal\views\Plugin\views\filter\Broken;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use Drupal\workflows\Entity\Workflow;
@@ -363,7 +364,7 @@ class ContentModerationHooks {
     // @todo Remove this once broken handlers in views configuration result in
     //   a view no longer returning results. https://www.drupal.org/node/2907954.
     foreach ($view->filter as $id => $filter) {
-      if (str_starts_with($id, 'moderation_state') && $filter instanceof \Drupal\views\Plugin\views\filter\Broken) {
+      if (str_starts_with($id, 'moderation_state') && $filter instanceof Broken) {
         $view->result = [];
         break;
       }
