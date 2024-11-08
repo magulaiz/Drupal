@@ -57,7 +57,7 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
         },
         model: {
           key: attribute,
-          value: (viewElement) => viewElement.getAttribute(attribute)
+          value: (viewElement) => viewElement.getAttribute(attribute),
         },
       });
     });
