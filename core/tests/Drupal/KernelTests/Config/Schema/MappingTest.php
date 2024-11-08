@@ -497,7 +497,6 @@ class MappingTest extends KernelTestBase {
         'ckeditor5.plugin.media_media' => ['allow_view_mode_override'],
         'ckeditor5.plugin.ckeditor5_codeBlock' => ['languages'],
         'ckeditor5.plugin.ckeditor5_style' => ['styles'],
-        'ckeditor5.plugin.ckeditor5_link_entity_suggestions' => [],
       ],
     ];
   }

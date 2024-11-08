@@ -309,7 +309,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     $format = FilterFormat::load('test_format');
     $format_settings = $format->toArray();
     $filter_html = $format_settings['filters']['filter_html'];
-    $filter_html['settings']['allowed_html'] = '<p> <br> <strong> <em> <a href data-entity-type data-entity-uuid data-entity-metadata download> <drupal-media data-link-entity-type data-link-entity-uuid data-link-entity-metadata data-entity-type data-entity-uuid data-align data-view-mode data-caption alt>';
+    $filter_html['settings']['allowed_html'] = '<p> <br> <strong> <em> <a href data-entity-type data-entity-uuid data-entity-metadata> <drupal-media data-link-entity-type data-link-entity-uuid data-link-entity-metadata data-entity-type data-entity-uuid data-align data-view-mode data-caption alt>';
     $format->setFilterConfig('filter_html', $filter_html);
     $format->setFilterConfig('entity_links', ['status' => TRUE]);
     $format->save();
