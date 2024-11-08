@@ -200,7 +200,11 @@ class TwigExtension extends AbstractExtension {
     assert($this->urlGenerator instanceof UrlGeneratorInterface, "The URL generator hasn't been set up. Any configuration YAML file with a service directive dealing with the Twig configuration can cause this, most likely found in a recently installed or changed module.");
 
     $options['absolute'] = FALSE;
-    return $this->urlGenerator->generateFromRoute($name, $parameters, $options);
+    try {
+      return $this->urlGenerator->generateFromRoute($name, $parameters, $options);
+    } catch (\Symfony\Component\Routing\Exception\RouteNotFoundException $e){
+      return null;
+    }
   }
 
   /**
