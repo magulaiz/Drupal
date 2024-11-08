@@ -5,6 +5,8 @@
  * Helper module for the Common tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Language\LanguageInterface;
 
@@ -106,7 +108,7 @@ function common_test_module_implements_alter(&$implementations, $hook) {
 /**
  * Implements hook_theme().
  */
-function common_test_theme() {
+function common_test_theme(): array {
   return [
     'common_test_foo' => [
       'variables' => ['foo' => 'foo', 'bar' => 'bar'],
@@ -251,9 +253,9 @@ function common_test_page_attachments_alter(array &$page) {
  */
 function common_test_js_alter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language) {
   // Attach alter.js above tableselect.js.
-  $alterjs = \Drupal::service('extension.list.module')->getPath('common_test') . '/alter.js';
-  if (array_key_exists($alterjs, $javascript) && array_key_exists('core/misc/tableselect.js', $javascript)) {
-    $javascript[$alterjs]['weight'] = $javascript['core/misc/tableselect.js']['weight'] - 1;
+  $alter_js = \Drupal::service('extension.list.module')->getPath('common_test') . '/alter.js';
+  if (array_key_exists($alter_js, $javascript) && array_key_exists('core/misc/tableselect.js', $javascript)) {
+    $javascript[$alter_js]['weight'] = $javascript['core/misc/tableselect.js']['weight'] - 1;
   }
 }
 

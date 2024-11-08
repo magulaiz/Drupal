@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
 use Drupal\workflows\Entity\Workflow;
@@ -9,6 +11,7 @@ use Drupal\workflows\WorkflowInterface;
  * Tests Drupal 6 upgrade using the migrate UI with Content Moderation.
  *
  * @group migrate_drupal_ui
+ * @group #slow
  */
 class Upgrade6TestWithContentModeration extends Upgrade6Test {
 
@@ -51,7 +54,7 @@ class Upgrade6TestWithContentModeration extends Upgrade6Test {
   /**
    * {@inheritdoc}
    */
-  protected function getEntityCounts() {
+  protected function getEntityCounts(): array {
     $entity_counts = parent::getEntityCounts() + [
       'content_moderation_state' => 17,
       'workflow' => 1,
