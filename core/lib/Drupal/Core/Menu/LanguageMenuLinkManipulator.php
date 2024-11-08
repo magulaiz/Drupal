@@ -3,7 +3,6 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Provides a menu link language manipulator.

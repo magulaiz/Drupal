@@ -10,7 +10,6 @@ use Drupal\Core\Menu\MenuLinkBase;
 use Drupal\Core\Menu\MenuLinkTranslationInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
