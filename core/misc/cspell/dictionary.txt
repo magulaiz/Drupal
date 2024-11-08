@@ -270,6 +270,7 @@ idekey
 iframeupload
 imagecache
 imagetextalternative
+importmap
 indexname
 inited
 inlines
