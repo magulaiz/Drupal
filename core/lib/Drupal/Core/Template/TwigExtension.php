@@ -202,8 +202,8 @@ class TwigExtension extends AbstractExtension {
     $options['absolute'] = FALSE;
     try {
       return $this->urlGenerator->generateFromRoute($name, $parameters, $options);
-    } 
-    catch {
+    }
+    catch (\Exception $e ) {
       return NULL;
     }
   }
