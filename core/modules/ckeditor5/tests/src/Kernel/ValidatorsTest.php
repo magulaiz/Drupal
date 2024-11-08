@@ -1582,34 +1582,6 @@ class ValidatorsTest extends KernelTestBase {
       'expected_violations' => [],
     ];
 
-    $data['VALID: EntityLinkSuggestions plugin configured to use a link suggester that allows all linkable entity types'] = [
-      'ckeditor5_settings' => [
-        'toolbar' => [
-          'items' => [
-            'link',
-          ],
-        ],
-        'plugins' => [
-          'ckeditor5_link_entity_suggestions' => [
-            'allow_download_links' => TRUE,
-          ],
-        ],
-      ],
-      'editor_image_upload_settings' => [
-        'status' => FALSE,
-      ],
-      'filters' => [
-        'entity_links' => [
-          'id' => 'entity_links',
-          'provider' => 'filter',
-          'status' => TRUE,
-          'weight' => 0,
-          'settings' => [],
-        ],
-      ],
-      'expected_violations' => [],
-    ];
-
     return $data;
   }
 

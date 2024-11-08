@@ -314,16 +314,6 @@ class MediaLinkabilityTest extends MediaTestBase {
     $format->setFilterConfig('entity_links', ['status' => TRUE]);
     $format->save();
 
-    $editor = Editor::load('test_format');
-    $settings = $editor->getSettings();
-
-    $settings['plugins']['ckeditor5_link_entity_suggestions'] = [
-      'allow_download_links' => TRUE,
-    ];
-
-    $editor->setSettings($settings);
-    $editor->save();
-
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();

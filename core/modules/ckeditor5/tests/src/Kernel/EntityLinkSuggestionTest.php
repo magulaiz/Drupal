@@ -86,12 +86,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
             'link',
           ],
         ],
-        'plugins' => [
-          // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions::defaultConfiguration()
-          'ckeditor5_link_entity_suggestions' => [
-            'allow_download_links' => TRUE,
-          ],
-        ],
       ],
     ])->save();
     $this->assertSame([], array_map(
@@ -291,9 +285,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
 
     // "f", single result due to (different) suggestion restrictions.
     yield 'suggestions=nodes only, host entity type=node, host entity langcode=en, search term="f"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
       'f',
       'node',
       'en',
@@ -304,9 +295,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
 
     // "z", no result due to no nodes having title with "z".
     yield 'host entity type=node, host entity langcode=en, search term="z"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
       'z',
       'node',
       'en',
@@ -322,9 +310,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
 
     // "fo", single result, but different labels due to host entity langcode.
     yield 'host entity type=node, host entity langcode=en, search term="fo"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
       'fo',
       'node',
       'en',
@@ -333,9 +318,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       ],
     ];
     yield 'host entity type=node, host entity langcode=de, search term="fo"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
       'fo',
       'node',
       'de',
@@ -346,9 +328,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
 
     // "tag", single result (taxonomy term), but different labels due to host entity langcode.
     yield 'host entity type=node, host entity langcode=en, search term="tag"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
       'tag',
       'node',
       'en',
@@ -357,9 +336,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       ],
     ];
     yield 'host entity type=node, host entity langcode=de, search term="tag"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
       'tag',
       'node',
       'de',
@@ -370,9 +346,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
 
     // "oo", multi results, but different labels due to host entity langcode.
     yield 'host entity type=node, host entity langcode=en, search term="oo"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
       'oo',
       'node',
       'en',
@@ -383,9 +356,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       ],
     ];
     yield 'host entity type=node, host entity langcode=de, search term="oo"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
       'oo',
       'node',
       'de',
@@ -399,9 +369,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     // "Deutsch" (which appears only on a translation of an entity!), single
     // result, but different labels due to host entity langcode.
     yield 'host entity type=node, host entity langcode=en, search term="Deutsch"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
       'Deutsch',
       'node',
       'en',
@@ -411,9 +378,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       ],
     ];
     yield 'host entity type=node, host entity langcode=de, search term="Deutsch"' => [
-      [
-        'allow_download_links' => TRUE,
-      ],
       'Deutsch',
       'node',
       'de',
@@ -429,12 +393,9 @@ class EntityLinkSuggestionTest extends KernelTestBase {
    *
    * @dataProvider providerEntityLinkSuggestions
    */
-  public function testEntityLinkSuggestions(array $plugin_configuration, string $search, string $host_entity_type_id, string $host_entity_langcode, array $expected): void {
+  public function testEntityLinkSuggestions(string $search, string $host_entity_type_id, string $host_entity_langcode, array $expected): void {
     // Set the given configuration for the entity link suggestions plugin.
     $editor = Editor::load('test_format');
-    $settings = $editor->getSettings();
-    $settings['plugins']['ckeditor5_link_entity_suggestions'] = $plugin_configuration;
-    $editor->setSettings($settings);
 
     // Whatever configuration it is, it must be valid.
     $this->assertSame([], array_map(
