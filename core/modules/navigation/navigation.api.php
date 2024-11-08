@@ -11,7 +11,7 @@
  */
 
 /**
- * Lists the blocks intended to be used in the Navigation.
+ * Lists the blocks intended to be used in Navigation.
  *
  * @return array
  *   An array of block ids.
@@ -27,7 +27,7 @@ function hook_navigation_block(): array {
 }
 
 /**
- * Alters the list of blocks intended to be used in the Navigations.
+ * Alters the list of blocks intended to be used in Navigation.
  *
  * @param $navigation_blocks
  *   An array of navigation safe blocks returned by hook_navigation_promoted().
