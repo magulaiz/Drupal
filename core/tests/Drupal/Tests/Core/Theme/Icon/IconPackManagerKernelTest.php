@@ -61,6 +61,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
     $theme_handler = $this->container->get('theme_handler');
     $cache_backend = $this->container->get('cache.default');
     $icon_extractor_plugin_manager = $this->container->get('plugin.manager.icon_extractor');
+    $icon_collector = $this->container->get('Drupal\Core\Theme\Icon\IconCollector');
     $this->appRoot = $this->container->getParameter('app.root');
 
     $this->pluginManagerIconPack = new IconPackManager(
@@ -68,6 +69,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
       $theme_handler,
       $cache_backend,
       $icon_extractor_plugin_manager,
+      $icon_collector,
       $this->appRoot,
     );
   }

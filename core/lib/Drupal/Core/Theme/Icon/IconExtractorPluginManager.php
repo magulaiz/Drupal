@@ -36,7 +36,7 @@ class IconExtractorPluginManager extends DefaultPluginManager {
       IconExtractor::class
     );
     $this->alterInfo('icon_extractor_info');
-    $this->setCacheBackend($cache_backend, 'icon_extractor_plugins', ['icon_extractor_plugins']);
+    $this->setCacheBackend($cache_backend, 'icon_extractor_plugins');
   }
 
   /**

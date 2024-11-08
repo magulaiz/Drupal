@@ -1898,6 +1898,7 @@ services:
         '@theme_handler',
         '@cache.discovery',
         '@plugin.manager.icon_extractor',
+        '@Drupal\Core\Theme\Icon\IconCollector',
         '%app.root%',
       ]
   Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface: '@plugin.manager.icon_pack'
@@ -1913,4 +1914,10 @@ services:
         '@file_url_generator',
         '@logger.channel.default',
         '%app.root%',
+      ]
+  Drupal\Core\Theme\Icon\IconCollector:
+    arguments:
+      [
+        '@cache.default',
+        '@lock',
       ]

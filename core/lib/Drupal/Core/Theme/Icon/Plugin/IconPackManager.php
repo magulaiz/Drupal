@@ -15,6 +15,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
+use Drupal\Core\Theme\Icon\IconCollector;
 use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 use Drupal\Core\Theme\Icon\IconExtractorPluginManager;
@@ -167,6 +168,8 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    *   The cache backend.
    * @param \Drupal\Core\Theme\Icon\IconExtractorPluginManager $iconPackExtractorManager
    *   The icon plugin extractor service.
+   * @param \Drupal\Core\Theme\Icon\IconCollector $iconCollector
+   *   The icon cache collector service.
    * @param string $appRoot
    *   The application root.
    */
@@ -175,12 +178,13 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     protected ThemeHandlerInterface $themeHandler,
     CacheBackendInterface $cacheBackend,
     protected IconExtractorPluginManager $iconPackExtractorManager,
+    protected IconCollector $iconCollector,
     protected string $appRoot,
   ) {
     $this->moduleHandler = $module_handler;
     $this->factory = new ContainerFactory($this);
     $this->alterInfo('icon_pack');
-    $this->setCacheBackend($cacheBackend, 'icon_pack', ['icon_pack', 'icon_pack_plugin']);
+    $this->setCacheBackend($cacheBackend, 'icon_pack', ['icon_pack_plugin', 'icon_pack_collector']);
   }
 
   /**
@@ -256,6 +260,11 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * {@inheritdoc}
    */
   public function getIcon(string $icon_full_id): ?IconDefinitionInterface {
+    $cached_icons = $this->iconCollector->get('icons');
+    if ($cached_icons !== NULL && isset($cached_icons[$icon_full_id])) {
+      return $cached_icons[$icon_full_id];
+    }
+
     $icon_data = explode(IconDefinition::ICON_SEPARATOR, $icon_full_id);
     if (!isset($icon_data[0]) || !isset($icon_data[1])) {
       return NULL;
@@ -279,6 +288,12 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
     // Extracted list of icons is not needed by extractor.
     unset($definition['icons']);
     $icon = $this->loadIconFromExtractor($icon_data, $definition['extractor'], $definition);
+
+    if ($cached_icons === NULL) {
+      $cached_icons = [];
+    }
+    $cached_icons[$icon_full_id] = $icon;
+    $this->iconCollector->set('icons', $cached_icons);
 
     return $icon;
   }
