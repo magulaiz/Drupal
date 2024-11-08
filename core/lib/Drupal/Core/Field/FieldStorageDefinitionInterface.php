@@ -131,15 +131,30 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
   /**
    * Gets an options provider for the given field item property.
    *
-   * @param string $property_name
-   *   The name of the property to get options for; e.g., 'value'.
+   * @param string|null $property_name
+   *   (optional) The name of the property to get options for; e.g., 'value'.
+   *   If omitted, options for the field item's main property are provided.
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
-   *   The entity for which the options should be provided.
+   *   (optional) The entity for which the options should be provided.
+   * @param int $delta
+   *   (optional) If the entity is passed, the delta of the item for which to
+   *   return the options provider. Defaults to the first item.
    *
    * @return \Drupal\Core\TypedData\OptionsProviderInterface|null
    *   An options provider, or NULL if no options are defined.
+   *
+   * @see ::getOptionsProviderDefinition()
    */
-  public function getOptionsProvider($property_name, FieldableEntityInterface $entity);
+  public function getOptionsProvider($property_name = NULL, ?FieldableEntityInterface $entity = NULL, $delta = 0);
+
+  /**
+   * {@inheritdoc}
+   *
+   * @param string|null $property_name
+   *   (optional) The name of the property to get options for; e.g., 'value'.
+   *   If omitted, options for the field item's main property are provided.
+   */
+  public function getOptionsProviderDefinition($property_name = NULL);
 
   /**
    * Returns whether the field can contain multiple items.

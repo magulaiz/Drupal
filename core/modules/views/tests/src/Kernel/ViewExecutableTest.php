@@ -535,7 +535,6 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     // Reset the static cache. Don't use clearCachedFieldDefinitions() since
     // that clears the persistent cache and we need to get the serialized cache
     // data.
-    $field_manager->useCaches(FALSE);
     $field_manager->useCaches(TRUE);
 
     // Serialize the ViewExecutable as part of other data.

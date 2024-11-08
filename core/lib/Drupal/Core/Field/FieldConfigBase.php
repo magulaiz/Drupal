@@ -6,6 +6,7 @@ use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\TypedData\FieldDefinitionOptionsProviderTrait;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -14,6 +15,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  */
 abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigInterface {
 
+  use FieldDefinitionOptionsProviderTrait;
   use FieldInputValueNormalizerTrait;
 
   /**
@@ -193,6 +195,13 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    * @var array[]
    */
   protected $propertyConstraints = [];
+
+  /**
+   * The set options provider context.
+   *
+   * @var array[]
+   */
+  protected $optionsProviderContext;
 
   /**
    * {@inheritdoc}
@@ -631,6 +640,29 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
       return $this->definition['internal'];
     }
     return $this->isComputed();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptionsProviderContext() {
+    return $this->optionsProviderContext;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOptionsProviderContext($interface, $method, $arguments) {
+    $this->optionsProviderContext[$interface][$method] = $arguments;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeOptionsProviderContext($interface) {
+    unset($this->optionsProviderContext[$interface]);
+    return $this;
   }
 
 }

@@ -13,6 +13,30 @@ use Drupal\Component\Plugin\Context\ContextDefinitionInterface as ComponentConte
 interface ContextDefinitionInterface extends ComponentContextDefinitionInterface {
 
   /**
+   * Returns an options provider if there are defined options.
+   *
+   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
+   *   (optional) The array of contexts to which the defined context belongs.
+   *
+   * @return \Drupal\Core\TypedData\OptionsProviderInterface|null
+   *   The options provider, or NULL if no options are defined.
+   *
+   * @see ::getOptionsProviderDefinition()
+   */
+  public function getOptionsProvider(?array $contexts = NULL);
+
+  /**
+   * Returns the set options provider definition.
+   *
+   * @return string|null
+   *   The options provider definition, or NULL if no options provider has been
+   *   defined.
+   *
+   * @see ::getOptionsProvider()
+   */
+  public function getOptionsProviderDefinition();
+
+  /**
    * Returns the data definition of the defined context.
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface

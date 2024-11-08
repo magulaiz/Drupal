@@ -258,6 +258,62 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   /**
    * {@inheritdoc}
    */
+  public function getOptionsProvider($data = NULL) {
+    return \Drupal::typedDataManager()
+      ->getOptionsProvider($this, $data);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptionsProviderDefinition() {
+    return $this->definition['options_provider'] ?? NULL;
+  }
+
+  /**
+   * Defines the options provider to be used.
+   *
+   * See \Drupal\Core\TypedData\TypedDataManager::getOptionsProvider() for
+   * supported definition notations.
+   *
+   * @param string|null $provider_definition
+   *   The options provider definition; e.g. the class name.
+   *
+   * @return $this
+   *
+   * @see ::getOptionsProviderDefinition()
+   */
+  public function setOptionsProviderDefinition($provider_definition) {
+    $this->definition['options_provider'] = $provider_definition;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptionsProviderContext() {
+    return $this->definition['options_provider_context'] ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOptionsProviderContext($interface, $method, $arguments) {
+    $this->definition['options_provider_context'][$interface][$method] = $arguments;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeOptionsProviderContext($interface) {
+    unset($this->definition['options_provider_context'][$interface]);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getConstraints() {
     $constraints = $this->definition['constraints'] ?? [];
     $constraints += $this->getTypedDataManager()->getDefaultConstraints($this);

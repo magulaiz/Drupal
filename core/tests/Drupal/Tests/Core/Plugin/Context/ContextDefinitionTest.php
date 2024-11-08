@@ -46,6 +46,9 @@ class ContextDefinitionTest extends UnitTestCase {
       ->method('setRequired')
       ->willReturnSelf();
     $mock_data_definition->expects($this->once())
+      ->method('setOptionsProviderDefinition')
+      ->willReturnSelf();
+    $mock_data_definition->expects($this->once())
       ->method('getConstraints')
       ->willReturn([]);
     $mock_data_definition->expects($this->once())

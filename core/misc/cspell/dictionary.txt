@@ -240,6 +240,7 @@ fouc
 fourcol
 fraîche
 frontpage
+fsdi
 fudgy
 fulldata
 fulldate
