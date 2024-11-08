@@ -24,10 +24,10 @@ use PHPStan\Type\ParserNodeTypeToPHPStanType;
  */
 final class ReturnTypeWillBeAdded implements Rule {
 
-	public function __construct(
-		private readonly FileTypeMapper $fileTypeMapper,
-	) {
-	}
+  public function __construct(
+    private readonly FileTypeMapper $fileTypeMapper,
+  ) {
+  }
 
   /**
    * {@inheritdoc}
