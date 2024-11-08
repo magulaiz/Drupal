@@ -1,4 +1,5 @@
-# cspell:ignore cobertura drupaltestbot drupaltestbotpw Dwebdriver logfile testdox XVFB
+# cspell:ignore cobertura drupaltestbot drupaltestbotpw Dwebdriver geckodriver
+# cspell:ignore testdox logfile XVFB
 
 stages:
   - 🗜️ Test
@@ -68,6 +69,7 @@ variables:
   POSTGRES_USER: drupaltestbot
   POSTGRES_PASSWORD: drupaltestbotpw
   MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
+  MINK_DRIVER_ARGS_FIREFOX: '["firefox", {"browserName":"firefox", "w3c": true, "moz:firefoxOptions":{"args":["--headless"]}}, "http://firefox:4444"]'
   MINK_DRIVER_ARGS_WEBDRIVER_CHROMEDRIVER_NON_W3C: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--dns-prefetch-disable"]}}, "http://localhost:9515"]'
   CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
@@ -95,6 +97,16 @@ variables:
     SE_NODE_MAX_SESSIONS: "16"
     SE_SESSION_RETRY_INTERVAL: "1"
     SE_SESSION_REQUEST_TIMEOUT: "10"
+    SE_START_XVFB: "false"
+    SE_START_VNC: "false"
+
+.with-selenium-firefox: &with-selenium-firefox
+  name: selenium/standalone-firefox:127.0
+  alias: firefox
+  variables:
+    JAVA_OPTS: "-Dwebdriver.firefox.logfile=/builds/geckodriver.log"
+    SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+    SE_NODE_MAX_SESSIONS: "5"
     SE_START_XVFB: "false"
     SE_START_VNC: "false"
 
@@ -136,16 +148,32 @@ variables:
   script:
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
 
-'🖱️️️ PHPUnit Functional Javascript':
+'🖱️️️ PHPUnit Functional Javascript (chrome)':
+  <<: [ *with-composer, *run-tests, *default-job-settings ]
+  parallel: 2
+  variables:
+    TESTSUITE: PHPUnit-FunctionalJavascript
+    CONCURRENCY: 8
+    KUBERNETES_CPU_REQUEST: "24"
+  services:
+    - <<: *with-database
+    - <<: *with-selenium-chrome
+  after_script:
+    - echo $MINK_DRIVER_ARGS_WEBDRIVER
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+    - cp /builds/chromedriver.log ./
+
+'🖱️️️ PHPUnit Functional Javascript (firefox)':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
   parallel: 3
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 5
     KUBERNETES_CPU_REQUEST: "16"
+    MINK_DRIVER_ARGS_WEBDRIVER: $MINK_DRIVER_ARGS_FIREFOX
   services:
     - <<: *with-database
-    - <<: *with-selenium-chrome
+    - <<: *with-selenium-firefox
   after_script:
     - echo $MINK_DRIVER_ARGS_WEBDRIVER
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
@@ -165,7 +193,6 @@ variables:
   script:
     # Run a small subset of tests to prove non W3C testing still works.
     - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html javascript
-
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
     - cp /builds/chromedriver.log ./

@@ -157,9 +157,14 @@ class ManageDisplayTest extends WebDriverTestBase {
     $this->assertEquals('hidden', $field_region->getValue());
     $field_region->setValue('content');
 
-    // Confirm the region element retains focus after the AJAX update completes.
-    $this->assertJsCondition('document.activeElement === document.querySelector("[name=\'fields[field_test][region]\']")');
-    $button_save->click();
+    // @todo Consider removing this assertion. There is no AJAX update anymore.
+    //   Firefox does not set the active element properly when selecting an
+    //   option.
+    if ($this->getSession()->getDriver()->getWebDriverSession()->capabilities()['browserName'] !== 'firefox') {
+      // Confirm the region element retains focus after the AJAX update completes.
+      $this->assertJsCondition('document.activeElement === document.querySelector("[name=\'fields[field_test][region]\']")');
+      $button_save->click();
+    }
 
     // Change the format for the test field.
     $field_test_format_type->setValue('field_test_multiple');

@@ -40,6 +40,8 @@ class PerformanceTestBase extends WebDriverTestBase {
     if ($db->databaseType() !== 'mysql' && $is_core_test) {
       $this->markTestSkipped('Drupal core performance tests only run on MySQL');
     }
+    // Call this before installing Drupal to skip if not using Chrome.
+    $this->getMinkDriverArgs();
   }
 
   /**

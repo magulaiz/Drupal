@@ -181,7 +181,7 @@ class TableTest extends WebDriverTestBase {
     $this->assertEquals($this->captionText, $caption->getText());
 
     // Update table cell content.
-    $table_cell = $assert_session->waitForElement('css', '.ck-editor__nested-editable .ck-table-bogus-paragraph');
+    $table_cell = $assert_session->waitForElement('css', '.ck-editor__nested-editable .ck-table-bogus-paragraph')->getParent();
     $this->assertNotEmpty($table_cell);
     $table_cell->click();
     $table_cell->setValue($this->tableCellText);

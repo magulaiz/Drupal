@@ -73,7 +73,7 @@ class ClaroViewsUiTest extends WebDriverTestBase {
     $this->drupalGet('admin/structure/views/view/who_s_online');
     $assert_session = $this->assertSession();
     $extra_actions_dropbutton_list = $assert_session->elementExists('css', '#views-display-extra-actions.dropbutton--small');
-    $list_item_selectors = ['li:first-child', 'li:last-child'];
+    $list_item_selectors = ['li:first-of-type', 'li:last-of-type'];
     // Test list item CSS classes.
     foreach ($list_item_selectors as $list_item_selector) {
       $this->assertNotNull($extra_actions_dropbutton_list->find('css', "$list_item_selector.dropbutton__item"));

@@ -582,7 +582,7 @@ JS;
    *   interactable or visible.
    */
   public static function isExceptionNotClickable(Exception $exception): bool {
-    return (bool) preg_match('/not (clickable|interactable|visible)/', $exception->getMessage());
+    return (bool) preg_match('/not (clickable|interactable|visible|be scrolled into view)/', $exception->getMessage());
   }
 
   /**

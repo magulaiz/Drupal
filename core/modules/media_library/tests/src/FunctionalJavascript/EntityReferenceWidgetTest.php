@@ -91,9 +91,9 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $this->assertFalse($open_button->hasAttribute('data-disabled-focus'));
     $this->assertTrue($open_button->hasAttribute('disabled'));
     // The button should be disabled.
-    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":disabled")');
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":disabled") === true');
     // The button should not have focus.
-    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").not(":focus")');
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":focus") === false');
   }
 
   /**
@@ -617,7 +617,11 @@ JS;
     $this->assertSame('Remove Horse', $remove_button->getAttribute('aria-label'));
     $assert_session->pageTextNotContains('You do not have permission to view media item');
     $remove_button->press();
-    $this->waitForText("Removing Horse.");
+    // This is transient text. Firefox never returns it.
+    // @todo Decide whether we should keep this assertion.
+    if ($this->getSession()->getDriver()->getWebDriverSession()->capabilities()['browserName'] !== 'firefox') {
+      $this->waitForText("Removing Horse.");
+    }
     $this->waitForText("Horse has been removed.");
     // Logout without saving.
     $this->drupalLogout();
@@ -645,7 +649,11 @@ JS;
     $assert_session->pageTextContains("You do not have permission to view media item $media_id.");
     // Confirm ajax text does not reveal media name.
     $remove_button->press();
-    $this->waitForText("Removing media.");
+    // This is transient text. Firefox never returns it.
+    // @todo Decide whether we should keep this assertion.
+    if ($this->getSession()->getDriver()->getWebDriverSession()->capabilities()['browserName'] !== 'firefox') {
+      $this->waitForText("Removing media.");
+    }
     $this->waitForText("Media has been removed.");
   }
 

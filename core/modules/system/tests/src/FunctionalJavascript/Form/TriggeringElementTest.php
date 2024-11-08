@@ -40,6 +40,7 @@ class TriggeringElementTest extends WebDriverTestBase {
 
     $assert_session = $this->assertSession();
     $this->getSession()->getDriver()->submitForm('//form[@id="' . $form_html_id . '"]');
+    $assert_session->waitForText('There is no clicked button.');
     $assert_session->pageTextContains('There is no clicked button.');
     $assert_session->pageTextNotContains('Submit handler for form_test_clicked_button executed.');
 
@@ -48,16 +49,19 @@ class TriggeringElementTest extends WebDriverTestBase {
     // argument with 'r' in it indicates a restricted (#access=FALSE) button.
     $this->drupalGet($path . '/s');
     $this->getSession()->getDriver()->submitForm('//form[@id="' . $form_html_id . '"]');
+    $assert_session->waitForText('The clicked button is button1.');
     $assert_session->pageTextContains('The clicked button is button1.');
     $assert_session->pageTextContains('Submit handler for form_test_clicked_button executed.');
 
     $this->drupalGet($path . '/s/s');
     $this->getSession()->getDriver()->submitForm('//form[@id="' . $form_html_id . '"]');
+    $assert_session->waitForText('The clicked button is button1.');
     $assert_session->pageTextContains('The clicked button is button1.');
     $assert_session->pageTextContains('Submit handler for form_test_clicked_button executed.');
 
     $this->drupalGet($path . '/rs/s');
     $this->getSession()->getDriver()->submitForm('//form[@id="' . $form_html_id . '"]');
+    $assert_session->waitForText('The clicked button is button2.');
     $assert_session->pageTextContains('The clicked button is button2.');
     $assert_session->pageTextContains('Submit handler for form_test_clicked_button executed.');
 
@@ -68,16 +72,19 @@ class TriggeringElementTest extends WebDriverTestBase {
     // (image_button).
     $this->drupalGet($path . '/s/b/i');
     $this->getSession()->getDriver()->submitForm('//form[@id="' . $form_html_id . '"]');
+    $assert_session->waitForText('The clicked button is button1.');
     $assert_session->pageTextContains('The clicked button is button1.');
     $assert_session->pageTextContains('Submit handler for form_test_clicked_button executed.');
 
     $this->drupalGet($path . '/b/s/i');
     $this->getSession()->getDriver()->submitForm('//form[@id="' . $form_html_id . '"]');
+    $assert_session->waitForText('The clicked button is button1.');
     $assert_session->pageTextContains('The clicked button is button1.');
     $assert_session->pageTextNotContains('Submit handler for form_test_clicked_button executed.');
 
     $this->drupalGet($path . '/i/s/b');
     $this->getSession()->getDriver()->submitForm('//form[@id="' . $form_html_id . '"]');
+    $assert_session->waitForText('The clicked button is button1.');
     $assert_session->pageTextContains('The clicked button is button1.');
     $assert_session->pageTextContains('Submit handler for form_test_clicked_button executed.');
   }

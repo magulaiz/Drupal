@@ -129,7 +129,7 @@ class TranslationsTest extends WebDriverTestBase {
     // regardless of the interface language.
     $this->drupalGet('nl/admin/content/media-grid');
     $assert_session->elementsCount('css', '.js-media-library-item', 6);
-    $media_items = $page->findAll('css', '.js-media-library-item-preview + div');
+    $media_items = $page->findAll('css', '.js-media-library-item-preview + *');
     $media_names = [];
     foreach ($media_items as $media_item) {
       $media_names[] = $media_item->getText();
@@ -140,7 +140,7 @@ class TranslationsTest extends WebDriverTestBase {
 
     $this->drupalGet('es/admin/content/media-grid');
     $assert_session->elementsCount('css', '.js-media-library-item', 6);
-    $media_items = $page->findAll('css', '.js-media-library-item-preview + div');
+    $media_items = $page->findAll('css', '.js-media-library-item-preview + *');
     $media_names = [];
     foreach ($media_items as $media_item) {
       $media_names[] = $media_item->getText();
@@ -155,7 +155,7 @@ class TranslationsTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->waitForText('Add or select media');
     $assert_session->elementsCount('css', '.js-media-library-item', 4);
-    $media_items = $page->findAll('css', '.js-media-library-item-preview + div');
+    $media_items = $page->findAll('css', '.js-media-library-item-preview + *');
     $media_names = [];
     foreach ($media_items as $media_item) {
       $media_names[] = $media_item->getText();
@@ -168,7 +168,7 @@ class TranslationsTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.js-media-library-open-button[name^="field_media"]')->click();
     $assert_session->waitForText('Add or select media');
     $assert_session->elementsCount('css', '.js-media-library-item', 4);
-    $media_items = $page->findAll('css', '.js-media-library-item-preview + div');
+    $media_items = $page->findAll('css', '.js-media-library-item-preview + *');
     $media_names = [];
     foreach ($media_items as $media_item) {
       $media_names[] = $media_item->getText();
