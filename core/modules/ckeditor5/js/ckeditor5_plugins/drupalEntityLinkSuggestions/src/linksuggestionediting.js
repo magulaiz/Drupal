@@ -7,7 +7,6 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
     this.attrs = [
       'data-entity-type',
       'data-entity-uuid',
-      'download',
       'data-entity-metadata',
     ];
     this.blockLinkAttrs = [
@@ -35,14 +34,6 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
         model: attribute,
         view: (value, { writer }) => {
           const viewAttributes = {};
-          if (attribute !== 'download') {
-            // Special case: the "download" attribute.
-            // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
-            // @see https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
-            viewAttributes[attribute] = value;
-          } else if (value === true) {
-            viewAttributes.download = '';
-          }
           const linkViewElement = writer.createAttributeElement(
             'a',
             viewAttributes,
@@ -66,13 +57,7 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
         },
         model: {
           key: attribute,
-          // Special case: the "download" attribute.
-          // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download
-          // @see https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#boolean-attributes
-          value: (viewElement) =>
-            attribute !== 'download'
-              ? viewElement.getAttribute(attribute)
-              : viewElement.hasAttribute(attribute),
+          value: (viewElement) => viewElement.getAttribute(attribute)
         },
       });
     });

@@ -66,7 +66,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <br> <a href data-entity-type data-entity-uuid data-entity-metadata download>',
+            'allowed_html' => '<p> <br> <a href data-entity-type data-entity-uuid data-entity-metadata>',
           ],
         ],
         'entity_links' => [
@@ -197,9 +197,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'group' => 'Content - Basic page',
       'label' => 'foo',
       'path' => 'entity:node/1',
-      'exposed_attributes' => [
-        'download' => FALSE,
-      ],
     ];
     $suggestion_node_1_de = [
       'description' => 'by sofie on Tue, 19 Sep 2023 - 03:31',
@@ -208,9 +205,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'group' => 'Content - Basic page',
       'label' => 'Deutsch foo',
       'path' => 'entity:node/1',
-      'exposed_attributes' => [
-        'download' => FALSE,
-      ],
     ];
     $suggestion_node_2_en = [
       'description' => 'by sofie on Tue, 19 Sep 2023 - 03:32',
@@ -219,9 +213,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'group' => 'Content - Article',
       'label' => 'doo',
       'path' => 'entity:node/2',
-      'exposed_attributes' => [
-        'download' => FALSE,
-      ],
     ];
     $suggestion_node_2_de = [
       'description' => 'by sofie on Tue, 19 Sep 2023 - 03:32',
@@ -230,9 +221,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'group' => 'Content - Article',
       'label' => 'Deutsch doo',
       'path' => 'entity:node/2',
-      'exposed_attributes' => [
-        'download' => FALSE,
-      ],
     ];
 
     $suggestion_tag_1_en = [
@@ -242,9 +230,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'group' => 'Taxonomy term - Tags',
       'label' => 'tag',
       'path' => 'entity:taxonomy_term/1',
-      'exposed_attributes' => [
-        'download' => FALSE,
-      ],
     ];
 
     $suggestion_tag_1_de = [
@@ -254,9 +239,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'group' => 'Taxonomy term - Tags',
       'label' => 'tag DE',
       'path' => 'entity:taxonomy_term/1',
-      'exposed_attributes' => [
-        'download' => FALSE,
-      ],
     ];
 
     $suggestion_tag_2_en = [
@@ -266,9 +248,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'group' => 'Taxonomy term - Tags',
       'label' => 'doo term',
       'path' => 'entity:taxonomy_term/2',
-      'exposed_attributes' => [
-        'download' => FALSE,
-      ],
     ];
 
     $suggestion_tag_2_de = [
@@ -278,9 +257,6 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       'group' => 'Taxonomy term - Tags',
       'label' => 'doo term DE',
       'path' => 'entity:taxonomy_term/2',
-      'exposed_attributes' => [
-        'download' => FALSE,
-      ],
     ];
 
     // "f", single result due to (different) suggestion restrictions.

@@ -19,27 +19,8 @@ class DrupalEntityLinkSuggestions extends Plugin {
     // TRICKY: Work-around until the CKEditor team offers a better solution: force the ContextualBalloon to get instantiated early thanks to imageBlock not yet being optimized like https://github.com/ckeditor/ckeditor5/commit/c276c45a934e4ad7c2a8ccd0bd9a01f6442d4cd3#diff-1753317a1a0b947ca8b66581b533616a5309f6d4236a527b9d21ba03e13a78d8.
     editor.plugins.get('LinkUI')._createViews();
 
-    // Some of the attributes supported by this plugin are exposed in the UI.
-    const { attrs } = editor.plugins.get('DrupalEntityLinkSuggestionsEditing');
-
-    const exposedAttributes = {
-      download: {
-        label: Drupal.t('Download link'),
-        viewName: 'download',
-        modelName: 'drupalEntityLinkDownload',
-      },
-    };
-
     this._buttonViews = new ViewCollection();
-    attrs.reverse().forEach((attrName) => {
-      if (!exposedAttributes.hasOwnProperty(attrName)) {
-        return;
-      }
-      this._createExtraButtonView(
-        exposedAttributes[attrName].modelName,
-        exposedAttributes[attrName],
-      );
-    });
+
     this._enableLinkAutocomplete();
     this._handleExtraFormFieldSubmit();
     this._handleDataLoadingIntoExtraFormField();
@@ -243,27 +224,6 @@ class DrupalEntityLinkSuggestions extends Plugin {
         if (newValue === linkActionsView && this.entityMetadata) {
           linkActionsView.set('metadata', this.entityMetadata);
         }
-        if (newValue === linkFormView) {
-          // Ensure the visibility is computed for the `download` switch button when it's not explicitly set (
-          // editing an existing link).
-          if (
-            this.entityType &&
-            this.entityUuid &&
-            typeof this.drupalEntityLinkDownload !== 'boolean'
-          ) {
-            // Use the local cache if it is primed.
-            const cached = window.sessionStorage.getItem(
-              `ckeditor5:drupal-entity-link-suggestions:download:${this.entityType}:${this.entityUuid}`,
-            );
-            if (cached === null) {
-              console.error('TODO IMPLEMENT FETCHING OF THIS METADATA');
-            }
-            const isDownloadable = cached === 'true';
-            if (isDownloadable) {
-              this.set('drupalEntityLinkDownload', false);
-            }
-          }
-        }
 
         if (newValue !== linkFormView || wasAutocompleteAdded) {
           return;
@@ -301,27 +261,10 @@ class DrupalEntityLinkSuggestions extends Plugin {
               this.set('entityType', item.entity_type_id);
               this.set('entityUuid', item.entity_uuid);
               this.set('entityMetadata', JSON.stringify(item));
-
-              if (item.exposed_attributes.download === true) {
-                this.set(
-                  'drupalEntityLinkDownload',
-                  typeof this.drupalEntityLinkDownload === 'boolean'
-                    ? this.drupalEntityLinkDownload // Keep current state if it is already specified.
-                    : true, // Otherwise default downloadable linked entities to have the `download` attribute by default.
-                );
-              } else {
-                this.set('drupalEntityLinkDownload', null);
-              }
-              // Prime local cache for when this link gets edited again during the same session.
-              window.sessionStorage.setItem(
-                `ckeditor5:drupal-entity-link-suggestions:download:${item.entity_type_id}:${item.entity_uuid}`,
-                item.exposed_attributes.download,
-              );
             } else {
               this.set('entityType', null);
               this.set('entityUuid', null);
               this.set('entityMetadata', null);
-              this.set('drupalEntityLinkDownload', null);
             }
 
             event.target.value = item.path;
@@ -336,7 +279,6 @@ class DrupalEntityLinkSuggestions extends Plugin {
               this.set('entityType', null);
               this.set('entityUuid', null);
               this.set('entityMetadata', null);
-              this.set('drupalEntityLinkDownload', null);
             }
             selected = false;
           },
@@ -358,7 +300,6 @@ class DrupalEntityLinkSuggestions extends Plugin {
         const values = {
           'data-entity-type': this.entityType,
           'data-entity-uuid': this.entityUuid,
-          download: this.drupalEntityLinkDownload,
           'data-entity-metadata': this.entityMetadata,
           'data-link-entity-type': this.entityType,
           'data-link-entity-uuid': this.entityUuid,
@@ -397,7 +338,6 @@ class DrupalEntityLinkSuggestions extends Plugin {
     this.bind('entityType').to(linkCommand, 'data-entity-type');
     this.bind('entityUuid').to(linkCommand, 'data-entity-uuid');
     this.bind('entityMetadata').to(linkCommand, 'data-entity-metadata');
-    this.bind('drupalEntityLinkDownload').to(linkCommand, 'download');
   }
 
   /**

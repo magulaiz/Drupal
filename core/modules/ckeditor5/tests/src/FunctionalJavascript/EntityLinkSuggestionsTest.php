@@ -57,7 +57,7 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <br> <a href data-entity-type data-entity-uuid data-entity-metadata download>',
+            'allowed_html' => '<p> <br> <a href data-entity-type data-entity-uuid data-entity-metadata>',
           ],
         ],
         'entity_links' => [
@@ -172,8 +172,6 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     // Make sure the link field is populated with the test entity's URL.
     $expected_url = 'entity:node/1';
     $this->assertSame($expected_url, $autocomplete_field->getValue());
-    // Nodes cannot be downloaded: the "Download link" toggle invisible.
-    $this->assertFalse($balloon->findButton('Download link')->isVisible());
     $balloon->pressButton('Save');
     $this->assertBalloonClosed();
 
@@ -183,7 +181,6 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     $this->assertSame('#', $entity_link_suggestions_link->getAttribute('href'));
     $this->assertSame('node', $entity_link_suggestions_link->getAttribute('data-entity-type'));
     $this->assertSame($entity->uuid(), $entity_link_suggestions_link->getAttribute('data-entity-uuid'));
-    $this->assertFalse($entity_link_suggestions_link->hasAttribute('download'));
 
     // Let's change our mind: we want to use the second result instead.
     $entity_link_suggestions_link->click();
@@ -196,8 +193,6 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     $results[1]->click();
     $expected_url = 'entity:media/1';
     $this->assertSame($expected_url, $autocomplete_field->getValue());
-    // Media items can be downloaded: the "Download link" toggle is visible.
-    $this->assertTrue($balloon->findButton('Download link')->isVisible());
     $balloon->pressButton('Save');
     $this->assertBalloonClosed();
 
@@ -207,7 +202,6 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     $this->assertSame('#', $entity_link_suggestions_link->getAttribute('href'));
     $this->assertSame('media', $entity_link_suggestions_link->getAttribute('data-entity-type'));
     $this->assertSame(Media::load(1)->uuid(), $entity_link_suggestions_link->getAttribute('data-entity-uuid'));
-    $this->assertSame('', $entity_link_suggestions_link->getAttribute('download'));
 
     // Open the edit link dialog by moving selection to the link, verifying the
     // "Link" button is off before and on after, and then pressing that button.
