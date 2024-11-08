@@ -5,10 +5,12 @@
  * Helper module for Twig extension tests.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_theme().
  */
-function twig_extension_test_theme($existing, $type, $theme, $path) {
+function twig_extension_test_theme($existing, $type, $theme, $path): array {
   return [
     'twig_extension_test_filter' => [
       'variables' => ['message' => NULL, 'safe_join_items' => NULL],
