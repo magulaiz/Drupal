@@ -1,0 +1,5 @@
+name: 'Cache flush uninstall'
+type: module
+description: 'Support module for cache flush hook testing.'
+package: Testing
+version: VERSION

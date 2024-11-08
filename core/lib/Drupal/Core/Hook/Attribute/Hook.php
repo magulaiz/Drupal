@@ -66,7 +66,6 @@ namespace Drupal\Core\Hook\Attribute;
  * - hook_module_implements_alter()
  *
  * Install hooks:
- * - hook_cache_flush()
  * - hook_install()
  * - hook_module_preinstall()
  * - hook_module_preuninstall()

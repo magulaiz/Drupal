@@ -92,6 +92,16 @@ class ModuleInstallerTest extends KernelTestBase {
   }
 
   /**
+   * Ensure that cache_flush is called on uninstall.
+   */
+  public function testCacheFlushModuleUninstall(): void {
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['cache_test', 'cache_flush_uninstall']));
+    $module_installer->uninstall(['cache_test']);
+    $this->assertTrue(isset($GLOBALS['hook_cache_flush']));
+  }
+
+  /**
    * Tests install with a module with an invalid core version constraint.
    *
    * @dataProvider providerTestInvalidCoreInstall
