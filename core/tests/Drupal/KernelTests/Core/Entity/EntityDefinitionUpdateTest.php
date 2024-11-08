@@ -54,9 +54,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   protected $database;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test_update', 'language'];
 
@@ -999,7 +997,6 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $db_schema = $this->database->schema();
 
     // Create two entities before adding the base field.
-    /** @var \Drupal\entity_test\Entity\EntityTestUpdate $entity */
     $storage->create()->save();
     $storage->create()->save();
 
