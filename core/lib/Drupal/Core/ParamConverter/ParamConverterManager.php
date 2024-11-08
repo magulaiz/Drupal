@@ -3,6 +3,8 @@
 namespace Drupal\Core\ParamConverter;
 
 use Drupal\Core\Routing\RouteObjectInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -14,26 +16,22 @@ use Symfony\Component\Routing\RouteCollection;
 class ParamConverterManager implements ParamConverterManagerInterface {
 
   /**
-   * Array of loaded converter services keyed by their ids.
+   * Constructs the ParamConverterManager service.
    *
-   * @var array
+   * @param \Symfony\Component\DependencyInjection\ServiceLocator $locator
+   *   A service locator for the converter services.
    */
-  protected $converters = [];
-
-  /**
-   * {@inheritdoc}
-   */
-  public function addConverter(ParamConverterInterface $param_converter, $id) {
-    $this->converters[$id] = $param_converter;
-    return $this;
-  }
+  public function __construct(
+    #[AutowireLocator('paramconverter')]
+    protected ServiceLocator $locator,
+  ) {}
 
   /**
    * {@inheritdoc}
    */
   public function getConverter($converter) {
-    if (isset($this->converters[$converter])) {
-      return $this->converters[$converter];
+    if ($this->locator->has($converter)) {
+      return $this->locator->get($converter);
     }
     else {
       throw new \InvalidArgumentException(sprintf('No converter has been registered for %s', $converter));
@@ -57,8 +55,8 @@ class ParamConverterManager implements ParamConverterManagerInterface {
           continue;
         }
 
-        foreach (array_keys($this->converters) as $converter) {
-          if ($this->getConverter($converter)->applies($definition, $name, $route)) {
+        foreach (array_keys($this->locator->getProvidedServices()) as $converter) {
+          if ($this->locator->get($converter)->applies($definition, $name, $route)) {
             $definition['converter'] = $converter;
             break;
           }
