@@ -24,6 +24,7 @@ use Twig\Node\Node;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\Runtime\EscaperRuntime;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * A class providing Drupal Twig extensions.
@@ -203,7 +204,7 @@ class TwigExtension extends AbstractExtension {
     try {
       return $this->urlGenerator->generateFromRoute($name, $parameters, $options);
     }
-    catch (\Exception $e ) {
+    catch (RouteNotFoundException) {
       return NULL;
     }
   }
