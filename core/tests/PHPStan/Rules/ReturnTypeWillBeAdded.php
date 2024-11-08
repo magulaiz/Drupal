@@ -137,7 +137,7 @@ final class ReturnTypeWillBeAdded implements Rule {
     try {
       $prototypeReturnTypeWillBeAddedTag = $this->getReturnTypeWillBeAddedTag($resolvedPrototypePhpDoc);
     }
-    catch (\LogicException $e) {
+    catch (\LogicException) {
       // Keep going, duplicates were reported on the prototype parsing already.
     }
 
@@ -211,7 +211,7 @@ final class ReturnTypeWillBeAdded implements Rule {
     $tags = [];
     foreach ($resolvedPhpDoc->getPhpDocNodes() as $node) {
       $tags = array_merge($tags, $node->getTagsByName('@return-type-will-be-added'));
-    };
+    }
     if (($tagsCount = count($tags)) > 1) {
       throw new \LogicException("'@return-type-will-be-added' annotation should only be defined once. Found {$tagsCount} instances.");
     }
