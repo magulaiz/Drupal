@@ -5,12 +5,14 @@
  * Contains content_moderation.module.
  */
 
+use Drupal\content_moderation\ContentPreprocess;
 use Drupal\content_moderation\EntityOperations;
 use Drupal\content_moderation\EntityTypeInfo;
-use Drupal\content_moderation\ContentPreprocess;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutPublish;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutUnpublish;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Action\Plugin\Action\PublishAction;
+use Drupal\Core\Action\Plugin\Action\UnpublishAction;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -22,14 +24,13 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
+use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\filter\Broken;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
-use Drupal\workflows\WorkflowInterface;
-use Drupal\Core\Action\Plugin\Action\PublishAction;
-use Drupal\Core\Action\Plugin\Action\UnpublishAction;
 use Drupal\workflows\Entity\Workflow;
-use Drupal\views\Entity\View;
+use Drupal\workflows\WorkflowInterface;
 
 /**
  * Implements hook_help().
@@ -163,6 +164,36 @@ function content_moderation_form_alter(&$form, FormStateInterface $form_state, $
   \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityTypeInfo::class)
     ->formAlter($form, $form_state, $form_id);
+
+  // Show previous published versions for draft state.
+  if (strpos($form_id, 'node_') === 0 && strpos($form_id, '_edit_form') !== FALSE) {
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = $form_state->getFormObject()->getEntity();
+    if ($node instanceof Node && $node->hasField('status')) {
+      $published_revision_exists = FALSE;
+      $revisions = \Drupal::entityTypeManager()->getStorage('node')->revisionIds($node);
+
+      foreach ($revisions as $revision_id) {
+        $revision = \Drupal::entityTypeManager()->getStorage('node')->loadRevision($revision_id);
+        if ($revision->isPublished()) {
+          $published_revision_exists = TRUE;
+          break;
+        }
+      }
+
+      $url = Url::fromUri("base:/node/{$node->id()}/revisions")->toString();
+      $message = $published_revision_exists
+        ? t('<i>A previous revision of this node is published. <a href=":url">See all revisions</a></i>.', [':url' => $url])
+        : t('<i>This node has no published revision. <a href=":url">See all revisions</a></i>.', [':url' => $url]);
+
+      $form['revision_message'] = [
+        '#type' => 'markup',
+        '#markup' => "<div>{$message}</div>",
+        '#weight' => 120,
+        "#group" => "footer",
+      ];
+    }
+  }
 }
 
 /**
