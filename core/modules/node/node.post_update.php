@@ -22,7 +22,7 @@ function node_removed_post_updates() {
 /**
  * Remove 'not null' constraint from node title column.
  */
-function node_post_update_remove_title_not_null_constraint() {
+function node_post_update_remove_title_not_null_constraint(): void {
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
 
   $field_storage_definition = $definition_update_manager->getFieldStorageDefinition('title', 'node');
