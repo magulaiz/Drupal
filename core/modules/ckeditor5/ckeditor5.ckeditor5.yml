@@ -360,7 +360,7 @@ ckeditor5_link_entity_suggestions:
     plugins:
       - drupalEntityLinkSuggestions.DrupalEntityLinkSuggestions
   drupal:
-    label: Entity link suggestions
+    label: Entity links
     class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions
     library: ckeditor5/internal.drupal.ckeditor5.link-entity-suggestions
     elements:

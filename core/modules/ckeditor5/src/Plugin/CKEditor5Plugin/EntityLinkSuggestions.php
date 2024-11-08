@@ -12,7 +12,6 @@ use Drupal\Core\Url;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
-use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\editor\EditorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -22,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   Plugin classes are internal.
  */
-class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5PluginConfigurableInterface, CKEditor5PluginElementsSubsetInterface, ContainerFactoryPluginInterface {
+class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5PluginConfigurableInterface, ContainerFactoryPluginInterface {
 
   use CKEditor5PluginConfigurableTrait;
   use DynamicPluginConfigWithCsrfTokenUrlTrait;
@@ -83,22 +82,13 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return [
-      'allow_download_links' => TRUE,
-    ];
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['allow_download_links'] = [
-      '#title' => $this->t('Allow the user to create <em>download links</em>'),
-      '#type' => 'checkbox',
-      '#description' => $this->t('Allow content creators to create a download link on entities that support it, by adding a <a href=":url"><code>download</code></a> attribute that will cause the browser to download the linked file.', [':url' => 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#download']),
-      '#default_value' => $this->configuration['allow_download_links'],
-    ];
-
     $allowed_bundles = [];
     $all_bundle_info = $this->entityTypeBundleInfo->getAllBundleInfo();
     foreach ($all_bundle_info as $entity_type => $bundles) {
@@ -110,7 +100,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
     }
 
     $header = [
-      'enabled' => $this->t('Provide link suggestions for entity type'),
+      'enabled' => $this->t('Supported entity types'),
       'bundles' => $this->t('Bundles'),
     ];
     $form['entity_types'] = [
@@ -129,9 +119,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
       }
       $row = [
         'enabled' => [
-          '#markup' => $entity_types[$entity_type_id]->isCommonReferenceTarget()
-            ? $this->t("@label <small>(commonly linked)</small>", ['@label' => $entity_type->getCollectionLabel()])
-            : $entity_type->getCollectionLabel(),
+          '#markup' => $entity_type->getCollectionLabel(),
         ],
         'bundles' => [
           [
@@ -157,29 +145,11 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    // Match the config schema structure at
-    // ckeditor5.plugin.ckeditor5_link_entity_suggestions.
-    $form_value = $form_state->getValue('allow_download_links');
-    $form_state->setValue('allow_download_links', (bool) $form_value);
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['allow_download_links'] = $form_state->getValue('allow_download_links');
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getElementsSubset(): array {
-    $subset = $this->getPluginDefinition()->getElements();
-    $download_links_enabled = $this->getConfiguration()['allow_download_links'];
-    if (!$download_links_enabled) {
-      $subset = array_diff($subset, ['<a download>']);
-    }
-    return $subset;
-  }
-
 }
