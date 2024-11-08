@@ -56,7 +56,7 @@ final class ReturnTypeWillBeAdded implements Rule {
       $scope->isInClass() ? $scope->getClassReflection()->getName() : NULL,
       $scope->isInTrait() ? $scope->getTraitReflection()->getName() : NULL,
       $methodName,
-      $method->getDocComment(),
+      $method->getDocComment() ?? '',
     );
     try {
       $returnTypeWillBeAddedTag = $this->getReturnTypeWillBeAddedTag($resolvedPhpDoc);
@@ -130,7 +130,7 @@ final class ReturnTypeWillBeAdded implements Rule {
       $prototypeClass->getName(),
       NULL,
       $methodName,
-      $prototypeMethod->getDocComment(),
+      $prototypeMethod->getDocComment() ?? '',
     );
 
     // Check for '@return-type-will-be-added' annotation on the prototype.
