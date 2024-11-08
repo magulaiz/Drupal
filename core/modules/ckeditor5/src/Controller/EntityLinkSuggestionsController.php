@@ -263,7 +263,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
       'entity_type_id' => $entity->getEntityTypeId(),
       'entity_uuid' => $entity->uuid(),
       'group' => $this->computeGroup($entity),
-      'label' => Html::escape($entity->label()),
+      'label' => $entity->label(),
       // Generate an entity URI because the link target may very well not be the
       // canonical URI anyway. The filter will transform this to the final URL.
       // @see \Drupal\Core\Url::fromEntityUri()

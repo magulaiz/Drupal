@@ -162,7 +162,9 @@ class DrupalEntityLinkSuggestions extends Plugin {
                   const group = entityMetadata.group
                     ? ` (${entityMetadata.group})`
                     : '';
-                  return `${entityMetadata.label}${group.replace(' - )', ')')}`;
+                  const element = document.createElement('div');
+                  element.innerHTML = entityMetadata.label;
+                  return `${element.textContent}${group.replace(' - )', ')')}`;
                 }
                 return parentHref;
               }),
