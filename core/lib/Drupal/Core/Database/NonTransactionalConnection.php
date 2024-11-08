@@ -90,8 +90,8 @@ final class NonTransactionalConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function createDatabase($database) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
+  public function createDatabase($database): void {
+    $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
   /**
@@ -167,8 +167,8 @@ final class NonTransactionalConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function setTarget($target = NULL) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
+  public function setTarget($target = NULL): void {
+    $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
   /**
@@ -181,8 +181,8 @@ final class NonTransactionalConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function setKey($key) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
+  public function setKey($key): void {
+    $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
   /**
@@ -195,8 +195,8 @@ final class NonTransactionalConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function setLogger(Log $logger) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
+  public function setLogger(Log $logger): void {
+    $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
   /**

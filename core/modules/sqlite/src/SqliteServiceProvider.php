@@ -16,7 +16,7 @@ final class SqliteServiceProvider extends ServiceProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     if ($container->hasDefinition('logger.dblog')) {
       $container->setDefinition(
         'sqlite.logger.dblog',
