@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\Theme;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\Registry;
+use Drupal\Core\Theme\ThemeHook;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -122,6 +123,9 @@ class RegistryTest extends UnitTestCase {
 
   /**
    * Tests getting the theme registry defined by a module.
+   *
+   * @group legacy
+   * @expectedDeprecation The "%s" theme hook must have either a render element, variables, or a base hook
    */
   public function testGetRegistryForModule(): void {
     $test_theme = new ActiveTheme([
@@ -198,7 +202,7 @@ class RegistryTest extends UnitTestCase {
   /**
    * @covers ::postProcessExtension
    * @covers ::completeSuggestion
-   * @covers ::mergePreprocessFunctions
+   * @covers ::mergeHookFromSuggestion
    *
    * @dataProvider providerTestPostProcessExtension
    *
@@ -211,6 +215,21 @@ class RegistryTest extends UnitTestCase {
    */
   public function testPostProcessExtension($defined_functions, $hooks, $expected): void {
     static::$functions['user'] = $defined_functions;
+
+    // @todo The BC layer is in \Drupal\Core\Theme\Registry::processExtension()
+    //   which this test bypasses via reflection. These legacy conversion calls
+    //   are necessary until the test data and expectations are converted.
+    //   Remove this in https://www.drupal.org/node/2873117.
+    foreach ($expected as $name => $hook) {
+      if (is_array($hook)) {
+        $expected[$name] = ThemeHook::createFromLegacy($name, $hook);
+      }
+    }
+    foreach ($hooks as $name => $hook) {
+      if (is_array($hook)) {
+        $hooks[$name] = ThemeHook::createFromLegacy($name, $hook);
+      }
+    }
 
     $theme = $this->prophesize(ActiveTheme::class);
     $theme->getBaseThemeExtensions()->willReturn([]);

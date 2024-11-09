@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Theme;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DestructableInterface;
@@ -405,6 +404,7 @@ class Registry implements DestructableInterface {
     // and preprocess functions comes first.
     foreach (array_reverse($this->theme->getBaseThemeExtensions()) as $base) {
       // If the base theme uses a theme engine, process its hooks.
+      /** @var \Drupal\Core\Theme\ActiveTheme $base */
       $base_path = $base->getPath();
       if ($this->theme->getEngine()) {
         $this->processExtension($cache, $this->theme->getEngine(), 'base_theme_engine', $base->getName(), $base_path);
@@ -428,12 +428,6 @@ class Registry implements DestructableInterface {
     $this->themeManager->alterForTheme($this->theme, 'theme_registry', $cache);
 
     // @todo Implement more reduction of the theme registry entry.
-    // Optimize the registry to not have empty arrays for functions.
-    foreach ($cache as $hook => $info) {
-      if (empty($info['preprocess functions'])) {
-        unset($cache[$hook]['preprocess functions']);
-      }
-    }
     $this->registry[$this->theme->getName()] = $cache;
 
     return $this->registry[$this->theme->getName()];
@@ -486,13 +480,6 @@ class Registry implements DestructableInterface {
   protected function processExtension(array &$cache, $name, $type, $theme, $path) {
     $result = [];
 
-    $hook_defaults = [
-      'variables' => TRUE,
-      'render element' => TRUE,
-      'pattern' => TRUE,
-      'base hook' => TRUE,
-    ];
-
     $module_list = array_keys($this->moduleHandler->getModuleList());
 
     // Invoke the hook_theme() implementation, preprocess what is returned, and
@@ -510,118 +497,32 @@ class Registry implements DestructableInterface {
     }
     if ($result) {
       foreach ($result as $hook => $info) {
+        // If there was no string $hook provided retrieve it from the ThemeHook.
+        if ($info instanceof ThemeHook && is_int($hook)) {
+          $hook = $info->getName();
+        }
+
+        // @todo Remove support for legacy array-based theme hooks in
+        //   https://www.drupal.org/node/2873117.
+        if (is_array($info)) {
+          $info = ThemeHook::createFromLegacy($hook, $info);
+        }
         // When a theme or engine overrides a module's theme function
         // $result[$hook] will only contain key/value pairs for information being
         // overridden.  Pull the rest of the information from what was defined by
         // an earlier hook.
+        $cached_info = $cache[$hook] ?? NULL;
 
-        // Fill in the type and path of the module, theme, or engine that
+        // Fill in the name, type, and path of the module, theme, or engine that
         // implements this theme function.
-        $result[$hook]['type'] = $type;
-        $result[$hook]['theme path'] = $path;
+        $info->setProvider($name);
+        $info->setProviderType($type);
+        $info->setThemePath($path);
 
-        // If a theme hook has a base hook, mark its preprocess functions always
-        // incomplete in order to inherit the base hook's preprocess functions.
-        if (!empty($result[$hook]['base hook'])) {
-          $result[$hook]['incomplete preprocess functions'] = TRUE;
-        }
-
-        if (isset($cache[$hook]['includes'])) {
-          $result[$hook]['includes'] = $cache[$hook]['includes'];
-        }
-
-        // Load the includes, as they may contain preprocess functions.
-        if (isset($info['includes'])) {
-          foreach ($info['includes'] as $include_file) {
-            include_once $this->root . '/' . $include_file;
-          }
-        }
-
-        // If the theme implementation defines a file, then also use the path
-        // that it defined. Otherwise use the default path. This allows
-        // system.module to declare theme functions on behalf of core .include
-        // files.
-        if (isset($info['file'])) {
-          $include_file = $info['path'] ?? $path;
-          $include_file .= '/' . $info['file'];
-          include_once $this->root . '/' . $include_file;
-          $result[$hook]['includes'][] = $include_file;
-        }
-
-        // Provide a default naming convention for 'template' based on the
-        // hook used. If the template does not exist, the theme engine used
-        // should throw an exception at runtime when attempting to include
-        // the template file.
-        if (!isset($info['template'])) {
-          $info['template'] = strtr($hook, '_', '-');
-          $result[$hook]['template'] = $info['template'];
-        }
-
-        // Prepend the current theming path when none is set. This is required
-        // for the default theme engine to know where the template lives.
-        if (isset($result[$hook]['template']) && !isset($info['path'])) {
-          $result[$hook]['path'] = $path . '/templates';
-        }
-
-        // If the default keys are not set, use the default values registered
-        // by the module.
-        if (isset($cache[$hook])) {
-          $result[$hook] += array_intersect_key($cache[$hook], $hook_defaults);
-        }
-
-        // Preprocess variables for all theming hooks. Ensure they are arrays.
-        if (!isset($info['preprocess functions']) || !is_array($info['preprocess functions'])) {
-          $info['preprocess functions'] = [];
-          $prefixes = [];
-          if ($type == 'module') {
-            // Default variable preprocessor prefix.
-            $prefixes[] = 'template';
-            // Add all modules so they can intervene with their own variable
-            // preprocessors. This allows them to provide variable preprocessors
-            // even if they are not the owner of the current hook.
-            $prefixes = array_merge($prefixes, $module_list);
-          }
-          elseif ($type == 'theme_engine' || $type == 'base_theme_engine') {
-            // Theme engines get an extra set that come before the normally
-            // named variable preprocessors.
-            $prefixes[] = $name . '_engine';
-            // The theme engine registers on behalf of the theme using the
-            // theme's name.
-            $prefixes[] = $theme;
-          }
-          else {
-            // This applies when the theme manually registers their own variable
-            // preprocessors.
-            $prefixes[] = $name;
-          }
-          foreach ($prefixes as $prefix) {
-            // Only use non-hook-specific variable preprocessors for theming
-            // hooks implemented as templates. See the @defgroup themeable
-            // topic.
-            if (isset($info['template']) && function_exists($prefix . '_preprocess')) {
-              $info['preprocess functions'][] = $prefix . '_preprocess';
-            }
-            if (function_exists($prefix . '_preprocess_' . $hook)) {
-              $info['preprocess functions'][] = $prefix . '_preprocess_' . $hook;
-            }
-          }
-        }
-        // Check for the override flag and prevent the cached variable
-        // preprocessors from being used. This allows themes or theme engines
-        // to remove variable preprocessors set earlier in the registry build.
-        if (!empty($info['override preprocess functions'])) {
-          // Flag not needed inside the registry.
-          unset($result[$hook]['override preprocess functions']);
-        }
-        elseif (isset($cache[$hook]['preprocess functions']) && is_array($cache[$hook]['preprocess functions'])) {
-          $info['preprocess functions'] = array_merge($cache[$hook]['preprocess functions'], $info['preprocess functions']);
-        }
-        $result[$hook]['preprocess functions'] = $info['preprocess functions'];
-
+        // Process the theme hook.
+        $cache[$hook] = $info->process($this->root, $theme, $module_list, $cached_info);
       }
 
-      // Merge the newly created theme hooks into the existing cache.
-      $cache = NestedArray::mergeDeep($cache, $result);
     }
 
     // Let themes have variable preprocessors even if they didn't register a
@@ -630,17 +531,15 @@ class Registry implements DestructableInterface {
       foreach ($cache as $hook => $info) {
         // Check only if not registered by the theme or engine.
         if (empty($result[$hook])) {
-          if (!isset($info['preprocess functions'])) {
-            $cache[$hook]['preprocess functions'] = [];
-          }
+
           // Only use non-hook-specific variable preprocessors for theme hooks
           // implemented as templates. See the @defgroup themeable topic.
-          if (isset($info['template']) && function_exists($name . '_preprocess')) {
-            $cache[$hook]['preprocess functions'][] = $name . '_preprocess';
+          if ($info->getTemplate() && function_exists($name . '_preprocess')) {
+            $info->addPreprocessFunction($name . '_preprocess');
           }
           if (function_exists($name . '_preprocess_' . $hook)) {
-            $cache[$hook]['preprocess functions'][] = $name . '_preprocess_' . $hook;
-            $cache[$hook]['theme path'] = $path;
+            $info->addPreprocessFunction($name . '_preprocess_' . $hook);
+            $info->setThemePath($path);
           }
         }
       }
@@ -652,64 +551,71 @@ class Registry implements DestructableInterface {
    *
    * @param string $hook
    *   The name of the suggestion hook to complete.
-   * @param array $cache
+   * @param \Drupal\Core\Theme\ThemeHook[] $cache
    *   The theme registry, as documented in
    *   \Drupal\Core\Theme\Registry::processExtension().
    */
   protected function completeSuggestion($hook, array &$cache) {
     $previous_hook = $hook;
-    $incomplete_previous_hook = [];
+    $incomplete_previous_hook = NULL;
     // Continue looping if the candidate hook doesn't exist or if the candidate
     // hook has incomplete preprocess functions, and if the candidate hook is a
     // suggestion (has a double underscore).
-    while ((!isset($cache[$previous_hook]) || isset($cache[$previous_hook]['incomplete preprocess functions']))
+    while ((!isset($cache[$previous_hook]) || $cache[$previous_hook]->isIncomplete())
       && $pos = strrpos($previous_hook, '__')) {
       // Find the first existing candidate hook that has incomplete preprocess
       // functions.
-      if (isset($cache[$previous_hook]) && !$incomplete_previous_hook && isset($cache[$previous_hook]['incomplete preprocess functions'])) {
+      if (isset($cache[$previous_hook]) && !$incomplete_previous_hook && $cache[$previous_hook]->isIncomplete()) {
         $incomplete_previous_hook = $cache[$previous_hook];
-        unset($incomplete_previous_hook['incomplete preprocess functions']);
       }
       $previous_hook = substr($previous_hook, 0, $pos);
-      $this->mergePreprocessFunctions($hook, $previous_hook, $incomplete_previous_hook, $cache);
+      $this->mergeHookFromSuggestion($hook, $previous_hook, $cache, $incomplete_previous_hook);
     }
 
-    // In addition to processing suggestions, include base hooks.
-    if (isset($cache[$hook]['base hook'])) {
-      // In order to retain the additions from above, pass in the current hook
-      // as the parent hook, otherwise it will be overwritten.
-      $this->mergePreprocessFunctions($hook, $cache[$hook]['base hook'], $cache[$hook], $cache);
+    // If a theme hook specifies a base hook, and that base hook is its own
+    // theme hook and has a complete list of preprocess functions, merge it into
+    // the current hook.
+    $base_hook = $cache[$hook]->getBaseHook();
+    if ($base_hook && isset($cache[$base_hook]) && !$cache[$base_hook]->isIncomplete()) {
+      $cache[$hook] = $cache[$hook]->merge($cache[$base_hook]);
     }
+
+    $cache[$hook]->markComplete();
   }
 
   /**
-   * Merges the source hook's preprocess functions into the destination hook's.
+   * Merges the source hook into the destination hook.
    *
    * @param string $destination_hook_name
-   *   The name of the hook to merge preprocess functions to.
+   *   The name of the hook being merged into.
    * @param string $source_hook_name
-   *   The name of the hook to merge preprocess functions from.
-   * @param array $parent_hook
-   *   The parent hook if it exists. Either an incomplete hook from suggestions
-   *   or a base hook.
-   * @param array $cache
+   *   The name of the hook being merged from.
+   * @param \Drupal\Core\Theme\ThemeHook[] $cache
    *   The theme registry, as documented in
    *   \Drupal\Core\Theme\Registry::processExtension().
+   * @param \Drupal\Core\Theme\ThemeHook|null $parent_hook
+   *   The parent hook if it exists. Either an incomplete hook from suggestions
+   *   or a base hook.
    */
-  protected function mergePreprocessFunctions($destination_hook_name, $source_hook_name, $parent_hook, array &$cache) {
-    // If base hook exists clone of it for the preprocess function
-    // without a template.
-    // @see https://www.drupal.org/node/2457295
-    if (isset($cache[$source_hook_name]) && (!isset($cache[$source_hook_name]['incomplete preprocess functions']) || !isset($cache[$destination_hook_name]['incomplete preprocess functions']))) {
-      $cache[$destination_hook_name] = $parent_hook + $cache[$source_hook_name];
-      if (isset($parent_hook['preprocess functions'])) {
-        $diff = array_diff($parent_hook['preprocess functions'], $cache[$source_hook_name]['preprocess functions']);
-        $cache[$destination_hook_name]['preprocess functions'] = array_merge($cache[$source_hook_name]['preprocess functions'], $diff);
+  protected function mergeHookFromSuggestion($destination_hook_name, $source_hook_name, array &$cache, ?ThemeHook $parent_hook = NULL): void {
+    // If the source hook doesn't exist, do not continue.
+    if (!isset($cache[$source_hook_name])) {
+      return;
+    }
+
+    // If either of the source or destination hook have complete preprocess
+    // functions, or the destination hook does not exist yet, continue.
+    if (!$cache[$source_hook_name]->isIncomplete() || (!isset($cache[$destination_hook_name]) || !$cache[$destination_hook_name]->isIncomplete())) {
+      $to_be_merged = $cache[$source_hook_name];
+      // If a parent hook was provided, use it as the basis for a merged result.
+      if ($parent_hook) {
+        $to_be_merged = $parent_hook->merge($to_be_merged);
       }
-      // If a base hook isn't set, this is the actual base hook.
-      if (!isset($cache[$source_hook_name]['base hook'])) {
-        $cache[$destination_hook_name]['base hook'] = $source_hook_name;
-      }
+      $cache[$destination_hook_name] = ThemeHook::createFromExisting($destination_hook_name, $to_be_merged)->merge($to_be_merged);
+    }
+    // If a base hook isn't set, this is the actual base hook.
+    if (!$cache[$destination_hook_name]->getBaseHook()) {
+      $cache[$destination_hook_name]->setBaseHook($source_hook_name);
     }
   }
 
@@ -728,7 +634,9 @@ class Registry implements DestructableInterface {
     // Gather prefixes. This will be used to limit the found functions to the
     // expected naming conventions.
     $prefixes = array_keys((array) $this->moduleHandler->getModuleList());
+
     foreach (array_reverse($theme->getBaseThemeExtensions()) as $base) {
+      /** @var \Drupal\Core\Theme\ActiveTheme $base */
       $prefixes[] = $base->getName();
     }
     if ($theme->getEngine()) {
@@ -771,16 +679,16 @@ class Registry implements DestructableInterface {
     ksort($suggestion_level);
     foreach ($suggestion_level as $level => $item) {
       foreach ($item as $preprocessor => $hook) {
-        if (isset($cache[$hook]['preprocess functions']) && !in_array($preprocessor, $cache[$hook]['preprocess functions'])) {
+        if (isset($cache[$hook]) && !$cache[$hook]->hasPreprocessFunction($preprocessor)) {
           // Add missing preprocessor to existing hook.
-          $cache[$hook]['preprocess functions'][] = $preprocessor;
+          $cache[$hook]->addPreprocessFunction($preprocessor);
         }
         elseif (!isset($cache[$hook]) && strpos($hook, '__')) {
           // Process non-existing hook and register it.
           // Look for a previously defined hook that is either a less specific
           // suggestion hook or the base hook.
           $this->completeSuggestion($hook, $cache);
-          $cache[$hook]['preprocess functions'][] = $preprocessor;
+          $cache[$hook]->addPreprocessFunction($preprocessor);
         }
       }
     }
@@ -791,18 +699,8 @@ class Registry implements DestructableInterface {
       // The 'base hook' is only applied to derivative hooks already registered
       // from a pattern. This is typically set from
       // drupal_find_theme_templates().
-      if (isset($info['incomplete preprocess functions'])) {
+      if ($info->isIncomplete()) {
         $this->completeSuggestion($hook, $cache);
-        unset($cache[$hook]['incomplete preprocess functions']);
-      }
-
-      // Optimize the registry.
-      if (isset($cache[$hook]['preprocess functions']) && empty($cache[$hook]['preprocess functions'])) {
-        unset($cache[$hook]['preprocess functions']);
-      }
-      // Ensure uniqueness.
-      if (isset($cache[$hook]['preprocess functions'])) {
-        $cache[$hook]['preprocess functions'] = array_unique($cache[$hook]['preprocess functions']);
       }
     }
   }

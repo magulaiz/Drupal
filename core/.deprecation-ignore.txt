@@ -35,3 +35,6 @@
 # Symfony 7.2
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_length" option is deprecated and will be ignored in Symfony 8.0.%
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_bits_per_character" option is deprecated and will be ignored in Symfony 8.0.%
+
+# ThemeHook.
+%Creating a "[^"]+" theme hook without either a render element, variables, or a base hook is deprecated in drupal:11.1.0 and will throw exception in drupal:12.0.0. Define one of them. See https://www.drupal.org/node/2873756%

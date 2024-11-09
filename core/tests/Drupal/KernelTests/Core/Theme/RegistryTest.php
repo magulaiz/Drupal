@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Theme\Registry;
+use Drupal\Core\Theme\ThemeHook;
 use Drupal\Core\Utility\ThemeRegistry;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -139,7 +140,17 @@ class RegistryTest extends KernelTestBase {
     $preprocess_functions = $registry_theme->get()['theme_test_preprocess_suggestions__kitten__bearcat']['preprocess functions'];
     $this->assertSame($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a template correctly inherits preprocess functions.');
 
+    // Test an object-based theme hook.
+    $info = $registry_theme->get()['theme_test_object_based'];
+    $this->assertSame(['template_preprocess'], $info['preprocess functions']);
+    $this->assertSame('elements', $info['render element']);
+
     $this->assertTrue(isset($registry_theme->get()['theme_test_preprocess_suggestions__kitten__meerkat__tarsier__moose']), 'Preprocess function with an unimplemented lower-level suggestion is added to the registry.');
+    foreach ($registry_theme->get() as $name => $info) {
+      $this->assertInstanceOf(ThemeHook::class, $info);
+      $this->assertSame($name, $info->getName());
+      $this->assertTrue($info->getTemplate() || $info->getFunction());
+    }
   }
 
   /**
