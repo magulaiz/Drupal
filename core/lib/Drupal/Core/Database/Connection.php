@@ -637,8 +637,6 @@ abstract class Connection {
    *   Typically, $options['return'] will be set by a default or by a query
    *   builder, and should not be set by a user.
    *
-   * @return-type-will-be-added in drupal:12.0.0
-   *
    * @return \Drupal\Core\Database\StatementInterface|null
    *   The executed statement.
    *
@@ -1177,8 +1175,6 @@ abstract class Connection {
    * instance, there could be two MySQL drivers, mysql and mysqlMock. This
    * function would return different values for each, but both would return
    * "mysql" for databaseType().
-   *
-   * @return-type-will-be-added in drupal:12.0.0
    *
    * @return string
    *   The type of database driver.
