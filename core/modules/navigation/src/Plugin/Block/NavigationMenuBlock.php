@@ -82,7 +82,7 @@ final class NavigationMenuBlock extends SystemMenuBlock implements ContainerFact
       ->setMinDepth($level)
       ->setMaxDepth(min($level + $depth, $this->menuTree->maxDepth()))
       ->onlyEnabledLinks();
-    $tree = $this->menuTree->load($menu_name, $parameters);
+    $tree = $this->menuTree->load($menu_name, $parameters, $this);
     $manipulators = [
       ['callable' => 'menu.default_tree_manipulators:checkAccess'],
       ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
