@@ -6,6 +6,8 @@ namespace Drupal\Core\Hook;
 
 use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
+use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\FileCache\FileCacheInterface;
 use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\LegacyHook;
@@ -163,26 +165,51 @@ class HookCollectorPass implements CompilerPassInterface {
     foreach ($iterator as $fileinfo) {
       assert($fileinfo instanceof \SplFileInfo);
       $extension = $fileinfo->getExtension();
-      if ($extension === 'module' && !$iterator->getDepth()) {
+
+      $filename = $fileinfo->getPathname();
+
+      $file_cache = FileCacheFactory::get('hook_implementations');
+
+      $cached = $file_cache->get($filename);
+
+      if (!$cached && $extension === 'module' && !$iterator->getDepth()) {
         // There is an expectation for all modules to be loaded. However,
         // .module files are not supposed to be in subdirectories.
         include_once $fileinfo->getPathname();
       }
       if ($extension === 'php') {
-        $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
-        $class = $namespace . '/' . $fileinfo->getBasename('.php');
-        $class = str_replace('/', '\\', $class);
-        foreach (static::getHookAttributesInClass($class) as $attribute) {
+        if ($cached) {
+          $class = $cached->class;
+          $attributes = $cached->attributes;
+        }
+        else {
+          $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
+          $class = $namespace . '/' . $fileinfo->getBasename('.php');
+          $class = str_replace('/', '\\', $class);
+          $attributes = static::getHookAttributesInClass($class);
+          $file_cache->set($filename, $attributes);
+        }
+        foreach ($attributes as $attribute) {
           $this->addFromAttribute($attribute, $class, $module);
         }
       }
       else {
-        $finder = MockFileFinder::create($fileinfo->getPathName());
-        $parser = new StaticReflectionParser('', $finder);
-        foreach ($parser->getMethodAttributes() as $function => $attributes) {
-          if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches)) {
-            $this->addProceduralImplementation($fileinfo, $matches['hook'], $matches['module'], $matches['function']);
+        if ($cached) {
+          $implementations = $cached->implementations;
+        }
+        else {
+          $finder = MockFileFinder::create($fileinfo->getPathName());
+          $parser = new StaticReflectionParser('', $finder);
+          $implementations = [];
+          foreach ($parser->getMethodAttributes() as $function => $attributes) {
+            if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches)) {
+              $implementations[] = ['function' => $function, 'module' => $matches['module'], 'hook' => $matches['hook']];
+            }
           }
+          $file_cache->set($filename, $implementations);
+        }
+        foreach ($implementations as $implementation) {
+          $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module'], $implementation['function']);
         }
       }
       if ($extension === 'inc') {
