@@ -121,6 +121,11 @@ abstract class FooAbstract implements FooInterface {
 
 class Foo extends FooAbstract {
 
+  public function __construct(
+    private readonly ?int $baz,
+  ) {
+  }
+
   public function fooInterfaceValidAnnotationForConcreteClassImplementation() {
     return TRUE;
   }

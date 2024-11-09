@@ -63,19 +63,19 @@ class ReturnTypeWillBeAddedTest extends RuleTestCase {
         ],
         [
           "Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooInterface::fooInterfaceValidAnnotationForConcreteClassImplementation() will add 'bool' as a native return type declaration in version 42.0.0. Add the return type to the implementation now.",
-          124,
+          129,
         ],
         [
           "Declaration of Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\Foo::fooInterfaceValidAnnotationForConcreteClassImplementationOfWrongType(): string must be compatible with Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooInterface::fooInterfaceValidAnnotationForConcreteClassImplementationOfWrongType(): bool that will be added as a native return type declaration in version 42.0.0. Change the return type to the implementation now.",
-          128,
+          133,
         ],
         [
           "Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooAbstract::fooAbstractValidAnnotation() will add 'bool' as a native return type declaration in version 42.0.0. Add the return type to the implementation now.",
-          132,
+          137,
         ],
         [
           "Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\Foo::fooMissingPhpDocReturnType() specifies a '@return-type-will-be-added' annotation, but a '@return' annotation is missing.",
-          139,
+          144,
         ],
       ],
     );
