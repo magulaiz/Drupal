@@ -182,8 +182,6 @@ function hook_module_preinstall($module, bool $is_syncing) {
 /**
  * Perform necessary actions after modules are installed.
  *
- * Only procedural implementations are supported for this hook.
- *
  * This function differs from hook_install() in that it gives all other modules
  * a chance to perform actions when a module is installed, whereas
  * hook_install() is only called on the module actually being installed. See
@@ -267,8 +265,6 @@ function hook_install($is_syncing): void {
 /**
  * Perform necessary actions before a module is uninstalled.
  *
- * Only procedural implementations are supported for this hook.
- *
  * @param string $module
  *   The name of the module about to be uninstalled.
  * @param bool $is_syncing
@@ -284,8 +280,6 @@ function hook_module_preuninstall($module, bool $is_syncing) {
 
 /**
  * Perform necessary actions after modules are uninstalled.
- *
- * Only procedural implementations are supported for this hook.
  *
  * This function differs from hook_uninstall() in that it gives all other
  * modules a chance to perform actions when a module is uninstalled, whereas
