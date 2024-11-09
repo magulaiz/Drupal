@@ -10,8 +10,6 @@ interface ImageInterface {
   /**
    * Checks if the image is valid.
    *
-   * @return-type-will-be-added in drupal:12.0.0
-   *
    * @return bool
    *   TRUE if the image object contains a valid image, FALSE otherwise.
    */
@@ -19,8 +17,6 @@ interface ImageInterface {
 
   /**
    * Returns the height of the image.
-   *
-   * @return-type-will-be-added in drupal:12.0.0
    *
    * @return int|null
    *   The height of the image, or NULL if the image is invalid.
@@ -30,8 +26,6 @@ interface ImageInterface {
   /**
    * Returns the width of the image.
    *
-   * @return-type-will-be-added in drupal:12.0.0
-   *
    * @return int|null
    *   The width of the image, or NULL if the image is invalid.
    */
@@ -40,15 +34,13 @@ interface ImageInterface {
   /**
    * Returns the size of the image file.
    *
-   * @return-type-will-be-added in drupal:12.0.0
+   * @return int|null
+   *   The size of the file in bytes, or NULL if the image is invalid.
    */
   public function getFileSize();
 
   /**
    * Returns the MIME type of the image file.
-   *
-   * @return-type-will-be-added in drupal:12.0.0
-   * @return-type-will-be-added in drupal:13.0.0
    *
    * @return string
    *   The MIME type of the image file, or an empty string if the image is
