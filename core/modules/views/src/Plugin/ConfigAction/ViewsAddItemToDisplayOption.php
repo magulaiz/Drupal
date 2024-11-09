@@ -28,19 +28,19 @@ class ViewsAddItemToDisplayOption implements ConfigActionPluginInterface, Contai
    *   The configuration manager.
    */
   public function __construct(
-    protected readonly ConfigManagerInterface $configManager
+    protected readonly ConfigManagerInterface $configManager,
   ) {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static($container->get('config.manager'));
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function apply(string $configName, mixed $value): void {
     if (empty($value)) {
