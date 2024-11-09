@@ -28,13 +28,13 @@ exports.command = function drupalLoginAsAdmin(callback) {
         throw new Error('Logging in as an admin user failed.');
       }
     });
+
+    if (typeof callback === 'function') {
+      callback.call(self);
+    }
+  }).perform(() => {
+    this.drupalLogout({ silent: true });
   });
-
-  if (typeof callback === 'function') {
-    callback.call(self);
-  }
-
-  this.drupalLogout({ silent: true });
 
   return this;
 };
