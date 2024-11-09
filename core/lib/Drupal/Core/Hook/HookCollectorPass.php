@@ -7,7 +7,6 @@ namespace Drupal\Core\Hook;
 use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Component\FileCache\FileCacheInterface;
 use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\LegacyHook;
