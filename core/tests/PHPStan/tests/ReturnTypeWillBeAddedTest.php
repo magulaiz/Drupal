@@ -31,8 +31,8 @@ class ReturnTypeWillBeAddedTest extends RuleTestCase {
   public function testRule(): void {
     include_once __DIR__ . '/../fixtures/return-type-will-be-added.php';
     $this->analyse(
-     [__DIR__ . '/../fixtures/return-type-will-be-added.php'],
-     [
+      [__DIR__ . '/../fixtures/return-type-will-be-added.php'],
+      [
         [
           "Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooInterface::fooInterfaceDuplicateAnnotation() '@return-type-will-be-added' annotation should only be defined once. Found 2 instances.",
           34,
