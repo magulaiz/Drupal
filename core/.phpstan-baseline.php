@@ -24617,30 +24617,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/src/Access/EntityAccessChecker.php',
 ];
 $ignoreErrors[] = [
-	// identifier: constant.notFound
-	'message' => '#^Constant JSONAPI_FILTER_AMONG_ALL not found\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/jsonapi/src/Access/TemporaryQueryGuard.php',
-];
-$ignoreErrors[] = [
-	// identifier: constant.notFound
-	'message' => '#^Constant JSONAPI_FILTER_AMONG_ENABLED not found\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/jsonapi/src/Access/TemporaryQueryGuard.php',
-];
-$ignoreErrors[] = [
-	// identifier: constant.notFound
-	'message' => '#^Constant JSONAPI_FILTER_AMONG_OWN not found\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/jsonapi/src/Access/TemporaryQueryGuard.php',
-];
-$ignoreErrors[] = [
-	// identifier: constant.notFound
-	'message' => '#^Constant JSONAPI_FILTER_AMONG_PUBLISHED not found\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/jsonapi/src/Access/TemporaryQueryGuard.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\jsonapi\\\\Access\\\\TemporaryQueryGuard\\:\\:addConditionFieldPrefix\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -24813,30 +24789,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jsonapi\\\\Exception\\\\UnprocessableHttpEntityException\\:\\:setViolations\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/src/Exception/UnprocessableHttpEntityException.php',
-];
-$ignoreErrors[] = [
-	// identifier: constant.notFound
-	'message' => '#^Constant JSONAPI_FILTER_AMONG_ALL not found\\.$#',
-	'count' => 10,
-	'path' => __DIR__ . '/modules/jsonapi/src/Hook/JsonapiHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: constant.notFound
-	'message' => '#^Constant JSONAPI_FILTER_AMONG_ENABLED not found\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/jsonapi/src/Hook/JsonapiHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: constant.notFound
-	'message' => '#^Constant JSONAPI_FILTER_AMONG_OWN not found\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/jsonapi/src/Hook/JsonapiHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: constant.notFound
-	'message' => '#^Constant JSONAPI_FILTER_AMONG_PUBLISHED not found\\.$#',
-	'count' => 6,
-	'path' => __DIR__ . '/modules/jsonapi/src/Hook/JsonapiHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
