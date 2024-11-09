@@ -25961,12 +25961,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/language/src/Form/NegotiationUrlForm.php',
 ];
 $ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function language_modules_installed not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/src/Hook/LanguageHooks.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\language\\\\Hook\\\\LanguageHooks\\:\\:elementInfoAlter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -26017,12 +26011,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\language\\\\Hook\\\\LanguageHooks\\:\\:modulesInstalled\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/src/Hook/LanguageHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\language\\\\Hook\\\\LanguageHooks\\:\\:modulesUninstalled\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/src/Hook/LanguageHooks.php',
 ];
