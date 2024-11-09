@@ -11,6 +11,8 @@ use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 /**
  * Collects and registers hook implementations.
@@ -80,6 +82,17 @@ class HookCollectorPass implements CompilerPassInterface {
   private array $groupIncludes = [];
 
   /**
+   * Array of AsEventListener attributes used to define event listeners.
+   *
+   * The array is two-dimensional, with each entry in the outer array indexed
+   * by class name, with the inner array having all the listener attributes
+   * defined for that class.
+   *
+   * @var \Symfony\Component\EventDispatcher\Attribute\AsEventListener[][]
+   */
+  protected array $listeners = [];
+
+  /**
    * {@inheritdoc}
    */
   public function process(ContainerBuilder $container): void {
@@ -118,6 +131,22 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
     $container->setParameter('hook_implementations_map', $map);
+
+    // Add definitions for the event listeners that are not hooks.
+    foreach ($collector->listeners as $class => $attributes) {
+      if ($container->has($class)) {
+        $definition = $container->findDefinition($class);
+      }
+      else {
+        $definition = $container
+          ->register($class, $class)
+          ->setAutowired(TRUE);
+      }
+      foreach ($attributes as $attribute) {
+        $definition->addTag('kernel.event_listener', get_object_vars($attribute));
+      }
+    }
+
   }
 
   /**
@@ -141,7 +170,7 @@ class HookCollectorPass implements CompilerPassInterface {
     $module_preg = '/^(?<function>(?<module>' . implode('|', $modules) . ')_(?!preprocess_)(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
     $collector = new static();
     foreach ($module_filenames as $module => $info) {
-      $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg);
+      $collector->collectModuleListeners(dirname($info['pathname']), $module, $module_preg);
     }
     return $collector->convertProceduralToImplementations();
   }
@@ -159,7 +188,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *
    * @return void
    */
-  protected function collectModuleHookImplementations($dir, $module, $module_preg): void {
+  protected function collectModuleListeners($dir, $module, $module_preg): void {
     $iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS);
     $iterator = new \RecursiveCallbackFilterIterator($iterator, static::filterIterator(...));
     $iterator = new \RecursiveIteratorIterator($iterator);
@@ -176,7 +205,7 @@ class HookCollectorPass implements CompilerPassInterface {
         $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
         $class = $namespace . '/' . $fileinfo->getBasename('.php');
         $class = str_replace('/', '\\', $class);
-        foreach (static::getHookAttributesInClass($class) as $attribute) {
+        foreach (static::getListenerAttributesInClass($class) as $attribute) {
           $this->addFromAttribute($attribute, $class, $module);
         }
       }
@@ -204,11 +233,11 @@ class HookCollectorPass implements CompilerPassInterface {
   protected static function filterIterator(\SplFileInfo $fileInfo, $key, \RecursiveDirectoryIterator $iterator): bool {
     $sub_path_name = $iterator->getSubPathname();
     $extension = $fileInfo->getExtension();
-    if (str_starts_with($sub_path_name, 'src/Hook/')) {
+    if (str_starts_with($sub_path_name, 'src/Hook/') || str_starts_with($sub_path_name, 'src/EventSubscriber/')) {
       return $iterator->isDir() || $extension === 'php';
     }
     if ($iterator->isDir()) {
-      if ($sub_path_name === 'src' || $sub_path_name === 'src/Hook') {
+      if ($sub_path_name === 'src' || $sub_path_name === 'src/Hook' || $sub_path_name === 'src/EventSubscriber') {
         return TRUE;
       }
       // glob() doesn't support streams but scandir() does.
@@ -218,52 +247,63 @@ class HookCollectorPass implements CompilerPassInterface {
   }
 
   /**
-   * An array of Hook attributes on this class with $method set.
+   * An array of AsEventListener attributes on this class.
    *
    * @param string $class
    *   The class.
    *
    * @return \Drupal\Core\Hook\Attribute\Hook[]
-   *   An array of Hook attributes on this class. The $method property is guaranteed to be set.
+   *   An array of AsEventListener attributes on this class. The $method
+   *   property is guaranteed to be set on Hook attributes.
    */
-  protected static function getHookAttributesInClass(string $class): array {
+  protected static function getListenerAttributesInClass(string $class): array {
     if (!class_exists($class)) {
       return [];
     }
     $reflection_class = new \ReflectionClass($class);
     $class_implementations = [];
-    // Check for #[Hook] on the class itself.
-    foreach ($reflection_class->getAttributes(Hook::class, \ReflectionAttribute::IS_INSTANCEOF) as $reflection_attribute) {
-      $hook = $reflection_attribute->newInstance();
-      assert($hook instanceof Hook);
-      self::checkForProceduralOnlyHooks($hook, $class);
-      if (!$hook->method) {
-        if (method_exists($class, '__invoke')) {
-          $hook->setMethod('__invoke');
-        }
-        else {
-          throw new \LogicException("The Hook attribute for hook $hook->hook on class $class must specify a method.");
+    // Check for #[AsEventListener] on the class itself.
+    foreach ($reflection_class->getAttributes(AsEventListener::class, \ReflectionAttribute::IS_INSTANCEOF) as $reflection_attribute) {
+      $attribute = $reflection_attribute->newInstance();
+      assert($attribute instanceof AsEventListener);
+      if ($attribute instanceof Hook) {
+        self::checkForProceduralOnlyHooks($attribute, $class);
+        if (!$attribute->method) {
+          if (method_exists($class, '__invoke')) {
+            $attribute->setMethod('__invoke');
+          }
+          else {
+            throw new \LogicException("The Hook attribute for hook $attribute->hook on class $class must specify a method.");
+          }
         }
       }
-      $class_implementations[] = $hook;
+      $class_implementations[] = $attribute;
     }
-    // Check for #[Hook] on methods.
+    // Check for #[AsEventListener] on methods.
     foreach ($reflection_class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method_reflection) {
-      foreach ($method_reflection->getAttributes(Hook::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute_reflection) {
-        $hook = $attribute_reflection->newInstance();
-        assert($hook instanceof Hook);
-        self::checkForProceduralOnlyHooks($hook, $class);
-        $class_implementations[] = $hook->setMethod($method_reflection->getName());
+      foreach ($method_reflection->getAttributes(AsEventListener::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute_reflection) {
+        $attribute = $attribute_reflection->newInstance();
+        assert($attribute instanceof AsEventListener);
+        if ($attribute instanceof Hook) {
+          self::checkForProceduralOnlyHooks($attribute, $class);
+        }
+        else {
+          if (isset($attribute->method)) {
+            throw new LogicException(sprintf('AsEventListener attribute cannot declare a method on "%s::%s()".', $method_reflection->class, $method_reflection->name));
+          }
+          $attribute->method = $method_reflection->getName();
+        }
+        $class_implementations[] = $attribute;
       }
     }
     return $class_implementations;
   }
 
   /**
-   * Adds a Hook attribute implementation.
+   * Adds an event listener attribute implementation.
    *
-   * @param \Drupal\Core\Hook\Attribute\Hook $hook
-   *   A hook attribute.
+   * @param \Symfony\Component\EventDispatcher\Attribute\AsEventListener $attribute
+   *   Attribute for event listener.
    * @param $class
    *   The class in which said attribute resides in.
    * @param $module
@@ -271,11 +311,16 @@ class HookCollectorPass implements CompilerPassInterface {
    *
    * @return void
    */
-  protected function addFromAttribute(Hook $hook, $class, $module) {
-    $this->implementations[$hook->hook][$class][$hook->method] = [
-      'priority' => $hook->priority ?? $this->priority--,
-      'module' => $hook->module ?? $module,
-    ];
+  protected function addFromAttribute(AsEventListener $attribute, $class, $module): void {
+    if ($attribute instanceof Hook) {
+      $this->implementations[$attribute->hook][$class][$attribute->method] = [
+        'priority' => $attribute->priority ?: $this->priority--,
+        'module' => $attribute->module ?? $module,
+      ];
+      return;
+    }
+
+    $this->listeners[$class][] = $attribute;
   }
 
   /**

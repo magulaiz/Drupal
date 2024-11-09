@@ -67,6 +67,7 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
         ->addTag('stream_wrapper', ['scheme' => 'private']);
     }
 
+    $container->addCompilerPass(new AddEventAliasesPass(KernelEvents::ALIASES));
     $container->addCompilerPass(new HookCollectorPass());
     // Add the compiler pass that lets service providers modify existing
     // service definitions. This pass must come before all passes operating on
@@ -117,19 +118,36 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->registerForAutoconfiguration(EventSubscriberInterface::class)
       ->addTag('event_subscriber');
 
-    $container->addCompilerPass(new AddEventAliasesPass(KernelEvents::ALIASES));
     $container->registerAttributeForAutoconfiguration(AsEventListener::class, static function (
       ChildDefinition $definition,
       AsEventListener $attribute,
       \ReflectionClass|\ReflectionMethod $reflector,
-    ) {
+    ) use ($container) {
       $tagAttributes = get_object_vars($attribute);
+
       if ($reflector instanceof \ReflectionMethod) {
         if (isset($tagAttributes['method'])) {
           throw new LogicException(sprintf('AsEventListener attribute cannot declare a method on "%s::%s()".', $reflector->class, $reflector->name));
         }
         $tagAttributes['method'] = $reflector->getName();
       }
+
+      // Checked to see whether 'kernel.event_listener' tags already added, to
+      // prevent them from being added twice.
+      $declaredTags = [];
+      if ($definition->hasTag('kernel.event_listener')) {
+        $declaredTags = $definition->getTag('kernel.event_listener');
+      }
+      if ($container->has($reflector->getDeclaringClass()->getName()) &&
+        ($aliasDefinition = $container->get($reflector->getDeclaringClass()->getName())) &&
+        ($aliasDefinition->hasTag('kernel.event_listener'))
+      ) {
+        $declaredTags = array_merge($declaredTags, $aliasDefinition->getTag('kernel.event_listener'));
+      }
+      if (in_array($tagAttributes, $declaredTags)) {
+        return;
+      }
+
       $definition->addTag('kernel.event_listener', $tagAttributes);
     });
 
