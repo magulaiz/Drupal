@@ -219,7 +219,10 @@ class LanguageHooks {
 
   /**
    * Implements hook_modules_installed().
+   *
+   * Implements hook_modules_uninstalled().
    */
+  #[Hook('modules_uninstalled')]
   #[Hook('modules_installed')]
   public function modulesInstalled($modules, $is_syncing) {
     if ($is_syncing) {
@@ -262,14 +265,6 @@ class LanguageHooks {
         }
       }
     }
-  }
-
-  /**
-   * Implements hook_modules_uninstalled().
-   */
-  #[Hook('modules_uninstalled')]
-  public function modulesUninstalled($modules, $is_syncing) {
-    language_modules_installed($modules, $is_syncing);
   }
 
   /**
