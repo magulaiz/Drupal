@@ -110,6 +110,7 @@
   --speed-transition: 0.2s;
   --transition: all var(--speed-transition) ease-out;
   --base-border-radius: 2px;
+  --base-border-size: 1px;
   --focus-border-size: 3px;
   --focus-border-offset-size: 2px;
   --outline-size: 2px;
@@ -118,6 +119,7 @@
   /**
    * Shadows.
    */
+  --shadow-z1: 0 2px 10px rgba(0, 0, 0, 0.15);
   --shadow-z3: 0 14px 30px rgba(0, 0, 0, 0.1);
   /*
    * Inputs.
@@ -239,6 +241,34 @@
    */
   --breadcrumb-height: 1.25rem;
   /**
+  * Dropbutton.
+  */
+  --dropbutton-spacing-size: var(--space-m);
+  --dropbutton-font-size: var(--font-size-base);
+  --dropbutton-line-height: var(--space-m);
+  --dropbutton-toggle-size: var(--space-xl);
+  --dropbutton-border-size: var(--base-border-size);
+  --dropbutton-toggle-size-spacing: var(--dropbutton-border-size);
+  --dropbutton-border-radius-size: var(--base-border-radius);
+  --dropbutton-small-spacing-size: 0.625rem;
+  --dropbutton-small-font-size: var(--font-size-xs);
+  --dropbutton-small-line-height: var(--space-s);
+  --dropbutton-small-toggle-size: calc((2 * var(--dropbutton-small-spacing-size)) + var(--dropbutton-small-line-height));
+  --dropbutton-extrasmall-spacing-size: 0.375rem;
+  --dropbutton-extrasmall-font-size: var(--font-size-xs);
+  --dropbutton-extrasmall-line-height: var(--space-s);
+  --dropbutton-extrasmall-toggle-size: calc((2 * var(--dropbutton-extrasmall-spacing-size)) + var(--dropbutton-extrasmall-line-height));
+  /**
+   * Icon links.
+   */
+  --icon-link-bg-color: var(--color-white);
+  --icon-link-border-color: var(--color-gray-200);
+  --icon-link-border-size: var(--base-border-size);
+  --icon-link--active-bg-color: var(--color-absolutezero);
+  --icon-link--active-border-color: var(--color-absolutezero);
+  --icon-link--hover-bg-color: var(--color-bgblue-hover);
+  --icon-link--hover-border-color: var(--color-gray-200-o-80);
+  /**
    * Layout.
    */
   --layout-region-edit-width: min(960px, 100%);
@@ -269,4 +299,22 @@
   --vertical-tabs-menu-link--active-border-size: 4px;
   --vertical-tabs-menu-link--active-border-color: var(--color-absolutezero);
   --vertical-tabs-menu--z-index: 0;
+  /**
+   * Contextual icons.
+   */
+  --contextual-trigger-width: 2rem;
+  --contextual-trigger-height: 2rem;
+  --contextual-icon-width: calc(var(--contextual-trigger-width) / 2);
+  --contextual-icon-height: calc(var(--contextual-trigger-height) / 2);
+  /**
+   * Contextual theme.
+   */
+  --contextual-z-index: 500;
+  --contextual-icon-spacing-size: 0.25rem; /* 4px */
+  --contextual-outline-bg-color: var(--color-gray-500);
+  --contextual-links-spacing-size: var(--dropbutton-spacing-size);
+  --contextual-links-border-size: var(--dropbutton-border-size);
+  --contextual-links-border-radius-size: var(--dropbutton-border-radius-size);
+  --contextual-links-font-size: var(--dropbutton-font-size);
+  --contextual-links-line-height: var(--dropbutton-line-height);
 }
