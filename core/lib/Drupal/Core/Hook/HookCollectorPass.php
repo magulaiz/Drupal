@@ -287,12 +287,10 @@ class HookCollectorPass implements CompilerPassInterface {
         if ($attribute instanceof Hook) {
           self::checkForProceduralOnlyHooks($attribute, $class);
         }
-        else {
-          if (isset($attribute->method)) {
-            throw new LogicException(sprintf('AsEventListener attribute cannot declare a method on "%s::%s()".', $method_reflection->class, $method_reflection->name));
-          }
-          $attribute->method = $method_reflection->getName();
+        elseif (isset($attribute->method)) {
+          throw new LogicException(sprintf('AsEventListener attribute cannot declare a method on "%s::%s()".', $method_reflection->class, $method_reflection->name));
         }
+        $attribute->method = $method_reflection->getName();
         $class_implementations[] = $attribute;
       }
     }
