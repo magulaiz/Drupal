@@ -1175,6 +1175,8 @@ abstract class Connection {
    * function would return different values for each, but both would return
    * "mysql" for databaseType().
    *
+   * @return-type-will-be-added in drupal:12.0.0
+   *
    * @return string
    *   The type of database driver.
    */
