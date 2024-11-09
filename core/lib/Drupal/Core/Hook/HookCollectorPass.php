@@ -178,15 +178,15 @@ class HookCollectorPass implements CompilerPassInterface {
       }
       if ($extension === 'php') {
         if ($cached) {
-          $class = $cached->class;
-          $attributes = $cached->attributes;
+          $class = $cached['class'];
+          $attributes = $cached['attributes'];
         }
         else {
           $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
           $class = $namespace . '/' . $fileinfo->getBasename('.php');
           $class = str_replace('/', '\\', $class);
           $attributes = static::getHookAttributesInClass($class);
-          $file_cache->set($filename, $attributes);
+          $file_cache->set($filename, ['class' => $class, 'attributed' => $attributes]);
         }
         foreach ($attributes as $attribute) {
           $this->addFromAttribute($attribute, $class, $module);
@@ -194,7 +194,7 @@ class HookCollectorPass implements CompilerPassInterface {
       }
       else {
         if ($cached) {
-          $implementations = $cached->implementations;
+          $implementations = $cached;
         }
         else {
           $finder = MockFileFinder::create($fileinfo->getPathName());
