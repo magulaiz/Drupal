@@ -1,0 +1,5 @@
+name: 'Event listener test'
+type: module
+description: 'Module providing event subscriber via AsEventListener attribute.'
+package: Testing
+version: VERSION

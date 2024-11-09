@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Hook\Attribute;
 
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+
 /**
  * Attribute for defining a class method as a hook implementation.
  *
  * Hook implementations in classes need to be marked with this attribute,
  * using one of the following techniques:
  * - On a method, use this attribute with the hook name:
+ *
  *   @code
  *   #[Hook('user_cancel')]
  *   public method userCancel(...)
@@ -92,19 +95,19 @@ namespace Drupal\Core\Hook\Attribute;
  * See \Drupal\Core\Hook\Attribute\LegacyHook for additional information.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class Hook {
+class Hook extends AsEventListener {
 
   /**
    * Constructs a Hook attribute object.
    *
    * @param string $hook
    *   The short hook name, without the 'hook_' prefix.
-   * @param string $method
+   * @param string|null $method
    *   (optional) The method name. If this attribute is on a method, this
    *   parameter is not required. If this attribute is on a class and this
    *   parameter is omitted, the class must have an __invoke() method, which is
    *   taken as the hook implementation.
-   * @param int|null $priority
+   * @param int $priority
    *   (optional) The priority of this implementation relative to other
    *   implementations of this hook. Hook implementations with higher priority
    *   are executed first. If omitted, the module order is used to order the
@@ -116,10 +119,12 @@ class Hook {
    */
   public function __construct(
     public string $hook,
-    public string $method = '',
-    public ?int $priority = NULL,
+    string $method = '',
+    int $priority = 0,
     public ?string $module = NULL,
-  ) {}
+  ) {
+    parent::__construct("drupal_hook.$hook", $method, $priority);
+  }
 
   /**
    * Set the method the hook should apply to.

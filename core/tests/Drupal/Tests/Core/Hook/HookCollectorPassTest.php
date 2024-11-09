@@ -73,7 +73,7 @@ __EOF__
 
   /**
    * @covers ::process
-   * @covers ::collectModuleHookImplementations
+   * @covers ::collectModuleListeners
    */
   public function testGroupIncludes(): void {
     $module_filenames = self::setupGroupIncludes();
@@ -86,11 +86,11 @@ __EOF__
   }
 
   /**
-   * @covers ::getHookAttributesInClass
+   * @covers ::getListenerAttributesInClass
    */
   public function testGetHookAttributesInClass(): void {
     /** @phpstan-ignore-next-line */
-    $getHookAttributesInClass = fn ($class) => $this->getHookAttributesInClass($class);
+    $getHookAttributesInClass = fn ($class) => $this->getListenerAttributesInClass($class);
     $p = new HookCollectorPass();
     $getHookAttributesInClass = $getHookAttributesInClass->bindTo($p, $p);
     $x = new class {
