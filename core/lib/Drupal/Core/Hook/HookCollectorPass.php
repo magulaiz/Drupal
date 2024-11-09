@@ -186,7 +186,7 @@ class HookCollectorPass implements CompilerPassInterface {
           $class = $namespace . '/' . $fileinfo->getBasename('.php');
           $class = str_replace('/', '\\', $class);
           $attributes = static::getHookAttributesInClass($class);
-          $file_cache->set($filename, ['class' => $class, 'attributed' => $attributes]);
+          $file_cache->set($filename, ['class' => $class, 'attributes' => $attributes]);
         }
         foreach ($attributes as $attribute) {
           $this->addFromAttribute($attribute, $class, $module);
