@@ -46,10 +46,10 @@
   /**
    * Processes asset information from the response to an HTMX request.
    *
-   * @param {Event} assetsAppendedEvent
-   *   The event triggered by header from HtmxResponseAttachmentsProcessor.
+   * @param {Event} oobSwapEvent
+   *   The htmx:oobAfterSwap event triggered by HTMX.
    */
-  function htmxDrupalAssetProcessor(assetsAppendedEvent) {
+  function htmxDrupalAssetProcessor(oobSwapEvent) {
 
     /**
      * Local helper function to merge two objects recursively.
