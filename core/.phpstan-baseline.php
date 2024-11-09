@@ -10589,12 +10589,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Queue/QueueWorkerManager.php',
 ];
 $ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function system_page_attachments not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Render/BareHtmlPageRenderer.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Render\\\\BubbleableMetadata\\:\\:applyTo\\(\\) has no return type specified\\.$#',
 	'count' => 1,
