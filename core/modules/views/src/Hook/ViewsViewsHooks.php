@@ -203,10 +203,7 @@ class ViewsViewsHooks {
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
       if (_views_field_get_entity_type_storage($field_storage)) {
-        $function = $field_storage->getTypeProvider() . '_field_views_data_views_data_alter';
-        if (function_exists($function)) {
-          $function($data, $field_storage);
-        }
+        \Drupal::moduleHandler()->invoke($field_storage->getTypeProvider(), 'field_views_data_views_data_alter', [&$data, $field_storage]);
       }
     }
   }
