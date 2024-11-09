@@ -171,7 +171,7 @@ class HookCollectorPass implements CompilerPassInterface {
 
       $cached = $file_cache->get($filename);
 
-      if (!$cached && $extension === 'module' && !$iterator->getDepth()) {
+      if ($extension === 'module' && !$iterator->getDepth()) {
         // There is an expectation for all modules to be loaded. However,
         // .module files are not supposed to be in subdirectories.
         include_once $fileinfo->getPathname();
