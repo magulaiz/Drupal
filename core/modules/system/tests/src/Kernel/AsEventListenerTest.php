@@ -9,6 +9,8 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests that module classes using AsEventListener attribute.
+ *
+ * @group system
  */
 class AsEventListenerTest extends KernelTestBase {
 
