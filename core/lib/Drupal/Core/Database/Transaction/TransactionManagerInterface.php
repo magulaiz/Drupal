@@ -14,6 +14,8 @@ interface TransactionManagerInterface {
   /**
    * Determines if there is an active transaction open.
    *
+   * @return-type-will-be-added in drupal:12.0.0
+   *
    * @return bool
    *   TRUE if we're currently in a transaction, FALSE otherwise.
    */

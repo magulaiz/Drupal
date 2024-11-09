@@ -59,6 +59,8 @@ trait StringTranslationTrait {
    *     @link i18n Internationalization topic @endlink for more information
    *     about string contexts.
    *
+   * @return-type-will-be-added in drupal:12.0.0
+   *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   An object that, when cast to a string, returns the translated string.
    *

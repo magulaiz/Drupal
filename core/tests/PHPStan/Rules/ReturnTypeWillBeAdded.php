@@ -16,7 +16,7 @@ use PHPStan\Type\VerbosityLevel;
 use PHPStan\Type\ParserNodeTypeToPHPStanType;
 
 /**
- * Scans not return typehinted methods to check for incoming additions.
+ * Check methods for future return type addition.
  *
  * @implements Rule<\PHPStan\Node\InClassMethodNode>
  *
@@ -78,6 +78,7 @@ final class ReturnTypeWillBeAdded implements Rule {
 
     // Determine the native return type of the method.
     $methodNativeParserReturnType = $node->getOriginalNode()->getReturnType();
+    // @phpstan-ignore phpstanApi.method
     $methodNativeReturnType = $methodNativeParserReturnType ? ParserNodeTypeToPHPStanType::resolve($methodNativeParserReturnType, $scope->getClassReflection()) : NULL;
 
     // Determine the PhpDoc return type of the method.
@@ -138,6 +139,7 @@ final class ReturnTypeWillBeAdded implements Rule {
       $prototypeReturnTypeWillBeAddedTag = $this->getReturnTypeWillBeAddedTag($resolvedPrototypePhpDoc);
     }
     catch (\LogicException) {
+      $prototypeReturnTypeWillBeAddedTag = NULL;
       // Keep going, duplicates were reported on the prototype parsing already.
     }
 
