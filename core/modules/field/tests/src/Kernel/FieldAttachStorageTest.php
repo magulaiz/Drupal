@@ -115,6 +115,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     }
 
     // Create one test entity per bundle, with random values.
+    $values = [];
     foreach ($bundles as $index => $bundle) {
       $entities[$index] = $this->container->get('entity_type.manager')
         ->getStorage($entity_type)

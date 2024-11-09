@@ -102,6 +102,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
     $process = $this->executeCommand("composer --working-dir=$root info --format=json");
     $this->assertCommandSuccessful();
     $installed = json_decode($process->getOutput(), TRUE);
+    $project_stabilities = [];
 
     // A lookup of the numerical position of each of the stability terms.
     $stability_order_indexes = array_flip(static::STABILITY_ORDER);

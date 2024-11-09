@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Functional;
 
+use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\user\UserInterface;
 
@@ -70,9 +71,11 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
     $blocks = $this->blocks;
     $logs = $this->revisionLogs;
 
+    /** @var \Drupal\block_content\BlockContentInterface|null $loaded */
+    $loaded = NULL;
+
     foreach ($blocks as $delta => $revision_id) {
       // Confirm the correct revision text appears.
-      /** @var \Drupal\block_content\BlockContentInterface  $loaded */
       $loaded = $this->container->get('entity_type.manager')
         ->getStorage('block_content')
         ->loadRevision($revision_id);
@@ -84,6 +87,8 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
         $this->assertIsNumeric($loaded->getRevisionCreationTime());
       }
     }
+
+    $this->assertInstanceOf(BlockContentInterface::class, $loaded);
 
     // Confirm that this is the default revision.
     $this->assertTrue($loaded->isDefaultRevision(), 'Third block revision is the default one.');

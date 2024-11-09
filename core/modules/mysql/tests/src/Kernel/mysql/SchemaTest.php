@@ -36,6 +36,8 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   protected function assertCollation(): void {
     // Make sure that varchar fields have the correct collations.
     $columns = $this->connection->query('SHOW FULL COLUMNS FROM {test_table}');
+    $string_check = '';
+    $string_ascii_check = '';
     foreach ($columns as $column) {
       if ($column->Field == 'test_field_string') {
         $string_check = $column->Collation;

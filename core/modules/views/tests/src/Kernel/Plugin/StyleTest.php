@@ -165,6 +165,7 @@ class StyleTest extends ViewsKernelTestBase {
     $expected['Job: Drummer']['rows']['Age: 28']['rows'][2]->views_test_data_id = '3';
 
     // Alter the results to support the stripped case.
+    $rand1 = $rand2 = $rand3 = '';
     if ($stripped) {
       // Add some html to the result and expected value.
       $rand1 = '<a data="' . $this->randomMachineName() . '" />';

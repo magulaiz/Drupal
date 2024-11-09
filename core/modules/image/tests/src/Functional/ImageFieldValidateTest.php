@@ -148,6 +148,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     }
     $this->uploadNodeImage($image_that_is_too_small, $field_names[0], 'article');
     $this->assertSession()->statusMessageContains("The specified file {$image_that_is_too_small->filename} could not be uploaded.", 'error');
+    assert(isset($image_that_is_too_small_file));
     $this->assertSession()->statusMessageContains("The image is too small. The minimum dimensions are 50x50 pixels and the image size is {$image_that_is_too_small_file->getWidth()}x{$image_that_is_too_small_file->getHeight()} pixels.", 'error');
     $this->uploadNodeImage($image_that_is_too_big, $field_names[0], 'article');
     $this->assertSession()->statusMessageContains('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.', 'status');

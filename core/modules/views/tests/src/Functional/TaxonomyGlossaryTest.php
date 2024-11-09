@@ -86,6 +86,7 @@ class TaxonomyGlossaryTest extends ViewTestBase {
 
     // Check that no other glossary links but the expected ones have been
     // rendered.
+    assert(isset($link));
     $assert_session->elementsCount('xpath', '/ancestor::ul//a', count($initials), $link);
 
     // Go the taxonomy glossary page for the first term.

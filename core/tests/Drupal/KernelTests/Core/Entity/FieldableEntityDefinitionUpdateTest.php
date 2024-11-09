@@ -557,6 +557,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     }
     // Allow other tests to be performed after the exception has been thrown.
     finally {
+      assert(isset($e));
       $this->assertSame('Peekaboo!', $e->getPrevious()->getMessage());
 
       // Check that the last installed entity type definition is kept as
@@ -581,6 +582,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
       foreach ($new_storage_definitions as $storage_definition) {
         $new_field_schema_data[$storage_definition->getName()] = $this->installedStorageSchema->get('entity_test_update.field_schema_data.' . $storage_definition->getName(), []);
       }
+      assert(isset($new_field_schema_data));
       $this->assertEquals($original_field_schema_data, $new_field_schema_data);
 
       // Check that temporary tables have been removed.
