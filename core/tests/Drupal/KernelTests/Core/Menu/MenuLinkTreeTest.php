@@ -157,7 +157,7 @@ class MenuLinkTreeTest extends KernelTestBase {
       ];
 
       $tree = $this->linkTree->load('mock', $parameters);
-      $this->linkTree->transform($tree, $manipulators);
+      $this->linkTree->transform($tree, $manipulators, $this);
 
       return array_keys(
         array_filter($tree, function (MenuLinkTreeElement $element) {
