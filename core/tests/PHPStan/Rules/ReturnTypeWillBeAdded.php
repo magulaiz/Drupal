@@ -125,7 +125,7 @@ final class ReturnTypeWillBeAdded implements Rule {
       return [];
     }
     $prototypeMethod = $prototypeClass->getMethod($methodName, $scope);
-    $prototypeTrait = $prototypeMethod instanceof PhpMethodReflection ? $prototypeMethod->getDeclaringTrait() : NULL;
+    $prototypeTrait = method_exists($prototypeMethod, 'getDeclaringTrait') ? $prototypeMethod->getDeclaringTrait() : NULL;
 
     // Get PHPDoc for the prototype.
     $resolvedPrototypePhpDoc = $this->fileTypeMapper->getResolvedPhpDoc(
