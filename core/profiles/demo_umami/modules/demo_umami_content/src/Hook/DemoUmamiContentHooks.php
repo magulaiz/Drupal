@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\language_test\Hook;
+namespace Drupal\demo_umami_content\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\demo_umami_content\InstallHelper;
