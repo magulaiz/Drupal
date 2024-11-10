@@ -124,12 +124,13 @@ final class ReturnTypeWillBeAdded implements Rule {
       return [];
     }
     $prototypeMethod = $prototypeClass->getMethod($methodName, $scope);
+    $prototypeTrait = $prototypeMethod->getDeclaringTrait();
 
     // Get PHPDoc for the prototype.
     $resolvedPrototypePhpDoc = $this->fileTypeMapper->getResolvedPhpDoc(
       $prototypeClass->getFileName(),
       $prototypeClass->getName(),
-      NULL,
+      $prototypeTrait ? $prototypeTrait->getName() : NULL,
       $methodName,
       $prototypeMethod->getDocComment() ?? '',
     );
@@ -156,10 +157,10 @@ final class ReturnTypeWillBeAdded implements Rule {
     if ($prototypeReturnTypeWillBeAddedTag && $methodNativeReturnType === NULL && $prototypeMethodPhpDocReturnType) {
       $message = sprintf(
         "%s::%s() will add '%s' as a native return type declaration %s. Add the return type to the implementation now.",
-        $prototypeClass->getName(),
+        $prototypeTrait ? $prototypeTrait->getName() : $prototypeClass->getName(),
         $methodName,
         $prototypeMethodPhpDocReturnType->describe(VerbosityLevel::value()),
-        $prototypeReturnTypeWillBeAddedTag->value ? (string) $prototypeReturnTypeWillBeAddedTag->value : 'in the future',
+        (string) $prototypeReturnTypeWillBeAddedTag->value ?: 'in the future',
       );
       return [
         RuleErrorBuilder::message($message)
@@ -180,10 +181,10 @@ final class ReturnTypeWillBeAdded implements Rule {
         $method->getDeclaringClass()->getName(),
         $methodName,
         $methodNativeReturnType->describe(VerbosityLevel::value()),
-        $prototypeClass->getName(),
+        $prototypeTrait ? $prototypeTrait->getName() : $prototypeClass->getName(),
         $methodName,
         $prototypeMethodPhpDocReturnType->describe(VerbosityLevel::value()),
-        $prototypeReturnTypeWillBeAddedTag->value ? (string) $prototypeReturnTypeWillBeAddedTag->value : 'in the future',
+        (string) $prototypeReturnTypeWillBeAddedTag->value ?: 'in the future',
       );
       return [
         RuleErrorBuilder::message($message)

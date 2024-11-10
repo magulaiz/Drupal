@@ -49,6 +49,22 @@ interface FooInterface {
 trait FooTrait {
 
   /**
+   * @return-type-will-be-added
+   * @return bool
+   */
+  protected function fooTraitValidAnnotationForUseInAbstractClassOverriddenInConcreteClass() {
+    return TRUE;
+  }
+
+  /**
+   * @return-type-will-be-added
+   * @return bool
+   */
+  protected function fooTraitValidAnnotationForUseInAbstractClassOverriddenInConcreteClassWithNativeTypeSpecified() {
+    return TRUE;
+  }
+
+  /**
    * @return-type-will-be-added in version 42.0.0
    * @return bool
    */
@@ -132,6 +148,14 @@ class Foo extends FooAbstract {
 
   public function fooInterfaceValidAnnotationForConcreteClassImplementationOfWrongType(): string {
     return 'bar';
+  }
+
+  protected function fooTraitValidAnnotationForUseInAbstractClassOverriddenInConcreteClass() {
+    return TRUE;
+  }
+
+  protected function fooTraitValidAnnotationForUseInAbstractClassOverriddenInConcreteClassWithNativeTypeSpecified(): string {
+    return 'baz';
   }
 
   public function fooAbstractValidAnnotation() {
