@@ -9,6 +9,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\UserEmailNotification;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -186,14 +187,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_admin_created']['user_mail_register_admin_created_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#config_target' => 'user.mail:register_admin_created.subject',
+      '#config_target' => 'user.mail:' . UserEmailNotification::RegisterAdminCreated->value . '.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_admin_created']['user_mail_register_admin_created_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#config_target' => 'user.mail:register_admin_created.body',
+      '#config_target' => 'user.mail:' . UserEmailNotification::RegisterAdminCreated->value . '.body',
       '#rows' => 15,
     ];
 
@@ -207,14 +208,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_pending_approval']['user_mail_register_pending_approval_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#config_target' => 'user.mail:register_pending_approval.subject',
+      '#config_target' => 'user.mail:' . UserEmailNotification::RegisterPendingApproval->value . '.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_pending_approval']['user_mail_register_pending_approval_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#config_target' => 'user.mail:register_pending_approval.body',
+      '#config_target' => 'user.mail:' . UserEmailNotification::RegisterPendingApproval->value . '.body',
       '#rows' => 8,
     ];
 
@@ -228,14 +229,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_pending_approval_admin']['register_pending_approval_admin_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#config_target' => 'user.mail:register_pending_approval_admin.subject',
+      '#config_target' => 'user.mail:' . UserEmailNotification::RegisterPendingApprovalAdmin->value . '.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_pending_approval_admin']['register_pending_approval_admin_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#config_target' => 'user.mail:register_pending_approval_admin.body',
+      '#config_target' => 'user.mail:' . UserEmailNotification::RegisterPendingApprovalAdmin->value . '.body',
       '#rows' => 8,
     ];
 
@@ -249,14 +250,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_no_approval_required']['user_mail_register_no_approval_required_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#config_target' => 'user.mail:register_no_approval_required.subject',
+      '#config_target' => 'user.mail:' . UserEmailNotification::RegisterNoApprovalRequired->value . '.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_no_approval_required']['user_mail_register_no_approval_required_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#config_target' => 'user.mail:register_no_approval_required.body',
+      '#config_target' => 'user.mail:' . UserEmailNotification::RegisterNoApprovalRequired->value . '.body',
       '#rows' => 15,
     ];
 
@@ -270,14 +271,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_password_reset']['user_mail_password_reset_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#config_target' => 'user.mail:password_reset.subject',
+      '#config_target' => 'user.mail:' . UserEmailNotification::PasswordReset->value . '.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_password_reset']['user_mail_password_reset_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#config_target' => 'user.mail:password_reset.body',
+      '#config_target' => 'user.mail:' . UserEmailNotification::PasswordReset->value . '.body',
       '#rows' => 12,
     ];
 
@@ -290,7 +291,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_activated']['user_mail_status_activated_notify'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user when account is activated'),
-      '#config_target' => 'user.settings:notify.status_activated',
+      '#config_target' => 'user.settings:notify.' . UserEmailNotification::StatusActivated->value,
     ];
     $form['email_activated']['settings'] = [
       '#type' => 'container',
@@ -304,7 +305,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_activated']['settings']['user_mail_status_activated_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#config_target' => 'user.mail:status_activated.subject',
+      '#config_target' => 'user.mail:' . UserEmailNotification::StatusActivated->value . '.subject',
       '#states' => [
         'required' => [
           'input[name="user_mail_status_activated_notify"]' => ['checked' => TRUE],
@@ -315,7 +316,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_activated']['settings']['user_mail_status_activated_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#config_target' => 'user.mail:status_activated.body',
+      '#config_target' => 'user.mail:' . UserEmailNotification::StatusActivated->value . '.body',
       '#rows' => 15,
     ];
 
@@ -328,7 +329,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_blocked']['user_mail_status_blocked_notify'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user when account is blocked'),
-      '#config_target' => 'user.settings:notify.status_blocked',
+      '#config_target' => 'user.settings:notify.' . UserEmailNotification::StatusBlocked->value,
     ];
     $form['email_blocked']['settings'] = [
       '#type' => 'container',
@@ -342,7 +343,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_blocked']['settings']['user_mail_status_blocked_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#config_target' => 'user.mail:status_blocked.subject',
+      '#config_target' => 'user.mail:' . UserEmailNotification::StatusBlocked->value . '.subject',
       '#states' => [
         'required' => [
           'input[name="user_mail_status_blocked_notify"]' => ['checked' => TRUE],
@@ -353,7 +354,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_blocked']['settings']['user_mail_status_blocked_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#config_target' => 'user.mail:status_blocked.body',
+      '#config_target' => 'user.mail:' . UserEmailNotification::StatusBlocked->value . '.body',
       '#rows' => 3,
     ];
 
@@ -366,14 +367,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_cancel_confirm']['user_mail_cancel_confirm_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#config_target' => 'user.mail:cancel_confirm.subject',
+      '#config_target' => 'user.mail:' . UserEmailNotification::CancelConfirm->value . '.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_cancel_confirm']['user_mail_cancel_confirm_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#config_target' => 'user.mail:cancel_confirm.body',
+      '#config_target' => 'user.mail:' . UserEmailNotification::CancelConfirm->value . '.body',
       '#rows' => 3,
     ];
 
@@ -386,7 +387,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_canceled']['user_mail_status_canceled_notify'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user when account is canceled'),
-      '#config_target' => 'user.settings:notify.status_canceled',
+      '#config_target' => 'user.settings:notify.' . UserEmailNotification::StatusCanceled->value,
     ];
     $form['email_canceled']['settings'] = [
       '#type' => 'container',
@@ -400,7 +401,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_canceled']['settings']['user_mail_status_canceled_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#config_target' => 'user.mail:status_canceled.subject',
+      '#config_target' => 'user.mail:' . UserEmailNotification::StatusCanceled->value . '.subject',
       '#states' => [
         'required' => [
           'input[name="user_mail_status_canceled_subject"]' => ['checked' => TRUE],
@@ -411,7 +412,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_canceled']['settings']['user_mail_status_canceled_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#config_target' => 'user.mail:status_canceled.body',
+      '#config_target' => 'user.mail:' . UserEmailNotification::StatusCanceled->value . '.body',
       '#rows' => 3,
     ];
 

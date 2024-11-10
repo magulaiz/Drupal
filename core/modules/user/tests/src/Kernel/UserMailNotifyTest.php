@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel;
 
+use Drupal\Core\Utility\UserEmailNotification;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -35,36 +36,36 @@ class UserMailNotifyTest extends EntityKernelTestBase {
   public static function userMailsProvider() {
     return [
       'cancel confirm notification' => [
-        'cancel_confirm',
-        ['cancel_confirm'],
+        UserEmailNotification::CancelConfirm->value,
+        [UserEmailNotification::CancelConfirm->value],
       ],
       'password reset notification' => [
-        'password_reset',
-        ['password_reset'],
+        UserEmailNotification::PasswordReset->value,
+        [UserEmailNotification::PasswordReset->value],
       ],
       'status activated notification' => [
-        'status_activated',
-        ['status_activated'],
+        UserEmailNotification::StatusActivated->value,
+        [UserEmailNotification::StatusActivated->value],
       ],
       'status blocked notification' => [
-        'status_blocked',
-        ['status_blocked'],
+        UserEmailNotification::StatusBlocked->value,
+        [UserEmailNotification::StatusBlocked->value],
       ],
       'status canceled notification' => [
-        'status_canceled',
-        ['status_canceled'],
+        UserEmailNotification::StatusCanceled->value,
+        [UserEmailNotification::StatusCanceled->value],
       ],
       'register admin created notification' => [
-        'register_admin_created',
-        ['register_admin_created'],
+        UserEmailNotification::RegisterAdminCreated->value,
+        [UserEmailNotification::RegisterAdminCreated->value],
       ],
       'register no approval required notification' => [
-        'register_no_approval_required',
-        ['register_no_approval_required'],
+        UserEmailNotification::RegisterNoApprovalRequired->value,
+        [UserEmailNotification::RegisterNoApprovalRequired->value],
       ],
       'register pending approval notification' => [
-        'register_pending_approval',
-        ['register_pending_approval', 'register_pending_approval_admin'],
+        UserEmailNotification::RegisterPendingApproval->value,
+        [UserEmailNotification::RegisterPendingApproval->value, UserEmailNotification::RegisterPendingApprovalAdmin->value],
       ],
     ];
   }
@@ -133,7 +134,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     $names = $locale_config_manager->getComponentNames();
     $locale_config_manager->updateConfigTranslations($names, $langcodes);
 
-    $this->config('user.settings')->set('notify.password_reset', TRUE)->save();
+    $this->config('user.settings')->set('notify.' . UserEmailNotification::StatusCanceled->value, TRUE)->save();
 
     // Set language prefix.
     $config = $this->config('language.negotiation');
@@ -144,13 +145,13 @@ class UserMailNotifyTest extends EntityKernelTestBase {
 
     // Update zh-hant password_reset config with custom translation.
     $configLanguageOverride = $this->container->get('language_manager')->getLanguageConfigOverride('zh-hant', 'user.mail');
-    $configLanguageOverride->set('password_reset.subject', 'hant subject [user:display-name]')->save();
-    $configLanguageOverride->set('password_reset.body', 'hant body [user:display-name] and token link [user:one-time-login-url]')->save();
+    $configLanguageOverride->set(UserEmailNotification::PasswordReset->value . '.subject', 'hant subject [user:display-name]')->save();
+    $configLanguageOverride->set(UserEmailNotification::PasswordReset->value . '.body', 'hant body [user:display-name] and token link [user:one-time-login-url]')->save();
 
     // Update fr password_reset config with custom translation.
     $configLanguageOverride = $this->container->get('language_manager')->getLanguageConfigOverride('fr', 'user.mail');
-    $configLanguageOverride->set('password_reset.subject', 'fr subject [user:display-name]')->save();
-    $configLanguageOverride->set('password_reset.body', 'fr body [user:display-name] and token link [user:one-time-login-url]')->save();
+    $configLanguageOverride->set(UserEmailNotification::PasswordReset->value . '.subject', 'fr subject [user:display-name]')->save();
+    $configLanguageOverride->set(UserEmailNotification::PasswordReset->value . '.body', 'fr body [user:display-name] and token link [user:one-time-login-url]')->save();
 
     // Current language is 'en'.
     $currentLanguage = $this->container->get('language_manager')->getCurrentLanguage()->getId();
@@ -166,7 +167,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     // langcode not set.
     $this->config('system.site')->set('mail', 'test@example.com')->save();
     $params['account'] = $user;
-    $default_email = \Drupal::service('plugin.manager.mail')->mail('user', 'password_reset', $user->getEmail(), $preferredLangcode, $params);
+    $default_email = \Drupal::service('plugin.manager.mail')->mail('user', UserEmailNotification::PasswordReset->value, $user->getEmail(), $preferredLangcode, $params);
     $this->assertTrue($default_email['result']);
 
     // Assert for zh.
@@ -175,7 +176,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     $this->assertMailString('body', 'zh/user/reset', 1);
 
     // Recovery email should be fr when langcode specified.
-    $french_email = \Drupal::service('plugin.manager.mail')->mail('user', 'password_reset', $user->getEmail(), 'fr', $params);
+    $french_email = \Drupal::service('plugin.manager.mail')->mail('user', UserEmailNotification::PasswordReset->value, $user->getEmail(), 'fr', $params);
     $this->assertTrue($french_email['result']);
 
     // Assert for fr.

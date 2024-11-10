@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Flood\PrefixFloodInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Utility\UserEmailNotification;
 use Drupal\user\RoleInterface;
 use Drupal\user\StatusItem;
 use Drupal\user\TimeZoneItem;
@@ -148,7 +149,7 @@ class User extends ContentEntityBase implements UserInterface {
       // Send emails after we have the new user object.
       if ($this->status->value != $this->original->status->value) {
         // The user's status is changing; conditionally send notification email.
-        $op = $this->status->value == 1 ? 'status_activated' : 'status_blocked';
+        $op = $this->status->value == 1 ? UserEmailNotification::StatusActivated->value : UserEmailNotification::StatusBlocked->value;
         _user_mail_notify($op, $this);
       }
     }

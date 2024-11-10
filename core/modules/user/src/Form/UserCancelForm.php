@@ -4,6 +4,7 @@ namespace Drupal\user\Form;
 
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Utility\UserEmailNotification;
 
 /**
  * Provides a confirmation form for cancelling user account.
@@ -105,7 +106,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       '#description' => $this->t('When enabled, the user must confirm the account cancellation via email.'),
     ];
     // Also allow to send account canceled notification mail, if enabled.
-    $default_notify = $this->config('user.settings')->get('notify.status_canceled');
+    $default_notify = $this->config('user.settings')->get('notify.' . UserEmailNotification::StatusCanceled->value);
     $form['user_cancel_notify'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user when account is canceled'),
@@ -148,7 +149,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       $this->entity->user_cancel_method = $form_state->getValue('user_cancel_method');
       $this->entity->user_cancel_notify = $form_state->getValue('user_cancel_notify');
       $this->entity->save();
-      _user_mail_notify('cancel_confirm', $this->entity);
+      _user_mail_notify(UserEmailNotification::CancelConfirm->value, $this->entity);
       $this->messenger()->addStatus($this->t('A confirmation request to cancel your account has been sent to your email address.'));
       $this->logger('user')->info('Sent account cancellation request to %name %email.', ['%name' => $this->entity->label(), '%email' => '<' . $this->entity->getEmail() . '>']);
 

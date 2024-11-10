@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element\Email;
+use Drupal\Core\Utility\UserEmailNotification;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
 use Drupal\user\UserNameValidator;
@@ -196,7 +197,7 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
     $account = $form_state->getValue('account');
     if ($account) {
       // Mail one time login URL and instructions using current language.
-      $mail = _user_mail_notify('password_reset', $account);
+      $mail = _user_mail_notify(UserEmailNotification::PasswordReset->value, $account);
       if (!empty($mail)) {
         $this->logger('user')
           ->info('Password reset instructions mailed to %name at %email.', [

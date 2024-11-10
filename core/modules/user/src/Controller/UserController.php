@@ -9,6 +9,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\UserEmailNotification;
 use Drupal\user\Form\UserPasswordResetForm;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
@@ -423,7 +424,7 @@ class UserController extends ControllerBase {
       // Validate expiration and hashed password/login.
       if ($user->id() && $this->validatePathParameters($user, $timestamp, $hashed_pass, $timeout)) {
         $edit = [
-          'user_cancel_notify' => $account_data['cancel_notify'] ?? $this->config('user.settings')->get('notify.status_canceled'),
+          'user_cancel_notify' => $account_data['cancel_notify'] ?? $this->config('user.settings')->get('notify.' . UserEmailNotification::StatusCanceled->value),
         ];
         user_cancel($edit, $user->id(), $account_data['cancel_method']);
         // Since user_cancel() is not invoked via Form API, batch processing

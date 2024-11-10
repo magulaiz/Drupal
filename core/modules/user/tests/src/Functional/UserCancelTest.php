@@ -7,6 +7,7 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\Core\Utility\UserEmailNotification;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -596,7 +597,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
     // Enable account cancellation notification.
-    $this->config('user.settings')->set('notify.status_canceled', TRUE)->save();
+    $this->config('user.settings')->set('notify.' . UserEmailNotification::StatusCanceled->value, TRUE)->save();
 
     // Create administrative user.
     $admin_user = $this->drupalCreateUser(['administer users']);

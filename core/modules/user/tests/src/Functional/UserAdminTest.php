@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Test\AssertMailTrait;
+use Drupal\Core\Utility\UserEmailNotification;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
@@ -125,7 +126,7 @@ class UserAdminTest extends BrowserTestBase {
     $edit['action'] = 'user_block_user_action';
     $edit['user_bulk_form[4]'] = TRUE;
     $config
-      ->set('notify.status_blocked', TRUE)
+      ->set('notify.' . UserEmailNotification::StatusBlocked->value, TRUE)
       ->save();
     $this->drupalGet('admin/people', [
       // Sort the table by username so that we know reliably which user will be

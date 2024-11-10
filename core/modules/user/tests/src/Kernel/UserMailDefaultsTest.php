@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel;
 
+use Drupal\Core\Utility\UserEmailNotification;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -44,15 +45,15 @@ class UserMailDefaultsTest extends KernelTestBase {
    */
   public static function userMailsProvider() {
     return [
-      ['cancel_confirm'],
-      ['password_reset'],
-      ['status_activated'],
-      ['status_blocked'],
-      ['status_canceled'],
-      ['register_admin_created'],
-      ['register_no_approval_required'],
-      ['register_pending_approval'],
-      ['register_pending_approval_admin'],
+      [UserEmailNotification::CancelConfirm->value],
+      [UserEmailNotification::PasswordReset->value],
+      [UserEmailNotification::StatusActivated->value],
+      [UserEmailNotification::StatusBlocked->value],
+      [UserEmailNotification::StatusCanceled->value],
+      [UserEmailNotification::RegisterAdminCreated->value],
+      [UserEmailNotification::RegisterNoApprovalRequired->value],
+      [UserEmailNotification::RegisterPendingApproval->value],
+      [UserEmailNotification::RegisterPendingApprovalAdmin->value],
     ];
   }
 

@@ -7,6 +7,7 @@ use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\UserEmailNotification;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -183,7 +184,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user when account is canceled'),
       '#default_value' => FALSE,
-      '#access' => $this->config('user.settings')->get('notify.status_canceled'),
+      '#access' => $this->config('user.settings')->get('notify.' . UserEmailNotification::StatusCanceled->value),
       '#description' => $this->t('When enabled, the user will receive an email notification after the account has been canceled.'),
     ];
 
