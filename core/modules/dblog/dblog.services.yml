@@ -1,6 +1,9 @@
 services:
   _defaults:
     autoconfigure: true
+  dblog.formatter:
+    class: Drupal\dblog\DblogFormatterTranslatable
+  Drupal\dblog\DblogFormatterInterface: '@dblog.formatter'
   logger.dblog:
     class: Drupal\dblog\Logger\DbLog
     arguments: ['@database', '@logger.log_message_parser']

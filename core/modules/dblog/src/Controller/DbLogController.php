@@ -60,6 +60,7 @@ class DbLogController extends ControllerBase {
    *   The form builder service.
    */
   public function __construct(Connection $database, ModuleHandlerInterface $module_handler, DateFormatterInterface $date_formatter, FormBuilderInterface $form_builder) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use the \Drupal\dblog\DblogEntryListBuilder class instead. See https://www.drupal.org/node/3236383', E_USER_DEPRECATED);
     $this->database = $database;
     $this->moduleHandler = $module_handler;
     $this->dateFormatter = $date_formatter;
@@ -99,8 +100,8 @@ class DbLogController extends ControllerBase {
    *   A render array as expected by
    *   \Drupal\Core\Render\RendererInterface::render().
    *
-   * @see Drupal\dblog\Form\DblogClearLogConfirmForm
-   * @see Drupal\dblog\Controller\DbLogController::eventDetails()
+   * @see \Drupal\dblog\Form\DblogClearLogConfirmForm
+   * @see \Drupal\dblog\Controller\DbLogController::eventDetails()
    */
   public function overview(Request $request) {
 

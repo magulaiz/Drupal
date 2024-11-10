@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Database\Database;
-use Drupal\dblog\Controller\DbLogController;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
 use Drupal\media_test_oembed\Controller\ResourceController;
@@ -203,13 +201,8 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $assert_session->addressEquals('admin/content/media');
     ResourceController::setResource404($video_url);
     $this->drupalGet($this->assertLinkToCreatedMedia());
-    $row = Database::getConnection()->select('watchdog')
-      ->fields('watchdog', ['message', 'variables'])
-      ->orderBy('wid', 'DESC')
-      ->range(0, 1)
-      ->execute()
-      ->fetchObject();
-    $message = (string) DbLogController::create($this->container)->formatMessage($row);
+    $dblog_formatter = \Drupal::service('dblog.formatter');
+    $message = (string) \Drupal::entityTypeManager()->getStorage('dblog')->loadMostRecent()->getFormattedMessage($dblog_formatter);
     $this->assertStringContainsString('resulted in a `404 Not Found` response', $message);
 
     // Test anonymous access to media via iframe.

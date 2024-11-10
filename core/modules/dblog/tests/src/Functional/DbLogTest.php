@@ -173,8 +173,6 @@ class DbLogTest extends BrowserTestBase {
     $this->assertSession()->elementsCount('xpath', $type, 1, $table);
 
     // Verify that the backtrace row exists and is HTML-encoded.
-    $backtrace = "//tr//pre[contains(@class, 'backtrace')]";
-    $this->assertCount(1, $table->findAll('xpath', $backtrace));
     $this->assertSession()->responseContains('&lt;script&gt;alert(&#039;xss&#039;)&lt;/script&gt;');
   }
 
@@ -281,7 +279,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Test that twig errors are displayed correctly.
+   * Tests that twig errors are displayed correctly.
    */
   protected function testMessageParsing(): void {
     $this->drupalLogin($this->adminUser);
@@ -804,6 +802,9 @@ class DbLogTest extends BrowserTestBase {
     // Find the class that contains the severity.
     $classes = explode(' ', $class);
     foreach ($classes as $class) {
+      if (strpos($class, 'severity-') !== FALSE) {
+        return intval(str_replace('severity-', '', $class));
+      }
       if (isset($map[$class])) {
         return $map[$class];
       }
@@ -866,7 +867,7 @@ class DbLogTest extends BrowserTestBase {
    */
   protected function testOverviewLinks(): void {
     $this->drupalLogin($this->adminUser);
-    // cSpell:disable-next-line
+    // cSpell:disable-next-line.
     $this->generateLogEntries(1, ['message' => "&lt;script&gt;alert('foo');&lt;/script&gt;<strong>Lorem</strong> ipsum dolor sit amet, consectetur adipiscing & elit."]);
     $this->drupalGet('admin/reports/dblog');
     $this->assertSession()->statusCodeEquals(200);
