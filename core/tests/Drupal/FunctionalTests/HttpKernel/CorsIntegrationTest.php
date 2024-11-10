@@ -168,6 +168,7 @@ class CorsIntegrationTest extends BrowserTestBase {
       ],
     ]);
     $this->assertEquals(200, $response->getStatusCode());
+
   }
 
 }

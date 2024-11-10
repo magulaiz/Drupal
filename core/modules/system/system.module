@@ -763,6 +763,12 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
     )));
     sort($minimal_libraries);
     $settings['ajaxPageState']['libraries'] = implode(',', $minimal_libraries);
+
+    // If CORS is enabled, make sure ajax calls send the credentials if needed.
+    $cors_config = \Drupal::getContainer()->getParameter('cors.config');
+    $settings['ajaxCrossDomain'] = [
+      'withCredentials' => $cors_config['supportsCredentials'] ?? FALSE,
+    ];
   }
 }
 
