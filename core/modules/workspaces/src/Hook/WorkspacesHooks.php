@@ -39,7 +39,7 @@ class WorkspacesHooks {
     }
   }
 
-    /**
+  /**
    * Implements hook_module_preinstall().
    */
   #[Hook('module_preinstall')]
