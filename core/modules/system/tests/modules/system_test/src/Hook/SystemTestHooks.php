@@ -28,6 +28,23 @@ class SystemTestHooks {
   }
 
   /**
+   * Implements hook_module_preinstall().
+   */
+  #[Hook('module_preinstall')]
+  public function modulePreinstall() {
+    \Drupal::messenger()->addStatus('system_test_preinstall_module called');
+    \Drupal::state()->set('system_test_preinstall_module', $module);
+
+    // Save the config.installer isSyncing() value to state to check that it is
+    // correctly set when installing module during config import.
+    \Drupal::state()->set('system_test_preinstall_module_config_installer_syncing', \Drupal::service('config.installer')->isSyncing());
+
+    // Save the $is_syncing parameter value to state to check that it is correctly
+    // set when installing module during config import.
+    \Drupal::state()->set('system_test_preinstall_module_syncing_param', $is_syncing);
+  }
+
+  /**
    * Implements hook_modules_installed().
    */
   #[Hook('modules_installed')]

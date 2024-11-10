@@ -17,10 +17,3 @@ function language_test_store_language_negotiation() {
   }
   \Drupal::keyValue('language_test')->set('language_negotiation_last', $last);
 }
-
-/**
- * Implements hook_module_preinstall().
- */
-function language_test_module_preinstall() {
-  \Drupal::state()->set('language_test.language_count_preinstall', count(\Drupal::languageManager()->getLanguages()));
-}

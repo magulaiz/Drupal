@@ -29,19 +29,3 @@ function _system_test_second_shutdown_function($arg1, $arg2) {
   // \Drupal\Core\Utility\Error::renderExceptionSafe() if possible.
   throw new Exception('Drupal is <blink>awesome</blink>.');
 }
-
-/**
- * Implements hook_module_preinstall().
- */
-function system_test_module_preinstall($module, bool $is_syncing) {
-  \Drupal::messenger()->addStatus('system_test_preinstall_module called');
-  \Drupal::state()->set('system_test_preinstall_module', $module);
-
-  // Save the config.installer isSyncing() value to state to check that it is
-  // correctly set when installing module during config import.
-  \Drupal::state()->set('system_test_preinstall_module_config_installer_syncing', \Drupal::service('config.installer')->isSyncing());
-
-  // Save the $is_syncing parameter value to state to check that it is correctly
-  // set when installing module during config import.
-  \Drupal::state()->set('system_test_preinstall_module_syncing_param', $is_syncing);
-}

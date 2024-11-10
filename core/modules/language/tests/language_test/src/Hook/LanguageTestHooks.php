@@ -107,4 +107,12 @@ class LanguageTestHooks {
     \Drupal::state()->set('language_test.language_switch_link_ids', array_keys($links));
   }
 
+  /**
+   * Implements hook_module_preinstall().
+   */
+  #[Hook('module_preinstall')]
+  public function modulePreinstall() {
+    \Drupal::state()->set('language_test.language_count_preinstall', count(\Drupal::languageManager()->getLanguages()));
+  }
+
 }
