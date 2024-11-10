@@ -26,12 +26,14 @@ class ViewsAddItemToDisplayOptionConfigActionTest extends ViewsKernelTestBase {
    */
   public function testAddFieldToDefaultDisplay() : void {
     $view = Views::getView('entity_test_fields');
+    $view->setDisplay();
     $fields = $view->displayHandlers->get('default')->getOption('fields');
     // Check that field type is not part of default display.
     $this->assertArrayNotHasKey('type', $fields);
     // Apply config action that adds field type to default display.
     $this->applyAction('views.view.entity_test_fields');
     $view = Views::getView('entity_test_fields');
+    $view->setDisplay();
     $fields = $view->displayHandlers->get('default')->getOption('fields');
     // Check that field type now exists.
     $this->assertArrayHasKey('type', $fields);

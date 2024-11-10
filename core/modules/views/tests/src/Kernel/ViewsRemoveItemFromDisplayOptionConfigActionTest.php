@@ -25,12 +25,14 @@ class ViewsRemoveItemFromDisplayOptionConfigActionTest extends ViewsKernelTestBa
    */
   public function testRemoveFieldFromDefaultDisplay() : void {
     $view = Views::getView('entity_test_fields');
+    $view->setDisplay();
     $fields = $view->displayHandlers->get('default')->getOption('fields');
     // Check that field type is not part of default display.
     $this->assertArrayHasKey('name', $fields);
     // Apply config action that removes field name from default display.
     $this->applyAction('views.view.entity_test_fields');
     $view = Views::getView('entity_test_fields');
+    $view->setDisplay();
     $fields = $view->displayHandlers->get('default')->getOption('fields');
     // Check that field type now exists.
     $this->assertArrayNotHasKey('name', $fields);
