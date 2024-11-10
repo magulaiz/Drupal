@@ -389,7 +389,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         }
       }
 
-      $this->moduleHandler->invokeAll('modules_installed', [$modules_installed, $sync_status]);
+      $this->invokeAll('modules_installed', [$modules_installed, $sync_status]);
     }
 
     return TRUE;
@@ -471,7 +471,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
 
       // Allow modules to react prior to the uninstallation of a module.
-      $this->moduleHandler->invokeAll('module_preuninstall', [$module, $sync_status]);
+      $this->invokeAll('module_preuninstall', [$module, $sync_status]);
 
       // Uninstall the module.
       $this->moduleHandler->loadInclude($module, 'install');
@@ -565,12 +565,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
     \Drupal::service('router.builder')->rebuild();
 
     // Let other modules react.
-    $this->moduleHandler->invokeAll('modules_uninstalled', [$module_list, $sync_status]);
+    $this->invokeAll('modules_uninstalled', [$module_list, $sync_status]);
 
     // Flush all persistent caches.
     // Any cache entry might implicitly depend on the uninstalled modules,
     // so clear all of them explicitly.
-    $this->moduleHandler->invokeAll('cache_flush');
+    $this->invokeAll('cache_flush');
     foreach (Cache::getBins() as $cache_backend) {
       $cache_backend->deleteAll();
     }
@@ -725,7 +725,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
   protected function invokeAll($hook, $args = []): void {
     $this->moduleHandler->loadAll();
     foreach ($this->moduleHandler->getModuleList() as $module => $extension) {
-      $this->invoke($module, $hook, $args);
+      $this->moduleHandler->invoke($module, $hook, $args);
     }
   }
 
