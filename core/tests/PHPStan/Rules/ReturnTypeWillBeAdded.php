@@ -9,6 +9,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Node\InClassMethodNode;
 use PHPStan\PhpDoc\ResolvedPhpDocBlock;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
+use PHPStan\Reflection\Php\PhpMethodReflection;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\FileTypeMapper;
@@ -124,7 +125,7 @@ final class ReturnTypeWillBeAdded implements Rule {
       return [];
     }
     $prototypeMethod = $prototypeClass->getMethod($methodName, $scope);
-    $prototypeTrait = $prototypeMethod->getDeclaringTrait();
+    $prototypeTrait = $prototypeMethod instanceof PhpMethodReflection ? $prototypeMethod->getDeclaringTrait() : NULL;
 
     // Get PHPDoc for the prototype.
     $resolvedPrototypePhpDoc = $this->fileTypeMapper->getResolvedPhpDoc(
