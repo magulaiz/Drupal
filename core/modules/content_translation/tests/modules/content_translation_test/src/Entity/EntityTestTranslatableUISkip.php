@@ -20,6 +20,7 @@ use Drupal\entity_test\Entity\EntityTest;
  *     "bundle" = "type",
  *     "label" = "name",
  *     "langcode" = "langcode",
+ *     "owner" = "user_id",
  *   },
  *   translatable = TRUE,
  *   content_translation_ui_skip = TRUE,

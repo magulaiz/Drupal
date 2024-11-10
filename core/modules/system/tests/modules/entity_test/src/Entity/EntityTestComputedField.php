@@ -26,6 +26,7 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
  *     "id" = "id",
  *     "uuid" = "uuid",
  *     "label" = "name",
+ *      "owner" = "user_id",
  *   },
  *   admin_permission = "administer entity_test content",
  *   links = {

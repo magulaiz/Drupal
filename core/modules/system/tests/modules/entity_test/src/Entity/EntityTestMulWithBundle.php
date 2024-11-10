@@ -34,6 +34,7 @@ namespace Drupal\entity_test\Entity;
  *     "bundle" = "type",
  *     "label" = "name",
  *     "langcode" = "langcode",
+ *     "owner" = "user_id",
  *   },
  *   bundle_entity_type = "entity_test_mul_bundle",
  *   links = {

@@ -26,6 +26,7 @@ namespace Drupal\entity_test\Entity;
  *     "uuid" = "uuid",
  *     "bundle" = "type",
  *     "label" = "name",
+ *     "owner" = "user_id",
  *   },
  *   links = {
  *     "add-page" = "/entity_test_add_page/{user}/add",

@@ -30,7 +30,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "uuid" = "uuid",
  *     "bundle" = "type",
  *     "label" = "name",
- *     "langcode" = "langcode"
+ *     "langcode" = "langcode",
+ *     "owner" = "user_id",
  *   },
  *   links = {
  *     "canonical" = "/entity_test_mul_default_value/manage/{entity_test_mul_default_value}",

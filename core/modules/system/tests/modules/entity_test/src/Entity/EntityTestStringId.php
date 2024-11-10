@@ -29,6 +29,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "uuid" = "uuid",
  *     "bundle" = "type",
  *     "label" = "name",
+ *     "owner" = "user_id",
  *   },
  *   links = {
  *     "canonical" = "/entity_test_string_id/manage/{entity_test_string_id}",

@@ -15,6 +15,7 @@ namespace Drupal\entity_test\Entity;
  *   },
  *   entity_keys = {
  *     "bundle" = "type",
+ *     "owner" = "user_id",
  *   },
  *   admin_permission = "administer entity_test content",
  *   field_ui_base_route = "entity.entity_test_no_id.admin_form",

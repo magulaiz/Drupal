@@ -28,6 +28,7 @@ use Drupal\entity_test\Entity\EntityTest;
  *     "bundle" = "type",
  *     "label" = "name",
  *     "langcode" = "langcode",
+ *     "owner" = "user_id",
  *   },
  *   translatable = TRUE,
  *   admin_permission = "administer entity_test content",

@@ -19,6 +19,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "id" = "id",
  *     "label" = "name",
  *     "langcode" = "langcode",
+ *     "owner" = "user_id",
  *   },
  *   admin_permission = "administer entity_test content",
  * )

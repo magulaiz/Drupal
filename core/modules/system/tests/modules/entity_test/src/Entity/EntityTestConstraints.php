@@ -19,7 +19,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "id" = "id",
  *     "uuid" = "uuid",
  *     "bundle" = "type",
- *     "label" = "name"
+ *     "label" = "name",
+ *     "owner" = "user_id",
  *   },
  *   base_table = "entity_test_constraints",
  *   persistent_cache = FALSE,

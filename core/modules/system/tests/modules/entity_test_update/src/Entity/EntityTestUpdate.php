@@ -9,6 +9,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\user\EntityOwnerInterface;
+use Drupal\user\EntityOwnerTrait;
 
 /**
  * Defines the test entity class for testing definition and schema updates.
@@ -33,11 +35,14 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *     "bundle" = "type",
  *     "label" = "name",
  *     "langcode" = "langcode",
+ *     "owner" = "user_id",
  *   },
  *   content_translation_ui_skip = TRUE,
  * )
  */
-class EntityTestUpdate extends ContentEntityBase {
+class EntityTestUpdate extends ContentEntityBase implements EntityOwnerInterface {
+
+  use EntityOwnerTrait;
 
   /**
    * {@inheritdoc}

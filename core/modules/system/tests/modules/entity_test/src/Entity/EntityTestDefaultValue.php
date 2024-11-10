@@ -18,7 +18,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "id" = "id",
  *     "uuid" = "uuid",
  *     "bundle" = "type",
- *     "langcode" = "langcode"
+ *     "langcode" = "langcode",
+ *     "owner" = "user_id",
  *   }
  * )
  */

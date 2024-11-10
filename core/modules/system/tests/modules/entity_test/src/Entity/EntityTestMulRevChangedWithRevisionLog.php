@@ -23,6 +23,7 @@ use Drupal\Core\Entity\RevisionLogInterface;
  *     "revision" = "revision_id",
  *     "label" = "name",
  *     "langcode" = "langcode",
+ *     "owner" = "user_id",
  *   },
  *   revision_metadata_keys = {
  *     "revision_user" = "revision_user",

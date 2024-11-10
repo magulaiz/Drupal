@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\user\EntityOwnerInterface;
-use Drupal\user\UserInterface;
+use Drupal\user\EntityOwnerTrait;
 
 /**
  * Defines the test entity class.
@@ -40,6 +40,7 @@ use Drupal\user\UserInterface;
  *     "bundle" = "type",
  *     "label" = "name",
  *     "langcode" = "langcode",
+ *     "owner" = "user_id",
  *   },
  *   links = {
  *     "canonical" = "/entity_test/{entity_test}",
@@ -54,6 +55,8 @@ use Drupal\user\UserInterface;
  * template. See https://www.drupal.org/node/2293697.
  */
 class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
+
+  use EntityOwnerTrait;
 
   /**
    * {@inheritdoc}
@@ -91,56 +94,9 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
       ->setDescription(t('Time the entity was created'))
       ->setTranslatable(TRUE);
 
-    $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('User ID'))
-      ->setDescription(t('The ID of the associated user.'))
-      ->setSetting('target_type', 'user')
-      ->setSetting('handler', 'default')
-      // Default EntityTest entities to have the root user as the owner, to
-      // simplify testing.
-      ->setDefaultValue([0 => ['target_id' => 1]])
-      ->setTranslatable(TRUE)
-      ->setDisplayOptions('form', [
-        'type' => 'entity_reference_autocomplete',
-        'weight' => -1,
-        'settings' => [
-          'match_operator' => 'CONTAINS',
-          'size' => '60',
-          'placeholder' => '',
-        ],
-      ]);
+    $fields += static::ownerBaseFieldDefinitions($entity_type);
 
     return $fields + \Drupal::state()->get($entity_type->id() . '.additional_base_field_definitions', []);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOwner() {
-    return $this->get('user_id')->entity;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOwnerId() {
-    return $this->get('user_id')->target_id;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOwnerId($uid) {
-    $this->set('user_id', $uid);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOwner(UserInterface $account) {
-    $this->set('user_id', $account->id());
-    return $this;
   }
 
   /**

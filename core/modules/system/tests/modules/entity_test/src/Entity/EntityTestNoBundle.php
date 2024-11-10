@@ -17,6 +17,7 @@ namespace Drupal\entity_test\Entity;
  *   entity_keys = {
  *     "id" = "id",
  *     "revision" = "revision_id",
+ *     "owner" = "user_id",
  *   },
  *   admin_permission = "administer entity_test content",
  *   links = {

@@ -13,7 +13,8 @@ namespace Drupal\entity_test\Entity;
  *   base_table = "entity_test_default_access",
  *   entity_keys = {
  *     "id" = "id",
- *     "bundle" = "type"
+ *     "bundle" = "type",
+ *     "owner" = "user_id",
  *   }
  * )
  */

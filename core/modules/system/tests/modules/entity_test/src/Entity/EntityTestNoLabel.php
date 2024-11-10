@@ -20,6 +20,7 @@ namespace Drupal\entity_test\Entity;
  *     "id" = "id",
  *     "uuid" = "uuid",
  *     "bundle" = "type",
+ *     "owner" = "user_id",
  *   },
  * )
  */

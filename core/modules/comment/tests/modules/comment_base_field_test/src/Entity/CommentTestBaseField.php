@@ -19,7 +19,8 @@ use Drupal\entity_test\Entity\EntityTest;
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
- *     "bundle" = "type"
+ *     "bundle" = "type",
+ *     "owner" = "user_id",
  *   },
  * )
  */

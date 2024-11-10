@@ -17,6 +17,7 @@ use Drupal\Core\Url;
  *     "id" = "id",
  *     "uuid" = "uuid",
  *     "bundle" = "type",
+ *     "owner" = "user_id",
  *   },
  *   links = {
  *     "canonical" = "/entity_test_external/{entity_test_external}"
