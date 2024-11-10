@@ -140,7 +140,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
         foreach ($fields as $field_name => $definition) {
           if ($definition->isComputed() || (!empty($storage_definitions[$field_name]) && _content_translation_is_field_translatability_configurable($entity_type, $storage_definitions[$field_name]))) {
             $form['settings'][$entity_type_id][$bundle]['fields'][$field_name] = [
-              '#label' => $definition->getLabel(),
+              '#title' => $definition->getLabel(),
               '#type' => 'checkbox',
               '#default_value' => $definition->isTranslatable(),
             ];
@@ -155,6 +155,8 @@ function _content_translation_form_language_content_settings_form_alter(array &$
           // Only show the checkbox to enable translation if the bundles in the
           // entity might have fields and if there are fields to translate.
           $form['settings'][$entity_type_id][$bundle]['translatable'] = [
+            '#title' => t('Translatable'),
+            '#title_display' => 'invisible',
             '#type' => 'checkbox',
             '#default_value' => $content_translation_manager->isEnabled($entity_type_id, $bundle),
           ];

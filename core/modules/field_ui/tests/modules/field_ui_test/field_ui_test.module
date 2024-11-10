@@ -42,6 +42,8 @@ function field_ui_test_form_entity_view_display_edit_form_alter(&$form, FormStat
     ],
     'weight' => [
       '#type' => 'textfield',
+      '#title' => 'Weight',
+      '#title_display' => 'invisible',
       '#default_value' => 0,
       '#size' => 3,
       '#attributes' => ['class' => ['field-weight']],
@@ -49,6 +51,8 @@ function field_ui_test_form_entity_view_display_edit_form_alter(&$form, FormStat
     'parent_wrapper' => [
       'parent' => [
         '#type' => 'select',
+        '#title' => 'Parent',
+        '#title_display' => 'invisible',
         '#options' => ['indent' => 'Indent'],
         '#empty_value' => '',
         '#default_value' => '',
