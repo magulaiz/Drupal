@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Core\Recipe\RecipeRunner;
@@ -57,6 +59,5 @@ YAML;
     $recipe = $this->createRecipe($contents);
     RecipeRunner::processRecipe($recipe);
   }
-
 
 }
