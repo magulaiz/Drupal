@@ -219,7 +219,7 @@
  *   // Use the default sorting of menu links.
  *   ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
  * ];
- * $tree = $menu_tree->transform($tree, $manipulators);
+ * $tree = $menu_tree->transform($tree, $manipulators, $this);
  *
  * // Finally, build a renderable array from the transformed tree.
  * $menu = $menu_tree->build($tree);
