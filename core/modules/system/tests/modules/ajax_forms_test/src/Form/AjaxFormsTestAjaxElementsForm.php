@@ -49,6 +49,42 @@ class AjaxFormsTestAjaxElementsForm extends FormBase {
       '#markup' => '<div id="ajax_datetime_value">No datetime selected.</div>',
     ];
 
+    $form['outside_table_button'] = [
+      '#type' => 'button',
+      '#value' => $this->t('Outside button'),
+      '#ajax' => [
+        'callback' => [$callback_object, 'outsideTableCallback'],
+      ],
+    ];
+    $form['information'] = [
+      '#type' => 'table',
+      '#header' => [
+        $this->t('Column 1'),
+        $this->t('Column 2'),
+      ],
+      '#rows' => [
+        [
+          'column_1' => [
+            'data' => [
+              '#type' => 'button',
+              '#value' => $this->t('Inside button'),
+              '#attributes' => [
+                'id' => ['edit-inside-table-button'],
+              ],
+              '#ajax' => [
+                'callback' => [$callback_object, 'insideTableCallback'],
+              ],
+            ],
+          ],
+          'column_2' => [
+            'data' => [
+              '#markup' => '<div id="ajax_table_row_result">No table row result</div>',
+            ],
+          ],
+        ],
+      ],
+    ];
+
     return $form;
   }
 
