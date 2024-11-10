@@ -28,7 +28,7 @@ class ConfigTestHooksHooks {
     if (\Drupal::state()->get('config_test.prepopulate')) {
       $config_test->set('foo', 'baz');
     }
-    _config_test_update_is_syncing_store('create', $config_test);
+    $this->updateIsSyncingStore('create', $config_test);
   }
 
   /**
@@ -37,7 +37,7 @@ class ConfigTestHooksHooks {
   #[Hook('config_test_presave')]
   public function configTestPresave(ConfigTest $config_test) {
     $GLOBALS['hook_config_test']['presave'] = 'config_test_config_test_presave';
-    _config_test_update_is_syncing_store('presave', $config_test);
+    $this->updateIsSyncingStore('presave', $config_test);
   }
 
   /**
@@ -46,7 +46,7 @@ class ConfigTestHooksHooks {
   #[Hook('config_test_insert')]
   public function configTestInsert(ConfigTest $config_test) {
     $GLOBALS['hook_config_test']['insert'] = 'config_test_config_test_insert';
-    _config_test_update_is_syncing_store('insert', $config_test);
+    $this->updateIsSyncingStore('insert', $config_test);
   }
 
   /**
@@ -55,7 +55,7 @@ class ConfigTestHooksHooks {
   #[Hook('config_test_update')]
   public function configTestUpdate(ConfigTest $config_test) {
     $GLOBALS['hook_config_test']['update'] = 'config_test_config_test_update';
-    _config_test_update_is_syncing_store('update', $config_test);
+    $this->updateIsSyncingStore('update', $config_test);
   }
 
   /**
@@ -64,7 +64,7 @@ class ConfigTestHooksHooks {
   #[Hook('config_test_predelete')]
   public function configTestPredelete(ConfigTest $config_test) {
     $GLOBALS['hook_config_test']['predelete'] = 'config_test_config_test_predelete';
-    _config_test_update_is_syncing_store('predelete', $config_test);
+    $this->updateIsSyncingStore('predelete', $config_test);
   }
 
   /**
@@ -73,7 +73,25 @@ class ConfigTestHooksHooks {
   #[Hook('config_test_delete')]
   public function configTestDelete(ConfigTest $config_test) {
     $GLOBALS['hook_config_test']['delete'] = 'config_test_config_test_delete';
-    _config_test_update_is_syncing_store('delete', $config_test);
+    $this->updateIsSyncingStore('delete', $config_test);
   }
+
+  /**
+   * Helper function for testing hooks during configuration sync.
+   *
+   * @param string $hook
+   *   The fired hook.
+   * @param \Drupal\config_test\Entity\ConfigTest $config_test
+   *   The ConfigTest entity.
+   */
+  protected function updateIsSyncingStore($hook, ConfigTest $config_test) {
+    $current_value = \Drupal::state()->get('config_test.store_isSyncing', FALSE);
+    if ($current_value !== FALSE) {
+      $current_value['global_state::' . $hook] = \Drupal::isConfigSyncing();
+      $current_value['entity_state::' . $hook] = $config_test->isSyncing();
+      \Drupal::state()->set('config_test.store_isSyncing', $current_value);
+    }
+  }
+
 
 }
