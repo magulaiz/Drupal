@@ -25,12 +25,14 @@ class ViewsSetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
    */
   public function testSetDefaultDisplay() : void {
     $view = Views::getView('entity_test_fields');
+    $view->setDisplay();
     $pager = $view->displayHandlers->get('default')->getOption('pager');
     // Check that pager type is full.
     $this->assertSame('full', $pager['type']);
     // Apply config action that set pager to mini for default display.
     $this->applyAction('views.view.entity_test_fields');
     $view = Views::getView('entity_test_fields');
+    $view->setDisplay();
     $pager = $view->displayHandlers->get('default')->getOption('pager');
     // Check that pager type is mini.
     $this->assertSame('mini', $pager['type']);
