@@ -31,7 +31,7 @@ class SystemTestHooks {
    * Implements hook_module_preinstall().
    */
   #[Hook('module_preinstall')]
-  public function modulePreinstall() {
+  public function modulePreinstall($module, $is_syncing): void {
     \Drupal::messenger()->addStatus('system_test_preinstall_module called');
     \Drupal::state()->set('system_test_preinstall_module', $module);
 
