@@ -47,35 +47,43 @@ class ReturnTypeWillBeAddedTest extends RuleTestCase {
         ],
         [
           "Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooInterface::fooInterfaceValidAnnotationForAbstractClassImplementation() will add 'bool' as a native return type declaration in version 42.0.0. Add the return type to the implementation now.",
-          65,
+          81,
         ],
         [
           "Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooAbstract::fooAbstractDuplicateAnnotation() '@return-type-will-be-added' annotation should only be defined once. Found 2 instances.",
-          101,
+          117,
         ],
         [
           "Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooAbstract::fooAbstractNativeReturnTypeExistsAlready() specifies a '@return-type-will-be-added' annotation, but already has a 'bool' native return type.",
-          109,
+          125,
         ],
         [
           "Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooAbstract::fooAbstractMissingPhpDocReturnType() specifies a '@return-type-will-be-added' annotation, but a '@return' annotation is missing.",
-          116,
+          132,
         ],
         [
           "Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooInterface::fooInterfaceValidAnnotationForConcreteClassImplementation() will add 'bool' as a native return type declaration in version 42.0.0. Add the return type to the implementation now.",
-          129,
+          145,
         ],
         [
           "Declaration of Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\Foo::fooInterfaceValidAnnotationForConcreteClassImplementationOfWrongType(): string must be compatible with Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooInterface::fooInterfaceValidAnnotationForConcreteClassImplementationOfWrongType(): bool that will be added as a native return type declaration in version 42.0.0. Change the return type to the implementation now.",
-          133,
+          149,
+        ],
+        [
+          "Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooTrait::fooTraitValidAnnotationForUseInAbstractClassOverriddenInConcreteClass() will add 'bool' as a native return type declaration in the future. Add the return type to the implementation now.",
+          153,
+        ],
+        [
+          "Declaration of Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\Foo::fooTraitValidAnnotationForUseInAbstractClassOverriddenInConcreteClassWithNativeTypeSpecified(): string must be compatible with Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooTrait::fooTraitValidAnnotationForUseInAbstractClassOverriddenInConcreteClassWithNativeTypeSpecified(): bool that will be added as a native return type declaration in the future. Change the return type to the implementation now.",
+          157,
         ],
         [
           "Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\FooAbstract::fooAbstractValidAnnotation() will add 'bool' as a native return type declaration in version 42.0.0. Add the return type to the implementation now.",
-          137,
+          161,
         ],
         [
           "Drupal\\PHPStanTestFixture\\ReturnTypeWillBeAdded\\Foo::fooMissingPhpDocReturnType() specifies a '@return-type-will-be-added' annotation, but a '@return' annotation is missing.",
-          144,
+          168,
         ],
       ],
     );
