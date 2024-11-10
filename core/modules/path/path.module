@@ -131,7 +131,9 @@ function path_entity_translation_create(ContentEntityInterface $translation) {
  * Implements hook_field_widget_single_element_form_alter().
  */
 function path_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
-  $field_definition = $context['items']->getFieldDefinition();
+  /** @var \Drupal\Core\Field\FieldItemListInterface $items */
+  $items = $context['items'];
+  $field_definition = $items->getFieldDefinition();
   $field_name = $field_definition->getName();
   $entity_type = $field_definition->getTargetEntityTypeId();
   $widget_name = $context['widget']->getPluginId();
@@ -145,6 +147,18 @@ function path_field_widget_single_element_form_alter(&$element, FormStateInterfa
       $element['value']['#description'] = t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set as <em>- Not specified -</em>.');
       $element['value']['#empty_value'] = LanguageInterface::LANGCODE_NOT_SPECIFIED;
       $element['value']['#empty_option'] = t('- Not specified -');
+
+      // Set default language for new path alias entities.
+      $entity = $items->getEntity();
+      if ($entity->isNew()) {
+        if (\Drupal::moduleHandler()->moduleExists('language')) {
+          $language_code = language_get_default_langcode($entity_type, $entity->bundle());
+        }
+        else {
+          $language_code = \Drupal::languageManager()->getCurrentLanguage()->getId();
+        }
+        $element['value']['#default_value'] = $language_code;
+      }
     }
 
     if ($field_name === 'path') {
