@@ -38,6 +38,7 @@ final class NavigationMenuBlock extends SystemMenuBlock implements ContainerFact
       $plugin_definition,
       $container->get('navigation.menu_tree'),
       $container->get('menu.active_trail'),
+      $container->get('language_manager'),
     );
   }
 
