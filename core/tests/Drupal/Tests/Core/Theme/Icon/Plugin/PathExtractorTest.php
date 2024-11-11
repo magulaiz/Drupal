@@ -75,6 +75,7 @@ class PathExtractorTest extends UnitTestCase {
         'foo' => [
           'icon_id' => 'foo',
           'source' => 'source/foo.svg',
+          'absolute_path' => '/path/source/foo.svg',
         ],
       ],
     ];
@@ -84,16 +85,19 @@ class PathExtractorTest extends UnitTestCase {
         'foo' => [
           'icon_id' => 'foo',
           'source' => 'source/foo.svg',
+          'absolute_path' => '/path/source/foo.svg',
           'group' => 'baz',
         ],
         'bar' => [
           'icon_id' => 'bar',
           'source' => 'source/bar.svg',
+          'absolute_path' => '/path/source/bar.svg',
           'group' => NULL,
         ],
         'baz' => [
           'icon_id' => 'baz',
           'source' => 'source/baz.svg',
+          'absolute_path' => '/path/source/baz.svg',
         ],
       ],
     ];

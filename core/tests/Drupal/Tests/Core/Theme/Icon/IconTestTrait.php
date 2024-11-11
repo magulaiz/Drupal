@@ -51,7 +51,7 @@ trait IconTestTrait {
    * @return \Drupal\Core\Theme\Icon\IconDefinitionInterface
    *   The icon mocked.
    */
-  protected function createTestIcon(array $data): IconDefinitionInterface {
+  protected function createTestIcon(array $data = []): IconDefinitionInterface {
     $filtered_data = $data;
     $keys = ['pack_id', 'icon_id', 'template', 'source', 'group'];
     foreach ($keys as $key) {

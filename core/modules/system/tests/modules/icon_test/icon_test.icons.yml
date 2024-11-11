@@ -9,8 +9,9 @@ test_minimal:
 test_path:
   enabled: true
   label: Test path
-  description: Local png files available for test.
+  description: Local png files available for test with all metas.
   links:
+    - https://www.drupal.org
     - https://www.drupal.org
   version: 1.0.0
   license:
@@ -62,9 +63,12 @@ test_svg:
       title: "Size"
       type: "integer"
   template: >
-    {{ icon_id }}:
-    <svg xmlns="https://www.w3.org/2000/svg" aria-hidden="true"
-      {{ attributes.setAttribute('viewBox', attributes.viewBox|default('0 0 50 50')).setAttribute('width', size|default('32')).setAttribute('height', size|default('32')) }}
+    {{ icon_id }}: <svg
+      xmlns="https://www.w3.org/2000/svg"
+      viewBox="0 0 50 50"
+      width="{{ size|default(32) }}"
+      height="{{ size|default(32) }}"
+      aria-hidden="true"
     >
       {{ content }}
     </svg>
@@ -86,10 +90,11 @@ test_svg_sprite:
       type: "integer"
       default: 32
   template: >
-    {{ icon_id }}:
-    <svg
+    {{ icon_id }}: <svg
       xmlns="https://www.w3.org/2000/svg"
-      {{ attributes.setAttribute('width', width|default('32')).setAttribute('height', height|default('32')) }}
+      width="{{ width|default(32) }}"
+      height="{{ height|default(32) }}"
+      aria-hidden="true"
     >
       <use xlink:href="{{ source }}#{{ icon_id }}"/>
     </svg>
@@ -100,7 +105,7 @@ test_settings:
   extractor: path
   config:
     sources:
-      - icons/settings/*.svg
+      - icons/settings/*
   settings:
     width:
       title: "Width"
@@ -165,6 +170,17 @@ test_settings:
       data-decimal="{{ decimal }}"
       data-number="{{ number }}"
     >
+    <ul>
+      <li>width: {{ width }}</li>
+      <li>height: {{ height }}</li>
+      <li>title: {{ title }}</li>
+      <li>alt: {{ alt }}</li>
+      <li>select: {{ select }}</li>
+      <li>select_string: {{ select_string }}</li>
+      <li>boolean: {{ boolean }}</li>
+      <li>decimal: {{ decimal }}</li>
+      <li>number: {{ number }}</li>
+    </ul>
 
 test_no_settings:
   enabled: true
@@ -187,23 +203,34 @@ test_url_path:
     sources:
       - https://www.drupal.org/files/D10-logo.png
       - https://www.drupal.org/files/drupal-wordmark.png
-      - ftp://test.com/ignored_1.png
-      - ssh://test.com/ignored_2.png
       - htp://test.com/invalid.jpg
   template: >
     {{ icon_id }}: <img src="{{ source }}" width="32" height="32">
 
 test_url_svg:
   enabled: true
-  label: Test url svg
+  label: Test url svg empty
   extractor: svg
   config:
     sources:
-      # This will be ignored, remote svg not allowed.
+      # This will be ignored.
       - https://www.drupal.org/files/drupal-wordmark.svg
   template: >
     {{ icon_id }}: <svg xmlns="https://www.w3.org/2000/svg">
       {{ content }}
+    </svg>
+
+test_url_svg_sprite:
+  enabled: false
+  label: Test url svg sprite disabled and empty
+  extractor: svg_sprite
+  config:
+    sources:
+      - https://test.com/ignored.png
+      - https://test.com/ignored.gif
+  template: >
+    <svg xmlns="https://www.w3.org/2000/svg">
+      <use xlink:href="{{ source }}#{{ icon_id }}"/>
     </svg>
 
 test_no_icons:
@@ -215,6 +242,7 @@ test_no_icons:
       - icons/empty/*
   template: '{{ icon_id }}'
 
+# @todo enable and log error instead.
 test_invalid_path:
   enabled: true
   extractor: path

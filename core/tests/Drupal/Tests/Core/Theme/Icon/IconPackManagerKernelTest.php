@@ -27,7 +27,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
    */
   private const TEST_ICON_FULL_ID = 'test_minimal:foo';
 
-  private const EXPECTED_TOTAL_TEST_ICONS = 32;
+  private const EXPECTED_TOTAL_TEST_ICONS = 30;
 
   /**
    * {@inheritdoc}
@@ -126,19 +126,19 @@ class IconPackManagerKernelTest extends KernelTestBase {
       'test_svg_sprite' => 'Test sprite (3)',
       'test_no_settings' => 'test_no_settings (1)',
       'test_settings' => 'Test settings (1)',
-      'test_url_path' => 'Test url path (4)',
+      'test_url_path' => 'Test url path (2)',
     ];
     $this->assertEquals($expected, $actual);
 
     $actual = $this->pluginManagerIconPack->listIconPackOptions(TRUE);
     $expected = [
       'test_minimal' => 'test_minimal (1)',
-      'test_path' => 'Test path - Local png files available for test. (10)',
+      'test_path' => 'Test path - Local png files available for test with all metas. (10)',
       'test_svg' => 'Test svg (12)',
       'test_svg_sprite' => 'Test sprite (3)',
       'test_no_settings' => 'test_no_settings (1)',
       'test_settings' => 'Test settings (1)',
-      'test_url_path' => 'Test url path (4)',
+      'test_url_path' => 'Test url path (2)',
     ];
     $this->assertEquals($expected, $actual);
   }

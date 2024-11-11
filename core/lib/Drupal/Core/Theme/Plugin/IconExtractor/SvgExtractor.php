@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Theme\Plugin\IconExtractor;
 
-use Drupal\Core\Template\Attribute;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Icon\Attribute\IconExtractor;
-use Drupal\Core\Theme\Icon\IconExtractorWithFinder;
-use Drupal\Core\Theme\Icon\IconPackExtractorForm;
 use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\IconDefinitionInterface;
+use Drupal\Core\Theme\Icon\IconExtractorWithFinder;
+use Drupal\Core\Theme\Icon\IconPackExtractorForm;
 
 /**
  * Plugin implementation of the icon_extractor.
@@ -98,7 +98,7 @@ class SvgExtractor extends IconExtractorWithFinder {
    * @param string $source
    *   Local path or url to the svg file.
    *
-   * @return array<string, string|null>|null
+   * @return array|null
    *   The SVG `content` as string and `viewbox` value if any.
    */
   private function extractSvg(string $source): ?array {
@@ -121,7 +121,7 @@ class SvgExtractor extends IconExtractorWithFinder {
       $return['content'] .= $child->asXML();
     }
 
-    if (!isset($return['content'])) {
+    if (empty($return['content'])) {
       return NULL;
     }
 
