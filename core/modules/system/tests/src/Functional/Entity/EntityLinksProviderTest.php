@@ -1,0 +1,59 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\Tests\system\Functional\Entity;
+
+use Drupal\Tests\BrowserTestBase;
+
+/**
+ * Tests the entity form.
+ *
+ * @group Entity
+ */
+class EntityLinksProviderTest extends BrowserTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  protected static $modules = [
+    'block',
+    'entity_test',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalPlaceBlock('local_actions_block');
+
+    $web_user = $this->drupalCreateUser([
+      'administer entity ui tests',
+      'administer entity ui test types',
+    ]);
+    $this->drupalLogin($web_user);
+  }
+
+  /**
+   * Tests the UI of the entity types using the entity links provider.
+   */
+  public function testEntityUI() {
+    // Test the config entity UI.
+    $this->drupalGet('admin/structure/entity_ui_test_type');
+    $this->assertSession()->linkExists("Add entity ui test type");
+
+    // Test the content entity UI.
+    // @todo Test all the things.
+  }
+
+}

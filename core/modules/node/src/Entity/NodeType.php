@@ -31,6 +31,7 @@ use Drupal\node\NodeTypeInterface;
  *     "route_provider" = {
  *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProvider",
  *     },
+ *     "link_provider" = "Drupal\node\Menu\NodeTypeLinksProvider",
  *     "list_builder" = "Drupal\node\NodeTypeListBuilder",
  *   },
  *   admin_permission = "administer content types",

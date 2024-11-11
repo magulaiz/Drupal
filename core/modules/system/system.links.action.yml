@@ -4,3 +4,9 @@ system.date_format_add:
   weight: -10
   appears_on:
     - entity.date_format.collection
+
+# Action links for entity types, derived by their link_provider handlers.
+# This is in system module rather than in the Entity component, because YAML
+# plugin discovery doesn't look there.
+system.entity:
+  deriver: \Drupal\Core\Entity\Plugin\Derivative\EntityActionLinkDeriver

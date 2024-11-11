@@ -24,6 +24,13 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
   protected $themeHandler;
 
   /**
+   * The mocked entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -62,6 +69,15 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
         'foo' => $fooEntityDefinition,
       ]);
     $this->container->set('entity_type.manager', $entityTypeManager);
+
+    // Mock the entity type manager: the local task deriver
+    // \Drupal\Core\Entity\Plugin\Derivative\EntityTaskLinkDeriver calls it.
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
+    $this->entityTypeManager->expects($this->any())
+      ->method('getDefinitions')
+      ->willReturn([]);
+
+    $this->container->set('entity_type.manager', $this->entityTypeManager);
   }
 
   /**

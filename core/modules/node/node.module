@@ -178,6 +178,17 @@ function node_title_list(StatementInterface $result, $title = NULL) {
 }
 
 /**
+ * Implements hook_menu_links_discovered_alter().
+ */
+function node_menu_links_discovered_alter(&$links) {
+  // Change the plugin IDs from the link provider, to maintain backwards
+  // compatibility.
+  // @todo Remove this when the old plugin IDs can be deprecated.
+  $links['entity.node_type.collection'] = $links['system.entity:entity.node_type.collection'];
+  unset($links['system.entity:entity.node_type.collection']);
+}
+
+/**
  * Implements hook_local_tasks_alter().
  */
 function node_local_tasks_alter(&$local_tasks): void {
@@ -186,6 +197,41 @@ function node_local_tasks_alter(&$local_tasks): void {
   // 'entity.version_history:node.version_history' after
   // https://www.drupal.org/project/drupal/issues/3153559.
   unset($local_tasks['entity.version_history:node.version_history']);
+
+  // Change the plugin IDs from the link provider, to maintain backwards
+  // compatibility.
+  // @todo Remove this when the old plugin IDs can be deprecated.
+  $local_tasks['entity.node_type.collection'] = $local_tasks['system.entity:entity.node_type.collection'];
+  unset($local_tasks['system.entity:entity.node_type.collection']);
+
+  $local_tasks['entity.node_type.edit_form'] = $local_tasks['system.entity:entity.node_type.edit_form'];
+  unset($local_tasks['system.entity:entity.node_type.edit_form']);
+
+  $local_tasks['entity.node.canonical'] = $local_tasks['system.entity:entity.node.canonical'];
+  unset($local_tasks['system.entity:entity.node.canonical']);
+
+  $local_tasks['entity.node.edit_form'] = $local_tasks['system.entity:entity.node.edit_form'];
+  unset($local_tasks['system.entity:entity.node.edit_form']);
+
+  $local_tasks['entity.node.version_history'] = $local_tasks['system.entity:entity.node.version_history'];
+  unset($local_tasks['system.entity:entity.node.version_history']);
+
+  $local_tasks['entity.node.delete_form'] = $local_tasks['system.entity:entity.node.delete_form'];
+  unset($local_tasks['system.entity:entity.node.delete_form']);
+}
+
+/**
+ * Implements hook_menu_local_actions_alter().
+ */
+function node_menu_local_actions_alter(&$local_actions) {
+  // Change the plugin IDs from the link provider, to maintain backwards
+  // compatibility.
+  // @todo Remove this when the old plugin IDs can be deprecated.
+  $local_actions['node.type_add'] = $local_actions['system.entity:entity.node_type.add'];
+  unset($local_actions['system.entity:entity.node_type.add']);
+
+  $local_actions['node.add_page'] = $local_actions['system.entity:entity.node.add'];
+  unset($local_actions['system.entity:entity.node.add']);
 }
 
 /**
