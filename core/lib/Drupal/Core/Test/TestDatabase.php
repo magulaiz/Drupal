@@ -6,6 +6,8 @@ use Drupal\Component\FileSystem\FileSystem;
 
 /**
  * Provides helper methods for interacting with the fixture database.
+ *
+ * @internal
  */
 class TestDatabase {
 

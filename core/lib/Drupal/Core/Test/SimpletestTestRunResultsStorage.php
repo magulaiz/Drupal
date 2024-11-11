@@ -6,6 +6,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 
+// cspell:ignore sttid
+
 /**
  * Implements a test run results storage compatible with legacy Simpletest.
  *
@@ -56,10 +58,24 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
   /**
    * {@inheritdoc}
    */
-  public function createNew(): int|string {
+  public function createNew(string $testClassName): int|string {
     return $this->connection->insert('simpletest_test_id')
       ->useDefaults(['test_id'])
+      ->fields(['test_configuration' => serialize(['testClassName' => $testClassName])])
       ->execute();
+  }
+
+  /**
+   * @todo Add doc.
+   */
+  public function getTestConfiguration(int|string $testId): array {
+    $raw = $this->connection->select('simpletest_test_id', 'sttid')
+      ->fields('sttid', ['test_configuration'])
+      ->condition('test_id', $testId)
+      ->execute()
+      ->fetchField();
+
+    return unserialize($raw);
   }
 
   /**
@@ -255,6 +271,12 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
           'type' => 'serial',
           'not null' => TRUE,
           'description' => 'Primary Key: Unique simpletest ID used to group test results together. Each time a set of tests are run a new test ID is used.',
+        ],
+        'test_configuration' => [
+          'type' => 'text',
+          'not null' => TRUE,
+          'serialize' => TRUE,
+          'description' => 'Configuration of the test run.',
         ],
         'last_prefix' => [
           'type' => 'varchar',

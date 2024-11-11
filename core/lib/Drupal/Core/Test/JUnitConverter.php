@@ -7,7 +7,7 @@ namespace Drupal\Core\Test;
  *
  * This is mainly for converting PHPUnit test results.
  *
- * This class is @internal and not considered to be API.
+ * @internal
  */
 class JUnitConverter {
 
@@ -16,8 +16,9 @@ class JUnitConverter {
    *
    * @param int $test_id
    *   The current test ID.
-   * @param string $phpunit_xml_file
-   *   Path to the PHPUnit XML file.
+   * @param string|false $junit_xml
+   *   The content of the PHPUnit JUnit XML file, that contains the results of
+   *   a PHPUnit test run.
    *
    * @return array[]
    *   The results as array of rows in a format that can be inserted into the
@@ -25,12 +26,11 @@ class JUnitConverter {
    *
    * @internal
    */
-  public static function xmlToRows($test_id, $phpunit_xml_file) {
-    $contents = @file_get_contents($phpunit_xml_file);
-    if (!$contents) {
+  public static function xmlToRows($test_id, $junit_xml) {
+    if ($junit_xml === FALSE) {
       return [];
     }
-    return static::xmlElementToRows($test_id, new \SimpleXMLElement($contents));
+    return static::xmlElementToRows($test_id, new \SimpleXMLElement($junit_xml));
   }
 
   /**

@@ -10,6 +10,7 @@
  * @internal
  */
 
+use Drupal\BuildTests\Framework\BuildTestBase;
 use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Html;
@@ -17,19 +18,17 @@ use Drupal\Component\Utility\Timer;
 use Drupal\Core\Composer\Composer;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\EnvironmentCleaner;
-use Drupal\Core\Test\PhpUnitTestRunner;
-use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Drupal\Core\Test\RunTests\TestFileParser;
+use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Drupal\Core\Test\TestDatabase;
+use Drupal\Core\Test\TestDiscovery;
 use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Test\TestRunResultsStorageInterface;
-use Drupal\Core\Test\TestDiscovery;
-use Drupal\BuildTests\Framework\BuildTestBase;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\BrowserTestBase;
-
+use Drupal\TestTools\PhpUnitRunner;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -72,7 +71,7 @@ if ($args['execute-test']) {
   simpletest_script_setup_database();
   $test_run_results_storage = simpletest_script_setup_test_run_results_storage();
   $test_run = TestRun::get($test_run_results_storage, $args['test-id']);
-  simpletest_script_run_one_test($test_run, $args['execute-test']);
+  simpletest_script_run_one_test($test_run);
   // Sub-process exited already; this is just for clarity.
   exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
 }
@@ -743,8 +742,10 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
         break;
       }
 
+      $test_class = array_shift($test_classes);
+
       try {
-        $test_run = TestRun::createNew($test_run_results_storage);
+        $test_run = TestRun::createNew($test_run_results_storage, $test_class);
       }
       catch (Exception $e) {
         echo (string) $e;
@@ -752,9 +753,8 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
       }
       $test_ids[] = $test_run->id();
 
-      $test_class = array_shift($test_classes);
       // Fork a child process.
-      $command = simpletest_script_command($test_run, $test_class);
+      $command = simpletest_script_command($test_run);
       try {
         $process = new Process($command);
         $process->start();
@@ -828,16 +828,12 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
 /**
  * Run a PHPUnit-based test.
  */
-function simpletest_script_run_phpunit(TestRun $test_run, $class) {
-  $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
+function simpletest_script_run_phpunit(TestRun $test_run) {
+  $runner = PhpUnitRunner::create(\Drupal::getContainer());
   $start = microtime(TRUE);
-  $results = $runner->execute($test_run, $class, $status);
+  $status = $runner->runOneTestClass($test_run);
   $time = microtime(TRUE) - $start;
-
-  $runner->processPhpUnitResults($test_run, $results);
-
-  $summaries = $runner->summarizeResults($results);
-  foreach ($summaries as $class => $summary) {
+  foreach ($test_run->getSummaries() as $class => $summary) {
     simpletest_script_reporter_display_summary($class, $summary, $time);
   }
   return $status;
@@ -846,14 +842,14 @@ function simpletest_script_run_phpunit(TestRun $test_run, $class) {
 /**
  * Run a single test, bootstrapping Drupal if needed.
  */
-function simpletest_script_run_one_test(TestRun $test_run, $test_class) {
+function simpletest_script_run_one_test(TestRun $test_run) {
   global $args;
 
   try {
     if ($args['suppress-deprecations']) {
       putenv('SYMFONY_DEPRECATIONS_HELPER=disabled');
     }
-    $status = simpletest_script_run_phpunit($test_run, $test_class);
+    $status = simpletest_script_run_phpunit($test_run);
     exit($status);
   }
   // DrupalTestCase::run() catches exceptions already, so this is only reached
@@ -867,15 +863,13 @@ function simpletest_script_run_one_test(TestRun $test_run, $test_class) {
 /**
  * Return a command used to run a test in a separate process.
  *
- * @param int $test_id
+ * @param \Drupal\Core\Test\TestRun $test_run
  *   The current test ID.
- * @param string $test_class
- *   The name of the test class to run.
  *
  * @return list<string>
  *   The list of command-line elements.
  */
-function simpletest_script_command(TestRun $test_run, string $test_class): array {
+function simpletest_script_command(TestRun $test_run): array {
   global $args, $php;
 
   $command = [];
@@ -902,7 +896,7 @@ function simpletest_script_command(TestRun $test_run, string $test_class): array
   }
   // --execute-test and class name needs to come last.
   $command[] = '--execute-test';
-  $command[] = $test_class;
+  $command[] = $test_run->testClassName;
 
   return $command;
 }

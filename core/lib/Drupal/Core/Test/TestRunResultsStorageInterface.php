@@ -12,10 +12,13 @@ interface TestRunResultsStorageInterface {
   /**
    * Gets a new unique identifier for a test run.
    *
+   * @param string $testClassName
+   *   The test class name.
+   *
    * @return int|string
    *   A unique identifier.
    */
-  public function createNew(): int|string;
+  public function createNew(string $testClassName): int|string;
 
   /**
    * Sets the test database prefix of a test run in storage.

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Test;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Test\JUnitConverter;
-use Drupal\Core\Test\PhpUnitTestRunner;
 use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Drupal\KernelTests\KernelTestBase;
@@ -55,7 +53,7 @@ class TestRunTest extends KernelTestBase {
    */
   public function testCreateAndGet(): void {
     // Test ::createNew.
-    $test_run = TestRun::createNew($this->testRunResultsStorage);
+    $test_run = TestRun::createNew($this->testRunResultsStorage, 'Test\GroundControl');
     $this->assertEquals(1, $test_run->id());
     $this->assertEquals(0, $this->connection->select('simpletest')->countQuery()->execute()->fetchField());
     $this->assertEquals(1, $this->connection->select('simpletest_test_id')->countQuery()->execute()->fetchField());
@@ -87,14 +85,14 @@ class TestRunTest extends KernelTestBase {
    * @covers ::setDatabasePrefix
    */
   public function testCreateAndRemove(): void {
-    $test_run_1 = TestRun::createNew($this->testRunResultsStorage);
+    $test_run_1 = TestRun::createNew($this->testRunResultsStorage, 'Test\GroundControl');
     $test_run_1->setDatabasePrefix('oddity1234');
     $test_run_1->insertLogEntry($this->getTestLogEntry('Test\GroundControl'));
     $this->assertEquals(1, $test_run_1->id());
     $this->assertEquals(1, $this->connection->select('simpletest')->countQuery()->execute()->fetchField());
     $this->assertEquals(1, $this->connection->select('simpletest_test_id')->countQuery()->execute()->fetchField());
 
-    $test_run_2 = TestRun::createNew($this->testRunResultsStorage);
+    $test_run_2 = TestRun::createNew($this->testRunResultsStorage, 'Test\PlanetEarth');
     $test_run_2->setDatabasePrefix('oddity5678');
     $test_run_2->insertLogEntry($this->getTestLogEntry('Test\PlanetEarth'));
     $this->assertEquals(2, $test_run_2->id());
@@ -115,7 +113,7 @@ class TestRunTest extends KernelTestBase {
    * @covers ::getTestClass
    */
   public function testGetLogEntriesByTestClass(): void {
-    $test_run = TestRun::createNew($this->testRunResultsStorage);
+    $test_run = TestRun::createNew($this->testRunResultsStorage, 'Test\PlanetEarth');
     $test_run->setDatabasePrefix('oddity1234');
     $this->assertEquals(1, $test_run->insertLogEntry($this->getTestLogEntry('Test\PlanetEarth')));
     $this->assertEquals(2, $test_run->insertLogEntry($this->getTestLogEntry('Test\GroundControl')));
@@ -154,7 +152,7 @@ class TestRunTest extends KernelTestBase {
    * @covers ::getLogEntriesByTestClass
    */
   public function testProcessPhpErrorLogFile(): void {
-    $test_run = TestRun::createNew($this->testRunResultsStorage);
+    $test_run = TestRun::createNew($this->testRunResultsStorage, 'Test\PlanetEarth');
     $test_run->setDatabasePrefix('oddity1234');
     $test_run->processPhpErrorLogFile('core/tests/fixtures/test-error.log', 'Test\PlanetEarth');
     $this->assertEquals([
@@ -258,20 +256,6 @@ class TestRunTest extends KernelTestBase {
         'file' => 'Unknown',
       ],
     ], $test_run->getLogEntriesByTestClass());
-  }
-
-  /**
-   * @covers ::insertLogEntry
-   */
-  public function testProcessPhpUnitResults(): void {
-    $phpunit_error_xml = __DIR__ . '/../../../Tests/Core/Test/fixtures/phpunit_error.xml';
-    $res = JUnitConverter::xmlToRows(1, $phpunit_error_xml);
-
-    $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
-    $test_run = TestRun::createNew($this->testRunResultsStorage);
-    $runner->processPhpUnitResults($test_run, $res);
-
-    $this->assertEquals(4, $this->connection->select('simpletest')->countQuery()->execute()->fetchField());
   }
 
   /**

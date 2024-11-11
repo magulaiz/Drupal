@@ -6,7 +6,6 @@ namespace Drupal\Tests\Core\Test;
 
 use Drupal\Core\Test\JUnitConverter;
 use Drupal\Tests\UnitTestCase;
-use org\bovigo\vfs\vfsStream;
 
 /**
  * Tests Drupal\Core\Test\JUnitConverter.
@@ -30,7 +29,7 @@ class JUnitConverterTest extends UnitTestCase {
   public function testXmlToRowsWithErrors(): void {
     $phpunit_error_xml = __DIR__ . '/fixtures/phpunit_error.xml';
 
-    $res = JUnitConverter::xmlToRows(1, $phpunit_error_xml);
+    $res = JUnitConverter::xmlToRows(1, @file_get_contents($phpunit_error_xml));
     $this->assertCount(4, $res, 'All test cases got extracted');
     $this->assertNotEquals('pass', $res[0]['status']);
     $this->assertEquals('fail', $res[0]['status']);
@@ -40,18 +39,13 @@ class JUnitConverterTest extends UnitTestCase {
       $this->assertNotEquals('pass', $res[$i + 1]['status']);
       $this->assertEquals('fail', $res[$i + 1]['status']);
     }
-
-    // Make sure xmlToRows() does not balk if there are no test results.
-    $this->assertSame([], JUnitConverter::xmlToRows(1, 'does_not_exist'));
   }
 
   /**
    * @covers ::xmlToRows
    */
   public function testXmlToRowsEmptyFile(): void {
-    // File system with an empty XML file.
-    vfsStream::setup('junit_test', NULL, ['empty.xml' => '']);
-    $this->assertSame([], JUnitConverter::xmlToRows(23, vfsStream::url('junit_test/empty.xml')));
+    $this->assertSame([], JUnitConverter::xmlToRows(23, ''));
   }
 
   /**

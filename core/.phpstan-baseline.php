@@ -70485,12 +70485,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Test\\\\PhpUnitTestRunnerTest\\:\\:providerTestSummarizeResults\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Test/PhpUnitTestRunnerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Test\\\\RunTests\\\\TestFileParserTest\\:\\:provideTestFileContents\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Test/RunTests/TestFileParserTest.php',
