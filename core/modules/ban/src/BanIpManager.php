@@ -128,7 +128,7 @@ class BanIpManager implements BanIpManagerInterface {
   public function banIp($ip) {
     $this->executeWithTableCheck(function ($ip) {
       $this->connection->merge('ban_ip')
-        ->key(['ip' => $ip])
+        ->key('ip', $ip)
         ->fields(['ip' => $ip])
         ->execute();
     }, $ip);

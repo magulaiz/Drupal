@@ -19,14 +19,6 @@ class BanIpTest extends KernelTestBase {
   protected static $modules = ['ban'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->installSchema('ban', ['ban_ip']);
-  }
-
-  /**
    * Test banning IPs.
    */
   public function testBanIp(): void {
@@ -34,6 +26,7 @@ class BanIpTest extends KernelTestBase {
 
     // Test valid IP addresses.
     $ip = '1.2.3.3';
+    $banIp->isBanned($ip);
     $this->assertCount(0, $this->getIpBans($ip));
     $banIp->banIp($ip);
     $this->assertCount(1, $this->getIpBans($ip));
