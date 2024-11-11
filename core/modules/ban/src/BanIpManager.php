@@ -29,8 +29,11 @@ class BanIpManager implements BanIpManagerInterface {
 
   /**
    * Check if the ban_ip table exists and create it if not.
+   *
+   * @return bool
+   *   Returns TRUE always.
    */
-  protected function ensureTableExists() {
+  protected function ensureTableExists(): bool {
     try {
       $database_schema = $this->connection->schema();
       $schema_definition = $this->schemaDefinition();
@@ -49,8 +52,11 @@ class BanIpManager implements BanIpManagerInterface {
    * Defines the schema for the {ban_ip} table.
    *
    * @internal
+   *
+   * @return array
+   *   Ban module schema.
    */
-  public function schemaDefinition() {
+  public function schemaDefinition(): array {
     $schema = [
       'description' => 'Stores banned IP addresses.',
       'fields' => [
@@ -76,7 +82,15 @@ class BanIpManager implements BanIpManagerInterface {
     return $schema;
   }
 
-  protected function executeWithTableCheck(callable $callback, ...$args) {
+  /**
+   * Defines the schema for the {ban_ip} table.
+   *
+   * @internal
+   *
+   * @return mixed
+   *   This can return any value from the callback.
+   */
+  protected function executeWithTableCheck(callable $callback, ...$args): mixed {
     try {
       return $callback(...$args);
     }
