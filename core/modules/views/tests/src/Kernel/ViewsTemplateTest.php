@@ -45,7 +45,6 @@ class ViewsTemplateTest extends ViewsKernelTestBase {
   }
 
   /**
-   * @covers views_theme_suggestions_container_alter
    * @throws \Exception
    */
   public function testThemeSuggestionsContainerAlter(): void {
