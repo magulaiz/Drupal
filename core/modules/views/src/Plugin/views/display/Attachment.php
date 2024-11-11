@@ -176,7 +176,7 @@ class Attachment extends DisplayPluginBase {
         $form['render_pager'] = [
           '#type' => 'checkbox',
           '#title' => $this->t('Render'),
-          '#description' => $this->t('Should this display render the pager values? This is only meaningful if inheriting a pager.'),
+          '#description' => $this->t('Should this display render the pager values?'),
           '#default_value' => $this->getOption('render_pager'),
         ];
         break;
@@ -254,6 +254,10 @@ class Attachment extends DisplayPluginBase {
       $view->display_handler->usesPager = $this->view->displayHandlers->get($display_id)->usesPager();
       $view->display_handler->setOption('pager', $this->view->displayHandlers->get($display_id)->getOption('pager'));
     }
+    elseif ($this->getOption('render_pager')) {
+      $view->display_handler->usesPager = TRUE;
+      $view->display_handler->setOption('pager', $view->displayHandlers->get($view->current_display)->getOption('pager'));
+    }
 
     $attachment = $view->buildRenderable($this->display['id'], $args);
 
@@ -272,6 +276,12 @@ class Attachment extends DisplayPluginBase {
         break;
     }
 
+  }
+  /**
+   * {@inheritdoc}
+   */
+  public function usesPager() {
+    return $this->getOption('render_pager');
   }
 
   /**
