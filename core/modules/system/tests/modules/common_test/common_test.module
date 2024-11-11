@@ -5,6 +5,8 @@
  * Helper module for the Common tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Language\LanguageInterface;
 
@@ -106,7 +108,7 @@ function common_test_module_implements_alter(&$implementations, $hook) {
 /**
  * Implements hook_theme().
  */
-function common_test_theme() {
+function common_test_theme(): array {
   return [
     'common_test_foo' => [
       'variables' => ['foo' => 'foo', 'bar' => 'bar'],

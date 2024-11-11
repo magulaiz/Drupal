@@ -44,9 +44,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
   ];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',
@@ -77,7 +75,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
   /**
    * Tests the content block listing page.
    */
-  public function testListing() {
+  public function testListing(): void {
     // Test with an admin user.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/content/block');
@@ -183,7 +181,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->drupalGet('admin/content/block');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkNotExists($link_text);
-    $matches = $this->xpath('//td/a');
+    $matches = $this->xpath('//td[1]');
     $actual = $matches[0]->getText();
     $this->assertEquals($label, $actual, 'Label found for test block.');
     $this->assertSession()->linkNotExists('Edit');

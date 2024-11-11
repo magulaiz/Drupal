@@ -5,9 +5,12 @@
  * Provide structure for the administrative interface to Views.
  */
 
+use Drupal\block\BlockInterface;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Analyzer;
 
@@ -60,9 +63,9 @@ function views_ui_entity_type_build(array &$entity_types) {
 /**
  * Implements hook_theme().
  */
-function views_ui_theme() {
+function views_ui_theme(): array {
   return [
-    // edit a view
+    // Edit a view
     'views_ui_display_tab_setting' => [
       'variables' => ['description' => '', 'link' => '', 'settings_links' => [], 'overridden' => FALSE, 'defaulted' => FALSE, 'description_separator' => TRUE, 'class' => []],
       'file' => 'views_ui.theme.inc',
@@ -167,9 +170,9 @@ function views_ui_theme_suggestions_views_ui_view_preview_section(array $variabl
 /**
  * Returns contextual links for each handler of a certain section.
  *
- * @TODO
- *   Bring in relationships
- *   Refactor this function to use much stuff of views_ui_edit_form_get_bucket.
+ * @todo Bring in relationships.
+ * @todo Refactor this function to use much stuff of
+ *    views_ui_edit_form_get_bucket.
  *
  * @param $title
  *   Add a bolded title of this section.
@@ -333,4 +336,32 @@ function views_ui_views_analyze(ViewExecutable $view) {
   }
 
   return $ret;
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function views_ui_entity_operation(EntityInterface $entity): array {
+  $operations = [];
+  if ($entity instanceof BlockInterface) {
+    $plugin = $entity->getPlugin();
+    if ($plugin->getBaseId() === 'views_block') {
+      $view_id_parts = explode('-', $plugin->getDerivativeId());
+      $view_id = $view_id_parts[0] ?? '';
+      $display_id = $view_id_parts[1] ?? '';
+      $view = View::load($view_id);
+      if ($view && $view->access('edit')) {
+        $operations['view-edit'] = [
+          'title' => t('Edit view'),
+          'url' => Url::fromRoute('entity.view.edit_display_form', [
+            'view' => $view_id,
+            'display_id' => $display_id,
+          ]),
+          'weight' => 50,
+        ];
+      }
+    }
+  }
+
+  return $operations;
 }
