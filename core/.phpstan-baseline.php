@@ -3833,13 +3833,13 @@ $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Database\\\\DatabaseConnectionInterface\\:\\:setLogger\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Database/Connection.php',
+	'path' => __DIR__ . '/lib/Drupal/Core/Database/DatabaseConnectionInterface.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Database\\\\NonTransactionalConnection\\:\\:setLogger\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Database/Connection.php',
+	'path' => __DIR__ . '/lib/Drupal/Core/Database/NonTransactionalConnection.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Database\\\\Connection\\:\\:setPrefix\\(\\) has no return type specified\\.$#',
