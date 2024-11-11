@@ -195,6 +195,7 @@ class HookCollectorPass implements CompilerPassInterface {
             $proceduralSystem = [
               'system_theme',
               'system_page_attachments',
+              'system_authorized_init'
             ];
 
             $isProcedural = !in_array($hook, $staticDenyHooks);
