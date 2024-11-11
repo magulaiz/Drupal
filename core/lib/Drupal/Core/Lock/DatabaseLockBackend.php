@@ -3,9 +3,10 @@
 namespace Drupal\Core\Lock;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseConnectionInterface;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
+use Drupal\Core\Database\NonTransactionalConnection;
 
 /**
  * Defines the database lock backend. This is the default backend in Drupal.
@@ -20,23 +21,18 @@ class DatabaseLockBackend extends LockBackendAbstract {
   const TABLE_NAME = 'semaphore';
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
    * Constructs a new DatabaseLockBackend.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    */
-  public function __construct(Connection $database) {
+  public function __construct(protected DatabaseConnectionInterface $database) {
     // __destruct() is causing problems with garbage collections, register a
     // shutdown function instead.
     drupal_register_shutdown_function([$this, 'releaseAll']);
-    $this->database = $database;
+    if (!($database instanceof NonTransactionalConnection) && $this->database->databaseType() !== 'sqlite') {
+      @trigger_error('Calling ' . __METHOD__ . '() with a transactional database connection is deprecated in drupal:10.4.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
+    }
   }
 
   /**

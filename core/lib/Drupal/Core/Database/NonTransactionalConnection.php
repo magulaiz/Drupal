@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database;
 
+use Drupal\Core\Database\Event\DatabaseEvent;
+
 /**
  * A decorator class wrapping a connection, not supporting transactions.
  *
@@ -184,6 +186,41 @@ final class NonTransactionalConnection implements DatabaseConnectionInterface {
    * {@inheritdoc}
    */
   public function condition($conjunction) {
+    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function escapeTable($table) {
+    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function dispatchEvent(DatabaseEvent $event, ?string $eventName = NULL): DatabaseEvent {
+    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function disableEvents(array $eventNames): DatabaseConnectionInterface {
+    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function enableEvents(array $eventNames): DatabaseConnectionInterface {
+    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEventEnabled(string $eventName): bool {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 

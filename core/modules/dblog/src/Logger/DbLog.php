@@ -4,7 +4,9 @@ namespace Drupal\dblog\Logger;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseConnectionInterface;
 use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\NonTransactionalConnection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Logger\LogMessageParserInterface;
 use Drupal\Core\Logger\RfcLoggerTrait;
@@ -23,20 +25,6 @@ class DbLog implements LoggerInterface {
   const DEDICATED_DBLOG_CONNECTION_TARGET = 'dedicated_dblog';
 
   /**
-   * The database connection object.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The message's placeholders parser.
-   *
-   * @var \Drupal\Core\Logger\LogMessageParserInterface
-   */
-  protected $parser;
-
-  /**
    * Constructs a DbLog object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -44,9 +32,13 @@ class DbLog implements LoggerInterface {
    * @param \Drupal\Core\Logger\LogMessageParserInterface $parser
    *   The parser to use when extracting message variables.
    */
-  public function __construct(Connection $connection, LogMessageParserInterface $parser) {
-    $this->connection = $connection;
-    $this->parser = $parser;
+  public function __construct(
+    protected DatabaseConnectionInterface $connection,
+    protected LogMessageParserInterface $parser,
+  ) {
+    if (!($connection instanceof NonTransactionalConnection) && $connection->databaseType() !== 'sqlite') {
+      @trigger_error('Calling ' . __METHOD__ . '() with a transactional database connection is deprecated in drupal:10.4.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
+    }
   }
 
   /**

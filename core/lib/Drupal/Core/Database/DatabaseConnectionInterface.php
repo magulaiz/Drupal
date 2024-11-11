@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database;
 
+use Drupal\Core\Database\Event\DatabaseEvent;
+
 /**
  * Interface for database connections.
  *
@@ -346,5 +348,85 @@ interface DatabaseConnectionInterface {
    *   The database Schema object for this connection.
    */
   public function schema();
+
+  /**
+   * Escapes a table name string.
+   *
+   * Force all table names to be strictly alphanumeric-plus-underscore.
+   * Database drivers should never wrap the table name in database-specific
+   * escape characters. This is done in Connection::prefixTables(). The
+   * database-specific escape characters are added in Connection::setPrefix().
+   *
+   * @param string $table
+   *   An unsanitized table name.
+   *
+   * @return string
+   *   The sanitized table name.
+   *
+   * @see \Drupal\Core\Database\Connection::prefixTables()
+   * @see \Drupal\Core\Database\Connection::setPrefix()
+   */
+  public function escapeTable($table);
+
+  /**
+   * Dispatches a database API event via the container dispatcher.
+   *
+   * @param \Drupal\Core\Database\Event\DatabaseEvent $event
+   *   The database event.
+   * @param string|null $eventName
+   *   (Optional) the name of the event to dispatch.
+   *
+   * @return \Drupal\Core\Database\Event\DatabaseEvent
+   *   The database event.
+   *
+   * @throws \Drupal\Core\Database\Exception\EventException
+   *   If the container is not initialized.
+   */
+  public function dispatchEvent(DatabaseEvent $event, ?string $eventName = NULL): DatabaseEvent;
+
+  /**
+   * Disables database API events dispatching.
+   *
+   *  The return type might appear counter-intuitive but is a BC layer for
+   *  connections which only type hint a return type of static. With the
+   *  introduction of connection decorators (e.g., for non-transactional
+   *  connections) the return type must be covariant, but can be narrowed on
+   *  implementing classes.
+   *
+   * @param string[] $eventNames
+   *   A list of database events to be disabled.
+   *
+   * @return \Drupal\Core\Database\Connection|static
+   */
+  public function disableEvents(array $eventNames): DatabaseConnectionInterface|static;
+
+  /**
+   * Enables database API events dispatching.
+   *
+   * The return type might appear counter-intuitive but is a BC layer for
+   * connections which only type hint a return type of static. With the
+   * introduction of connection decorators (e.g., for non-transactional
+   * connections) the return type must be covariant, but can be narrowed on
+   * implementing classes.
+   *
+   * @param string[] $eventNames
+   *   A list of database events to be enabled.
+   *
+   * @return \Drupal\Core\Database\Connection|static
+   */
+  public function enableEvents(array $eventNames): DatabaseConnectionInterface|static;
+
+  /**
+   * Returns the status of a database API event toggle.
+   *
+   * @param string $eventName
+   *   The name of the event to check.
+   *
+   * @return bool
+   *   TRUE if the event is going to be fired by the database API, FALSE
+   *   otherwise.
+   */
+  public function isEventEnabled(string $eventName): bool;
+
 
 }
