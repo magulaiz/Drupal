@@ -26,7 +26,14 @@ class LockTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->lock = new DatabaseLockBackend($this->container->get('database'));
+    // The test container would otherwise contain the null lock backend,
+    // so it must be specifically constructed, here. Normally the selection of
+    // appropriate database backend would be handled in the service container.
+    $this->lock = new DatabaseLockBackend(
+      $this->container->get('database')->databaseType() === 'sqlite'
+        ? $this->container->get('database')
+        : $this->container->get('database.nontransactional')
+    );
   }
 
   /**

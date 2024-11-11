@@ -35,7 +35,14 @@ class TempStoreDatabaseTest extends KernelTestBase {
     $current_user = $this->prophesize(AccountProxyInterface::class);
     $factory = new SharedTempStoreFactory(
       new KeyValueExpirableFactory(\Drupal::getContainer()),
-      new DatabaseLockBackend($database),
+      new DatabaseLockBackend(
+        // Normally the correct database is registered in the service container
+        // but since we are explicitly mocking here, we need to select the
+        // non-transactional backend except when using SQLite.
+        $database->databaseType() === 'sqlite'
+          ? $database
+          : Database::getConnection(nonTransactional: true)
+      ),
       $this->container->get('request_stack'),
       $current_user->reveal()
     );
