@@ -199,7 +199,7 @@ class HookCollectorPass implements CompilerPassInterface {
 
             $isProcedural = !in_array($hook, $staticDenyHooks);
             $isSystemException = !in_array($function, $proceduralSystem);
-            $isOtherException = !preg_match('/^(post_update_|theme_suggestions|preprocess_|process_|update_\d+$)/', $function);
+            $isOtherException = !preg_match('/^(post_update_|theme_suggestions|preprocess_|process_|update_\d+$)/', $hook);
 
             if ($isProcedural && $isSystemException && $isOtherException) {
               throw new \LogicException("The $function for $hook.");
