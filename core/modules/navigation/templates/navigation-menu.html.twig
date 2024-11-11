@@ -108,12 +108,14 @@
             ],
           } only %}
         {% else %}
+          {% if item.url %}
+            {{ link(item.title, item.url, item_link_attributes.addClass(['toolbar-button'])) }}
+          {% endif %}
           {% include 'navigation:toolbar-button' with {
             attributes: create_attribute({
               'aria-expanded': 'false',
               'data-toolbar-menu-trigger': menu_level,
             }),
-            text: item.title,
             modifiers: ['expand--down'],
           } only %}
           <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}" inert>
