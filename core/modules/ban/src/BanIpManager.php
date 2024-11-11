@@ -39,7 +39,7 @@ class BanIpManager implements BanIpManagerInterface {
     // If another process has already created the ban_ip table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
-    catch (DatabaseException $e) {
+    catch (DatabaseException) {
     }
 
     return TRUE;
