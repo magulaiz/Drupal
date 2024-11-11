@@ -172,14 +172,14 @@ class HookCollectorPass implements CompilerPassInterface {
 
       // Add the deployment identifier to the cache key so that changes in the
       // implementation of attribute parsing will not result in a stale cache.
-      $cid = Settings::get('deployment_identifier') . $file_cache;
+      $cid = Settings::get('deployment_identifier') . $filename;
 
       $cached = $file_cache->get($cid);
 
       if ($extension === 'module' && !$iterator->getDepth()) {
         // There is an expectation for all modules to be loaded. However,
         // .module files are not supposed to be in subdirectories.
-        include_once $fileinfo->getPathname();
+        include_once $filename;
       }
       if ($extension === 'php') {
         if ($cached) {
@@ -202,7 +202,7 @@ class HookCollectorPass implements CompilerPassInterface {
           $implementations = $cached;
         }
         else {
-          $finder = MockFileFinder::create($fileinfo->getPathName());
+          $finder = MockFileFinder::create($filename);
           $parser = new StaticReflectionParser('', $finder);
           $implementations = [];
           foreach ($parser->getMethodAttributes() as $function => $attributes) {
@@ -219,7 +219,7 @@ class HookCollectorPass implements CompilerPassInterface {
       if ($extension === 'inc') {
         $parts = explode('.', $fileinfo->getFilename());
         if (count($parts) === 3 && $parts[0] === $module) {
-          $this->groupIncludes[$parts[1]][] = $fileinfo->getPathname();
+          $this->groupIncludes[$parts[1]][] = $filename;
         }
       }
     }
