@@ -71,7 +71,7 @@ class EntitySchemaTestHooks {
   public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle) {
     if ($entity_type->id() == 'entity_test_update' && $bundle == 'custom') {
       /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface $custom_bundle_field_storage */
-      $custom_bundle_field_storage = entity_schema_test_entity_field_storage_info($entity_type)['custom_bundle_field'];
+      $custom_bundle_field_storage = $this->entityFieldStorageInfo($entity_type)['custom_bundle_field'];
       $definitions[$custom_bundle_field_storage->getName()] = FieldDefinition::createFromFieldStorageDefinition($custom_bundle_field_storage);
       return $definitions;
     }
