@@ -197,7 +197,7 @@ class HookCollectorPass implements CompilerPassInterface {
               'system_page_attachments',
             ];
 
-            if (!in_array($hook, $staticDenyHooks) || !in_array($function, $proceduralSystem)) {
+            if (!in_array($hook, $staticDenyHooks) && !in_array($function, $proceduralSystem)) {
               throw new \LogicException("This $function should not be procedural.");
             }
             $this->addProceduralImplementation($fileinfo, $matches['hook'], $matches['module'], $matches['function']);
