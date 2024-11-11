@@ -181,30 +181,6 @@ class HookCollectorPass implements CompilerPassInterface {
         $parser = new StaticReflectionParser('', $finder);
         foreach ($parser->getMethodAttributes() as $function => $attributes) {
           if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches)) {
-            $function = $matches['function'];
-            $hook = $matches['hook'];
-            $staticDenyHooks = [
-              'hook_info',
-              'install',
-              'module_implements_alter',
-              'requirements',
-              'schema',
-              'uninstall',
-              'update_last_removed',
-            ];
-            $proceduralSystem = [
-              'system_theme',
-              'system_page_attachments',
-              'system_authorized_init'
-            ];
-
-            $isProcedural = !in_array($hook, $staticDenyHooks);
-            $isSystemException = !in_array($function, $proceduralSystem);
-            $isOtherException = !preg_match('/^(post_update_|theme_suggestions|preprocess_|process_|update_\d+$)/', $hook);
-
-            if ($isProcedural && $isSystemException && $isOtherException) {
-              throw new \LogicException("The $function for $hook.");
-            }
             $this->addProceduralImplementation($fileinfo, $matches['hook'], $matches['module'], $matches['function']);
           }
         }

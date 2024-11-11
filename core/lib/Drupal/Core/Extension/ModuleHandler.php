@@ -339,6 +339,28 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected function legacyInvoke($module, $hook, array $args = []) {
     $this->load($module);
     $function = $module . '_' . $hook;
+    $staticDenyHooks = [
+      'hook_info',
+      'install',
+      'module_implements_alter',
+      'requirements',
+      'schema',
+      'uninstall',
+      'update_last_removed',
+    ];
+    $proceduralSystem = [
+      'system_theme',
+      'system_page_attachments',
+      'system_authorized_init'
+    ];
+
+    $isProcedural = !in_array($hook, $staticDenyHooks);
+    $isSystemException = !in_array($function, $proceduralSystem);
+    $isOtherException = !preg_match('/^(post_update_|theme_suggestions|preprocess_|process_|update_\d+$)/', $hook);
+
+    if ($isProcedural && $isSystemException && $isOtherException) {
+      throw new \LogicException("The $function for $hook.");
+    }
     if (function_exists($function) && !(new \ReflectionFunction($function))->getAttributes(LegacyHook::class)) {
       return $function(... $args);
     }
@@ -556,6 +578,30 @@ class ModuleHandler implements ModuleHandlerInterface {
           if ($listener[0] instanceof ProceduralCall) {
             $listener[0]->loadFile($listener[1]);
             $callable = '\\' . $listener[1];
+            $function = $listener[1];
+
+            $staticDenyHooks = [
+              'hook_info',
+              'install',
+              'module_implements_alter',
+              'requirements',
+              'schema',
+              'uninstall',
+              'update_last_removed',
+            ];
+            $proceduralSystem = [
+              'system_theme',
+              'system_page_attachments',
+              'system_authorized_init'
+            ];
+
+            $isProcedural = !in_array($hook, $staticDenyHooks);
+            $isSystemException = !in_array($function, $proceduralSystem);
+            $isOtherException = !preg_match('/^(post_update_|theme_suggestions|preprocess_|process_|update_\d+$)/', $hook);
+
+            if ($isProcedural && $isSystemException && $isOtherException) {
+              throw new \LogicException("The $function for $hook.");
+            }
           }
           else {
             $callable = $listener;
