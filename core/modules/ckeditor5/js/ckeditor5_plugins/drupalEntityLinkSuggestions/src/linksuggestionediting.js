@@ -34,6 +34,7 @@ export default class DrupalEntityLinkSuggestionsEditing extends Plugin {
         model: attribute,
         view: (value, { writer }) => {
           const viewAttributes = {};
+          viewAttributes[attribute] = value;
           const linkViewElement = writer.createAttributeElement(
             'a',
             viewAttributes,
