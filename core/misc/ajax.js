@@ -347,22 +347,46 @@
    *   The original URL.
    * @param {object} formData
    *   The form data object.
+   * @param {object} options
+   *   The options object.
    *
    * @return {string}
    *   The updated URL without the previous form data parameters.
    */
-  Drupal.ajax.dedupeUrlParams = function (url, formData) {
+  Drupal.ajax.dedupeUrlParams = function (url, formData, options = null) {
     const urlParts = url.split('?');
     if (urlParts.length > 1) {
       const urlSearchParams = new URLSearchParams(urlParts[1]);
-      Object.keys(formData).forEach((key) => {
-        // If the key is actually building up an array, allow that.
-        if (!key.endsWith('[]')) {
-          urlSearchParams.delete(key);
+      if (formData !== null) {
+        Object.keys(formData).forEach((key) => {
+          // If the key is actually building up an array, allow that.
+          if (!key.endsWith('[]')) {
+            urlSearchParams.delete(key);
+          }
+        });
+        // Rebuild the querystring.
+        urlParts[1] = urlSearchParams.toString();
+      }
+      else {
+        const deDupedUrlSearchParams = new URLSearchParams();
+        let parameters = [];
+        for (const param of urlSearchParams) {
+          parameters.push(param);
         }
-      });
-      // Rebuild the querystring.
-      urlParts[1] = urlSearchParams.toString();
+        const seenKeys = {};
+        parameters.filter(item => {
+          const key = item[0];
+          if (seenKeys[key]) {
+            return false;
+          } else {
+            seenKeys[key] = true;
+            deDupedUrlSearchParams.set(key, urlSearchParams.get(key))
+            return true;
+          }
+        });
+        // Rebuild the querystring.
+        urlParts[1] = deDupedUrlSearchParams.toString();
+      }
     }
 
     return urlParts.join('?');
@@ -614,12 +638,17 @@
             typeof options.data === 'function'
               ? options.data(formValues)
               : options.data;
-          options.url = Drupal.ajax.dedupeUrlParams(options.url, optionsData);
+          options.url = Drupal.ajax.dedupeUrlParams(
+            options.url,
+            optionsData,
+            options,
+          );
         }
         return ajax.beforeSubmit(formValues, elementSettings, options);
       },
       beforeSend(xmlhttprequest, options) {
         ajax.ajaxing = true;
+        options.url = Drupal.ajax.dedupeUrlParams(options.url, null, options);
         return ajax.beforeSend(xmlhttprequest, options);
       },
       success(response, status, xmlhttprequest) {
