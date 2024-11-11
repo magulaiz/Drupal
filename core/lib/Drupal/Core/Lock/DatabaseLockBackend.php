@@ -30,6 +30,9 @@ class DatabaseLockBackend extends LockBackendAbstract {
     // __destruct() is causing problems with garbage collections, register a
     // shutdown function instead.
     drupal_register_shutdown_function([$this, 'releaseAll']);
+    if (!($database instanceof NonTransactionalConnection) && $this->database->databaseType() !== 'sqlite') {
+      @trigger_error('Calling ' . __METHOD__ . '() with a transactional database connection is deprecated in drupal:10.4.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
+    }
   }
 
   /**

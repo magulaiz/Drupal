@@ -18,23 +18,6 @@ use Symfony\Component\DependencyInjection\Reference;
 class CacheCollectorTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  public function register(ContainerBuilder $container): void {
-    parent::register($container);
-    // Change container to database cache backends.
-    $container
-      ->register('cache_factory', 'Drupal\Core\Cache\CacheFactory')
-      ->addArgument(new Reference('settings'))
-      ->addMethodCall('setContainer', [new Reference('service_container')]);
-
-    // Change container to use database lock backends.
-    $container
-      ->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend')
-      ->addArgument(new Reference('database'));
-  }
-
-  /**
    * Tests setting and invalidating.
    *
    * @dataProvider providerTestInvalidCharacters
