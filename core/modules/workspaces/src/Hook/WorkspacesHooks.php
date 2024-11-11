@@ -40,6 +40,26 @@ class WorkspacesHooks {
   }
 
   /**
+   * Implements hook_module_preinstall().
+   */
+  #[Hook('module_preinstall')]
+  public function modulePreinstall($module) {
+    if ($module !== 'workspaces') {
+      return;
+    }
+
+    /** @var \Drupal\workspaces\WorkspaceInformationInterface $workspace_info */
+    $workspace_info = \Drupal::service('workspaces.information');
+    $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+    foreach ($entity_definition_update_manager->getEntityTypes() as $entity_type) {
+      if ($workspace_info->isEntityTypeSupported($entity_type)) {
+        $entity_type->setRevisionMetadataKey('workspace', 'workspace');
+        $entity_definition_update_manager->updateEntityType($entity_type);
+      }
+    }
+  }
+
+  /**
    * Implements hook_entity_type_build().
    */
   #[Hook('entity_type_build')]
