@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Cache;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Core\Cache\CacheCollectorHelper;
 use Drupal\TestTools\Random;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests DatabaseBackend cache tag implementation.
