@@ -194,7 +194,7 @@ function layout_builder_test_theme(): array {
 /**
  * Implements hook_block_view_alter().
  */
-function layout_builder_test_block_view_alter(array &$build, BlockPluginInterface $block) {
+function layout_builder_test_block_view_alter(array &$build, BlockPluginInterface $block):  void {
   // Modify the content of the block.
   $build['content']['#markup'] = 'The block content altered.';
 }
@@ -202,7 +202,7 @@ function layout_builder_test_block_view_alter(array &$build, BlockPluginInterfac
 /**
  * Implements hook_block_build_alter().
  */
-function layout_builder_test_block_build_alter(array &$build, BlockPluginInterface $block) {
+function layout_builder_test_block_build_alter(array &$build, BlockPluginInterface $block): void {
   // Modify the content of the block.
   $build['content']['#markup'] = 'The block content altered.';
 }
