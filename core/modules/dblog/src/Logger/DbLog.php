@@ -2,7 +2,6 @@
 
 namespace Drupal\dblog\Logger;
 
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseConnectionInterface;
 use Drupal\Core\Database\DatabaseException;

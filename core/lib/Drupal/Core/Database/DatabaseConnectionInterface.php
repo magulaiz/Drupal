@@ -428,5 +428,4 @@ interface DatabaseConnectionInterface {
    */
   public function isEventEnabled(string $eventName): bool;
 
-
 }
