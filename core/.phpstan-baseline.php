@@ -63575,7 +63575,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\language_test\\\\Hook\\\\DemoUmamiContentHooks\\:\\:modulePreinstall\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\demo_umami_content\\\\Hook\\\\DemoUmamiContentHooks\\:\\:modulePreinstall\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/profiles/demo_umami/modules/demo_umami_content/src/Hook/DemoUmamiContentHooks.php',
 ];
