@@ -976,6 +976,30 @@ function system_cron() {
     $fetcher = \Drupal::service('system.sa_fetcher');
     $fetcher->getSecurityAdvisories();
   }
+
+  // Perform session garbage collection. PHP's built-in probability
+  // based garbage collection is disabled by default in the session
+  // configuration in core.services.yml.
+  /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
+  $session = \Drupal::service('session');
+  $forced_session_start = FALSE;
+  if (!$session->isStarted()) {
+    // If the session has not been started, force a session start and afterwards
+    // destroy it again, as documented on
+    // https://www.php.net/manual/en/function.session-gc.php. We have to invoke
+    // both SessionManager's start AND session_start() because SessionManager
+    // won't actually call session_start when run in a CLI. It's still
+    // important to call SessionManager's start to initialize session config.
+    $session->start();
+    session_start();
+    $forced_session_start = TRUE;
+  }
+
+  session_gc();
+
+  if ($forced_session_start) {
+    session_destroy();
+  }
 }
 
 /**

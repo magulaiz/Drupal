@@ -6,12 +6,10 @@ parameters:
   session.storage.options:
     # Default ini options for sessions.
     #
-    # Some distributions of Linux (most notably Debian) ship their PHP
-    # installations with garbage collection (gc) disabled. Since Drupal depends
-    # on PHP's garbage collection for clearing sessions, ensure that garbage
-    # collection occurs by using the most common settings.
-    # @default 1
-    gc_probability: 1
+    # Disable probability-based session garbage collection, this is done in
+    # system_cron() instead.
+    # @default 0
+    gc_probability: 0
     # @default 100
     gc_divisor: 100
     #
