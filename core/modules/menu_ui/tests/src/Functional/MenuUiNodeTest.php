@@ -284,7 +284,7 @@ class MenuUiNodeTest extends BrowserTestBase {
   /**
    * Testing menu link is only changed when required.
    */
-  public function testMenuLinkIsNotUpdatedWhenUnchanged() {
+  public function testMenuLinkIsNotUpdatedWhenUnchanged(): void {
     // Create a node.
     $node_title = $this->randomMachineName();
     $edit = [
@@ -311,7 +311,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     $link = MenuLinkContent::load($original->id());
 
     // Assert that the menu link updated date has not been updated.
-    $this->assertSession()->assertEquals($original->getChangedTime(), $link->getChangedTime());
+    $this->assertEquals($original->getChangedTime(), $link->getChangedTime());
   }
 
   /**
