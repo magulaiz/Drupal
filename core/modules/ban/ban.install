@@ -2,34 +2,12 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the Ban module.
+ * Uninstall functions for the Ban module.
  */
 
 /**
- * Implements hook_schema().
+ * Implements hook_uninstall().
  */
-function ban_schema() {
-  $schema['ban_ip'] = [
-    'description' => 'Stores banned IP addresses.',
-    'fields' => [
-      'iid' => [
-        'description' => 'Primary Key: unique ID for IP addresses.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ],
-      'ip' => [
-        'description' => 'IP address',
-        'type' => 'varchar_ascii',
-        'length' => 40,
-        'not null' => TRUE,
-        'default' => '',
-      ],
-    ],
-    'indexes' => [
-      'ip' => ['ip'],
-    ],
-    'primary key' => ['iid'],
-  ];
-  return $schema;
+function ban_uninstall(): void {
+  \Drupal::database()->schema()->dropTable('ban_ip');
 }

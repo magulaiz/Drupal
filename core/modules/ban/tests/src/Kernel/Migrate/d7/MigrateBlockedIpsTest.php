@@ -22,14 +22,6 @@ class MigrateBlockedIpsTest extends MigrateDrupal7TestBase {
   protected static $modules = ['ban'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->installSchema('ban', ['ban_ip']);
-  }
-
-  /**
    * Tests migration of blocked IPs.
    */
   public function testBlockedIps(): void {
