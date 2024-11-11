@@ -340,8 +340,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     $this->load($module);
     $function = $module . '_' . $hook;
 
-    $this->noProcedural($hook, $function);
     if (function_exists($function) && !(new \ReflectionFunction($function))->getAttributes(LegacyHook::class)) {
+      $this->noProcedural($hook, $function);
       return $function(... $args);
     }
 
