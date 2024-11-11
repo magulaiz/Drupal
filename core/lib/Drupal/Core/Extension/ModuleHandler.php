@@ -351,7 +351,6 @@ class ModuleHandler implements ModuleHandlerInterface {
     $proceduralSystem = [
       'system_theme',
       'system_page_attachments',
-      'system_authorized_init'
     ];
 
     $isProcedural = !in_array($hook, $staticDenyHooks);
@@ -592,7 +591,6 @@ class ModuleHandler implements ModuleHandlerInterface {
             $proceduralSystem = [
               'system_theme',
               'system_page_attachments',
-              'system_authorized_init'
             ];
 
             $isProcedural = !in_array($hook, $staticDenyHooks);
