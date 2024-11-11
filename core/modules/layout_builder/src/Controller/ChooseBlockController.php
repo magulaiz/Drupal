@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Controller;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -255,10 +256,12 @@ class ChooseBlockController implements ContainerInjectionInterface {
    */
   protected function getAjaxAttributes() {
     if ($this->isAjax()) {
+      $width = \Drupal::config('system.site')->get('off_canvas.width');
       return [
         'class' => ['use-ajax'],
         'data-dialog-type' => 'dialog',
         'data-dialog-renderer' => 'off_canvas',
+        'data-dialog-options' => Json::encode(['width' => $width]),
       ];
     }
     return [];

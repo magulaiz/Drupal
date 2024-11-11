@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Element;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
@@ -193,6 +194,7 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
               ],
               'data-dialog-type' => 'dialog',
               'data-dialog-renderer' => 'off_canvas',
+              'data-dialog-options' => $this->getDataDialogOptions(),
             ],
           ]
         ),
@@ -277,6 +279,8 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
               ],
               'data-dialog-type' => 'dialog',
               'data-dialog-renderer' => 'off_canvas',
+              'data-dialog-options' => $this->getDataDialogOptions(),
+
             ],
           ]
         ),
@@ -348,6 +352,7 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
           ],
           'data-dialog-type' => 'dialog',
           'data-dialog-renderer' => 'off_canvas',
+          'data-dialog-options' => $this->getDataDialogOptions(),
         ],
       ],
       // The section label is added to sections without a "Configure section"
@@ -373,10 +378,31 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
           ],
           'data-dialog-type' => 'dialog',
           'data-dialog-renderer' => 'off_canvas',
+          'data-dialog-options' => $this->getDataDialogOptions(),
         ],
       ],
       'layout-builder__section' => $build,
     ];
+  }
+
+  /**
+   * Get the configured off-canvas width.
+   *
+   * @return array|mixed|null
+   *   The width.
+   */
+  protected function getOffCanvasWidth() {
+    return \Drupal::config('system.site')->get('off_canvas.width');
+  }
+
+  /**
+   * Get the serialized array of data-dialog-options.
+   *
+   * @return false|string
+   *   The options.
+   */
+  protected function getDataDialogOptions() {
+    return Json::encode(['width' => $this->getOffCanvasWidth()]);
   }
 
 }

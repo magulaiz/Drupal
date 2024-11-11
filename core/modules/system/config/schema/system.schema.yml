@@ -32,6 +32,13 @@ system.site:
         front:
           type: path
           label: 'Default front page'
+    off_canvas:
+      type: mapping
+      label: 'Off-canvas'
+      mapping:
+        width:
+          type: integer
+          label: 'Width in pixels'
     admin_compact_mode:
       type: boolean
       label: 'Compact mode'
