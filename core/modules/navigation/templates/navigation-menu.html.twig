@@ -116,6 +116,7 @@
               'aria-expanded': 'false',
               'data-toolbar-menu-trigger': menu_level,
             }),
+            text: item.url ? item.title : '',
             modifiers: ['expand--down'],
           } only %}
           <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}" inert>

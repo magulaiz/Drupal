@@ -334,7 +334,7 @@ class NavigationMenuBlockTest extends KernelTestBase {
     $items_query = [
       "//li[contains(@class,'toolbar-block__list-item')]/span/span[text()='title 1']",
       "//li[contains(@class,'toolbar-block__list-item')]/button/span[text()='title 2']",
-      "//li[contains(@class,'toolbar-menu__item--level-1')]/button/span[text()='title 3']",
+      "//li[contains(@class,'toolbar-menu__item--level-1')]/span[contains(@class, 'toolbar-button') and text()='title 3']",
       "//li[contains(@class,'toolbar-menu__item--level-2')]/a[text()='title 4']",
       "//li[contains(@class,'toolbar-block__list-item')]/button/span[text()='title 5']",
       "//li[contains(@class,'toolbar-block__list-item')]/a/span[text()='title 6']",
