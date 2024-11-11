@@ -339,27 +339,8 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected function legacyInvoke($module, $hook, array $args = []) {
     $this->load($module);
     $function = $module . '_' . $hook;
-    $staticDenyHooks = [
-      'hook_info',
-      'install',
-      'module_implements_alter',
-      'requirements',
-      'schema',
-      'uninstall',
-      'update_last_removed',
-    ];
-    $proceduralSystem = [
-      'system_theme',
-      'system_page_attachments',
-    ];
 
-    $isProcedural = !in_array($hook, $staticDenyHooks);
-    $isSystemException = !in_array($function, $proceduralSystem);
-    $isOtherException = !preg_match('/^(post_update_|theme_suggestions|preprocess_|process_|update_\d+$)/', $hook);
-
-    if ($isProcedural && $isSystemException && $isOtherException) {
-      throw new \LogicException("The $function for $hook.");
-    }
+    $this->noProcedural($hook, $function);
     if (function_exists($function) && !(new \ReflectionFunction($function))->getAttributes(LegacyHook::class)) {
       return $function(... $args);
     }
@@ -577,29 +558,7 @@ class ModuleHandler implements ModuleHandlerInterface {
           if ($listener[0] instanceof ProceduralCall) {
             $listener[0]->loadFile($listener[1]);
             $callable = '\\' . $listener[1];
-            $function = $listener[1];
-
-            $staticDenyHooks = [
-              'hook_info',
-              'install',
-              'module_implements_alter',
-              'requirements',
-              'schema',
-              'uninstall',
-              'update_last_removed',
-            ];
-            $proceduralSystem = [
-              'system_theme',
-              'system_page_attachments',
-            ];
-
-            $isProcedural = !in_array($hook, $staticDenyHooks);
-            $isSystemException = !in_array($function, $proceduralSystem);
-            $isOtherException = !preg_match('/^(post_update_|theme_suggestions|preprocess_|process_|update_\d+$)/', $hook);
-
-            if ($isProcedural && $isSystemException && $isOtherException) {
-              throw new \LogicException("The $function for $hook.");
-            }
+            $this->noProcedural($hook, $listener[1]);
           }
           else {
             $callable = $listener;
@@ -616,6 +575,35 @@ class ModuleHandler implements ModuleHandlerInterface {
       }
     }
     return $this->invokeMap[$hook] ?? [];
+  }
+
+  /**
+   * Detect deprecated procedural implementations.
+   */
+  protected function noProcedural(string $hook, string $function): void {
+    $staticDenyHooks = [
+      'hook_info',
+      'install',
+      'module_implements_alter',
+      'requirements',
+      'schema',
+      'uninstall',
+      'update_last_removed',
+    ];
+    $proceduralSystem = [
+      'system_theme',
+      'system_page_attachments',
+      'module_handler_test_fake_hook',
+      'mysql_module_preinstall',
+    ];
+
+    $isProcedural = !in_array($hook, $staticDenyHooks);
+    $isSystemException = !in_array($function, $proceduralSystem);
+    $isOtherException = !preg_match('/^(post_update_|theme_suggestions|preprocess_|process_|update_\d+$)/', $hook);
+
+    if ($isProcedural && $isSystemException && $isOtherException) {
+      throw new \LogicException("The $function for $hook.");
+    }
   }
 
 }
