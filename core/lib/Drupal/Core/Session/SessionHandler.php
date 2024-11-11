@@ -4,7 +4,7 @@ namespace Drupal\Core\Session;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseConnectionInterface;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\NonTransactionalConnection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -23,14 +23,14 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\DatabaseConnectionInterface $connection
    *   The database connection.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
   public function __construct(
     protected RequestStack $requestStack,
-    protected Connection $connection,
+    protected DatabaseConnectionInterface $connection,
     protected TimeInterface $time,
   ) {
     if (!($connection instanceof NonTransactionalConnection) && $connection->databaseType() !== 'sqlite') {

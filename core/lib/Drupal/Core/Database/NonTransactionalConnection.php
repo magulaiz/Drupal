@@ -4,72 +4,39 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database;
 
-use Drupal\Core\Database\Event\DatabaseEvent;
-use Drupal\Core\Database\Exception\TransactionsNotSupportedException;
-use Drupal\Core\Database\Transaction\TransactionManagerInterface;
-use Drupal\Core\Pager\PagerManagerInterface;
-
 /**
  * A decorator class wrapping a connection, not supporting transactions.
  *
  * @internal
  */
-final class NonTransactionalConnection extends Connection {
+final class NonTransactionalConnection implements DatabaseConnectionInterface {
 
   /**
    * Constructor.
    *
-   * @param Connection $wrappedConnection
+   * @param \Drupal\Core\Database\DatabaseConnectionInterface $wrappedConnection
    *   Database connection to wrap calls.
    */
-  public function __construct(protected Connection $wrappedConnection) {}
+  public function __construct(protected DatabaseConnectionInterface $wrappedConnection) {}
 
   /**
    * {@inheritdoc}
    */
-  public function transactionManager(): TransactionManagerInterface {
-    throw new TransactionsNotSupportedException();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function inTransaction(): bool {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function startTransaction($name = '') {
-    throw new TransactionsNotSupportedException();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function open(array &$connection_options = []) {
-    throw new \RuntimeException(sprintf('%s is a wrapper only around existing connection objects.', __CLASS__));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function upsert($table, array $options = []) {
+  public function databaseType() {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function schema() {
+  public function getProvider(): string {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function queryRange($query, $from, $count, array $args = [], array $options = []) {
+  public function hasJson(): bool {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
@@ -83,49 +50,49 @@ final class NonTransactionalConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function databaseType() {
+  public function version() {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createDatabase($database): void {
-    $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function mapConditionOperator($operator) {
+  public function clientVersion() {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function __destruct() {
+  public function getKey() {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getClientConnection(): object {
+  public function getTarget() {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getConnectionOptions() {
+  public function supportsTransactionalDDL() {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLogger() {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function attachDatabase(string $database): void {
+  public function setLogger(Log $logger) {
     $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
@@ -139,83 +106,6 @@ final class NonTransactionalConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function prefixTables($sql) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function quoteIdentifiers($sql) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFullQualifiedTableName($table) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setTarget($target = NULL): void {
-    $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getTarget() {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setKey($key): void {
-    $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getKey() {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setLogger(Log $logger): void {
-    $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getLogger() {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function makeComment($comments) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function query($query, array $args = [], $options = []) {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
@@ -223,14 +113,14 @@ final class NonTransactionalConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function getDriverClass($class) {
+  public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
   /**
    * {@inheritdoc}
    */
-  public function exceptionHandler() {
+  public function schema() {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
@@ -265,6 +155,13 @@ final class NonTransactionalConnection extends Connection {
   /**
    * {@inheritdoc}
    */
+  public function upsert($table, array $options = []) {
+    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function update($table, array $options = []) {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
@@ -287,125 +184,6 @@ final class NonTransactionalConnection extends Connection {
    * {@inheritdoc}
    */
   public function condition($conjunction) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function escapeDatabase($database) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function escapeTable($table) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function escapeField($field) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function escapeAlias($field) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function escapeLike($string) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function version() {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function clientVersion() {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function supportsTransactionalDDL() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function quote($string, $parameter_type = \PDO::PARAM_STR) {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __sleep(): array {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getProvider(): string {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPagerManager(): PagerManagerInterface {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function hasJson(): bool {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isEventEnabled(string $eventName): bool {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function enableEvents(array $eventNames): Connection {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function disableEvents(array $eventNames): static {
-    return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function dispatchEvent(DatabaseEvent $event, ?string $eventName = NULL): DatabaseEvent {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 

@@ -12,7 +12,6 @@ use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
-use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 
 /**
@@ -25,7 +24,10 @@ use Drupal\Core\Pager\PagerManagerInterface;
  *
  * @see http://php.net/manual/book.pdo.php
  */
-abstract class Connection {
+abstract class Connection implements DatabaseConnectionInterface {
+
+  use TransactionalConnectionTrait;
+  use DatabaseConnectionDebugHelperTrait;
 
   /**
    * The database target this connection is for.
@@ -161,11 +163,6 @@ abstract class Connection {
   private array $enabledEvents = [];
 
   /**
-   * The transaction manager.
-   */
-  protected TransactionManagerInterface $transactionManager;
-
-  /**
    * Constructs a Connection object.
    *
    * @param object $connection
@@ -213,21 +210,6 @@ abstract class Connection {
     // using $this in the call to set the statement class can be garbage
     // collected.
     $this->connection = NULL;
-  }
-
-  /**
-   * Commits all the open transactions.
-   *
-   * @internal
-   *   This method exists only to work around a bug caused by Drupal incorrectly
-   *   relying on object destruction order to commit transactions. Xdebug 3.3.0
-   *   changes the order of object destruction when the develop mode is enabled.
-   */
-  public function commitAll() {
-    $manager = $this->transactionManager();
-    if ($manager->inTransaction() && method_exists($manager, 'commitAll')) {
-      $this->transactionManager()->commitAll();
-    }
   }
 
   /**
@@ -323,10 +305,7 @@ abstract class Connection {
   }
 
   /**
-   * Returns the prefix of the tables.
-   *
-   * @return string
-   *   The table prefix.
+   * {@inheritdoc}
    */
   public function getPrefix(): string {
     return $this->prefix;
@@ -508,10 +487,7 @@ abstract class Connection {
   }
 
   /**
-   * Returns the target this connection is associated with.
-   *
-   * @return string|null
-   *   The target string of this connection, or NULL if no target is set.
+   * {@inheritdoc}
    */
   public function getTarget() {
     return $this->target;
@@ -530,31 +506,21 @@ abstract class Connection {
   }
 
   /**
-   * Returns the key this connection is associated with.
-   *
-   * @return string|null
-   *   The key of this connection, or NULL if no key is set.
+   * {@inheritdoc}
    */
   public function getKey() {
     return $this->key;
   }
 
   /**
-   * Associates a logging object with this connection.
-   *
-   * @param \Drupal\Core\Database\Log $logger
-   *   The logging object we want to use.
+   * {@inheritdoc}
    */
   public function setLogger(Log $logger) {
     $this->logger = $logger;
   }
 
   /**
-   * Gets the current logging object for this connection.
-   *
-   * @return \Drupal\Core\Database\Log|null
-   *   The current logging object for this connection. If there isn't one,
-   *   NULL is returned.
+   * {@inheritdoc}
    */
   public function getLogger() {
     return $this->logger;
@@ -620,31 +586,7 @@ abstract class Connection {
   }
 
   /**
-   * Executes a query string against the database.
-   *
-   * This method provides a central handler for the actual execution of every
-   * query. All queries executed by Drupal are executed as prepared statements.
-   *
-   * @param string $query
-   *   The query to execute. This is a string containing an SQL query with
-   *   placeholders.
-   * @param array $args
-   *   The associative array of arguments for the prepared statement.
-   * @param array $options
-   *   An associative array of options to control how the query is run. The
-   *   given options will be merged with self::defaultOptions(). See the
-   *   documentation for self::defaultOptions() for details.
-   *   Typically, $options['return'] will be set by a default or by a query
-   *   builder, and should not be set by a user.
-   *
-   * @return \Drupal\Core\Database\StatementInterface|null
-   *   The executed statement.
-   *
-   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
-   * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
-   * @throws \InvalidArgumentException
-   *
-   * @see \Drupal\Core\Database\Connection::defaultOptions()
+   * {@inheritdoc}
    */
   public function query($query, array $args = [], $options = []) {
     assert(is_string($query), 'The \'$query\' argument to ' . __METHOD__ . '() must be a string');
@@ -775,23 +717,7 @@ abstract class Connection {
   }
 
   /**
-   * Prepares and returns a SELECT query object.
-   *
-   * @param string|\Drupal\Core\Database\Query\SelectInterface $table
-   *   The base table name or subquery for this query, used in the FROM clause.
-   *   If a string, the table specified will also be used as the "base" table
-   *   for query_alter hook implementations.
-   * @param string $alias
-   *   (optional) The alias of the base table of this query.
-   * @param array $options
-   *   An array of options on the query.
-   *
-   * @return \Drupal\Core\Database\Query\SelectInterface
-   *   An appropriate SelectQuery object for this database connection. Note that
-   *   it may be a driver-specific subclass of SelectQuery, depending on the
-   *   driver.
-   *
-   * @see \Drupal\Core\Database\Query\Select
+   * {@inheritdoc}
    */
   public function select($table, $alias = NULL, array $options = []) {
     assert(is_string($alias) || $alias === NULL, 'The \'$alias\' argument to ' . __METHOD__ . '() must be a string or NULL');
@@ -799,47 +725,14 @@ abstract class Connection {
   }
 
   /**
-   * Prepares and returns an INSERT query object.
-   *
-   * @param string $table
-   *   The table to use for the insert statement.
-   * @param array $options
-   *   (optional) An associative array of options to control how the query is
-   *   run. The given options will be merged with
-   *   \Drupal\Core\Database\Connection::defaultOptions().
-   *
-   * @return \Drupal\Core\Database\Query\Insert
-   *   A new Insert query object.
-   *
-   * @see \Drupal\Core\Database\Query\Insert
-   * @see \Drupal\Core\Database\Connection::defaultOptions()
+   * {@inheritdoc}
    */
   public function insert($table, array $options = []) {
     return new Insert($this, $table, $options);
   }
 
   /**
-   * Returns the ID of the last inserted row or sequence value.
-   *
-   * This method should normally be used only within database driver code.
-   *
-   * This is a proxy to invoke lastInsertId() from the wrapped connection.
-   * If a sequence name is not specified for the name parameter, this returns a
-   * string representing the row ID of the last row that was inserted into the
-   * database.
-   * If a sequence name is specified for the name parameter, this returns a
-   * string representing the last value retrieved from the specified sequence
-   * object.
-   *
-   * @param string|null $name
-   *   (Optional) Name of the sequence object from which the ID should be
-   *   returned.
-   *
-   * @return string
-   *   The value returned by the wrapped connection.
-   *
-   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
-   *   In case of failure.
+   * {@inheritdoc}
    */
   public function lastInsertId(?string $name = NULL): string {
     if (($last_insert_id = $this->connection->lastInsertId($name)) === FALSE) {
@@ -849,114 +742,35 @@ abstract class Connection {
   }
 
   /**
-   * Prepares and returns a MERGE query object.
-   *
-   * @param string $table
-   *   The table to use for the merge statement.
-   * @param array $options
-   *   (optional) An array of options on the query.
-   *
-   * @return \Drupal\Core\Database\Query\Merge
-   *   A new Merge query object.
-   *
-   * @see \Drupal\Core\Database\Query\Merge
+   * {@inheritdoc}
    */
   public function merge($table, array $options = []) {
     return new Merge($this, $table, $options);
   }
 
   /**
-   * Prepares and returns an UPSERT query object.
-   *
-   * @param string $table
-   *   The table to use for the upsert query.
-   * @param array $options
-   *   (optional) An array of options on the query.
-   *
-   * @return \Drupal\Core\Database\Query\Upsert
-   *   A new Upsert query object.
-   *
-   * @see \Drupal\Core\Database\Query\Upsert
-   */
-  abstract public function upsert($table, array $options = []);
-
-  /**
-   * Prepares and returns an UPDATE query object.
-   *
-   * @param string $table
-   *   The table to use for the update statement.
-   * @param array $options
-   *   (optional) An associative array of options to control how the query is
-   *   run. The given options will be merged with
-   *   \Drupal\Core\Database\Connection::defaultOptions().
-   *
-   * @return \Drupal\Core\Database\Query\Update
-   *   A new Update query object.
-   *
-   * @see \Drupal\Core\Database\Query\Update
-   * @see \Drupal\Core\Database\Connection::defaultOptions()
+   * {@inheritdoc}
    */
   public function update($table, array $options = []) {
     return new Update($this, $table, $options);
   }
 
   /**
-   * Prepares and returns a DELETE query object.
-   *
-   * @param string $table
-   *   The table to use for the delete statement.
-   * @param array $options
-   *   (optional) An associative array of options to control how the query is
-   *   run. The given options will be merged with
-   *   \Drupal\Core\Database\Connection::defaultOptions().
-   *
-   * @return \Drupal\Core\Database\Query\Delete
-   *   A new Delete query object.
-   *
-   * @see \Drupal\Core\Database\Query\Delete
-   * @see \Drupal\Core\Database\Connection::defaultOptions()
+   * {@inheritdoc}
    */
   public function delete($table, array $options = []) {
     return new Delete($this, $table, $options);
   }
 
   /**
-   * Prepares and returns a TRUNCATE query object.
-   *
-   * @param string $table
-   *   The table to use for the truncate statement.
-   * @param array $options
-   *   (optional) An array of options on the query.
-   *
-   * @return \Drupal\Core\Database\Query\Truncate
-   *   A new Truncate query object.
-   *
-   * @see \Drupal\Core\Database\Query\Truncate
+   * {@inheritdoc}
    */
   public function truncate($table, array $options = []) {
     return new Truncate($this, $table, $options);
   }
 
   /**
-   * Returns a DatabaseSchema object for manipulating the schema.
-   *
-   * This method will lazy-load the appropriate schema library file.
-   *
-   * @return \Drupal\Core\Database\Schema
-   *   The database Schema object for this connection.
-   */
-  abstract public function schema();
-
-  /**
-   * Prepares and returns a CONDITION query object.
-   *
-   * @param string $conjunction
-   *   The operator to use to combine conditions: 'AND' or 'OR'.
-   *
-   * @return \Drupal\Core\Database\Query\Condition
-   *   A new Condition query object.
-   *
-   * @see \Drupal\Core\Database\Query\Condition
+   * {@inheritdoc}
    */
   public function condition($conjunction) {
     // Creating an instance of the class Drupal\Core\Database\Query\Condition
@@ -1084,149 +898,25 @@ abstract class Connection {
   }
 
   /**
-   * Returns the transaction manager.
-   *
-   * @return \Drupal\Core\Database\Transaction\TransactionManagerInterface
-   *   The transaction manager, or FALSE if not available.
-   *
-   * @throws \LogicException
-   *   If the transaction manager is undefined or unavailable.
-   */
-  public function transactionManager(): TransactionManagerInterface {
-    if (!isset($this->transactionManager)) {
-      $this->transactionManager = $this->driverTransactionManager();
-    }
-    return $this->transactionManager;
-  }
-
-  /**
-   * Returns a new instance of the driver's transaction manager.
-   *
-   * Database drivers must implement their own class extending from
-   * \Drupal\Core\Database\Transaction\TransactionManagerBase, and instantiate
-   * it here.
-   *
-   * @return \Drupal\Core\Database\Transaction\TransactionManagerInterface
-   *   The transaction manager.
-   *
-   * @throws \LogicException
-   *   If the transaction manager is undefined or unavailable.
-   */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn, Drupal.Commenting.FunctionComment.Missing
-  protected function driverTransactionManager(): TransactionManagerInterface {
-    throw new \LogicException('The database driver has no TransactionManager implementation');
-  }
-
-  /**
-   * Determines if there is an active transaction open.
-   *
-   * @return bool
-   *   TRUE if we're currently in a transaction, FALSE otherwise.
-   */
-  public function inTransaction() {
-    return $this->transactionManager()->inTransaction();
-  }
-
-  /**
-   * Returns a new DatabaseTransaction object on this connection.
-   *
-   * @param string $name
-   *   (optional) The name of the savepoint.
-   *
-   * @return \Drupal\Core\Database\Transaction
-   *   A Transaction object.
-   *
-   * @see \Drupal\Core\Database\Transaction
-   */
-  public function startTransaction($name = '') {
-    return $this->transactionManager()->push($name);
-  }
-
-  /**
-   * Runs a limited-range query on this database object.
-   *
-   * Use this as a substitute for ->query() when a subset of the query is to be
-   * returned. User-supplied arguments to the query should be passed in as
-   * separate parameters so that they can be properly escaped to avoid SQL
-   * injection attacks.
-   *
-   * @param string $query
-   *   A string containing an SQL query.
-   * @param int $from
-   *   The first result row to return.
-   * @param int $count
-   *   The maximum number of result rows to return.
-   * @param array $args
-   *   (optional) An array of values to substitute into the query at placeholder
-   *    markers.
-   * @param array $options
-   *   (optional) An array of options on the query.
-   *
-   * @return \Drupal\Core\Database\StatementInterface
-   *   A database query result resource, or NULL if the query was not executed
-   *   correctly.
-   */
-  abstract public function queryRange($query, $from, $count, array $args = [], array $options = []);
-
-  /**
-   * Returns the type of database driver.
-   *
-   * This is not necessarily the same as the type of the database itself. For
-   * instance, there could be two MySQL drivers, mysql and mysqlMock. This
-   * function would return different values for each, but both would return
-   * "mysql" for databaseType().
-   *
-   * @return string
-   *   The type of database driver.
-   */
-  abstract public function driver();
-
-  /**
-   * Returns the version of the database server.
-   *
-   * Assumes the client connection is \PDO. Non-PDO based drivers need to
-   * override this method.
-   *
-   * @return string
-   *   The version of the database server.
+   * {@inheritdoc}
    */
   public function version() {
     return $this->connection->getAttribute(\PDO::ATTR_SERVER_VERSION);
   }
 
   /**
-   * Returns the version of the database client.
-   *
-   * Assumes the client connection is \PDO. Non-PDO based drivers need to
-   * override this method.
-   *
-   * @return string
-   *   The version of the database client.
+   * {@inheritdoc}
    */
   public function clientVersion() {
     return $this->connection->getAttribute(\PDO::ATTR_CLIENT_VERSION);
   }
 
   /**
-   * Determines if this driver supports transactional DDL.
-   *
-   * DDL queries are those that change the schema, such as ALTER queries.
-   *
-   * @return bool
-   *   TRUE if this connection supports transactions for DDL queries, FALSE
-   *   otherwise.
+   * {@inheritdoc}
    */
   public function supportsTransactionalDDL() {
     return $this->transactionalDDLSupport;
   }
-
-  /**
-   * Returns the name of the database engine accessed by this driver.
-   *
-   * @return string
-   *   The database engine name.
-   */
-  abstract public function databaseType();
 
   /**
    * Creates a database.
@@ -1274,26 +964,6 @@ abstract class Connection {
    */
   public function quote($string, $parameter_type = \PDO::PARAM_STR) {
     return $this->connection->quote($string, $parameter_type);
-  }
-
-  /**
-   * Extracts the SQLSTATE error from a PDOException.
-   *
-   * @param \Exception $e
-   *   The exception
-   *
-   * @return string
-   *   The five character error code.
-   */
-  protected static function getSQLState(\Exception $e) {
-    // The PDOException code is not always reliable, try to see whether the
-    // message has something usable.
-    if (preg_match('/^SQLSTATE\[(\w{5})\]/', $e->getMessage(), $matches)) {
-      return $matches[1];
-    }
-    else {
-      return $e->getCode();
-    }
   }
 
   /**
@@ -1423,11 +1093,7 @@ abstract class Connection {
   }
 
   /**
-   * Get the module name of the module that is providing the database driver.
-   *
-   * @return string
-   *   The module name of the module that is providing the database driver, or
-   *   "core" when the driver is not provided as part of a module.
+   * {@inheritdoc}
    */
   public function getProvider(): string {
     [$first, $second] = explode('\\', $this->connectionOptions['namespace'], 3);
@@ -1454,10 +1120,7 @@ abstract class Connection {
   }
 
   /**
-   * Runs a simple query to validate json datatype support.
-   *
-   * @return bool
-   *   Returns the query result.
+   * {@inheritdoc}
    */
   public function hasJson(): bool {
     try {
@@ -1496,7 +1159,7 @@ abstract class Connection {
    *
    * @return \Drupal\Core\Database\Connection|static
    */
-  public function enableEvents(array $eventNames): Connection|static {
+  public function enableEvents(array $eventNames): DatabaseConnectionInterface|static {
     foreach ($eventNames as $eventName) {
       assert(class_exists($eventName), "Event class {$eventName} does not exist");
       $this->enabledEvents[$eventName] = TRUE;
@@ -1518,7 +1181,7 @@ abstract class Connection {
    *
    * @return \Drupal\Core\Database\Connection|static
    */
-  public function disableEvents(array $eventNames): Connection|static {
+  public function disableEvents(array $eventNames): DatabaseConnectionInterface|static {
     foreach ($eventNames as $eventName) {
       assert(class_exists($eventName), "Event class {$eventName} does not exist");
       $this->enabledEvents[$eventName] = FALSE;
@@ -1545,89 +1208,6 @@ abstract class Connection {
       return \Drupal::service('event_dispatcher')->dispatch($event, $eventName);
     }
     throw new EventException('The event dispatcher service is not available. Database API events can only be fired if the container is initialized');
-  }
-
-  /**
-   * Determine the last non-database method that called the database API.
-   *
-   * Traversing the call stack from the very first call made during the
-   * request, we define "the routine that called this query" as the last entry
-   * in the call stack that is not any method called from the namespace of the
-   * database driver, is not inside the Drupal\Core\Database namespace and does
-   * have a file (which excludes call_user_func_array(), anonymous functions
-   * and similar). That makes the climbing logic very simple, and handles the
-   * variable stack depth caused by the query builders.
-   *
-   * See the @link http://php.net/debug_backtrace debug_backtrace() @endlink
-   * function.
-   *
-   * @return array
-   *   This method returns a stack trace entry similar to that generated by
-   *   debug_backtrace(). However, it flattens the trace entry and the trace
-   *   entry before it so that we get the function and args of the function that
-   *   called into the database system, not the function and args of the
-   *   database call itself.
-   */
-  public function findCallerFromDebugBacktrace(): array {
-    $stack = $this->removeDatabaseEntriesFromDebugBacktrace($this->getDebugBacktrace(), $this->getConnectionOptions()['namespace']);
-    // Return the first function call whose stack entry has a 'file' key, that
-    // is, it is not a callback or a closure.
-    for ($i = 0; $i < count($stack); $i++) {
-      if (!empty($stack[$i]['file'])) {
-        return [
-          'file' => $stack[$i]['file'],
-          'line' => $stack[$i]['line'],
-          'function' => $stack[$i + 1]['function'],
-          'class' => $stack[$i + 1]['class'] ?? NULL,
-          'type' => $stack[$i + 1]['type'] ?? NULL,
-          'args' => $stack[$i + 1]['args'] ?? [],
-        ];
-      }
-    }
-
-    return [];
-  }
-
-  /**
-   * Removes database related calls from a backtrace array.
-   *
-   * @param array $backtrace
-   *   A standard PHP backtrace. Passed by reference.
-   * @param string $driver_namespace
-   *   The PHP namespace of the database driver.
-   *
-   * @return array
-   *   The cleaned backtrace array.
-   */
-  public static function removeDatabaseEntriesFromDebugBacktrace(array $backtrace, string $driver_namespace): array {
-    // Starting from the very first entry processed during the request, find
-    // the first function call that can be identified as a call to a
-    // method/function in the database layer.
-    for ($n = count($backtrace) - 1; $n >= 0; $n--) {
-      // If the call was made from a function, 'class' will be empty. We give
-      // it a default empty string value in that case.
-      $class = $backtrace[$n]['class'] ?? '';
-      if (str_starts_with($class, __NAMESPACE__) || str_starts_with($class, $driver_namespace)) {
-        break;
-      }
-    }
-
-    return array_values(array_slice($backtrace, $n));
-  }
-
-  /**
-   * Gets the debug backtrace.
-   *
-   * Wraps the debug_backtrace function to allow mocking results in PHPUnit
-   * tests.
-   *
-   * @return array[]
-   *   The debug backtrace.
-   */
-  protected function getDebugBacktrace(): array {
-    // @todo Allow a backtrace including all arguments as an option.
-    //   https://www.drupal.org/project/drupal/issues/3401906
-    return debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
   }
 
 }
