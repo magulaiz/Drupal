@@ -282,6 +282,39 @@ class MenuUiNodeTest extends BrowserTestBase {
   }
 
   /**
+   * Testing menu link is only changed when required.
+   */
+  public function testMenuLinkIsNotUpdatedWhenUnchanged() {
+    // Create a node.
+    $node_title = $this->randomMachineName();
+    $edit = [
+      'title[0][value]' => $node_title,
+      'body[0][value]' => $this->randomString(),
+    ];
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Save');
+    $node = $this->drupalGetNodeByTitle($node_title);
+
+    // Add a menu link to the Main menu.
+    $original = MenuLinkContent::create([
+      'link' => [['uri' => 'entity:node/' . $node->id()]],
+      'menu_name' => 'main',
+    ]);
+    $original = $original->save();
+
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $edit = [
+      'body[0][value]' => $this->randomString(),
+    ];
+    $this->submitForm($edit, 'Save');
+
+    $link = MenuLinkContent::load($original->id());
+
+    // Assert that the menu link updated date has not been updated.
+    $this->assertSession()->assertEquals($original->getChangedTime(), $link->getChangedTime());
+  }
+
+  /**
    * Testing correct loading and saving of menu links via node form widget in a multilingual environment.
    */
   public function testMultilingualMenuNodeFormWidget(): void {
