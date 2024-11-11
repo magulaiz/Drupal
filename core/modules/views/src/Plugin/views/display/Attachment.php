@@ -33,7 +33,10 @@ class Attachment extends DisplayPluginBase {
   protected $usesPager = FALSE;
 
   /**
+   * Defines default options for the attachment display.
    *
+   * @return array
+   *   The defined options.
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -49,14 +52,23 @@ class Attachment extends DisplayPluginBase {
   }
 
   /**
+   * Executes the view for the attachment display.
    *
+   * @return array
+   *   The rendered display output.
    */
   public function execute() {
     return $this->view->render($this->display['id']);
   }
 
   /**
+   * Provides possible attachment positions.
    *
+   * @param string|null $position
+   *   The specific position to retrieve, or NULL to retrieve all options.
+   *
+   * @return array|string
+   *   The position label or array of all positions.
    */
   public function attachmentPositions($position = NULL) {
     $positions = [
@@ -317,7 +329,10 @@ class Attachment extends DisplayPluginBase {
   }
 
   /**
+   * Checks if the pager should be rendered for this display.
    *
+   * @return bool
+   *   TRUE if the pager is used and should be rendered, FALSE otherwise.
    */
   public function renderPager() {
     return $this->usesPager() && $this->getOption('render_pager');
