@@ -299,7 +299,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     $this->assertNotEmpty($xpath->query('//drupal-media'));
   }
 
-  public function testWithEntityLinkSuggestions() {
+  public function testWithEntityLinkSuggestions(): void {
     $content_to_add = $this->drupalCreateNode([
       'type' => 'blog',
       'title' => 'Zoo Party',
