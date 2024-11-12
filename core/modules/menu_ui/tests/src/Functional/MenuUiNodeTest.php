@@ -284,7 +284,7 @@ class MenuUiNodeTest extends BrowserTestBase {
   /**
    * Testing menu link is only changed when required.
    */
-  public function testMenuLinkIsNotUpdatedWhenUnchanged(): void {
+  public function testMenuLinkIsOnlyUpdatedWhenChanged(): void {
     // Create a node.
     $node_title = $this->randomMachineName();
     $edit = [
@@ -298,6 +298,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Add a menu link to the Main menu.
     $original = MenuLinkContent::create([
       'link' => [['uri' => 'entity:node/' . $node->id()]],
+      'title' => $node_title,
       'menu_name' => 'main',
     ]);
     $original = $original->save();
@@ -312,6 +313,22 @@ class MenuUiNodeTest extends BrowserTestBase {
 
     // Assert that the menu link updated date has not been updated.
     $this->assertEquals($original->getChangedTime(), $link->getChangedTime());
+    // Assert the link title is correct.
+    $this->assertEquals($node_title, $link->title->value);
+
+    $menu_title = $this->randomString();
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $edit = [
+      'menu[title]' => $menu_title,
+    ];
+    $this->submitForm($edit, 'Save');
+
+    $link = MenuLinkContent::load($original->id());
+
+    // Assert that the menu link updated date has not been updated.
+    $this->assertNotEquals($original->getChangedTime(), $link->getChangedTime());
+    // Assert the link title is correct.
+    $this->assertEquals($menu_title, $link->title->value);
   }
 
   /**
