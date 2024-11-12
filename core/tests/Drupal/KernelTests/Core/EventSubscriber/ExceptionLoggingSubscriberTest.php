@@ -37,7 +37,6 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
     $http_kernel = \Drupal::service('http_kernel');
 
     $channel_map = [
-      400 => 'client error',
       401 => 'client error',
       403 => 'access denied',
       404 => 'page not found',
@@ -49,6 +48,7 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
       501 => 'php',
       502 => 'php',
       503 => 'php',
+      400 => 'client error',
     ];
 
     $level_map = [
@@ -75,8 +75,8 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
       // will rethrow the exception.
       if ($code === 400) {
         $this->expectException(HttpException::class);
-        $http_kernel->handle($request);
       }
+      $http_kernel->handle($request);
     }
     ini_set('error_log', $error_log);
 
