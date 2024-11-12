@@ -113,7 +113,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   A JSON response containing the autocomplete suggestions.
    */
-  public function suggestions(Request $request, EditorInterface $editor, string $host_entity_type_id, string $host_entity_langcode) {
+  public function suggestions(Request $request, EditorInterface $editor, string $host_entity_type_id, string $host_entity_langcode): JsonResponse {
     $input = mb_strtolower($request->query->get('q'));
     $suggestions = [];
 
