@@ -19,7 +19,9 @@ final class NonTransactionalConnection implements DatabaseConnectionInterface {
    * @param \Drupal\Core\Database\DatabaseConnectionInterface $wrappedConnection
    *   Database connection to wrap calls.
    */
-  public function __construct(protected DatabaseConnectionInterface $wrappedConnection) {}
+  public function __construct(protected DatabaseConnectionInterface $wrappedConnection) {
+    assert($this->wrappedConnection->allowsConcurrentNonTransactionalConnection());
+  }
 
   /**
    * {@inheritdoc}
@@ -222,6 +224,13 @@ final class NonTransactionalConnection implements DatabaseConnectionInterface {
    */
   public function isEventEnabled(string $eventName): bool {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function allowsConcurrentNonTransactionalConnection(): bool {
+    return TRUE;
   }
 
 }
