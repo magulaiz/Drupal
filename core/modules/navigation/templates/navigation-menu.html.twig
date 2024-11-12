@@ -115,8 +115,9 @@
             attributes: create_attribute({
               'aria-expanded': 'false',
               'data-toolbar-menu-trigger': menu_level,
+              'title': 'Expand '|t ~ item.title,
             }),
-            text: item.url ? item.title : '',
+            text: item.url ? '' : item.title,
             modifiers: ['expand--down'],
           } only %}
           <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}" inert>
