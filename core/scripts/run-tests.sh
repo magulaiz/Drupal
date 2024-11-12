@@ -819,9 +819,11 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
  * Run a PHPUnit-based test.
  */
 function simpletest_script_run_phpunit(TestRun $test_run, $class) {
+  global $args;
+
   $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
   $start = microtime(TRUE);
-  $results = $runner->execute($test_run, $class, $status);
+  $results = $runner->execute($test_run, $class, $status, $args['color']);
   $time = microtime(TRUE) - $start;
 
   $runner->processPhpUnitResults($test_run, $results);
