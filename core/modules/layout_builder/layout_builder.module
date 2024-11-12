@@ -26,6 +26,7 @@ use Drupal\layout_builder\InlineBlockEntityOperations;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
+use Drupal\layout_builder\LayoutOverrideFieldHelper;
 
 /**
  * Implements hook_help().
@@ -208,6 +209,28 @@ function layout_builder_entity_delete(EntityInterface $entity) {
     /** @var \Drupal\layout_builder\InlineBlockEntityOperations $entity_operations */
     $entity_operations = \Drupal::classResolver(InlineBlockEntityOperations::class);
     $entity_operations->handleEntityDelete($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function layout_builder_entity_update(EntityInterface $entity): void {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+
+  // See if the entity's layout must be updated with the new entity values if:
+  // 1. The entity is not being saved via the Layout Builder UI
+  // 2. It is a fieldable layout
+  // 3. A layout override field is present.
+  // @todo Remove instanceof FieldableEntityInterface check in
+  //   https://www.drupal.org/node/3046216
+  if ($route_name && !str_starts_with($route_name, 'layout_builder.') && $entity instanceof FieldableEntityInterface && $entity->hasField(OverridesSectionStorage::FIELD_NAME)) {
+    // If an entity's field values change, and it also has a layout override in
+    // the tempstore, the tempstore must be updated to reflect those new
+    // values.
+    /** @var \Drupal\layout_builder\LayoutOverrideFieldHelper $override_field_helper */
+    $override_field_helper = \Drupal::classResolver(LayoutOverrideFieldHelper::class);
+    $override_field_helper->updateTempstoreEntityContext($entity);
   }
 }
 
