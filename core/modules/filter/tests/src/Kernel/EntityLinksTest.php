@@ -120,7 +120,7 @@ class EntityLinksTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
 
     // Undo what the parent did, to allow testing path aliases in kernel tests.
