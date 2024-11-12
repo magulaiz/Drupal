@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_entity_bundle_info_alter().
  */
-function ckeditor5_test_entity_bundle_info_alter(&$bundles) {
+function ckeditor5_test_entity_bundle_info_alter(&$bundles): void {
   if (isset($bundles['taxonomy_term'])) {
     foreach ($bundles['taxonomy_term'] as $key => $bundle) {
       $bundles['taxonomy_term'][$key]['ckeditor5_link_suggestions'] = TRUE;
