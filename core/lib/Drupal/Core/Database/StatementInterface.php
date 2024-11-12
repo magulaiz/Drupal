@@ -23,10 +23,10 @@ interface StatementInterface extends \Traversable {
   /**
    * Executes a prepared statement.
    *
-   * @param $args
+   * @param array|null $args
    *   An array of values with as many elements as there are bound parameters in
-   *   the SQL statement being executed. This can be NULL.
-   * @param $options
+   *   the SQL statement being executed.
+   * @param array $options
    *   An array of options for this query.
    *
    * @return bool

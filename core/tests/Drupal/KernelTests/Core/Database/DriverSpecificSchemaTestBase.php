@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\Schema\Index;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Exception\SchemaIndexOnJsonFieldUnsupportedException;
 use Drupal\Core\Database\Schema;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\SchemaException;
+use Drupal\pgsql\Schema\IndexType;
 use Drupal\Tests\Core\Database\SchemaIntrospectionTestTrait;
 
 /**
@@ -1353,6 +1356,148 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     ])->execute();
 
     $this->assertEquals($id + 1, $id_two);
+  }
+
+  /**
+   * Tests creating an index with the index specification value object.
+   */
+  public function testObjectIndexSyntax(): void {
+    $specification = [
+      'fields' => [
+        'id' => [
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'Primary Key: Unique ID.',
+        ],
+        'text' => [
+          'type' => 'text',
+          'description' => 'A text field',
+        ],
+      ],
+      'indexes' => [
+        'text_column_index' => new Index(
+          ['text'],
+          [
+            'pgsql' => [
+              'type' => IndexType::GIST,
+              'operator' => 'gist_trgm_ops',
+            ],
+          ]
+        ),
+      ],
+      'primary key' => ['id'],
+    ];
+    $table_name = 'index_with_object';
+    $this->schema->createTable($table_name, $specification);
+    $this->assertIndexOnColumns($table_name, ['text']);
+  }
+
+  /**
+   * Test creation of a generated column.
+   */
+  public function testGeneratedColumn(): void {
+    $this->schema->createTable('with_generated', [
+      'fields' => [
+        'id' => ['type' => 'serial', 'not null' => TRUE],
+        'text_field' => [
+          'type' => 'text',
+          'description' => 'A text field',
+        ],
+        'gen' => [
+          'as' => 'text_field',
+          'type' => 'text',
+          'description' => 'A generated field.',
+        ],
+      ],
+      'primary key' => ['id'],
+    ]);
+    $sourceValue = 'Generated fields are useful.';
+    $this->assertTrue($this->schema->fieldExists('with_generated', 'gen'));
+    $this->connection->insert('with_generated')
+      ->fields(['text_field' => $sourceValue])
+      ->execute();
+    $result = $this->connection->select('with_generated')
+      ->fields('with_generated', ['gen'])
+      ->execute()
+      ->fetchField();
+    $this->assertSame($sourceValue, $result);
+  }
+
+  const JSON_TEST_VALUE = '{"key": "value1", "number": 0, "bool": true, "list": ["a","b","c"], "nested": {"key": "value2"}, "float": 5.5}';
+
+  const JSON_TEST_DATA = [
+    '$.key' => 'value1',
+    '$.nested.key' => 'value2',
+    '$.bool' => TRUE,
+    '$.number' => 0,
+    '$.list' => ['a', 'b', 'c'],
+    '$.list[1]' => 'b',
+    '$.float' => 5.5,
+  ];
+
+  const JSON_TABLE_SPECIFICATION = [
+    'fields' => [
+      'id' => ['type' => 'serial', 'not null' => TRUE],
+      'test_field' => [
+        'type' => 'json',
+        'json_hotpaths' => [
+          [
+            'type' => 'int',
+            'jsonpath' => '$.number',
+          ],
+          [
+            'type' => 'text',
+            'jsonpath' => '$.key',
+          ],
+          [
+            'type' => 'float',
+            'jsonpath' => '$.float',
+          ],
+        ],
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+
+  /**
+   * Tests JSON schema type.
+   *
+   * @param bool $allow_direct_indexes
+   *   Whether to allow direct index creation on a JSON data column.
+   */
+  protected function doTestJsonSchema(bool $allow_direct_indexes = FALSE): void {
+    $spec = static::JSON_TABLE_SPECIFICATION;
+    $this->schema->createTable('test_json', $spec);
+    $this->assertTrue($this->schema->tableExists('test_json'), 'Table with database specific datatype was created.');
+
+    // Test ::fieldExists().
+    $this->assertTrue($this->schema->fieldExists('test_json', 'test_field'));
+
+    // Test simple index creation. Drivers supporting options should test them.
+    // Drivers should validate indexes are actually used; this only tests the
+    // methods for creating, asserting and dropping indexes with simple syntax.
+
+    // Not all db drivers support creating an index directly on a JSON field.
+    try {
+      $this->schema->addIndex('test_json', 'test_simple_index', ['test_field'], $spec);
+    }
+    catch (\Throwable $e) {
+      if (!$allow_direct_indexes && $e instanceof SchemaIndexOnJsonFieldUnsupportedException) {
+        $this->assertTrue(TRUE);
+      }
+    }
+    if ($allow_direct_indexes) {
+      $this->assertTrue($this->schema->indexExists('test_json', 'test_simple_index'));
+      $this->schema->dropIndex('test_json', 'test_simple_index');
+    }
+
+    $this->connection->insert('test_json')
+      ->fields([
+        'test_field' => self::JSON_TEST_VALUE,
+      ])
+      ->execute();
+    // This method must be extended with driver-specific query syntax and
+    // associated assertions for reading out data.
   }
 
 }

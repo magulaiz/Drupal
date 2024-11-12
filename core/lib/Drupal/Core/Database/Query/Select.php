@@ -9,7 +9,7 @@ use Drupal\Core\Database\Connection;
  *
  * @ingroup database
  */
-class Select extends Query implements SelectInterface {
+class Select extends Query implements SelectInterface, JsonConditionInterface {
 
   use QueryConditionTrait;
 
@@ -236,6 +236,9 @@ class Select extends Query implements SelectInterface {
    */
   public function compile(Connection $connection, PlaceholderInterface $queryPlaceholder) {
     $this->condition->compile($connection, $queryPlaceholder);
+    if (($this->condition instanceof StrictSqlParamsConditionInterface) && $this->condition->usesStrictParameters()) {
+      $this->queryOptions['strict_params'] = TRUE;
+    }
     $this->having->compile($connection, $queryPlaceholder);
 
     foreach ($this->tables as $table) {

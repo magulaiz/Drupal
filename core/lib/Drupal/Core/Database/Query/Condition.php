@@ -8,7 +8,7 @@ use Drupal\Core\Database\InvalidQueryException;
 /**
  * Generic class for a series of conditions in a query.
  */
-class Condition implements ConditionInterface, \Countable {
+class Condition implements ConditionInterface, JsonConditionInterface, \Countable {
 
   /**
    * Provides a map of condition operators to condition operator options.
@@ -60,6 +60,11 @@ class Condition implements ConditionInterface, \Countable {
    * @var bool
    */
   protected $changed = TRUE;
+
+  /**
+   * Whether the resulting query should have its parameters strictly-bound.
+   */
+  protected bool $strictParams = FALSE;
 
   /**
    * The identifier of the query placeholder this condition has been compiled against.
@@ -122,6 +127,52 @@ class Condition implements ConditionInterface, \Countable {
       'operator' => $operator,
     ];
 
+    $this->changed = TRUE;
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function usesStrictParameters(): bool {
+    return $this->strictParams;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|bool|null $value = NULL, string $operator = '='): self {
+    $array_operators = ['@>'];
+    $scalar_operators = ['=', '<>', '!=', '<', '<=', '>', '>='];
+    if (!in_array($operator, [...$scalar_operators, ...$array_operators], TRUE)) {
+      throw new InvalidQueryException(sprintf(
+        'Operator %s is not supported by %s. Allowed operators include: %s',
+        $operator,
+        __METHOD__,
+        implode(', ', [...$scalar_operators, ...$array_operators]),
+      ));
+    }
+    if (in_array($operator, $array_operators, TRUE) && !is_array($value)) {
+      throw new InvalidQueryException(sprintf(
+        'Operator %s is only supported with an array $value.',
+        $operator,
+      ));
+    }
+    if (!str_starts_with($jsonpath, '$')) {
+      throw new InvalidQueryException(sprintf(
+        'The provided jsonpath %s is invalid. Supported jsonpath expressions must begin with "$".',
+        $jsonpath,
+      ));
+    }
+    $this->conditions[] = [
+      'field' => $field,
+      'jsonpath' => $jsonpath,
+      'value' => $value,
+      'operator' => $operator,
+    ];
+
+    $this->strictParams = TRUE;
     $this->changed = TRUE;
 
     return $this;
@@ -236,6 +287,10 @@ class Condition implements ConditionInterface, \Countable {
           $arguments += $condition['value'];
           $ignore_operator = TRUE;
         }
+        elseif (isset($condition['jsonpath'])) {
+          $ignore_operator = FALSE;
+          $field_fragment = $this->processJsonCondition($condition, $connection, $ignore_operator, $queryPlaceholder);
+        }
         else {
           // Left hand part is a normal field. Add it as is.
           $field_fragment = $connection->escapeField($condition['field']);
@@ -325,6 +380,33 @@ class Condition implements ConditionInterface, \Countable {
       $this->arguments = $arguments;
       $this->changed = FALSE;
     }
+  }
+
+  /**
+   * Compile a JSON condition.
+   *
+   * Drivers supporting JSON data types may have widely-varying syntax on
+   * SQL syntax for queries. This default implementation delegates to a function
+   * which provides a simple field fragment, however some drivers (e.g., PgSQL)
+   * may need more complex syntax.
+   *
+   * @param array $condition
+   *   Condition.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   Connection.
+   * @param bool $ignore_operator
+   *   Ignore operator flag, passed by reference.
+   * @param PlaceholderInterface $query_placeholder
+   *   Query placeholder.
+   *
+   * @return string
+   *   Field fragment.
+   */
+  protected function processJsonCondition(array $condition, Connection $connection, bool &$ignore_operator, PlaceholderInterface $query_placeholder): string {
+    if (method_exists($this, 'getJsonFieldFragment')) {
+      return $this->getJsonFieldFragment($condition['field'], $condition, $connection, $query_placeholder);
+    }
+    throw new \RuntimeException('Database driver must implement ' . __FUNCTION__);
   }
 
   /**

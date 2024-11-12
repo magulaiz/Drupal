@@ -9,6 +9,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\SelectExtender;
 
+// cspell:ignore handies uncompahgre
+
 /**
  * Tests the Select query builder.
  *
@@ -627,6 +629,54 @@ class SelectTest extends DatabaseTestBase {
       ->fields('t')
       ->condition('age', [26, 27], $operator)
       ->execute();
+  }
+
+  /**
+   * Data provider of JSON condition test cases.
+   *
+   * @return array[]
+   *   Test cases.
+   */
+  public static function providerJsonConditionOperators(): array {
+    return [
+      'LTE with matching' => ['$.number', 5, '<=', 1],
+      'LTE with no matching' => ['$.number', 5, '<=', 1],
+      'GT with matching' => ['$.number', -2, '>', 3],
+      'GT with subset matching' => ['$.number', 7, '>', 2],
+      'Equals' => ['$.number', 10, '=', 2],
+      'Text equals' => ['$.key', 'some text', '=', 1],
+      'Boolean TRUE' => ['$.boolean', TRUE, '=', 2],
+      'Boolean FALSE' => ['$.boolean', FALSE, '=', 1],
+      'Boolean invalid condition' => ['$.boolean', 'invalid string argument', '=', 0],
+      'Non-matching text' => ['$.key', 'nothing to see here', '=', 0],
+      'String instead of number' => ['$.number', 'stringy', '=', 0],
+      'Array value with full containment' => ['$.array', [32, 41], '@>', 1],
+      'Array value with partial containment' => ['$.array', [41], '@>', 1],
+      'Array value with no containment' => ['$.array', [81235], '@>', 0],
+      'Associative array value with containment' => ['$.associative', ['mountain' => 'Handies'], '@>', 1],
+      'Associative array value with no containment' => ['$.associative', ['mountain' => 'Uncompahgre'], '@>', 0],
+    ];
+  }
+
+  /**
+   * Test JSON conditions with supported operators.
+   *
+   * This test appears simple at first glance but is particularly important when
+   * implementing JSON data types. Variable typing becomes far more sensitive
+   * when matching JSON documents vs. other data which is stored directly in SQL
+   * tables.
+   *
+   * @dataProvider providerJsonConditionOperators
+   */
+  public function testJsonCondition(string $jsonpath, int|string|bool|array $value, string $operator, int $expected_count): void {
+    if ($operator === '@>' && $this->connection->driver() === 'sqlite') {
+      $this->markTestSkipped('SQLite does not support containment operator.');
+    }
+    $query = $this->connection->select('json', 'j');
+    $query->fields('j');
+    $query->jsonCondition('test_field', $jsonpath, $value, $operator);
+    $retrieved = $query->execute()->fetchAll();
+    $this->assertEquals($expected_count, count($retrieved));
   }
 
 }

@@ -31,6 +31,21 @@ trait QueryConditionTrait {
   /**
    * {@inheritdoc}
    */
+  public function usesStrictParameters(): bool {
+    return $this->condition->usesStrictParameters();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|bool|null $value = NULL, string $operator = '='): self {
+    $this->condition->jsonCondition($field, $jsonpath, $value, $operator);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isNull($field) {
     $this->condition->isNull($field);
     return $this;

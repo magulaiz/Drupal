@@ -1,0 +1,4 @@
+services:
+  Drupal\user_data_test\JsonBackedUserData:
+    arguments:
+      - '@database'

@@ -2,11 +2,13 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
+use Drupal\Core\Database\JsonIndexValidationTrait;
+use Drupal\Core\Database\JsonpathGeneratedFieldTrait;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
 
-// cspell:ignore autoincrement autoindex
+// cspell:ignore autoincrement autoindex xinfo
 
 /**
  * @ingroup schemaapi
@@ -18,12 +20,25 @@ use Drupal\Core\Database\Schema as DatabaseSchema;
  */
 class Schema extends DatabaseSchema {
 
+  use JsonpathGeneratedFieldTrait;
+  use JsonIndexValidationTrait;
+
   /**
    * Override DatabaseSchema::$defaultSchema.
    *
    * @var string
    */
   protected $defaultSchema = 'main';
+
+  /**
+   * Get a list of column names for a table.
+   *
+   * @return array
+   *   Array of column names for the table.
+   */
+  public function getFields(string $table): array {
+    return array_keys($this->introspectSchema($table)['fields']);
+  }
 
   /**
    * {@inheritdoc}
@@ -77,8 +92,13 @@ class Schema extends DatabaseSchema {
 
   /**
    * Build the SQL expression for creating columns.
+   *
+   * @param string $table_name
+   *   Table name.
+   * @param array $schema
+   *   Table schema, passed by reference.
    */
-  protected function createColumnsSql($tablename, $schema) {
+  protected function createColumnsSql($table_name, &$schema) {
     $sql_array = [];
 
     // Add the SQL statement for each field.
@@ -89,6 +109,10 @@ class Schema extends DatabaseSchema {
         }
       }
       $sql_array[] = $this->createFieldSql($name, $this->processField($field));
+      assert($this->connection instanceof Connection);
+      if ($this->connection->supportsGeneratedColumns()) {
+        $sql_array = array_merge($sql_array, $this->processJsonpathGeneratedFields($name, $schema, $table_name));
+      }
     }
 
     // Process keys.
@@ -96,7 +120,14 @@ class Schema extends DatabaseSchema {
       $sql_array[] = " PRIMARY KEY (" . $this->createKeySql($schema['primary key']) . ")";
     }
 
-    return implode(", \n", $sql_array);
+    return implode(", \n", array_filter($sql_array));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static function getJsonExtractValueExpression(string $field, string $jsonpath): string {
+    return "json_extract([{$field}], \"{$jsonpath}\")";
   }
 
   /**
@@ -189,6 +220,10 @@ class Schema extends DatabaseSchema {
         }
       }
 
+      if (!empty($spec['as'])) {
+        $sql .= ' GENERATED ALWAYS AS (' . $spec['as'] . ') VIRTUAL';
+      }
+
       if (!empty($spec['unsigned'])) {
         $sql .= ' CHECK (' . $name . '>= 0)';
       }
@@ -200,7 +235,7 @@ class Schema extends DatabaseSchema {
         $sql .= ' DEFAULT ' . $spec['default'];
       }
 
-      if (empty($spec['not null']) && !isset($spec['default'])) {
+      if (empty($spec['not null']) && !isset($spec['default']) && empty($spec['as'])) {
         $sql .= ' DEFAULT NULL';
       }
     }
@@ -249,6 +284,8 @@ class Schema extends DatabaseSchema {
 
       'blob:big'        => 'BLOB',
       'blob:normal'     => 'BLOB',
+
+      'json:normal'     => 'JSON',
     ];
     return $map;
   }
@@ -322,7 +359,8 @@ class Schema extends DatabaseSchema {
     // SQLite doesn't have a full-featured ALTER TABLE statement. It only
     // supports adding new fields to a table, in some simple cases. In most
     // cases, we have to create a new table and copy the data over.
-    if (empty($keys_new) && (empty($specification['not null']) || isset($specification['default']))) {
+    // JSON data type gets special handling due to automatic index creation.
+    if (empty($keys_new) && $specification['type'] !== 'json' && (empty($specification['not null']) || isset($specification['default']))) {
       // When we don't have to create new keys and we are not creating a
       // NOT NULL column without a default value, we can use the quicker version.
       $query = 'ALTER TABLE {' . $table . '} ADD ' . $this->createFieldSql($field, $this->processField($specification));
@@ -483,7 +521,7 @@ class Schema extends DatabaseSchema {
     ];
 
     $info = $this->getPrefixInfo($table);
-    $result = $this->connection->query('PRAGMA [' . $info['schema'] . '].table_info([' . $info['table'] . '])');
+    $result = $this->connection->query('PRAGMA [' . $info['schema'] . '].table_xinfo([' . $info['table'] . '])');
     foreach ($result as $row) {
       if (preg_match('/^([^(]+)\((.*)\)$/', $row->type, $matches)) {
         $type = $matches[1];
@@ -492,6 +530,10 @@ class Schema extends DatabaseSchema {
       else {
         $type = $row->type;
         $length = NULL;
+      }
+      // We could match generated columns by $row->hidden, but we need the type.
+      if (preg_match('/(.*)\sGENERATED(\sALWAYS)?/', $type, $matches)) {
+        $type = $matches[1];
       }
       if (isset($mapped_fields[$type])) {
         [$type, $size] = explode(':', $mapped_fields[$type]);
@@ -578,6 +620,15 @@ class Schema extends DatabaseSchema {
     // @see \Drupal\mysql\Driver\Database\mysql\Schema::dropField()
     if (isset($new_schema['primary key']) && in_array($field, $new_schema['primary key'], TRUE)) {
       unset($new_schema['primary key']);
+    }
+
+    // When dropping a field that had a JSON path generated field automatically
+    // created for purposes of index optimization, drop the generated field and
+    // corresponding index.
+    $auto_generated_column_prefix = self::getJsonpathGeneratedFieldPrefix($field);
+    foreach (array_filter($this->getFields($table), fn(string $name) => str_starts_with($name, $auto_generated_column_prefix)) as $field_name) {
+      unset($new_schema['fields'][$field_name]);
+      unset($new_schema['indexes'][$field_name]);
     }
 
     // Handle possible index changes.
@@ -679,6 +730,8 @@ class Schema extends DatabaseSchema {
     if ($this->indexExists($table, $name)) {
       throw new SchemaObjectExistsException("Cannot add index '$name' to table '$table': index already exists.");
     }
+
+    $this::guardNoDirectJsonIndexes($table, $name, $fields, $spec);
 
     $schema['indexes'][$name] = $fields;
     $statements = $this->createIndexSql($table, $schema);

@@ -324,9 +324,9 @@ use Drupal\Core\Database\Query\SelectInterface;
  *       brackets. For example, the users_data table 'uid' field description
  *       might contain "The {users}.uid this record affects."
  *     - 'type': The generic datatype: 'char', 'varchar', 'text', 'blob', 'int',
- *       'float', 'numeric', or 'serial'. Most types just map to the according
- *       database engine specific data types. Use 'serial' for auto incrementing
- *       fields. This will expand to 'INT auto_increment' on MySQL.
+ *       'float', 'numeric', 'serial', or 'json'. Most types just map to the
+ *       according database engine specific data types. Use 'serial' for auto
+ *       incrementing fields. This will expand to 'INT auto_increment' on MySQL.
  *       A special 'varchar_ascii' type is also available for limiting machine
  *       name field to US ASCII characters.
  *     - 'mysql_type', 'pgsql_type', 'sqlite_type', etc.: If you need to
@@ -366,6 +366,24 @@ use Drupal\Core\Database\Query\SelectInterface;
  *       'varchar' or 'text' fields to use case-sensitive binary collation.
  *       This has no effect on other database types for which case sensitivity
  *       is already the default behavior.
+ *     - 'as': An expression for determining the value of a generated column.
+ *       This key should be used only with 'type' and 'description'.
+ *       Not all database drivers support specifying 'default', e.g. SQLite.
+ *       Generated columns are VIRTUAL except when the driver only supports
+ *       STORED.
+ *     - 'json_hotpaths': An array of 'type' and 'jsonpath' pairs corresponding
+ *       to a SQL type and JSON path, representing a value which should be used
+ *       for indexing. The specific mechanism for optimization (e.g., generated
+ *       column and/or index creation) is abstracted and driver-specific.
+ *       Specify any jsonpath expressions which are regularly used in database
+ *       query conditions. Supported syntax for JSON paths vary slightly between
+ *       database vendors, so distributed code should use widely-used syntax
+ *       only, such as '.' and '[]'. For more detail on supported syntax, see:
+ *       - Postgres: https://www.postgresql.org/docs/current/datatype-json.html#DATATYPE-JSONPATH
+ *       - MySQL: https://dev.mysql.com/doc/refman/8.0/en/json.html#json-path-syntax
+ *       - MariaDB: https://mariadb.com/kb/en/jsonpath-expressions/
+ *       - SQLite: https://sqlite.org/json1.html#jptr
+ *       - SQL:2016 standard: https://www.iso.org/standard/78937.html
  *     All parameters apart from 'type' are optional except that type
  *     'numeric' columns must specify 'precision' and 'scale', and type
  *     'varchar' must specify the 'length' parameter.
@@ -381,8 +399,8 @@ use Drupal\Core\Database\Query\SelectInterface;
  *    'referenced_column'). This key is for documentation purposes only; foreign
  *    keys are not created in the database, nor are they enforced by Drupal.
  *  - 'indexes':  An associative array of indexes ('indexname' =>
- *    specification). Each specification is an array of one or more
- *    key column specifiers (see below) that form an index on the
+ *    specification). Each specification is an array or Index object containing
+ *    one or more key column specifiers (see below) that form an index on the
  *    table.
  *
  * A key column specifier is either a string naming a column or an array of two

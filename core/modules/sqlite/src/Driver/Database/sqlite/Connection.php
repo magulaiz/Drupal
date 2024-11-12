@@ -484,6 +484,13 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
+  public function condition($conjunction) {
+    return new Condition($conjunction);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function insert($table, array $options = []) {
     return new Insert($this, $table, $options);
   }
@@ -517,6 +524,25 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    */
   protected function driverTransactionManager(): TransactionManagerInterface {
     return new TransactionManager($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function startTransaction($name = '') {
+    return $this->transactionManager()->push($name);
+  }
+
+  /**
+   * Determines whether this version of SQLite supports generated columns.
+   *
+   * @return bool
+   *   TRUE if supported, FALSE if not.
+   *
+   * @see https://www.sqlite.org/gencol.html#compatibility
+   */
+  public function supportsGeneratedColumns(): bool {
+    return version_compare($this->version(), '3.31.0', '>=');
   }
 
 }

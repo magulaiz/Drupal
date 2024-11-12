@@ -6,6 +6,8 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Tests\system\Functional\Database\FakeRecord;
 
+// cspell:ignore handies
+
 /**
  * Trait to manage data samples for test tables.
  */
@@ -116,6 +118,34 @@ trait DatabaseTestSchemaDataTrait {
       ->fields([
         'id' => 1,
         'function' => 'Function value 1',
+      ])
+      ->execute();
+
+    $this->connection->insert('json')
+      ->fields(['id', 'test_field'])
+      ->values([
+        'id' => 1,
+        'test_field' => '{"boolean": true, "number": 5}',
+      ])
+      ->values([
+        'id' => 2,
+        'test_field' => '{"number": 10, "boolean": false}',
+      ])
+      ->values([
+        'id' => 3,
+        'test_field' => '{"number": 10, "key": "some text"}',
+      ])
+      ->values([
+        'id' => 4,
+        'test_field' => '{"boolean": true, "key": "some other text"}',
+      ])
+      ->values([
+        'id' => 5,
+        'test_field' => '{"array": [32, 41]}',
+      ])
+      ->values([
+        'id' => 6,
+        'test_field' => '{"associative": {"mountain": "Handies"}}',
       ])
       ->execute();
   }

@@ -266,6 +266,10 @@ abstract class Connection {
    *   database type. In rare cases, such as creating an SQL function, []
    *   characters might be needed and can be allowed by changing this option to
    *   TRUE.
+   * - strict_params: By default, parameters are bound as strings, which most
+   *   database servers will coerce as necessary. Some types of queries may
+   *   require strict comparison, e.g. on values in JSON-backed columns. When
+   *   set to TRUE, Drupal will bind parameters strictly (if supported).
    * - pdo: By default, queries will execute with the client connection options
    *   set on the connection. In particular cases, it could be necessary to
    *   override the driver options on the statement level. In such case, pass
@@ -280,6 +284,7 @@ abstract class Connection {
       'fetch' => \PDO::FETCH_OBJ,
       'allow_delimiter_in_query' => FALSE,
       'allow_square_brackets' => FALSE,
+      'strict_params' => FALSE,
       'pdo' => [],
     ];
   }
@@ -361,7 +366,36 @@ abstract class Connection {
    *   The properly-prefixed string.
    */
   public function prefixTables($sql) {
-    return str_replace(['{', '}'], $this->tablePlaceholderReplacements, $sql);
+    // Historically, this was a simple str_replace() call. Sadly, blindly
+    // replacing curly braces is incompatible with the inlined JSON expressions
+    // that must be within single quotes. We cannot placeholder that JSON, as it
+    // is within single-quoted portions of the SQL statement that are not
+    // interpolated. This regex matches first against those single-quoted
+    // portions of the statement. They are then passed over when matching
+    // the second half of the pattern finding curly-braced table names which
+    // require prefixing.
+    $retSql = preg_replace_callback(
+      "/(?:'(.*(?<!\\\))')|(?'simple'{(\w+)})/U",
+      function ($matches) {
+        return match (TRUE) {
+          // Curly brace table not contained inside single quotes.
+          array_key_exists('simple', $matches) => "{$this->tablePlaceholderReplacements[0]}{$matches[3]}{$this->tablePlaceholderReplacements[1]}",
+          // BC layer: Some table names are contained inside single quotes, but
+          // still require expansion. This was historically valid, but makes
+          // these cases difficult to isolate from inlined JSON.
+          // This check determines if there are curly braces in the string,
+          // and determines they need replacement if the overall string is not
+          // itself valid JSON. This would match '{table1}' but not
+          // '{"table": 1}'. The return value is the original, simple logic
+          // from this method.
+          preg_match('/[{}]+/', $matches[1]) && !json_validate($matches[1]) => str_replace(['{', '}'], $this->tablePlaceholderReplacements, $matches[0]),
+          // Return single-quoted string as-is.
+          default => $matches[0],
+        };
+      },
+      $sql
+    );
+    return $retSql;
   }
 
   /**
@@ -385,7 +419,23 @@ abstract class Connection {
    *   This method should only be called by database API code.
    */
   public function quoteIdentifiers($sql) {
-    return str_replace(['[', ']'], $this->identifierQuotes, $sql);
+    // Historically, this was a simple str_replace() call. Sadly, blindly
+    // replacing square brackets is incompatible with the inlined JSON
+    // expressions that must be within single quotes. We cannot placeholder that
+    // JSON, as it is within single-quoted portions of the SQL statement that
+    // are not interpolated. This regex matches first against those
+    // single-quoted portions of the statement. They are then passed over when
+    // matching the second half of the pattern finding bracketed identifiers
+    // requiring quotes.
+    return preg_replace_callback(
+      "/(?:'.*(?<!\\\)')|(\[(\w+)])/U",
+      function ($matches) {
+        return count($matches) > 1
+          ? "{$this->identifierQuotes[0]}{$matches[2]}{$this->identifierQuotes[1]}"
+          : $matches[0];
+      },
+      $sql
+    );
   }
 
   /**

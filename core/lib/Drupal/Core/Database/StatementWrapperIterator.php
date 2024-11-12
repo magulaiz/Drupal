@@ -109,6 +109,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
       $this->connection->dispatchEvent($startEvent);
     }
 
+    $this->bindArguments($args ?? [], $options['strict_params'] ?? FALSE);
     try {
       $return = $this->clientStatement->execute($args);
       $this->markResultsetIterable($return);
@@ -144,6 +145,34 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
     }
 
     return $return;
+  }
+
+  /**
+   * Binds arguments to the client statement object.
+   *
+   * For a \PDO client connection, this will call \PDO::bindValue(). Database
+   * drivers need to override this method to use client-specific methods.
+   *
+   * @var mixed[] $arguments
+   *   The arguments to bind to the statement object.
+   * @var bool $strict
+   *   (Optional) Whether strict typing should be used. Defaults to FALSE.
+   */
+  protected function bindArguments(array $arguments, bool $strict = FALSE): void {
+    foreach ($arguments as $param_name => $param_value) {
+      $this->clientStatement->bindValue(
+        array_is_list($arguments) ? $param_name + 1 : $param_name,
+        $param_value,
+        $strict
+          // Explicitly bind named arguments to match their proper PDO param type.
+          ? match(gettype($param_value)) {
+            'boolean' => \PDO::PARAM_BOOL,
+            'integer' => \PDO::PARAM_INT,
+            default => \PDO::PARAM_STR,
+          }
+          : \PDO::PARAM_STR
+      );
+    }
   }
 
   /**
