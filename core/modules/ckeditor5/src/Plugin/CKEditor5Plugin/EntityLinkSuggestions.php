@@ -144,7 +144,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
   }
 
   /**
