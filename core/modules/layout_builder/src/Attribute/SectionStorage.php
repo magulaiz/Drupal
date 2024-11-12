@@ -31,6 +31,7 @@ class SectionStorage extends Plugin {
    *   When an entity with layout is rendered, all section storage plugins which
    *   match a particular set of contexts are checked, in order of their weight,
    *   to determine which plugin should be used to render the layout.
+   *   @see \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::findByContext()
    * @param bool $handles_permission_check
    *   (optional) Indicates that this section storage handles its own
    *   permission checking. If FALSE, the 'configure any layout' permission
@@ -44,8 +45,6 @@ class SectionStorage extends Plugin {
    *   Builder UI.
    * @param string|null $deriver
    *   (optional) The deriver class.
-   *
-   * @see \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface::findByContext()
    */
   public function __construct(
     public readonly string $id,

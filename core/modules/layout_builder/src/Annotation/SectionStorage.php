@@ -72,7 +72,7 @@ class SectionStorage extends Plugin {
    *
    * @see \Drupal\layout_builder\Controller\ChooseBlockController
    */
-  public $allow_inline_blocks = TRUE;
+  public bool $allow_inline_blocks = TRUE;
 
   /**
    * {@inheritdoc}
