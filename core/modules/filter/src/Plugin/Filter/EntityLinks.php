@@ -16,7 +16,6 @@ use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\filter\Plugin\FilterInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -49,7 +48,6 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
     $plugin_id,
     $plugin_definition,
     protected readonly EntityRepositoryInterface $entityRepository,
-    protected readonly LoggerInterface $logger,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -62,8 +60,7 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.repository'),
-      $container->get('logger.channel.filter')
+      $container->get('entity.repository')
     );
   }
 
