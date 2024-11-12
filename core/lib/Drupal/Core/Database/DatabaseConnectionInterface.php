@@ -428,4 +428,13 @@ interface DatabaseConnectionInterface {
    */
   public function isEventEnabled(string $eventName): bool;
 
+  /**
+   * Indicates if the driver allows a concurrent non-transactional connection.
+   *
+   * @return bool
+   *   TRUE if this connection allows a concurrent non-transactional
+   *   connection, FALSE otherwise.
+   */
+  public function allowsConcurrentNonTransactionalConnection(): bool;
+
 }

@@ -192,6 +192,13 @@ abstract class Connection implements DatabaseConnectionInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function allowsConcurrentNonTransactionalConnection(): bool {
+    return TRUE;
+  }
+
+  /**
    * Opens a client connection.
    *
    * @param array $connection_options

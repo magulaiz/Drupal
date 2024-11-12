@@ -30,9 +30,9 @@ class LockTest extends KernelTestBase {
     // so it must be specifically constructed, here. Normally the selection of
     // appropriate database backend would be handled in the service container.
     $this->lock = new DatabaseLockBackend(
-      $this->container->get('database')->databaseType() === 'sqlite'
-        ? $this->container->get('database')
-        : $this->container->get('database.nontransactional')
+      $this->container->get('database')->allowsConcurrentNonTransactionalConnection()
+        ? $this->container->get('database.nontransactional')
+        : $this->container->get('database')
     );
   }
 
