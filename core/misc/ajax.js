@@ -366,23 +366,21 @@
         });
         // Rebuild the querystring.
         urlParts[1] = urlSearchParams.toString();
-      }
-      else {
+      } else {
         const deDupedUrlSearchParams = new URLSearchParams();
-        let parameters = [];
-        for (const param of urlSearchParams) {
-          parameters.push(param);
-        }
+        const parameters = [];
+        urlSearchParams.forEach((value, key) => {
+          parameters.push([key, value]);
+        });
         const seenKeys = {};
-        parameters.filter(item => {
+        parameters.filter((item) => {
           const key = item[0];
           if (seenKeys[key]) {
             return false;
-          } else {
-            seenKeys[key] = true;
-            deDupedUrlSearchParams.set(key, urlSearchParams.get(key))
-            return true;
           }
+          seenKeys[key] = true;
+          deDupedUrlSearchParams.set(key, urlSearchParams.get(key));
+          return true;
         });
         // Rebuild the querystring.
         urlParts[1] = deDupedUrlSearchParams.toString();
