@@ -89,7 +89,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public static function formatUsesEntityLinksFilter(EditorInterface $editor) {
+  public static function formatUsesEntityLinksFilter(EditorInterface $editor): AccessResultInterface {
     $filters = $editor->getFilterFormat()->filters();
     return AccessResult::allowedIf($filters->has('entity_links') && $filters->get('entity_links')->status)
       ->addCacheableDependency($editor);
