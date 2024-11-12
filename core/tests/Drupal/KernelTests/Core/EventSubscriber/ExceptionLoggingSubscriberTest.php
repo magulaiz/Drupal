@@ -35,7 +35,7 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
    *
    * @dataProvider exceptionDataProvider
    */
-  public function testExceptionLogging(int $error_code, string $channel, int $log_level): void {
+  public function testExceptionLogging(int $error_code, string $channel, int $log_level, string $exception = ''): void {
     $http_kernel = \Drupal::service('http_kernel');
 
     // Ensure that noting is logged.
@@ -46,10 +46,8 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
     $error_log = ini_set('error_log', '/dev/null');
     $request = Request::create('/test-http-response-exception/' . $error_code);
 
-    // When a BadRequestException is thrown, DefaultHttpExceptionSubscriber
-    // will rethrow the exception.
-    if ($error_code === 400) {
-      $this->expectException(HttpException::class);
+    if ($exception) {
+      $this->expectException($exception);
     }
     $http_kernel->handle($request);
     ini_set('error_log', $error_log);
@@ -66,7 +64,9 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
 
   public static function exceptionDataProvider(): array {
     return [
-      [400, 'client error', RfcLogLevel::WARNING],
+      // When a BadRequestException is thrown, DefaultHttpExceptionSubscriber
+      // will rethrow the exception.
+      [400, 'client error', RfcLogLevel::WARNING, HttpException::class],
       [401, 'client error', RfcLogLevel::WARNING],
       [403, 'access denied', RfcLogLevel::WARNING],
       [404, 'page not found', RfcLogLevel::WARNING],
