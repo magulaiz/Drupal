@@ -6,6 +6,7 @@ namespace Drupal\ckeditor5\Controller;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -162,7 +163,6 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
             'description' => $this->t('No content suggestions found. This URL will be used as is.'),
             'group' => $this->t('No results'),
             'label' => Html::escape($input),
-            // @todo rename `path` to `href`?
             'path' => $input,
           ],
         ];
@@ -194,6 +194,9 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    *   The string to search.
    * @param string $host_entity_langcode
    *   The langcode of the host entity.
+   *
+   * @return array
+   *    An array of suggestion objects with populated entity data.
    *
    * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection::defaultConfiguration()
    */
@@ -318,19 +321,14 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    *   A suggestion group.
    */
   protected function computeGroup(EntityInterface $entity): TranslatableMarkup {
-    $args = [
-      ':entity-type-label' => $entity->getEntityType()->getLabel(),
-    ];
-
     // If the entity type does not have bundles, the group is very simple.
     if ($entity->getEntityType()->getBundleEntityType() === NULL) {
-      return $this->t(':entity-type-label', $args);
+      return $entity->getEntityType()->getLabel();
     }
 
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity->getEntityTypeId());
-    $args[':bundle-label'] = $bundles[$entity->bundle()]['label'];
 
-    return $this->t(':entity-type-label - :bundle-label', $args);
+    return $entity->getEntityType()->getLabel() . ' - ' . $bundles[$entity->bundle()]['label'];
   }
 
   /**
