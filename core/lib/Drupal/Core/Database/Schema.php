@@ -790,6 +790,9 @@ abstract class Schema implements PlaceholderInterface {
 
   /**
    * Determines the maximum table name length for the database.
+   *
+   * @return int
+   *   The maximum length allowed for table names.
    */
   protected function getMaxTableNameLength() {
     return 64;
