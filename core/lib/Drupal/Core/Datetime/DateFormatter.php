@@ -331,7 +331,7 @@ class DateFormatter implements DateFormatterInterface {
    *   non-custom formats, NULL otherwise.
    */
   protected function dateFormat($type, $langcode) {
-    if (!isset($this->dateFormats[$type][$langcode])) {
+    if (!array_key_exists($type, $this->dateFormats) || !array_key_exists($langcode, $this->dateFormats[$type])) {
       $original_language = $this->languageManager->getConfigOverrideLanguage();
       $this->languageManager->setConfigOverrideLanguage(new Language(['id' => $langcode]));
       $this->dateFormats[$type][$langcode] = $this->dateFormatStorage->load($type);
