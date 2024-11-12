@@ -75,9 +75,9 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
       // Do not check the 500 status code here because it would be caught by
       // Drupal\Core\EventSubscriberExceptionTestSiteSubscriber which has lower
       // priority.
-      [501, 'php',RfcLogLevel::ERROR],
-      [502, 'php',RfcLogLevel::ERROR],
-      [503, 'php',RfcLogLevel::ERROR],
+      [501, 'php', RfcLogLevel::ERROR],
+      [502, 'php', RfcLogLevel::ERROR],
+      [503, 'php', RfcLogLevel::ERROR],
     ];
   }
 
