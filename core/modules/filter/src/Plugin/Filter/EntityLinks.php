@@ -40,8 +40,6 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository service.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   The filter logger.
    */
   public function __construct(
     array $configuration,
