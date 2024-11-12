@@ -197,7 +197,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    *
    * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection::defaultConfiguration()
    */
-  public function getSuggestions(string $target_entity_type_id, ?array $target_bundles, string $string, string $host_entity_langcode) {
+  public function getSuggestions(string $target_entity_type_id, ?array $target_bundles, string $string, string $host_entity_langcode): array {
     // If the user input is a current entity URL, don't get more suggestions.
     if ($entity_id = static::findEntityIdByUrl($target_entity_type_id, $string)) {
       $entity = $this->entityTypeManager->getStorage($target_entity_type_id)->load($entity_id);
