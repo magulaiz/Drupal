@@ -196,7 +196,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    *   The langcode of the host entity.
    *
    * @return array
-   *    An array of suggestion objects with populated entity data.
+   *   An array of suggestion objects with populated entity data.
    *
    * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection::defaultConfiguration()
    */
