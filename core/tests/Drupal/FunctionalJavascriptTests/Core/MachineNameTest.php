@@ -7,9 +7,9 @@ namespace Drupal\FunctionalJavascriptTests\Core;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
- * Tests for the machine name field.
+ * Tests for the machine name form element.
  *
- * @group field
+ * @group Form
  */
 class MachineNameTest extends WebDriverTestBase {
 

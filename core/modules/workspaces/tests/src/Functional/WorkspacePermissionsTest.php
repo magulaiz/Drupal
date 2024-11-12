@@ -76,8 +76,7 @@ class WorkspacePermissionsTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     $page = $this->getSession()->getPage();
-    $page->fillField('label', 'Bears again');
-    $page->fillField('id', 'bears');
+    $page->fillField('label[0][value]', 'Bears again');
     $page->findButton('Save')->click();
     $page->hasContent('Bears again (bears)');
 
@@ -120,8 +119,7 @@ class WorkspacePermissionsTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     $page = $this->getSession()->getPage();
-    $page->fillField('label', 'Bears again');
-    $page->fillField('id', 'bears');
+    $page->fillField('label[0][value]', 'Bears again');
     $page->findButton('Save')->click();
     $page->hasContent('Bears again (bears)');
 
