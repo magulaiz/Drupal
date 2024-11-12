@@ -5,9 +5,9 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Html as HtmlUtility;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Markup;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -38,6 +38,7 @@ class HtmlTag extends RenderElementBase {
 
   /**
    * Void elements do not contain values or closing tags.
+   *
    * @see https://www.w3.org/TR/html5/syntax.html#syntax-start-tag
    * @see https://www.w3.org/TR/html5/syntax.html#void-elements
    */
@@ -87,7 +88,7 @@ class HtmlTag extends RenderElementBase {
     // Ensure href and src attributes don't get escaped.
     // @see https://www.drupal.org/project/drupal/issues/2968558
     if ($element['#tag'] == 'link') {
-      $url = isset($element['#attributes']['href']) ? $element['#attributes']['href'] : NULL;
+      $url = $element['#attributes']['href'] ?? NULL;
       if (UrlHelper::isValid($url)) {
         unset($element['#attributes']['href']);
         $attributes = isset($element['#attributes']) ? new Attribute($element['#attributes']) : '';
@@ -95,7 +96,7 @@ class HtmlTag extends RenderElementBase {
       }
     }
     elseif ($element['#tag'] == 'src') {
-      $url = isset($element['#attributes']['src']) ? $element['#attributes']['src'] : NULL;
+      $url = $element['#attributes']['src'] ?? NULL;
       if (UrlHelper::isValid($url)) {
         unset($element['#attributes']['src']);
         $attributes = isset($element['#attributes']) ? new Attribute($element['#attributes']) : '';
