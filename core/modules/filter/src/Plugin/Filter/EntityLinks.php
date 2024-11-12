@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 #[Filter(
   id: 'entity_links',
-  title: new TranslatableMarkup('Entity Links'),
+  title: new TranslatableMarkup('Entity links'),
   description: new TranslatableMarkup('Updates entity links with <code>data-entity-type</code> and <code>data-entity-type-uuid</code> attributes to point to the latest entity URL aliases.'),
   type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
 )]
