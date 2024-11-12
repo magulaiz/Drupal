@@ -48,6 +48,7 @@ class ValidatorsTest extends KernelTestBase {
     'filter_test',
     'media',
     'media_library',
+    'system',
     'views',
   ];
 
@@ -57,6 +58,10 @@ class ValidatorsTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->typedConfig = $this->container->get('config.typed');
+
+    $this->installConfig(['system']);
+    // Avoid needing to install the Stark theme.
+    $this->config('system.theme')->delete();
   }
 
   /**
@@ -1575,6 +1580,35 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'expected_violations' => [],
     ];
+
+    $data['VALID: EntityLinkSuggestions plugin configured to use a link suggester that allows all linkable entity types'] = [
+      'ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => [
+            'link',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_link_entity_suggestions' => [
+            'allow_download_links' => TRUE,
+          ],
+        ],
+      ],
+      'editor_image_upload_settings' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'entity_links' => [
+          'id' => 'entity_links',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [],
+        ],
+      ],
+      'expected_violations' => [],
+    ];
+
     return $data;
   }
 

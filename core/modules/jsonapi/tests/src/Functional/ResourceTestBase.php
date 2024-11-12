@@ -1073,7 +1073,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    */
   public function testCollection(): void {
     $entity_collection = $this->getData();
-    assert(count($entity_collection) > 1, 'A collection must have more that one entity in it.');
+    assert(count($entity_collection) > 1, 'A collection must have more than one entity in it.');
 
     $collection_url = Url::fromRoute(sprintf('jsonapi.%s.collection', static::$resourceTypeName))->setAbsolute(TRUE);
     $request_options = [];

@@ -230,3 +230,14 @@ ckeditor5.plugin.ckeditor5_style:
                     minAttributeValueCount: 1
               StyleSensibleElement: []
             label: 'Style tag + classes'
+
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions
+ckeditor5.plugin.ckeditor5_link_entity_suggestions:
+  type: mapping
+  label: Entity link suggestions
+  mapping:
+    allow_download_links:
+      type: boolean
+      label: 'Allow download links'
+      constraints:
+        NotNull: ~
