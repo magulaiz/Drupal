@@ -88,7 +88,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
     $allowed_bundles = [];
     $all_bundle_info = $this->entityTypeBundleInfo->getAllBundleInfo();
     foreach ($all_bundle_info as $entity_type => $bundles) {
