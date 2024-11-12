@@ -23,6 +23,10 @@ use Symfony\Component\Process\Process;
 /**
  * Provides a workspace to test build processes.
  *
+ * Module tests extending BuildTestBase must exist in the
+ * Drupal\Tests\your_module\Build namespace and live in the
+ * modules/your_module/tests/src/Build directory.
+ *
  * Tests for core/lib/Drupal classes extending BuildTestBase must exist in the
  * \Drupal\BuildTests namespace and live in the core/tests/Drupal/BuildTests
  * directory.
