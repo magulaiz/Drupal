@@ -98,7 +98,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event to process.
    */
-  public function on400(ExceptionEvent $event) {
+  public function on400(ExceptionEvent $event): void {
     if ($exception = $event->getThrowable()) {
       throw $exception;
     }
