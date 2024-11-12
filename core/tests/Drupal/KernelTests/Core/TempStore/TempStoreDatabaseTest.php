@@ -41,7 +41,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
         // non-transactional backend except when using SQLite.
         $database->databaseType() === 'sqlite'
           ? $database
-          : Database::getConnection(nonTransactional: true)
+          : Database::getConnection(nonTransactional: TRUE)
       ),
       $this->container->get('request_stack'),
       $current_user->reveal()
