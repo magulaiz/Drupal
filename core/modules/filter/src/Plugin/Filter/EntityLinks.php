@@ -70,7 +70,7 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
   /**
    * {@inheritdoc}
    */
-  public function process($text, $langcode) {
+  public function process($text, $langcode): FilterProcessResult {
     $result = new FilterProcessResult($text);
 
     if (strpos($text, 'data-entity-type') !== FALSE && strpos($text, 'data-entity-uuid') !== FALSE) {
