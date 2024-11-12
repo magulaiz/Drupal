@@ -81,7 +81,7 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [];
   }
 
