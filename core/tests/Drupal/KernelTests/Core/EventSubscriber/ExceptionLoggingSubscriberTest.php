@@ -9,6 +9,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Tests that HTTP exceptions are logged correctly.
@@ -70,7 +71,12 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
     $error_log = ini_set('error_log', '/dev/null');
     foreach ($channel_map as $code => $channel) {
       $request = Request::create('/test-http-response-exception/' . $code);
-      $http_kernel->handle($request);
+      // When a BadRequestException is thrown, DefaultHttpExceptionSubscriber
+      // will rethrow the exception.
+      if ($code === 400) {
+        $this->expectException(HttpException::class);
+        $http_kernel->handle($request);
+      }
     }
     ini_set('error_log', $error_log);
 
