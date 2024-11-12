@@ -15,23 +15,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 class UniquePathAliasConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $currentRequest;
-
-  /**
    * Creates a new UniquePathAliasConstraintValidator instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $currentRequest
    *   The current request stack.
    */
-  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, RequestStack $request_stack) {
-    $this->currentRequest = $request_stack->getCurrentRequest();
-  }
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected RequestStack $currentRequest) {}
 
   /**
    * {@inheritdoc}
@@ -52,7 +43,7 @@ class UniquePathAliasConstraintValidator extends ConstraintValidator implements 
     $alias = $entity->getAlias();
 
     // If the language selector field is available, use the selected language.
-    $langcode = $this->currentRequest->request->all()['langcode'][0]['value'] ?? $entity->language()->getId();
+    $langcode = $this->currentRequest->getCurrentRequest()->request->all()['langcode'][0]['value'] ?? $entity->language()->getId();
     $storage = $this->entityTypeManager->getStorage('path_alias');
     $query = $storage->getQuery()
       ->accessCheck(FALSE)
