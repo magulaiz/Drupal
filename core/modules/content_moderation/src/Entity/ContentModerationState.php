@@ -138,7 +138,7 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
       // creation of a content moderation state entity may have already been
       // triggered elsewhere. In this case we have to match on the revision ID
       // (instead of the loaded revision ID).
-      $revision_id = $entity->getLoadedRevisionId() ?: $entity->getRevisionId();
+      $revision_id = $entity->getLoadedRevisionId(TRUE) ?: $entity->getRevisionId();
       $ids = $storage->getQuery()
         ->accessCheck(FALSE)
         ->condition('content_entity_type_id', $entity->getEntityTypeId())

@@ -1300,7 +1300,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
     // Use the loaded revision instead of default one to check for data change.
     if ($original && !$entity->isNewRevision() && !$entity->isDefaultRevision()) {
-      $original = $this->loadRevision($entity->getLoadedRevisionId());
+      $original = $this->loadRevision($entity->getLoadedRevisionId(TRUE));
     }
 
     // Determine which fields should be actually stored.

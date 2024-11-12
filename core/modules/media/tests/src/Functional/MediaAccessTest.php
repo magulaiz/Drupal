@@ -108,7 +108,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->assertNoCacheContext('user');
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(200);
-    $previous_revision = $user_media->getLoadedRevisionId();
+    $previous_revision = $user_media->getLoadedRevisionId(TRUE);
     $user_media->setUnpublished()->setNewRevision();
     $user_media->save();
     $this->drupalGet('media/' . $user_media->id());

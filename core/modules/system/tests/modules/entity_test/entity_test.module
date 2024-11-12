@@ -394,7 +394,7 @@ function entity_test_entity_insert(EntityInterface $entity) {
  */
 function entity_test_entity_update(EntityInterface $entity) {
   if ($entity instanceof ContentEntityInterface) {
-    \Drupal::state()->set('entity_test.loadedRevisionId', $entity->getLoadedRevisionId());
+    \Drupal::state()->set('entity_test.loadedRevisionId', $entity->getLoadedRevisionId(TRUE));
   }
 }
 

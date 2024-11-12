@@ -118,7 +118,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
         $default_revision = $this->entityTypeManager
           ->getStorage($entity->getEntityTypeId())
           ->load($entity->id());
-        if ($default_revision->getLoadedRevisionId() !== $entity->getLoadedRevisionId()) {
+        if ($default_revision->getLoadedRevisionId(TRUE) !== $entity->getLoadedRevisionId(TRUE)) {
           $other_langcodes = array_diff_key($default_revision->getTranslationLanguages(), [$sync_langcode => FALSE]);
           if ($other_langcodes) {
             $sync_langcode = key($other_langcodes);
@@ -192,7 +192,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
     if (!isset($entity->original)) {
       /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
       $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
-      $original = $entity->isDefaultRevision() ? $storage->loadUnchanged($entity->id()) : $storage->loadRevision($entity->getLoadedRevisionId());
+      $original = $entity->isDefaultRevision() ? $storage->loadUnchanged($entity->id()) : $storage->loadRevision($entity->getLoadedRevisionId(TRUE));
     }
     else {
       $original = $entity->original;

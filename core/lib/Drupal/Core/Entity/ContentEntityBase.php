@@ -196,6 +196,13 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   protected static $fieldsToSkipFromTranslationChangesCheck = [];
 
   /**
+   * The field storage type of the revision field.
+   *
+   * @var string|null
+   */
+  protected $fieldStorageTypeRevisionField;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = []) {
@@ -313,16 +320,43 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     elseif (!$value && $this->newRevision) {
       // If ::setNewRevision(FALSE) is called after ::setNewRevision(TRUE) we
       // have to restore the loaded revision ID.
-      $this->set($this->getEntityType()->getKey('revision'), $this->getLoadedRevisionId());
+      $this->set($this->getEntityType()->getKey('revision'), $this->getLoadedRevisionId(TRUE));
     }
 
     $this->newRevision = $value;
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the loaded Revision ID of the entity.
+   *
+   * @param bool $cast_to_int
+   *   (optional) Indicator for how the revision identifier is returned. When
+   *   set to TRUE it will return the revision identifier as an integer value
+   *   when the field storage type is integer. When the indicator is not set or
+   *   set to FALSE the revision identifier will return a string value.
+   *
+   * @return int|string|null
+   *   The loaded Revision identifier of the entity, or NULL if the entity
+   *   does not have a revision identifier.
    */
-  public function getLoadedRevisionId() {
+  public function getLoadedRevisionId(bool $cast_to_int = FALSE) {
+    if (!$cast_to_int) {
+      @trigger_error('Returning the loaded revision identifier as a string value when it is of the field storage type integer is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3476934', E_USER_DEPRECATED);
+      return $this->loadedRevisionId;
+    }
+
+    // Get the field storage type fo the revision field.
+    if (!$this->fieldStorageTypeRevisionField) {
+      $revisionKey = $this->getEntityType()->getKey('revision');
+      if ($this->hasField($revisionKey)) {
+        $this->fieldStorageTypeRevisionField = $this->getFieldDefinition($revisionKey)->getType();
+      }
+    }
+
+    if (($this->fieldStorageTypeRevisionField === 'integer') && !is_null($this->loadedRevisionId)) {
+      return (int) $this->loadedRevisionId;
+    }
+
     return $this->loadedRevisionId;
   }
 
@@ -376,7 +410,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
     $storage = $this->entityTypeManager()->getStorage($this->getEntityTypeId());
 
-    return $this->getLoadedRevisionId() == $storage->getLatestRevisionId($this->id());
+    return $this->getLoadedRevisionId(TRUE) == $storage->getLatestRevisionId($this->id());
   }
 
   /**
@@ -386,7 +420,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
     $storage = $this->entityTypeManager()->getStorage($this->getEntityTypeId());
 
-    return $this->getLoadedRevisionId() == $storage->getLatestTranslationAffectedRevisionId($this->id(), $this->language()->getId());
+    return $this->getLoadedRevisionId(TRUE) == $storage->getLatestTranslationAffectedRevisionId($this->id(), $this->language()->getId());
   }
 
   /**
@@ -823,7 +857,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
         // If the revision identifier field is being populated with the original
         // value, we need to make sure the "new revision" flag is reset
         // accordingly.
-        if ($key === 'revision' && $this->getRevisionId() == $this->getLoadedRevisionId() && !$this->isNew()) {
+        if ($key === 'revision' && $this->getRevisionId() == $this->getLoadedRevisionId(TRUE) && !$this->isNew()) {
           $this->newRevision = FALSE;
         }
       }
