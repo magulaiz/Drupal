@@ -301,7 +301,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'title' => $node_title,
       'menu_name' => 'main',
     ]);
-    $original = $original->save();
+    $original->save();
 
     $this->drupalGet('node/' . $node->id() . '/edit');
     $edit = [
