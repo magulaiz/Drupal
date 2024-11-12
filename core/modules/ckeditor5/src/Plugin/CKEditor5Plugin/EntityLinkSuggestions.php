@@ -129,9 +129,9 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
                 ->getPluralLabel(),
             ]),
           ], [
-            '#list_type' => 'ol',
             '#theme' => 'item_list',
             '#items' => $bundles_list,
+            '#list_type' => 'ol',
           ],
         ],
       ];
