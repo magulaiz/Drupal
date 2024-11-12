@@ -66,7 +66,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('current_user'),
       $container->get(SelectionPluginManagerInterface::class),
