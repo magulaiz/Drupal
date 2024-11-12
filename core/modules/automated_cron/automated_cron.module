@@ -43,6 +43,36 @@ function automated_cron_form_system_cron_settings_alter(&$form, &$form_state) {
     '#default_value' => $automated_cron_settings->get('interval'),
     '#options' => [0 => t('Never')] + array_map([\Drupal::service('date.formatter'), 'formatInterval'], array_combine($options, $options)),
   ];
+  $form['instant_queue'] = [
+    '#type' => 'details',
+    '#title' => t('Instant queue settings'),
+    '#open' => TRUE,
+  ];
+  $form['instant_queue']['max_items_to_process'] = [
+    '#type' => 'textfield',
+    '#title' => t('Maximum number of items to process'),
+    '#description' => t('Set the maximum number of items to process at end of a request. Set zero to disable instant queue running.'),
+    '#default_value' => $automated_cron_settings->get('max_items_to_process'),
+    '#required' => TRUE,
+    '#size' => 5,
+  ];
+  $form['instant_queue']['max_concurrent_queue_process'] = [
+    '#type' => 'textfield',
+    '#title' => t('Maximum concurrent requests'),
+    '#description' => t('Set the maximum number of concurrent requests.'),
+    '#default_value' => $automated_cron_settings->get('max_concurrent_queue_process'),
+    '#required' => TRUE,
+    '#size' => 5,
+  ];
+
+  // Check if there are any instant queues running, if so, show a message.
+  $query = \Drupal::database()->select('semaphore', 's');
+  $query->addExpression('count(*)', 'queue_count');
+  $query->condition('name', 'instant_queue_process');
+  $result = $query->execute()->fetchField();
+  if ($result) {
+    \Drupal::messenger()->addMessage(t('There @count instant queues active.', ['@count' => $result]));
+  }
 
   // Add submit callback.
   $form['#submit'][] = 'automated_cron_settings_submit';
@@ -57,5 +87,7 @@ function automated_cron_form_system_cron_settings_alter(&$form, &$form_state) {
 function automated_cron_settings_submit(array $form, FormStateInterface $form_state) {
   \Drupal::configFactory()->getEditable('automated_cron.settings')
     ->set('interval', $form_state->getValue('interval'))
+    ->set('max_items_to_process', $form_state->getValue('max_items_to_process'))
+    ->set('max_concurrent_queue_process', $form_state->getValue('max_concurrent_queue_process'))
     ->save();
 }

@@ -1,0 +1,8 @@
+cron_queue_test.instant_queue:
+  path: '/instant-queue-test/{count}'
+  defaults:
+    _controller: 'Drupal\cron_queue_test\Controller\CronQueueTestInstantQueueController::createItems'
+    _title: 'Instant Queue'
+    count: 10
+  requirements:
+    _access: 'TRUE'

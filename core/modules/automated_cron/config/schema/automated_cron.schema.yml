@@ -12,3 +12,17 @@ automated_cron.settings:
       constraints:
         Range:
           min: 0
+    max_concurrent_queue_process:
+      type: integer
+      label: 'Maximum number of concurrent queue processing'
+      requiredKey: false
+      constraints:
+        Range:
+          min: 1
+    max_items_to_process:
+      type: integer
+      label: 'Number of items to process. Set to 0 disable instant queue processing'
+      requiredKey: false
+      constraints:
+        Range:
+          min: 0

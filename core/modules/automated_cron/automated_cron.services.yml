@@ -1,6 +1,13 @@
 services:
   _defaults:
     autoconfigure: true
+  automated_cron.instant_queue:
+    class: Drupal\automated_cron\lib\InstantQueue
+    arguments: ['@queue', '@logger.channel.cron', '@plugin.manager.queue_worker', '@config.factory', '@database', '@datetime.time', '%queue.config%']
+  Drupal\automated_cron\lib\InstantQueue: '@automated_cron.instant_queue'
   automated_cron.subscriber:
     class: Drupal\automated_cron\EventSubscriber\AutomatedCron
-    arguments: ['@cron', '@config.factory', '@state']
+    arguments: ['@cron', '@config.factory', '@state', '@automated_cron.instant_queue']
+  queue.database:
+    class: Drupal\automated_cron\lib\QueueDatabaseFactory
+    arguments: ['@database']

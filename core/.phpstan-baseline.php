@@ -4113,18 +4113,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Cron\\:\\:processQueue\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cron.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Cron\\:\\:processQueues\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cron.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Cron\\:\\:setCronLastTime\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Cron.php',
@@ -20274,12 +20262,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Functional\\\\ReEnableModuleFieldTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Functional/ReEnableModuleFieldTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Functional\\\\Rest\\\\FieldConfigJsonAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/tests/src/Functional/Rest/FieldConfigJsonAnonTest.php',
@@ -23487,12 +23469,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function more_help_page_test_help_section_info_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/help/tests/modules/more_help_page_test/more_help_page_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\help\\\\Functional\\\\HelpTopicSearchTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/tests/src/Functional/HelpTopicSearchTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -29265,12 +29241,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\locale\\\\Functional\\\\LocaleUpdateBase\\:\\:setTranslationsDirectory\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/tests/src/Functional/LocaleUpdateBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\locale\\\\Functional\\\\LocaleUpdateCronTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/tests/src/Functional/LocaleUpdateCronTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -38360,24 +38330,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchCommentTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchCommentTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchNumberMatchingTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchNumberMatchingTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchNumbersTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchNumbersTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchPageCacheTagsTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchPageCacheTagsTest.php',
@@ -38451,12 +38403,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchRankingTest\\:\\:addDefaultCommentField\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchRankingTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchRankingTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchRankingTest.php',
 ];
@@ -46295,12 +46241,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\SecurityAdvisories\\\\SecurityAdvisoryTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/SecurityAdvisories/SecurityAdvisoryTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\AccessDeniedTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/AccessDeniedTest.php',
@@ -46334,12 +46274,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\AccessDeniedTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/AccessDeniedTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\CronRunTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/CronRunTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -49391,12 +49325,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\update\\\\Functional\\\\UpdateMiscTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateMiscTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\update\\\\Functional\\\\UpdateSemverContribSecurityAvailabilityTest\\:\\:securityUpdateAvailabilityProvider\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateSemverContribSecurityAvailabilityTest.php',
@@ -49424,12 +49352,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\update\\\\Functional\\\\UpdateSemverCoreTestBase\\:\\:setProjectInstalledVersion\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateSemverCoreTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\update\\\\Functional\\\\UpdateSemverTestBase\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateSemverTestBase.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -59045,18 +58967,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\SearchIntegrationTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/SearchIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\SearchMultilingualTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/SearchMultilingualTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\SearchMultilingualTest\\:\\:disableBundleTranslation\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/SearchMultilingualTest.php',
@@ -63924,12 +63834,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\FunctionalTests\\\\BrowserTestBaseTest\\:\\:assertPathAliasNotExists\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/BrowserTestBaseTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\FunctionalTests\\\\BrowserTestBaseTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/BrowserTestBaseTest.php',
 ];
