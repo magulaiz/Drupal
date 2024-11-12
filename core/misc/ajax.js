@@ -648,7 +648,9 @@
       },
       beforeSend(xmlhttprequest, options) {
         ajax.ajaxing = true;
-        options.url = Drupal.ajax.dedupeUrlParams(options.url, null, options);
+        if (options.method.toUpperCase() === 'GET') {
+          options.url = Drupal.ajax.dedupeUrlParams(options.url, null, options);
+        }
         return ajax.beforeSend(xmlhttprequest, options);
       },
       success(response, status, xmlhttprequest) {
