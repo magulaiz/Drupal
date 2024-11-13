@@ -724,9 +724,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
    */
   protected function invokeAll($hook, $args = []): void {
     $this->moduleHandler->loadAll();
-    foreach ($this->moduleHandler->getModuleList() as $module => $extension) {
-      $this->moduleHandler->invoke($module, $hook, $args);
-    }
+    $this->moduleHandler->invokeAll($hook, $args);
   }
 
   /**

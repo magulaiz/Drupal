@@ -558,7 +558,6 @@ class ModuleHandler implements ModuleHandlerInterface {
           if ($listener[0] instanceof ProceduralCall) {
             $listener[0]->loadFile($listener[1]);
             $callable = '\\' . $listener[1];
-            $this->noProcedural($hook, $listener[1]);
           }
           else {
             $callable = $listener;
