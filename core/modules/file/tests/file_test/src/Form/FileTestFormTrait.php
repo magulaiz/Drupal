@@ -14,9 +14,17 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 trait FileTestFormTrait {
 
   /**
-   * {@inheritdoc}
+   * Adds common form elements to the form.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return array
+   *   The form structure.
    */
-  public function buildFormTrait(array $form, FormStateInterface $form_state) {
+  public function buildFormTrait(array $form, FormStateInterface $form_state): array {
 
     $form['file_test_replace'] = [
       '#type' => 'select',
