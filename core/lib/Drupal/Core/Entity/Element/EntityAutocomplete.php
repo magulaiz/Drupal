@@ -131,6 +131,8 @@ class EntityAutocomplete extends Textfield {
 
       return static::getEntityLabels($entities);
     }
+
+    return NULL;
   }
 
   /**
