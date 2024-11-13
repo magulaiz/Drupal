@@ -59,7 +59,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  protected $moduleHandler;
+  protected ModuleHandlerInterface $moduleHandler;
 
   /**
    * Data provider for test functions that should test block types.

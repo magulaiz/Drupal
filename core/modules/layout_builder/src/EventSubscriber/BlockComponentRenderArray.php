@@ -53,6 +53,7 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
   public function __construct(AccountInterface $current_user, ?ModuleHandlerInterface $module_handler = NULL) {
     $this->currentUser = $current_user;
     if (is_null($module_handler)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $module_handler argument is deprecated in drupal:10.x and will be required in drupal:11.0.0.', E_USER_DEPRECATED);
       $this->moduleHandler = \Drupal::moduleHandler();
     }
     else {
