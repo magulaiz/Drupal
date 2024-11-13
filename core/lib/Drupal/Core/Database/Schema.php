@@ -10,6 +10,11 @@ use Drupal\Core\Database\Query\PlaceholderInterface;
 abstract class Schema implements PlaceholderInterface {
 
   /**
+   * The maximum table name length allowed by the database.
+   */
+  protected const MAX_TABLE_NAME_LENGTH = 64;
+
+  /**
    * The database connection.
    *
    * @var \Drupal\Core\Database\Connection
@@ -738,8 +743,8 @@ abstract class Schema implements PlaceholderInterface {
    * @return string
    *   The abbreviated table name.
    */
-  public function createAbbreviatedTable($actual_table_name, $fixed_prefix, array $schema = []) {
-    $max_length = $this->getMaxTableNameLength();
+  public function createAbbreviatedTable(string $actual_table_name, string $fixed_prefix, array $schema): string {
+    $max_length = self::MAX_TABLE_NAME_LENGTH;
 
     // Abbreviate the table name if it exceeds the max length.
     if (strlen($actual_table_name) > $max_length) {
@@ -751,10 +756,6 @@ abstract class Schema implements PlaceholderInterface {
     }
     else {
       $abbreviated_name = $actual_table_name;
-    }
-
-    if (empty($schema)) {
-      throw new \InvalidArgumentException('You must provide a schema to create the table.');
     }
 
     $this->createTable($abbreviated_name, $schema);
@@ -773,8 +774,8 @@ abstract class Schema implements PlaceholderInterface {
    *   The abbreviated table name, if necessary, or the original table name if
    *   it does not exceed the maximum length.
    */
-  public function getAbbreviatedTableName($actual_table_name, $fixed_prefix) {
-    $max_length = $this->getMaxTableNameLength();
+  public function getAbbreviatedTableName(string $actual_table_name, string $fixed_prefix): string {
+    $max_length = self::MAX_TABLE_NAME_LENGTH;
 
     // Abbreviate the table name if it exceeds the max length.
     if (strlen($actual_table_name) > $max_length) {
@@ -786,16 +787,6 @@ abstract class Schema implements PlaceholderInterface {
     }
 
     return $actual_table_name;
-  }
-
-  /**
-   * Determines the maximum table name length for the database.
-   *
-   * @return int
-   *   The maximum length allowed for table names.
-   */
-  protected function getMaxTableNameLength() {
-    return 64;
   }
 
 }
