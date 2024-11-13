@@ -101,6 +101,7 @@
 /**
  * Responsive table cells.
  */
+
 th.priority-low,
 th.priority-medium,
 td.priority-low,
@@ -119,5 +120,5 @@ td.priority-medium {
   th.priority-low,
   td.priority-low {
     display: table-cell;
-   }
- }
+  }
+}
