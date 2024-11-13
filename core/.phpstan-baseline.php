@@ -12156,7 +12156,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function announcements_feed_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function announcements_feed_theme\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/announcements_feed/announcements_feed.module',
 ];
@@ -12204,12 +12204,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function automated_cron_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/automated_cron/automated_cron.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function automated_cron_settings_submit\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/automated_cron/automated_cron.module',
@@ -12225,12 +12219,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function ban_schema\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ban/ban.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function ban_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/ban.module',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -12306,12 +12294,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function basic_auth_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/basic_auth/basic_auth.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\basic_auth_test\\\\BasicAuthTestController\\:\\:modifyState\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/basic_auth/tests/modules/basic_auth_test/src/BasicAuthTestController.php',
@@ -12321,12 +12303,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\basic_auth_test\\\\BasicAuthTestController\\:\\:readState\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/basic_auth/tests/modules/basic_auth_test/src/BasicAuthTestController.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function big_pipe_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/big_pipe/big_pipe.module',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -12517,12 +12493,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function block_configurable_language_delete\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/block.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function block_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block/block.module',
 ];
@@ -13009,12 +12979,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function block_content_entity_type_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/block_content.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function block_content_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/block_content.module',
 ];
@@ -13524,12 +13488,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function breakpoint_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/breakpoint/breakpoint.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function breakpoint_themes_installed\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/breakpoint/breakpoint.module',
@@ -13585,12 +13543,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function ckeditor5_form_filter_format_form_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/ckeditor5.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function ckeditor5_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/ckeditor5.module',
 ];
@@ -14425,12 +14377,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function comment_form_field_ui_form_display_overview_form_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/comment.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function comment_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/comment.module',
 ];
@@ -15540,12 +15486,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function config_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/config.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\config\\\\ConfigSubscriber\\:\\:onConfigImporterValidate\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config/src/ConfigSubscriber.php',
@@ -16128,7 +16068,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function config_translation_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function config_translation_theme\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config_translation/config_translation.module',
 ];
@@ -16465,12 +16405,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function contact_form_user_form_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contact/contact.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function contact_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contact/contact.module',
 ];
@@ -17101,12 +17035,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function content_moderation_form_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/content_moderation.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function content_moderation_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/content_moderation.module',
 ];
@@ -18294,12 +18222,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function content_translation_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/content_translation.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function content_translation_language_configuration_element_submit\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_translation/content_translation.module',
@@ -18906,12 +18828,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function contextual_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contextual/contextual.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function contextual_page_attachments\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contextual/contextual.module',
@@ -18999,12 +18915,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$unrestricted_tab_count might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/EditModeTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function datetime_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/datetime/datetime.module',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -19152,9 +19062,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function datetime_range_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function datetime_range_removed_post_updates\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/datetime_range/datetime_range.module',
+	'path' => __DIR__ . '/modules/datetime_range/datetime_range.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -19237,12 +19147,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function dblog_form_system_logging_settings_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/dblog/dblog.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function dblog_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/dblog/dblog.module',
 ];
@@ -19392,12 +19296,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function dynamic_page_cache_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/dynamic_page_cache/dynamic_page_cache.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\dynamic_page_cache\\\\EventSubscriber\\\\DynamicPageCacheSubscriber\\:\\:onRequest\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/dynamic_page_cache/src/EventSubscriber/DynamicPageCacheSubscriber.php',
@@ -19513,12 +19411,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function editor_form_filter_format_form_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/editor/editor.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function editor_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/editor/editor.module',
 ];
@@ -19776,9 +19668,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function field_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function field_removed_post_updates\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/field/field.module',
+	'path' => __DIR__ . '/modules/field/field.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -20832,12 +20724,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function field_layout_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_layout/field_layout.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\field_layout\\\\Entity\\\\FieldLayoutEntityFormDisplay\\:\\:init\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_layout/src/Entity/FieldLayoutEntityFormDisplay.php',
@@ -21019,12 +20905,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function field_ui_form_manage_field_form_submit\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/field_ui.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function field_ui_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_ui/field_ui.module',
 ];
@@ -21661,12 +21541,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function file_form_system_file_system_settings_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/file.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function file_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/file.module',
 ];
@@ -22902,7 +22776,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function filter_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function filter_theme\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/filter/filter.module',
 ];
@@ -23274,12 +23148,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function help_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/help.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function help_modules_installed\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/help/help.module',
@@ -23382,24 +23250,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function help_page_test_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/tests/modules/help_page_test/help_page_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function help_test_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/tests/modules/help_test/help_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function help_topics_test_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/tests/modules/help_topics_test/help_topics_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function help_topics_test_help_topics_info_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/help/tests/modules/help_topics_test/help_topics_test.module',
@@ -23409,12 +23259,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\help_topics_twig_tester\\\\HelpTestTwigNodeVisitor\\:\\:setStateValue\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/help/tests/modules/help_topics_twig_tester/src/HelpTestTwigNodeVisitor.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function more_help_page_test_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/tests/modules/more_help_page_test/more_help_page_test.module',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -23467,12 +23311,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function history_cron\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/history/history.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function history_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/history/history.module',
 ];
@@ -23695,12 +23533,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function image_file_predelete\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/image.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function image_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/image.module',
 ];
@@ -24366,12 +24198,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function inline_form_errors_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/inline_form_errors/inline_form_errors.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function inline_form_errors_preprocess_datetime_wrapper\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/inline_form_errors/inline_form_errors.module',
@@ -24457,12 +24283,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function jsonapi_entity_delete\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/jsonapi.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function jsonapi_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/jsonapi.module',
 ];
@@ -25477,12 +25297,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function language_form_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/language.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function language_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/language.module',
 ];
@@ -26526,12 +26340,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function layout_builder_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/layout_builder.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function layout_builder_module_implements_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/layout_builder.module',
@@ -26592,9 +26400,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function layout_builder_expose_all_field_blocks_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function layout_builder_removed_post_updates\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/modules/layout_builder_expose_all_field_blocks/layout_builder_expose_all_field_blocks.module',
+	'path' => __DIR__ . '/modules/layout_builder/layout_builder.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -27972,7 +27780,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function layout_discovery_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function layout_discovery_theme\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_discovery/layout_discovery.module',
 ];
@@ -28002,7 +27810,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function link_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function link_theme\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/link/link.module',
 ];
@@ -28357,12 +28165,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function locale_form_system_file_system_settings_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/locale.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function locale_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/locale.module',
 ];
@@ -29305,12 +29107,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function media_form_filter_format_edit_form_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/media.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function media_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/media.module',
 ];
@@ -30330,12 +30126,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function media_library_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/media_library.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function media_library_image_style_access\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media_library/media_library.module',
@@ -30840,12 +30630,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function menu_link_content_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/menu_link_content.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function menu_link_content_menu_delete\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_link_content/menu_link_content.module',
@@ -31224,12 +31008,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function menu_ui_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/menu_ui.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function menu_ui_node_builder\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_ui/menu_ui.module',
@@ -31386,9 +31164,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function migrate_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function migrate_removed_post_updates\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/migrate.module',
+	'path' => __DIR__ . '/modules/migrate/migrate.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -32518,12 +32296,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function migrate_drupal_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal/migrate_drupal.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function migrate_drupal_migration_plugins_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal/migrate_drupal.module',
@@ -33152,9 +32924,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function migrate_drupal_ui_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function migrate_drupal_ui_install\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal_ui/migrate_drupal_ui.module',
+	'path' => __DIR__ . '/modules/migrate_drupal_ui/migrate_drupal_ui.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -33560,12 +33332,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function mysql_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mysql/mysql.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\mysql\\\\Driver\\\\Database\\\\mysql\\\\Connection\\:\\:createDatabase\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/mysql/src/Driver/Database/mysql/Connection.php',
@@ -33680,12 +33446,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function navigation_top_bar_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/modules/navigation_top_bar/navigation_top_bar.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function navigation_requirements\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/navigation/navigation.install',
@@ -33699,12 +33459,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function navigation_element_info_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/navigation.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function navigation_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/navigation/navigation.module',
 ];
@@ -33999,12 +33753,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function node_form_system_themes_admin_form_submit\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/node.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function node_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/node.module',
 ];
@@ -35630,12 +35378,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function options_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/options/options.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function options_field_views_data\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/options/options.views.inc',
@@ -35798,348 +35540,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\ComposerInspector\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/ComposerInspector.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\ComposerInspector\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/ComposerInspector.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\EventSubscriber\\\\ChangeLogger\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/EventSubscriber/ChangeLogger.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\EventSubscriber\\\\ChangeLogger\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/EventSubscriber/ChangeLogger.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\PackageManagerUninstallValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/PackageManagerUninstallValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\PackageManagerUninstallValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/PackageManagerUninstallValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\PathExcluder\\\\UnknownPathExcluder\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/PathExcluder/UnknownPathExcluder.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\PathExcluder\\\\UnknownPathExcluder\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/PathExcluder/UnknownPathExcluder.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\StageBase\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/StageBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\StageBase\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/StageBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\AllowedScaffoldPackagesValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/AllowedScaffoldPackagesValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\AllowedScaffoldPackagesValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/AllowedScaffoldPackagesValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerMinimumStabilityValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerMinimumStabilityValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerMinimumStabilityValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerMinimumStabilityValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerPatchesValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerPatchesValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerPatchesValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerPatchesValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerPluginsValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerPluginsValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerPluginsValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerPluginsValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\DiskSpaceValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/DiskSpaceValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\DiskSpaceValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/DiskSpaceValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\DuplicateInfoFileValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/DuplicateInfoFileValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\DuplicateInfoFileValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/DuplicateInfoFileValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\EnabledExtensionsValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/EnabledExtensionsValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\EnabledExtensionsValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/EnabledExtensionsValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\EnvironmentSupportValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/EnvironmentSupportValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\EnvironmentSupportValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/EnvironmentSupportValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\LockFileValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/LockFileValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\LockFileValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/LockFileValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\MultisiteValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/MultisiteValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\MultisiteValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/MultisiteValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\OverwriteExistingPackagesValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/OverwriteExistingPackagesValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\OverwriteExistingPackagesValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/OverwriteExistingPackagesValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\PendingUpdatesValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/PendingUpdatesValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\PendingUpdatesValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/PendingUpdatesValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\PhpExtensionsValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/PhpExtensionsValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\PhpExtensionsValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/PhpExtensionsValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\PhpTufValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/PhpTufValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\PhpTufValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/PhpTufValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\RsyncValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/RsyncValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\RsyncValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/RsyncValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\SettingsValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/SettingsValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\SettingsValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/SettingsValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\StageNotInActiveValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/StageNotInActiveValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\StageNotInActiveValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/StageNotInActiveValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\StagedDBUpdateValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/StagedDBUpdateValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\StagedDBUpdateValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/StagedDBUpdateValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\SupportedReleaseValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/SupportedReleaseValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\SupportedReleaseValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/SupportedReleaseValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\WritableFileSystemValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/WritableFileSystemValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\WritableFileSystemValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/src/Validator/WritableFileSystemValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\package_manager\\\\Functional\\\\FailureMarkerRequirementTest\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/tests/src/Functional/FailureMarkerRequirementTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\package_manager\\\\Functional\\\\FailureMarkerRequirementTest\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/tests/src/Functional/FailureMarkerRequirementTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\package_manager\\\\Kernel\\\\StageOwnershipTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/tests/src/Kernel/StageOwnershipTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\package_manager\\\\Kernel\\\\StageOwnershipTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/package_manager/tests/src/Kernel/StageOwnershipTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function page_cache_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/page_cache/page_cache.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\page_cache\\\\StackMiddleware\\\\PageCache\\:\\:set\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/page_cache/src/StackMiddleware/PageCache.php',
@@ -36260,9 +35660,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function path_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function path_removed_post_updates\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/path/path.module',
+	'path' => __DIR__ . '/modules/path/path.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -36656,12 +36056,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function pgsql_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/pgsql/pgsql.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\pgsql\\\\Driver\\\\Database\\\\pgsql\\\\Connection\\:\\:addSavepoint\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/pgsql/src/Driver/Database/pgsql/Connection.php',
@@ -36836,12 +36230,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function phpass_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/phpass/phpass.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\phpass\\\\Unit\\\\PasswordVerifyTest\\:\\:providerLongPasswords\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/phpass/tests/src/Unit/PasswordVerifyTest.php',
@@ -36849,12 +36237,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function _responsive_image_image_style_url\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/responsive_image/responsive_image.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function responsive_image_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/responsive_image/responsive_image.module',
 ];
@@ -37010,9 +36392,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function rest_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function rest_removed_post_updates\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/rest.module',
+	'path' => __DIR__ . '/modules/rest/rest.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -37724,12 +37106,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function search_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/search.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function search_preprocess_block\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/search.module',
@@ -38420,9 +37796,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function serialization_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function serialization_removed_post_updates\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/serialization.module',
+	'path' => __DIR__ . '/modules/serialization/serialization.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -38582,12 +37958,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function settings_tray_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/settings_tray/settings_tray.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function settings_tray_preprocess_block\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/settings_tray/settings_tray.module',
@@ -38714,9 +38084,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function shortcut_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function shortcut_uninstall\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/shortcut.module',
+	'path' => __DIR__ . '/modules/shortcut/shortcut.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -39134,12 +38504,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function sqlite_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/sqlite/sqlite.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\sqlite\\\\Driver\\\\Database\\\\sqlite\\\\Connection\\:\\:createDatabase\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/sqlite/src/Driver/Database/sqlite/Connection.php',
@@ -39315,12 +38679,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function syslog_form_system_logging_settings_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/syslog/syslog.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function syslog_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/syslog/syslog.module',
 ];
@@ -40233,12 +39591,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function system_filetransfer_info\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function system_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/system.module',
 ];
@@ -43150,18 +42502,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function experimental_module_requirements_test_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/experimental_module_requirements_test/experimental_module_requirements_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function experimental_module_test_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/experimental_module_test/experimental_module_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function _form_test_tableselect_get_data\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/form_test.module',
@@ -44892,12 +44232,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function system_test_filetransfer_info\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/system_test/system_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function system_test_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/system_test/system_test.module',
 ];
@@ -48203,12 +47537,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function taxonomy_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/taxonomy.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function taxonomy_local_tasks_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/taxonomy.module',
@@ -48911,12 +48239,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function telephone_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/telephone/telephone.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\text\\\\Plugin\\\\Field\\\\FieldType\\\\TextFieldItemList\\:\\:defaultValuesFormValidate\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/text/src/Plugin/Field/FieldType/TextFieldItemList.php',
@@ -48989,9 +48311,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function text_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function text_removed_post_updates\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/text/text.module',
+	'path' => __DIR__ . '/modules/text/text.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -49062,12 +48384,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function template_preprocess_toolbar\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/toolbar.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function toolbar_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/toolbar/toolbar.module',
 ];
@@ -49548,12 +48864,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function update_fetch_data_finished\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/update.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function update_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/update.module',
 ];
@@ -51318,12 +50628,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function user_form_system_regional_settings_submit\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/user.module',
 ];
@@ -59867,12 +59171,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function views_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/views.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function views_hook_info\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.module',
@@ -60827,12 +60125,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function views_ui_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/views_ui.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function views_ui_preprocess_views_view\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/views_ui.module',
@@ -61370,12 +60662,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workflows\\\\Unit\\\\WorkflowStateTransitionOperationsAccessCheckTest\\:\\:invalidOperationNameTestCases\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workflows/tests/src/Unit/WorkflowStateTransitionOperationsAccessCheckTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function workflows_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workflows/workflows.module',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -63095,12 +62381,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function workspaces_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/workspaces.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function workspaces_menu_link_content_update\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/workspaces.module',
@@ -63132,12 +62412,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function demo_umami_form_install_configure_submit\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/demo_umami/demo_umami.profile',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function demo_umami_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/profiles/demo_umami/demo_umami.profile',
 ];
