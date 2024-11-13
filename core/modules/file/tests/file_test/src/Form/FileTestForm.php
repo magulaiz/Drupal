@@ -9,13 +9,11 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 
-use Drupal\file_test\Form\FileTestFormTrait;
-
 /**
  * File test form class.
  */
 class FileTestForm implements FormInterface {
-use FileTestFormTrait;
+  use FileTestFormTrait;
 
   /**
    * {@inheritdoc}
@@ -105,4 +103,5 @@ use FileTestFormTrait;
       default => FileExists::Rename,
     };
   }
+
 }

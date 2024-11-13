@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\file_test\Form;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\File\FileExists;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * File test form Trait.
+ * This trait provides common code common for Forms.
  */
-/**
- * This class provides the trait common for FileTestForm + FileTestSaveUploadFromForm
- */
-trait FileTestFormTrait
-{
+trait FileTestFormTrait {
 
   /**
    * {@inheritdoc}
@@ -68,5 +64,5 @@ trait FileTestFormTrait
 
     return $form;
   }
-}
 
+}
