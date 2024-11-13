@@ -62,9 +62,12 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $entity) {
       $label = $entity->label();
+      // Check if the user has "view label" access.
+      if ($entity->access('view label')) {
+        $uri = NULL;
       // If the link is to be displayed and the entity has a uri, display a
       // link.
-      if ($output_as_link && !$entity->isNew()) {
+      if ($output_as_link && !$entity->isNew() && $entity->access('view')) {
         try {
           $uri = $entity->toUrl();
         }
@@ -100,6 +103,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
       $elements[$delta]['#entity'] = $entity;
       $elements[$delta]['#cache']['tags'] = $entity->getCacheTags();
     }
+  }
 
     return $elements;
   }
