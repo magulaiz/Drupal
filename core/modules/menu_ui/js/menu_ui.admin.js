@@ -18,7 +18,11 @@
         Drupal.menuUiUpdateParentList();
 
         // Update list of available parent menu items.
-        $menu.on('change', 'input', Drupal.menuUiUpdateParentList);
+        $menu.on(
+          'change',
+          '.available-menus input',
+          Drupal.menuUiUpdateParentList,
+        );
       }
     },
   };
@@ -30,7 +34,7 @@
     const $menu = $('#edit-menu');
     const values = [];
 
-    $menu.find('input:checked').each(function () {
+    $menu.find('.available-menus input:checked').each(function () {
       // Get the names of all checked menus.
       values.push(Drupal.checkPlain(this.value));
     });
