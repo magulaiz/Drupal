@@ -21,7 +21,7 @@ use Drupal\update\UpdateManagerInterface;
 /**
  * Implements hook_help().
  */
-function update_help($route_name, RouteMatchInterface $route_match) {
+function update_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.update':
       $output = '';
@@ -48,6 +48,9 @@ function update_help($route_name, RouteMatchInterface $route_match) {
 
     case 'system.modules_list':
       return '<p>' . t('Regularly review <a href=":updates">available updates</a> and update as required to maintain a secure and current site. Always run the <a href=":update-php">update script</a> each time you update software.', [':update-php' => Url::fromRoute('system.db_update')->toString(), ':updates' => Url::fromRoute('update.status')->toString()]) . '</p>';
+
+    default:
+      return '';
 
   }
 }

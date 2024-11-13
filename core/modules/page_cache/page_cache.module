@@ -11,7 +11,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_help().
  */
-function page_cache_help($route_name, RouteMatchInterface $route_match) {
+function page_cache_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.page_cache':
       $output = '<h2>' . t('About') . '</h2>';
@@ -27,5 +27,8 @@ function page_cache_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</dl>';
 
       return $output;
+
+    default:
+      return '';
   }
 }

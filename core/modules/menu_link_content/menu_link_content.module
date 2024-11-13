@@ -14,7 +14,7 @@ use Drupal\system\MenuInterface;
 /**
  * Implements hook_help().
  */
-function menu_link_content_help($route_name, RouteMatchInterface $route_match) {
+function menu_link_content_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.menu_link_content':
       $output = '';
@@ -28,6 +28,9 @@ function menu_link_content_help($route_name, RouteMatchInterface $route_match) {
       }
       $output .= '</p>';
       return $output;
+
+    default:
+      return '';
   }
 }
 

@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_help().
  */
-function config_help($route_name, RouteMatchInterface $route_match) {
+function config_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.config':
       $output = '';
@@ -57,6 +57,9 @@ function config_help($route_name, RouteMatchInterface $route_match) {
       $output = '';
       $output .= '<p>' . t('Import a single configuration item by pasting its YAML structure into the text field.') . '</p>';
       return $output;
+
+    default:
+      return '';
   }
 }
 

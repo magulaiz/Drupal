@@ -17,7 +17,7 @@ use Drupal\shortcut\ShortcutSetInterface;
 /**
  * Implements hook_help().
  */
-function shortcut_help($route_name, RouteMatchInterface $route_match) {
+function shortcut_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.shortcut':
       $output = '<h2>' . t('About') . '</h2>';
@@ -42,6 +42,8 @@ function shortcut_help($route_name, RouteMatchInterface $route_match) {
         $output = '<p>' . t('Define which shortcut set you are using on the <a href=":shortcut-link">Shortcuts tab</a> of your account page.', [':shortcut-link' => Url::fromRoute('shortcut.set_switch', ['user' => $user->id()])->toString()]) . '</p>';
         return $output;
       }
+    default:
+      return '';
   }
 }
 

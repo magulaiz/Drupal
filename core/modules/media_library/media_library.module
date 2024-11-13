@@ -30,7 +30,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Implements hook_help().
  */
-function media_library_help($route_name, RouteMatchInterface $route_match) {
+function media_library_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.media_library':
       $output = '<h2>' . t('About') . '</h2>';
@@ -73,6 +73,9 @@ function media_library_help($route_name, RouteMatchInterface $route_match) {
       ]) . '</li>';
       $output .= '</ul>';
       return $output;
+
+    default:
+      return '';
   }
 }
 

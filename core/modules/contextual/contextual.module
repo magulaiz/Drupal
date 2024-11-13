@@ -72,7 +72,7 @@ function contextual_page_attachments(array &$page) {
 /**
  * Implements hook_help().
  */
-function contextual_help($route_name, RouteMatchInterface $route_match) {
+function contextual_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.contextual':
       $output = '';
@@ -97,6 +97,9 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</dd>';
       $output .= '</dl>';
       return $output;
+
+    default:
+      return '';
   }
 }
 

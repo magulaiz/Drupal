@@ -61,7 +61,7 @@ const REGIONS_ALL = 'all';
 /**
  * Implements hook_help().
  */
-function system_help($route_name, RouteMatchInterface $route_match) {
+function system_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.system':
       $output = '';
@@ -129,22 +129,25 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       if (($block = $route_match->getParameter('block')) && $block->getPluginId() == 'system_powered_by_block') {
         return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
       }
-      break;
+      return '';
 
     case 'block.admin_add':
       if ($route_match->getParameter('plugin_id') == 'system_powered_by_block') {
         return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
       }
-      break;
+      return '';
 
     case 'system.site_maintenance_mode':
       if (\Drupal::currentUser()->id() == 1) {
         return '<p>' . t('Use maintenance mode when making major updates, particularly if the updates could disrupt visitors or the update process. Examples include upgrading, importing or exporting content, modifying a theme, modifying content types, and making backups.') . '</p>';
       }
-      break;
+      return '';
 
     case 'system.status':
       return '<p>' . t("Here you can find a short overview of your site's parameters as well as any problems detected with your installation. It may be useful to copy and paste this information into support requests filed on Drupal.org's support forums and project issue queues. Before filing a support request, ensure that your web server meets the <a href=\":system-requirements\">system requirements.</a>", [':system-requirements' => 'https://www.drupal.org/docs/system-requirements']) . '</p>';
+
+    default:
+      return '';
   }
 }
 

@@ -13,7 +13,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_help().
  */
-function demo_umami_help($route_name, RouteMatchInterface $route_match) {
+function demo_umami_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.demo_umami':
       $output = '';
@@ -27,6 +27,9 @@ function demo_umami_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h2>' . t('What to do when you are ready to build your Drupal website') . '</h2>';
       $output .= '<p>' . t("Once you've tried Drupal using Umami and want to build your own site, simply reinstall Drupal and select a different installation profile (such as Standard) from the install screen.") . '</p>';
       return $output;
+
+    default:
+      return '';
   }
 }
 

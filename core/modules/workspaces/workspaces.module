@@ -24,7 +24,7 @@ use Drupal\workspaces\ViewsQueryAlter;
 /**
  * Implements hook_help().
  */
-function workspaces_help($route_name, RouteMatchInterface $route_match) {
+function workspaces_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     // Main module help for the Workspaces module.
     case 'help.page.workspaces':
@@ -32,6 +32,9 @@ function workspaces_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Workspaces module allows workspaces to be defined and switched between. Content is then assigned to the active workspace when created. For more information, see the <a href=":workspaces">online documentation for the Workspaces module</a>.', [':workspaces' => 'https://www.drupal.org/docs/8/core/modules/workspace/overview']) . '</p>';
       return $output;
+
+    default:
+      return '';
   }
 }
 

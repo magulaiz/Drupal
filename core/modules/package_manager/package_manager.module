@@ -103,5 +103,5 @@ function package_manager_help($route_name): ?string {
 
       return $output;
   }
-  return NULL;
+  return '';
 }

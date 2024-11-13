@@ -27,7 +27,7 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrlFallback;
 /**
  * Implements hook_help().
  */
-function language_help($route_name, RouteMatchInterface $route_match) {
+function language_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.language':
       $output = '';
@@ -86,16 +86,19 @@ function language_help($route_name, RouteMatchInterface $route_match) {
       if (($block = $route_match->getParameter('block')) && $block->getPluginId() == 'language_block:language_interface') {
         return '<p>' . t('With multiple languages configured, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
-      break;
+      return '';
 
     case 'block.admin_add':
       if ($route_match->getParameter('plugin_id') == 'language_block:language_interface') {
         return '<p>' . t('With multiple languages configured, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
-      break;
+      return '';
 
     case 'language.content_settings_page':
       return '<p>' . t("Change language settings for <em>content types</em>, <em>taxonomy vocabularies</em>, <em>user profiles</em>, or any other supported element on your site. By default, language settings hide the language selector and the language is the site's default language.") . '</p>';
+
+    default:
+      return '';
   }
 }
 
