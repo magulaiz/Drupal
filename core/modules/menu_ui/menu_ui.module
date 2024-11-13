@@ -127,6 +127,7 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
   // Check for changes to the menu link content.
   if ($entity->hasTranslationChanges()) {
     $entity->isDefaultRevision($node->isDefaultRevision());
+    $entity->setChangedTime(\Drupal::service('datetime.time')->getRequestTime());
     $entity->save();
   }
 }
