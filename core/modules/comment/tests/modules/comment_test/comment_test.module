@@ -5,13 +5,15 @@
  * Implements comment-related hooks to test API interactions.
  */
 
+declare(strict_types=1);
+
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Url;
 
 /**
  * Implements hook_entity_type_alter().
  */
-function comment_test_entity_type_alter(array &$entity_types) {
+function comment_test_entity_type_alter(array &$entity_types): void {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   if (\Drupal::languageManager()->isMultilingual()) {
     // Enable language handling for comment fields.

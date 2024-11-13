@@ -78,7 +78,7 @@ function user_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function user_theme() {
+function user_theme(): array {
   return [
     'user' => [
       'render element' => 'elements',
@@ -464,7 +464,7 @@ function user_user_logout(AccountInterface $account) {
  *   they can change their password.
  */
 function user_pass_reset_url($account, $options = []) {
-  $timestamp = \Drupal::time()->getRequestTime();
+  $timestamp = \Drupal::time()->getCurrentTime();
   $langcode = $options['langcode'] ?? $account->getPreferredLangcode();
   return Url::fromRoute('user.reset',
     [
@@ -1153,7 +1153,7 @@ function template_preprocess_user(&$variables) {
 /**
  * Implements hook_form_FORM_ID_alter() for \Drupal\system\Form\RegionalForm.
  */
-function user_form_system_regional_settings_alter(&$form, FormStateInterface $form_state) {
+function user_form_system_regional_settings_alter(&$form, FormStateInterface $form_state): void {
   $config = \Drupal::config('system.date');
 
   $form['timezone']['configurable_timezones'] = [

@@ -31,7 +31,6 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
-use Drupal\user\UserInterface;
 use Drupal\node\Form\NodePreviewForm;
 
 /**
@@ -105,7 +104,7 @@ function node_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function node_theme() {
+function node_theme(): array {
   return [
     'node' => [
       'render element' => 'elements',
@@ -614,33 +613,6 @@ function node_ranking() {
 }
 
 /**
- * Implements hook_user_cancel().
- */
-function node_user_cancel($edit, UserInterface $account, $method) {
-  switch ($method) {
-    case 'user_cancel_block_unpublish':
-      // Unpublish nodes (current revisions).
-      $nids = \Drupal::entityQuery('node')
-        ->accessCheck(FALSE)
-        ->condition('uid', $account->id())
-        ->execute();
-      \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
-      node_mass_update($nids, ['status' => 0], NULL, TRUE);
-      break;
-
-    case 'user_cancel_reassign':
-      // Anonymize all of the nodes for this old account.
-      \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
-      $vids = \Drupal::entityTypeManager()->getStorage('node')->userRevisionIds($account);
-      node_mass_update($vids, [
-        'uid' => 0,
-        'revision_uid' => 0,
-      ], NULL, TRUE, TRUE);
-      break;
-  }
-}
-
-/**
  * Implements hook_ENTITY_TYPE_predelete() for user entities.
  */
 function node_user_predelete($account) {
@@ -688,7 +660,7 @@ function node_page_top(array &$page_top) {
  *
  * @see node_form_system_themes_admin_form_submit()
  */
-function node_form_system_themes_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function node_form_system_themes_admin_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   $form['admin_theme']['use_admin_theme'] = [
     '#type' => 'checkbox',
     '#title' => t('Use the administration theme when editing or creating content'),

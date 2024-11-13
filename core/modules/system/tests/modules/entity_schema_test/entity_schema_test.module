@@ -5,6 +5,8 @@
  * Test module for the entity API providing a bundle field.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -15,7 +17,7 @@ use Drupal\entity_test\Entity\EntityTestMulRev;
 /**
  * Implements hook_entity_type_alter().
  */
-function entity_schema_test_entity_type_alter(array &$entity_types) {
+function entity_schema_test_entity_type_alter(array &$entity_types): void {
   // Allow a test to tell us whether or not to alter the entity type.
   if (\Drupal::state()->get('entity_schema_update')) {
     $entity_type = $entity_types['entity_test_update'];

@@ -466,7 +466,7 @@ abstract class BuildTestBase extends TestCase {
    * @throws \RuntimeException
    *   Thrown when there are no available ports within the range.
    */
-  protected function findAvailablePort() {
+  protected function findAvailablePort(): int {
     $store = new FlockStore(DrupalFilesystem::getOsTemporaryDirectory());
     $lock_factory = new LockFactory($store);
 
@@ -498,12 +498,12 @@ abstract class BuildTestBase extends TestCase {
   /**
    * Checks whether a port is available.
    *
-   * @param $port
+   * @param int $port
    *   A number between 1024 and 65536.
    *
    * @return bool
    */
-  protected function checkPortIsAvailable($port) {
+  protected function checkPortIsAvailable($port): bool {
     $fp = @fsockopen(self::$hostName, $port, $errno, $errstr, 1);
     // If fsockopen() fails to connect, probably nothing is listening.
     // It could be a firewall but that's impossible to detect, so as a
@@ -524,7 +524,7 @@ abstract class BuildTestBase extends TestCase {
    *
    * @return int
    */
-  protected function getPortNumber() {
+  protected function getPortNumber(): int {
     if (empty($this->hostPort)) {
       $this->hostPort = $this->findAvailablePort();
     }
