@@ -20,6 +20,7 @@ use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Queue\QueueGarbageCollectionInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Site\Settings;
@@ -763,6 +764,29 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
     )));
     sort($minimal_libraries);
     $settings['ajaxPageState']['libraries'] = implode(',', $minimal_libraries);
+  }
+
+  // @todo Preferably, retrieve these from the render element.
+  foreach (['status', 'error', 'warning'] as $type) {
+    $message_type_key = $type . 'MessagesTemplate';
+    if (array_key_exists($message_type_key, $settings)) {
+      /** @var \Drupal\Core\Render\RendererInterface $renderer */
+      $renderer = \Drupal::service('renderer');
+      $message_template = [
+        '#theme' => 'status_messages',
+        '#message_list' => [
+          $type => [
+            '#markup' => Markup::create('<div data-drupal-message-template></div>'),
+          ],
+        ],
+        '#status_headings' => [
+          'status' => t('Status message'),
+          'error' => t('Error message'),
+          'warning' => t('Warning message'),
+        ],
+      ];
+      $settings[$message_type_key] = $renderer->renderInIsolation($message_template);
+    }
   }
 }
 

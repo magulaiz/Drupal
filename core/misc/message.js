@@ -248,21 +248,11 @@
    *   A DOM Node.
    */
   Drupal.theme.message = ({ text }, { type, id }) => {
-    const messagesTypes = Drupal.Message.getMessageTypeLabels();
-    const messageWrapper = document.createElement('div');
-
-    messageWrapper.setAttribute('class', `messages messages--${type}`);
-    messageWrapper.setAttribute(
-      'role',
-      type === 'error' || type === 'warning' ? 'alert' : 'status',
-    );
-    messageWrapper.setAttribute('data-drupal-message-id', id);
-    messageWrapper.setAttribute('data-drupal-message-type', type);
-
-    messageWrapper.setAttribute('aria-label', messagesTypes[type]);
-
-    messageWrapper.innerHTML = `${text}`;
-
-    return messageWrapper;
+    const element = document.createElement('div');
+    element.innerHTML = drupalSettings[`${type}MessagesTemplate`];
+    element.querySelector('[data-drupal-message-template]').innerHTML = text;
+    const fragment = document.createDocumentFragment();
+    fragment.appendChild(element);
+    return fragment.firstElementChild.firstElementChild;
   };
 })(Drupal);
