@@ -109,7 +109,7 @@ function jsonapi_help($route_name, RouteMatchInterface $route_match): string {
     default:
       return '';
   }
-  return NULL;
+  return '';
 }
 
 /**
