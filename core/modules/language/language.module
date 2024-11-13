@@ -86,12 +86,14 @@ function language_help($route_name, RouteMatchInterface $route_match): string {
       if (($block = $route_match->getParameter('block')) && $block->getPluginId() == 'language_block:language_interface') {
         return '<p>' . t('With multiple languages configured, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
+      return '';
       break;
 
     case 'block.admin_add':
       if ($route_match->getParameter('plugin_id') == 'language_block:language_interface') {
         return '<p>' . t('With multiple languages configured, registered users can select their preferred language and authors can assign a specific language to content.') . '</p>';
       }
+      return '';
       break;
 
     case 'language.content_settings_page':
