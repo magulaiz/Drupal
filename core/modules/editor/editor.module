@@ -634,6 +634,9 @@ function editor_filter_format_presave(FilterFormatInterface $format) {
   if ($format->isNew()) {
     return;
   }
+  if ($format->isSyncing()) {
+    return;
+  }
 
   /** @var \Drupal\filter\FilterFormatInterface $original */
   $original = \Drupal::entityTypeManager()

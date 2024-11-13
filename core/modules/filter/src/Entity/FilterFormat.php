@@ -152,7 +152,9 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
   public function filters($instance_id = NULL) {
     if (!isset($this->filterCollection)) {
       $this->filterCollection = new FilterPluginCollection(\Drupal::service('plugin.manager.filter'), $this->filters);
-      $this->filterCollection->sort();
+      if (!$this->isSyncing()) {
+        $this->filterCollection->sort();
+      }
     }
     if (isset($instance_id)) {
       return $this->filterCollection->get($instance_id);
