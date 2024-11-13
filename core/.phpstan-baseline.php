@@ -22403,12 +22403,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileManagedTestBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: method.notFound
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonBasicAuthTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileUploadJsonBasicAuthTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonBasicAuthTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
 	'count' => 1,
