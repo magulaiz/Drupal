@@ -27,7 +27,6 @@ use Drupal\Core\Action\Plugin\Action\PublishAction;
 use Drupal\Core\Action\Plugin\Action\UnpublishAction;
 use Drupal\workflows\Entity\Workflow;
 use Drupal\views\Entity\View;
-use Drupal\content_moderation\EntityOperations;
 use Drupal\Core\Hook\Attribute\Hook;
 /**
  * Hook implementations for content_moderation.
