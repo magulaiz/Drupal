@@ -510,7 +510,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       // Hide all fields except the current one.
       foreach (array_keys($entity->getFieldDefinitions()) as $name) {
         if ($name != $field_name) {
-          $display->removeComponent($name);
+          $display->hideComponent($name);
         }
       }
     }

@@ -307,7 +307,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
 
     // Disable fields without any applicable plugins.
     if (empty($this->getApplicablePluginOptions($field_definition))) {
-      $this->entity->removeComponent($field_name);
+      $this->entity->hideComponent($field_name);
       $display_options = $this->entity->getComponent($field_name);
     }
 
@@ -615,7 +615,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
       $values = $form_values['fields'][$field_name];
 
       if ($values['region'] == 'hidden') {
-        $entity->removeComponent($field_name);
+        $entity->hideComponent($field_name);
       }
       else {
         $options = $entity->getComponent($field_name);
@@ -643,7 +643,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
     // Collect data for 'extra' fields.
     foreach ($form['#extra'] as $name) {
       if ($form_values['fields'][$name]['region'] == 'hidden') {
-        $entity->removeComponent($name);
+        $entity->hideComponent($name);
       }
       else {
         $entity->setComponent($name, [

@@ -38,7 +38,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
       'type' => 'textfield',
       'region' => 'hidden',
     ];
-    $entity->removeComponent('new_field_mismatch_type_visible')
+    $entity->hideComponent('new_field_mismatch_type_visible')
       ->will(function (array $args) use ($entity) {
         // On subsequent calls, getComponent() will return an empty array.
         $entity->getComponent($args[0])->willReturn([]);
@@ -77,7 +77,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
       'type' => 'textfield',
       'region' => 'hidden',
     ];
-    $entity->removeComponent('field_start_visible_change_region')
+    $entity->hideComponent('field_start_visible_change_region')
       ->will(function (array $args) use ($entity) {
         // On subsequent calls, getComponent() will return an empty array.
         $entity->getComponent($args[0])->willReturn([]);

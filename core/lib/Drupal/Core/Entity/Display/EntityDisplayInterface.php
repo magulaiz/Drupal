@@ -64,7 +64,7 @@ interface EntityDisplayInterface extends ConfigEntityInterface, EntityWithPlugin
    *
    * @return $this
    */
-  public function removeComponent($name);
+  public function hideComponent($name);
 
   /**
    * Gets the highest weight of the components in the display.

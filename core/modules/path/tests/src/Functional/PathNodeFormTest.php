@@ -49,7 +49,7 @@ class PathNodeFormTest extends PathTestBase {
 
     // Disable the 'Path' field for this content type.
     \Drupal::service('entity_display.repository')->getFormDisplay('node', 'page', 'default')
-      ->removeComponent('path')
+      ->hideComponent('path')
       ->save();
 
     $this->drupalGet('node/add/page');

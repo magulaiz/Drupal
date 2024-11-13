@@ -497,7 +497,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Remove the image field from the display, to avoid a dependency error
     // during import.
     EntityViewDisplay::load('node.article.default')
-      ->removeComponent($field_name)
+      ->hideComponent($field_name)
       ->save();
     $this->copyConfig($active, $sync);
     $sync->delete('image.style.' . $style_name);

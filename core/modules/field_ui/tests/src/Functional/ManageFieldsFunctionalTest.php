@@ -102,7 +102,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
 
     // Check that the default widget is used when the field is hidden.
     $display_repository->getFormDisplay($field->getTargetEntityTypeId(), $field->getTargetBundle())
-      ->removeComponent($field_name)
+      ->hideComponent($field_name)
       ->save();
     $this->drupalGet($admin_path);
     $this->assertSession()->fieldValueEquals($element_id, '');

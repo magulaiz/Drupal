@@ -580,7 +580,7 @@ class FormTest extends FieldTestBase {
     // Set the field back to hidden.
     \Drupal::service('entity_display.repository')
       ->getFormDisplay($entity_type, $this->field->getTargetBundle())
-      ->removeComponent($this->field->getName())
+      ->hideComponent($this->field->getName())
       ->save();
 
     // Create a new revision.

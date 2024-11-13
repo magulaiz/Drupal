@@ -102,7 +102,7 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $entity_form_display */
     $entity_form_display = $display_repository->getFormDisplay('media', $media_type_id, 'default');
     if ($entity_form_display->getComponent($field_name)) {
-      $entity_form_display->removeComponent($field_name)->save();
+      $entity_form_display->hideComponent($field_name)->save();
     }
   }
 

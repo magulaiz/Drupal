@@ -88,7 +88,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
 
     // Field hidden.
     $entity = clone($entity_init);
-    $display->removeComponent($this->fieldTestData->field_name);
+    $display->hideComponent($this->fieldTestData->field_name);
     $content = $display->build($entity);
     $this->render($content);
     $this->assertNoRaw($this->fieldTestData->field->getLabel(), "Hidden field: label is not displayed.");
@@ -282,7 +282,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     $display = $display_repository->getFormDisplay($entity_type, $this->fieldTestData->field->getTargetBundle());
     foreach ($display->getComponents() as $name => $options) {
       if ($name != $this->fieldTestData->field_name_2) {
-        $display->removeComponent($name);
+        $display->hideComponent($name);
       }
     }
     $form = [];
@@ -376,7 +376,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     // Call EntityFormDisplayInterface::extractFormValues() for a single field (the second field).
     foreach ($display->getComponents() as $name => $options) {
       if ($name != $this->fieldTestData->field_name_2) {
-        $display->removeComponent($name);
+        $display->hideComponent($name);
       }
     }
     $entity = clone($entity_init);

@@ -103,7 +103,7 @@ trait CommentTestTrait {
         $display = $entity_display_repository->getFormDisplay($entity_type, $bundle, $id);
         // Only update existing displays.
         if ($display && !$display->isNew()) {
-          $display->removeComponent($field_name)->save();
+          $display->hideComponent($field_name)->save();
         }
       }
 
@@ -121,7 +121,7 @@ trait CommentTestTrait {
         $display = $entity_display_repository->getViewDisplay($entity_type, $bundle, $id);
         // Only update existing displays.
         if ($display && !$display->isNew()) {
-          $display->removeComponent($field_name)->save();
+          $display->hideComponent($field_name)->save();
         }
       }
     }

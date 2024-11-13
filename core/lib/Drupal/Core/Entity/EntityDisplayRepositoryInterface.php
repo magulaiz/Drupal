@@ -132,7 +132,7 @@ interface EntityDisplayRepositoryInterface {
    *     'settings' => ['trim_length' => '200'],
    *     'weight' => 1,
    *   ])
-   *   ->removeComponent('field_image')
+   *   ->hideComponent('field_image')
    *   ->save();
    * @endcode
    *

@@ -374,7 +374,7 @@ class MediaTypeForm extends EntityForm {
 
         // Remove all default components.
         foreach (array_keys($display->getComponents()) as $name) {
-          $display->removeComponent($name);
+          $display->hideComponent($name);
         }
         $source->prepareViewDisplay($media_type, $display);
         $display->save();

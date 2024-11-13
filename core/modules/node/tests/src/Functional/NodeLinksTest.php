@@ -40,7 +40,7 @@ class NodeLinksTest extends NodeTestBase {
     // Hide links.
     \Drupal::service('entity_display.repository')
       ->getViewDisplay('node', 'article', 'teaser')
-      ->removeComponent('links')
+      ->hideComponent('links')
       ->save();
 
     $this->drupalGet('node');

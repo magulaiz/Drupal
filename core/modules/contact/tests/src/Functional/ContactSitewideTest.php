@@ -490,7 +490,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $email = '';
     \Drupal::service('entity_display.repository')
       ->getFormDisplay('contact_message', 'foo')
-      ->removeComponent('mail')
+      ->hideComponent('mail')
       ->save();
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'foo', $this->randomString(128));
     $this->assertSession()->pageTextNotContains('Unable to send email. Contact the site administrator if the problem persists.');

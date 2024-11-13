@@ -76,7 +76,7 @@ class TermDisplayConfigurableTest extends TaxonomyTestBase {
     $assert->elementTextContains('xpath', '//*[@class="views-row"][2]/div/div[2]/div[2]', $this->term2->getName());
 
     // Remove 'name' field from display.
-    $display->removeComponent('name')->save();
+    $display->hideComponent('name')->save();
 
     // Recheck the taxonomy_term with 'name' field removed from display.
     // There should just be an unlabelled description. Nothing should be

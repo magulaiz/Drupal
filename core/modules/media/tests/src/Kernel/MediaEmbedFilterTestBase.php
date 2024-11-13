@@ -111,9 +111,9 @@ abstract class MediaEmbedFilterTestBase extends KernelTestBase {
       'bundle' => $media_type->id(),
       'mode' => 'foobar',
       'status' => TRUE,
-    ])->removeComponent('thumbnail')
-      ->removeComponent('created')
-      ->removeComponent('uid')
+    ])->hideComponent('thumbnail')
+      ->hideComponent('created')
+      ->hideComponent('uid')
       ->setComponent('field_media_image', [
         'label' => 'visually_hidden',
         'type' => 'image',

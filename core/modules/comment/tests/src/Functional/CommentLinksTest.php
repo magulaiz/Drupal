@@ -136,7 +136,7 @@ class CommentLinksTest extends CommentTestBase {
 
     // Make sure we can hide node links.
     $display_repository->getViewDisplay('node', $this->node->bundle())
-      ->removeComponent('links')
+      ->hideComponent('links')
       ->save();
     $this->drupalGet($this->node->toUrl());
     $this->assertSession()->linkNotExists('1 comment');
@@ -149,7 +149,7 @@ class CommentLinksTest extends CommentTestBase {
 
     // Make sure we can hide comment links.
     $display_repository->getViewDisplay('comment', 'comment')
-      ->removeComponent('links')
+      ->hideComponent('links')
       ->save();
     $this->drupalGet('node/' . $this->node->id());
     $this->assertSession()->pageTextContains($comment->getSubject());

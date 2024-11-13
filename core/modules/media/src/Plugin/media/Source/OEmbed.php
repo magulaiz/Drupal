@@ -530,7 +530,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       'type' => 'oembed_textfield',
       'weight' => $display->getComponent($source_field)['weight'],
     ]);
-    $display->removeComponent('name');
+    $display->hideComponent('name');
   }
 
   /**

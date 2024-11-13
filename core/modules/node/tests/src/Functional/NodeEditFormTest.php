@@ -210,7 +210,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->checkVariousAuthoredByValues($node, 'uid[target_id]');
 
     // Hide the 'authored by' field from the form.
-    $form_display->removeComponent('uid')->save();
+    $form_display->hideComponent('uid')->save();
 
     // Check that saving the node without making any changes keeps the proper
     // author ID.

@@ -87,7 +87,7 @@ class EntityFormTest extends BrowserTestBase {
       'bundle' => 'entity_test',
       'mode' => 'compact',
       'status' => TRUE,
-    ])->removeComponent('field_test_text')->save();
+    ])->hideComponent('field_test_text')->save();
 
     // The field should be available on default form mode.
     $entity1 = EntityTest::create([
