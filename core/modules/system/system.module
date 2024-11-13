@@ -97,59 +97,61 @@ function system_help($route_name, RouteMatchInterface $route_match): string {
         $output .= '<dd>' . t('Only the most highly critical security announcements will be shown. <a href=":advisories-list">View all security announcements</a>.', [':advisories-list' => 'https://www.drupal.org/security']) . '</dd>';
       }
       $output .= '</dl>';
+      break;
 
     case 'system.admin_index':
       $output = '<p>' . t('This page shows you all available administration tasks for each module.') . '</p>';
+      break;
 
     case 'system.themes_page':
       $output = '<p>' . t('Set and configure the default theme for your website.  Alternative <a href=":themes">themes</a> are available.', [':themes' => 'https://www.drupal.org/project/themes']) . '</p>';
       if (\Drupal::moduleHandler()->moduleExists('block')) {
         $output .= '<p>' . t('You can place blocks for each theme on the <a href=":blocks">block layout</a> page.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';
       }
+      break;
 
     case 'system.theme_settings_theme':
       $theme_list = \Drupal::service('theme_handler')->listInfo();
       $theme = $theme_list[$route_match->getParameter('theme')];
       $output = '<p>' . t('These options control the display settings for the %name theme. When your site is displayed using this theme, these settings will be used.', ['%name' => $theme->info['name']]) . '</p>';
+      break;
 
     case 'system.theme_settings':
       $output = '<p>' . t('Control default display settings for your site, across all themes. Use theme-specific settings to override these defaults.') . '</p>';
+      break;
 
     case 'system.modules_list':
       $output = '<p>' . t('Add <a href=":modules">contributed modules</a> to extend your site\'s functionality.', [':modules' => 'https://www.drupal.org/project/modules']) . '</p>';
       if (!\Drupal::moduleHandler()->moduleExists('update')) {
         $output .= '<p>' . t('Regularly review available updates and update as required to maintain a secure and current site. Always run the <a href=":update-php">update script</a> each time a module is updated. Install the <a href=":update-manager">Update Manager module</a> to update modules and themes.', [':update-php' => Url::fromRoute('system.db_update')->toString(), ':update-manager' => Url::fromRoute('system.modules_list', [], ['fragment' => 'module-update'])->toString()]) . '</p>';
       }
+      break;
 
     case 'system.modules_uninstall':
       $output = '<p>' . t('The uninstall process removes all data related to a module.') . '</p>';
+      break;
 
     case 'entity.block.edit_form':
       if (($block = $route_match->getParameter('block')) && $block->getPluginId() == 'system_powered_by_block') {
         $output = '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
       }
-
       break;
 
     case 'block.admin_add':
       if ($route_match->getParameter('plugin_id') == 'system_powered_by_block') {
         $output = '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
       }
-
       break;
 
     case 'system.site_maintenance_mode':
       if (\Drupal::currentUser()->id() == 1) {
         $output = '<p>' . t('Use maintenance mode when making major updates, particularly if the updates could disrupt visitors or the update process. Examples include upgrading, importing or exporting content, modifying a theme, modifying content types, and making backups.') . '</p>';
       }
-
       break;
 
     case 'system.status':
       $output = '<p>' . t("Here you can find a short overview of your site's parameters as well as any problems detected with your installation. It may be useful to copy and paste this information into support requests filed on Drupal.org's support forums and project issue queues. Before filing a support request, ensure that your web server meets the <a href=\":system-requirements\">system requirements.</a>", [':system-requirements' => 'https://www.drupal.org/docs/system-requirements']) . '</p>';
-
-    default:
-      $output = '';
+      break;
   }
 
   return $output;
