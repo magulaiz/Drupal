@@ -8,7 +8,9 @@
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\contact\MessageInterface;
 use Drupal\contact\Plugin\rest\resource\ContactMessageResource;
+use Drupal\file\Plugin\Field\FieldType\FileItem;
 use Drupal\user\Entity\User;
 
 /**
@@ -253,4 +255,38 @@ function contact_form_user_admin_settings_submit($form, FormStateInterface $form
  */
 function contact_rest_resource_alter(&$definitions) {
   $definitions['entity:contact_message']['class'] = ContactMessageResource::class;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function contact_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
+  /** @var \Drupal\field_ui\Form\FieldConfigEditForm $form_object */
+  $form_object = $form_state->getFormObject();
+
+  /** @var \Drupal\field\FieldConfigInterface $field_config */
+  $field_config = $form_state->getFormObject()->getEntity();
+
+  if (
+    empty($form['#entity']) ||
+    !$form['#entity'] instanceof MessageInterface ||
+    !is_a($field_config->getItemDefinition()->getClass(), FileItem::class, TRUE)
+  ) {
+    // Only alter the form for Message entities where a file field is added.
+    return;
+  }
+  if ($form_object->getEntity()->isNew() && isset($form['field_storage']['subform']['settings']['uri_scheme']['#options']['private'])) {
+    // Set file upload scheme to private by default when creating new fields.
+    $form['field_storage']['subform']['settings']['uri_scheme']['#default_value'] = 'private';
+  }
+
+  if (!$form_state->getUserInput() && $form['field_storage']['subform']['settings']['uri_scheme']['#default_value'] !== 'private') {
+    if (!isset($form['field_storage']['subform']['settings']['uri_scheme']['#options']['private'])) {
+      // Private files are not configured.
+      Drupal::messenger()->addWarning(t('It is advised to store file uploads for contact forms as private files. You can configure this in settings.php'));
+    }
+    else {
+      Drupal::messenger()->addWarning(t('It is advised to store file uploads for contact forms as private files.'));
+    }
+  }
 }
