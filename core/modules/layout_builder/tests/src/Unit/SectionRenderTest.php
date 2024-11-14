@@ -10,6 +10,7 @@ use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\Core\Layout\LayoutInterface;
 use Drupal\Core\Layout\LayoutPluginManagerInterface;
@@ -67,6 +68,13 @@ class SectionRenderTest extends UnitTestCase {
   protected $eventDispatcher;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -80,7 +88,9 @@ class SectionRenderTest extends UnitTestCase {
     $this->eventDispatcher = (new \ReflectionClass(EventDispatcher::class))->newInstanceWithoutConstructor();
 
     $this->account = $this->prophesize(AccountInterface::class);
-    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $this->moduleHandler = $this->prophesize(ModuleHandlerInterface::class);
+
+    $subscriber = new BlockComponentRenderArray($this->account->reveal(), $this->moduleHandler->reveal());
     $this->eventDispatcher->addSubscriber($subscriber);
 
     $layout = $this->prophesize(LayoutInterface::class);

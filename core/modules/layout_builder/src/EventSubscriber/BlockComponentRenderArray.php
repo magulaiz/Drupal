@@ -6,14 +6,15 @@ use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\PreviewFallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\layout_builder\Access\LayoutPreviewAccessAllowed;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
-use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\layout_builder\LayoutBuilderEvents;
+use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -32,16 +33,32 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
-  protected $currentUser;
+  protected AccountInterface $currentUser;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected ModuleHandlerInterface $moduleHandler;
 
   /**
    * Creates a BlockComponentRenderArray object.
    *
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $module_handler
+   *   The module handler.
    */
-  public function __construct(AccountInterface $current_user) {
+  public function __construct(AccountInterface $current_user, ?ModuleHandlerInterface $module_handler = NULL) {
     $this->currentUser = $current_user;
+    if (is_null($module_handler)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $module_handler argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3292520', E_USER_DEPRECATED);
+      $this->moduleHandler = \Drupal::moduleHandler();
+    }
+    else {
+      $this->moduleHandler = $module_handler;
+    }
   }
 
   /**
@@ -150,6 +167,23 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         $build['#contextual_links'] = $content['#contextual_links'];
       }
       $build['content'] = $content;
+
+      if (isset($this->moduleHandler)) {
+        $base_id = $block->getBaseId();
+
+        // If an alter hook wants to modify the block contents, it can append
+        // another #pre_render hook.
+        $this->moduleHandler->alter([
+          'block_view',
+          "block_view_$base_id",
+        ], $build, $block);
+
+        // Allow altering of cacheability metadata or setting #create_placeholder.
+        $this->moduleHandler->alter([
+          'block_build',
+          "block_build_$base_id",
+        ], $build, $block);
+      }
 
       if ($event->inPreview()) {
         if ($block instanceof PreviewFallbackInterface) {
