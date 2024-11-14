@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Url;
+use Drupal\Component\Utility\DiffArray;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\SubformState;
 use Drupal\editor\Entity\Editor;
@@ -401,14 +402,14 @@ function editor_entity_update(EntityInterface $entity) {
     foreach ($uuids_by_field as $field => $uuids) {
       $original_uuids = $original_uuids_by_field[$field] ?? [];
 
-      if ($added_files = array_diff($uuids_by_field[$field], $original_uuids)) {
+      if ($added_files = DiffArray::diffOnce($uuids_by_field[$field], $original_uuids)) {
         _editor_record_file_usage($added_files, $entity);
       }
     }
 
     // Detect file usages that should be decremented.
     foreach ($original_uuids_by_field as $field => $uuids) {
-      $removed_files = array_diff($original_uuids_by_field[$field], $uuids_by_field[$field]);
+      $removed_files = DiffArray::diffOnce($original_uuids_by_field[$field], $uuids_by_field[$field]);
       _editor_delete_file_usage($removed_files, $entity, 1);
     }
   }
