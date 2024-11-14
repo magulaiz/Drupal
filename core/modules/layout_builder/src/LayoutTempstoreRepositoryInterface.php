@@ -27,8 +27,11 @@ interface LayoutTempstoreRepositoryInterface {
    *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
    *   The section storage to set in tempstore.
+   * @param bool $has_unsaved_changes
+   *   (optional) Indicates that the section has unsaved changes. Defaults to
+   *   TRUE.
    */
-  public function set(SectionStorageInterface $section_storage);
+  public function set(SectionStorageInterface $section_storage, bool $has_unsaved_changes = TRUE): void;
 
   /**
    * Checks for the existence of a tempstore version of a section storage.
@@ -40,6 +43,18 @@ interface LayoutTempstoreRepositoryInterface {
    *   TRUE if there is a tempstore version of this section storage.
    */
   public function has(SectionStorageInterface $section_storage);
+
+  /**
+   * Checks for tempstore version of a section storage with unsaved changes.
+   *
+   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   *   The section storage whose saved status is being checked in tempstore.
+   *
+   * @return bool
+   *   TRUE if there is a tempstore version of this section storage with unsaved
+   *   changes.
+   */
+  public function hasUnsavedChanges(SectionStorageInterface $section_storage): bool;
 
   /**
    * Removes the tempstore version of a section storage.
