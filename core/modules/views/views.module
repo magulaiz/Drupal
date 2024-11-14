@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\views\Plugin\Derivative\ViewsLocalTask;
+use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Entity\View;
@@ -578,6 +579,20 @@ function views_hook_info() {
   ];
 
   return $hooks;
+}
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function views_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  if (($context = isset($variables['context']) ? $variables['context'] : FALSE)) {
+    if (($view = isset($context['view']) ? $context['view'] : FALSE) && $view instanceof ViewExecutable) {
+      $suggestions = array_unique(array_merge($suggestions, $view->themeSuggestions($hook)));
+    }
+    elseif (($plugin = isset($context['plugin']) ? $context['plugin'] : FALSE) && $plugin instanceof PluginBase) {
+      $suggestions = array_unique(array_merge($suggestions, $plugin->themeSuggestions()));
+    }
+  }
 }
 
 /**

@@ -127,8 +127,9 @@ class Rss extends RssPluginBase {
     $item->cid = $comment->id();
 
     $build = [
-      '#theme' => $this->themeFunctions(),
+      '#theme' => $this->definition['theme'],
       '#view' => $this->view,
+      '#context' => ['plugin' => $this],
       '#options' => $this->options,
       '#row' => $item,
     ];

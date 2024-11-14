@@ -301,7 +301,21 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * {@inheritdoc}
    */
   public function themeFunctions() {
-    return $this->view->buildThemeFunctions($this->definition['theme']);
+    return array_reverse($this->themeSuggestions());
+  }
+
+  /**
+   * Provides possible theme suggestions used by this plugin.
+   *
+   * The order of the theme suggestions starts with the least specific one.
+   *
+   * @return array
+   *   An array of theme suggestions.
+   *
+   * @see \hook_theme_suggestions_HOOK
+   */
+  public function themeSuggestions() {
+    return !empty($this->definition['theme']) ? $this->view->themeSuggestions($this->definition['theme']) : [];
   }
 
   /**

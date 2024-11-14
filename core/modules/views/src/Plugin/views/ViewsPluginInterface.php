@@ -184,6 +184,9 @@ interface ViewsPluginInterface extends PluginInspectionInterface, DerivativeInsp
 
   /**
    * Provide a full list of possible theme templates used by this style.
+   *
+   * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0.
+   *   Use ::themeSuggestions instead.
    */
   public function themeFunctions();
 

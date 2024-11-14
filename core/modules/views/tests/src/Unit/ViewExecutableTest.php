@@ -351,6 +351,50 @@ class ViewExecutableTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::themeSuggestions
+   */
+  public function testThemeSuggestions() {
+    /** @var \Drupal\views\ViewExecutable|\PHPUnit_Framework_MockObject_MockObject $view */
+    /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit_Framework_MockObject_MockObject $display */
+    list($view, $display) = $this->setupBaseViewAndDisplay();
+
+    unset($view->display_handler);
+    $expected = [
+      'test_hook',
+      'test_hook__test_view',
+    ];
+    $this->assertEquals($expected, $view->themeSuggestions('test_hook'));
+
+    $view->display_handler = $display;
+    $expected = [
+      'test_hook',
+      'test_hook__test_view',
+      'test_hook__one',
+      'test_hook__two',
+      'test_hook__and_three',
+      'test_hook__default',
+      'test_hook__test_view__default',
+    ];
+    $this->assertEquals($expected, $view->themeSuggestions('test_hook'));
+
+    // Change the name of the display plugin and make sure that is in the array.
+    $view->display_handler->display['display_plugin'] = 'default2';
+
+    $expected = [
+      'test_hook',
+      'test_hook__test_view',
+      'test_hook__default2',
+      'test_hook__test_view__default2',
+      'test_hook__one',
+      'test_hook__two',
+      'test_hook__and_three',
+      'test_hook__default',
+      'test_hook__test_view__default',
+    ];
+    $this->assertEquals($expected, $view->themeSuggestions('test_hook'));
+  }
+
+  /**
    * @covers ::generateHandlerId
    */
   public function testGenerateHandlerId(): void {

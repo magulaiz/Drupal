@@ -137,6 +137,7 @@ class ViewsExposedForm extends FormBase implements WorkspaceSafeFormInterface {
 
     $form['#action'] = $form_action;
     $form['#theme'] = $view->buildThemeFunctions('views_exposed_form');
+    $form['#context'] = ['view' => $view];
     $form['#id'] = Html::cleanCssIdentifier('views_exposed_form-' . $view->storage->id() . '-' . $display['id']);
     // Labels are built too late for inline form errors to work, resulting
     // in duplicated messages.

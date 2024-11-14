@@ -2465,29 +2465,47 @@ class ViewExecutable {
    *
    * @return array
    *   An array of theme hook suggestions.
+   *
+   * @deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0.
+   *   Use \Drupal\views\ViewExecutable::themeSuggestions instead.
    */
   public function buildThemeFunctions($hook) {
-    $themes = [];
+    return array_reverse($this->themeSuggestions($hook));
+  }
+
+  /**
+   * Provides possible theme suggestions to try for a given hook.
+   *
+   * @param string $hook
+   *   The hook to use. This is the base theme/template name.
+   *
+   * @return array
+   *   An array of theme hook suggestions.
+   *
+   * @see \hook_theme_suggestions_HOOK()
+   */
+  public function themeSuggestions($hook) {
+    $suggestions = [];
     $display = isset($this->display_handler) ? $this->display_handler->display : NULL;
     $id = $this->storage->id();
 
+    $suggestions[] = $hook;
+    $suggestions[] = $hook . '__' . $id;
+
+    // Display specific suggestions.
     if ($display) {
-      $themes[] = $hook . '__' . $id . '__' . $display['id'];
-      $themes[] = $hook . '__' . $display['id'];
-      // Add theme suggestions for each single tag.
-      foreach (Tags::explode($this->storage->get('tag')) as $tag) {
-        $themes[] = $hook . '__' . preg_replace('/[^a-z0-9]/', '_', strtolower($tag));
-      }
-
       if ($display['id'] != $display['display_plugin']) {
-        $themes[] = $hook . '__' . $id . '__' . $display['display_plugin'];
-        $themes[] = $hook . '__' . $display['display_plugin'];
+        $suggestions[] = $hook . '__' . $display['display_plugin'];
+        $suggestions[] = $hook . '__' . $id . '__' . $display['display_plugin'];
       }
+      foreach (Tags::explode($this->storage->get('tag')) as $tag) {
+        $suggestions[] = $hook . '__' . preg_replace('/[^a-z0-9]/', '_', strtolower($tag));
+      }
+      $suggestions[] = $hook . '__' . $display['id'];
+      $suggestions[] = $hook . '__' . $id . '__' . $display['id'];
     }
-    $themes[] = $hook . '__' . $id;
-    $themes[] = $hook;
 
-    return $themes;
+    return $suggestions;
   }
 
   /**
