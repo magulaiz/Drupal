@@ -168,10 +168,10 @@ class HookCollectorPass implements CompilerPassInterface {
 
       $filename = $fileinfo->getPathname();
 
-      $file_cache = FileCacheFactory::get('hook_implementations . ':' . Settings::get('deployment_identifier'));
-
-      // Add the deployment identifier to the cache key so that changes in the
-      // implementation of attribute parsing will not result in a stale cache.
+      // Add the deployment identifier to the cache namespace so that changes in
+      // the implementation of attribute parsing will not result in a stale
+      // cache.
+      $file_cache = FileCacheFactory::get('hook_implementations' . ':' . Settings::get('deployment_identifier'));
 
       $cached = $file_cache->get($filename);
 
