@@ -68,7 +68,7 @@ function layout_builder_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_entity_type_alter().
  */
-function layout_builder_entity_type_alter(array &$entity_types) {
+function layout_builder_entity_type_alter(array &$entity_types): void {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $entity_types['entity_view_display']
     ->setClass(LayoutBuilderEntityViewDisplay::class)
@@ -87,7 +87,7 @@ function layout_builder_entity_type_alter(array &$entity_types) {
 /**
  * Implements hook_form_FORM_ID_alter() for \Drupal\field_ui\Form\EntityFormDisplayEditForm.
  */
-function layout_builder_form_entity_form_display_edit_form_alter(&$form, FormStateInterface $form_state) {
+function layout_builder_form_entity_form_display_edit_form_alter(&$form, FormStateInterface $form_state): void {
   // Hides the Layout Builder field. It is rendered directly in
   // \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::buildMultiple().
   unset($form['fields'][OverridesSectionStorage::FIELD_NAME]);
