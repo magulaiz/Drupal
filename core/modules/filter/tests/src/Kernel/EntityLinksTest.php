@@ -290,7 +290,7 @@ class EntityLinksTest extends KernelTestBase {
       '<a data-entity-type="media" data-entity-uuid="' . $media->uuid() . '" href="something?query=string#fragment">Link text</a>',
       'en',
       (new FilterProcessResult())
-        ->setProcessedText(sprintf('<a data-entity-type="media" data-entity-uuid="%s"%s href="%s?query=string#fragment">Link text</a>', $media->uuid(), $expected_url))
+        ->setProcessedText(sprintf('<a data-entity-type="media" data-entity-uuid="%s" href="%s?query=string#fragment">Link text</a>', $media->uuid(), $expected_url))
         ->setCacheTags($expected_cache_tags)
         ->setCacheContexts([])
         ->setCacheMaxAge(Cache::PERMANENT)
