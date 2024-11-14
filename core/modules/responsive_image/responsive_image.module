@@ -5,14 +5,14 @@
  * Responsive image display formatter for image fields.
  */
 
-use Drupal\Core\Url;
-use Drupal\Core\Template\Attribute;
+use Drupal\breakpoint\BreakpointInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
-use Drupal\breakpoint\BreakpointInterface;
 
 /**
  * Implements hook_help().
@@ -394,6 +394,9 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
           $dimensions = responsive_image_get_image_dimensions($image_style_name, ['width' => $width, 'height' => $height], $variables['uri']);
           // Get MIME type.
           $derivative_mime_type = responsive_image_get_mime_type($image_style_name, $extension);
+          if (is_null($derivative_mime_type)) {
+            throw new \LogicException("Could not determine MIME type for '{$variables['uri']}' using image style with ID: $image_style_name.");
+          }
           $derivative_mime_types[] = $derivative_mime_type;
 
           // Add the image source with its width descriptor. When a width
@@ -415,6 +418,9 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
       case 'image_style':
         // Get MIME type.
         $derivative_mime_type = responsive_image_get_mime_type($image_style_mapping['image_mapping'], $extension);
+        if (is_null($derivative_mime_type)) {
+          throw new \LogicException("Could not determine MIME type for '{$variables['uri']}' using extension $extension.");
+        }
         $derivative_mime_types[] = $derivative_mime_type;
         // Add the image source with its multiplier. Use the multiplier as key
         // so we can sort the array later on. Multipliers within a srcset should
@@ -498,10 +504,11 @@ function responsive_image_get_image_dimensions($image_style_name, array $dimensi
  * @param string $extension
  *   The original extension of the image (without the leading dot).
  *
- * @return string
- *   The MIME type of the image after the image style is applied.
+ * @return string|null
+ *   The MIME type of the image after the image style is applied, or NULL if
+ *   no MIME type is found.
  */
-function responsive_image_get_mime_type($image_style_name, $extension) {
+function responsive_image_get_mime_type(string $image_style_name, string $extension): ?string {
   if ($image_style_name == ResponsiveImageStyleInterface::EMPTY_IMAGE) {
     return 'image/gif';
   }
@@ -513,7 +520,7 @@ function responsive_image_get_mime_type($image_style_name, $extension) {
   else {
     $fake_path = 'responsive_image.' . ImageStyle::load($image_style_name)->getDerivativeExtension($extension);
   }
-  return \Drupal::service('file.mime_type.guesser.extension')->guessMimeType($fake_path);
+  return \Drupal::service('file.mime_type.guesser')->guessMimeType($fake_path);
 }
 
 /**
