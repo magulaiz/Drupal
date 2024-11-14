@@ -109,7 +109,14 @@
           } only %}
         {% else %}
           {% if item.url %}
-            {{ link(item.title, item.url, item_link_attributes.addClass(['toolbar-button'])) }}
+            {% include 'navigation:toolbar-button' with {
+              attributes: item_link_attributes.setAttribute('href', item.url|render|default(null)),
+              text: item.title,
+              html_tag: 'a',
+              extra_classes: [
+                'toolbar-button'
+              ],
+            } only %}
           {% endif %}
           {% include 'navigation:toolbar-button' with {
             attributes: create_attribute({
