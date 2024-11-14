@@ -317,10 +317,10 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The suggested entity for which to compute the group.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   * @return string
    *   A suggestion group.
    */
-  protected function computeGroup(EntityInterface $entity): TranslatableMarkup {
+  protected function computeGroup(EntityInterface $entity): string {
     // If the entity type does not have bundles, the group is very simple.
     if ($entity->getEntityType()->getBundleEntityType() === NULL) {
       return $entity->getEntityType()->getLabel();
