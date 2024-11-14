@@ -9,19 +9,19 @@
  */
 
 use Drupal\block\BlockInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Url;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuLinkInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\system\Entity\Menu;
-use Drupal\node\NodeInterface;
 use Drupal\system\MenuInterface;
 
 /**
@@ -108,22 +108,38 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
       $entity = $entity->getUntranslated();
       $entity->set($entity->getEntityType()->getKey('langcode'), $node->language()->getId());
     }
+    // Check if the value has changed before updating.
+    $isChanged = FALSE;
+    foreach (['title', 'description', 'menu_name', 'parent'] as $field) {
+      if ($entity->$field->value !== trim($values[$field])) {
+        $entity->$field->value = trim($values[$field]);
+        $isChanged = TRUE;
+      }
+    }
+    if ($entity->weight->value !== trim($values['weight'])) {
+      $entity->weight->value = $values['weight'] ?? 0;
+      $isChanged = TRUE;
+    }
+    if ($isChanged) {
+      $entity->isDefaultRevision($node->isDefaultRevision());
+      $entity->save();
+    }
   }
   else {
     // Create a new menu_link_content entity.
     $entity = MenuLinkContent::create([
       'link' => ['uri' => 'entity:node/' . $node->id()],
       'langcode' => $node->language()->getId(),
+      'title' => trim($values['title']),
+      'description' => trim($values['description']),
+      'menu_name' => trim($values['menu_name']),
+      'parent' => trim($values['parent']),
+      'weight' => $values['weight'] ?? 0,
     ]);
     $entity->enabled->value = 1;
+    $entity->isDefaultRevision($node->isDefaultRevision());
+    $entity->save();
   }
-  $entity->title->value = trim($values['title']);
-  $entity->description->value = trim($values['description']);
-  $entity->menu_name->value = $values['menu_name'];
-  $entity->parent->value = $values['parent'];
-  $entity->weight->value = $values['weight'] ?? 0;
-  $entity->isDefaultRevision($node->isDefaultRevision());
-  $entity->save();
 }
 
 /**
@@ -143,7 +159,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
   $defaults = FALSE;
   if ($node->id()) {
     $id = FALSE;
-    // Give priority to the default menu
+    // Give priority to the default menu.
     $type_menus = $node_type->getThirdPartySetting('menu_ui', 'available_menus', ['main']);
     if (in_array($menu_name, $type_menus)) {
       $query = \Drupal::entityQuery('menu_link_content')
