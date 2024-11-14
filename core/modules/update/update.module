@@ -34,7 +34,7 @@ function update_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Checking for available updates') . '</dt>';
-      $output .= '<dd>' . t('The <a href=":update-report">Available updates report</a> displays core, contributed modules, and themes for which there are new releases available for download. On the report page, you can also check manually for updates. You can configure the frequency of update checks, which are performed during cron runs, and whether notifications are sent on the <a href=":update-settings">Update SStatus settings page</a>.', [':update-report' => Url::fromRoute('update.status')->toString(), ':update-settings' => Url::fromRoute('update.settings')->toString()]) . '</dd>';
+      $output .= '<dd>' . t('The <a href=":update-report">Available updates report</a> displays core, contributed modules, and themes for which there are new releases available for download. On the report page, you can also check manually for updates. You can configure the frequency of update checks, which are performed during cron runs, and whether notifications are sent on the <a href=":update-settings">Update Status settings page</a>.', [':update-report' => Url::fromRoute('update.status')->toString(), ':update-settings' => Url::fromRoute('update.settings')->toString()]) . '</dd>';
       // Only explain the Update manager if it has not been uninstalled.
       if (_update_manager_access()) {
         $output .= '<dt>' . t('Performing updates through the Update page') . '</dt>';
