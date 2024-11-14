@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Datetime range module.
+ */
+
+use Drupal\Core\Site\Settings;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Allow NULL in the field end_value column.
+ */
+function datetime_range_update_10300(array &$sandbox): PluralTranslatableMarkup|TranslatableMarkup {
+  if (!isset($sandbox['configs'])) {
+    $sandbox['configs'] = \Drupal::entityTypeManager()
+      ->getStorage('field_storage_config')
+      ->loadByProperties(['type' => 'daterange']);
+    $sandbox['total'] = count($sandbox['configs']);
+  }
+  $database_schema = \Drupal::database()->schema();
+  $storage_schema = \Drupal::keyValue('entity.storage_schema.sql');
+
+  $configs = array_splice($sandbox['configs'], 0, (int) Settings::get('entity_update_batch_size', 50));
+
+  foreach ($configs as $config) {
+    $schema_key = $config->getTargetEntityTypeId() . '.field_schema_data.' . $config->getName();
+    $tables = $storage_schema->get($schema_key);
+
+    $field_name = $config->getName() . '_end_value';
+    foreach ($tables as $table_name => &$table) {
+      $table['fields'][$field_name]['not null'] = FALSE;
+      $database_schema->changeField($table_name, $field_name, $field_name, $table['fields'][$field_name]);
+    }
+
+    $storage_schema->set($schema_key, $tables);
+  }
+  $sandbox['#finished'] = empty($sandbox['total']) || empty($sandbox['configs']) ? 1 : ($sandbox['total'] - count($sandbox['configs'])) / $sandbox['total'];
+  if ($sandbox['#finished'] === 1) {
+    return new TranslatableMarkup('Update finished.');
+  }
+  return new PluralTranslatableMarkup($sandbox['total'] - count($sandbox['configs']),
+    'Processed 1 entry of @total.',
+    'Processed @count entries of @total.',
+    ['@total' => $sandbox['total']],
+  );
+}

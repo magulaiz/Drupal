@@ -7,6 +7,7 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\field\FieldConfigInterface;
 
 /**
  * Implements hook_help().
@@ -25,5 +26,19 @@ function datetime_range_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('Dates can be displayed using the <em>Plain</em> or the <em>Default</em> formatter. The <em>Plain</em> formatter displays the date in the <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format. If you choose the <em>Default</em> formatter, you can choose a format from a predefined list that can be managed on the <a href=":date_format_list">Date and time formats</a> page.', [':date_format_list' => Url::fromRoute('entity.date_format.collection')->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for 'field_config'.
+ */
+function datetime_range_field_config_presave(FieldConfigInterface $field): void {
+  // Don't do anything during a configuration sync or if the field is not a date range field.
+  if ($field->isSyncing() || $field->getType() !== 'daterange') {
+    return;
+  }
+  $field_settings = $field->getSettings();
+  if (!isset($field_settings['optional_values'])) {
+    @trigger_error("Using the 'datetime_range' field without the 'optional_values' settings is deprecated in drupal:11.1.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3389542", E_USER_DEPRECATED);
   }
 }

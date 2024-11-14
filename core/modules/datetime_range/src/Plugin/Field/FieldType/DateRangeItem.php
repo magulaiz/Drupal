@@ -31,9 +31,28 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 class DateRangeItem extends DateTimeItem {
 
   /**
+   * {@inheritdoc}
+   */
+  public static function defaultFieldSettings(): array {
+    return [
+      'optional_values' => static::OPTIONAL_NONE,
+    ] + parent::defaultFieldSettings();
+  }
+
+  /**
    * Value for the 'datetime_type' setting: store a date and time.
    */
   const DATETIME_TYPE_ALLDAY = 'allday';
+
+  /**
+   * Optional values setting, require a bounded datetime range.
+   */
+  const OPTIONAL_NONE = 0x01;
+
+  /**
+   * Optional values setting, do not require an end date.
+   */
+  const OPTIONAL_END = 0x02;
 
   /**
    * {@inheritdoc}
@@ -52,7 +71,7 @@ class DateRangeItem extends DateTimeItem {
 
     $properties['end_value'] = DataDefinition::create('datetime_iso8601')
       ->setLabel(t('End date value'))
-      ->setRequired(TRUE);
+      ->setRequired(FALSE);
 
     $properties['end_date'] = DataDefinition::create('any')
       ->setLabel(t('Computed end date'))
@@ -84,10 +103,18 @@ class DateRangeItem extends DateTimeItem {
   /**
    * {@inheritdoc}
    */
-  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $element = parent::storageSettingsForm($form, $form_state, $has_data);
-
-    $element['datetime_type']['#options'][static::DATETIME_TYPE_ALLDAY] = $this->t('All Day');
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state): array {
+    $element = [];
+    $element['optional_values'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('End date'),
+      '#description' => $this->t('Whether an end date must be provided if a start date is given.'),
+      '#default_value' => $this->getSetting('optional_values'),
+      '#options' => [
+        static::OPTIONAL_NONE => $this->t('Required'),
+        static::OPTIONAL_END => $this->t('Optional'),
+      ],
+    ];
 
     return $element;
   }
@@ -134,6 +161,28 @@ class DateRangeItem extends DateTimeItem {
       $this->end_date = NULL;
     }
     parent::onChange($property_name, $notify);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraints(): array {
+    $constraints = parent::getConstraints();
+    $constraint_manager = \Drupal::typedDataManager()
+      ->getValidationConstraintManager();
+    if ($this->getSetting('optional_values') == static::OPTIONAL_NONE) {
+      $label = $this->getFieldDefinition()->getLabel();
+      $constraints[] = $constraint_manager
+        ->create('ComplexData', [
+          'end_value' => [
+            'NotNull' => [
+              'message' => $this->t('The @title end date is required', ['@title' => $label]),
+            ],
+          ],
+        ]);
+    }
+
+    return $constraints;
   }
 
 }

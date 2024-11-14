@@ -7,6 +7,18 @@ field.storage_settings.daterange:
   type: field.storage_settings.datetime
   label: 'Date range settings'
 
+field.field_settings.daterange:
+  type: mapping
+  label: 'Date range settings'
+  mapping:
+    optional_values:
+      type: integer
+      label: 'Optional values'
+      constraints:
+        Choice:
+          - 0x01
+          - 0x02
+
 field.value.daterange:
   type: mapping
   label: 'Default value'
