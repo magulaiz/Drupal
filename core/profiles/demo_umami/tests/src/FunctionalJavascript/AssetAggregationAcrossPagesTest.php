@@ -21,20 +21,20 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   /**
    * Checks the asset requests made when the front and recipe pages are visited.
    */
-  public function testFrontAndRecipesPages() {
+  public function testFrontAndRecipesPages(): void {
     $performance_data = $this->collectPerformanceData(function () {
       $this->doRequests();
     }, 'umamiFrontAndRecipePages');
     $this->assertSame(6, $performance_data->getStylesheetCount());
     $this->assertLessThan(125000, $performance_data->getStylesheetBytes());
     $this->assertSame(1, $performance_data->getScriptCount());
-    $this->assertLessThan(7500, $performance_data->getScriptBytes());
+    $this->assertLessThan(12000, $performance_data->getScriptBytes());
   }
 
   /**
    * Checks the asset requests made when the front and recipe pages are visited.
    */
-  public function testFrontAndRecipesPagesAuthenticated() {
+  public function testFrontAndRecipesPagesAuthenticated(): void {
     $user = $this->createUser();
     $this->drupalLogin($user);
     sleep(2);

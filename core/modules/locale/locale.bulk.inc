@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Mass import-export and batch import functionality for Gettext .po files.
  */
 
 use Drupal\Core\Batch\BatchBuilder;
@@ -255,7 +254,7 @@ function locale_translate_batch_import($file, array $options, &$context) {
         }
       }
     }
-    catch (Exception $exception) {
+    catch (Exception) {
       // Import failed. Store the data of the failing file.
       $context['results']['failed_files'][] = $file;
       \Drupal::logger('locale')->notice('Unable to import translations file: @file', ['@file' => $file->uri]);
@@ -518,7 +517,7 @@ function locale_translate_delete_translation_files(array $projects = [], array $
       try {
         \Drupal::service('file_system')->delete($file->uri);
       }
-      catch (FileException $e) {
+      catch (FileException) {
         $fail = TRUE;
       }
     }
