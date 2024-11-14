@@ -120,11 +120,13 @@ function contact_mail($key, &$message, $params) {
   $sender = $params['sender'];
   $language = \Drupal::languageManager()->getLanguage($message['langcode']);
 
+  /** @var \Drupal\contact\ContactFormInterface $contact_form */
+  $contact_form = $params['contact_form'];
   $variables = [
     '@site-name' => \Drupal::config('system.site')->get('name'),
     '@subject' => $contact_message->getSubject(),
-    '@form' => !empty($params['contact_form']) ? $params['contact_form']->label() : '',
-    '@form-url' => Url::fromRoute('<current>', [], ['absolute' => TRUE, 'language' => $language])->toString(),
+    '@form' => $contact_form->label(),
+    '@form-url' => $contact_form->toUrl('canonical', ['absolute' => TRUE, 'language' => $language])->toString(),
     '@sender-name' => $sender->getDisplayName(),
   ];
   if ($sender->isAuthenticated()) {
@@ -149,7 +151,7 @@ function contact_mail($key, &$message, $params) {
 
     case 'page_autoreply':
       $message['subject'] .= t('[@form] @subject', $variables, $options);
-      $message['body'][] = $params['contact_form']->getReply();
+      $message['body'][] = $contact_form->getReply();
       break;
 
     case 'user_mail':

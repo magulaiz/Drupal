@@ -74,6 +74,8 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
    * {@inheritdoc}
    */
   public function save(EntityInterface $entity) {
+    // Execute post save logic and invoke the related hooks.
+    $this->doPostSave($entity, !$entity->isNew());
   }
 
   /**

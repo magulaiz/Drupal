@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\contact\Kernel;
 
+use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 
 /**
@@ -13,6 +14,8 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
  * @see \Drupal\contact\Entity\Message
  */
 class MessageEntityTest extends EntityKernelTestBase {
+
+  use AssertMailTrait;
 
   /**
    * {@inheritdoc}
@@ -26,10 +29,18 @@ class MessageEntityTest extends EntityKernelTestBase {
   ];
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $user;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->user = $this->drupalSetUpCurrentUser();
     $this->installConfig(['contact', 'contact_test']);
   }
 
@@ -61,14 +72,35 @@ class MessageEntityTest extends EntityKernelTestBase {
     $this->assertEquals('sender_mail', $message->getSenderMail());
     $this->assertTrue($message->copySender());
 
-    $no_access_user = $this->createUser([], NULL, FALSE, ['uid' => 2]);
-    $access_user = $this->createUser(['access site-wide contact form'], NULL, FALSE, ['uid' => 3]);
-    $admin = $this->createUser(['administer contact forms'], NULL, FALSE, ['uid' => 4]);
+    $no_access_user = $this->createUser();
+    $access_user = $this->createUser(['access site-wide contact form']);
+    $admin = $this->createUser(['administer contact forms']);
 
     $this->assertFalse(\Drupal::entityTypeManager()->getAccessControlHandler('contact_message')->createAccess(NULL, $no_access_user));
     $this->assertTrue(\Drupal::entityTypeManager()->getAccessControlHandler('contact_message')->createAccess(NULL, $access_user));
     $this->assertTrue($message->access('update', $admin));
     $this->assertFalse($message->access('update', $access_user));
+  }
+
+  /**
+   * Tests postSave hooks on the Message entity type.
+   */
+  public function testMessagePostSave() {
+    $message_storage = $this->container->get('entity_type.manager')->getStorage('contact_message');
+    $recipient = $this->createUser();
+    /** @var \Drupal\contact\MessageInterface $message */
+    $message = $message_storage->create([
+      'contact_form' => 'personal',
+      'recipient' => $recipient,
+    ]);
+    $message->save();
+    $mails = $this->getMails();
+    $this->assertCount(1, $mails);
+    $mail = $mails[0];
+    $this->assertEquals($recipient->getEmail(), $mail['to']);
+    $this->assertEquals($this->config('system.site')->get('mail'), $mail['from']);
+    $this->assertEquals($this->user->getEmail(), $mail['reply-to']);
+    $this->assertEquals('user_mail', $mail['key']);
   }
 
 }
