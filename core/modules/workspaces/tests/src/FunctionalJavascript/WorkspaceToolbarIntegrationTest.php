@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\FunctionalJavascript;
 
+use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
 
 /**
@@ -16,12 +17,21 @@ class WorkspaceToolbarIntegrationTest extends OffCanvasTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['toolbar', 'workspaces'];
+  protected static $modules = [
+    'dynamic_page_cache',
+    'toolbar',
+    'workspaces',
+  ];
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $profile = 'standard';
 
   /**
    * {@inheritdoc}
@@ -69,7 +79,11 @@ class WorkspaceToolbarIntegrationTest extends OffCanvasTestBase {
 
     // Wait for toolbar to appear.
     $this->getSession()->resizeWindow(1200, 600);
+
+    // Open a few pages in order to test toolbar caching.
     $this->drupalGet('admin');
+    $this->drupalGet('<front>');
+    $this->drupalGet('admin/content');
 
     // Wait for toolbar to appear.
     $this->assertNotEmpty($assert_session->waitForElement('css', 'body.toolbar-horizontal'));
@@ -84,7 +98,8 @@ class WorkspaceToolbarIntegrationTest extends OffCanvasTestBase {
     $page->find('css', '.ui-dialog-buttonset .button--primary')->click();
     $assert_session->statusMessageContainsAfterWait('Stage is now the active workspace.', 'status');
     // Make sure we stay on same page after switch.
-    $assert_session->addressEquals('admin');
+    $assert_session = $this->assertSession();
+    $assert_session->addressEquals('admin/content');
   }
 
 }
