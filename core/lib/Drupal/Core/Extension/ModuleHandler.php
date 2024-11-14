@@ -581,7 +581,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    *
    * @param $hook
    *   The hook being called.
-   * @param $hook
+   * @param $module
    *   The module implementing the hook.
    * @param $function
    *   The function being called.
