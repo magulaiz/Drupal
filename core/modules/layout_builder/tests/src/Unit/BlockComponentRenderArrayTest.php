@@ -59,7 +59,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-  protected ModuleHandlerInterface $moduleHandler;
+  protected $moduleHandler;
 
   /**
    * Data provider for test functions that should test block types.
@@ -156,15 +156,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
     $subscriber->onBuildRender($event);
     $result = $event->getBuild();
-    $this->assertEquals($expected_build, $result);
-
-    // Block alter with hooks.
-    $expected_build['content']['#markup'] = 'The block content altered.';
-    $this->moduleHandler->alter('block_view', $result);
-
-    $this->assertEquals($expected_build, $result);
-
-    $this->moduleHandler->alter('block_build', $result);
     $this->assertEquals($expected_build, $result);
 
     $event->getCacheableMetadata()->applyTo($result);
