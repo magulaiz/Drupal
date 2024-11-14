@@ -915,8 +915,17 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
     // then iterate over the file parts, trying to find a match.
     // For 'my.awesome.image.jpeg', we try: 'awesome.image.jpeg', then
     // 'image.jpeg', then 'jpeg'.
-    while (array_shift($file_parts)) {
+    while (TRUE) {
+      $maybeExtension = array_shift($file_parts);
+
+      if ($maybeExtension === NULL) {
+        // Strictly check for NULL because "0" (zero)
+        // can be a part of the file name.
+        break;
+      }
+
       $extension = strtolower(implode('.', $file_parts));
+
       if (isset($this->mapping['extensions'][$extension])) {
         return $this->mapping['mimetypes'][$this->mapping['extensions'][$extension]];
       }
