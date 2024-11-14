@@ -23,9 +23,10 @@ use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
+ * Tests the behavior of generating entity URLs when using entity links in CKEditor.
+ *
  * @coversDefaultClass \Drupal\filter\Plugin\Filter\EntityLinks
- * @group ckeditor5
- * @todo ⚠️ CHANGE THE GROUP TO "FILTER" ONCE WE RUN THE ENTIRE CORE TEST SUITE ⚠️
+ * @group filter
  */
 class EntityLinksTest extends KernelTestBase {
 
@@ -225,18 +226,18 @@ class EntityLinksTest extends KernelTestBase {
   /**
    * @covers ::getUrl
    * @covers \Drupal\media\Entity\MediaLinkTarget
-   * @testWith [true,  "file", false, {"target_id": 1}, "/media/1", ["media:1"]]
-   *           [true,  "file", true,  {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
-   *           [false, "file", false, {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
-   *           [false, "file", true,  {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
-   *           [true,  "oembed:video", false, {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "/media/1", ["media:1"]]
-   *           [true,  "oembed:video", true,  {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
-   *           [false, "oembed:video", false, {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
-   *           [false, "oembed:video", true,  {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
-   *           [true,  "test", false, {"value": "foobar"}, "/media/1", ["media:1"]]
-   *           [true,  "test", true,  {"value": "foobar"}, "/media/1", ["media:1"]]
-   *           [false, "test", false, {"value": "foobar"}, "", ["media:1"]]
-   *           [false, "test", true,  {"value": "foobar"}, "", ["media:1"]]
+   * @testWith [true,  "file", {"target_id": 1}, "/media/1", ["media:1"]]
+   *           [true,  "file", {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
+   *           [false, "file", {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
+   *           [false, "file", {"target_id": 1}, "/<SITE_DIRECTORY>/files/druplicon.txt", ["file:1", "media:1"]]
+   *           [true,  "oembed:video", {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "/media/1", ["media:1"]]
+   *           [true,  "oembed:video", {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
+   *           [false, "oembed:video", {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
+   *           [false, "oembed:video", {"value": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ["media:1"]]
+   *           [true,  "test", {"value": "foobar"}, "/media/1", ["media:1"]]
+   *           [true,  "test", {"value": "foobar"}, "/media/1", ["media:1"]]
+   *           [false, "test", {"value": "foobar"}, "", ["media:1"]]
+   *           [false, "test", {"value": "foobar"}, "", ["media:1"]]
    *
    * @param bool $standalone_url_setting
    *   Whether the standalone_url setting is off (Drupal's default) or on.
