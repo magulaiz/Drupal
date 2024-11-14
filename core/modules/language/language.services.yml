@@ -26,3 +26,6 @@ services:
     tags:
       - { name: paramconverter }
     lazy: true
+  language.admin_language_render:
+    class: Drupal\language\AdminLanguageRender
+    arguments: ['@language_manager', '@string_translation', '@current_user']
