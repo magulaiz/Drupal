@@ -168,13 +168,12 @@ class HookCollectorPass implements CompilerPassInterface {
 
       $filename = $fileinfo->getPathname();
 
-      $file_cache = FileCacheFactory::get('hook_implementations');
+      $file_cache = FileCacheFactory::get('hook_implementations . ':' . Settings::get('deployment_identifier'));
 
       // Add the deployment identifier to the cache key so that changes in the
       // implementation of attribute parsing will not result in a stale cache.
-      $cid = Settings::get('deployment_identifier') . $filename;
 
-      $cached = $file_cache->get($cid);
+      $cached = $file_cache->get($filename);
 
       if ($extension === 'module' && !$iterator->getDepth()) {
         // There is an expectation for all modules to be loaded. However,
@@ -191,7 +190,7 @@ class HookCollectorPass implements CompilerPassInterface {
           $class = $namespace . '/' . $fileinfo->getBasename('.php');
           $class = str_replace('/', '\\', $class);
           $attributes = static::getHookAttributesInClass($class);
-          $file_cache->set($cid, ['class' => $class, 'attributes' => $attributes]);
+          $file_cache->set($filename, ['class' => $class, 'attributes' => $attributes]);
         }
         foreach ($attributes as $attribute) {
           $this->addFromAttribute($attribute, $class, $module);
@@ -210,7 +209,7 @@ class HookCollectorPass implements CompilerPassInterface {
               $implementations[] = ['function' => $function, 'module' => $matches['module'], 'hook' => $matches['hook']];
             }
           }
-          $file_cache->set($cid, $implementations);
+          $file_cache->set($filename, $implementations);
         }
         foreach ($implementations as $implementation) {
           $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module'], $implementation['function']);
