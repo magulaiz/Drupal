@@ -610,7 +610,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     if ($notProceduralOnly && $notSystemException && $notOtherException) {
       if (!empty($modules)) {
         $message = "Procedural implementations of hook_$hook() is deprecated: ";
-        $description = "Please convert $function to use a Hook class";
+        $description = "Convert $function to use a Hook class";
         @trigger_error($message . $description, E_USER_DEPRECATED);
       }
     }
