@@ -114,7 +114,7 @@ class StorageComparerTest extends UnitTestCase {
    * @group legacy
    */
   public function testDeprecatedStorageComparerInterface() {
-    $this->expectDeprecation('The Drupal\Core\Config\StorageComparerInterface is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Use "StorageComparer" instead. See https://www.drupal.org/node/3482267');
+    $this->expectDeprecation('The Drupal\Core\Config\StorageComparerInterface is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use "StorageComparer" instead. See https://www.drupal.org/node/3482267');
     $storage_comparer_object = $this->createMock(StorageComparerInterface::class);
   }
 
