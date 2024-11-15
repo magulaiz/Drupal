@@ -317,7 +317,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
     if (is_int($mode)) {
-      assert(in_array($fetchStyle, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$fetchStyle] ?? $fetchStyle) . ' is not supported. Use supported modes only.');
+      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
       @trigger_error("Passing the \$mode argument as an integer to fetchAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
       $mode = $this->pdoToFetchAs($mode);
     }

@@ -116,7 +116,7 @@ trait FetchModeTrait {
     };
   }
 
-  protected function pdoToFetchAs(int $mode): FetchMode {
+  protected function pdoToFetchAs(int $mode): FetchAs {
     return match ($mode) {
       \PDO::FETCH_ASSOC => FetchAs::Associative,
       \PDO::FETCH_CLASS, \PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE => FetchAs::ClassObject,
