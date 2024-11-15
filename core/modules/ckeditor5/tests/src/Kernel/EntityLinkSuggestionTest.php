@@ -279,7 +279,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
           'description' => 'No content suggestions found. This URL will be used as is.',
           'group' => 'No results',
           'label' => 'z',
-          'path' => 'z',
+          'href' => 'z',
         ],
       ],
     ];
