@@ -9,7 +9,6 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Plugin\DependentWithRemovalPluginInterface;
 use Drupal\views\ViewEntityInterface;
@@ -46,8 +45,6 @@ use Drupal\views\Views;
   ],
 )]
 class View extends ConfigEntityBase implements ViewEntityInterface {
-
-  use StringTranslationTrait;
 
   /**
    * The name of the base table this view will use.
@@ -158,7 +155,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $plugin = Views::pluginManager('display')->getDefinition($plugin_id);
 
     if (empty($plugin)) {
-      $plugin['title'] = $this->t('Broken');
+      $plugin['title'] = new TranslatableMarkup('Broken');
     }
 
     if (empty($id)) {
