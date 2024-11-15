@@ -225,6 +225,11 @@ function system_permission() {
       'title' => t('Administer site configuration'),
       'restrict access' => TRUE,
     ),
+    'administer file extensions' => array(
+      'title' => t('Administer file extensions'),
+      'description' => t('Change the types of files that users can upload.'),
+      'restrict access' => TRUE,
+    ),
     'administer themes' => array(
       'title' => t('Administer themes'),
     ),
