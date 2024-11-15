@@ -238,12 +238,11 @@ class DrupalEntityLinkSuggestions extends Plugin {
 
         initializeAutocomplete(linkFormView.urlInputView.fieldView.element, {
           // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions::getDynamicPluginConfig()
-          autocompleteUrl: this.editor.config
-            .get('drupalEntityLinkSuggestions')
-            .suggestionsUrl.replace(
-              '/_/_',
-              `/${hostEntityTypeId}/${hostEntityLangcode}`,
-            ),
+          autocompleteUrl: this.editor.config.get('drupalEntityLinkSuggestions').suggestionsUrl,
+          queryParams: {
+            hostEntityLangcode,
+            hostEntityTypeId,
+          },
           selectHandler: (event, { item }) => {
             if (!item.path) {
               // eslint-disable-next-line no-throw-literal

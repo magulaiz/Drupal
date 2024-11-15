@@ -388,7 +388,9 @@ class EntityLinkSuggestionTest extends KernelTestBase {
 
     $request = Request::create("/irrelevant-in-kernel-test");
     $request->query->set('q', $search);
-    $response = $controller->suggestions($request, $editor, $host_entity_type_id, $host_entity_langcode);
+    $request->query->set('hostEntityTypeId', $host_entity_type_id);
+    $request->query->set('hostEntityLangcode', $host_entity_langcode);
+    $response = $controller->suggestions($request, $editor);
     $this->assertInstanceOf(JsonResponse::class, $response);
 
     $data = json_decode($response->getContent(), TRUE);

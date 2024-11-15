@@ -63,7 +63,7 @@ function renderMenu(ul, items) {
 }
 
 export default function initializeAutocomplete(element, settings) {
-  const { autocompleteUrl, selectHandler, closeHandler, openHandler } =
+  const { autocompleteUrl, selectHandler, closeHandler, openHandler, queryParams } =
     settings;
   const autocomplete = {
     cache: {},
@@ -102,9 +102,11 @@ export default function initializeAutocomplete(element, settings) {
     if (cache.hasOwnProperty(term)) {
       response(cache[term]);
     } else {
+      const data = queryParams;
+      data.q = term;
       $.ajax(autocompleteUrl, {
         success: sourceCallbackHandler,
-        data: { q: term },
+        data,
         ...autocomplete.ajax,
       });
     }

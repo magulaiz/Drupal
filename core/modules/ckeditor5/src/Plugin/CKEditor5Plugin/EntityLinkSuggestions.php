@@ -71,9 +71,6 @@ class EntityLinkSuggestions extends CKEditor5PluginDefault implements CKEditor5P
     $dynamic_plugin_config['drupalEntityLinkSuggestions']['suggestionsUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
       Url::fromRoute('ckeditor5.entity_link_suggestions')
         ->setRouteParameter('editor', $editor->id())
-        // @see initializeAutocomplete() in core/modules/ckeditor5/js/ckeditor5_plugins/drupalEntityLinkSuggestions/src/index.js
-        ->setRouteParameter('host_entity_type_id', '_')
-        ->setRouteParameter('host_entity_langcode', '_')
     );
     return $dynamic_plugin_config;
   }

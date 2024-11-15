@@ -27,7 +27,7 @@ ckeditor5.media_entity_metadata:
         type: entity:editor
 
 ckeditor5.entity_link_suggestions:
-  path: '/ckeditor5/{editor}/entity-link-suggestions/{host_entity_type_id}/{host_entity_langcode}'
+  path: '/ckeditor5/{editor}/entity-link-suggestions'
   defaults:
     _controller: '\Drupal\ckeditor5\Controller\EntityLinkSuggestionsController::suggestions'
   methods: [GET]
@@ -36,7 +36,7 @@ ckeditor5.entity_link_suggestions:
     _custom_access: '\Drupal\ckeditor5\Controller\EntityLinkSuggestionsController::formatUsesEntityLinksFilter'
     # The returned information relies on entity reference selection plugins ensuring only entities are returned that the
     # current user is allowed to see.
-    # @todo `_csrf_token` check like for the other routes; that does not impede cacheability
+    _csrf_token: 'TRUE'
   options:
     parameters:
       editor:
