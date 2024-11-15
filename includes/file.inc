@@ -74,7 +74,7 @@ define('FILE_STATUS_PERMANENT', 1);
  *
  * @see file_munge_filename(), file_save_upload()
  */
-define('FILE_INSECURE_EXTENSIONS', 'php|phar|pl|py|cgi|asp|js|phtml');
+define('FILE_INSECURE_EXTENSIONS', 'php|phar|pl|py|cgi|asp|js|htm|html|phtml');
 
 /**
  * Provides Drupal stream wrapper registry.
