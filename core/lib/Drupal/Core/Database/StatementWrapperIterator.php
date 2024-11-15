@@ -60,7 +60,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
     protected readonly bool $rowCountEnabled = FALSE,
   ) {
     $this->clientStatement = $clientConnection->prepare($query, $options);
-    $this->setFetchMode(\PDO::FETCH_OBJ);
+    $this->setFetchMode(FetchAs::Object);
   }
 
   /**
@@ -86,6 +86,10 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
+    if (isset($options['fetch']) && is_int($options['fetch'])) {
+      @trigger_error("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+    }
+
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
         // \PDO::FETCH_PROPS_LATE tells __construct() to run before properties
@@ -269,7 +273,10 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
-    assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+    if (is_int($mode)) {
+      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+      @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+    }
 
     // Call \PDOStatement::setFetchMode to set fetch mode.
     // \PDOStatement is picky about the number of arguments in some cases so we

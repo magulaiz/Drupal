@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\Core\Database\FetchAs;
 use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\StatementInterface;
@@ -173,7 +174,7 @@ class SqlBaseTest extends MigrateTestBase {
     }
 
     $statement = $this->createMock(StatementInterface::class);
-    $statement->expects($this->atLeastOnce())->method('setFetchMode')->with(\PDO::FETCH_ASSOC);
+    $statement->expects($this->atLeastOnce())->method('setFetchMode')->with(FetchAs::Associative);
     $query = $this->createMock(SelectInterface::class);
     $query->method('execute')->willReturn($statement);
     $query->expects($this->atLeastOnce())->method('orderBy')->with('order', 'ASC');

@@ -6,6 +6,7 @@ namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\FetchAs;
 use Drupal\Core\Database\StatementPrefetchIterator;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
@@ -892,12 +893,12 @@ class ConnectionTest extends UnitTestCase {
    */
   public static function providerSupportedFetchModes(): array {
     return [
-      'FETCH_ASSOC' => [\PDO::FETCH_ASSOC],
-      'FETCH_CLASS' => [\PDO::FETCH_CLASS],
-      'FETCH_CLASS | FETCH_PROPS_LATE' => [\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE],
-      'FETCH_COLUMN' => [\PDO::FETCH_COLUMN],
-      'FETCH_NUM' => [\PDO::FETCH_NUM],
-      'FETCH_OBJ' => [\PDO::FETCH_OBJ],
+      'FETCH_ASSOC' => [FetchAs::Associative],
+      'FETCH_CLASS' => [FetchAs::ClassObject],
+      'FETCH_CLASS | FETCH_PROPS_LATE' => [FetchAs::ClassObject],
+      'FETCH_COLUMN' => [FetchAs::Column],
+      'FETCH_NUM' => [FetchAs::Numbered],
+      'FETCH_OBJ' => [FetchAs::Object],
     ];
   }
 
@@ -906,7 +907,7 @@ class ConnectionTest extends UnitTestCase {
    *
    * @dataProvider providerSupportedFetchModes
    */
-  public function testSupportedFetchModes(int $mode): void {
+  public function testSupportedFetchModes(FetchAs $mode): void {
     $mockPdo = $this->createMock(StubPDO::class);
     $mockConnection = new StubConnection($mockPdo, []);
     $statement = new StatementPrefetchIterator($mockPdo, $mockConnection, '');

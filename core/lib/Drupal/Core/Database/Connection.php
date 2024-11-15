@@ -250,11 +250,10 @@ abstract class Connection {
    * A given query can be customized with a number of option flags in an
    * associative array:
    * - fetch: This element controls how rows from a result set will be
-   *   returned. Legal values include \PDO::FETCH_ASSOC, \PDO::FETCH_BOTH,
-   *   \PDO::FETCH_OBJ, \PDO::FETCH_NUM, or a string representing the name of a
-   *   class. If a string is specified, each record will be fetched into a new
-   *   object of that class. The behavior of all other values is defined by PDO.
-   *   See http://php.net/manual/pdostatement.fetch.php
+   *   returned. Legal values include one of the enumeration cases of FetchAs or
+   *   a string representing the name of a class. If a string is specified, each
+   *   record will be fetched into a new object of that class. The behavior of
+   *   all other values is described in the FetchAs enum.
    * - allow_delimiter_in_query: By default, queries which have the ; delimiter
    *   any place in them will cause an exception. This reduces the chance of SQL
    *   injection attacks that terminate the original query and add one or more
@@ -277,7 +276,7 @@ abstract class Connection {
    */
   protected function defaultOptions() {
     return [
-      'fetch' => \PDO::FETCH_OBJ,
+      'fetch' => FetchAs::Object,
       'allow_delimiter_in_query' => FALSE,
       'allow_square_brackets' => FALSE,
       'pdo' => [],
@@ -430,6 +429,9 @@ abstract class Connection {
    */
   public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
     assert(!isset($options['return']), 'Passing "return" option to prepareStatement() has no effect. See https://www.drupal.org/node/3185520');
+    if (isset($options['fetch']) && is_int($options['fetch'])) {
+      @trigger_error("Passing the 'fetch' key as an integer to \$options in prepareStatement() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+    }
 
     try {
       $query = $this->preprocessStatement($query, $options);
@@ -648,6 +650,9 @@ abstract class Connection {
     assert(is_string($query), 'The \'$query\' argument to ' . __METHOD__ . '() must be a string');
     assert(!isset($options['return']), 'Passing "return" option to query() has no effect. See https://www.drupal.org/node/3185520');
     assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
+    if (isset($options['fetch']) && is_int($options['fetch'])) {
+      @trigger_error("Passing the 'fetch' key as an integer to \$options in query() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+    }
 
     // Use default values if not already set.
     $options += $this->defaultOptions();

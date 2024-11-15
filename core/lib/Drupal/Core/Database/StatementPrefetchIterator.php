@@ -21,7 +21,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   /**
    * Main data store.
    *
-   * The resultset is stored as a \PDO::FETCH_ASSOC array.
+   * The resultset is stored as a FetchAs::Associative array.
    */
   protected array $data = [];
 
@@ -39,8 +39,15 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
   /**
    * Holds the default fetch style.
+   *
+   * @todo Deprecate.
    */
   protected int $defaultFetchStyle = \PDO::FETCH_OBJ;
+
+  /**
+   * Holds the default fetch mode.
+   */
+  protected FetchAs $defaultFetchMode = FetchAs::Object;
 
   /**
    * Holds fetch options.
@@ -88,12 +95,16 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
+    if (isset($options['fetch']) && is_int($options['fetch'])) {
+      @trigger_error("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+    }
+
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
         // Default to an object. Note: db fields will be added to the object
         // before the constructor is run. If you need to assign fields after
         // the constructor is run. See https://www.drupal.org/node/315092.
-        $this->setFetchMode(\PDO::FETCH_CLASS, $options['fetch']);
+        $this->setFetchMode(FetchAs::ClassObject, $options['fetch']);
       }
       else {
         $this->setFetchMode($options['fetch']);
@@ -137,7 +148,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
     // Fetch all the data from the reply, in order to release any lock as soon
     // as possible.
-    $this->data = $statement->fetchAll(\PDO::FETCH_ASSOC);
+    $this->data = $statement->fetchAll($this->fetchAsToPdo(FetchAs::Associative));
     $this->rowCount = $this->rowCountEnabled ? $statement->rowCount() : NULL;
     // Destroy the statement as soon as possible. See the documentation of
     // \Drupal\sqlite\Driver\Database\sqlite\Statement for an explanation.
@@ -190,24 +201,27 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
-    assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+    if (is_int($mode)) {
+      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+      @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+      $mode = $this->pdoToFetchAs($mode);
+    }
 
-    $this->defaultFetchStyle = $mode;
+    $this->defaultFetchMode = $mode;
+    // @todo Backwards compatibility.
+    $this->defaultFetchStyle = $this->fetchAsToPdo($mode);
     switch ($mode) {
-      case \PDO::FETCH_CLASS:
+      case FetchAs::ClassObject:
         $this->fetchOptions['class'] = $a1;
         if ($a2) {
           $this->fetchOptions['constructor_args'] = $a2;
         }
         break;
 
-      case \PDO::FETCH_COLUMN:
+      case FetchAs::Column:
         $this->fetchOptions['column'] = $a1;
         break;
 
-      case \PDO::FETCH_INTO:
-        $this->fetchOptions['object'] = $a1;
-        break;
     }
   }
 
@@ -228,6 +242,11 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetch($fetch_style = NULL, $cursor_orientation = \PDO::FETCH_ORI_NEXT, $cursor_offset = NULL) {
+    if (is_int($fetch_style)) {
+      @trigger_error("Passing the \$fetch_style argument as an integer to fetch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+      $fetch_style = $this->pdoToFetchAs($fetch_style);
+    }
+
     $currentKey = $this->getResultsetCurrentRowIndex();
 
     // We can remove the current record from the prefetched data, before
@@ -242,13 +261,13 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
     // Now, format the next prefetched record according to the required fetch
     // style.
     $rowAssoc = $this->data[$currentKey];
-    $mode = $fetch_style ?? $this->defaultFetchStyle;
+    $mode = $fetch_style ?? $this->defaultFetchMode;
     $row = match($mode) {
-      \PDO::FETCH_ASSOC => $rowAssoc,
-      \PDO::FETCH_CLASS, \PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE => $this->assocToClass($rowAssoc, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
-      \PDO::FETCH_COLUMN => $this->assocToColumn($rowAssoc, $this->columnNames, $this->fetchOptions['column']),
-      \PDO::FETCH_NUM => $this->assocToNum($rowAssoc),
-      \PDO::FETCH_OBJ => $this->assocToObj($rowAssoc),
+      FetchAs::Associative => $rowAssoc,
+      FetchAs::ClassObject => $this->assocToClass($rowAssoc, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
+      FetchAs::Column => $this->assocToColumn($rowAssoc, $this->columnNames, $this->fetchOptions['column']),
+      FetchAs::Numbered => $this->assocToNum($rowAssoc),
+      FetchAs::Object => $this->assocToObj($rowAssoc),
       default => throw new DatabaseExceptionWrapper('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.'),
     };
     $this->setResultsetCurrentRow($row);
@@ -259,7 +278,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchColumn($index = 0) {
-    if ($row = $this->fetch(\PDO::FETCH_ASSOC)) {
+    if ($row = $this->fetch(FetchAs::Associative)) {
       return $row[$this->columnNames[$index]];
     }
     return FALSE;
@@ -277,29 +296,33 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    */
   public function fetchObject(?string $class_name = NULL, array $constructor_arguments = []) {
     if (!isset($class_name)) {
-      return $this->fetch(\PDO::FETCH_OBJ);
+      return $this->fetch(FetchAs::Object);
     }
     $this->fetchOptions = [
       'class' => $class_name,
       'constructor_args' => $constructor_arguments,
     ];
-    return $this->fetch(\PDO::FETCH_CLASS);
+    return $this->fetch(FetchAs::ClassObject);
   }
 
   /**
    * {@inheritdoc}
    */
   public function fetchAssoc() {
-    return $this->fetch(\PDO::FETCH_ASSOC);
+    return $this->fetch(FetchAs::Associative);
   }
 
   /**
    * {@inheritdoc}
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
-    $fetchStyle = $mode ?? $this->defaultFetchStyle;
+    if (is_int($mode)) {
+      assert(in_array($fetchStyle, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$fetchStyle] ?? $fetchStyle) . ' is not supported. Use supported modes only.');
+      @trigger_error("Passing the \$mode argument as an integer to fetchAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+      $mode = $this->pdoToFetchAs($mode);
+    }
 
-    assert(in_array($fetchStyle, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$fetchStyle] ?? $fetchStyle) . ' is not supported. Use supported modes only.');
+    $fetchStyle = $mode ?? $this->defaultFetchMode;
 
     if (isset($column_index)) {
       $this->fetchOptions['column'] = $column_index;
@@ -321,7 +344,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   public function fetchCol($index = 0) {
     if (isset($this->columnNames[$index])) {
       $result = [];
-      while ($row = $this->fetch(\PDO::FETCH_ASSOC)) {
+      while ($row = $this->fetch(FetchAs::Associative)) {
         $result[] = $row[$this->columnNames[$index]];
       }
       return $result;
@@ -341,7 +364,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
     $value = $this->columnNames[$value_index];
 
     $result = [];
-    while ($row = $this->fetch(\PDO::FETCH_ASSOC)) {
+    while ($row = $this->fetch(FetchAs::Associative)) {
       $result[$row[$key]] = $row[$value];
     }
     return $result;
