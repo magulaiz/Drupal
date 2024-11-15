@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Administration pages for image settings.
  */
 
 use Drupal\Core\Render\Element;
@@ -81,7 +80,10 @@ function template_preprocess_image_style_preview(&$variables) {
   $variables['original']['rendered'] = [
     '#theme' => 'image',
     '#uri' => $original_path,
-    '#alt' => t('Sample original image'),
+    '#alt' => t('Source image: @width pixels wide, @height pixels high', [
+      '@width' => $variables['original']['width'],
+      '@height' => $variables['original']['height'],
+    ]),
     '#title' => '',
     '#attributes' => [
       'width' => $variables['original']['width'],
@@ -95,7 +97,10 @@ function template_preprocess_image_style_preview(&$variables) {
   $variables['derivative']['rendered'] = [
     '#theme' => 'image',
     '#uri' => $variables['derivative']['url'] . '?cache_bypass=' . $variables['cache_bypass'] . '&itok=' . $variables['itok'],
-    '#alt' => t('Sample modified image'),
+    '#alt' => t('Derivative image: @width pixels wide, @height pixels high', [
+      '@width' => $variables['derivative']['width'],
+      '@height' => $variables['derivative']['height'],
+    ]),
     '#title' => '',
     '#attributes' => [
       'width' => $variables['derivative']['width'],

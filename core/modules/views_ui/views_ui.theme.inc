@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Preprocessors and theme functions for the Views UI.
  */
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -534,12 +533,12 @@ function template_preprocess_views_ui_view_preview_section(&$variables) {
       break;
 
     case 'attachment_before':
-      // @todo: Add links to the attachment configuration page.
+      // @todo Add links to the attachment configuration page.
       $variables['title'] = t('Attachment before');
       break;
 
     case 'attachment_after':
-      // @todo: Add links to the attachment configuration page.
+      // @todo Add links to the attachment configuration page.
       $variables['title'] = t('Attachment after');
       break;
   }

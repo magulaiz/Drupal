@@ -2,7 +2,10 @@
 
 namespace Drupal\file\Upload;
 
+use Drupal\file\Validation\Constraint\UploadedFileConstraint;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Provides a bridge to Symfony UploadedFile.
@@ -59,6 +62,14 @@ class FormUploadedFile implements UploadedFileInterface {
    */
   public function getFilename(): string {
     return $this->uploadedFile->getFilename();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validate(ValidatorInterface $validator, array $options = []): ConstraintViolationListInterface {
+    $constraint = new UploadedFileConstraint($options);
+    return $validator->validate($this->uploadedFile, $constraint);
   }
 
 }

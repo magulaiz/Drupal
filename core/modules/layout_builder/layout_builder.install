@@ -13,7 +13,7 @@ use Drupal\layout_builder\Section;
 /**
  * Implements hook_install().
  */
-function layout_builder_install() {
+function layout_builder_install(): void {
   $display_changed = FALSE;
 
   $displays = LayoutBuilderEntityViewDisplay::loadMultiple();
@@ -79,6 +79,6 @@ function layout_builder_schema() {
 /**
  * Implements hook_update_last_removed().
  */
-function layout_builder_update_last_removed() {
+function layout_builder_update_last_removed(): int {
   return 8602;
 }
