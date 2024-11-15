@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\editor\Kernel;
 
 use Drupal\editor\Entity\Editor;
-use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
