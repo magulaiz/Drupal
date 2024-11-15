@@ -22805,12 +22805,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/filter/src/Plugin/Filter/FilterHtml.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$rows might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/filter/src/Plugin/Filter/FilterHtml.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\filter\\\\Plugin\\\\FilterBase\\:\\:setConfiguration\\(\\) has no return type specified\\.$#',
 	'count' => 1,

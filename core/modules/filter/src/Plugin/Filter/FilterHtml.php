@@ -465,7 +465,7 @@ class FilterHtml extends FilterBase {
       [$this->t('Quotation mark'), '&quot;'],
     ];
     $header = [$this->t('Character Description'), $this->t('You Type'), $this->t('You Get')];
-    unset($rows);
+    $rows = [];
     foreach ($entities as $entity) {
       $rows[] = [
         ['data' => $entity[0], 'class' => ['description']],

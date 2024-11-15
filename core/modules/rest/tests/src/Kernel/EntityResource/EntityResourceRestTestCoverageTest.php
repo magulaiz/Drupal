@@ -69,21 +69,6 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
    * Tests that all core content/config entity types have REST test coverage.
    */
   public function testEntityTypeRestTestCoverage(): void {
-    $tests = [
-      // Test coverage for formats provided by the 'serialization' module.
-      'serialization' => [
-        'path' => '\Drupal\Tests\PROVIDER\Functional\Rest\CLASS',
-        'class suffix' => [
-          'JsonAnonTest',
-          'JsonBasicAuthTest',
-          'JsonCookieTest',
-          'XmlAnonTest',
-          'XmlBasicAuthTest',
-          'XmlCookieTest',
-        ],
-      ],
-    ];
-
     $problems = [];
     foreach ($this->definitions as $entity_type_id => $info) {
       $class_name_full = $info->getClass();
@@ -91,38 +76,44 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
       $class_name = end($parts);
       $module_name = $parts[1];
 
-      foreach ($tests as $module => $info) {
-        $path = $info['path'];
-        $missing_tests = [];
-        foreach ($info['class suffix'] as $postfix) {
-          $class = str_replace(['PROVIDER', 'CLASS'], [$module_name, $class_name], $path . $postfix);
-          $class_alternative = str_replace("\\Drupal\\Tests\\$module_name\\Functional", '\Drupal\FunctionalTests', $class);
-          // For entities defined in the system module with Jsonapi tests in
-          // another module.
-          $class_entity_in_system_alternative = str_replace(['PROVIDER', 'CLASS'], [$entity_type_id, $class_name], $path . $postfix);
-          if (class_exists($class) || class_exists($class_alternative) || class_exists($class_entity_in_system_alternative)) {
-            continue;
+      $path = '\Drupal\Tests\PROVIDER\Functional\Rest\CLASS';
+      $missing_tests = [];
+      foreach ([
+        'JsonAnonTest',
+        'JsonBasicAuthTest',
+        'JsonCookieTest',
+        'XmlAnonTest',
+        'XmlBasicAuthTest',
+        'XmlCookieTest',
+      ] as $postfix) {
+        $class = str_replace(['PROVIDER', 'CLASS'], [$module_name, $class_name], $path . $postfix);
+        $class_alternative = str_replace("\\Drupal\\Tests\\$module_name\\Functional", '\Drupal\FunctionalTests', $class);
+        // For entities defined in the system module with Jsonapi tests in
+        // another module.
+        $class_entity_in_system_alternative = str_replace(['PROVIDER', 'CLASS'], [$entity_type_id, $class_name], $path . $postfix);
+
+        if (class_exists($class) || class_exists($class_alternative) || class_exists($class_entity_in_system_alternative)) {
+          $config_entity = is_subclass_of($class_name_full, ConfigEntityInterface::class);
+          $config_test = is_subclass_of($class, ConfigEntityResourceTestBase::class)
+            || is_subclass_of($class_alternative, ConfigEntityResourceTestBase::class)
+            || is_subclass_of($class_entity_in_system_alternative, ConfigEntityResourceTestBase::class);
+          if ($config_entity && !$config_test) {
+            $problems[] = "$entity_type_id: $class_name is a config entity, but the test is for content entities.";
           }
-          $missing_tests[] = $postfix;
+          elseif (!$config_entity && $config_test) {
+            $problems[] = "$entity_type_id: $class_name is a content entity, but the test is for config entities.";
+          }
+
+          continue;
         }
-        if (!empty($missing_tests)) {
-          $missing_tests_list = implode(', ', array_map(function ($missing_test) use ($class_name) {
-            return $class_name . $missing_test;
-          }, $missing_tests));
-          $which_normalization = $module === 'serialization' ? 'default' : $module;
-          $problems[] = "$entity_type_id: $class_name ($class_name_full), $which_normalization normalization (expected tests: $missing_tests_list)";
-        }
+        $missing_tests[] = $postfix;
       }
 
-      $config_entity = is_subclass_of($class_name_full, ConfigEntityInterface::class);
-      $config_test = is_subclass_of($class ?? throw new \LogicException('Expected a class.'), ConfigEntityResourceTestBase::class)
-        || is_subclass_of($class_alternative ?? throw new \LogicException('Expected a class alternative.'), ConfigEntityResourceTestBase::class)
-        || is_subclass_of($class_entity_in_system_alternative ?? throw new \LogicException('Expected a class entity in system alternative.'), ConfigEntityResourceTestBase::class);
-      if ($config_entity && !$config_test) {
-        $problems[] = "$entity_type_id: $class_name is a config entity, but the test is for content entities.";
-      }
-      elseif (!$config_entity && $config_test) {
-        $problems[] = "$entity_type_id: $class_name is a content entity, but the test is for config entities.";
+      if ($missing_tests !== []) {
+        $missing_tests_list = implode(', ', array_map(function ($missing_test) use ($class_name) {
+          return $class_name . $missing_test;
+        }, $missing_tests));
+        $problems[] = "$entity_type_id: $class_name ($class_name_full), default normalization (expected tests: $missing_tests_list)";
       }
     }
     $this->assertSame([], $problems);

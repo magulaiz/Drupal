@@ -77,6 +77,7 @@ class TestCoverageTest extends KernelTestBase {
         // another module.
         '\Drupal\Tests\\' . $info->id() . '\Functional\Jsonapi\CLASSTest',
       ];
+      $class = NULL;
       foreach ($possible_paths as $path) {
         $missing_tests = [];
         $class = str_replace('CLASS', $class_name, $path);
@@ -91,7 +92,7 @@ class TestCoverageTest extends KernelTestBase {
       }
       else {
         $config_entity = is_subclass_of($class_name_full, ConfigEntityInterface::class);
-        $config_test = is_subclass_of($class ?? throw new \LogicException('Expected a class.'), ConfigEntityResourceTestBase::class);
+        $config_test = is_subclass_of($class, ConfigEntityResourceTestBase::class);
         if ($config_entity && !$config_test) {
           $problems[] = "$entity_type_id: $class_name is a config entity, but the test is for content entities.";
         }
