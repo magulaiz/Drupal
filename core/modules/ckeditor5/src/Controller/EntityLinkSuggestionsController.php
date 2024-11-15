@@ -106,10 +106,6 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    *   The request.
    * @param \Drupal\editor\EditorInterface $editor
    *   The text editor whose drupalEntityLinkSuggestions configuration to use.
-   * @param string $host_entity_type_id
-   *   The host entity type ID.
-   * @param string $host_entity_langcode
-   *   The host entity's langcode.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   A JSON response containing the autocomplete suggestions.
