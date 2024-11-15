@@ -162,16 +162,17 @@ class HookCollectorPass implements CompilerPassInterface {
     $iterator = new \RecursiveCallbackFilterIterator($iterator, static::filterIterator(...));
     $iterator = new \RecursiveIteratorIterator($iterator);
     /** @var \RecursiveDirectoryIterator | \RecursiveIteratorIterator $iterator*/
+
+    // Add the deployment identifier to the cache namespace so that changes in
+    // the implementation of attribute parsing will not result in a stale
+    // cache.
+    $file_cache = FileCacheFactory::get('hook_implementations' . ':' . Settings::get('deployment_identifier'));
     foreach ($iterator as $fileinfo) {
       assert($fileinfo instanceof \SplFileInfo);
       $extension = $fileinfo->getExtension();
 
       $filename = $fileinfo->getPathname();
 
-      // Add the deployment identifier to the cache namespace so that changes in
-      // the implementation of attribute parsing will not result in a stale
-      // cache.
-      $file_cache = FileCacheFactory::get('hook_implementations' . ':' . Settings::get('deployment_identifier'));
 
       $cached = $file_cache->get($filename);
 
