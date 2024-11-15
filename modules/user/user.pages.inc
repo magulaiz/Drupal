@@ -36,8 +36,12 @@ function user_pass() {
     '#size' => 60,
     '#maxlength' => max(USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH),
     '#required' => TRUE,
-    '#default_value' => isset($_GET['name']) ? $_GET['name'] : '',
+    '#default_value' => '',
   );
+  // Apply the same sanitization as in form_type_textfield_value().
+  if (isset($_GET['name']) && is_scalar($_GET['name'])) {
+    $form['name']['#default_value'] = str_replace(array("\r", "\n"), '', (string) $_GET['name']);
+  }
   // Allow logged in users to request this also.
   if ($user->uid > 0) {
     $form['name']['#type'] = 'value';
