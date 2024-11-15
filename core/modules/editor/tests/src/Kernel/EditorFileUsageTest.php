@@ -129,7 +129,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     ];
 
     $image_entities = [];
-    $file_usage = \Drupal::service(FileUsageInterface::class);
+    $file_usage = \Drupal::service('file.usage');
     foreach ($image_paths as $key => $image_path) {
       $image = File::create();
       $image->setFileUri($image_path);
