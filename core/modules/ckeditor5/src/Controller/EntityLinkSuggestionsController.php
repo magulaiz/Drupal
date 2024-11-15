@@ -161,7 +161,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
             'description' => $this->t('No content suggestions found. This URL will be used as is.'),
             'group' => $this->t('No results'),
             'label' => Html::escape($input),
-            'path' => $input,
+            'href' => $input,
           ],
         ];
       }
