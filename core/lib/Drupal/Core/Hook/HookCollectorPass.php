@@ -161,7 +161,8 @@ class HookCollectorPass implements CompilerPassInterface {
     // Add the deployment identifier to the cache namespace so that changes in
     // the implementation of attribute parsing will not result in a stale
     // cache.
-    $file_cache = FileCacheFactory::get('hook_implementations' . ':' . Settings::get('deployment_identifier'));
+    $hook_file_cache = FileCacheFactory::get('hook_implementations' . ':' . Settings::get('deployment_identifier'));
+    $procedural_hook_file_cache = FileCacheFactory::get('hook_implementations' . ':' . Settings::get('deployment_identifier') . ':' . $module_preg);
 
     $iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS);
     $iterator = new \RecursiveCallbackFilterIterator($iterator, static::filterIterator(...));
@@ -171,7 +172,6 @@ class HookCollectorPass implements CompilerPassInterface {
       assert($fileinfo instanceof \SplFileInfo);
       $extension = $fileinfo->getExtension();
       $filename = $fileinfo->getPathname();
-      $cached = $file_cache->get($filename);
 
       if ($extension === 'module' && !$iterator->getDepth()) {
         // There is an expectation for all modules to be loaded. However,
@@ -179,6 +179,7 @@ class HookCollectorPass implements CompilerPassInterface {
         include_once $filename;
       }
       if ($extension === 'php') {
+        $cached = $hook_file_cache->get($filename);
         if ($cached) {
           $class = $cached['class'];
           $attributes = $cached['attributes'];
@@ -195,6 +196,7 @@ class HookCollectorPass implements CompilerPassInterface {
         }
       }
       else {
+        $cached = $procedural_hook_file_cache->get($filename);
         if ($cached) {
           $implementations = $cached;
         }
