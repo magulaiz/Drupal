@@ -63,8 +63,13 @@ function renderMenu(ul, items) {
 }
 
 export default function initializeAutocomplete(element, settings) {
-  const { autocompleteUrl, selectHandler, closeHandler, openHandler, queryParams } =
-    settings;
+  const {
+    autocompleteUrl,
+    selectHandler,
+    closeHandler,
+    openHandler,
+    queryParams,
+  } = settings;
   const autocomplete = {
     cache: {},
     ajax: {

@@ -238,7 +238,8 @@ class DrupalEntityLinkSuggestions extends Plugin {
 
         initializeAutocomplete(linkFormView.urlInputView.fieldView.element, {
           // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions::getDynamicPluginConfig()
-          autocompleteUrl: this.editor.config.get('drupalEntityLinkSuggestions').suggestionsUrl,
+          autocompleteUrl: this.editor.config.get('drupalEntityLinkSuggestions')
+            .suggestionsUrl,
           queryParams: {
             hostEntityLangcode,
             hostEntityTypeId,
