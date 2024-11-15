@@ -80,21 +80,8 @@ function contact_site_form($form, &$form_state) {
   // Do not allow authenticated users to alter the name or e-mail values to
   // prevent the impersonation of other users.
   if ($user->uid) {
-    // Hide the original name and e-mail address fields and display read-only
-    // versions in their place.
-    $form['name']['#access'] = $form['mail']['#access'] = FALSE;
+    $form['name']['#disabled'] = $form['mail']['#disabled'] = TRUE;
 
-    // Display read-only name and e-mail address to the user.
-    $form['name_display'] = array(
-      '#type' => 'item',
-      '#title' => t('Your name'),
-      '#markup' => check_plain(format_username($user)),
-    );
-    $form['mail_display'] = array(
-      '#type' => 'item',
-      '#title' => t('Your e-mail address'),
-      '#markup' => check_plain($user->mail),
-    );
   }
   $form['subject'] = array(
     '#type' => 'textfield',
@@ -243,21 +230,7 @@ function contact_personal_form($form, &$form_state, $recipient) {
   // Do not allow authenticated users to alter the name or e-mail values to
   // prevent the impersonation of other users.
   if (!empty($user->uid)) {
-    // Hide the original name and e-mail address fields and display read-only
-    // versions in their place.
-    $form['name']['#access'] = $form['mail']['#access'] = FALSE;
-
-    // Display read-only name and e-mail address to the user.
-    $form['name_display'] = array(
-      '#type' => 'item',
-      '#title' => t('Your name'),
-      '#markup' => check_plain(format_username($user)),
-    );
-    $form['mail_display'] = array(
-      '#type' => 'item',
-      '#title' => t('Your e-mail address'),
-      '#markup' => check_plain($user->mail),
-    );
+    $form['name']['#disabled'] = $form['mail']['#disabled'] = FALSE;
   }
   $form['to'] = array(
     '#type' => 'item',
