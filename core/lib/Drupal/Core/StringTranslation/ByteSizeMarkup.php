@@ -21,9 +21,6 @@ final class ByteSizeMarkup {
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The translatable markup.
-   *
-   * @throws \LogicException
-   *   Thrown when an invalid unit size is used.
    */
   public static function create(float|int $size, ?string $langcode = NULL, ?TranslationInterface $stringTranslation = NULL): TranslatableMarkup {
     $options = ['langcode' => $langcode];
@@ -32,6 +29,7 @@ final class ByteSizeMarkup {
       return new PluralTranslatableMarkup($size, '1 byte', '@count bytes', [], $options, $stringTranslation);
     }
 
+    /** @var 'KB'|'MB'|'GB'|'TB'|'PB'|'EB'|'ZB'|'YB' $unit */
     [$rounded_size, $unit] = (static function ($absolute_size): array {
       foreach (['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] as $unit) {
         $absolute_size /= 1024;
@@ -54,7 +52,6 @@ final class ByteSizeMarkup {
       'EB' => new TranslatableMarkup('@size EB', $args, $options, $stringTranslation),
       'ZB' => new TranslatableMarkup('@size ZB', $args, $options, $stringTranslation),
       'YB' => new TranslatableMarkup('@size YB', $args, $options, $stringTranslation),
-      default => throw new \LogicException("Unexpected unit value"),
     };
   }
 
