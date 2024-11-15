@@ -115,9 +115,9 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
       }
 
       $config_entity = is_subclass_of($class_name_full, ConfigEntityInterface::class);
-      $config_test = is_subclass_of($class, ConfigEntityResourceTestBase::class)
-        || is_subclass_of($class_alternative, ConfigEntityResourceTestBase::class)
-        || is_subclass_of($class_entity_in_system_alternative, ConfigEntityResourceTestBase::class);
+      $config_test = is_subclass_of($class ?? throw new \LogicException('Expected a class.'), ConfigEntityResourceTestBase::class)
+        || is_subclass_of($class_alternative ?? throw new \LogicException('Expected a class alternative.'), ConfigEntityResourceTestBase::class)
+        || is_subclass_of($class_entity_in_system_alternative ?? throw new \LogicException('Expected a class entity in system alternative.'), ConfigEntityResourceTestBase::class);
       if ($config_entity && !$config_test) {
         $problems[] = "$entity_type_id: $class_name is a config entity, but the test is for content entities.";
       }

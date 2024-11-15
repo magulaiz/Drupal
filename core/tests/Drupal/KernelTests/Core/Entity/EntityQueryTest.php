@@ -79,6 +79,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     $figures = $this->randomMachineName();
     $greetings = $this->randomMachineName();
+    $field_storages = [];
     foreach ([$figures => 'shape', $greetings => 'text'] as $field_name => $field_type) {
       $field_storage = FieldStorageConfig::create([
         'field_name' => $field_name,
@@ -96,7 +97,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       do {
         $bundle = $this->randomMachineName();
       } while ($bundles && strtolower($bundles[0]) >= strtolower($bundle));
-      entity_test_create_bundle($bundle, entity_type: $field_storage->getTargetEntityTypeId());
+      entity_test_create_bundle($bundle, entity_type: 'entity_test_mulrev');
       foreach ($field_storages as $field_storage) {
         FieldConfig::create([
           'field_storage' => $field_storage,

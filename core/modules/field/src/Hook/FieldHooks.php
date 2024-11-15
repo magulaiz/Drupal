@@ -280,6 +280,7 @@ class FieldHooks {
     if ($storage_comparer?->getSourceStorage()->exists('core.extension') && empty($user_input)) {
       $field_storages = ConfigImporterFieldPurger::getFieldStoragesToPurge($storage_comparer->getSourceStorage()->read('core.extension'), $storage_comparer->getChangelist('delete'));
       if ($field_storages) {
+        $field_labels = [];
         foreach ($field_storages as $field) {
           $field_labels[] = $field->label();
         }

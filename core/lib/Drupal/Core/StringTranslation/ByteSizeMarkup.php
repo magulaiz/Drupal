@@ -31,18 +31,20 @@ final class ByteSizeMarkup {
     if ($absolute_size < Bytes::KILOBYTE) {
       return new PluralTranslatableMarkup($size, '1 byte', '@count bytes', [], $options, $stringTranslation);
     }
-    // Create a multiplier to preserve the sign of $size.
-    $sign = $absolute_size / $size;
-    foreach (['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] as $unit) {
-      $absolute_size /= Bytes::KILOBYTE;
-      $rounded_size = round($absolute_size, 2);
-      if ($rounded_size < Bytes::KILOBYTE) {
-        break;
-      }
-    }
 
-    $args = ['@size' => $rounded_size * $sign];
-    // At this point $markup must be set.
+    [$rounded_size, $unit] = (static function ($absolute_size): array {
+      foreach (['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] as $unit) {
+        $absolute_size /= 1024;
+        $rounded_size = round($absolute_size, 2);
+        if ($rounded_size < 1024 || $unit === 'YB') {
+          return [$rounded_size, $unit];
+        }
+      }
+
+      throw new \LogicException('Invalid byte size value.');
+    })($absolute_size);
+
+    $args = ['@size' => $rounded_size * ($absolute_size / $size)];
     return match ($unit) {
       'KB' => new TranslatableMarkup('@size KB', $args, $options, $stringTranslation),
       'MB' => new TranslatableMarkup('@size MB', $args, $options, $stringTranslation),

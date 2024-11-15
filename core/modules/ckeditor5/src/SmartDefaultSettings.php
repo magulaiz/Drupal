@@ -786,6 +786,7 @@ final class SmartDefaultSettings {
         $editor_settings_to_update = $editor->getSettings();
         // Create new group for all the added toolbar items.
         $editor_settings_to_update['toolbar']['items'][] = '|';
+        $plugins_enabled = [];
         foreach ($selected_plugins as $plugin_id => $reason_why_enabled) {
           $plugin_definition = $this->pluginManager->getDefinition($plugin_id);
           $label = $plugin_definition->label();

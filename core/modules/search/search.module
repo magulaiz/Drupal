@@ -107,6 +107,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
   // Extract fragments of about 60 characters around keywords, bounded by word
   // boundary characters. Try to reach 256 characters, using second occurrences
   // if necessary.
+  /** @var array<int, int> $ranges */
   $ranges = [];
   $length = 0;
   $look_start = [];
@@ -178,9 +179,13 @@ function search_excerpt($keys, $text, $langcode = NULL) {
   // Collapse overlapping text ranges into one. The sorting makes it O(n).
   $new_ranges = [];
   $max_end = 0;
+  /** @var null|int $working_from */
+  $working_from = NULL;
+  /** @var null|int $working_to */
+  $working_to = NULL;
   foreach ($ranges as $this_from => $this_to) {
     $max_end = max($max_end, $this_to);
-    if (!isset($working_from)) {
+    if ($working_from === NULL || $working_to === NULL) {
       // This is the first time through this loop: initialize.
       $working_from = $this_from;
       $working_to = $this_to;

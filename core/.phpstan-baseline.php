@@ -37189,12 +37189,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/search/search.module',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$working_to might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/search.module',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function template_preprocess_search_result\\(\\) has no return type specified\\.$#',
 	'count' => 1,

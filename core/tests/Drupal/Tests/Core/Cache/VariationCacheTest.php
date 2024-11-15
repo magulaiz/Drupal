@@ -310,7 +310,7 @@ class VariationCacheTest extends UnitTestCase {
     }
 
     // Set at least one more specific item in the cache again.
-    $this->setVariationCacheItem($data, $this->houseOrientationCacheability, $this->housingTypeCacheability);
+    $this->setVariationCacheItem($possible_outcomes['house|garden|north'], $this->houseOrientationCacheability, $this->housingTypeCacheability);
 
     // Verify that the previously set outcomes are all accessible again.
     foreach ($possible_outcomes as $cache_context_values => $data) {

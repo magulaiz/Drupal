@@ -114,7 +114,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     foreach ($tables as $index => $table) {
       $this->assertEquals(!$index, $schema_handler->tableExists($table), "Entity schema correct for the $table table.");
     }
-    $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), "Field schema correct for the $table table.");
+    $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), "Field schema correct for the $dedicated_tables[0] table.");
 
     // Update the entity type definition and check that the entity schema now
     // supports translations and revisions.
@@ -132,7 +132,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     foreach ($tables as $index => $table) {
       $this->assertEquals(!$index, $schema_handler->tableExists($table), "Entity schema correct for the $table table.");
     }
-    $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), "Field schema correct for the $table table.");
+    $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), "Field schema correct for the $dedicated_tables[0] table.");
   }
 
   /**

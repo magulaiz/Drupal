@@ -178,9 +178,11 @@ class CommentViewBuilder extends EntityViewBuilder {
         ];
       }
     }
-    if ($build[$id]['#comment_threaded']) {
+
+    $last_comment_id = array_key_last($entities);
+    if ($build[$last_comment_id]['#comment_threaded']) {
       // The final comment must close up some hanging divs.
-      $build[$id]['#comment_indent_final'] = $current_indent;
+      $build[$last_comment_id]['#comment_indent_final'] = $current_indent;
     }
   }
 

@@ -234,6 +234,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       MigrateIdMapInterface::STATUS_FAILED,
     ];
     // Create a mapping row for each STATUS constant.
+    $expected_results = [];
     foreach ($row_statuses as $status) {
       $source = ['source_id_property' => 'source_value_' . $status];
       $row = new Row($source, ['source_id_property' => []]);
@@ -893,6 +894,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       MigrateIdMapInterface::STATUS_FAILED,
     ];
     // Create a mapping row for each STATUS constant.
+    $expected_results = [];
     foreach ($row_statuses as $status) {
       $source = ['source_id_property' => 'source_value_' . $status];
       $row = new Row($source, ['source_id_property' => []]);
@@ -942,6 +944,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     ];
 
     // Create a mapping row for each STATUS constant.
+    $expected_results = [];
     foreach ($row_statuses as $status) {
       $source = ['source_id_property' => 'source_value_' . $status];
       $row = new Row($source, ['source_id_property' => []]);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\editor\Kernel;
 
 use Drupal\editor\Entity\Editor;
+use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -128,13 +129,13 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     ];
 
     $image_entities = [];
+    $file_usage = \Drupal::service(FileUsageInterface::class);
     foreach ($image_paths as $key => $image_path) {
       $image = File::create();
       $image->setFileUri($image_path);
       $image->setFilename(\Drupal::service('file_system')->basename($image->getFileUri()));
       $image->save();
 
-      $file_usage = $this->container->get('file.usage');
       $this->assertSame([], $file_usage->listUsage($image), 'The image ' . $image_paths[$key] . ' has zero usages.');
 
       $image_entities[] = $image;

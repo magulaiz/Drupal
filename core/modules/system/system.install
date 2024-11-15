@@ -133,6 +133,7 @@ function system_requirements($phase) {
     }
     // Warn if any deprecated modules are installed.
     if (!empty($deprecated_modules)) {
+      $deprecated_modules_link_list = [];
       foreach ($deprecated_modules as $deprecated_module) {
         $deprecated_modules_link_list[] = (string) Link::fromTextAndUrl($deprecated_module['name'], Url::fromUri($deprecated_module['lifecycle_link']))->toString();
       }
@@ -175,6 +176,7 @@ function system_requirements($phase) {
 
     // Warn if any deprecated themes are installed.
     if (!empty($deprecated_themes)) {
+      $deprecated_themes_link_list = [];
       foreach ($deprecated_themes as $deprecated_theme) {
         $deprecated_themes_link_list[] = (string) Link::fromTextAndUrl($deprecated_theme['name'], Url::fromUri($deprecated_theme['lifecycle_link']))->toString();
 
@@ -190,6 +192,7 @@ function system_requirements($phase) {
 
     // Warn if any obsolete extensions (themes or modules) are installed.
     if (!empty($obsolete_extensions)) {
+      $obsolete_extensions_link_list = [];
       foreach ($obsolete_extensions as $obsolete_extension) {
         $obsolete_extensions_link_list[] = (string) Link::fromTextAndUrl($obsolete_extension['name'], Url::fromUri($obsolete_extension['lifecycle_link']))->toString();
       }
