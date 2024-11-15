@@ -281,6 +281,9 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
     elseif ($mode instanceof FetchAs) {
       $pdoMode = $this->fetchAsToPdo($mode);
     }
+    else {
+      $pdoMode = $mode;
+    }
 
     // Call \PDOStatement::setFetchMode to set fetch mode.
     // \PDOStatement is picky about the number of arguments in some cases so we
