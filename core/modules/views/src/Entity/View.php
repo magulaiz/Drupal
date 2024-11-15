@@ -2,18 +2,18 @@
 
 namespace Drupal\views\Entity;
 
-use Drupal\Core\Entity\Attribute\ConfigEntityType;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Plugin\DependentWithRemovalPluginInterface;
-use Drupal\views\Views;
 use Drupal\views\ViewEntityInterface;
+use Drupal\views\Views;
 
 /**
  * Defines a View configuration entity class.
@@ -46,6 +46,8 @@ use Drupal\views\ViewEntityInterface;
   ],
 )]
 class View extends ConfigEntityBase implements ViewEntityInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The name of the base table this view will use.
@@ -156,7 +158,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $plugin = Views::pluginManager('display')->getDefinition($plugin_id);
 
     if (empty($plugin)) {
-      $plugin['title'] = t('Broken');
+      $plugin['title'] = $this->t('Broken');
     }
 
     if (empty($id)) {
@@ -204,6 +206,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    *   Which plugin should be used for the new display ID.
    *
    * @return string
+   *   Generated display ID.
    */
   protected function generateDisplayId($plugin_id) {
     // 'default' is singular and is unique, so just go with 'default'
@@ -313,7 +316,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    * the view's configuration. This allows Views to determine very efficiently:
    * - the max-age
    * - the cache contexts
-   * - the cache tags
+   * - the cache tags.
    *
    * In other words: this allows us to do the (expensive) work of initializing
    * Views plugins and handlers to determine their effect on the cacheability of
