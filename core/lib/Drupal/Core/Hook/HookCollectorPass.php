@@ -167,13 +167,11 @@ class HookCollectorPass implements CompilerPassInterface {
     // the implementation of attribute parsing will not result in a stale
     // cache.
     $file_cache = FileCacheFactory::get('hook_implementations' . ':' . Settings::get('deployment_identifier'));
+
     foreach ($iterator as $fileinfo) {
       assert($fileinfo instanceof \SplFileInfo);
       $extension = $fileinfo->getExtension();
-
       $filename = $fileinfo->getPathname();
-
-
       $cached = $file_cache->get($filename);
 
       if ($extension === 'module' && !$iterator->getDepth()) {
