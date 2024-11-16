@@ -123,7 +123,7 @@ class FetchTest extends DatabaseTestBase {
    */
   public function testQueryFetchNum(): void {
     $records = [];
-    $result = $this->connection->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25], ['fetch' => FetchAs::Numbered]);
+    $result = $this->connection->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25], ['fetch' => FetchAs::List]);
     foreach ($result as $record) {
       $records[] = $record;
       $this->assertIsArray($record);

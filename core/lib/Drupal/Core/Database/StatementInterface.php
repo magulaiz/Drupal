@@ -65,18 +65,15 @@ interface StatementInterface extends \Traversable {
   /**
    * Sets the default fetch mode for this statement.
    *
-   * See http://php.net/manual/pdo.constants.php for the definition of the
-   * constants used.
-   *
-   * @param $mode
-   *   One of the \PDO::FETCH_* constants.
-   * @param $a1
+   * @param \Drupal\Core\Database\FetchAs|int $mode
+   *   One of the cases of the FetchAs enum, or (deprecated) a \PDO::FETCH_*
+   *   constant.
+   * @param string|int|null $a1
    *   An option depending of the fetch mode specified by $mode:
-   *   - for \PDO::FETCH_COLUMN, the index of the column to fetch
-   *   - for \PDO::FETCH_CLASS, the name of the class to create
-   *   - for \PDO::FETCH_INTO, the object to add the data to
-   * @param $a2
-   *   If $mode is \PDO::FETCH_CLASS, the optional arguments to pass to the
+   *   - for FetchAs::Column, the index of the column to fetch;
+   *   - for FetchAs::ClassObject, the name of the class to create.
+   * @param list<mixed> $a2
+   *   If $mode is FetchAs::ClassObject, the optional arguments to pass to the
    *   constructor.
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []);
@@ -84,12 +81,10 @@ interface StatementInterface extends \Traversable {
   /**
    * Fetches the next row from a result set.
    *
-   * See http://php.net/manual/pdo.constants.php for the definition of the
-   * constants used.
-   *
-   * @param $mode
-   *   One of the \PDO::FETCH_* constants.
-   *   Default to what was specified by setFetchMode().
+   * @param \Drupal\Core\Database\FetchAs|int|null $mode
+   *   (Optional) one of the cases of the FetchAs enum, or (deprecated) a
+   *   \PDO::FETCH_* constant. If not specified, defaults to what is specified
+   *   by setFetchMode().
    * @param $cursor_orientation
    *   Not implemented in all database drivers, don't use.
    * @param $cursor_offset
@@ -143,12 +138,14 @@ interface StatementInterface extends \Traversable {
   /**
    * Returns an array containing all of the result set rows.
    *
-   * @param $mode
-   *   One of the \PDO::FETCH_* constants.
+   * @param \Drupal\Core\Database\FetchAs|int|null $mode
+   *   (Optional) one of the cases of the FetchAs enum, or (deprecated) a
+   *   \PDO::FETCH_* constant. If not specified, defaults to what is specified
+   *   by setFetchMode().
    * @param $column_index
-   *   If $mode is \PDO::FETCH_COLUMN, the index of the column to fetch.
+   *   If $mode is FetchAs::Column, the index of the column to fetch.
    * @param $constructor_arguments
-   *   If $mode is \PDO::FETCH_CLASS, the arguments to pass to the constructor.
+   *   If $mode is FetchAs::ClassObject, the arguments to pass to the constructor.
    *
    * @return array
    *   An array of results.
@@ -196,11 +193,12 @@ interface StatementInterface extends \Traversable {
    *
    * @param $key
    *   The name of the field on which to index the array.
-   * @param $fetch
-   *   The fetch mode to use. If set to \PDO::FETCH_ASSOC, \PDO::FETCH_NUM, or
-   *   \PDO::FETCH_BOTH the returned value with be an array of arrays. For any
-   *   other value it will be an array of objects. By default, the fetch mode
-   *   set for the query will be used.
+   * @param \Drupal\Core\Database\FetchAs|int|string|null $fetch
+   *   (Optional) the fetch mode to use. One of the cases of the FetchAs enum,
+   *   or (deprecated) a \PDO::FETCH_* constant. If set to FetchAs::Associative
+   *   or FetchAs::List the returned value with be an array of arrays. For any
+   *   other value it will be an array of objects. If not specified, defaults to
+   *   what is specified by setFetchMode().
    *
    * @return array
    *   An associative array, or an empty array if there is no result set.

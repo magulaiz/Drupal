@@ -656,7 +656,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     }
 
     try {
-      return $query->execute()->fetchAll(FetchAs::Numbered);
+      return $query->execute()->fetchAll(FetchAs::List);
     }
     catch (DatabaseExceptionWrapper) {
       // It's possible that the query will cause an exception to be thrown. For

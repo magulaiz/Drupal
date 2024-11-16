@@ -11,6 +11,8 @@ use Drupal\Core\Database\StatementPrefetchIterator;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the Connection class.
@@ -891,14 +893,44 @@ class ConnectionTest extends UnitTestCase {
    *   elements:
    *   - a PDO fetch mode.
    */
+  public static function providerSupportedLegacyFetchModes(): array {
+    return [
+      'FETCH_ASSOC' => [\PDO::FETCH_ASSOC],
+      'FETCH_CLASS' => [\PDO::FETCH_CLASS],
+      'FETCH_CLASS | FETCH_PROPS_LATE' => [\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE],
+      'FETCH_COLUMN' => [\PDO::FETCH_COLUMN],
+      'FETCH_NUM' => [\PDO::FETCH_NUM],
+      'FETCH_OBJ' => [\PDO::FETCH_OBJ],
+    ];
+  }
+
+  /**
+   * Tests supported fetch modes.
+   */
+  #[IgnoreDeprecations]
+  #[DataProvider('providerSupportedLegacyFetchModes')]
+  public function testSupportedLegacyFetchModes(int $mode): void {
+    $this->expectDeprecation("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321");
+    $mockPdo = $this->createMock(StubPDO::class);
+    $mockConnection = new StubConnection($mockPdo, []);
+    $statement = new StatementPrefetchIterator($mockPdo, $mockConnection, '');
+    $this->assertInstanceOf(StatementPrefetchIterator::class, $statement);
+    $statement->setFetchMode($mode);
+  }
+
+  /**
+   * Provides data for testSupportedFetchModes.
+   *
+   * @return array<string,array<\Drupal\Core\Database\FetchAs>>
+   *   The FetchAs cases.
+   */
   public static function providerSupportedFetchModes(): array {
     return [
-      'FETCH_ASSOC' => [FetchAs::Associative],
-      'FETCH_CLASS' => [FetchAs::ClassObject],
-      'FETCH_CLASS | FETCH_PROPS_LATE' => [FetchAs::ClassObject],
-      'FETCH_COLUMN' => [FetchAs::Column],
-      'FETCH_NUM' => [FetchAs::Numbered],
-      'FETCH_OBJ' => [FetchAs::Object],
+      'Associative array' => [FetchAs::Associative],
+      'Classed object' => [FetchAs::ClassObject],
+      'Single column' => [FetchAs::Column],
+      'Simple array' => [FetchAs::List],
+      'Standard object' => [FetchAs::Object],
     ];
   }
 
@@ -938,11 +970,12 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Tests unsupported fetch modes.
-   *
-   * @dataProvider providerUnsupportedFetchModes
+   * Tests unsupported legacy fetch modes.
    */
+  #[IgnoreDeprecations]
+  #[DataProvider('providerUnsupportedFetchModes')]
   public function testUnsupportedFetchModes(int $mode): void {
+    $this->expectDeprecation("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321");
     $this->expectException(\AssertionError::class);
     $this->expectExceptionMessageMatches("/^Fetch mode FETCH_.* is not supported\\. Use supported modes only/");
     $mockPdo = $this->createMock(StubPDO::class);

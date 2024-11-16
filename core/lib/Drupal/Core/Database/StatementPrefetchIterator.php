@@ -40,7 +40,10 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   /**
    * Holds the default fetch style.
    *
-   * @todo Deprecate.
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * $defaultFetchMode instead.
+   *
+   * @see https://www.drupal.org/node/7654321
    */
   protected int $defaultFetchStyle = \PDO::FETCH_OBJ;
 
@@ -202,13 +205,13 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
     if (is_int($mode)) {
-      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
       @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
       $mode = $this->pdoToFetchAs($mode);
     }
 
     $this->defaultFetchMode = $mode;
-    // @todo Backwards compatibility.
+    // @todo Remove backwards compatibility statement below in drupal:12.0.0.
     $this->defaultFetchStyle = $this->fetchAsToPdo($mode);
     switch ($mode) {
       case FetchAs::ClassObject:
@@ -266,7 +269,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
       FetchAs::Associative => $rowAssoc,
       FetchAs::ClassObject => $this->assocToClass($rowAssoc, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
       FetchAs::Column => $this->assocToColumn($rowAssoc, $this->columnNames, $this->fetchOptions['column']),
-      FetchAs::Numbered => $this->assocToNum($rowAssoc),
+      FetchAs::List => $this->assocToNum($rowAssoc),
       FetchAs::Object => $this->assocToObj($rowAssoc),
       default => throw new DatabaseExceptionWrapper('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.'),
     };
@@ -317,8 +320,8 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
     if (is_int($mode)) {
-      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
       @trigger_error("Passing the \$mode argument as an integer to fetchAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
       $mode = $this->pdoToFetchAs($mode);
     }
 

@@ -92,9 +92,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
 
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
-        // \PDO::FETCH_PROPS_LATE tells __construct() to run before properties
-        // are added to the object.
-        $this->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $options['fetch']);
+        $this->setFetchMode(FetchAs::ClassObject, $options['fetch']);
       }
       else {
         $this->setFetchMode($options['fetch']);
@@ -161,7 +159,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchCol($index = 0) {
-    return $this->fetchAll(\PDO::FETCH_COLUMN, $index);
+    return $this->fetchAll(FetchAs::Column, $index);
   }
 
   /**
@@ -170,7 +168,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
   public function fetchAllAssoc($key, $fetch = NULL) {
     if (isset($fetch)) {
       if (is_string($fetch)) {
-        $this->setFetchMode(\PDO::FETCH_CLASS, $fetch);
+        $this->setFetchMode(FetchAs::ClassObject, $fetch);
       }
       else {
         $this->setFetchMode($fetch);
@@ -197,7 +195,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllKeyed($key_index = 0, $value_index = 1) {
-    $this->setFetchMode(\PDO::FETCH_NUM);
+    $this->setFetchMode(FetchAs::List);
 
     // Return early if the statement was already fully traversed.
     if (!$this->isResultsetIterable) {
@@ -233,7 +231,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAssoc() {
-    return $this->fetch(\PDO::FETCH_ASSOC);
+    return $this->fetch(FetchAs::Associative);
   }
 
   /**
@@ -274,8 +272,8 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
     if (is_int($mode)) {
-      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
       @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
       $pdoMode = $mode;
     }
     elseif ($mode instanceof FetchAs) {
@@ -300,8 +298,8 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    */
   public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL) {
     if (is_int($mode)) {
-      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
       @trigger_error("Passing the \$mode argument as an integer to fetch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
     }
     elseif ($mode instanceof FetchAs) {
       $mode = $this->fetchAsToPdo($mode);
