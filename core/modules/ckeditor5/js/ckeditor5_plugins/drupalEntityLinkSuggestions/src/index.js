@@ -245,9 +245,9 @@ class DrupalEntityLinkSuggestions extends Plugin {
             hostEntityTypeId,
           },
           selectHandler: (event, { item }) => {
-            if (!item.path) {
+            if (!item.path && !item.href) {
               // eslint-disable-next-line no-throw-literal
-              throw `Missing path param. ${JSON.stringify(item)}`;
+              throw `Missing path or href param. ${JSON.stringify(item)}`;
             }
 
             if (item.entity_type_id || item.entity_uuid) {
@@ -267,7 +267,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
               this.set('entityMetadata', null);
             }
 
-            event.target.value = item.path;
+            event.target.value = item.path ?? item.href;
             selected = true;
             return false;
           },
