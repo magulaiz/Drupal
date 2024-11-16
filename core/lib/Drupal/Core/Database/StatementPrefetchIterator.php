@@ -212,6 +212,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
     $this->defaultFetchMode = $mode;
     // @todo Remove backwards compatibility statement below in drupal:12.0.0.
+    // @phpstan-ignore property.deprecated
     $this->defaultFetchStyle = $this->fetchAsToPdo($mode);
     switch ($mode) {
       case FetchAs::ClassObject:

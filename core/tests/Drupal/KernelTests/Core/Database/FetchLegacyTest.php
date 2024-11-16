@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\RowCountException;
-use Drupal\Core\Database\StatementInterface;
-use Drupal\Tests\system\Functional\Database\FakeRecord;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
@@ -124,4 +121,3 @@ class FetchLegacyTest extends DatabaseTestBase {
   }
 
 }
-
