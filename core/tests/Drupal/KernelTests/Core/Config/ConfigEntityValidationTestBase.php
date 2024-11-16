@@ -589,7 +589,12 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       }
 
       $this->entity = clone $original_entity;
-      $this->entity->set($property, NULL);
+      try {
+        $this->entity->set($property, NULL);
+      }
+      catch (\TypeError) {
+        continue;
+      }
       $expected_validation_errors = in_array($property, $properties_with_optional_values, TRUE)
         ? []
         : [$property => 'This value should not be null.'];

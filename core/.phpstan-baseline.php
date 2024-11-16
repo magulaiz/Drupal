@@ -33086,12 +33086,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node\\\\Controller\\\\NodeViewController\\:\\:create\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Controller/NodeViewController.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\node\\\\Entity\\\\Node\\:\\:postDelete\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/Entity/Node.php',
@@ -33503,12 +33497,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\NodeTranslationHandler\\:\\:entityFormEntityBuild\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/NodeTranslationHandler.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node\\\\NodeTypeForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/NodeTypeForm.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return

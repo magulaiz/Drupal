@@ -25,8 +25,23 @@ class PathWidget extends WidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $entity = $items->getEntity();
 
+    $viewMode = \Drupal::entityTypeManager()->getStorage('entity_view_mode')->load(\sprintf('%s.%s', $entity->getEntityTypeId(), $items[$delta]->viewMode));
+    $suffix = $viewMode?->getPath() ?? '';
+    if ($suffix !== '') {
+      $suffix = '/' . $suffix;
+    }
     $element += [
       '#element_validate' => [[static::class, 'validateFormElement']],
+    ];
+    $element['view_mode_label'] = [
+      '#type' => 'item',
+      '#title' => $this->t('View mode'),
+      '#value' => $viewMode?->label() ?? $this->t('Full'),
+      '#access' => FALSE,
+    ];
+    $element['viewMode'] = [
+      '#type' => 'value',
+      '#value' => $items[$delta]->viewMode,
     ];
     $element['alias'] = [
       '#type' => 'textfield',
@@ -42,7 +57,7 @@ class PathWidget extends WidgetBase {
     ];
     $element['source'] = [
       '#type' => 'value',
-      '#value' => !$entity->isNew() ? '/' . $entity->toUrl()->getInternalPath() : NULL,
+      '#value' => !$entity->isNew() ? '/' . $entity->toUrl()->getInternalPath() . $suffix : NULL,
     ];
     $element['langcode'] = [
       '#type' => 'value',
@@ -52,7 +67,7 @@ class PathWidget extends WidgetBase {
     // If the advanced settings tabs-set is available (normally rendered in the
     // second column on wide-resolutions), place the field as a details element
     // in this tab-set.
-    if (isset($form['advanced'])) {
+    if (isset($form['advanced']) && $items->count() <= 2) {
       $element += [
         '#type' => 'details',
         '#title' => $this->t('URL path settings'),
@@ -70,6 +85,56 @@ class PathWidget extends WidgetBase {
     }
 
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state) {
+    $elements = parent::formMultipleElements($items, $form, $form_state);
+    // Remove add more.
+    unset($elements['add_more']);
+    // Remove empty item.
+    unset($elements[$items->count() - 1]);
+    foreach ($items as $delta => $item) {
+      if (!\array_key_exists($delta, $elements)) {
+        continue;
+      }
+      if ($items->count() > 2) {
+        $elements[$delta]['alias']['#title'] = $this->t('@title (@view_mode view mode)', [
+          '@title' => $this->fieldDefinition->getLabel(),
+          '@view_mode' => $elements[$delta]['view_mode_label']['#value'] ?? $this->t('Unknown'),
+        ]);
+        // Remove the duplicated description.
+        unset($elements[$delta]['alias']['#description']);
+      }
+      else {
+        $elements[$delta]['alias']['#title'] = $this->fieldDefinition->getLabel();
+        $elements[$delta]['#title'] = $this->fieldDefinition->getLabel();
+        $elements[$delta]['_weight']['#access'] = FALSE;
+      }
+      // Remove the remove option.
+      unset($elements[$delta]['_actions']);
+    }
+    if ($items->count() > 2) {
+      $elements = [
+        'elements' => $elements,
+        '#type' => 'details',
+        '#title' => $this->t('URL path settings'),
+        '#open' => !empty($items[0]->alias),
+        '#description' => $this->t('Specify an alternative path by which this data can be accessed. For example, type "/about" when writing an about page.'),
+        '#group' => 'advanced',
+        '#access' => $items->getEntity()->get('path')->access('edit'),
+        '#attributes' => [
+          'class' => ['path-form'],
+        ],
+        '#attached' => [
+          'library' => ['path/drupal.path'],
+        ],
+        '#weight' => 30,
+      ];
+    }
+    return $elements;
   }
 
   /**
@@ -110,6 +175,17 @@ class PathWidget extends WidgetBase {
    */
   public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state) {
     return $element['alias'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
+    if (\array_key_exists('_original_delta', $values[0])) {
+      unset($values[0]['_original_delta']);
+      return $values[0];
+    }
+    return $values;
   }
 
 }

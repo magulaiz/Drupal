@@ -34,6 +34,8 @@ class PathItem extends FieldItemBase {
       ->setLabel(t('Path id'));
     $properties['langcode'] = DataDefinition::create('string')
       ->setLabel(t('Language Code'));
+    $properties['viewMode'] = DataDefinition::create('string')
+      ->setLabel(t('View mode'));
     return $properties;
   }
 
@@ -64,7 +66,8 @@ class PathItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function postSave($update) {
-    $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $path_alias_storage = $entity_type_manager->getStorage('path_alias');
     $entity = $this->getEntity();
 
     // If specified, rely on the langcode property for the language, so that the
@@ -72,11 +75,19 @@ class PathItem extends FieldItemBase {
     // unspecified even if the field/entity has a specific langcode.
     $alias_langcode = ($this->langcode && $this->pid) ? $this->langcode : $this->getLangcode();
 
+    $view_mode_id = $this->viewMode ?? 'full';
+    $entity_type_id = $entity->getEntityTypeId();
+    /** @var \Drupal\Core\Entity\EntityViewModeInterface|null $view_mode */
+    $view_mode = $entity_type_manager->getStorage('entity_view_mode')->load(\sprintf('%s.%s', $entity_type_id, $view_mode_id));
+    $suffix = $view_mode?->getPath() ?? '';
+    if ($suffix !== '') {
+      $suffix = '/' . $suffix;
+    }
     // If we have an alias, we need to create or update a path alias entity.
     if ($this->alias) {
       if (!$update || !$this->pid) {
         $path_alias = $path_alias_storage->create([
-          'path' => '/' . $entity->toUrl()->getInternalPath(),
+          'path' => '/' . $entity->toUrl()->getInternalPath() . $suffix,
           'alias' => $this->alias,
           'langcode' => $alias_langcode,
         ]);
