@@ -18,6 +18,22 @@ use Drupal\user\UserInterface;
  * Adds body classes if certain regions have content.
  */
 function olivero_preprocess_html(&$variables) {
+
+  // Until olivero stabilizes, we should warn site admins to not subtheme it.
+  $theme = \Drupal::theme()->getActiveTheme();
+  $user = \Drupal::service('current_user');
+
+  if (
+    $user->hasPermission('administer themes') &&
+    in_array('olivero', array_keys($theme->getBaseThemeExtensions()))
+  ) {
+    $warning = t(
+      'Olivero does not support sub-theming but the %current_theme theme uses it as a base theme. This may result in future problems as Olivero is updated',
+      ['%current_theme' => $theme->getName()]
+    );
+    \Drupal::messenger()->addWarning($warning);
+  }
+
   if (theme_get_setting('mobile_menu_all_widths') === 1) {
     $variables['attributes']['class'][] = 'is-always-mobile-nav';
   }

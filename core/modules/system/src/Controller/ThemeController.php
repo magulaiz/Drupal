@@ -234,6 +234,16 @@ class ThemeController extends ControllerBase {
         $this->messenger()->addError($this->t('The %theme theme was not found.', ['%theme' => $theme]));
       }
 
+      if (
+        isset($themes[$theme]) &&
+        !empty($themes[$theme]->base_themes) &&
+        in_array('olivero', array_keys($themes[$theme]->base_themes))
+      ) {
+        $this
+          ->messenger()
+          ->addWarning($this->t('Olivero does not support sub-theming but the %selected_theme theme uses it as a base theme. This may result in future problems as Olivero is updated', ['%selected_theme' => $theme]));
+      }
+
       return $this->redirect('system.themes_page');
 
     }
