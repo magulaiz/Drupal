@@ -3,7 +3,7 @@
 namespace Drupal\system\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Render\BareHtmlPageRenderer;
+use Drupal\Core\Render\BareHtmlPageRendererInterface;
 
 /**
  * Implements hook_page_attachments() for the system module.
@@ -13,11 +13,11 @@ class PageAttachmentsHook {
   /**
    * Constructs a new PageAttachmentsHook.
    *
-   * @param \Drupal\Core\Render\BareHtmlPageRenderer $bareHtmlPageRenderer
+   * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bareHtmlPageRenderer
    *   The renderer service.
    */
   public function __construct(
-    private readonly BareHtmlPageRenderer $bareHtmlPageRenderer,
+    private readonly BareHtmlPageRendererInterface $bareHtmlPageRenderer,
   ) {}
 
   /**
