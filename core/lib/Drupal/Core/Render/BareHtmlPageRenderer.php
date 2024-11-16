@@ -77,6 +77,9 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
 
   /**
    * Helper for system_page_attachments.
+   *
+   * @param array $page
+   *   The page to attach to.
    */
   public function systemPageAttachments(array &$page): void {
     // Ensure the same CSS is loaded in template_preprocess_maintenance_page().
