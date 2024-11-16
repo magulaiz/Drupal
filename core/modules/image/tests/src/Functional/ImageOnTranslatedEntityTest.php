@@ -117,6 +117,7 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $this->submitForm($edit, 'Save (this translation)');
     $edit = [$this->fieldName . '[0][alt]' => 'Scarlett Johansson image', $this->fieldName . '[0][title]' => 'Scarlett Johansson image title'];
     $this->submitForm($edit, 'Save (this translation)');
+    $this->drupalGet('/node/' . $default_language_node->id());
     // This inspects the HTML after the post of the translation, the image
     // should be displayed on the original node.
     $this->assertSession()->responseContains('alt="Lost in translation image"');
@@ -159,6 +160,7 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $this->assertTrue($file->isPermanent(), 'First file still exists and is permanent.');
     // This inspects the HTML after the post of the translation, the image
     // should be displayed on the original node.
+    $this->drupalGet('/node/' . $default_language_node->id());
     $this->assertSession()->responseContains('alt="Lost in translation image"');
     $this->assertSession()->responseContains('title="Lost in translation image title"');
     // View the translated node.
