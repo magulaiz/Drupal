@@ -78,6 +78,10 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
   /**
    * Helper for system_page_attachments.
    *
+   * SystemPageAttachment needs to be on BareHtmlPageRenderer.
+   * When BareHtmlPageRenderer is called the system module is not available.
+   * PageAttachmentsHook can inject BareHtmlPageRenderer to use for system_page_attachments.
+   *
    * @param array $page
    *   The page to attach to.
    */
