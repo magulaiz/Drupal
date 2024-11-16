@@ -8,7 +8,7 @@ use Drupal\Core\Render\BareHtmlPageRenderer;
 /**
  * Implements hook_page_attachments() for the system module.
  */
-class PageAttachmentHooks {
+class PageAttachmentsHook {
 
   /**
    * Constructs a new PageAttachmentsHook.
