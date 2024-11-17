@@ -34,8 +34,7 @@ class Color extends FormElementBase {
       '#input' => TRUE,
       '#process' => [
         [$class, 'processAjaxForm'],
-        [$class, '
-preRenderHtmxElement'],
+        [$class, 'preRenderHtmxElement'],
       ],
       '#element_validate' => [
         [$class, 'validateColor'],

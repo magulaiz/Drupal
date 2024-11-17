@@ -53,8 +53,7 @@ class Email extends FormElementBase {
       '#process' => [
         [$class, 'processAutocomplete'],
         [$class, 'processAjaxForm'],
-        [$class, '
-preRenderHtmxElement'],
+        [$class, 'preRenderHtmxElement'],
         [$class, 'processPattern'],
       ],
       '#element_validate' => [
