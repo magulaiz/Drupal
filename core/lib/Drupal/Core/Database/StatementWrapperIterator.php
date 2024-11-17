@@ -42,6 +42,11 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
   protected object $clientStatement;
 
   /**
+   * Holds the default fetch mode.
+   */
+  protected FetchAs $defaultFetchMode = FetchAs::Object;
+
+  /**
    * Constructs a StatementWrapperIterator object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -274,6 +279,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
       $pdoMode = $mode;
     }
 
+    $this->defaultFetchMode = $mode;
     // Call \PDOStatement::setFetchMode to set fetch mode.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.

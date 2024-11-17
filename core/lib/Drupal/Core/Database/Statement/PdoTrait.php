@@ -110,6 +110,7 @@ trait PdoTrait {
       ),
       FetchAs::ClassObject => $this->getClientStatement()->fetchAll(
         \PDO::FETCH_CLASS,
+        // @todo Add the default class when set.
         $columnOrClass,
         $constructorArguments,
       ),
