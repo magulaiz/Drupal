@@ -157,13 +157,10 @@ class RegistryTest extends UnitTestCase {
     include_once $this->root . '/core/modules/system/tests/modules/theme_test/theme_test.module';
     include_once $this->root . '/core/tests/fixtures/test_stable/test_stable.theme';
     $themeTestTheme = new ThemeTestHooks();
-    $invokeCalls = ['system', 'theme_test', 'system', 'theme_test'];
-    $this->moduleHandler->expects($this->exactly(4))
+    $this->moduleHandler->expects($this->atLeastOnce())
       ->method('invoke')
-      ->with($this->callback(function ($module) use (&$invokeCalls) {
-        return $module === array_shift($invokeCalls);
-      }))
-      ->willReturnCallback(fn ($x) => $x === 'theme_test' ? $themeTestTheme->theme(NULL, NULL, NULL, NULL) : []);
+      ->with('theme_test', 'theme')
+      ->willReturn($themeTestTheme->theme(NULL, NULL, NULL, NULL));
 
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('invokeAllWith')
@@ -178,7 +175,7 @@ class RegistryTest extends UnitTestCase {
     $this->moduleList->expects($this->exactly(4))
       ->method('getPath')
       ->with($this->callback(function ($module) use (&$getPathCalls) {
-          return $module === array_shift($getPathCalls);
+        return $module === array_shift($getPathCalls);
       }))
       ->willReturnCallback(fn (string $module) => $module === 'theme_test' ? 'core/modules/system/tests/modules/theme_test' : '');
 

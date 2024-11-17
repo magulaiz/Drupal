@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Update\UpdateKernel;
+use Drupal\Core\Theme\ThemeCommon;
 use Drupal\Core\Utility\ThemeRegistry;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -503,7 +504,8 @@ class Registry implements DestructableInterface {
     $args = [$cache, $type, $theme, $path];
     $result = [];
     if ($type === 'module') {
-      $result = $this->moduleHandler->invoke($name, 'theme', $args);
+      // System is a special case for install.
+      $result = ($name === 'system') ? ThemeCommon::themeCommon() : $this->moduleHandler->invoke($name, 'theme', $args);
     }
     else {
       $function = $name . '_theme';

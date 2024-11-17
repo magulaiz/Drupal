@@ -2,6 +2,10 @@
 
 namespace Drupal\Core\Theme;
 
+if (!defined('MARK_NEW')) {
+  define('MARK_NEW', 1);
+}
+
 /**
  * Provide common theme render elements.
  */
