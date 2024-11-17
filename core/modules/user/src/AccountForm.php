@@ -160,9 +160,14 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
         // The user may only change their own password without their current
         // password if they logged in via a one-time login link.
         if (!$form_state->get('user_pass_reset')) {
-          $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the <em>Email address</em> or the <em>Password</em> field below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
-            ':request_new_url' => Url::fromRoute('user.pass')->toString(),
-          ]);
+          if (empty($user->getEmail())) {
+            $form['account']['current_pass']['#description'] = $this->t('You cannot reset your password because you do not have an email address set.');
+          }
+          else {
+            $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the <em>Email address</em> or the <em>Password</em> field below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
+              ':request_new_url' => Url::fromRoute('user.pass')->toString(),
+            ]);
+          }
         }
       }
     }
@@ -362,7 +367,6 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     //   set on the field, which throws an exception as the list requires
     //   numeric keys. Allow to override this per field. As this function is
     //   called twice, we have to prevent it from getting the array keys twice.
-
     if (is_string(key($form_state->getValue('roles')))) {
       $form_state->setValue('roles', array_keys(array_filter($form_state->getValue('roles'))));
     }
