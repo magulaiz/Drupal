@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\FetchAs;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\RowCountException;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\user\Entity\User;
 
 /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel\Migrate\d6;
 
-use Drupal\Core\Database\FetchAs;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\file\Kernel\Migrate\d6\FileMigrationTestTrait;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;

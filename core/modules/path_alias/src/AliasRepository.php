@@ -3,8 +3,8 @@
 namespace Drupal\path_alias;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\FetchAs;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Language\LanguageInterface;
 
 /**

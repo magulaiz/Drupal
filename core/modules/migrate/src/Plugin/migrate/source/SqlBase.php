@@ -5,7 +5,7 @@ namespace Drupal\migrate\Plugin\migrate\source;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
-use Drupal\Core\Database\FetchAs;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Exception\RequirementsException;

@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\Core\Database;
+declare(strict_types=1);
+
+namespace Drupal\Core\Database\Statement;
 
 /**
  * Enumeration of the fetch modes for result sets.

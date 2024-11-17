@@ -5,6 +5,8 @@ namespace Drupal\Core\Database;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
+use Drupal\Core\Database\Statement\FetchAs;
+use Drupal\Core\Database\Statement\PdoTrait;
 
 // cSpell:ignore maxlen driverdata INOUT
 
@@ -28,8 +30,9 @@ use Drupal\Core\Database\Event\StatementExecutionStartEvent;
  */
 class StatementWrapperIterator implements \Iterator, StatementInterface {
 
-  use StatementIteratorTrait;
   use FetchModeTrait;
+  use PdoTrait;
+  use StatementIteratorTrait;
 
   /**
    * The client database Statement object.
@@ -61,18 +64,6 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
   ) {
     $this->clientStatement = $clientConnection->prepare($query, $options);
     $this->setFetchMode(FetchAs::Object);
-  }
-
-  /**
-   * Returns the client-level database statement object.
-   *
-   * This method should normally be used only within database driver code.
-   *
-   * @return object
-   *   The client-level database statement, for example \PDOStatement.
-   */
-  public function getClientStatement(): object {
-    return $this->clientStatement;
   }
 
   /**
@@ -112,7 +103,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
     }
 
     try {
-      $return = $this->clientStatement->execute($args);
+      $return = $this->clientExecute($args, $options);
       $this->markResultsetIterable($return);
     }
     catch (\Exception $e) {
@@ -300,20 +291,10 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
     if (is_int($mode)) {
       @trigger_error("Passing the \$mode argument as an integer to fetch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
       assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
-    }
-    elseif ($mode instanceof FetchAs) {
-      $mode = $this->fetchAsToPdo($mode);
+      $mode = $this->pdoToFetchAs($mode);
     }
 
-    // Call \PDOStatement::fetchAll to fetch all rows.
-    // \PDOStatement is picky about the number of arguments in some cases so we
-    // need to pass the exact number of arguments we were given.
-    $row = match(func_num_args()) {
-      0 => $this->clientStatement->fetch(),
-      1 => $this->clientStatement->fetch($mode),
-      2 => $this->clientStatement->fetch($mode, $cursor_orientation),
-      default => $this->clientStatement->fetch($mode, $cursor_orientation, $cursor_offset),
-    };
+    $row = $this->clientFetch($mode, $cursor_orientation, $cursor_offset);
 
     if ($row === FALSE) {
       $this->markResultsetFetchingComplete();

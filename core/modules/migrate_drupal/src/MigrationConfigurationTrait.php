@@ -5,7 +5,7 @@ namespace Drupal\migrate_drupal;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\FetchAs;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\RequirementsInterface;
 

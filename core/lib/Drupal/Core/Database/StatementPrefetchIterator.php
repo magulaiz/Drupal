@@ -5,6 +5,8 @@ namespace Drupal\Core\Database;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
+use Drupal\Core\Database\Statement\FetchAs;
+use Drupal\Core\Database\Statement\PdoTrait;
 
 /**
  * An implementation of StatementInterface that prefetches all data.
@@ -15,8 +17,16 @@ use Drupal\Core\Database\Event\StatementExecutionStartEvent;
  */
 class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
-  use StatementIteratorTrait;
   use FetchModeTrait;
+  use PdoTrait;
+  use StatementIteratorTrait;
+
+  /**
+   * The client database Statement object.
+   *
+   * For a \PDO client connection, this will be a \PDOStatement object.
+   */
+  protected ?object $clientStatement;
 
   /**
    * Main data store.
@@ -128,8 +138,8 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
     // Prepare and execute the statement.
     try {
-      $statement = $this->getStatement($this->queryString, $args);
-      $return = $statement->execute($args);
+      $this->clientStatement = $this->getStatement($this->queryString, $args);
+      $return = $this->clientExecute($args, $options);
     }
     catch (\Exception $e) {
       if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionFailureEvent::class)) {
@@ -151,11 +161,11 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
     // Fetch all the data from the reply, in order to release any lock as soon
     // as possible.
-    $this->data = $statement->fetchAll($this->fetchAsToPdo(FetchAs::Associative));
-    $this->rowCount = $this->rowCountEnabled ? $statement->rowCount() : NULL;
+    $this->data = $this->clientFetchAll(FetchAs::Associative);
+    $this->rowCount = $this->rowCountEnabled ? $this->clientRowCount() : NULL;
     // Destroy the statement as soon as possible. See the documentation of
     // \Drupal\sqlite\Driver\Database\sqlite\Statement for an explanation.
-    unset($statement);
+    unset($this->clientStatement);
     $this->markResultsetIterable($return);
 
     $this->columnNames = count($this->data) > 0 ? array_keys($this->data[0]) : [];

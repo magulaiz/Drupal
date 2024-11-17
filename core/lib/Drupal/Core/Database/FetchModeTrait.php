@@ -106,24 +106,4 @@ trait FetchModeTrait {
     return $rowAssoc[$columnNames[$columnIndex]] ?? FALSE;
   }
 
-  protected function fetchAsToPdo(FetchAs $mode): int {
-    return match ($mode) {
-      FetchAs::Associative => \PDO::FETCH_ASSOC,
-      FetchAs::ClassObject => \PDO::FETCH_CLASS,
-      FetchAs::Column => \PDO::FETCH_COLUMN,
-      FetchAs::List => \PDO::FETCH_NUM,
-      FetchAs::Object => \PDO::FETCH_OBJ,
-    };
-  }
-
-  protected function pdoToFetchAs(int $mode): FetchAs {
-    return match ($mode) {
-      \PDO::FETCH_ASSOC => FetchAs::Associative,
-      \PDO::FETCH_CLASS, \PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE => FetchAs::ClassObject,
-      \PDO::FETCH_COLUMN => FetchAs::Column,
-      \PDO::FETCH_NUM => FetchAs::List,
-      \PDO::FETCH_OBJ => FetchAs::Object,
-    };
-  }
-
 }
