@@ -976,7 +976,7 @@ class ConnectionTest extends UnitTestCase {
   #[DataProvider('providerUnsupportedFetchModes')]
   public function testUnsupportedFetchModes(int $mode): void {
     $this->expectDeprecation("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321");
-    $this->expectException(\AssertionError::class);
+    $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessageMatches("/^Fetch mode FETCH_.* is not supported\\. Use supported modes only/");
     $mockPdo = $this->createMock(StubPDO::class);
     $mockConnection = new StubConnection($mockPdo, []);

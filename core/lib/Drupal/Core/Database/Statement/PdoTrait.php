@@ -135,6 +135,25 @@ trait PdoTrait {
   }
 
   /**
+   * Fetches the next row and returns it as an object.
+   *
+   * @param class-string|null $class
+   *   Name of the class to be instantiated.
+   * @param list<mixed>|null $constructorArguments
+   *   The arguments to be passed to the constructor.
+   *
+   * @return object|false
+   *   An instance of the required class with property names that correspond
+   *   to the column names, or FALSE on failure.
+   */
+  protected function clientFetchObject(?string $class = NULL, array $constructorArguments = []): object|FALSE {
+    if ($class) {
+      return $this->getClientStatement()->fetchObject($class, $constructorArguments);
+    }
+    return $this->getClientStatement()->fetchObject();
+  }
+
+  /**
    * Returns an array containing all of the result set rows.
    *
    * @param \Drupal\Core\Database\FetchAs|null $mode

@@ -155,6 +155,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
           $e->getMessage(),
         ));
       }
+      unset($this->clientStatement);
       throw $e;
     }
 
@@ -215,7 +216,6 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
     if (is_int($mode)) {
       @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
-      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
       $mode = $this->pdoToFetchAs($mode);
     }
 
@@ -334,12 +334,10 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
     if (is_int($mode)) {
       @trigger_error("Passing the \$mode argument as an integer to fetchAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
-      assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
       $mode = $this->pdoToFetchAs($mode);
     }
 
     $fetchStyle = $mode ?? $this->defaultFetchMode;
-
     if (isset($column_index)) {
       $this->fetchOptions['column'] = $column_index;
     }
@@ -389,14 +387,14 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function fetchAllAssoc($key, $fetch_style = NULL) {
-    if (is_int($fetch_style)) {
-      @trigger_error("Passing the \$fetch_style argument as an integer to fetchAllAssoc() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
-      $fetch_style = $this->pdoToFetchAs($fetch_style);
+  public function fetchAllAssoc($key, $fetch = NULL) {
+    if (is_int($fetch)) {
+      @trigger_error("Passing the \$fetch argument as an integer to fetchAllAssoc() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
+      $fetch = $this->pdoToFetchAs($fetch);
     }
 
     $result = [];
-    while ($row = $this->fetch($fetch_style ?? $this->defaultFetchMode)) {
+    while ($row = $this->fetch($fetch ?? $this->defaultFetchMode)) {
       $result[$this->data[$this->getResultsetCurrentRowIndex()][$key]] = $row;
     }
     return $result;

@@ -94,7 +94,7 @@ class FetchLegacyTest extends DatabaseTestBase {
    */
   #[IgnoreDeprecations]
   public function testQueryFetchAllAssoc(): void {
-    $this->expectDeprecation("Passing the \$fetch_style argument as an integer to fetchAllAssoc() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321");
+    $this->expectDeprecation("Passing the \$fetch argument as an integer to fetchAllAssoc() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321");
     $expected_result = [
       "Singer" => [
         "id" => "2",
