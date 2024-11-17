@@ -440,7 +440,7 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
    * @return mixed[]
    *   The modified array with HTMX library attachments, if appropriate.
    */
-  public static function preProcessHtmxElement(array $element): array {
+  public static function preRenderHtmxElement(array $element): array {
     $processed = $element['#htmx_processed'] ?? FALSE;
     // Skip already processed elements.
     if ($processed) {

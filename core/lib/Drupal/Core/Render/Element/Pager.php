@@ -41,6 +41,7 @@ class Pager extends RenderElementBase {
     return [
       '#pre_render' => [
         static::class . '::preRenderPager',
+        [self::class, 'preRenderHtmxElement'],
       ],
       '#theme' => 'pager',
       // The pager ID, to distinguish between multiple pagers on the same page.

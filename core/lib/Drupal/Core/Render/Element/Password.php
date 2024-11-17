@@ -40,6 +40,8 @@ class Password extends FormElementBase {
       '#maxlength' => 128,
       '#process' => [
         [$class, 'processAjaxForm'],
+        [$class, '
+preRenderHtmxElement'],
         [$class, 'processPattern'],
       ],
       '#pre_render' => [

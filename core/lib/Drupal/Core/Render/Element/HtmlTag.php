@@ -54,6 +54,7 @@ class HtmlTag extends RenderElementBase {
     return [
       '#pre_render' => [
         [$class, 'preRenderHtmlTag'],
+        [$class, 'preRenderHtmxElement'],
       ],
       '#attributes' => [],
       '#value' => NULL,

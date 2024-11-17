@@ -21,6 +21,9 @@ class PageTitle extends RenderElementBase {
       // The page title: either a string for plain titles or a render array for
       // formatted titles.
       '#title' => NULL,
+      '#pre_render' => [
+        [self::class, 'preRenderHtmxElement'],
+      ],
     ];
   }
 

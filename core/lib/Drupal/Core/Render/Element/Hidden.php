@@ -35,6 +35,8 @@ class Hidden extends FormElementBase {
       '#input' => TRUE,
       '#process' => [
         [$class, 'processAjaxForm'],
+        [$class, '
+preRenderHtmxElement'],
       ],
       '#pre_render' => [
         [$class, 'preRenderHidden'],

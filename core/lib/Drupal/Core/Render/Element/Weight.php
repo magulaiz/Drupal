@@ -40,6 +40,8 @@ class Weight extends FormElementBase {
       '#process' => [
         [$class, 'processWeight'],
         [$class, 'processAjaxForm'],
+        [$class, '
+preRenderHtmxElement'],
       ],
     ];
   }

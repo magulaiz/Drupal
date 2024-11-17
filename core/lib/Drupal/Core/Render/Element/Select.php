@@ -94,7 +94,8 @@ class Select extends FormElementBase {
       '#process' => [
         [$class, 'processSelect'],
         [$class, 'processAjaxForm'],
-        [$class, 'preProcessHtmxElement'],
+        [$class, '
+preRenderHtmxElement'],
       ],
       '#pre_render' => [
         [$class, 'preRenderSelect'],

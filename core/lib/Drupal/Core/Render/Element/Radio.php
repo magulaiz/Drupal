@@ -27,6 +27,8 @@ class Radio extends FormElementBase {
       '#default_value' => NULL,
       '#process' => [
         [$class, 'processAjaxForm'],
+        [$class, '
+preRenderHtmxElement'],
       ],
       '#pre_render' => [
         [$class, 'preRenderRadio'],

@@ -35,6 +35,8 @@ class Fieldset extends RenderElementBase {
       '#process' => [
         [$class, 'processGroup'],
         [$class, 'processAjaxForm'],
+        [$class, '
+preRenderHtmxElement'],
       ],
       '#pre_render' => [
         [$class, 'preRenderGroup'],

@@ -38,6 +38,7 @@ class Link extends RenderElementBase {
     return [
       '#pre_render' => [
         [$class, 'preRenderLink'],
+        [$class, 'preRenderHtmxElement'],
       ],
     ];
   }

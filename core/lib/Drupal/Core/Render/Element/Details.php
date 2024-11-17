@@ -50,6 +50,8 @@ class Details extends RenderElementBase {
       '#process' => [
         [$class, 'processGroup'],
         [$class, 'processAjaxForm'],
+        [$class, '
+preRenderHtmxElement'],
       ],
       '#pre_render' => [
         [$class, 'preRenderDetails'],

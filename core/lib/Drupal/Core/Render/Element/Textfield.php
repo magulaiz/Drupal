@@ -59,6 +59,8 @@ class Textfield extends FormElementBase {
         [$class, 'processAjaxForm'],
         [$class, 'processPattern'],
         [$class, 'processGroup'],
+        [$class, '
+preRenderHtmxElement'],
       ],
       '#pre_render' => [
         [$class, 'preRenderTextfield'],
