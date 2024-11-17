@@ -75,7 +75,12 @@ class ConfigSingleExportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $config_type = '', $config_name = '') {
+  public function buildForm(array $form, FormStateInterface $form_state, ?string $config_type = NULL, ?string $config_name = NULL) {
+    // Default types allow us to extend the form signature but Drupal actually
+    // passes NULL if the parameters are not in the route.  Insure we have a
+    // string.
+    $config_type = $config_type ?? '';
+    $config_name = $config_name ?? '';
     $trigger = $this->getHtmxTrigger();
     $form['#prefix'] = '<div id="js-config-form-wrapper">';
     $form['#suffix'] = '</div>';
@@ -134,8 +139,8 @@ class ConfigSingleExportForm extends FormBase {
       '#default_value' => $config_name,
       '#htmx' => $config_name_htmx
         ->post($form_url)
-        ->select('textarea[data-drupal-selector="edit-export"]')
-        ->target('textarea[data-drupal-selector="edit-export"]')
+        ->select('#edit-export-wrapper')
+        ->target('#edit-export-wrapper')
         ->swap('outerHTML'),
     ];
 
@@ -143,41 +148,57 @@ class ConfigSingleExportForm extends FormBase {
       '#title' => $this->t('Here is your configuration:'),
       '#type' => 'textarea',
       '#rows' => 24,
+      '#prefix' => '<div id="edit-export-wrapper">',
+      '#suffix' => '</div>',
     ];
     if ($trigger === 'edit-config-type') {
       // Type has changed.
       $form['export']['#value'] = NULL;
       // Also replace the export element when the response is returned.
+      // See https://htmx.org/attributes/hx-swap-oob/ for a detailed description
+      // of selection and targeting with ::swapOob.
       $export_htmx = new HtmxAttribute();
-      $form['export']['#htmx'] = $export_htmx->swapOob(TRUE);
+      $attributes = (string) $export_htmx->swapOob('outerHTML:#edit-export-wrapper');
+      $form['export']['#prefix'] = '<div id="edit-export-wrapper" ' . $attributes . '>';
     }
     elseif ($trigger === 'edit-config-name') {
       // A name is selected.
-      $form['export'] = $this->updateExport($form, $form_state);
+      $default_name = $form_state->getValue('config_name', $config_name);
+      $form['export'] = $this->updateExport($form['export'], $default_type, $default_name);
+    }
+    elseif ($config_type && $config_name) {
+      $form['export'] = $this->updateExport($form['export'], $config_type, $config_name);
     }
     return $form;
   }
 
   /**
    * Handles switching the export textarea.
+   *
+   * @param array $element
+   *   The export element render array.
+   * @param string $config_type
+   *   The config type ID.
+   * @param string $config_name
+   *   The config name ID.
+   *
+   * @return array
    */
-  public function updateExport($form, FormStateInterface $form_state) {
+  public function updateExport(array $element, string $config_type, string $config_name) {
     // Determine the full config name for the selected config entity.
-    $config_type = $form_state->getValue('config_type');
-    $config_name = $form_state->getValue('config_name');
     if (!empty($config_type) && $config_type !== 'system.simple' && !empty($config_name)) {
       $definition = $this->entityTypeManager->getDefinition($config_type);
       $name = $definition->getConfigPrefix() . '.' . $config_name;
     }
     // The config name is used directly for simple configuration.
     else {
-      $name = $form_state->getValue('config_name');
+      $name = $config_name;
     }
     // Read the raw data for this config name, encode it, and display it.
     $exists = $this->configStorage->exists($name);
-    $form['export']['#value'] = !$exists ? NULL : Yaml::encode($this->configStorage->read($name));
-    $form['export']['#description'] = !$exists ? NULL : $this->t('Filename: %name', ['%name' => $name . '.yml']);
-    return $form['export'];
+    $element['#value'] = !$exists ? NULL : Yaml::encode($this->configStorage->read($name));
+    $element['#description'] = !$exists ? NULL : $this->t('Filename: %name', ['%name' => $name . '.yml']);
+    return $element;
   }
 
   /**
