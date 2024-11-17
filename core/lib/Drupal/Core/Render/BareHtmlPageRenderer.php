@@ -72,6 +72,7 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
     // Process attachments, because this does not go via the regular render
     // pipeline, but will be sent directly.
     $response = $this->htmlResponseAttachmentsProcessor->processAttachments($response);
+
     return $response;
   }
 
