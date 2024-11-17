@@ -602,7 +602,7 @@ drupal.form:
 drupal.htmx:
   version: VERSION
   js:
-    misc/htmx.js: {}
+    misc/htmx-behaviors.js: {}
   dependencies:
     - core/drupal
     - core/drupalSettings

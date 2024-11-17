@@ -1352,7 +1352,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     $input = $form_state->getUserInput();
     if ($this->isHtmxRequest()) {
       if (isset($element['#attributes']['data-drupal-selector']) && $element['#attributes']['data-drupal-selector'] === $this->getHtmxTrigger()) {
-        // @see htmxDrupalData() in core/misc/htmx.js.
+        // @see htmxDrupalData() in core/misc/htmx-behaviors.js.
         return TRUE;
       }
     }

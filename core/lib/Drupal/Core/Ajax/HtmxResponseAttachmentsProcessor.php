@@ -3,6 +3,7 @@
 namespace Drupal\Core\Ajax;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\HtmlResponse;
@@ -15,7 +16,7 @@ use Drupal\Core\Render\HtmlResponseAttachmentsProcessor;
  *
  * @see \Drupal\Core\EventSubscriber\HtmxResponseSubscriber
  * @see \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::processAttachments
- * @see core/misc/htmx.js
+ * @see core/misc/htmx-behaviors.js
  */
 class HtmxResponseAttachmentsProcessor extends HtmlResponseAttachmentsProcessor {
 
@@ -42,6 +43,12 @@ class HtmxResponseAttachmentsProcessor extends HtmlResponseAttachmentsProcessor 
    * {@inheritdoc}
    */
   protected function processAssetLibraries(AttachedAssetsInterface $assets, array $placeholders) {
+    $request = $this->requestStack->getCurrentRequest();
+    if ($request->headers->has('HX-Page-State')) {
+      $uncompressed = UrlHelper::uncompressQueryParameter($request->headers->get('HX-Page-State'));
+      $libraries = explode(',', $uncompressed);
+      $assets->setAlreadyLoadedLibraries($libraries);
+    }
     $settings = [];
     $variables = [];
     $maintenance_mode = defined('MAINTENANCE_MODE') || \Drupal::state()->get('system.maintenance_mode');

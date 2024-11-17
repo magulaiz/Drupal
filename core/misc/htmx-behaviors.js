@@ -36,7 +36,7 @@
     const sameHost = origin === url.origin;
     if (sameHost) {
       // We only need to add this data for htmx requests back to the site.
-      configRequestEvent.detail.parameters['ajax_page_state[libraries]'] = drupalSettings.ajaxPageState.libraries;
+      configRequestEvent.detail.headers['HX-Page-State'] = drupalSettings.ajaxPageState.libraries;
       // Swap in drupal data selectors as #id values are altered to be unique.
       configRequestEvent.detail.headers['HX-Target'] = configRequestEvent.detail.target.dataset.drupalSelector;
       configRequestEvent.detail.headers['HX-Trigger'] = configRequestEvent.detail.elt.dataset.drupalSelector;
