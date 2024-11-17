@@ -11,7 +11,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Update\UpdateKernel;
-use Drupal\Core\Theme\ThemeCommon;
 use Drupal\Core\Utility\ThemeRegistry;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 

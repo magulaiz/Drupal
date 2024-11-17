@@ -11,6 +11,8 @@ if (!defined('MARK_NEW')) {
  */
 class ThemeCommon {
 
+  public function __construct() {}
+
   /**
    * Base theme array.
    *
