@@ -65,12 +65,11 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   /**
    * Holds fetch options.
    *
-   * @var string[]
+   * @var array{'class': class-string, 'constructor_args': array<mixed>, 'column': int}
    */
   protected array $fetchOptions = [
     'class' => 'stdClass',
     'constructor_args' => [],
-    'object' => NULL,
     'column' => 0,
   ];
 
@@ -282,14 +281,14 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
       FetchAs::Column => $this->assocToColumn($rowAssoc, $this->columnNames, $this->fetchOptions['column']),
       FetchAs::List => $this->assocToNum($rowAssoc),
       FetchAs::Object => $this->assocToObj($rowAssoc),
-      default => throw new DatabaseExceptionWrapper('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.'),
     };
     $this->setResultsetCurrentRow($row);
     return $row;
   }
 
   /**
-   * {@inheritdoc}
+   * @todo Deprecate this method, it's not on the interface or on the other
+   *   StatementWrapperIterator class either.
    */
   public function fetchColumn($index = 0) {
     if ($row = $this->fetch(FetchAs::Associative)) {
@@ -302,7 +301,10 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchField($index = 0) {
-    return $this->fetchColumn($index);
+    if ($row = $this->fetch(FetchAs::Associative)) {
+      return $row[$this->columnNames[$index]];
+    }
+    return FALSE;
   }
 
   /**

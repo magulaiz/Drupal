@@ -47,6 +47,17 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
   protected FetchAs $defaultFetchMode = FetchAs::Object;
 
   /**
+   * Holds fetch options.
+   *
+   * @var array{'class': class-string, 'constructor_args': array<mixed>, 'column': int}
+   */
+  protected array $fetchOptions = [
+    'class' => 'stdClass',
+    'constructor_args' => [],
+    'column' => 0,
+  ];
+
+  /**
    * Constructs a StatementWrapperIterator object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -148,7 +159,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function getQueryString() {
-    return $this->clientStatement->queryString;
+    return $this->clientQueryString();
   }
 
   /**
@@ -211,16 +222,10 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchField($index = 0) {
-    // Call \PDOStatement::fetchColumn to fetch the field.
-    $column = $this->clientStatement->fetchColumn($index);
-
-    if ($column === FALSE) {
-      $this->markResultsetFetchingComplete();
-      return FALSE;
+    if ($row = $this->fetch(FetchAs::Associative)) {
+      return $row[$this->columnNames[$index]];
     }
-
-    $this->setResultsetCurrentRow($column);
-    return $column;
+    return FALSE;
   }
 
   /**
@@ -234,20 +239,14 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchObject(?string $class_name = NULL, array $constructor_arguments = []) {
-    if ($class_name) {
-      $row = $this->clientStatement->fetchObject($class_name, $constructor_arguments);
+    if (!isset($class_name)) {
+      return $this->fetch(FetchAs::Object);
     }
-    else {
-      $row = $this->clientStatement->fetchObject();
-    }
-
-    if ($row === FALSE) {
-      $this->markResultsetFetchingComplete();
-      return FALSE;
-    }
-
-    $this->setResultsetCurrentRow($row);
-    return $row;
+    $this->fetchOptions = [
+      'class' => $class_name,
+      'constructor_args' => $constructor_arguments,
+    ];
+    return $this->fetch(FetchAs::ClassObject);
   }
 
   /**
@@ -256,7 +255,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
   public function rowCount() {
     // SELECT query should not use the method.
     if ($this->rowCountEnabled) {
-      return $this->clientStatement->rowCount();
+      return $this->clientRowCount();
     }
     else {
       throw new RowCountException();
@@ -270,24 +269,25 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
     if (is_int($mode)) {
       @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
       assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
-      $pdoMode = $mode;
-    }
-    elseif ($mode instanceof FetchAs) {
-      $pdoMode = $this->fetchAsToPdo($mode);
-    }
-    else {
-      $pdoMode = $mode;
+      $mode = $this->pdoToFetchAs($mode);
     }
 
     $this->defaultFetchMode = $mode;
-    // Call \PDOStatement::setFetchMode to set fetch mode.
-    // \PDOStatement is picky about the number of arguments in some cases so we
-    // need to be pass the exact number of arguments we where given.
-    return match(func_num_args()) {
-      1 => $this->clientStatement->setFetchMode($pdoMode),
-      2 => $this->clientStatement->setFetchMode($pdoMode, $a1),
-      default => $this->clientStatement->setFetchMode($pdoMode, $a1, $a2),
-    };
+    switch ($mode) {
+      case FetchAs::ClassObject:
+        $this->fetchOptions['class'] = $a1;
+        if ($a2) {
+          $this->fetchOptions['constructor_args'] = $a2;
+        }
+        break;
+
+      case FetchAs::Column:
+        $this->fetchOptions['column'] = $a1;
+        break;
+
+    }
+
+    return $this->clientSetFetchMode($mode, $a1, $a2);
   }
 
   /**

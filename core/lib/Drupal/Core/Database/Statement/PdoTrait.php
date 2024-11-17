@@ -49,7 +49,39 @@ trait PdoTrait {
   }
 
   /**
-   * Executes a prepared PDO statement.
+   * Sets the default fetch mode for the PDO statement.
+   *
+   * @param \Drupal\Core\Database\FetchAs $mode
+   *   One of the cases of the FetchAs enum.
+   * @param int|class-string|null $columnOrClass
+   *   If $mode is FetchAs::Column, the index of the column to fetch.
+   *   If $mode is FetchAs::ClassObject, the FQCN of the object.
+   * @param list<mixed>|null $constructorArguments
+   *   If $mode is FetchAs::ClassObject, the arguments to pass to the
+   *   constructor.
+   *
+   * @return bool
+   *   Returns true on success or false on failure.
+   */
+  protected function clientSetFetchMode(FetchAs $mode, int|string|null $columnOrClass = NULL, array|null $constructorArguments = NULL): bool {
+    return match ($mode) {
+      FetchAs::Column => $this->getClientStatement()->setFetchMode(
+        \PDO::FETCH_COLUMN,
+        $columnOrClass ?? $this->fetchOptions['column'],
+      ),
+      FetchAs::ClassObject => $this->getClientStatement()->setFetchMode(
+        \PDO::FETCH_CLASS,
+        $columnOrClass ?? $this->fetchOptions['class'],
+        $constructorArguments ?? $this->fetchOptions['constructor_args'],
+      ),
+      default => $this->getClientStatement()->setFetchMode(
+        $this->fetchAsToPdo($mode),
+      ),
+    };
+  }
+
+  /**
+   * Executes the prepared PDO statement.
    *
    * @param array|null $arguments
    *   An array of values with as many elements as there are bound parameters in
@@ -95,7 +127,7 @@ trait PdoTrait {
    * @param int|class-string|null $columnOrClass
    *   If $mode is FetchAs::Column, the index of the column to fetch.
    *   If $mode is FetchAs::ClassObject, the FQCN of the object.
-   * @param array|null $constructorArguments
+   * @param list<mixed>|null $constructorArguments
    *   If $mode is FetchAs::ClassObject, the arguments to pass to the
    *   constructor.
    *
@@ -106,13 +138,12 @@ trait PdoTrait {
     return match ($mode) {
       FetchAs::Column => $this->getClientStatement()->fetchAll(
         \PDO::FETCH_COLUMN,
-        $columnOrClass ?? 0,
+        $columnOrClass ?? $this->fetchOptions['column'],
       ),
       FetchAs::ClassObject => $this->getClientStatement()->fetchAll(
         \PDO::FETCH_CLASS,
-        // @todo Add the default class when set.
-        $columnOrClass,
-        $constructorArguments,
+        $columnOrClass ?? $this->fetchOptions['class'],
+        $constructorArguments ?? $this->fetchOptions['constructor_args'],
       ),
       default => $this->getClientStatement()->fetchAll(
         $mode ? $this->fetchAsToPdo($mode) : $this->fetchAsToPdo($this->defaultFetchMode),
@@ -128,6 +159,16 @@ trait PdoTrait {
    */
   protected function clientRowCount(): int {
     return $this->getClientStatement()->rowCount();
+  }
+
+  /**
+   * Returns the query string used to prepare the statement.
+   *
+   * @return string
+   *   The query string.
+   */
+  protected function clientQueryString(): string {
+    return $this->getClientStatement()->queryString;
   }
 
 }
