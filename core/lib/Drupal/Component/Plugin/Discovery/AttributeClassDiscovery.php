@@ -6,6 +6,8 @@ use Drupal\Component\Plugin\Attribute\AttributeInterface;
 use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\FileCache\FileCacheInterface;
+use Drupal\Component\Plugin\Attribute\PluginPropertyInterface;
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 
 /**
  * Defines a discovery mechanism to find plugins with attributes.
@@ -72,7 +74,9 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               if ($cached = $this->fileCache->get($fileinfo->getPathName())) {
                 if (isset($cached['id'])) {
                   // Explicitly unserialize this to create a new object instance.
-                  $definitions[$cached['id']] = unserialize($cached['content']);
+                  $content = unserialize($cached['content']);
+                  $third_party_attributes = isset($cached['third_party_attributes']) ? unserialize($cached['third_party_attributes']) : [];
+                  $definitions[$cached['id']] = $this->addThirdPartyPropertiesToDefinition($cached['id'], $content, $third_party_attributes ?? []);
                 }
                 continue;
               }
@@ -81,11 +85,15 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               $sub_path = $sub_path ? str_replace(DIRECTORY_SEPARATOR, '\\', $sub_path) . '\\' : '';
               $class = $namespace . '\\' . $sub_path . $fileinfo->getBasename('.php');
               try {
-                ['id' => $id, 'content' => $content] = $this->parseClass($class, $fileinfo);
+                ['id' => $id, 'content' => $content, 'third_party_attributes' => $third_party_attributes] = $this->parseClass($class, $fileinfo);
                 if ($id) {
-                  $definitions[$id] = $content;
                   // Explicitly serialize this to create a new object instance.
-                  $this->fileCache->set($fileinfo->getPathName(), ['id' => $id, 'content' => serialize($content)]);
+                  // Cache the definition content before it is modified in
+                  // ::addThirdPartyPropertiesToDefinition() by third-party
+                  // property attributes, which should be applied only if the
+                  // module provider exists.
+                  $this->fileCache->set($fileinfo->getPathName(), ['id' => $id, 'content' => serialize($content), 'third_party_attributes' => serialize($third_party_attributes)]);
+                  $definitions[$id] = $this->addThirdPartyPropertiesToDefinition($id, $content, $third_party_attributes ?? []);
                 }
                 else {
                   // Store a NULL object, so that the file is not parsed again.
@@ -132,6 +140,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
    *
    * @throws \ReflectionException
    * @throws \Error
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   protected function parseClass(string $class, \SplFileInfo $fileinfo): array {
     // @todo Consider performance improvements over using reflection.
@@ -139,6 +148,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
     $reflection_class = new \ReflectionClass($class);
 
     $id = $content = NULL;
+    $third_party_attributes = [];
     if ($attributes = $reflection_class->getAttributes($this->pluginDefinitionAttributeName, \ReflectionAttribute::IS_INSTANCEOF)) {
       /** @var \Drupal\Component\Plugin\Attribute\AttributeInterface $attribute */
       $attribute = $attributes[0]->newInstance();
@@ -146,8 +156,38 @@ class AttributeClassDiscovery implements DiscoveryInterface {
 
       $id = $attribute->getId();
       $content = $attribute->get();
+
+      if ($property_reflectors = $reflection_class->getAttributes(PluginPropertyInterface::class, \ReflectionAttribute::IS_INSTANCEOF)) {
+        foreach ($property_reflectors as $property_reflector) {
+          $property_class = $property_reflector->getName();
+          if (!str_starts_with($property_class, 'Drupal\\Component\\') &&
+              !str_starts_with($property_class, 'Drupal\\Core\\')) {
+            throw new InvalidPluginDefinitionException($id, sprintf('Invalid plugin property class: %s. Plugin property attributes can be provided only from core.', $property_class));
+          }
+
+          /** @var \Drupal\Component\Plugin\Attribute\PluginPropertyInterface $property_attribute */
+          $property_attribute = $property_reflector->newInstance();
+          $property_attribute->setClass($property_class);
+          // Check that the property attribute is allowed to work with the plugin
+          // attribute.
+          if (!$property_attribute->isValidPluginClass($attribute::class)) {
+            throw new InvalidPluginDefinitionException($id, sprintf('May not use plugin property class %s with main plugin attribute class "%s".', $property_class, $attribute::class));
+          }
+          if ($property_attribute->getProvider() === 'core') {
+            // Add properties from attributes with core provider, since they are
+            // not dependent on a module being installed.
+            $content = $property_attribute->addToDefinition($content);
+            continue;
+          }
+
+          // Attributes with a provider other than core are saved separately.
+          // They will be added to the definition after being retrieved from
+          // file cache, if the module that is the provider is installed.
+          $third_party_attributes[] = $property_attribute;
+        }
+      }
     }
-    return ['id' => $id, 'content' => $content];
+    return ['id' => $id, 'content' => $content, 'third_party_attributes' => $third_party_attributes];
   }
 
   /**
@@ -169,6 +209,29 @@ class AttributeClassDiscovery implements DiscoveryInterface {
    */
   protected function getPluginNamespaces(): array {
     return $this->pluginNamespaces;
+  }
+
+  /**
+   * Add properties from third party attributes.
+   *
+   * @param string $id
+   *   The plugin ID.
+   * @param array|object $definition
+   *   The definition parsed from the plugin class attribute.
+   * @param \Drupal\Component\Plugin\Attribute\PluginProperty[] $third_party_attributes
+   *   Third-party attributes from modules that provide additional properties to'
+   *   the definition.
+   *
+   * @return array|object
+   *   The plugin definition.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   */
+  protected function addThirdPartyPropertiesToDefinition(string $id, array|object $definition, array $third_party_attributes = []): array|object {
+    // Need to filter third party attributes by installed modules, which will
+    // happen in subclass method.
+    // @see \Drupal\Core\Plugin\Discovery\AttributeClassDiscovery::addThirdPartyPropertiesToDefinition()
+    return $definition;
   }
 
 }

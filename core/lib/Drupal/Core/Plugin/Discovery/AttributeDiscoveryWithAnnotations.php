@@ -8,6 +8,7 @@ use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
 use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Enables both attribute and annotation discovery for plugin definitions.
@@ -39,6 +40,8 @@ class AttributeDiscoveryWithAnnotations extends AttributeClassDiscovery {
    *   Defaults to 'Drupal\Component\Annotation\Plugin'.
    * @param string[] $additionalNamespaces
    *   (optional) Additional namespaces to scan for attribute definitions.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $moduleHandler
+   *   The module handler.
    */
   public function __construct(
     string $subdir,
@@ -46,8 +49,9 @@ class AttributeDiscoveryWithAnnotations extends AttributeClassDiscovery {
     string $pluginDefinitionAttributeName = 'Drupal\Component\Plugin\Attribute\Plugin',
     protected readonly string $pluginDefinitionAnnotationName = 'Drupal\Component\Annotation\Plugin',
     protected readonly array $additionalNamespaces = [],
+    protected ?ModuleHandlerInterface $moduleHandler = NULL,
   ) {
-    parent::__construct($subdir, $rootNamespaces, $pluginDefinitionAttributeName);
+    parent::__construct($subdir, $rootNamespaces, $pluginDefinitionAttributeName, $this->moduleHandler);
   }
 
   /**
@@ -87,7 +91,7 @@ class AttributeDiscoveryWithAnnotations extends AttributeClassDiscovery {
     /** @var \Drupal\Component\Annotation\AnnotationInterface $annotation */
     if ($annotation = $this->getAnnotationReader()->getClassAnnotation($reflection_class, $this->pluginDefinitionAnnotationName)) {
       $this->prepareAnnotationDefinition($annotation, $class);
-      return ['id' => $annotation->getId(), 'content' => $annotation->get()];
+      return ['id' => $annotation->getId(), 'content' => $annotation->get(), 'third_party_attributes' => []];
     }
 
     // Annotations use static reflection and are able to analyze a class that
@@ -97,7 +101,7 @@ class AttributeDiscoveryWithAnnotations extends AttributeClassDiscovery {
     if ($reflection_class->hasClassAttribute($this->pluginDefinitionAttributeName)) {
       return parent::parseClass($class, $fileinfo);
     }
-    return ['id' => NULL, 'content' => NULL];
+    return ['id' => NULL, 'content' => NULL, 'third_party_attributes' => []];
   }
 
   /**
