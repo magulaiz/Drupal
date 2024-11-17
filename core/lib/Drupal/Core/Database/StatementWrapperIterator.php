@@ -175,7 +175,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
   public function fetchAllAssoc($key, $fetch = NULL) {
     if (is_int($fetch)) {
       @trigger_error("Passing the \$fetch argument as an integer to fetchAllAssoc() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/7654321", E_USER_DEPRECATED);
-      $fetch_style = $this->pdoToFetchAs($fetch);
+      $fetch = $this->pdoToFetchAs($fetch);
     }
 
     if (isset($fetch)) {
