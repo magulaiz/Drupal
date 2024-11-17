@@ -26,6 +26,7 @@ trait PdoTrait {
       \PDO::FETCH_COLUMN => FetchAs::Column,
       \PDO::FETCH_NUM => FetchAs::List,
       \PDO::FETCH_OBJ => FetchAs::Object,
+      default => throw new \RuntimeException('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.'),
     };
   }
 
@@ -116,6 +117,21 @@ trait PdoTrait {
       $cursorOrientation ?? \PDO::FETCH_ORI_NEXT,
       $cursorOffset ?? 0,
     );
+  }
+
+  /**
+   * Returns a single column from the next row of a result set.
+   *
+   * @param int $column
+   *   0-indexed number of the column to retrieve from the row. If no value is
+   *   supplied, the first column is fetched.
+   *
+   * @return string|int|float|bool|false
+   *   A single column from the next row of a result set or false if there are
+   *   no more rows.
+   */
+  protected function clientFetchColumn(int $column = 0): mixed {
+    return $this->getClientStatement()->fetchColumn($column);
   }
 
   /**

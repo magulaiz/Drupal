@@ -222,10 +222,15 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchField($index = 0) {
-    if ($row = $this->fetch(FetchAs::Associative)) {
-      return $row[$this->columnNames[$index]];
+    $column = $this->clientFetchColumn($index);
+
+    if ($column === FALSE) {
+      $this->markResultsetFetchingComplete();
+      return FALSE;
     }
-    return FALSE;
+
+    $this->setResultsetCurrentRow($column);
+    return $column;
   }
 
   /**
