@@ -12,7 +12,7 @@ trait PdoTrait {
   protected function fetchAsToPdo(FetchAs $mode): int {
     return match ($mode) {
       FetchAs::Associative => \PDO::FETCH_ASSOC,
-      FetchAs::ClassObject => \PDO::FETCH_CLASS,
+      FetchAs::ClassObject => \PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE,
       FetchAs::Column => \PDO::FETCH_COLUMN,
       FetchAs::List => \PDO::FETCH_NUM,
       FetchAs::Object => \PDO::FETCH_OBJ,
