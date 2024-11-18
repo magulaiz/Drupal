@@ -16,9 +16,9 @@ class EntityTypeProperty extends PluginProperty {
   public function __construct(
     int|string|array $key,
     mixed $value,
-    ?string $provider = 'core',
+    array $moduleDependencies = [],
   ) {
-    parent::__construct($key, $value, [EntityType::class], $provider);
+    parent::__construct($key, $value, [EntityType::class], $moduleDependencies);
   }
 
   /**

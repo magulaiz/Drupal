@@ -96,7 +96,7 @@ use Drupal\user\EntityOwnerTrait;
 #[EntityTypeProperty(
   key: 'field_ui_base_route',
   value: 'entity.node_type.edit_form',
-  provider: 'field_ui',
+  moduleDependencies: ['field_ui'],
 )]
 class Node extends EditorialContentEntityBase implements NodeInterface {
 

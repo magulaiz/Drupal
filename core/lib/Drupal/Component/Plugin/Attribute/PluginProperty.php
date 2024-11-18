@@ -13,7 +13,7 @@ use Drupal\Component\Utility\NestedArray;
  * Because of the way plugin definitions are cached, subclasses of this class
  * can not be defined in modules. Instead, if properties should be added to a
  * plugin definition only if a module is installed, then this attribute class
- * should be used with its provider set to the desired module.
+ * should include the module in its module dependencies.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class PluginProperty extends AttributeBase implements PluginPropertyInterface {
@@ -30,10 +30,9 @@ class PluginProperty extends AttributeBase implements PluginPropertyInterface {
    * @param class-string[] $allowedPluginClasses
    *   List of plugin attribute class names that this property attribute can set
    *   properties on. If list is empty, property can be applied to any plugin.
-   * @param string|null $provider
-   *   The provider for this plugin property. If the provider is a module and
-   *   not 'core', the property will be added to the plugin definition only if
-   *   the module is installed.
+   * @param string[] $moduleDependencies
+   *   The property will be added to the plugin definition only if all the
+   *   modules in this list are installed.
    * @param mixed $addToDefinitionCallback
    *   Callable that adds the property to the plugin definition. If NULL and the
    *   plugin definition is an array, the property will be set by nested key on
@@ -52,7 +51,7 @@ class PluginProperty extends AttributeBase implements PluginPropertyInterface {
     public readonly int|string|array $key,
     public readonly mixed $value,
     public readonly array $allowedPluginClasses = [],
-    public ?string $provider = 'core',
+    public readonly array $moduleDependencies = [],
     public mixed $addToDefinitionCallback = NULL,
   ) {
     if ($key === []) {
@@ -118,6 +117,13 @@ class PluginProperty extends AttributeBase implements PluginPropertyInterface {
       NestedArray::setValue($definition, $key, $this->value);
     }
     return $definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getModuleDependencies(): array {
+    return $this->moduleDependencies;
   }
 
 }

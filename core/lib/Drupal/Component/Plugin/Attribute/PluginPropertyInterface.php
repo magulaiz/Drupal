@@ -49,4 +49,12 @@ interface PluginPropertyInterface extends AttributeInterface {
    */
   public function addToDefinition(array|object $definition): array|object;
 
+  /**
+   * Gets the list of modules that need to be installed for property to be set.
+   *
+   * @return string[]
+   *   The list of modules.
+   */
+  public function getModuleDependencies(): array;
+
 }

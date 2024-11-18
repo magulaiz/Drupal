@@ -18,6 +18,6 @@ use Drupal\plugin_test\Plugin\Attribute\PluginExample;
 #[PluginProperty(
   key: 'plugin_test_extended_plugin_property',
   value: 'plugin_test_extended plugin property value',
-  provider: 'plugin_test_extended',
+  moduleDependencies: ['plugin_test_extended'],
 )]
 class Example {}

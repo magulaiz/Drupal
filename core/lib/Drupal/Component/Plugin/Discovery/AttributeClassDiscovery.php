@@ -173,9 +173,10 @@ class AttributeClassDiscovery implements DiscoveryInterface {
           if (!$property_attribute->isValidPluginClass($attribute::class)) {
             throw new InvalidPluginDefinitionException($id, sprintf('May not use plugin property class %s with main plugin attribute class "%s".', $property_class, $attribute::class));
           }
-          if ($property_attribute->getProvider() === 'core') {
-            // Add properties from attributes with core provider, since they are
-            // not dependent on a module being installed.
+          if (empty($property_attribute->getModuleDependencies())) {
+            // Add properties from attributes if they do not have module
+            // dependencies, since they are not dependent on modules being
+            // installed.
             $content = $property_attribute->addToDefinition($content);
             continue;
           }

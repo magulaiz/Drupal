@@ -97,8 +97,8 @@ class DefaultPluginManagerTest extends KernelTestBase {
     $base_directory = $this->root . '/core/modules/system/tests/modules/plugin_test/src';
     $namespaces = new \ArrayObject(['Drupal\plugin_test' => $base_directory]);
 
-    // When plugin_test_extended is not installed, only plugin property from
-    // attribute with core provider is set.
+    // When plugin_test_extended is not installed, only plugin properties
+    // without module dependencies are set.
     $manager = new DefaultPluginManager($subdir, $namespaces, $this->container->get('module_handler'), NULL, AttributePluginExample::class, AnnotationPluginExample::class);
     $definitions = $manager->getDefinitions();
     $this->assertArrayHasKey('example_with_plugin_property', $definitions);
@@ -113,7 +113,7 @@ class DefaultPluginManagerTest extends KernelTestBase {
     $this->assertEquals(['key' => 'nested key'], $definitions['example_object_definition']->nested);
 
     // Install plugin_test_extended and now plugin property from attribute with
-    // plugin_test_extended provider is set.
+    // plugin_test_extended module dependency is set.
     $this->container->get('module_installer')->install(['plugin_test_extended']);
     // Container has new instance of module handler after module install, so
     // need to reset.
@@ -125,8 +125,8 @@ class DefaultPluginManagerTest extends KernelTestBase {
     $this->assertArrayHasKey('plugin_test_extended_plugin_property', $definitions['example_with_plugin_property']);
     $this->assertEquals('plugin_test_extended plugin property value', $definitions['example_with_plugin_property']['plugin_test_extended_plugin_property']);
 
-    // Uninstall plugin_test_extended and now only plugin property from
-    // attribute with core provider is set.
+    // Uninstall plugin_test_extended and now only plugin properties without
+    // plugin_test_extended module dependencies are set.
     $this->container->get('module_installer')->uninstall(['plugin_test_extended']);
     // Container has new instance of module handler after module uninstall, so
     // need to reset.
