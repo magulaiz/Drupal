@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Icon;
 
-use Drupal\Core\Template\Attribute;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Render\Element\Icon;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Icon\IconDefinition;
+use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -192,7 +193,7 @@ class IconTest extends UnitTestCase {
     $icon = $this->createTestIcon($data);
     $icon_full_id = IconDefinition::createIconId($data['pack_id'], $data['icon_id']);
 
-    $prophecy = $this->prophesize('\Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface');
+    $prophecy = $this->prophesize(IconPackManagerInterface::class);
     $prophecy->getIcon($icon_full_id)
       ->willReturn($icon);
 
@@ -221,7 +222,7 @@ class IconTest extends UnitTestCase {
       '#icon_id' => '',
     ];
 
-    $prophecy = $this->prophesize('\Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface');
+    $prophecy = $this->prophesize(IconPackManagerInterface::class);
     $prophecy->getIcon(':')
       ->willReturn(NULL);
 
@@ -237,7 +238,7 @@ class IconTest extends UnitTestCase {
    * Test the Icon::preRenderIcon method.
    */
   public function testPreRenderIconNoIcon(): void {
-    $prophecy = $this->prophesize('Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface');
+    $prophecy = $this->prophesize(IconPackManagerInterface::class);
     $prophecy->getIcon('foo:bar')->willReturn(NULL);
 
     $pluginManagerIconPack = $prophecy->reveal();

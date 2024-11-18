@@ -133,7 +133,7 @@ class IconPackManagerKernelTest extends KernelTestBase {
     $actual = $this->pluginManagerIconPack->listIconPackOptions(TRUE);
     $expected = [
       'test_minimal' => 'test_minimal (1)',
-      'test_path' => 'Test path - Local png files available for test with all metas. (10)',
+      'test_path' => 'Test path - Local png files available for test with all metadata. (10)',
       'test_svg' => 'Test svg (12)',
       'test_svg_sprite' => 'Test sprite (3)',
       'test_no_settings' => 'test_no_settings (1)',

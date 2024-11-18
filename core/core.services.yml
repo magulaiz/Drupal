@@ -1918,6 +1918,7 @@ services:
   Drupal\Core\Theme\Icon\IconCollector:
     arguments:
       [
+        '@plugin.manager.icon_extractor',
         '@cache.default',
         '@lock',
       ]

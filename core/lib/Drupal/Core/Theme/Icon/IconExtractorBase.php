@@ -24,27 +24,10 @@ abstract class IconExtractorBase extends PluginBase implements IconExtractorInte
   private const DEFINITION_REMOVE = [
     'enabled',
     'template',
-    // Definition label, remove to avoid confusion with icon label.
-    'label',
     'description',
     'links',
     'config',
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  public function loadIcon(array $icon_data): ?IconDefinitionInterface {
-    if (!isset($icon_data['icon_id']) || empty($icon_data['icon_id'])) {
-      return NULL;
-    }
-
-    return $this->createIcon(
-      $icon_data['icon_id'],
-      $icon_data['source'] ?? '',
-      $icon_data['group'] ?? NULL,
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -81,6 +64,21 @@ abstract class IconExtractorBase extends PluginBase implements IconExtractorInte
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function loadIcon(array $icon_data): ?IconDefinitionInterface {
+    if (!isset($icon_data['icon_id']) || empty($icon_data['icon_id'])) {
+      return NULL;
+    }
+
+    return $this->createIcon(
+      $icon_data['icon_id'],
+      $icon_data['source'] ?? '',
+      $icon_data['group'] ?? NULL,
+    );
   }
 
   /**
