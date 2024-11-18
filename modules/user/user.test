@@ -740,7 +740,7 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
     // Make sure the test account has a valid password.
-    user_save($account, array('pass' => user_password()));
+    user_save($account, ['pass' => user_password()]);
 
     // Try to use the login link while logged in as a different user.
     // Generate one time login link.
@@ -748,7 +748,11 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     $this->drupalGet($reset_url);
     $this->assertRaw(t(
       'Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href="!logout">logout</a> and try using the link again.',
-      array('%other_user' => $account->name, '%resetting_user' => $another_account->name, '!logout' => url('user/logout'))
+      [
+        '%other_user' => $account->name,
+        '%resetting_user' => $another_account->name,
+        '!logout' => url('user/logout')
+      ]
     ));
 
     // Verify that the invalid password reset page does not show the user name.
@@ -775,7 +779,7 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
       $this->assertTrue(!$form_built, 'The password reset form was never fully built.');
     }
     else {
-      $this->assertUrl($this->getConfirmURL($reset_url), array(), 'The user is redirected to the reset password confirm form.');
+      $this->assertUrl($this->getConfirmURL($reset_url), [], 'The user is redirected to the reset password confirm form.');
       $this->assertText('Reset password');
       $this->drupalPost(NULL, NULL, t('Log in'));
       // The form was fully processed before redirecting.
@@ -797,11 +801,17 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test direct login link that bypasses the password reset form.
+   * Test user password reset name default sanitation.
    */
-  function testUserDirectLogin() {
-    $this->testUserPasswordReset(TRUE);
-    $this->testUserPasswordResetLoggedIn(TRUE);
+  function testUserPasswordResetNameDefaultSanitation() {
+    // Test that string value is passed correctly.
+    $_GET['name'] = 'test';
+    $form = user_pass();
+    $this->assertEqual($form['name']['#default_value'], 'test');
+    // Non scalar values produce empty value.
+    $_GET['name'] = (object) ['test' => 'test'];
+    $form = user_pass();
+    $this->assertEqual($form['name']['#default_value'], '');
   }
 
   /**
