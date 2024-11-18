@@ -26,7 +26,7 @@ class EntityTypeProperty extends PluginProperty {
    */
   public function addToDefinition(array|object $definition): array|object {
     if (!($definition instanceof EntityTypeInterface)) {
-      throw new \InvalidArgumentException(sprintf('%s attribute can be used only with entity type definitions.', static::class));
+      throw new \InvalidArgumentException(sprintf('%s attribute can not be used with %s, because it is not an entity type definition.', static::class, $this->getClass()));
     }
 
     $value = $this->getValue();
@@ -40,14 +40,14 @@ class EntityTypeProperty extends PluginProperty {
     if (!$nested) {
       if (!is_null($property) && !is_array($property) && is_array($value)) {
         // Can not set an array value for a non-array property.
-        throw new InvalidPluginDefinitionException($definition->id(), sprintf('Invalid property key %s specified for %s entity type definition property.', implode(', ', $key), $definition->id()));
+        throw new InvalidPluginDefinitionException($definition->id(), sprintf('Invalid property key %s specified for %s entity type definition in %s.', implode(', ', $key), $definition->id(), $this->getClass()));
       }
       return $definition->set($outer_key, $value);
     }
 
     if (!is_null($property) && !is_array($property)) {
       // Nested key is invalid if property exists and is not an array.
-      throw new InvalidPluginDefinitionException($definition->id(), sprintf('Invalid property key %s specified for %s entity type definition property.', implode(', ', $key), $definition->id()));
+      throw new InvalidPluginDefinitionException($definition->id(), sprintf('Invalid property key %s specified for %s entity type definition in %s.', implode(', ', $key), $definition->id(), $this->getClass()));
     }
     $property = $property ?? [];
     $sub_key = array_slice($key, 1);

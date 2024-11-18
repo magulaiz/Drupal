@@ -162,16 +162,16 @@ class AttributeClassDiscovery implements DiscoveryInterface {
           $property_class = $property_reflector->getName();
           if (!str_starts_with($property_class, 'Drupal\\Component\\') &&
               !str_starts_with($property_class, 'Drupal\\Core\\')) {
-            throw new InvalidPluginDefinitionException($id, sprintf('Invalid plugin property class: %s. Plugin property attributes can be provided only from core.', $property_class));
+            throw new InvalidPluginDefinitionException($id, sprintf('Invalid plugin property class: %s used in plugin class %s. Plugin property classes can be implemented only in core.', $property_class, $class));
           }
 
           /** @var \Drupal\Component\Plugin\Attribute\PluginPropertyInterface $property_attribute */
           $property_attribute = $property_reflector->newInstance();
-          $property_attribute->setClass($property_class);
+          $this->prepareAttributeDefinition($property_attribute, $class);
           // Check that the property attribute is allowed to work with the plugin
           // attribute.
           if (!$property_attribute->isValidPluginClass($attribute::class)) {
-            throw new InvalidPluginDefinitionException($id, sprintf('May not use plugin property class %s with main plugin attribute class "%s".', $property_class, $attribute::class));
+            throw new InvalidPluginDefinitionException($id, sprintf('May not use plugin property class %s with main plugin attribute class "%s for plugin class %s".', $property_class, $attribute::class, $class));
           }
           if (empty($property_attribute->getModuleDependencies())) {
             // Add properties from attributes if they do not have module

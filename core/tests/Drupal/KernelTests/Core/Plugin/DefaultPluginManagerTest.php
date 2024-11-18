@@ -174,10 +174,8 @@ EOS;
     }
     catch (InvalidPluginDefinitionException $e) {
     }
-    finally {
-      $this->assertInstanceOf(InvalidPluginDefinitionException::class, $e);
-      $this->assertSame('May not use plugin property class Drupal\Core\Entity\Attribute\EntityTypeProperty with main plugin attribute class "Drupal\plugin_test\Plugin\Attribute\PluginExample".', $e->getMessage());
-    }
+    $this->assertInstanceOf(InvalidPluginDefinitionException::class, $e);
+    $this->assertSame('May not use plugin property class Drupal\Core\Entity\Attribute\EntityTypeProperty with main plugin attribute class "Drupal\plugin_test\Plugin\Attribute\PluginExample for plugin class Drupal\plugin_test\Plugin\plugin_test\plugin_property\InvalidPluginClass".', $e->getMessage());
     $this->assertArrayNotHasKey('invalid_plugin_class', $definitions);
 
     // Test plugin property with invalid $addToDefinitionCallback.
@@ -210,10 +208,8 @@ EOS;
     }
     catch (InvalidPluginDefinitionException $e) {
     }
-    finally {
-      $this->assertInstanceOf(InvalidPluginDefinitionException::class, $e);
-      $this->assertSame('Can not add property to plugin definition because specified addToDefinitionCallback is invalid.', $e->getMessage());
-    }
+    $this->assertInstanceOf(InvalidPluginDefinitionException::class, $e);
+    $this->assertSame('Can not add property to plugin definition because specified addToDefinitionCallback is invalid.', $e->getMessage());
     $this->assertArrayNotHasKey('invalid_callback', $definitions);
 
     // Test plugin property in a module is invalid.
@@ -225,16 +221,16 @@ namespace Drupal\plugin_test\Plugin\plugin_test\plugin_property;
 use Drupal\plugin_test\Plugin\Attribute\InvalidPluginProperty;
 use Drupal\plugin_test\Plugin\Attribute\PluginExample;
 #[PluginExample(
-  id: 'invalid_module_plugin_provider',
+  id: 'invalid_module_plugin_property',
   custom: 'Invalid example with plugin property in module',
 )]
 #[InvalidPluginProperty(
   key: 1,
   value: 0,
 )]
-class InvalidModulePluginProvider {}
+class InvalidModulePluginProperty {}
 EOS;
-    $file = vfsStream::newFile('InvalidModulePluginProvider.php')->withContent($invalid_callback);
+    $file = vfsStream::newFile('InvalidModulePluginProperty.php')->withContent($invalid_callback);
     $plugin_directory->addChild($file);
     $manager = new DefaultPluginManager($subdir, $namespaces, $this->container->get('module_handler'), NULL, AttributePluginExample::class, AnnotationPluginExample::class);
     $manager->clearCachedDefinitions();
@@ -244,11 +240,9 @@ EOS;
     }
     catch (InvalidPluginDefinitionException $e) {
     }
-    finally {
-      $this->assertInstanceOf(InvalidPluginDefinitionException::class, $e);
-      $this->assertSame('Invalid plugin property class: Drupal\plugin_test\Plugin\Attribute\InvalidPluginProperty. Plugin property attributes can be provided only from core.', $e->getMessage());
-    }
-    $this->assertArrayNotHasKey('invalid_module_plugin_provider', $definitions);
+    $this->assertInstanceOf(InvalidPluginDefinitionException::class, $e);
+    $this->assertSame('Invalid plugin property class: Drupal\plugin_test\Plugin\Attribute\InvalidPluginProperty used in plugin class Drupal\plugin_test\Plugin\plugin_test\plugin_property\InvalidModulePluginProperty. Plugin property classes can be implemented only in core.', $e->getMessage());
+    $this->assertArrayNotHasKey('invalid_module_plugin_property', $definitions);
   }
 
 }
