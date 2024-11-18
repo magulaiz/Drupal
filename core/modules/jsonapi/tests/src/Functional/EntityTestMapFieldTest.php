@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
@@ -10,7 +12,6 @@ use Drupal\user\Entity\User;
  * JSON:API integration test for the "EntityTestMapField" content entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class EntityTestMapFieldTest extends ResourceTestBase {
 
@@ -65,7 +66,7 @@ class EntityTestMapFieldTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     $this->grantPermissionsToTestedRole(['administer entity_test content']);
   }
 
@@ -88,7 +89,7 @@ class EntityTestMapFieldTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/entity_test_map_field/entity_test_map_field/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     $author = User::load(0);
     return [
@@ -138,7 +139,7 @@ class EntityTestMapFieldTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     return [
       'data' => [
         'type' => 'entity_test_map_field--entity_test_map_field',
@@ -153,14 +154,14 @@ class EntityTestMapFieldTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessMessage($method) {
+  protected function getExpectedUnauthorizedAccessMessage($method): string {
     return "The 'administer entity_test content' permission is required.";
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getSparseFieldSets() {
+  protected function getSparseFieldSets(): array {
     // EntityTestMapField's owner field name is `user_id`, not `uid`, which
     // breaks nested sparse fieldset tests.
     return array_diff_key(parent::getSparseFieldSets(), array_flip([

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Config\StorageComparer;
@@ -30,9 +32,7 @@ class ConfigImportAllTest extends ModuleTestBase {
   protected $webUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config'];
 
@@ -59,9 +59,9 @@ class ConfigImportAllTest extends ModuleTestBase {
   /**
    * Tests that a fixed set of modules can be installed and uninstalled.
    */
-  public function testInstallUninstall() {
+  public function testInstallUninstall(): void {
 
-    // Get a list of modules to enable.
+    // Get a list of modules to install.
     $all_modules = $this->container->get('extension.list.module')->getList();
     $all_modules = array_filter($all_modules, function ($module) {
       // Filter out contrib, hidden, testing, experimental, and deprecated
@@ -109,7 +109,7 @@ class ConfigImportAllTest extends ModuleTestBase {
 
     $all_modules = \Drupal::service('extension.list.module')->getList();
     $database_module = \Drupal::service('database')->getProvider();
-    $expected_modules = ['path_alias', 'system', 'user', 'testing', $database_module];
+    $expected_modules = ['path_alias', 'system', 'user', $database_module];
     // If the database module has dependencies, they are expected too.
     $database_module_extension = \Drupal::service(ModuleExtensionList::class)->get($database_module);
     $database_module_dependencies = $database_module_extension->requires ? array_keys($database_module_extension->requires) : [];
@@ -120,8 +120,8 @@ class ConfigImportAllTest extends ModuleTestBase {
     $this->assertEqualsCanonicalizing($expected_modules, $validation_modules);
 
     $modules_to_uninstall = array_filter($all_modules, function ($module) {
-      // Filter required and not enabled modules.
-      if (!empty($module->info['required']) || $module->status == FALSE) {
+      // Filter profiles, and required and not enabled modules.
+      if (!empty($module->info['required']) || $module->status == FALSE || $module->getType() === 'profile') {
         return FALSE;
       }
       return TRUE;

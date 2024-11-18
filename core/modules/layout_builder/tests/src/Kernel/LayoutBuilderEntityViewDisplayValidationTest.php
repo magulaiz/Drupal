@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
@@ -70,6 +72,7 @@ class LayoutBuilderEntityViewDisplayValidationTest extends ConfigEntityValidatio
    */
   public function testImmutableProperties(array $valid_values = []): void {
     parent::testImmutableProperties([
+      'id' => 'entity_test_with_bundle.two.full',
       'targetEntityType' => 'entity_test_with_bundle',
       'bundle' => 'two',
     ]);

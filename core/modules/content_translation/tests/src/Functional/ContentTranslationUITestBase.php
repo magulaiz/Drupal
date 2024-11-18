@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Core\Cache\Cache;
@@ -51,7 +53,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests the basic translation UI.
    */
-  public function testTranslationUI() {
+  public function testTranslationUI(): void {
     $this->doTestBasicTranslation();
     $this->doTestTranslationOverview();
     $this->doTestOutdatedStatus();
