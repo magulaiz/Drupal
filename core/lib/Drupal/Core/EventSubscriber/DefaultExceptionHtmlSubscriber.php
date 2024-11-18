@@ -99,9 +99,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    *   The event to process.
    */
   public function on400(ExceptionEvent $event): void {
-    if ($exception = $event->getThrowable()) {
-      throw $exception;
-    }
+    throw $event->getThrowable();
   }
 
   /**
