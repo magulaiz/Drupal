@@ -157,7 +157,7 @@ class AttributeClassDiscovery extends ComponentAttributeClassDiscovery {
   protected function addThirdPartyPropertiesToDefinition(string $id, array|object $definition, array $third_party_attributes = []): array|object {
     foreach ($third_party_attributes as $third_party_attribute) {
       // Check that the property attribute's module dependencies are installed.
-      $installed_modules = array_keys($this->moduleHandler->getModuleList());
+      $installed_modules = array_keys($this->getModuleHandler()->getModuleList());
       if (array_diff($third_party_attribute->getModuleDependencies(), $installed_modules)) {
         continue;
       }
