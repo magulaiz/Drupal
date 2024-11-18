@@ -129,6 +129,10 @@ class ModerationInformation implements ModerationInformationInterface {
         /** @var \Drupal\Core\Entity\ContentEntityInterface $latest_revision */
         $latest_revision = $storage->loadRevision($latest_revision_id);
         $result = !$latest_revision->wasDefaultRevision();
+if ($latest_revision_id == 6) {
+  dump('$latest_revision_id: ' . $latest_revision_id);
+  dump($latest_revision->wasDefaultRevision());
+}
       }
     }
     return $result;

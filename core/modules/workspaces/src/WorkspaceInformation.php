@@ -115,7 +115,7 @@ class WorkspaceInformation implements WorkspaceInformationInterface {
   public function isEntityDeletable(EntityInterface $entity, WorkspaceInterface $workspace): bool {
     $initial_revisions = $this->workspaceAssociation->getAssociatedInitialRevisions($workspace->id(), $entity->getEntityTypeId());
 
-    return in_array($entity->id(), $initial_revisions, TRUE);
+    return in_array($entity->id(), $initial_revisions);
   }
 
 }

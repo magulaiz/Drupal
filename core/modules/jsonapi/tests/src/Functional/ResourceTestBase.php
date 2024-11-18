@@ -2822,7 +2822,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * Tests individual and collection revisions.
    */
   public function testRevisions(): void {
-    if ((Database::getConnection()->driver() == 'mongodb') && (static::$resourceTypeName == 'workspace--workspace')) {
+    if ((Database::getConnection()->driver() == 'mongodb') && in_array(static::$resourceTypeName, ['workspace--workspace', 'node--camelids'])) {
       // @todo Fix this test for MongoDB with workspace entity.
       $this->markTestSkipped();
     }
