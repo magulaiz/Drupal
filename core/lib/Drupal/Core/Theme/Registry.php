@@ -391,7 +391,7 @@ class Registry implements DestructableInterface {
       $cache = $cached->data;
     }
     else {
-      $this->processExtension($cache, 'system', 'module', 'system', $this->moduleList->getPath('system'));
+      $this->processExtension($cache, 'system', 'common', 'system', $this->moduleList->getPath('system'));
       $this->moduleHandler->invokeAllWith('theme', function (callable $callback, string $module) use (&$cache) {
         if ($module !== 'system') {
           $this->processExtension($cache, $module, 'module', $module, $this->moduleList->getPath($module));
@@ -503,8 +503,12 @@ class Registry implements DestructableInterface {
     $args = [$cache, $type, $theme, $path];
     $result = [];
     if ($type === 'module') {
-      // System is a special case for install.
-      $result = ($name === 'system') ? ThemeCommon::themeCommon() : $this->moduleHandler->invoke($name, 'theme', $args);
+      $result = $this->moduleHandler->invoke($name, 'theme', $args);
+    }
+    else if ($type === 'common') {
+      $result = ThemeCommon::themeCommon();
+      $type = 'module';
+      $args = [$cache, $type, $theme, $path];
     }
     else {
       $function = $name . '_theme';

@@ -20,7 +20,7 @@ class ThemeCommon {
    *   System theme array.
    */
   public static function themeCommon(): array {
-    return [
+    $themeCommon = [
       // From ThemeCommon.
       'html' => [
         'render element' => 'html',
@@ -166,6 +166,9 @@ class ThemeCommon {
       'field_multiple_value_form' => [
         'render element' => 'element',
       ],
+    ];
+
+    $systemTheme = [
       // Normally theme suggestion templates are only picked up when they are in
       // themes. We explicitly define theme suggestions here so that the block
       // templates in core/modules/system/templates are picked up.
@@ -273,6 +276,8 @@ class ThemeCommon {
         ],
       ],
     ];
+
+    return array_merge($themeCommon, $systemTheme);
   }
 
 }
