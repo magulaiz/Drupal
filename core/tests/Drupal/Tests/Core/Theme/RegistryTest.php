@@ -161,6 +161,7 @@ class RegistryTest extends UnitTestCase {
       ->method('invoke')
       ->with('theme_test', 'theme')
       ->willReturn($themeTestTheme->theme(NULL, NULL, NULL, NULL));
+
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('invokeAllWith')
       ->with('theme')
@@ -170,10 +171,13 @@ class RegistryTest extends UnitTestCase {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('getModuleList')
       ->willReturn([]);
-    $this->moduleList->expects($this->exactly(2))
+    $getPathCalls = ['system', 'theme_test', 'system', 'theme_test'];
+    $this->moduleList->expects($this->exactly(4))
       ->method('getPath')
-      ->with('theme_test')
-      ->willReturn('core/modules/system/tests/modules/theme_test');
+      ->with($this->callback(function ($module) use (&$getPathCalls) {
+        return $module === array_shift($getPathCalls);
+      }))
+      ->willReturnCallback(fn (string $module) => $module === 'theme_test' ? 'core/modules/system/tests/modules/theme_test' : '');
 
     $registry = $this->registry->get();
 
