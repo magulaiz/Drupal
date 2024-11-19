@@ -276,4 +276,3 @@ display:
           break_phrase: true
           not: false
           plugin_id: entity_target_id
-
