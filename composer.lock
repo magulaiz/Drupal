@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "104086943ee98f64d5bcac7860b72b1c",
+    "content-hash": "58d551a2b70e89d4c227a133092da7c1",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -496,7 +496,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "f2db3b7ce714b984d75a410d178d58fa91648926"
+                "reference": "90b4eb88c1172b14d629b36ef335f7855f89fccd"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -544,6 +544,7 @@
                 "symfony/routing": "^7.2@beta",
                 "symfony/serializer": "^7.2@beta",
                 "symfony/validator": "^7.2@beta",
+                "symfony/var-exporter": "^7.2@beta",
                 "symfony/yaml": "^7.2@beta",
                 "twig/twig": "^3.14.2"
             },
@@ -4272,16 +4273,16 @@
         },
         {
             "name": "symfony/var-exporter",
-            "version": "v7.1.6",
+            "version": "v7.2.0-RC1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-exporter.git",
-                "reference": "90173ef89c40e7c8c616653241048705f84130ef"
+                "reference": "1a6a89f95a46af0f142874c9d650a6358d13070d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/90173ef89c40e7c8c616653241048705f84130ef",
-                "reference": "90173ef89c40e7c8c616653241048705f84130ef",
+                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/1a6a89f95a46af0f142874c9d650a6358d13070d",
+                "reference": "1a6a89f95a46af0f142874c9d650a6358d13070d",
                 "shasum": ""
             },
             "require": {
@@ -4328,7 +4329,7 @@
                 "serialize"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-exporter/tree/v7.1.6"
+                "source": "https://github.com/symfony/var-exporter/tree/v7.2.0-RC1"
             },
             "funding": [
                 {
@@ -4344,7 +4345,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-25T14:20:29+00:00"
+            "time": "2024-10-18T07:58:17+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -9865,7 +9866,8 @@
         "symfony/dom-crawler": 10,
         "symfony/error-handler": 10,
         "symfony/lock": 10,
-        "symfony/var-dumper": 10
+        "symfony/var-dumper": 10,
+        "symfony/var-exporter": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,
