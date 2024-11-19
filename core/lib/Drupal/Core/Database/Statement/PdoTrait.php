@@ -138,7 +138,7 @@ trait PdoTrait {
    * Fetches the next row and returns it as an object.
    *
    * @param class-string|null $class
-   *   Name of the class to be instantiated.
+   *   FQCN of the class to be instantiated.
    * @param list<mixed>|null $constructorArguments
    *   The arguments to be passed to the constructor.
    *
@@ -181,7 +181,7 @@ trait PdoTrait {
         $constructorArguments ?? $this->fetchOptions['constructor_args'],
       ),
       default => $this->getClientStatement()->fetchAll(
-        $mode ? $this->fetchAsToPdo($mode) : $this->fetchAsToPdo($this->defaultFetchMode),
+        $this->fetchAsToPdo($mode ?? $this->defaultFetchMode),
       ),
     };
   }
