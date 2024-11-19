@@ -233,7 +233,7 @@ display:
     display_options:
       defaults:
         arguments: false
-        row:
+        row: false
       path: entity-id-argument-test-access
       row:
         type: fields
