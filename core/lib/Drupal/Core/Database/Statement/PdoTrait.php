@@ -111,7 +111,7 @@ trait PdoTrait {
    * @return array<string|int|float|bool>|object|string|int|float|bool
    *   A result, formatted according to $mode, or FALSE on failure.
    */
-  protected function clientFetch(?FetchAs $mode = NULL, ?int $cursorOrientation = NULL, ?int $cursorOffset = NULL): array|object|string|int|float|bool {
+  protected function clientFetch(?FetchAs $mode = NULL, ?int $cursorOrientation = NULL, ?int $cursorOffset = NULL) {
     return match(func_num_args()) {
       0 => $this->getClientStatement()->fetch(),
       1 => $this->getClientStatement()->fetch($this->fetchAsToPdo($mode)),
