@@ -145,7 +145,7 @@ class TransactionTest extends DriverSpecificTransactionTestBase {
     $this->assertTrue($this->connection->inTransaction());
     $this->connection->getClientConnection()->commit();
     $this->assertFalse($this->connection->inTransaction());
-    $transaction = NULL;
+    unset($transaction);
   }
 
 }

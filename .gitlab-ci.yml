@@ -235,12 +235,12 @@ default:
 'PHP 8.3 MariaDB 10.6':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.1"
-    _TARGET_DB: "mysql-5.7"
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "mariadb-10.6"
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
 
-'PHP 8.1 MySQLi 8.4':
+'mysqli - PHP 8.3 MySQL 8.4':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.3-ubuntu"
@@ -253,12 +253,16 @@ default:
   variables:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-8.4"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
 
 'PHP 8.3 MySQL 9.0':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-9"
+    _TARGET_DB_DRIVER: "mysql"
+    _TARGET_DB_DRIVER_MODULE: "mysql"
 
 'PHP 8.3 PostgreSQL 16':
   <<: [ *default-stage, *run-on-mr ]

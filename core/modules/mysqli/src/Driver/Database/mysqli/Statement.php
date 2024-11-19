@@ -198,7 +198,7 @@ class Statement extends StatementWrapperIterator {
   /**
    * {@inheritdoc}
    */
-  public function fetchObject(string $class_name = NULL, array $constructor_arguments = []) {
+  public function fetchObject(?string $class_name = NULL, array $constructor_arguments = []) {
     if (isset($class_name)) {
       $this->defaultFetchStyle = \PDO::FETCH_CLASS;
       $this->fetchOptions = [
