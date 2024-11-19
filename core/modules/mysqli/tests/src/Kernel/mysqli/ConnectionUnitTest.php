@@ -14,7 +14,7 @@ class ConnectionUnitTest extends BaseMySqlTest {
   /**
    * Tests pdo options override.
    */
-  public function testConnectionOpen() {
+  public function testConnectionOpen(): void {
     $this->markTestSkipped('mysqli is not a pdo driver.');
   }
 

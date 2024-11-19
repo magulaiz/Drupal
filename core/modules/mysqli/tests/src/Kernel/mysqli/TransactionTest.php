@@ -3,7 +3,6 @@
 namespace Drupal\Tests\mysqli\Kernel\mysqli;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificTransactionTestBase;
-use PHPUnit\Framework\Error\Warning;
 
 /**
  * Tests transaction for the MySQL driver.
@@ -100,7 +99,7 @@ class TransactionTest extends DriverSpecificTransactionTestBase {
         // MySQLi does not fail when rolling back and no transaction active.
         // $this->fail('Rolling back a transaction containing DDL should produce a warning.');
       }
-      catch (Warning $warning) {
+      catch (\RuntimeException $warning) {
         $this->assertSame('Rollback attempted when there is no active transaction. This can cause data integrity issues.', $warning->getMessage());
       }
       unset($transaction);

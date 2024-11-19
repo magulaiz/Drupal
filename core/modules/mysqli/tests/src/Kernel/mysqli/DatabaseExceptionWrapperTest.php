@@ -20,14 +20,14 @@ class DatabaseExceptionWrapperTest extends BaseMySqlTest {
    * connection not to emulate statement preparation. Still, this is only valid
    * for the MySql driver.
    */
-  public function testPrepareStatementFailOnPreparation() {
+  public function testPrepareStatementFailOnPreparation(): void {
     $this->markTestSkipped('mysqli is not a pdo driver.');
   }
 
   /**
    * Tests Connection::prepareStatement exception on execution.
    */
-  public function testPrepareStatementFailOnExecution() {
+  public function testPrepareStatementFailOnExecution(): void {
     $this->expectException(\mysqli_sql_exception::class);
     $stmt = $this->connection->prepareStatement('bananas', []);
     $stmt->execute();

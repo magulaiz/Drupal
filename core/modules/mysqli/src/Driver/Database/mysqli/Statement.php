@@ -247,7 +247,7 @@ class Statement extends StatementWrapperIterator {
   /**
    * {@inheritdoc}
    */
-  public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
+  public function setFetchMode($mode, $a1 = NULL, $a2 = []): bool {
     if (!in_array($mode, $this->supportedFetchModes)) {
       @trigger_error('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use supported modes only. See https://www.drupal.org/node/3377999', E_USER_DEPRECATED);
     }
