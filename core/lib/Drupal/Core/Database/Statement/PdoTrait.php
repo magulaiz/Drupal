@@ -115,8 +115,8 @@ trait PdoTrait {
     return match(func_num_args()) {
       0 => $this->getClientStatement()->fetch(),
       1 => $this->getClientStatement()->fetch($this->fetchAsToPdo($mode)),
-      2 => $this->getClientStatement()->fetch($this->fetchAsToPdo($mode), $cursor_orientation),
-      default => $this->getClientStatement()->fetch($this->fetchAsToPdo($mode), $cursor_orientation, $cursor_offset),
+      2 => $this->getClientStatement()->fetch($this->fetchAsToPdo($mode), $cursorOrientation),
+      default => $this->getClientStatement()->fetch($this->fetchAsToPdo($mode), $cursorOrientation, $cursorOffset),
     };
   }
 
