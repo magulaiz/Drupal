@@ -39424,7 +39424,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/BreadcrumbTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
 	'message' => '#^Variable \\$parent might not be defined\\.$#',
 	'identifier' => 'variable.undefined',
 	'count' => 3,
