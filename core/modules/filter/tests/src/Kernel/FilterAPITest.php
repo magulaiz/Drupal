@@ -328,7 +328,7 @@ class FilterAPITest extends EntityKernelTestBase {
       '#format' => 'filtered_html',
     ];
     \Drupal::service('renderer')->renderRoot($build);
-    $this->assertSame('', (string) $build['#markup']);
+    $this->assertSame('', $build['#markup']);
   }
 
   /**
