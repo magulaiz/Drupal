@@ -67,7 +67,7 @@ class FileHooks {
    * Implements hook_field_widget_info_alter().
    */
   #[Hook('field_widget_info_alter')]
-  public function fieldWidgetInfoAlter(array &$info) {
+  public function fieldWidgetInfoAlter(array &$info): void {
     // Allows using the 'uri' widget for the 'file_uri' field type, which uses it
     // as the default widget.
     // @see \Drupal\file\Plugin\Field\FieldType\FileUriItem
@@ -163,7 +163,7 @@ class FileHooks {
    * Implements hook_cron().
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     $age = \Drupal::config('system.file')->get('temporary_maximum_age');
     $file_storage = \Drupal::entityTypeManager()->getStorage('file');
     /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */

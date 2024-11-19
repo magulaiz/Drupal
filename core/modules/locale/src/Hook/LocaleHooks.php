@@ -196,7 +196,7 @@ class LocaleHooks {
    * @see \Drupal\locale\Plugin\QueueWorker\LocaleTranslation
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     // Update translations only when an update frequency was set by the admin
     // and a translatable language was set.
     // Update tasks are added to the queue here but processed by Drupal's cron.
@@ -218,7 +218,7 @@ class LocaleHooks {
    * Implements hook_js_alter().
    */
   #[Hook('js_alter')]
-  public function jsAlter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language) {
+  public function jsAlter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language): void {
     $files = [];
     foreach ($javascript as $item) {
       if (isset($item['type']) && $item['type'] == 'file') {
@@ -252,7 +252,7 @@ class LocaleHooks {
    * Provides language support.
    */
   #[Hook('library_info_alter')]
-  public function libraryInfoAlter(array &$libraries, $module) {
+  public function libraryInfoAlter(array &$libraries, $module): void {
     // When the locale module is enabled, we update the core/drupal library to
     // have a dependency on the locale/translations library, which provides
     // window.drupalTranslations, containing the translations for all strings in
