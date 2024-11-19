@@ -35,12 +35,13 @@ class StatementWrapperIterator extends StatementBase {
    *   (optional) Enables counting the rows matched. Defaults to FALSE.
    */
   public function __construct(
-    protected readonly Connection $connection,
+    Connection $connection,
     object $clientConnection,
     string $query,
     array $options,
-    protected readonly bool $rowCountEnabled = FALSE,
+    bool $rowCountEnabled = FALSE,
   ) {
+    parent::__construct($connection, $rowCountEnabled);
     $this->clientStatement = $clientConnection->prepare($query, $options);
     $this->setFetchMode(FetchAs::Object);
   }

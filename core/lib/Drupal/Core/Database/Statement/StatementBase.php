@@ -5,6 +5,7 @@ namespace Drupal\Core\Database\Statement;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\FetchModeTrait;
 use Drupal\Core\Database\RowCountException;
 use Drupal\Core\Database\StatementInterface;
@@ -34,16 +35,6 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   use StatementIteratorTrait;
 
   /**
-   * Drupal database connection object.
-   */
-  protected readonly Connection $connection;
-
-  /**
-   * Enables counting the rows matched.
-   */
-  protected readonly bool $rowCountEnabled;
-
-  /**
    * Holds the default fetch mode.
    */
   protected FetchAs $defaultFetchMode = FetchAs::Object;
@@ -58,6 +49,20 @@ abstract class StatementBase implements \Iterator, StatementInterface {
     'constructor_args' => [],
     'column' => 0,
   ];
+
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   Drupal database connection object.
+   * @param bool $rowCountEnabled
+   *   (optional) Enables counting the rows matched. Defaults to FALSE.
+   */
+  public function __construct(
+    protected readonly Connection $connection,
+    protected readonly bool $rowCountEnabled = FALSE,
+  ) {
+  }
 
   /**
    * {@inheritdoc}
@@ -244,7 +249,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
+  public function setFetchMode($mode, $a1 = NULL, $a2 = []): bool {
     $this->defaultFetchMode = $mode;
     switch ($mode) {
       case FetchAs::ClassObject:
