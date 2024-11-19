@@ -9,6 +9,8 @@ use Drupal\layout_builder\Section;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
 
+// cspell:ignore blocknodebundle fieldlayout
+
 /**
  * Tests the Layout Builder UI.
  *
