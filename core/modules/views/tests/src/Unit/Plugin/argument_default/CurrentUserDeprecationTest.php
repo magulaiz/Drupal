@@ -21,7 +21,7 @@ class CurrentUserDeprecationTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $container = new Container();
-    $current_user = $this->createMock('\Drupal\Core\Session\AccountProxyInterface');
+    $current_user = $this->createMock('\Drupal\Core\Session\AccountInterface');
     $container->set('current_user', $current_user);
     \Drupal::setContainer($container);
   }
