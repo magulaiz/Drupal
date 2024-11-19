@@ -7,6 +7,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\PhpStorage\PhpStorageInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
+use Symfony\Component\VarExporter\VarExporter;
 
 /**
  * Defines a PHP cache implementation.
@@ -252,7 +253,7 @@ class PhpBackend implements CacheBackendInterface {
    *   The cache item to store.
    */
   protected function writeItem($cidhash, \stdClass $item) {
-    $content = '<?php return unserialize(' . var_export(serialize($item), TRUE) . ');';
+    $content = '<?php return ' . VarExporter::export($item) . ';';
     $this->storage()->save($cidhash, $content);
   }
 
