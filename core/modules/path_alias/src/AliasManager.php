@@ -144,9 +144,11 @@ class AliasManager implements AliasManagerInterface {
    * {@inheritdoc}
    */
   public function getAliasByPath($path, $langcode = NULL) {
+    $path ??= '';
     if (!str_starts_with($path, '/')) {
-      throw new \InvalidArgumentException(sprintf('Source path %s has to start with a slash.', $path));
+      $path = '/' . $path;
     }
+
     // If no language is explicitly specified we default to the current URL
     // language. If we used a language different from the one conveyed by the
     // requested URL, we might end up being unable to check if there is a path
@@ -217,7 +219,6 @@ class AliasManager implements AliasManagerInterface {
     // Note this method does not flush the preloaded path lookup cache. This is
     // because if a path is missing from this cache, it still results in the
     // alias being loaded correctly, only less efficiently.
-
     if ($source) {
       foreach (array_keys($this->lookupMap) as $lang) {
         unset($this->lookupMap[$lang][$source]);
@@ -240,8 +241,8 @@ class AliasManager implements AliasManagerInterface {
    *   An optional path for which an alias is being inserted.
    */
   protected function pathAliasPrefixListRebuild($path = NULL) {
-    // When paths are inserted, only rebuild the prefix list if the path has a top
-    // level component which is not already in the prefix list.
+    // When paths are inserted, only rebuild the prefix list if the path has a
+    // top level component which is not already in the prefix list.
     if (!empty($path)) {
       if ($this->pathPrefixes->get(strtok($path, '/'))) {
         return;
