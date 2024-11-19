@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Unit\Plugin\argument_default;
 
 use Drupal\Core\DependencyInjection\Container;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Plugin\views\argument_default\CurrentUser;
 
@@ -22,8 +21,8 @@ class CurrentUserDeprecationTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $container = new Container();
-    $current_user = $this->prophesize(AccountProxyInterface::class);
-    $container->set('current_user', $current_user->reveal());
+    $current_user = $this->createMock('\Drupal\Core\Session\AccountProxyInterface');
+    $container->set('current_user', $current_user);
     \Drupal::setContainer($container);
   }
 
