@@ -31,7 +31,7 @@ class CurrentUserDeprecationTest extends UnitTestCase {
    * Tests the deprecation in the constructor.
    */
   public function testConstructorDeprecation(): void {
-    $this->expectDeprecation('Calling Drupal\user\Plugin\views\argument_default\CurrentUser::__construct() without the $current_user argument is deprecated in drupal:11.1.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3347878');
+    $this->expectDeprecation('Calling Drupal\user\Plugin\views\argument_default\CurrentUser::__construct() without the $current_user argument is deprecated in drupal:11.2.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3347878');
     new CurrentUser([], '', []);
   }
 
