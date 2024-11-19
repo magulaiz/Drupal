@@ -144,7 +144,7 @@ class AliasManager implements AliasManagerInterface {
    * {@inheritdoc}
    */
   public function getAliasByPath($path, $langcode = NULL) {
-    $path ??= '';
+    $path = (string) $path;
     if (!str_starts_with($path, '/')) {
       $path = '/' . $path;
     }
