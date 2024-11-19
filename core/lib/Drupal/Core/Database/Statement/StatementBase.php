@@ -34,6 +34,16 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   use StatementIteratorTrait;
 
   /**
+   * Drupal database connection object.
+   */
+  protected readonly Connection $connection;
+
+  /**
+   * Enables counting the rows matched.
+   */
+  protected readonly bool $rowCountEnabled;
+
+  /**
    * Holds the default fetch mode.
    */
   protected FetchAs $defaultFetchMode = FetchAs::Object;
