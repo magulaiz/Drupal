@@ -4101,6 +4101,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Database\\\\Statement\\\\StatementBase\\:\\:setFetchMode\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Database/Statement/StatementBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Database\\\\StatementInterface\\:\\:setFetchMode\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Database/StatementInterface.php',
