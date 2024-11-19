@@ -83,11 +83,6 @@ catch (HttpExceptionInterface $e) {
   exit;
 }
 
-// We have to enable the user and system modules, even to check access and
-// display errors via the maintenance theme.
-\Drupal::moduleHandler()->addModule('system', 'core/modules/system');
-\Drupal::moduleHandler()->load('system');
-
 // Initialize the maintenance theme for this administrative script.
 drupal_maintenance_theme();
 
