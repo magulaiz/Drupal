@@ -81,7 +81,7 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
 
       // These values from the database area always strings, so we can change
       // the case of all of them.
-      $other_entity_values = array_map(fn(string $value) => iconv('UTF-8', 'ASCII//TRANSLIT', $value) , $other_entity_values);
+      $other_entity_values = array_map(fn(string $value) => iconv('UTF-8', 'ASCII//TRANSLIT', $value), $other_entity_values);
       // Item values could be of any type, only change the case of string
       // values.
       $item_values = array_map(fn(mixed $value) => is_string($value) ? iconv('UTF-8', 'ASCII//TRANSLIT', $value) : $value, $item_values);
@@ -151,7 +151,7 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
   private function extractDuplicates(array $item_values): array {
     $value_frequency = array_count_values($item_values);
 
-    // Filter out item values which are not duplicates while preserving deltas
+    // Filter out item values which are not duplicates while preserving deltas.
     $duplicate_values = array_intersect($item_values, array_keys(array_filter(
       $value_frequency, function ($value) {
         return $value > 1;
