@@ -112,11 +112,12 @@ trait PdoTrait {
    *   A result, formatted according to $mode, or FALSE on failure.
    */
   protected function clientFetch(?FetchAs $mode = NULL, ?int $cursorOrientation = NULL, ?int $cursorOffset = NULL) {
-    return $this->getClientStatement()->fetch(
-      $mode ? $this->fetchAsToPdo($mode) : \PDO::FETCH_DEFAULT,
-      $cursorOrientation ?? \PDO::FETCH_ORI_NEXT,
-      $cursorOffset ?? 0,
-    );
+    return match(func_num_args()) {
+      0 => $this->getClientStatement()->fetch(),
+      1 => $this->getClientStatement()->fetch($this->fetchAsToPdo($mode)),
+      2 => $this->getClientStatement()->fetch($this->fetchAsToPdo($mode), $cursor_orientation),
+      default => $this->getClientStatement()->fetch($this->fetchAsToPdo($mode), $cursor_orientation, $cursor_offset),
+    };
   }
 
   /**
