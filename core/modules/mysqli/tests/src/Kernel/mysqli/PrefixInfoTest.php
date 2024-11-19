@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\mysqli\Kernel\mysqli;
 
 use Drupal\Tests\mysql\Kernel\mysql\PrefixInfoTest as BaseMySqlTest;

@@ -23,6 +23,7 @@ class MysqliHooks {
         return $output;
 
     }
+    return [];
   }
 
 }
