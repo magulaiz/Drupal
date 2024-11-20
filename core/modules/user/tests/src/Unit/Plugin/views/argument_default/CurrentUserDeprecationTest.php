@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\views\Unit\Plugin\argument_default;
+namespace Drupal\Tests\user\Unit\Plugin\views\argument_default;
 
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Tests\UnitTestCase;
