@@ -76,7 +76,7 @@ module.exports = {
         .drupalRelativeURL('/admin/structure/types/manage/test/fields/reuse')
         .submitForm('input[name="body"]')
         .waitForElementVisible('[data-drupal-selector="edit-label"]')
-        .submitForm('input[name="op"]')
+        .submitForm('input[type="submit"]')
         .waitForElementVisible('[data-drupal-messages]')
         .assert.textContains(
           '[data-drupal-messages]',
