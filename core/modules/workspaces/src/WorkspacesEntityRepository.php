@@ -20,10 +20,8 @@ class WorkspacesEntityRepository extends EntityRepository {
    *
    * If there is no workspace, we need to get the latest revision not in a
    * workspace.
-   *
-   * {@inheritdoc}
    */
-  public function getActiveMultiple($entity_type_id, array $entity_ids, array $contexts = NULL) {
+  public function getActiveMultiple($entity_type_id, array $entity_ids, array $contexts = NULL): array {
     /** @var \Drupal\workspaces\WorkspaceInformationInterface $workspaceInformation */
     $workspaceInformation = \Drupal::service('workspaces.information');
 
@@ -84,7 +82,7 @@ class WorkspacesEntityRepository extends EntityRepository {
   /**
    * Get the latest revision of an entity not associated with a workspace.
    */
-  private function getLatestNonWorkspaceRevision(RevisionableInterface $entity) {
+  private function getLatestNonWorkspaceRevision(RevisionableInterface $entity): ?RevisionableInterface {
     $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
 
     /** @var ContentEntityTypeInterface $entityType */
