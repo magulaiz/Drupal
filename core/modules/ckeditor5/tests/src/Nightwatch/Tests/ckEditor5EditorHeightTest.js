@@ -54,7 +54,7 @@ module.exports = {
         )
         // Add the body field to the new content type.
         .drupalRelativeURL('/admin/structure/types/manage/test/fields/reuse')
-        .submitForm('input[name="body"]')
+        .click('button[name="body"]')
         .waitForElementVisible('[data-drupal-selector="edit-label"]')
         .submitForm('input[type="submit"]')
         .waitForElementVisible('[data-drupal-messages]')
