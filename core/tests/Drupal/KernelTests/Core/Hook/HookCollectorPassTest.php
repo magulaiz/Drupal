@@ -82,4 +82,20 @@ class HookCollectorPassTest extends KernelTestBase {
     $this->assertLessThan($priorities['drupal_hook.order2']['order'], $priorities['drupal_hook.order2']['module_handler_test_all2_order2']);
   }
 
+  /**
+   * Test hooks implemneted on behalf of an uninstalled module.
+   *
+   * They should be picked up but only executed when the other
+   * module is installed.
+   */
+  public function testHooksImplementedOnBehalfFileCache(): void {
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['hook_collector_on_behalf']));
+    drupal_flush_all_caches();
+    $this->assertFalse(isset($GLOBALS['respond_install_uninstall_hook_test_cache']));
+    $this->assertTrue($module_installer->install(['respond_install_uninstall_hook_test']));
+    drupal_flush_all_caches();
+    $this->assertTrue(isset($GLOBALS['respond_install_uninstall_hook_test_cache']));
+  }
+
 }
