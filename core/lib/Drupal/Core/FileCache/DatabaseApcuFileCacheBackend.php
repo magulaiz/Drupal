@@ -3,6 +3,7 @@
 namespace Drupal\Core\FileCache;
 
 use Drupal\Component\FileCache\FileCacheBackendInterface;
+use Drupal\Component\FileCache\GarbageCollectionInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
@@ -12,7 +13,7 @@ use Drupal\Core\Site\Settings;
 /**
  * Database and APCu backend for the file cache.
  */
-class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface {
+class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, GarbageCollectionInterface {
 
   /**
    * The database table to use.
@@ -119,6 +120,22 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface {
     }
 
     apcu_delete($cid);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function garbageCollection(): void {
+    try {
+      $this->connection->delete($this->table)
+        ->condition('expire', time(), '<')
+        ->execute();
+    }
+    catch (\Exception) {
+      // If the table does not exist, it surely does not have garbage in it.
+      // If the table exists, the next garbage collection will clean up.
+      // There is nothing to do.
+    }
   }
 
   /**
