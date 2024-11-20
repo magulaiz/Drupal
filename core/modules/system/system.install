@@ -1744,3 +1744,14 @@ function system_update_11001(): void {
   ];
   $schema->changeField('menu_tree', 'route_param_key', 'route_param_key', $spec);
 }
+
+/**
+ * Update hide untranslated custom menu links setting from empty to false.
+ */
+function system_update_11002(): void {
+  $settings = \Drupal::configFactory()->getEditable('block.settings.system_menu_block');
+  if (empty($settings->get('hide_untranslated_menu_links'))) {
+    $settings->set('hide_untranslated_menu_links', FALSE);
+    $settings->save();
+  }
+}
