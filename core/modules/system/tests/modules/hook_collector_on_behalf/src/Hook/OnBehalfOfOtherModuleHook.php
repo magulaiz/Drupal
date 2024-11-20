@@ -17,7 +17,7 @@ class OnBehalfOfOtherModuleHook {
   #[Hook('cache_flush', module: 'respond_install_uninstall_hook_test')]
   public function flush(): void {
     // Set a global value we can check in test code.
-    $GLOBALS['respond_install_uninstall_hook_test_cache'] = 'respond_install_uninstall_hook_test_cache';
+    $GLOBALS['on_behalf_oop'] = 'on_behalf_oop';
   }
 
 }

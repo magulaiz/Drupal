@@ -91,11 +91,14 @@ class HookCollectorPassTest extends KernelTestBase {
   public function testHooksImplementedOnBehalfFileCache(): void {
     $module_installer = $this->container->get('module_installer');
     $this->assertTrue($module_installer->install(['hook_collector_on_behalf']));
+    $this->assertTrue($module_installer->install(['hook_collector_on_behalf_procedural']));
     drupal_flush_all_caches();
-    $this->assertFalse(isset($GLOBALS['respond_install_uninstall_hook_test_cache']));
+    $this->assertFalse(isset($GLOBALS['on_behalf_oop']));
+    $this->assertFalse(isset($GLOBALS['on_behalf_procedural']));
     $this->assertTrue($module_installer->install(['respond_install_uninstall_hook_test']));
     drupal_flush_all_caches();
-    $this->assertTrue(isset($GLOBALS['respond_install_uninstall_hook_test_cache']));
+    $this->assertTrue(isset($GLOBALS['on_behalf_oop']));
+    $this->assertTrue(isset($GLOBALS['on_behalf_procedural']));
   }
 
 }
