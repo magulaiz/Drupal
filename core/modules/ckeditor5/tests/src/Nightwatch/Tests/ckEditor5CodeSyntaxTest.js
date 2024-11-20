@@ -72,6 +72,7 @@ module.exports = {
           '[data-drupal-messages]',
           'The content type test has been added',
         )
+        // @todo Add the body field to the new content type.
 
         // Navigate to create new content.
         .drupalRelativeURL('/node/add/test')

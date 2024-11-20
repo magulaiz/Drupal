@@ -52,6 +52,7 @@ module.exports = {
           '[data-drupal-messages]',
           'The content type test has been added',
         )
+        // @todo Add the body field to the new content type.
         // Navigate to the create content page and measure height of the editor.
         .drupalRelativeURL('/node/add/test')
         .waitForElementVisible('.ck-editor__editable')
