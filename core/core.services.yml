@@ -1107,6 +1107,8 @@ services:
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
+  # The next service will be removed from the core service file before Drupal
+  # 12.0.0 and will be moved to the pgsql module.
   pgsql.entity.query.sql:
     class: Drupal\pgsql\EntityQuery\QueryFactory
     arguments: ['@database']
