@@ -12,6 +12,7 @@ use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Component\DependencyInjection\ReverseContainer;
+use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
@@ -492,7 +493,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (!isset($configuration['default'])) {
       // @todo Use extension_loaded('apcu') for non-testbot
       //   https://www.drupal.org/node/2447753.
-      if (function_exists('apcu_fetch')) {
+      if (function_exists('apcu_fetch') && Database::hasConnection()) {
         $configuration['default']['cache_backend_class'] = '\Drupal\Core\FileCache\DatabaseApcuFileCacheBackend';
       }
     }
