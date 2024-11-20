@@ -370,7 +370,8 @@ default:
         php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=$CI_PROJECT_DIR/core/.phpstan-baseline.php || true
         exit $EXIT_CODE
       fi
-
+  except:
+    - tags
   artifacts:
     # Only store the baseline if the job fails.
     when: on_failure
@@ -394,6 +395,8 @@ default:
       fi
     - vendor/bin/phpcs --version
     - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
+  except:
+    - tags
   artifacts:
     expire_in: 1 week
     expose_as: 'web-vendor'
