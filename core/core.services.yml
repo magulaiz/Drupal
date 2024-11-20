@@ -1107,6 +1107,9 @@ services:
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
+  pgsql.entity.query.sql:
+    class: Drupal\pgsql\EntityQuery\QueryFactory
+    arguments: ['@database']
   entity.query.null:
     class: Drupal\Core\Entity\Query\Null\QueryFactory
   entity.query.keyvalue:
