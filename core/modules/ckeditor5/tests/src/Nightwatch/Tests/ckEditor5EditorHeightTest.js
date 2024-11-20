@@ -1,4 +1,4 @@
-// cspell:ignore soume=rceediting
+// cspell:ignore sourceediting
 
 module.exports = {
   '@tags': ['core', 'ckeditor5'],
