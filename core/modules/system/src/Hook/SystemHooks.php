@@ -9,6 +9,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\FileCache\GarbageCollectionInterface;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Queue\QueueGarbageCollectionInterface;
@@ -315,9 +316,19 @@ class SystemHooks {
       $cache_backend->garbageCollection();
     }
 
-    $file_cache = \Drupal::service('file_cache');
-    if ($file_cache instanceof GarbageCollectionInterface) {
-      $file_cache->garbageCollection();
+    // Keep the default configuration in sync with FileCacheFactory::get().
+    $file_cache_configuration = [
+      'class' => '\Drupal\Component\FileCache\FileCache',
+      'collection' => 'default',
+      'cache_backend_class' => NULL,
+      'cache_backend_configuration' => [],
+    ] + FileCacheFactory::getConfiguration();
+
+    foreach ($file_cache_configuration as $namespace => $config) {
+      $file_cache = FileCacheFactory::get($namespace);
+      if ($file_cache instanceof GarbageCollectionInterface) {
+        $file_cache->garbageCollection();
+      }
     }
 
     // Clean up the expirable key value database store.
