@@ -83,7 +83,7 @@ class HookCollectorPassTest extends KernelTestBase {
   }
 
   /**
-   * Test hooks implemneted on behalf of an uninstalled module.
+   * Test hooks implemented on behalf of an uninstalled module.
    *
    * They should be picked up but only executed when the other
    * module is installed.
