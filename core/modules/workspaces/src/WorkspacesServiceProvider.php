@@ -15,7 +15,7 @@ class WorkspacesServiceProvider extends ServiceProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     $modules = $container->getParameter('container.modules');
 
     // Add the entity query override only when the pgsql module is enabled.
