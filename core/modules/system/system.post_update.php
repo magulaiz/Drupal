@@ -80,7 +80,10 @@ function system_post_update_convert_empty_country_and_timezone_settings_to_null(
   }
 }
 
-function system_post_update_implement_schema_for_hide_untranslated_menu_links(&$sandbox = NULL) {
+/**
+ * Set hide_untranslated_menu_links config.
+ */
+function system_post_update_implement_schema_for_hide_untranslated_menu_links(&$sandbox = NULL): void {
   if (!\Drupal::moduleHandler()->moduleExists('block')) {
     return;
   }
