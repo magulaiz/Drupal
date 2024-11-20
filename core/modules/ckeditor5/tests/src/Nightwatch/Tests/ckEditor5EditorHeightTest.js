@@ -52,7 +52,16 @@ module.exports = {
           '[data-drupal-messages]',
           'The content type test has been added',
         )
-        // @todo Add the body field to the new content type.
+        // Add the body field to the new content type.
+        .drupalRelativeURL('/admin/structure/types/manage/test/fields/reuse')
+        .submitForm('input[name="body"]')
+        .submitForm('input[type="submit"]')
+        .waitForElementVisible('[data-drupal-messages]')
+        .assert.textContains(
+          '[data-drupal-messages]',
+          'Saved Body configuration.',
+        )
+
         // Navigate to the create content page and measure height of the editor.
         .drupalRelativeURL('/node/add/test')
         .waitForElementVisible('.ck-editor__editable')
