@@ -4,8 +4,9 @@ namespace Drupal\Core\FileCache;
 
 use Drupal\Component\FileCache\FileCacheBackendInterface;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Site\Settings;
 
 /**
@@ -39,34 +40,33 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface {
    * {@inheritdoc}
    */
   public function fetch(array $cids) {
-		$cache = apcu_fetch($cids);
-		$remaining_cids = array_diff_key($cache, array_flip($cids));
-
-		if (!$remaining_cids) {
-			return $cache;
-		}
-		$cid_mapping = [];
-		foreach ($remaining_cids as $cid) {
-			$cid_mapping[$this->normalizeCid($cid)] = $cid;
-		}
-		$result = [];
-		try {
-			$result = $this->connection->select('file_cache')
-				->fields('cid', 'data', 'serialized', 'created', 'expire')
-				-condition('cid', $cids, 'IN')
-				->sort('cid', 'ASC')
-				->execute();
-		}
-		catch (\Exception) {
-			// Nothing to do.
-		}
-		$database_cache = [];
-		foreach ($result as $item) {
-			// Map the cache ID back to the original.
-			$item->cid = $cid_mapping[$item->cid];
-			if ($item && $item->expire >= time()) {
-				$data = $item->serialized ? unserialize($item->data) : $item->data;
-				$database_cache[$item->cid] = $data;
+    $cache = apcu_fetch($cids);
+    $remaining_cids = array_diff_key($cache, array_flip($cids));
+    if (!$remaining_cids) {
+      return $cache;
+    }
+    $cid_mapping = [];
+    foreach ($remaining_cids as $cid) {
+      $cid_mapping[$this->normalizeCid($cid)] = $cid;
+    }
+    $result = [];
+    try {
+      $result = $this->connection->select('file_cache')
+        ->fields('cid', 'data', 'serialized', 'created', 'expire')
+        ->condition('cid', $cids, 'IN')
+        ->sort('cid', 'ASC')
+        ->execute();
+    }
+    catch (\Exception) {
+      // Nothing to do.
+    }
+    $database_cache = [];
+    foreach ($result as $item) {
+      // Map the cache ID back to the original.
+      $item->cid = $cid_mapping[$item->cid];
+      if ($item && $item->expire >= time()) {
+        $data = $item->serialized ? unserialize($item->data) : $item->data;
+        $database_cache[$item->cid] = $data;
         $cache[$item->cid] = $data;
       }
     }
@@ -78,7 +78,7 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface {
   /**
    * {@inheritdoc}
    */
-  public function store($cid, $data) {
+  public function store($cid, $data): void {
     // Write to apcu first so that cached items are immediately available to
     // other processes.
     apcu_store($cid, $data);
@@ -105,16 +105,16 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface {
   /**
    * {@inheritdoc}
    */
-  public function delete($cid) {
+  public function delete($cid): void {
     // Delete from the database first so that other processes don't try to write
     // a stale cache item from the database back to APCu.
     $database_cid = $this->normalizeCid($cid);
     try {
-			$this->connection->delete($this->table)
-				->condition('cid', $database_cid)
+      $this->connection->delete($this->table)
+        ->condition('cid', $database_cid)
         ->execute();
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Nothing to do.
     }
 
@@ -190,10 +190,10 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface {
    *   TRUE if the table exists or was created, false if it could not be created.
    */
   private function ensureBinExists(): bool {
-    try { 
+    try {
       $database_schema = $this->connection->schema();
       if (!$database_schema->tableExists($this->table)) {
-        $schema_definition = $this->schemaDefinition(); 
+        $schema_definition = $this->schemaDefinition();
         $database_schema->createTable($this->table, $schema_definition);
         return TRUE;
       }
@@ -211,6 +211,7 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface {
    * Defines the schema for the {cache_*} bin tables.
    *
    * @internal
+   *
    * @return array
    */
   public function schemaDefinition(): array {
