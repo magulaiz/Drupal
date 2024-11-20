@@ -112,6 +112,7 @@ function system_theme(): array {
         'php' => [],
         'php_memory_limit' => [],
         'webserver' => [],
+        'other_modules' => [],
       ],
     ],
     'admin_page' => [
