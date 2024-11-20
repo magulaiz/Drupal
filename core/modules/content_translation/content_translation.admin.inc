@@ -2,7 +2,6 @@
 
 /**
  * @file
- * The content translation administration forms.
  */
 
 use Drupal\content_translation\BundleTranslationSettingsInterface;
@@ -192,7 +191,7 @@ function _content_translation_is_field_translatability_configurable(EntityTypeIn
 /**
  * (proxied) Implements hook_preprocess_HOOK().
  */
-function _content_translation_preprocess_language_content_settings_table(&$variables) {
+function _content_translation_preprocess_language_content_settings_table(&$variables): void {
   // Alter the 'build' variable injecting the translation settings if the user
   // has the required permission.
   if (!\Drupal::currentUser()->hasPermission('administer content translation')) {
