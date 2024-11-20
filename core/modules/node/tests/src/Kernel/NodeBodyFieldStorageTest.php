@@ -24,6 +24,7 @@ class NodeBodyFieldStorageTest extends KernelTestBase {
     'system',
     'field',
     'node',
+    'node_storage',
     'text',
     'filter',
   ];
@@ -37,7 +38,7 @@ class NodeBodyFieldStorageTest extends KernelTestBase {
     $this->installSchema('user', 'users_data');
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
-    $this->installConfig(['field', 'node']);
+    $this->installConfig(['field', 'node', 'node_storage']);
   }
 
   /**

@@ -128,23 +128,43 @@ function node_type_get_description(NodeTypeInterface $node_type) {
  *   A node type object.
  * @param string $label
  *   (optional) The label for the body instance.
+ * @param string $field_type
+ *   (optional) The field type that should be created.
  *
  * @return \Drupal\field\Entity\FieldConfig
  *   A Body field object.
  */
-function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
+function node_add_body_field(NodeTypeInterface $type, $label = 'Body', string $field_type = 'text_long') {
   // Add or remove the body field, as needed.
   $field_storage = FieldStorageConfig::loadByName('node', 'body');
+  if (empty($field_storage)) {
+    FieldStorageConfig::create([
+      'field_name' => 'body',
+      'entity_type' => 'node',
+      'translatable' => TRUE,
+      'persist_with_no_fields' => TRUE,
+      'type' => $field_type,
+    ])->save();
+    $field_storage = FieldStorageConfig::loadByName('node', 'body');
+  }
   $field = FieldConfig::loadByName('node', $type->id(), 'body');
   if (empty($field)) {
+    if ($field_type === 'text_with_summary') {
+      $settings = [
+        'display_summary' => TRUE,
+        'allowed_formats' => [],
+      ];
+    }
+    else {
+      $settings = [
+        'allowed_formats' => [],
+      ];
+    }
     $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $type->id(),
       'label' => $label,
-      'settings' => [
-        'display_summary' => TRUE,
-        'allowed_formats' => [],
-      ],
+      'settings' => $settings,
     ]);
     $field->save();
 
@@ -154,7 +174,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
     // Assign widget settings for the default form mode.
     $display_repository->getFormDisplay('node', $type->id())
       ->setComponent('body', [
-        'type' => 'text_textarea_with_summary',
+        'type' => $field_type === 'text_with_summary' ? 'text_textarea_with_summary' : 'text_textarea',
       ])
       ->save();
 
@@ -173,7 +193,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
       $display_repository->getViewDisplay('node', $type->id(), 'teaser')
         ->setComponent('body', [
           'label' => 'hidden',
-          'type' => 'text_summary_or_trimmed',
+          'type' => $field_type === 'text_with_summary' ? 'text_summary_or_trimmed' : 'text_trimmed',
         ])
         ->save();
     }

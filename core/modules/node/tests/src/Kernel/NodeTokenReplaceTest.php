@@ -31,7 +31,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
 
     $node_type = NodeType::create(['type' => 'article', 'name' => 'Article']);
     $node_type->save();
-    node_add_body_field($node_type);
+    node_add_body_field($node_type, 'Body', 'text_with_summary');
   }
 
   /**

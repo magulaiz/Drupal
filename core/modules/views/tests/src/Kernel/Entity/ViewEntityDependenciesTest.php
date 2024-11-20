@@ -31,6 +31,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
    */
   protected static $modules = [
     'node',
+    'node_storage',
     'comment',
     'user',
     'field',
@@ -46,7 +47,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
 
     // Install the necessary dependencies for node type creation to work.
     $this->installEntitySchema('node');
-    $this->installConfig(['field', 'node']);
+    $this->installConfig(['field', 'node', 'node_storage']);
 
     $comment_type = CommentType::create([
       'id' => 'comment',

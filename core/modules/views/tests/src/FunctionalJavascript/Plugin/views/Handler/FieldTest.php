@@ -24,6 +24,7 @@ class FieldTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'node',
+    'node_storage',
     'views',
     'views_ui',
     'views_test_config',

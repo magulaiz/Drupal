@@ -24,7 +24,12 @@ class EditorFileUsageTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['editor', 'editor_test', 'node', 'file'];
+  protected static $modules = [
+    'editor',
+    'editor_test',
+    'node',
+    'file',
+  ];
 
   /**
    * {@inheritdoc}
@@ -45,11 +50,6 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     ]);
     $filtered_html_format->save();
 
-    // Set cardinality for body field.
-    FieldStorageConfig::loadByName('node', 'body')
-      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
-      ->save();
-
     // Set up text editor.
     $editor = Editor::create([
       'format' => 'filtered_html',
@@ -63,7 +63,13 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     // Create a node type for testing.
     $type = NodeType::create(['type' => 'page', 'name' => 'page']);
     $type->save();
-    node_add_body_field($type);
+    node_add_body_field($type, 'Body', 'text_with_summary');
+
+    // Set cardinality for body field.
+    FieldStorageConfig::loadByName('node', 'body')
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->save();
+
     FieldStorageConfig::create([
       'field_name' => 'description',
       'entity_type' => 'node',

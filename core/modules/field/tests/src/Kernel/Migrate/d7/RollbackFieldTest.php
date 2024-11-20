@@ -26,6 +26,7 @@ class RollbackFieldTest extends MigrateFieldTest {
     // Check that fields have been rolled back.
     $rolled_back_field_ids = [
       'comment.field_integer',
+      'node.body',
       'node.taxonomy_forums',
       'node.field_integer',
       'node.field_tags',
@@ -52,7 +53,6 @@ class RollbackFieldTest extends MigrateFieldTest {
 
     // Check that fields that should persist have not been rolled back.
     $non_rolled_back_field_ids = [
-      'node.body',
       'comment.comment_body',
     ];
     foreach ($non_rolled_back_field_ids as $field_id) {

@@ -139,10 +139,10 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
     $assert_session->fieldValueEquals('fields[body][type]', 'text_default');
 
     // Change the body formatter to Summary.
-    $page->selectFieldOption('fields[body][type]', 'text_summary_or_trimmed');
+    $page->selectFieldOption('fields[body][type]', 'text_default');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save');
-    $assert_session->fieldValueEquals('fields[body][type]', 'text_summary_or_trimmed');
+    $assert_session->fieldValueEquals('fields[body][type]', 'text_default');
 
     // Reactivate Layout Builder.
     $this->drupalGet($field_ui_prefix);
@@ -154,7 +154,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
 
     // The changed body formatter is reflected in Layout Builder UI.
     $this->drupalGet($this->getPathForFieldBlock('node', 'after', 'default', 'body'));
-    $assert_session->fieldValueEquals('settings[formatter][type]', 'text_summary_or_trimmed');
+    $assert_session->fieldValueEquals('settings[formatter][type]', 'text_default');
   }
 
   /**

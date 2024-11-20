@@ -27,7 +27,14 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'node', 'system', 'text', 'user'];
+  protected static $modules = [
+    'field',
+    'node',
+    'node_storage',
+    'system',
+    'text',
+    'user',
+  ];
 
   /**
    * {@inheritdoc}
@@ -94,7 +101,7 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
    * Tests that the action will ignore existing fields by default.
    */
   public function testIgnoreExistingFields(): void {
-    $this->installConfig('node');
+    $this->installConfig(['node', 'node_storage']);
 
     node_add_body_field(NodeType::load('one'))
       ->setLabel('Original label')
@@ -132,7 +139,7 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
 name: Instantiate field on all bundles
 config:
   import:
-    node:
+    node_storage:
       - field.storage.node.body
   actions:
     $config_name:

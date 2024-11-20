@@ -1,0 +1,8 @@
+name: 'Node storage'
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:field
+  - drupal:node
+  - drupal:text
