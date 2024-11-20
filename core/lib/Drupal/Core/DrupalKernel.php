@@ -493,7 +493,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (!isset($configuration['default'])) {
       // @todo Use extension_loaded('apcu') for non-testbot
       //   https://www.drupal.org/node/2447753.
-      if (function_exists('apcu_fetch') && Database::hasConnection()) {
+      if (function_exists('apcu_fetch') && Database::getConnectionInfo('default')) {
         $configuration['default']['cache_backend_class'] = '\Drupal\Core\FileCache\DatabaseApcuFileCacheBackend';
       }
     }
