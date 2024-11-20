@@ -67,15 +67,6 @@ class Radios extends FormElementBase {
         // sub-elements.
         $weight += 0.001;
 
-        // Each value in #options may either be a string (the label to present
-        // to the user) or a renderable array. If it is a renderable array, the
-        // property `#title` is required.
-        $additional_properties = [];
-        if (is_array($choice)) {
-          $additional_properties = array_diff_key($choice, ['#title']);
-          $choice = $choice['#title'];
-        }
-
         $element += [$key => []];
         // Generate the parents as the autogenerator does, so we will have a
         // unique id for each radio button.
@@ -96,7 +87,7 @@ class Radios extends FormElementBase {
           // Errors should only be shown on the parent radios element.
           '#error_no_message' => TRUE,
           '#weight' => $weight,
-        ] + $additional_properties;
+        ];
       }
     }
     return $element;
