@@ -1,4 +1,4 @@
-// cspell:ignore sourceediting
+// cspell:ignore soume=rceediting
 
 module.exports = {
   '@tags': ['core', 'ckeditor5'],
@@ -55,7 +55,7 @@ module.exports = {
         // Add the body field to the new content type.
         .drupalRelativeURL('/admin/structure/types/manage/test/fields/reuse')
         .waitForElementVisible('input[name="body"]')
-        .click('input[name="body"]'
+        .click('input[name="body"]')
         .waitForElementVisible('input[type="submit"]')
         .submitForm('input[type="submit"]')
         .waitForElementVisible('[data-drupal-messages]')
