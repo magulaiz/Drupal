@@ -10,7 +10,6 @@ use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\LegacyHook;
-use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
