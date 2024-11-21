@@ -118,6 +118,7 @@ class Table extends FormElementBase {
     $class = static::class;
     return [
       '#header' => [],
+      '#header_multilevel' => FALSE,
       '#rows' => [],
       '#empty' => '',
       // Properties for tableselect support.

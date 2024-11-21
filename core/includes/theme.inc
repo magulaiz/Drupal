@@ -694,6 +694,8 @@ function template_preprocess_image(&$variables): void {
  *       narrow viewports to save horizontal space.
  *     - Any HTML attributes, such as "colspan", to apply to the column header
  *       cell.
+ *   - header_multilevel: A boolean flag, FALSE by default. If set to TRUE, the
+ *      header key array should have one more depth level.
  *   - rows: An array of table rows. Every row is an array of cells, or an
  *     associative array with the following keys:
  *     - data: An array of cells.
@@ -791,60 +793,91 @@ function template_preprocess_table(&$variables): void {
   $ts = [];
   $header_columns = 0;
   if (!empty($variables['header'])) {
-    $ts = TableSort::getContextFromRequest($variables['header'], \Drupal::request());
-
-    // Use a separate index with responsive classes as headers
-    // may be associative.
-    $responsive_index = -1;
-    foreach ($variables['header'] as $col_key => $cell) {
-      // Increase the responsive index.
-      $responsive_index++;
-
-      if (!is_array($cell)) {
-        $header_columns++;
-        $cell_content = $cell;
-        $cell_attributes = new Attribute();
-        $is_header = TRUE;
+    // Build multirows header from simple row.
+    if (empty($variables['header_multilevel'])) {
+      $ts = TableSort::getContextFromRequest($variables['header'], \Drupal::request());
+      $variables['header'] = [
+        'single_row' => $variables['header'],
+      ];
+    }
+    else {
+      $multi_header = [];
+      foreach ($variables['header'] as $row_key => $header_row) {
+        foreach ($header_row as $col_key => $cell) {
+          if (is_array($cell) && isset($cell['field'])) {
+            $multi_header[] = $cell;
+          }
+        }
       }
-      else {
-        if (isset($cell['colspan'])) {
-          $header_columns += $cell['colspan'];
+      $ts = TableSort::getContextFromRequest($multi_header, \Drupal::request());
+    }
+
+    foreach ($variables['header'] as $row_key => $header_row) {
+      $header_columns_in_row = 0;
+
+      // Use a separate index with responsive classes as headers
+      // may be associative.
+      $responsive_index = -1;
+      foreach ($header_row as $col_key => $cell) {
+        // Increase the responsive index.
+        $responsive_index++;
+
+        if (!is_array($cell)) {
+          $header_columns_in_row++;
+          $cell_content = $cell;
+          $cell_attributes = new Attribute();
+          $is_header = TRUE;
         }
         else {
-          $header_columns++;
-        }
-        $cell_content = '';
-        if (isset($cell['data'])) {
-          $cell_content = $cell['data'];
-          unset($cell['data']);
-        }
-        // Flag the cell as a header or not and remove the flag.
-        $is_header = $cell['header'] ?? TRUE;
-        unset($cell['header']);
-
-        // Track responsive classes for each column as needed. Only the header
-        // cells for a column are marked up with the responsive classes by a
-        // module developer or themer. The responsive classes on the header cells
-        // must be transferred to the content cells.
-        if (!empty($cell['class']) && is_array($cell['class'])) {
-          if (in_array(RESPONSIVE_PRIORITY_MEDIUM, $cell['class'])) {
-            $responsive_classes[$responsive_index] = RESPONSIVE_PRIORITY_MEDIUM;
+          if (isset($cell['colspan'])) {
+            $header_columns_in_row += $cell['colspan'];
           }
-          elseif (in_array(RESPONSIVE_PRIORITY_LOW, $cell['class'])) {
-            $responsive_classes[$responsive_index] = RESPONSIVE_PRIORITY_LOW;
+          else {
+            $header_columns_in_row++;
           }
+          $cell_content = '';
+          if (isset($cell['data'])) {
+            $cell_content = $cell['data'];
+            unset($cell['data']);
+          }
+          // Flag the cell as a header or not and remove the flag.
+          $is_header = $cell['header'] ?? TRUE;
+          unset($cell['header']);
+
+          // Track responsive classes for each column as needed. Only the header
+          // cells for a column are marked up with the responsive classes by a
+          // module developer or themer. The responsive classes on the header cells
+          // must be transferred to the content cells.
+          if (!empty($cell['class']) && is_array($cell['class'])) {
+            if (in_array(RESPONSIVE_PRIORITY_MEDIUM, $cell['class'])) {
+              $responsive_classes[$responsive_index] = RESPONSIVE_PRIORITY_MEDIUM;
+            }
+            elseif (in_array(RESPONSIVE_PRIORITY_LOW, $cell['class'])) {
+              $responsive_classes[$responsive_index] = RESPONSIVE_PRIORITY_LOW;
+            }
+          }
+
+          TableSort::header($cell_content, $cell, $header_row, $ts);
+
+          // TableSort::header() removes the 'sort', 'initial_click_sort' and
+          // 'field' keys.
+          $cell_attributes = new Attribute($cell);
         }
-
-        TableSort::header($cell_content, $cell, $variables['header'], $ts);
-
-        // TableSort::header() removes the 'sort', 'initial_click_sort' and
-        // 'field' keys.
-        $cell_attributes = new Attribute($cell);
+        $variables['header'][$row_key][$col_key] = [];
+        $variables['header'][$row_key][$col_key]['tag'] = $is_header ? 'th' : 'td';
+        $variables['header'][$row_key][$col_key]['attributes'] = $cell_attributes;
+        $variables['header'][$row_key][$col_key]['content'] = $cell_content;
       }
-      $variables['header'][$col_key] = [];
-      $variables['header'][$col_key]['tag'] = $is_header ? 'th' : 'td';
-      $variables['header'][$col_key]['attributes'] = $cell_attributes;
-      $variables['header'][$col_key]['content'] = $cell_content;
+      $header_columns = max($header_columns_in_row, $header_columns);
+    }
+
+    // Get single row header back to normal for BC.
+    // @todo: remove this in D9.
+    if (empty($variables['header_multilevel'])) {
+      $variables['header'] = $variables['header']['single_row'];
+    }
+    else {
+      $variables['header_multilevel'] = $variables['header'];
     }
   }
   $variables['header_columns'] = $header_columns;
@@ -1858,7 +1891,7 @@ function drupal_common_theme() {
       'variables' => ['links' => []],
     ],
     'table' => [
-      'variables' => ['header' => NULL, 'rows' => NULL, 'footer' => NULL, 'attributes' => [], 'caption' => NULL, 'colgroups' => [], 'sticky' => FALSE, 'responsive' => TRUE, 'empty' => ''],
+      'variables' => ['header' => NULL, 'header_multilevel' => NULL, 'rows' => NULL, 'footer' => NULL, 'attributes' => [], 'caption' => NULL, 'colgroups' => [], 'sticky' => FALSE, 'responsive' => TRUE, 'empty' => ''],
     ],
     'tablesort_indicator' => [
       'variables' => ['style' => NULL],
