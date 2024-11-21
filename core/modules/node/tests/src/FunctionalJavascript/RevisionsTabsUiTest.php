@@ -100,4 +100,3 @@ class RevisionsTabsUiTest extends WebDriverTestBase {
   }
 
 }
-
