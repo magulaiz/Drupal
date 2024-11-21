@@ -516,9 +516,11 @@ function node_access_needs_rebuild($rebuild = NULL): bool|null {
   }
   elseif ($rebuild) {
     \Drupal::state()->set('node.node_access_needs_rebuild', TRUE);
+    return NULL;
   }
   else {
     \Drupal::state()->delete('node.node_access_needs_rebuild');
+    return NULL;
   }
 }
 
@@ -708,7 +710,7 @@ function node_comment_update($comment): void {
 /**
  * Implements hook_ENTITY_TYPE_delete() for comment entities.
  */
-function node_comment_delete($comment) {
+function node_comment_delete($comment): void {
   // Reindex the node when comments are deleted.
   if ($comment->getCommentedEntityTypeId() == 'node') {
     node_reindex_node_search($comment->getCommentedEntityId());
