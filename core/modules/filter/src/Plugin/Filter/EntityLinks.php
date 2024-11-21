@@ -95,7 +95,7 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
               $entity = $entity->getTranslation($langcode);
             }
 
-            $url = $this->getUrl($entity, $element->hasAttribute('download'));
+            $url = $this->getUrl($entity);
 
             // Parse link href as URL, extract query and fragment from it.
             $href_url = parse_url($element->getAttribute('href'));
@@ -128,16 +128,12 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   A linked entity.
-   * @param bool $download
-   *   Whether the `download` attribute is present and hence a download link
-   *   should be generated instead of a view link.
    *
    * @return \Drupal\Core\GeneratedUrl
    *   The generated URL plus cacheability metadata.
    */
-  protected static function getUrl(EntityInterface $entity, bool $download): GeneratedUrl {
-    $link_target_type = !$download ? 'view' : 'download';
-    if ($link_target_handler = $entity->getEntityType()->getHandlerClass('link_target', $link_target_type)) {
+  protected static function getUrl(EntityInterface $entity): GeneratedUrl {
+    if ($link_target_handler = $entity->getEntityType()->getHandlerClass('link_target', 'view')) {
       return (new $link_target_handler())->getLinkTarget($entity);
     }
 
