@@ -60,7 +60,7 @@ variables:
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
   script:
-    - sudo -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
+    - sudo -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --verbose --non-html --all
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
   artifacts:
