@@ -516,11 +516,9 @@ function node_access_needs_rebuild($rebuild = NULL): bool|null {
   }
   elseif ($rebuild) {
     \Drupal::state()->set('node.node_access_needs_rebuild', TRUE);
-    return NULL;
   }
   else {
     \Drupal::state()->delete('node.node_access_needs_rebuild');
-    return NULL;
   }
 }
 
