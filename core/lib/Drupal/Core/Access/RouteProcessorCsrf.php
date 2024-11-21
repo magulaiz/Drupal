@@ -15,30 +15,20 @@ use Symfony\Component\Routing\Route;
 class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCallbackInterface {
 
   /**
-   * The CSRF token generator.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfToken;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * Constructs a RouteProcessorCsrf object.
    *
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrfToken
    *   The CSRF token generator.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   The request stack.
    */
-  public function __construct(CsrfTokenGenerator $csrf_token, RequestStack $request_stack) {
-    $this->csrfToken = $csrf_token;
-    $this->requestStack = $request_stack;
+  public function __construct(
+    protected CsrfTokenGenerator $csrfToken,
+    protected ?RequestStack $requestStack = NULL,
+  ) {
+    if ($requestStack === NULL) {
+      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $requestStack argument is deprecated in drupal:11.1.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3485174', E_USER_DEPRECATED);
+    }
   }
 
   /**
