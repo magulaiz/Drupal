@@ -23,12 +23,12 @@ default:
   parallel:
     matrix:
       - PHP_TARGET_IMAGE:
-        - "8.3-ubuntu"
-        - "8.4-ubuntu"
+        - "8.3"
+        - "8.4"
   image:
-    name: $_CONFIG_DOCKERHUB_ROOT/php-$PHP_TARGET_IMAGE-apache:production
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$PHP_TARGET_IMAGE-ubuntu-apache:production
   rules:
-    - if: $PHP_TARGET_IMAGE == "8.4-ubuntu" && $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
+    - if: $PHP_TARGET_IMAGE == "8.4" && $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
       allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
 
