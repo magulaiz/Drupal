@@ -9,8 +9,6 @@ use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
-use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -67,7 +65,7 @@ function node_title_list(StatementInterface $result, $title = NULL) {
  * @return int
  *   One of the MARK constants.
  */
-function node_mark($nid, $timestamp) {
+function node_mark($nid, $timestamp): int {
   if (\Drupal::currentUser()->isAnonymous() || !\Drupal::moduleHandler()->moduleExists('history')) {
     return MARK_READ;
   }
@@ -89,7 +87,7 @@ function node_mark($nid, $timestamp) {
  * @return string[]
  *   An array of node type labels, keyed by the node type name.
  */
-function node_type_get_names() {
+function node_type_get_names(): string {
   return array_map(function ($bundle_info) {
     return $bundle_info['label'];
   }, \Drupal::service('entity_type.bundle.info')->getBundleInfo('node'));
@@ -107,7 +105,7 @@ function node_type_get_names() {
  * @todo Add this as generic helper method for config entities representing
  *   entity bundles.
  */
-function node_get_type_label(NodeInterface $node) {
+function node_get_type_label(NodeInterface $node): string|false {
   $type = NodeType::load($node->bundle());
   return $type ? $type->label() : FALSE;
 }
@@ -121,7 +119,7 @@ function node_get_type_label(NodeInterface $node) {
  * @return string
  *   The node type description.
  */
-function node_type_get_description(NodeTypeInterface $node_type) {
+function node_type_get_description(NodeTypeInterface $node_type): string {
   return $node_type->getDescription();
 }
 
@@ -136,7 +134,7 @@ function node_type_get_description(NodeTypeInterface $node_type) {
  * @return \Drupal\field\Entity\FieldConfig
  *   A Body field object.
  */
-function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
+function node_add_body_field(NodeTypeInterface $type, $label = 'Body'): \Drupal\field\Entity\FieldConfig {
   // Add or remove the body field, as needed.
   $field_storage = FieldStorageConfig::loadByName('node', 'body');
   $field = FieldConfig::loadByName('node', $type->id(), 'body');
@@ -195,7 +193,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
  * @return bool
  *   TRUE if this is a full page view, otherwise FALSE.
  */
-function node_is_page(NodeInterface $node) {
+function node_is_page(NodeInterface $node): bool {
   $route_match = \Drupal::routeMatch();
   if ($route_match->getRouteName() == 'entity.node.canonical' || $route_match->getRouteName() == 'entity.node.revision') {
     $page_node = $route_match->getParameter('node');
@@ -290,7 +288,7 @@ function node_preprocess_field__node(&$variables): void {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function node_theme_suggestions_node(array $variables) {
+function node_theme_suggestions_node(array $variables): array {
   $suggestions = [];
   $node = $variables['elements']['#node'];
   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
@@ -411,7 +409,7 @@ function template_preprocess_node(&$variables): void {
  *
  * @see node_form_system_themes_admin_form_alter()
  */
-function node_form_system_themes_admin_form_submit($form, FormStateInterface $form_state) {
+function node_form_system_themes_admin_form_submit($form, FormStateInterface $form_state): void {
   \Drupal::configFactory()->getEditable('node.settings')
     ->set('use_admin_theme', $form_state->getValue('use_admin_theme'))
     ->save();
@@ -437,7 +435,7 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
  *   An associative array in which the keys are realms, and the values are
  *   arrays of grants for those realms.
  */
-function node_access_grants($operation, AccountInterface $account) {
+function node_access_grants($operation, AccountInterface $account): array {
   // Fetch node access grants from other modules.
   $grants = \Drupal::moduleHandler()->invokeAll('node_grants', [$account, $operation]);
   // Allow modules to alter the assigned grants.
@@ -468,7 +466,7 @@ function node_access_grants($operation, AccountInterface $account) {
  * @see hook_node_grants()
  * @see node_query_node_access_alter()
  */
-function node_access_view_all_nodes($account = NULL) {
+function node_access_view_all_nodes($account = NULL): bool {
 
   if (!$account) {
     $account = \Drupal::currentUser();
@@ -512,7 +510,7 @@ function node_access_view_all_nodes($account = NULL) {
  *
  * @see node_access_rebuild()
  */
-function node_access_needs_rebuild($rebuild = NULL) {
+function node_access_needs_rebuild($rebuild = NULL): bool|null {
   if (!isset($rebuild)) {
     return \Drupal::state()->get('node.node_access_needs_rebuild', FALSE);
   }
@@ -546,7 +544,7 @@ function node_access_needs_rebuild($rebuild = NULL) {
  *
  * @see node_access_needs_rebuild()
  */
-function node_access_rebuild($batch_mode = FALSE) {
+function node_access_rebuild($batch_mode = FALSE): void {
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
   /** @var \Drupal\node\NodeAccessControlHandlerInterface $access_control_handler */
   $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
@@ -609,7 +607,7 @@ function node_access_rebuild($batch_mode = FALSE) {
  * @param array $context
  *   An array of contextual key/value information for rebuild batch process.
  */
-function _node_access_rebuild_batch_operation(&$context) {
+function _node_access_rebuild_batch_operation(&$context): void {
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
   if (empty($context['sandbox'])) {
     // Initiate multistep processing.
@@ -664,7 +662,7 @@ function _node_access_rebuild_batch_operation(&$context) {
  * @param array $operations
  *   An array of function calls (not used in this function).
  */
-function _node_access_rebuild_batch_finished($success, $results, $operations) {
+function _node_access_rebuild_batch_finished($success, $results, $operations): void {
   if ($success) {
     \Drupal::messenger()->addStatus(t('The content access permissions have been rebuilt.'));
     node_access_needs_rebuild(FALSE);
@@ -680,7 +678,7 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
  * @param int $nid
  *   The node ID.
  */
-function node_reindex_node_search($nid) {
+function node_reindex_node_search($nid): void {
   if (\Drupal::moduleHandler()->moduleExists('search')) {
     // Reindex node context indexed by the node module search plugin.
     \Drupal::service('search.index')->markForReindex('node_search', $nid);
@@ -690,7 +688,7 @@ function node_reindex_node_search($nid) {
 /**
  * Implements hook_ENTITY_TYPE_insert() for comment entities.
  */
-function node_comment_insert($comment) {
+function node_comment_insert($comment): void {
   // Reindex the node when comments are added.
   if ($comment->getCommentedEntityTypeId() == 'node') {
     node_reindex_node_search($comment->getCommentedEntityId());
@@ -700,7 +698,7 @@ function node_comment_insert($comment) {
 /**
  * Implements hook_ENTITY_TYPE_update() for comment entities.
  */
-function node_comment_update($comment) {
+function node_comment_update($comment): void {
   // Reindex the node when comments are changed.
   if ($comment->getCommentedEntityTypeId() == 'node') {
     node_reindex_node_search($comment->getCommentedEntityId());
@@ -720,7 +718,7 @@ function node_comment_delete($comment) {
 /**
  * Implements hook_config_translation_info_alter().
  */
-function node_config_translation_info_alter(&$info) {
+function node_config_translation_info_alter(&$info): void {
   $info['node_type']['class'] = 'Drupal\node\ConfigTranslation\NodeTypeMapper';
 }
 
