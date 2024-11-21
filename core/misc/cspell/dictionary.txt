@@ -40,9 +40,6 @@ backporting
 backports
 bakeware
 barchart
-basefield
-basepath
-basetheme
 beatle
 bebebe
 beforeclose
@@ -259,6 +256,7 @@ guzzlehttp
 hande
 hateoas
 hexcode
+hhvm
 hilited
 hmac
 hookname
@@ -274,6 +272,7 @@ imagecache
 imagetextalternative
 indexname
 inited
+inlines
 inno
 instantiator
 interactable
@@ -389,6 +388,7 @@ nourriture
 nplurals
 nproc
 ntfs
+nyholm
 oembed
 omittable
 onecol
@@ -570,6 +570,7 @@ subvalues
 subview
 supercede
 svgz
+syncer
 synchronizable
 syrop
 tabbingmanager
@@ -584,6 +585,7 @@ tablesorts
 tabset
 tabwidth
 taskless
+tbachert
 testbot
 testbots
 testgroups
