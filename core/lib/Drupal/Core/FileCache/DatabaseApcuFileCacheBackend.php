@@ -233,7 +233,7 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
    */
   public function schemaDefinition(): array {
     $schema = [
-      'description' => 'Storage for the cache API.',
+      'description' => 'Storage for the FileCache API.',
       'fields' => [
         'cid' => [
           'description' => 'Primary Key: Unique cache ID.',

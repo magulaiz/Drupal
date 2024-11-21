@@ -316,15 +316,7 @@ class SystemHooks {
       $cache_backend->garbageCollection();
     }
 
-    // Keep the default configuration in sync with FileCacheFactory::get().
-    $file_cache_configuration = [
-      'class' => '\Drupal\Component\FileCache\FileCache',
-      'collection' => 'default',
-      'cache_backend_class' => NULL,
-      'cache_backend_configuration' => [],
-    ] + FileCacheFactory::getConfiguration();
-
-    foreach ($file_cache_configuration as $namespace => $config) {
+    foreach (array_keys(FileCacheFactory::getConfiguration()) as $namespace) {
       $file_cache = FileCacheFactory::get($namespace);
       if ($file_cache instanceof GarbageCollectionInterface) {
         $file_cache->garbageCollection();
