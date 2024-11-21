@@ -134,7 +134,7 @@ function node_type_get_description(NodeTypeInterface $node_type): string {
  * @return \Drupal\field\Entity\FieldConfig
  *   A Body field object.
  */
-function node_add_body_field(NodeTypeInterface $type, $label = 'Body'): \Drupal\field\Entity\FieldConfig {
+function node_add_body_field(NodeTypeInterface $type, $label = 'Body'): FieldConfig {
   // Add or remove the body field, as needed.
   $field_storage = FieldStorageConfig::loadByName('node', 'body');
   $field = FieldConfig::loadByName('node', $type->id(), 'body');
