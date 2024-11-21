@@ -16,6 +16,13 @@ use Drupal\user\Entity\User;
 class DrupalDateTimeTest extends BrowserTestBase {
 
   /**
+   * Set up required modules.
+   *
+   * @var string[]
+   */
+  protected static $modules = [];
+
+  /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';

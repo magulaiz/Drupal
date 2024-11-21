@@ -34,8 +34,10 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
 
   /**
    * The default theme.
+   *
+   * @var string
    */
-  protected string $defaultTheme;
+  protected $defaultTheme;
 
   /**
    * {@inheritdoc}
