@@ -158,11 +158,8 @@ class HookCollectorPass implements CompilerPassInterface {
    * @return void
    */
   protected function collectModuleHookImplementations($dir, $module, $module_preg): void {
-    // Add the deployment identifier to the cache namespace so that changes in
-    // the implementation of attribute parsing will not result in a stale
-    // cache.
-    $hook_file_cache = FileCacheFactory::get('hook_implementations' . ':' . Settings::get('deployment_identifier'));
-    $procedural_hook_file_cache = FileCacheFactory::get('hook_implementations' . ':' . Settings::get('deployment_identifier') . ':' . $module_preg);
+    $hook_file_cache = FileCacheFactory::get('hook_implementations');
+    $procedural_hook_file_cache = FileCacheFactory::get('procedural_hook_implementations' . ':' . $module_preg);
 
     $iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS);
     $iterator = new \RecursiveCallbackFilterIterator($iterator, static::filterIterator(...));
