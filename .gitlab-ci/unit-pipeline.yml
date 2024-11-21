@@ -37,8 +37,6 @@ default:
 
 variables:
   FF_NETWORK_PER_BUILD: 1
-  CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
-  CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
 
 ################
 # Jobs
@@ -54,7 +52,7 @@ variables:
   <<: [ *with-composer, *default-job-settings ]
   variables:
     TESTSUITE: PHPUnit-Unit
-    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_CPU_REQUEST: "2"
     CONCURRENCY: 6
   before_script:
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
