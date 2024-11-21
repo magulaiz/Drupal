@@ -42,15 +42,20 @@ class MediaLinkTarget implements EntityLinkTargetInterface {
    * {@inheritdoc}
    */
   public function getLinkTarget(EntityInterface $entity): GeneratedUrl {
+    // Follow-up issue https://www.drupal.org/project/drupal/issues/3317769
+    // Below is an example of how to get the generated URL object for a media linked entity which is used in
+    // Entity links filter @see \Drupal\filter\Plugin\Filter\EntityLinks::getUrl().
+    // At this point, media entity type is not enabled for entity suggestions in CKEditor
+    // @see ckeditor5_entity_bundle_info_alter() in ckeditor5.module.
+    // Technically, media link target handler should not be in the core until core supports media entity by default,
+    // consider this is an example on how to build a media link target handler.
     assert($entity instanceof MediaInterface);
     if ($link_target = $entity->getSource()->getMetadata($entity, MediaSourceInterface::METADATA_ATTRIBUTE_LINK_TARGET)) {
       return $link_target;
     }
 
-    // @todo Ensure that in the entity selection plugin logic only file media
     // entities are returned unless standalone URLs are enabled, to avoid
     // meaningless links like this one
-    // @todo Also evaluate tightening the interface then!
     return (new GeneratedUrl())
       ->setGeneratedUrl('')
       // No path & route processing means permanent cacheability.

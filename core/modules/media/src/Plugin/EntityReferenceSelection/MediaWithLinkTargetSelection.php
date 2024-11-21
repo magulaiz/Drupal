@@ -33,8 +33,17 @@ class MediaWithLinkTargetSelection extends MediaSelection {
     // phpcs:disable
     // @see \Drupal\media\MediaSourceBase::getMetadata()
     if (!\Drupal::config('media.settings')->get('standalone_url')) {
-      // @todo add logic to avoid finding media entities that are not linkable: any media bundle whose media source does not compute a link target should be omitted
-//      $query->condition('bundle', 'document', '<>');
+      // Follow-up issue: https://www.drupal.org/project/drupal/issues/3317769.
+      // The logic for finding media entities (which are used to provide entity link suggestions in CKEditor)
+      // should be at the API level for bundles. From the core, we enable node bundle selection only
+      // @see ckeditor5_entity_bundle_info_alter() in ckeditor5.module.
+
+      // To generates entity link suggestions for use by an autocomplete in CKEditor 5, an equivalent entity selection
+      // plugin is selected, @see \Drupal\ckeditor5\Controller\EntityLinkSuggestionsController::getSuggestions.
+
+      // This is an example to build and add logic to avoid finding media entities that are not linkable:
+      // any media bundle whose media source does not compute a link target should be omitted.
+      // $query->condition('bundle', 'document', '<>');
     }
     // phpcs:enable
 
