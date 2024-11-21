@@ -101,14 +101,13 @@ function user_requirements($phase): array {
   }
   $return = [];
 
-  $requirements = [];
   $config = \Drupal::configFactory()->getEditable('user.settings');
   $cancel_methods_options = $config->get('cancel_method_options');
   if (empty($cancel_methods_options)) {
 
     // If the user cancellation options are not configured
     // it will show all of them, so it's not critical.
-    $requirements['user_cancel_methods'] = [
+    $return['user_cancel_methods'] = [
       'title' => t('User cancellation methods'),
       'severity' => REQUIREMENT_WARNING,
       'value' => t('Missing cancellation methods'),
