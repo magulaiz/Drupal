@@ -110,10 +110,16 @@ trait RecipeInputFormTrait {
     }
     catch (ValidationFailedException $e) {
       $data = $e->getValue();
-      assert($data instanceof TypedDataInterface);
 
-      $element = NestedArray::getValue($form, explode('.', $data->getName(), 2));
-      $form_state->setError($element, $e->getMessage());
+      if ($data instanceof TypedDataInterface) {
+        $element = NestedArray::getValue($form, explode('.', $data->getName(), 2));
+        $form_state->setError($element, $e->getMessage());
+      }
+      else {
+        // If the data isn't a typed data object, we have no idea how to handle
+        // the situation, so just re-throw the exception.
+        throw $e;
+      }
     }
   }
 
