@@ -564,3 +564,12 @@ form_test.incorrect_config_target:
     _admin_route: TRUE
   requirements:
     _access: 'TRUE'
+
+form_test.weights:
+  path: '/form-test/form-weights/{alter}'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestWeightForm'
+    _title: 'Form element weight test'
+    alter: FALSE
+  requirements:
+    _access: 'TRUE'

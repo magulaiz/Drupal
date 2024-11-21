@@ -61,3 +61,15 @@ function form_test_user_register_form_rebuild($form, FormStateInterface $form_st
 function form_test_tableselect_ajax_callback($form, FormStateInterface $form_state) {
   return $form['tableselect'];
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function form_test_form_form_test_weight_alter(&$form, FormStateInterface $form_state): void {
+  // Change a form element weight, but only if a variable has been set in the
+  // form (so that the same form can be used without this modification in other
+  // tests).
+  if (isset($form['#enable_form_alter']) && $form['#enable_form_alter']) {
+    $form['form_textfield_test_1']['#weight'] = 40;
+  }
+}
