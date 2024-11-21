@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Access;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Access\RouteProcessorCsrf;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -18,24 +21,18 @@ class RouteProcessorCsrfTest extends UnitTestCase {
 
   /**
    * The mock CSRF token generator.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $csrfToken;
+  protected CsrfTokenGenerator&MockObject $csrfToken;
 
   /**
    * The mock request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $requestStack;
+  protected RequestStack&MockObject $requestStack;
 
   /**
    * The route processor.
-   *
-   * @var \Drupal\Core\Access\RouteProcessorCsrf
    */
-  protected $processor;
+  protected RouteProcessorCsrf $processor;
 
   /**
    * {@inheritdoc}
