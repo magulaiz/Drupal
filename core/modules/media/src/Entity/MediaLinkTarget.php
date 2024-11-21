@@ -54,7 +54,7 @@ class MediaLinkTarget implements EntityLinkTargetInterface {
       return $link_target;
     }
 
-    // entities are returned unless standalone URLs are enabled, to avoid
+    // Entities are returned unless standalone URLs are enabled, to avoid
     // meaningless links like this one
     return (new GeneratedUrl())
       ->setGeneratedUrl('')
