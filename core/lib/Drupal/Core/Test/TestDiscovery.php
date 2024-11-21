@@ -399,6 +399,9 @@ class TestDiscovery {
    */
   public static function getPhpunitTestSuite($classname) {
     if (preg_match('/Drupal\\\\Tests\\\\(\w+)\\\\(\w+)/', $classname, $matches)) {
+      if ($matches[1] === 'Component') {
+        return 'Unit-Component';
+      }
       // This could be an extension test, in which case the first match will be
       // the extension name. We assume that lower-case strings are module names.
       if (strtolower($matches[1]) == $matches[1]) {
@@ -407,11 +410,8 @@ class TestDiscovery {
       return 'Unit';
     }
     // Core tests.
-    elseif (preg_match('/Drupal\\\\(\w*)Tests\\\\(\w+)/', $classname, $matches)) {
+    elseif (preg_match('/Drupal\\\\(\w*)Tests\\\\/', $classname, $matches)) {
       if ($matches[1] == '') {
-        if ($matches[2] == 'Component') {
-          return 'Unit-Component';
-        }
         return 'Unit';
       }
       return $matches[1];
