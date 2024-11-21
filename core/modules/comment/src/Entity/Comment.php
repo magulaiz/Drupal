@@ -335,7 +335,9 @@ class Comment extends ContentEntityBase implements CommentInterface {
 
   /**
    * {@inheritdoc}
-   * @throws \Exception If CommentType::load is unable to load the bundle id.
+   *
+   * @throws \Exception
+   *   If CommentType::load is unable to load the bundle id.
    */
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     if ($comment_type = CommentType::load($bundle)) {
@@ -343,7 +345,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
       $fields['entity_id']->setSetting('target_type', $comment_type->getTargetEntityTypeId());
       return $fields;
     }
-    throw new \Exception('Unable to load bundle with id: ' . $bundle);
+    throw new \InvalidArgumentException('Unable to load the comment type with ID: ' . $bundle);
   }
 
   /**
