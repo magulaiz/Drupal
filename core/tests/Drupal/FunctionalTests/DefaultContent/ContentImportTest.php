@@ -26,6 +26,7 @@ use Drupal\media\MediaInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
+use Drupal\Tests\block_content\Traits\BlockContentTestTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
@@ -40,6 +41,7 @@ use Psr\Log\LogLevel;
  */
 class ContentImportTest extends BrowserTestBase {
 
+  use BlockContentTestTrait;
   use EntityReferenceFieldCreationTrait;
   use MediaTypeCreationTrait;
   use RecipeTestTrait;
@@ -77,7 +79,7 @@ class ContentImportTest extends BrowserTestBase {
     $this->setUpCurrentUser(admin: TRUE);
 
     BlockContentType::create(['id' => 'basic', 'label' => 'Basic'])->save();
-    block_content_add_body_field('basic');
+    $this->addBodyField('basic');
 
     $this->createVocabulary(['vid' => 'tags']);
     $this->createMediaType('image', ['id' => 'image']);

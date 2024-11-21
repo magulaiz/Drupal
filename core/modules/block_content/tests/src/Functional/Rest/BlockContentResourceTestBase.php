@@ -7,12 +7,15 @@ namespace Drupal\Tests\block_content\Functional\Rest;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Cache\Cache;
+use Drupal\Tests\block_content\Traits\BlockContentTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
  * ResourceTestBase for BlockContent entity.
  */
 abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
+
+  use BlockContentTestTrait;
 
   /**
    * {@inheritdoc}
@@ -71,7 +74,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
         'revision' => TRUE,
       ]);
       $block_content_type->save();
-      block_content_add_body_field($block_content_type->id());
+      $this->addBodyField($block_content_type->id());
     }
 
     // Create a "Llama" content block.

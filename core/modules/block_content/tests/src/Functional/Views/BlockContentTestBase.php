@@ -6,12 +6,15 @@ namespace Drupal\Tests\block_content\Functional\Views;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
+use Drupal\Tests\block_content\Traits\BlockContentTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 
 /**
  * Base class for all block_content tests.
  */
 abstract class BlockContentTestBase extends ViewTestBase {
+
+  use BlockContentTestTrait;
 
   /**
    * Admin user.
@@ -100,7 +103,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
     ];
     $bundle = BlockContentType::create($values);
     $status = $bundle->save();
-    block_content_add_body_field($bundle->id());
+    $this->addBodyField($bundle->id());
 
     $this->assertEquals(SAVED_NEW, $status, sprintf('Created block content type %s.', $bundle->id()));
     return $bundle;

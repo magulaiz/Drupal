@@ -6,6 +6,7 @@ namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\comment\Entity\CommentType;
+use Drupal\Tests\block_content\Traits\BlockContentTestTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -14,6 +15,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group content_translation
  */
 class ContentTranslationStandardFieldsTest extends BrowserTestBase {
+
+  use BlockContentTestTrait;
 
   /**
    * {@inheritdoc}
@@ -76,7 +79,7 @@ class ContentTranslationStandardFieldsTest extends BrowserTestBase {
       'revision' => FALSE,
     ]);
     $bundle->save();
-    block_content_add_body_field($bundle->id());
+    $this->addBodyField($bundle->id());
 
     // Create a comment type with a body field.
     $bundle = CommentType::create([

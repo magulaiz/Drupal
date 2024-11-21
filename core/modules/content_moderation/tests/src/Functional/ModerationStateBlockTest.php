@@ -6,6 +6,7 @@ namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
+use Drupal\Tests\block_content\Traits\BlockContentTestTrait;
 
 /**
  * Tests general content moderation workflow for blocks.
@@ -13,6 +14,8 @@ use Drupal\block_content\Entity\BlockContentType;
  * @group content_moderation
  */
 class ModerationStateBlockTest extends ModerationStateTestBase {
+
+  use BlockContentTestTrait;
 
   /**
    * {@inheritdoc}
@@ -44,7 +47,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $bundle->save();
 
     // Add the body field to it.
-    block_content_add_body_field($bundle->id());
+    $this->addBodyField($bundle->id());
   }
 
   /**

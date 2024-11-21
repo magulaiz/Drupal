@@ -6,12 +6,14 @@ namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
+use Drupal\Tests\block_content\Traits\BlockContentTestTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**
  * Sets up block content types.
  */
 abstract class BlockContentTestBase extends BrowserTestBase {
+  use BlockContentTestTrait;
 
   /**
    * Profile to use.
@@ -135,7 +137,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
     }
     $bundle->save();
     if ($create_body) {
-      block_content_add_body_field($bundle->id());
+      $this->addBodyField($bundle->id());
     }
     return $bundle;
   }

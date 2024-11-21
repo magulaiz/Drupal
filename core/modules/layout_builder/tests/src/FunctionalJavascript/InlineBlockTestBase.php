@@ -6,6 +6,7 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\block_content\Traits\BlockContentTestTrait;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 
 // cspell:ignore blockbasic
@@ -15,6 +16,7 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
  */
 abstract class InlineBlockTestBase extends WebDriverTestBase {
 
+  use BlockContentTestTrait;
   use ContextualLinkClickTrait;
 
   /**
@@ -220,7 +222,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
       'revision' => 1,
     ]);
     $bundle->save();
-    block_content_add_body_field($bundle->id());
+    $this->addBodyField($bundle->id());
   }
 
 }

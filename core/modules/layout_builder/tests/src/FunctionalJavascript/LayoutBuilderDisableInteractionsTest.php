@@ -10,6 +10,7 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\FunctionalJavascriptTests\JSWebAssert;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\block_content\Traits\BlockContentTestTrait;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 
@@ -23,6 +24,7 @@ use Drupal\Tests\system\Traits\OffCanvasTestTrait;
  */
 class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
 
+  use BlockContentTestTrait;
   use ContextualLinkClickTrait;
   use OffCanvasTestTrait;
 
@@ -70,7 +72,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
       'revision' => 1,
     ]);
     $bundle->save();
-    block_content_add_body_field($bundle->id());
+    $this->addBodyField($bundle->id());
 
     BlockContent::create([
       'type' => 'basic',
