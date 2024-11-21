@@ -310,7 +310,7 @@ function hook_menu_links_discovered_alter(&$links) {
  * @param \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheability
  *   The cacheability metadata for the current route's local tasks.
  *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
  *   hook_local_tasks_render_alter instead.
  *
  * @see https://www.drupal.org/node/3216578
