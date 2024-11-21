@@ -79,7 +79,7 @@ variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
     - docker-php-ext-enable pcov
-    - vendor/bin/phpunit -c core --testsuite component-unit --testdox --coverage-text --colors=always --coverage-cobertura=coverage.cobertura.xml
+    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --testdox --coverage-text --colors=always --coverage-cobertura=coverage.cobertura.xml
   artifacts:
     when: always
     reports:

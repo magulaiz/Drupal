@@ -407,8 +407,11 @@ class TestDiscovery {
       return 'Unit';
     }
     // Core tests.
-    elseif (preg_match('/Drupal\\\\(\w*)Tests\\\\/', $classname, $matches)) {
+    elseif (preg_match('/Drupal\\\\(\w*)Tests\\\\(\w+)/', $classname, $matches)) {
       if ($matches[1] == '') {
+        if ($matches[2] == 'Component') {
+          return 'Unit-Component';
+        }
         return 'Unit';
       }
       return $matches[1];
