@@ -28,8 +28,6 @@ default:
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$PHP_TARGET_IMAGE-ubuntu-apache:production
   rules:
-    - if: $PHP_TARGET_IMAGE == "8.4" && $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
-      allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
 
 .with-composer: &with-composer

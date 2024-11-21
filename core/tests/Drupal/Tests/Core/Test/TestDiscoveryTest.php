@@ -65,7 +65,7 @@ class TestDiscoveryTest extends UnitTestCase {
         'name' => 'Drupal\Tests\Component\Plugin\PluginBaseTest',
         'group' => 'Plugin',
         'groups' => ['Plugin'],
-        'description' => 'Tests \Drupal\Tests\Component\Plugin\PluginBaseTest.',
+        'description' => 'Tests \Drupal\Component\Plugin\PluginBase.',
         'type' => 'PHPUnit-Unit-Component',
       ],
       // Classname.
