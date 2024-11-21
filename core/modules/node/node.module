@@ -193,12 +193,20 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
  * @return bool
  *   TRUE if this is a full page view, otherwise FALSE.
  */
-function node_is_page(NodeInterface $node) {
+function node_is_page(NodeInterface $node): bool {
   $route_match = \Drupal::routeMatch();
-  if ($route_match->getRouteName() == 'entity.node.canonical') {
+  if ($route_match->getRouteName() == 'entity.node.canonical' || $route_match->getRouteName() == 'entity.node.revision') {
     $page_node = $route_match->getParameter('node');
+    // The Node's node parameter is typically a Node object.
+    if (is_a($page_node, 'Drupal\node\Entity\Node')) {
+      $nid = $page_node->id();
+    }
+    // The Node Revision's node parameter is typically a string.
+    elseif (is_string($page_node)) {
+      $nid = $page_node;
+    }
   }
-  return (!empty($page_node) ? $page_node->id() == $node->id() : FALSE);
+  return (!empty($nid) ? $nid == $node->id() : FALSE);
 }
 
 /**
