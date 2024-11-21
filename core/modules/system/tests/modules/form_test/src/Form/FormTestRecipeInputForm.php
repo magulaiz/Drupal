@@ -21,6 +21,12 @@ class FormTestRecipeInputForm extends FormBase {
     return 'form_test_recipe_input';
   }
 
+  /**
+   * Returns the recipe object under test.
+   *
+   * @return \Drupal\Core\Recipe\Recipe
+   *   A Recipe object for the input_test recipe.
+   */
   private function getRecipe(): Recipe {
     return Recipe::createFromDirectory('core/tests/fixtures/recipes/input_test');
   }

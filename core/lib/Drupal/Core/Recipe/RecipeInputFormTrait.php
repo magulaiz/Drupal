@@ -32,6 +32,38 @@ trait RecipeInputFormTrait {
   protected function buildRecipeInputForm(Recipe $recipe): array {
     $collector = new class () implements InputCollectorInterface {
 
+      /**
+       * A form array containing the input elements for the given recipe.
+       *
+       * This will be a tree of input elements, grouped by the name of the
+       * recipe that defines them. For example:
+       *
+       * @code
+       * $form = [
+       *   'recipe_1' => [
+       *     'input_1' => [
+       *       '#type' => 'textfield',
+       *       '#title' => 'Some input value',
+       *     ],
+       *     'input_2' => [
+       *       '#type' => 'checkbox',
+       *       '#title' => 'Enable some feature or other?',
+       *     ],
+       *   ],
+       *   'dependency_recipe' => [
+       *     'input_1' => [
+       *       '#type' => 'textarea',
+       *       '#title' => 'An input defined by a dependency of recipe_1',
+       *     ],
+       *   ],
+       *   '#tree' => TRUE,
+       * ];
+       * @endcode
+       *
+       * The `#tree` property will always be set to TRUE.
+       *
+       * @var array
+       */
       // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       public array $form = [];
 
