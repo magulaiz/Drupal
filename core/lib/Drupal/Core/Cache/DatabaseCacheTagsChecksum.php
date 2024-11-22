@@ -14,6 +14,13 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
   use LazyTableCreationTrait;
 
   /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
    * Constructs a DatabaseCacheTagsChecksum object.
    *
    * @param \Drupal\Core\Database\Connection $connection

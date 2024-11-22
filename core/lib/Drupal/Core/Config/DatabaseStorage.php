@@ -15,6 +15,20 @@ class DatabaseStorage implements StorageInterface {
   use LazyTableCreationTrait;
 
   /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * The database table name.
+   *
+   * @var string
+   */
+  protected $table;
+
+  /**
    * Additional database connection options to use in queries.
    *
    * @var array

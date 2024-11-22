@@ -27,6 +27,13 @@ class DatabaseLockBackend extends LockBackendAbstract {
   const TABLE_NAME = 'semaphore';
 
   /**
+   * The database table name.
+   *
+   * @var string
+   */
+  protected $table;
+
+  /**
    * The database connection.
    *
    * @var \Drupal\Core\Database\Connection
@@ -37,6 +44,13 @@ class DatabaseLockBackend extends LockBackendAbstract {
    * @see https://www.drupal.org/node/3301744
    */
   protected $database;
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
 
   /**
    * Constructs a new DatabaseLockBackend.

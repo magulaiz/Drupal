@@ -57,8 +57,8 @@ class MatcherDumper implements MatcherDumperInterface {
     protected LoggerInterface $logger,
     protected $table = 'router',
   ) {
-    if (is_null($this->table)) {
-      $this->table = $table;
+    if (is_null($this->tableName)) {
+      $this->tableName = $table;
     }
     $this->tableName = $this->table;
   }

@@ -8,20 +8,6 @@ namespace Drupal\Core\Database;
 trait LazyTableCreationTrait {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The table name.
-   *
-   * @var string
-   */
-  protected $table;
-
-  /**
    * Defines the schema for the table.
    *
    * @return array

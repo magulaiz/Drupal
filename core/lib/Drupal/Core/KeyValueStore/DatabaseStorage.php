@@ -27,6 +27,20 @@ class DatabaseStorage extends StorageBase {
   protected $serializer;
 
   /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * The name of the SQL table to use.
+   *
+   * @var string
+   */
+  protected $table;
+
+  /**
    * Overrides Drupal\Core\KeyValueStore\StorageBase::__construct().
    *
    * @param string $collection

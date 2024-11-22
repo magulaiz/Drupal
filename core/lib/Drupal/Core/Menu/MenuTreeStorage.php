@@ -26,6 +26,14 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    */
   const MAX_DEPTH = 9;
 
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
   /**
    * Cache backend instance for the extracted tree data.
    *
@@ -39,6 +47,13 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
    */
   protected $cacheTagsInvalidator;
+
+  /**
+   * The database table name.
+   *
+   * @var string
+   */
+  protected $table;
 
   /**
    * Additional database connection options to use in queries.

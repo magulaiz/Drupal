@@ -23,6 +23,13 @@ class BatchStorage implements BatchStorageInterface {
   const TABLE_NAME = 'batch';
 
   /**
+   * The database table name.
+   *
+   * @var string
+   */
+  protected $table;
+
+  /**
    * Constructs the database batch storage service.
    *
    * @param \Drupal\Core\Database\Connection $connection
