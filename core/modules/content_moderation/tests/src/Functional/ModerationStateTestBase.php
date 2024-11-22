@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Functional;
 
-use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
@@ -122,11 +121,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check the content type has been set to create new revisions.
-    $node_type = NodeType::load($content_type_id);
-    $this->assertTrue($node_type->shouldCreateNewRevision());
-    // Ensure the Body field exists on the content type.
-    \Drupal::service(EntityTypeBundleInfoInterface::class)->clearCachedBundles();
-    node_add_body_field($node_type);
+    $this->assertTrue(NodeType::load($content_type_id)->shouldCreateNewRevision());
 
     if ($moderated) {
       $this->enableModerationThroughUi($content_type_id, $workflow_id);

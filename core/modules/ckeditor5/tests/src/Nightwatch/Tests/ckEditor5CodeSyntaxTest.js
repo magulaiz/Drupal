@@ -72,16 +72,6 @@ module.exports = {
           '[data-drupal-messages]',
           'The content type test has been added',
         )
-        // Add the body field to the new content type.
-        .drupalRelativeURL('/admin/structure/types/manage/test/fields/reuse')
-        .submitForm('input[name="body"]')
-        .waitForElementVisible('[data-drupal-selector="edit-label"]')
-        .submitForm('input[type="submit"]')
-        .waitForElementVisible('[data-drupal-messages]')
-        .assert.textContains(
-          '[data-drupal-messages]',
-          'Saved Body configuration.',
-        )
 
         // Navigate to create new content.
         .drupalRelativeURL('/node/add/test')
