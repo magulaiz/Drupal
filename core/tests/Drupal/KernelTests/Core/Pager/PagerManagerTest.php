@@ -14,14 +14,13 @@ class PagerManagerTest extends KernelTestBase {
 
   /**
    * @covers ::getUpdatedParameters
+   *
+   * @dataProvider providerTestGetUpdatedParameters
    */
-  public function testGetUpdatedParameters() {
+  public function testGetUpdatedParameters(array $query_parameters, string $expected_key): void {
     $element = 2;
     $index = 5;
-    $test_parameters = [
-      'other' => 'arbitrary',
-    ];
-    $request = Request::create('http://example.com', 'GET', $test_parameters);
+    $request = Request::create('http://example.com', 'GET', $query_parameters);
 
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = $this->container->get('request_stack');
@@ -33,9 +32,35 @@ class PagerManagerTest extends KernelTestBase {
     $pager_manager->createPager(30, 10, $element);
     $query = $pager_manager->getUpdatedParameters($request->query->all(), $element, $index);
 
-    $this->assertArrayHasKey('other', $query);
+    $this->assertArrayHasKey($expected_key, $query);
 
     $this->assertEquals(",,$index", $query['page']);
+  }
+
+  /**
+   * Provides test cases for PagerManagerTest::testGetUpdatedParameters().
+   *
+   * @return array
+   *   An array of test cases, each which the following values:
+   *   - Array of elements to pass to the request.
+   *   - The expected value returned by
+   *     PagerManagerInterface::getUpdatedParameters().
+   */
+  public function providerTestGetUpdatedParameters(): array {
+    return [
+      'string_key' => [
+        [
+          'other' => 'arbitrary',
+        ],
+        'other',
+      ],
+      'numeric_key' => [
+        [
+          '2' => '',
+        ],
+        '2',
+      ],
+    ];
   }
 
   /**
