@@ -56,6 +56,17 @@ final class EntityClone implements ConfigActionPluginInterface, ContainerFactory
     if (empty($original)) {
       throw new ConfigActionException("Cannot clone '$configName' because it does not exist.");
     }
+
+    // Treat the original ID like a period-separated array of strings, and
+    // replace positional tokens in the clone ID (like `${1}`) with the
+    // corresponding part of the original ID.
+    $tokens = [];
+    foreach (explode('.', $original->id()) as $index => $replacement) {
+      $search_for = sprintf('${%d}', $index);
+      $tokens[$search_for] = $replacement;
+    }
+    $value['id'] = str_replace(array_keys($tokens), $tokens, $value['id']);
+
     $clone = $original->createDuplicate();
     $clone->set($original->getEntityType()->getKey('id'), $value['id']);
 
