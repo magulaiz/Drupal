@@ -25,6 +25,13 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
   const TABLE_NAME = 'flood';
 
   /**
+   * The database table name.
+   *
+   * @var string
+   */
+  protected $table;
+
+  /**
    * Construct the DatabaseBackend.
    *
    * @param \Drupal\Core\Database\Connection $connection

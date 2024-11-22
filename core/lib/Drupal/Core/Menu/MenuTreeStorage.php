@@ -26,7 +26,6 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    */
   const MAX_DEPTH = 9;
 
-
   /**
    * The database connection.
    *
