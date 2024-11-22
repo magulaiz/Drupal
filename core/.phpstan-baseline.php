@@ -1899,12 +1899,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Asset\\\\LibraryDiscoveryParser\\:\\:setOverrideValue\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Asset/LibraryDiscoveryParser.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Authentication\\\\AuthenticationCollector\\:\\:addProvider\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Authentication/AuthenticationCollector.php',
