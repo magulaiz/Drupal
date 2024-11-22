@@ -35,6 +35,11 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   use StatementIteratorTrait;
 
   /**
+   * Determines if results are prefetched.
+   */
+  protected ?PrefetchedResult $prefetchedResult = NULL;
+
+  /**
    * Holds the default fetch mode.
    */
   protected FetchAs $defaultFetchMode = FetchAs::Object;
@@ -55,11 +60,14 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   Drupal database connection object.
+   * @param object $clientConnection
+   *   Client database connection object, for example \PDO.
    * @param bool $rowCountEnabled
    *   (optional) Enables counting the rows matched. Defaults to FALSE.
    */
   public function __construct(
     protected readonly Connection $connection,
+    protected readonly object $clientConnection,
     protected readonly bool $rowCountEnabled = FALSE,
   ) {
   }
@@ -239,7 +247,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   public function rowCount() {
     // SELECT query should not use the method.
     if ($this->rowCountEnabled) {
-      return $this->clientRowCount();
+      return $this->prefetchedResult ? $this->prefetchedResult->rowCount : $this->clientRowCount();
     }
     else {
       throw new RowCountException();
@@ -264,8 +272,13 @@ abstract class StatementBase implements \Iterator, StatementInterface {
         break;
 
     }
-
-    return $this->clientSetFetchMode($mode, $a1, $a2);
+    try {
+      return $this->prefetchedResult ? TRUE : $this->clientSetFetchMode($mode, $a1, $a2);
+    }
+    catch (\RuntimeException) {
+      // The client statement is missing, just do with the properties setting.
+      return TRUE;
+    }
   }
 
   /**
@@ -362,10 +375,10 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * @param int|null $cursorOffset
    *   Not implemented in all database drivers, don't use.
    *
-   * @return array<string|int|float|bool>|object|false
+   * @return array<scalar|null>|object|scalar|null|false
    *   A result, formatted according to $mode, or FALSE on failure.
    */
-  abstract protected function clientFetch(?FetchAs $mode = NULL, ?int $cursorOrientation = NULL, ?int $cursorOffset = NULL): array|object|string|int|float|bool;
+  abstract protected function clientFetch(?FetchAs $mode = NULL, ?int $cursorOrientation = NULL, ?int $cursorOffset = NULL): array|object|int|float|string|bool|NULL;
 
   /**
    * Returns a single column from the next row of a result set.

@@ -42,7 +42,7 @@ trait PdoTrait {
    *   If the client-level statement is not set.
    */
   public function getClientStatement(): \PDOStatement {
-    if ($this->clientStatement) {
+    if (isset($this->clientStatement)) {
       assert($this->clientStatement instanceof \PDOStatement);
       return $this->clientStatement;
     }
@@ -62,7 +62,7 @@ trait PdoTrait {
    *   constructor.
    *
    * @return bool
-   *   Returns true on success or false on failure.
+   *   Returns TRUE on success or FALSE on failure.
    */
   protected function clientSetFetchMode(FetchAs $mode, int|string|null $columnOrClass = NULL, array|null $constructorArguments = NULL): bool {
     return match ($mode) {

@@ -41,8 +41,8 @@ class StatementWrapperIterator extends StatementBase {
     array $options,
     bool $rowCountEnabled = FALSE,
   ) {
-    parent::__construct($connection, $rowCountEnabled);
-    $this->clientStatement = $clientConnection->prepare($query, $options);
+    parent::__construct($connection, $clientConnection, $rowCountEnabled);
+    $this->clientStatement = $this->clientConnection->prepare($query, $options);
     $this->setFetchMode(FetchAs::Object);
   }
 

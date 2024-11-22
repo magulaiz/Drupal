@@ -7,6 +7,8 @@ use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\Statement\PdoTrait;
+use Drupal\Core\Database\Statement\PrefetchedResult;
+use Drupal\Core\Database\Statement\StatementBase;
 
 /**
  * An implementation of StatementInterface that prefetches all data.
@@ -15,11 +17,9 @@ use Drupal\Core\Database\Statement\PdoTrait;
  * \PDOStatement but as it always fetches every row it is possible to
  * manipulate those results.
  */
-class StatementPrefetchIterator implements \Iterator, StatementInterface {
+class StatementPrefetchIterator extends StatementBase {
 
-  use FetchModeTrait;
   use PdoTrait;
-  use StatementIteratorTrait;
 
   /**
    * The client database Statement object.
@@ -27,25 +27,6 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * For a \PDO client connection, this will be a \PDOStatement object.
    */
   protected ?object $clientStatement;
-
-  /**
-   * Main data store.
-   *
-   * The resultset is stored as a FetchAs::Associative array.
-   */
-  protected array $data = [];
-
-  /**
-   * The list of column names in this result set.
-   *
-   * @var string[]
-   */
-  protected ?array $columnNames = NULL;
-
-  /**
-   * The number of rows matched by the last query.
-   */
-  protected ?int $rowCount = NULL;
 
   /**
    * Holds the default fetch style.
@@ -56,22 +37,6 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * @see https://www.drupal.org/node/3488338
    */
   protected int $defaultFetchStyle = \PDO::FETCH_OBJ;
-
-  /**
-   * Holds the default fetch mode.
-   */
-  protected FetchAs $defaultFetchMode = FetchAs::Object;
-
-  /**
-   * Holds fetch options.
-   *
-   * @var array{'class': class-string, 'constructor_args': array<mixed>, 'column': int}
-   */
-  protected array $fetchOptions = [
-    'class' => 'stdClass',
-    'constructor_args' => [],
-    'column' => 0,
-  ];
 
   /**
    * Constructs a StatementPrefetchIterator object.
@@ -88,19 +53,13 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    *   (optional) Enables counting the rows matched. Defaults to FALSE.
    */
   public function __construct(
-    protected readonly object $clientConnection,
-    protected readonly Connection $connection,
+    object $clientConnection,
+    Connection $connection,
     protected string $queryString,
     protected array $driverOptions = [],
-    protected readonly bool $rowCountEnabled = FALSE,
+    bool $rowCountEnabled = FALSE,
   ) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConnectionTarget(): string {
-    return $this->connection->getTarget();
+    parent::__construct($connection, $clientConnection, $rowCountEnabled);
   }
 
   /**
@@ -109,18 +68,6 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   public function execute($args = [], $options = []) {
     if (isset($options['fetch']) && is_int($options['fetch'])) {
       @trigger_error("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-    }
-
-    if (isset($options['fetch'])) {
-      if (is_string($options['fetch'])) {
-        // Default to an object. Note: db fields will be added to the object
-        // before the constructor is run. If you need to assign fields after
-        // the constructor is run. See https://www.drupal.org/node/315092.
-        $this->setFetchMode(FetchAs::ClassObject, $options['fetch']);
-      }
-      else {
-        $this->setFetchMode($options['fetch']);
-      }
     }
 
     if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
@@ -161,14 +108,29 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
     // Fetch all the data from the reply, in order to release any lock as soon
     // as possible.
-    $this->data = $this->clientFetchAll(FetchAs::Associative);
-    $this->rowCount = $this->rowCountEnabled ? $this->clientRowCount() : NULL;
+    $data = $this->clientFetchAll(FetchAs::Associative);
+    $this->prefetchedResult = new PrefetchedResult(
+      $data,
+      count($data) > 0 ? array_keys($data[0]) : [],
+      $this->rowCountEnabled ? $this->clientRowCount() : NULL,
+    );
+
     // Destroy the statement as soon as possible. See the documentation of
     // \Drupal\sqlite\Driver\Database\sqlite\Statement for an explanation.
     unset($this->clientStatement);
     $this->markResultsetIterable($return);
 
-    $this->columnNames = count($this->data) > 0 ? array_keys($this->data[0]) : [];
+    if (isset($options['fetch'])) {
+      if (is_string($options['fetch'])) {
+        // Default to an object. Note: db fields will be added to the object
+        // before the constructor is run. If you need to assign fields after
+        // the constructor is run. See https://www.drupal.org/node/315092.
+        $this->setFetchMode(FetchAs::ClassObject, $options['fetch']);
+      }
+      else {
+        $this->setFetchMode($options['fetch']);
+      }
+    }
 
     if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
       $this->connection->dispatchEvent(new StatementExecutionEndEvent(
@@ -206,49 +168,15 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function getQueryString() {
-    return $this->queryString;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
     if (is_int($mode)) {
       @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
       $mode = $this->pdoToFetchAs($mode);
     }
-
-    $this->defaultFetchMode = $mode;
     // @todo Remove backwards compatibility statement below in drupal:12.0.0.
     // @phpstan-ignore property.deprecated
     $this->defaultFetchStyle = $this->fetchAsToPdo($mode);
-    switch ($mode) {
-      case FetchAs::ClassObject:
-        $this->fetchOptions['class'] = $a1;
-        if ($a2) {
-          $this->fetchOptions['constructor_args'] = $a2;
-        }
-        break;
-
-      case FetchAs::Column:
-        $this->fetchOptions['column'] = $a1;
-        break;
-
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function rowCount() {
-    // SELECT query should not use the method.
-    if ($this->rowCountEnabled) {
-      return $this->rowCount;
-    }
-    else {
-      throw new RowCountException();
-    }
+    return parent::setFetchMode($mode, $a1, $a2);
   }
 
   /**
@@ -264,21 +192,21 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
     // We can remove the current record from the prefetched data, before
     // moving to the next record.
-    unset($this->data[$currentKey]);
+    unset($this->prefetchedResult->data[$currentKey]);
     $currentKey++;
-    if (!isset($this->data[$currentKey])) {
+    if (!isset($this->prefetchedResult->data[$currentKey])) {
       $this->markResultsetFetchingComplete();
       return FALSE;
     }
 
     // Now, format the next prefetched record according to the required fetch
     // style.
-    $rowAssoc = $this->data[$currentKey];
+    $rowAssoc = $this->prefetchedResult->data[$currentKey];
     $mode = $fetch_style ?? $this->defaultFetchMode;
     $row = match($mode) {
       FetchAs::Associative => $rowAssoc,
       FetchAs::ClassObject => $this->assocToClass($rowAssoc, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
-      FetchAs::Column => $this->assocToColumn($rowAssoc, $this->columnNames, $this->fetchOptions['column']),
+      FetchAs::Column => $this->assocToColumn($rowAssoc, $this->prefetchedResult->columnNames, $this->fetchOptions['column']),
       FetchAs::List => $this->assocToNum($rowAssoc),
       FetchAs::Object => $this->assocToObj($rowAssoc),
     };
@@ -292,7 +220,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    */
   public function fetchColumn($index = 0) {
     if ($row = $this->fetch(FetchAs::Associative)) {
-      return $row[$this->columnNames[$index]];
+      return $row[$this->prefetchedResult->columnNames[$index]];
     }
     return FALSE;
   }
@@ -302,7 +230,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    */
   public function fetchField($index = 0) {
     if ($row = $this->fetch(FetchAs::Associative)) {
-      return $row[$this->columnNames[$index]];
+      return $row[$this->prefetchedResult->columnNames[$index]];
     }
     return FALSE;
   }
@@ -356,10 +284,10 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchCol($index = 0) {
-    if (isset($this->columnNames[$index])) {
+    if (isset($this->prefetchedResult->columnNames[$index])) {
       $result = [];
       while ($row = $this->fetch(FetchAs::Associative)) {
-        $result[] = $row[$this->columnNames[$index]];
+        $result[] = $row[$this->prefetchedResult->columnNames[$index]];
       }
       return $result;
     }
@@ -370,12 +298,12 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllKeyed($key_index = 0, $value_index = 1) {
-    if (!isset($this->columnNames[$key_index]) || !isset($this->columnNames[$value_index])) {
+    if (!isset($this->prefetchedResult->columnNames[$key_index]) || !isset($this->prefetchedResult->columnNames[$value_index])) {
       return [];
     }
 
-    $key = $this->columnNames[$key_index];
-    $value = $this->columnNames[$value_index];
+    $key = $this->prefetchedResult->columnNames[$key_index];
+    $value = $this->prefetchedResult->columnNames[$value_index];
 
     $result = [];
     while ($row = $this->fetch(FetchAs::Associative)) {
@@ -395,9 +323,16 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
     $result = [];
     while ($row = $this->fetch($fetch ?? $this->defaultFetchMode)) {
-      $result[$this->data[$this->getResultsetCurrentRowIndex()][$key]] = $row;
+      $result[$this->prefetchedResult->data[$this->getResultsetCurrentRowIndex()][$key]] = $row;
     }
     return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function clientQueryString(): string {
+    return $this->queryString;
   }
 
 }
