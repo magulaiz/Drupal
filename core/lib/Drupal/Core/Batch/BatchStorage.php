@@ -27,7 +27,7 @@ class BatchStorage implements BatchStorageInterface {
    *
    * @var string
    */
-  protected $table;
+  protected $table = 'batch';
 
   /**
    * Constructs the database batch storage service.
@@ -47,7 +47,6 @@ class BatchStorage implements BatchStorageInterface {
     protected CsrfTokenGenerator $csrfToken,
     protected TimeInterface $time,
   ) {
-    $this->table = 'batch';
   }
 
   /**

@@ -31,7 +31,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
    *
    * @var string
    */
-  protected $table;
+  protected $table = 'semaphore';
 
   /**
    * The database connection.
@@ -62,7 +62,6 @@ class DatabaseLockBackend extends LockBackendAbstract {
     // __destruct() is causing problems with garbage collections, register a
     // shutdown function instead.
     drupal_register_shutdown_function([$this, 'releaseAll']);
-    $this->table = 'semaphore';
     $this->connection = $database;
     $this->database = $database;
   }

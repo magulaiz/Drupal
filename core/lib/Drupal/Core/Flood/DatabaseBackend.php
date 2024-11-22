@@ -29,7 +29,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
    *
    * @var string
    */
-  protected $table;
+  protected $table = 'flood';
 
   /**
    * Construct the DatabaseBackend.
@@ -47,7 +47,6 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
     protected RequestStack $requestStack,
     protected TimeInterface $time,
   ) {
-    $this->table = 'flood';
   }
 
   /**
