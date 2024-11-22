@@ -134,7 +134,11 @@ class ResourceFetcher implements ResourceFetcherInterface {
       return NULL;
     }
 
-    $high_quality_thumbnail = str_replace('hqdefault', 'maxresdefault', $data['thumbnail_url']);
+    $high_quality_thumbnail = preg_replace('@(hq)(\w+\.[^\.]+)$@Ui', 'maxres$2', $data['thumbnail_url']);
+    if ($high_quality_thumbnail === $data['thumbnail_url']) {
+      return NULL;
+    }
+
     try {
       $response = $this->httpClient->request('GET', $high_quality_thumbnail, [
         RequestOptions::TIMEOUT => 5,
