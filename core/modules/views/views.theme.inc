@@ -655,7 +655,16 @@ function template_preprocess_views_view_table(&$variables) {
 
   // Add the caption to the list if set.
   if (!empty($handler->options['caption'])) {
-    $variables['caption'] = ['#markup' => $handler->options['caption']];
+    if (method_exists($handler, 'getCaption')) {
+      // Get the first row index for the current results.
+      // Allows grouping table captions to work.
+      $row_index = !empty($result) ? reset($result)->index : 0;
+      $variables['caption'] = ['#markup' => $handler->getCaption($row_index)];
+    }
+    else {
+      $variables['caption'] = ['#markup' => $handler->options['caption']];
+    }
+    
     $variables['caption_needed'] = TRUE;
   }
   elseif (!empty($variables['title'])) {

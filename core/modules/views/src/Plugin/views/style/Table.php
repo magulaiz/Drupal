@@ -230,6 +230,10 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
       '#maxlength' => 255,
     ];
 
+    if ($this->usesFields()) {
+      $form['caption']['#description'] .= ' ' . $this->t('You may use field tokens as per the "Replacement patterns" used in "Rewrite the output of this field" with values from the first row of results.');
+    }
+
     $form['accessibility_details'] = [
       '#type' => 'details',
       '#title' => $this->t('Table details'),
@@ -445,6 +449,41 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
     }
 
     return $contexts;
+  }
+
+  /**
+   * Return the token replaced caption.
+   * 
+   * @param integer $row_index
+   *   Index of the row to get tokens from.
+   *
+   * @return string
+   *   A stripped tokenized caption.
+   */
+  public function getCaption($row_index) {
+    $caption = $this->options['caption'];
+    if ($this->usesTokens() && $this->usesFields() && $this->view->field) {
+      $caption = strip_tags($this->tokenizeValue($caption, $row_index));
+    }
+
+    return $caption;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function usesTokens() {
+    $usesTokens = parent::usesTokens();
+
+    // Also check if the table caption uses tokens.
+    if (!$usesTokens) {
+      $caption = $this->options['caption'];
+      if (strpos($caption, '{{') !== FALSE) {
+        $usesTokens = TRUE;
+      }
+    }
+
+    return $usesTokens;
   }
 
   /**
