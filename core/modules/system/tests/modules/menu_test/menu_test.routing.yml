@@ -66,8 +66,38 @@ menu_test.child3_test:
   requirements:
     _access: 'TRUE'
 
-menu_test.super_child1_test:
-  path: '/parent_test/child_test/super_child1_test'
+menu_test.child4_test:
+  path: '/parent_test/child4_test'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
+  requirements:
+    _permission: 'access child4 test page'
+
+menu_test.grand_child4_test:
+  path: '/parent_test/child4_test/grand_child4_test'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
+  requirements:
+    _permission: 'access grand child4 test page'
+
+menu_test.child4_test_overview:
+  path: '/parent_test/child4_test'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::overview'
+    link_id: 'menu_test.parent_test.child4_test'
+    _title: 'Configuration'
+  requirements:
+    _access: 'TRUE'
+
+menu_test.grand_child1_test:
+  path: '/parent_test/child_test/grand_child1_test'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access grand child1 test page'
+
+menu_test.great_grand_child1_test:
+  path: '/parent_test/child_test/great_grand_child1_test'
   defaults:
     _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
   requirements:
