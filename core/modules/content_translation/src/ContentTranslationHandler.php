@@ -561,7 +561,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
 
     // Handle entity form submission before the entity has been saved.
     foreach (Element::children($form['actions']) as $action) {
-      if (isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] == 'submit') {
+      if (isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] == 'submit' && isset($form['actions'][$action]['#submit'])) {
         array_unshift($form['actions'][$action]['#submit'], [$this, 'entityFormSubmit']);
       }
     }
