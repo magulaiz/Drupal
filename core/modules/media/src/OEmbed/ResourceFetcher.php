@@ -5,6 +5,7 @@ namespace Drupal\media\OEmbed;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Client\ClientExceptionInterface;
 
@@ -89,25 +90,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
       throw new ResourceException('The oEmbed resource could not be decoded.', $url);
     }
 
-    if (isset($data['provider_name']) && $data['provider_name'] === 'Vimeo') {
-      $data['thumbnail_url'] = $this->doVimeoRequest($data)['video']['thumbnail_large'];
-    }
-    if (isset($data['provider_name']) && $data['provider_name'] === 'YouTube') {
-      // Check for high quality thumbnail.
-      $high_quality_thumbnail = str_replace('hqdefault', 'maxresdefault', $data['thumbnail_url']);
-      try {
-        $response = $this->httpClient->request('GET', $high_quality_thumbnail, [
-          RequestOptions::TIMEOUT => 5,
-        ]);
-
-        if ($response->getStatusCode() === 200) {
-          $data['thumbnail_url'] = $high_quality_thumbnail;
-        }
-      }
-      catch (TransferException $e) {
-        // Use default thumbnail.
-      }
-    }
+    $this->convertToHighResolutionThumbnail($data);
 
     $this->cacheBackend->set($cache_id, $data);
 
@@ -115,34 +98,94 @@ class ResourceFetcher implements ResourceFetcherInterface {
   }
 
   /**
-   * Do request to Vimeo v2 API to return large thumbnail.
+   * Convert the embed data to a high resolution thumbnail.
    *
    * @param array $data
-   *   The video data.
+   *   The embed data altered by reference.
    *
-   * @return array
-   *   return large thumbnail
-   *
-   * @throws \Drupal\media\OEmbed\ResourceException
-   * @throws \GuzzleHttp\Exception\GuzzleException
+   * @todo Convert to a hook or event for others to update to a high resolution.
+   * @todo Set the width and height of the high resolution image.
    */
-  protected function doVimeoRequest(array $data): array{
-    if (isset($data['video_id'])) {
-      $vimeoUrl = 'https://vimeo.com/api/v2/video/' . $data['video_id'] . '.xml';
+  protected function convertToHighResolutionThumbnail(array &$data): void {
+    $provider_name = $data['provider_name'] ?? NULL;
+    $high_resolution_thumbnail_url = NULL;
+    if ($provider_name === 'Vimeo') {
+      $high_resolution_thumbnail_url = $this->getVimeoHighResolutionThumbnailUrl($data);
     }
-    if (isset($vimeoUrl)) {
-      try {
-        $response = $this->httpClient->request('GET', $vimeoUrl, [
-          RequestOptions::TIMEOUT => 5,
-        ]);
-      }
-      catch (TransferException $e) {
-        throw new ResourceException('Could not retrieve the oEmbed resource.', $vimeoUrl, [], $e);
-      }
-      $content = (string) $response->getBody();
+    elseif ($provider_name === 'YouTube') {
+      $high_resolution_thumbnail_url = $this->getYouTubeHighResolutionThumbnailUrl($data);
+    }
 
-      return $this->parseResourceXml($content, $vimeoUrl);
+    if ($high_resolution_thumbnail_url) {
+      $data['thumbnail_url'] = $high_resolution_thumbnail_url;
     }
+  }
+
+  /**
+   * Get the YouTube high resolution thumbnail.
+   *
+   * @param array $data
+   *   The embed data.
+   *
+   * @return string|null
+   *   The URL for the high resolution thumbnail.
+   */
+  protected function getYouTubeHighResolutionThumbnailUrl(array $data): ?string {
+    if (empty($data['thumbnail_url'])) {
+      return NULL;
+    }
+
+    $high_quality_thumbnail = str_replace('hqdefault', 'maxresdefault', $data['thumbnail_url']);
+    try {
+      $response = $this->httpClient->request('GET', $high_quality_thumbnail, [
+        RequestOptions::TIMEOUT => 5,
+        RequestOptions::HTTP_ERRORS => FALSE,
+      ]);
+
+      if ($response->getStatusCode() === 200) {
+        return $high_quality_thumbnail;
+      }
+    }
+    catch (\Throwable $e) {
+      // Any error, use the default thumbnail.
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Get the Vimeo high resolution thumbnail.
+   *
+   * @param array $data
+   *   The embed data.
+   *
+   * @return string|null
+   *   The URL for the high resolution thumbnail.
+   */
+  protected function getVimeoHighResolutionThumbnailUrl(array $data): ?string {
+    if (empty($data['video_id'])) {
+      return NULL;
+    }
+
+    $vimeo_url = 'https://vimeo.com/api/v2/video/' . $data['video_id'] . '.xml';
+    try {
+      $response = $this->httpClient->request('GET', $vimeo_url, [
+        RequestOptions::TIMEOUT => 5,
+        RequestOptions::HTTP_ERRORS => FALSE,
+      ]);
+      $content = (string) $response->getBody();
+      $parsed_data = $this->parseResourceXml($content, $vimeo_url);
+      if ($parsed_data &&
+          !empty($parsed_data['video']['thumbnail_large']) &&
+          is_string($parsed_data['video']['thumbnail_large'])) {
+        return (string) $parsed_data['video']['thumbnail_large'];
+      }
+    }
+    catch (\Throwable $e) {
+      // Any error use the default thumbnail.
+    }
+
+    return NULL;
   }
 
   /**
