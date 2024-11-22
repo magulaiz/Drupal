@@ -15,6 +15,9 @@ use Drupal\link\LinkItemInterface;
 /**
  * Tests the default 'link' formatter with complex query parameters.
  *
+ * Create entity with link field. Add multiple links to that field. Render
+ * field using different display settings. Check render results.
+ *
  * @group link
  */
 class LinkItemUrlDisplayTest extends FieldKernelTestBase {
@@ -94,7 +97,7 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
    *   The URLs to test.
    */
   public static function getTestingUrls(): array {
-    $test_urls = [
+    return [
       [
         'input' => 'internal:?a[]=1&a[]=2',
         // Result link: '?a[0]=1&a[1]=2'.
@@ -133,7 +136,6 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
         'expected_href'  => '?z%5B0%5D=2',
       ],
     ];
-    return $test_urls;
   }
 
   /**
@@ -143,49 +145,50 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
    *   Test cases.
    */
   public static function getTestCases(): array {
-    return [
-      'default settings' => [
-        'display settings' => [],
-        'results' => array_map(function ($values) {
-          return '<a href="' . $values['expected_href'] . '">' . $values['expected_href'] . '</a>';
-        }, self::getTestingUrls()),
-      ],
-      'trim title to 6' => [
-        'display settings' => ['trim_length' => 6],
-        'results' => array_map(function ($values) {
-          $title = Unicode::truncate($values['expected_href'], 6, FALSE, TRUE);
-          return '<a href="' . $values['expected_href'] . '">' . $title . '</a>';
-        }, self::getTestingUrls()),
-      ],
-      'attribute rel' => [
-        'display settings' => ['rel' => 'nofollow'],
-        'results' => array_map(function ($values) {
-          return '<a href="' . $values['expected_href'] . '" rel="nofollow">' . $values['expected_href'] . '</a>';
-        }, self::getTestingUrls()),
-      ],
-      'attribute target' => [
-        'display settings' => ['target' => '_blank'],
-        'results' => array_map(function ($values) {
-          return '<a href="' . $values['expected_href'] . '" target="_blank">' . $values['expected_href'] . '</a>';
-        }, self::getTestingUrls()),
-      ],
-      'url_only' => [
-        'display settings' => ['url_only' => TRUE],
-        'results' => array_map(function ($values) {
-          return '<a href="' . $values['expected_href'] . '">' . $values['expected_href'] . '</a>';
-        }, self::getTestingUrls()),
-      ],
-      'url_only and url_plain' => [
-        'display settings' => ['url_only' => TRUE, 'url_plain' => TRUE],
-        'results' => array_map(function ($values) {
-          return $values['expected_href'];
-        }, self::getTestingUrls()),
-      ],
+    $cases = [];
+    $cases['default settings'] = [
+      'display settings' => [],
+      'results' => array_map(function ($values) {
+        return '<a href="' . $values['expected_href'] . '">' . $values['expected_href'] . '</a>';
+      }, self::getTestingUrls()),
     ];
+    $cases['trim title to 6'] = [
+      'display settings' => ['trim_length' => 6],
+      'results' => array_map(function ($values) {
+        $title = Unicode::truncate($values['expected_href'], 6, FALSE, TRUE);
+        return '<a href="' . $values['expected_href'] . '">' . $title . '</a>';
+      }, self::getTestingUrls()),
+    ];
+    $cases['attribute rel'] = [
+      'display settings' => ['rel' => 'nofollow'],
+      'results' => array_map(function ($values) {
+        return '<a href="' . $values['expected_href'] . '" rel="nofollow">' . $values['expected_href'] . '</a>';
+      }, self::getTestingUrls()),
+    ];
+    $cases['attribute target'] = [
+      'display settings' => ['target' => '_blank'],
+      'results' => array_map(function ($values) {
+        return '<a href="' . $values['expected_href'] . '" target="_blank">' . $values['expected_href'] . '</a>';
+      }, self::getTestingUrls()),
+    ];
+    $cases['url_only'] = [
+      'display settings' => ['url_only' => TRUE],
+      'results' => array_map(function ($values) {
+        return '<a href="' . $values['expected_href'] . '">' . $values['expected_href'] . '</a>';
+      }, self::getTestingUrls()),
+    ];
+    $cases['url_only and url_plain'] = [
+      'display settings' => ['url_only' => TRUE, 'url_plain' => TRUE],
+      'results' => array_map(function ($values) {
+        return $values['expected_href'];
+      }, self::getTestingUrls()),
+    ];
+
+    return $cases;
   }
 
   /**
-   * Prepare values for link field.
+   * Prepare values for the link field.
    *
    * @return array
    *   Values to use at link field setter.
