@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Database;
 
- /**
+/**
  * Provides methods for the lazy table creation in services.
  */
 trait LazyTableCreationTrait {
