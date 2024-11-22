@@ -95,7 +95,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
           // We never need to try again.
           $retry = FALSE;
         }
-        catch (IntegrityConstraintViolationException $e) {
+        catch (IntegrityConstraintViolationException) {
           // Suppress the error. If this is our first pass through the loop,
           // then $retry is FALSE. In this case, the insert failed because some
           // other request acquired the lock but did not release it. We decide
@@ -187,6 +187,47 @@ class DatabaseLockBackend extends LockBackendAbstract {
   }
 
   /**
+<<<<<<< HEAD
+=======
+   * Check if the semaphore table exists and create it if not.
+   */
+  protected function ensureTableExists() {
+    try {
+      $database_schema = $this->database->schema();
+      $schema_definition = $this->schemaDefinition();
+      $database_schema->createTable(static::TABLE_NAME, $schema_definition);
+    }
+    // If another process has already created the semaphore table, attempting to
+    // recreate it will throw an exception. In this case just catch the
+    // exception and do nothing.
+    catch (DatabaseException) {
+    }
+    catch (\Exception) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
+   * Act on an exception when semaphore might be stale.
+   *
+   * If the table does not yet exist, that's fine, but if the table exists and
+   * yet the query failed, then the semaphore is stale and the exception needs
+   * to propagate.
+   *
+   * @param $e
+   *   The exception.
+   *
+   * @throws \Exception
+   */
+  protected function catchException(\Exception $e) {
+    if ($this->database->schema()->tableExists(static::TABLE_NAME)) {
+      throw $e;
+    }
+  }
+
+  /**
+>>>>>>> 11.x
    * Normalizes a lock name in order to comply with database limitations.
    *
    * @param string $name

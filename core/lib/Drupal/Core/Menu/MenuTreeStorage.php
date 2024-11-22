@@ -8,10 +8,11 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\LazyTableCreationTrait;
 use Drupal\Core\Database\Query\SelectInterface;
+
+// cspell:ignore mlid
 
 /**
  * Provides a menu tree storage using the database.
@@ -275,10 +276,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $transaction = $this->connection->startTransaction();
       if (!$original) {
         // Generate a new mlid.
-        // @todo Remove the 'return' option in Drupal 11.
-        // @see https://www.drupal.org/project/drupal/issues/3256524
-        $options = ['return' => Database::RETURN_INSERT_ID] + $this->options;
-        $link['mlid'] = $this->connection->insert($this->table, $options)
+        $link['mlid'] = $this->connection->insert($this->table, $this->options)
           ->fields(['id' => $link['id'], 'menu_name' => $link['menu_name']])
           ->execute();
         $fields = $this->preSave($link, []);
@@ -1118,6 +1116,30 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   }
 
   /**
+<<<<<<< HEAD
+=======
+   * Checks if the tree table exists and create it if not.
+   *
+   * @return bool
+   *   TRUE if the table was created, FALSE otherwise.
+   */
+  protected function ensureTableExists() {
+    try {
+      $this->connection->schema()->createTable($this->table, static::schemaDefinition());
+    }
+    catch (DatabaseException) {
+      // If another process has already created the config table, attempting to
+      // recreate it will throw an exception. In this case just catch the
+      // exception and do nothing.
+    }
+    catch (\Exception) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
+>>>>>>> 11.x
    * Determines serialized fields in the storage.
    *
    * @return array
@@ -1186,7 +1208,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         'route_param_key' => [
           'description' => 'An encoded string of route parameters for loading by route.',
           'type' => 'varchar',
-          'length' => 255,
+          'length' => 2048,
         ],
         'route_parameters' => [
           'description' => 'Serialized array of route parameters of this menu link.',
@@ -1198,7 +1220,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         'url' => [
           'description' => 'The external path this link points to (when not using a route).',
           'type' => 'varchar',
-          'length' => 255,
+          'length' => 2048,
           'not null' => TRUE,
           'default' => '',
         ],

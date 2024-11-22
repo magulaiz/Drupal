@@ -106,24 +106,24 @@ class CssOptimizer implements AssetOptimizerInterface {
    * color.module enabled themes with CSS aggregation turned off.
    *
    * Note: the only reason this method is public is so color.module can call it;
-   * it is not on the AssetOptimizerInterface, so future refactorings can make
-   * it protected.
+   * it is not on the AssetOptimizerInterface, so any future refactoring can
+   * make it protected.
    *
    * @param $file
    *   Name of the stylesheet to be processed.
    * @param $optimize
    *   Defines if CSS contents should be compressed or not.
-   * @param $reset_basepath
+   * @param $reset_base_path
    *   Used internally to facilitate recursive resolution of @import commands.
    *
    * @return string
    *   Contents of the stylesheet, including any resolved @import commands.
    */
-  public function loadFile($file, $optimize = NULL, $reset_basepath = TRUE) {
+  public function loadFile($file, $optimize = NULL, $reset_base_path = TRUE) {
     // These statics are not cache variables, so we don't use drupal_static().
-    static $_optimize, $basepath;
-    if ($reset_basepath) {
-      $basepath = '';
+    static $_optimize, $base_path;
+    if ($reset_base_path) {
+      $base_path = '';
     }
     // Store the value of $optimize for preg_replace_callback with nested
     // @import loops.
@@ -133,13 +133,13 @@ class CssOptimizer implements AssetOptimizerInterface {
 
     // Stylesheets are relative one to each other. Start by adding a base path
     // prefix provided by the parent stylesheet (if necessary).
-    if ($basepath && !StreamWrapperManager::getScheme($file)) {
-      $file = $basepath . '/' . $file;
+    if ($base_path && !StreamWrapperManager::getScheme($file)) {
+      $file = $base_path . '/' . $file;
     }
     // Store the parent base path to restore it later.
-    $parent_base_path = $basepath;
+    $parent_base_path = $base_path;
     // Set the current base path to process possible child imports.
-    $basepath = dirname($file);
+    $base_path = dirname($file);
 
     // Load the CSS stylesheet. We suppress errors because themes may specify
     // stylesheets in their .info.yml file that don't exist in the theme's path,
@@ -164,7 +164,7 @@ class CssOptimizer implements AssetOptimizerInterface {
     }
 
     // Restore the parent base path as the file and its children are processed.
-    $basepath = $parent_base_path;
+    $base_path = $parent_base_path;
     return $content;
   }
 
@@ -271,8 +271,8 @@ class CssOptimizer implements AssetOptimizerInterface {
    * Prefixes all paths within a CSS file for processFile().
    *
    * Note: the only reason this method is public is so color.module can call it;
-   * it is not on the AssetOptimizerInterface, so future refactorings can make
-   * it protected.
+   * it is not on the AssetOptimizerInterface, so any future refactoring can
+   * make it protected.
    *
    * @param array $matches
    *   An array of matches by a preg_replace_callback() call that scans for
