@@ -22,7 +22,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
    * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use the
    *   class variable $this->table instead.
    *
-   * @see https://www.drupal.org/node/3301744
+   * @see https://www.drupal.org/node/3489185
    */
   const TABLE_NAME = 'semaphore';
 
@@ -41,7 +41,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
    * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use the
    *   class variable $this->connection instead.
    *
-   * @see https://www.drupal.org/node/3301744
+   * @see https://www.drupal.org/node/3489185
    */
   protected $database;
 
