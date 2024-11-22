@@ -10,6 +10,7 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\LazyTableCreationTrait;
 use Drupal\Core\Database\Query\SelectInterface;
 
 /**
@@ -17,19 +18,13 @@ use Drupal\Core\Database\Query\SelectInterface;
  */
 class MenuTreeStorage implements MenuTreeStorageInterface {
 
+  use LazyTableCreationTrait;
   use MenuLinkFieldDefinitions;
 
   /**
    * The maximum depth of a menu links tree.
    */
   const MAX_DEPTH = 9;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
 
   /**
    * Cache backend instance for the extracted tree data.
@@ -44,13 +39,6 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
    */
   protected $cacheTagsInvalidator;
-
-  /**
-   * The database table name.
-   *
-   * @var string
-   */
-  protected $table;
 
   /**
    * Additional database connection options to use in queries.
@@ -1130,27 +1118,6 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   }
 
   /**
-   * Checks if the tree table exists and create it if not.
-   *
-   * @return bool
-   *   TRUE if the table was created, FALSE otherwise.
-   */
-  protected function ensureTableExists() {
-    try {
-      $this->connection->schema()->createTable($this->table, static::schemaDefinition());
-    }
-    catch (DatabaseException $e) {
-      // If another process has already created the config table, attempting to
-      // recreate it will throw an exception. In this case just catch the
-      // exception and do nothing.
-    }
-    catch (\Exception $e) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
    * Determines serialized fields in the storage.
    *
    * @return array
@@ -1179,15 +1146,10 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   }
 
   /**
-   * Defines the schema for the tree table.
-   *
-   * @return array
-   *   The schema API definition for the SQL storage table.
-   *
-   * @internal
+   * {@inheritdoc}
    */
-  protected static function schemaDefinition() {
-    $schema = [
+  public function schemaDefinition() {
+    return [
       'description' => 'Contains the menu tree hierarchy.',
       'fields' => [
         'menu_name' => [
@@ -1420,8 +1382,6 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         'id' => ['id'],
       ],
     ];
-
-    return $schema;
   }
 
   /**

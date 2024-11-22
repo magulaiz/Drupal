@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
+use Drupal\Core\Database\LazyTableCreationTrait;
 
 /**
  * Defines the database lock backend. This is the default backend in Drupal.
@@ -14,8 +15,15 @@ use Drupal\Core\Database\IntegrityConstraintViolationException;
  */
 class DatabaseLockBackend extends LockBackendAbstract {
 
+  use LazyTableCreationTrait;
+
   /**
    * The database table name.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use the
+   *   class variable $this->table instead.
+   *
+   * @see https://www.drupal.org/node/3301744
    */
   const TABLE_NAME = 'semaphore';
 
@@ -23,20 +31,27 @@ class DatabaseLockBackend extends LockBackendAbstract {
    * The database connection.
    *
    * @var \Drupal\Core\Database\Connection
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use the
+   *   class variable $this->connection instead.
+   *
+   * @see https://www.drupal.org/node/3301744
    */
   protected $database;
 
   /**
    * Constructs a new DatabaseLockBackend.
    *
-   * @param \Drupal\Core\Database\Connection $database
+   * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(Connection $database) {
+  public function __construct(Connection $connection) {
     // __destruct() is causing problems with garbage collections, register a
     // shutdown function instead.
     drupal_register_shutdown_function([$this, 'releaseAll']);
-    $this->database = $database;
+    $this->table = 'semaphore';
+    $this->connection = $connection;
+    $this->database = $connection;
   }
 
   /**
@@ -50,7 +65,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
     $expire = microtime(TRUE) + $timeout;
     if (isset($this->locks[$name])) {
       // Try to extend the expiration of a lock we already acquired.
-      $success = (bool) $this->database->update('semaphore')
+      $success = (bool) $this->connection->update($this->table)
         ->fields(['expire' => $expire])
         ->condition('name', $name)
         ->condition('value', $this->getLockId())
@@ -68,7 +83,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
       // We always want to do this code at least once.
       do {
         try {
-          $this->database->insert('semaphore')
+          $this->connection->insert($this->table)
             ->fields([
               'name' => $name,
               'value' => $this->getLockId(),
@@ -112,7 +127,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
     $name = $this->normalizeName($name);
 
     try {
-      $lock = $this->database->query('SELECT [expire], [value] FROM {semaphore} WHERE [name] = :name', [':name' => $name])->fetchAssoc();
+      $lock = $this->connection->query('SELECT [expire], [value] FROM {' . $this->table . '} WHERE [name] = :name', [':name' => $name])->fetchAssoc();
     }
     catch (\Exception $e) {
       $this->catchException($e);
@@ -128,7 +143,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
       // We check two conditions to prevent a race condition where another
       // request acquired the lock and set a new expire time. We add a small
       // number to $expire to avoid errors with float to string conversion.
-      return (bool) $this->database->delete('semaphore')
+      return (bool) $this->connection->delete($this->table)
         ->condition('name', $name)
         ->condition('value', $lock['value'])
         ->condition('expire', 0.0001 + $expire, '<=')
@@ -145,7 +160,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
 
     unset($this->locks[$name]);
     try {
-      $this->database->delete('semaphore')
+      $this->connection->delete($this->table)
         ->condition('name', $name)
         ->condition('value', $this->getLockId())
         ->execute();
@@ -165,47 +180,9 @@ class DatabaseLockBackend extends LockBackendAbstract {
       if (empty($lock_id)) {
         $lock_id = $this->getLockId();
       }
-      $this->database->delete('semaphore')
+      $this->connection->delete($this->table)
         ->condition('value', $lock_id)
         ->execute();
-    }
-  }
-
-  /**
-   * Check if the semaphore table exists and create it if not.
-   */
-  protected function ensureTableExists() {
-    try {
-      $database_schema = $this->database->schema();
-      $schema_definition = $this->schemaDefinition();
-      $database_schema->createTable(static::TABLE_NAME, $schema_definition);
-    }
-    // If another process has already created the semaphore table, attempting to
-    // recreate it will throw an exception. In this case just catch the
-    // exception and do nothing.
-    catch (DatabaseException $e) {
-    }
-    catch (\Exception $e) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Act on an exception when semaphore might be stale.
-   *
-   * If the table does not yet exist, that's fine, but if the table exists and
-   * yet the query failed, then the semaphore is stale and the exception needs
-   * to propagate.
-   *
-   * @param $e
-   *   The exception.
-   *
-   * @throws \Exception
-   */
-  protected function catchException(\Exception $e) {
-    if ($this->database->schema()->tableExists(static::TABLE_NAME)) {
-      throw $e;
     }
   }
 
@@ -237,9 +214,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
   }
 
   /**
-   * Defines the schema for the semaphore table.
-   *
-   * @internal
+   * {@inheritdoc}
    */
   public function schemaDefinition() {
     return [

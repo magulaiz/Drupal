@@ -3,9 +3,9 @@
 namespace Drupal\Core\KeyValueStore;
 
 use Drupal\Component\Serialization\SerializationInterface;
-use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\LazyTableCreationTrait;
+use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -17,6 +17,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 class DatabaseStorage extends StorageBase {
 
   use DependencySerializationTrait;
+  use LazyTableCreationTrait;
 
   /**
    * The serialization class to use.
@@ -24,20 +25,6 @@ class DatabaseStorage extends StorageBase {
    * @var \Drupal\Component\Serialization\SerializationInterface
    */
   protected $serializer;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The name of the SQL table to use.
-   *
-   * @var string
-   */
-  protected $table;
 
   /**
    * Overrides Drupal\Core\KeyValueStore\StorageBase::__construct().
@@ -247,50 +234,9 @@ class DatabaseStorage extends StorageBase {
   }
 
   /**
-   * Check if the table exists and create it if not.
-   *
-   * @return bool
-   *   TRUE if the table exists, FALSE if it does not exists.
+   * {@inheritdoc}
    */
-  protected function ensureTableExists() {
-    try {
-      $database_schema = $this->connection->schema();
-      $database_schema->createTable($this->table, $this->schemaDefinition());
-    }
-    // If the table already exists, then attempting to recreate it will throw an
-    // exception. In this case just catch the exception and do nothing.
-    catch (DatabaseException $e) {
-    }
-    catch (\Exception $e) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Act on an exception when the table might not have been created.
-   *
-   * If the table does not yet exist, that's fine, but if the table exists and
-   * yet the query failed, then the exception needs to propagate if it is not
-   * a DatabaseException. Due to race conditions it is possible that another
-   * request has created the table in the meantime. Therefore we can not rethrow
-   * for any database exception.
-   *
-   * @param \Exception $e
-   *   The exception.
-   *
-   * @throws \Exception
-   */
-  protected function catchException(\Exception $e) {
-    if (!($e instanceof DatabaseException) && $this->connection->schema()->tableExists($this->table)) {
-      throw $e;
-    }
-  }
-
-  /**
-   * Defines the schema for the key_value table.
-   */
-  public static function schemaDefinition() {
+  public function schemaDefinition() {
     return [
       'description' => 'Generic key-value storage table. See the state system for an example.',
       'fields' => [

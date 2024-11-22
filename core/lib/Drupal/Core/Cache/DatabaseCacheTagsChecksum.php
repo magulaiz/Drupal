@@ -3,7 +3,7 @@
 namespace Drupal\Core\Cache;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\LazyTableCreationTrait;
 
 /**
  * Cache tags invalidations checksum implementation that uses the database.
@@ -11,13 +11,7 @@ use Drupal\Core\Database\DatabaseException;
 class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTagsInvalidatorInterface {
 
   use CacheTagsChecksumTrait;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
+  use LazyTableCreationTrait;
 
   /**
    * Constructs a DatabaseCacheTagsChecksum object.
@@ -70,32 +64,10 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
   }
 
   /**
-   * Check if the cache tags table exists and create it if not.
-   */
-  protected function ensureTableExists() {
-    try {
-      $database_schema = $this->connection->schema();
-      $schema_definition = $this->schemaDefinition();
-      $database_schema->createTable('cachetags', $schema_definition);
-    }
-    // If another process has already created the cachetags table, attempting to
-    // recreate it will throw an exception. In this case just catch the
-    // exception and do nothing.
-    catch (DatabaseException $e) {
-    }
-    catch (\Exception $e) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Defines the schema for the {cachetags} table.
-   *
-   * @internal
+   * {@inheritdoc}
    */
   public function schemaDefinition() {
-    $schema = [
+    return [
       'description' => 'Cache table for tracking cache tag invalidations.',
       'fields' => [
         'tag' => [
@@ -114,7 +86,6 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
       ],
       'primary key' => ['tag'],
     ];
-    return $schema;
   }
 
   /**

@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Routing;
 
-use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\LazyTableCreationTrait;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
@@ -17,12 +17,7 @@ use Drupal\Core\Database\Connection;
  */
 class MatcherDumper implements MatcherDumperInterface {
 
-  /**
-   * The database connection to which to dump route information.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
+  use LazyTableCreationTrait;
 
   /**
    * The routes to be dumped.
@@ -42,6 +37,11 @@ class MatcherDumper implements MatcherDumperInterface {
    * The name of the SQL table to which to dump the routes.
    *
    * @var string
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use the
+   *    class variable $this->table instead.
+   *
+   * @see https://www.drupal.org/node/3301744
    */
   protected $tableName;
 
@@ -71,14 +71,15 @@ class MatcherDumper implements MatcherDumperInterface {
     if (is_string($logger) || is_null($logger)) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
       $this->logger = \Drupal::service('logger.channel.router');
-      $this->tableName = $logger;
+      $this->table = $logger;
     }
     else {
       $this->logger = $logger;
     }
-    if (is_null($this->tableName)) {
-      $this->tableName = $table;
+    if (is_null($this->table)) {
+      $this->table = $table;
     }
+    $this->tableName = $this->table;
   }
 
   /**
@@ -111,7 +112,7 @@ class MatcherDumper implements MatcherDumperInterface {
   public function dump(array $options = []): string {
     // Convert all of the routes into database records.
     // Accumulate the menu masks on top of any we found before.
-    $masks = array_flip($this->state->get('routing.menu_masks.' . $this->tableName, []));
+    $masks = array_flip($this->state->get('routing.menu_masks.' . $this->table, []));
     // Delete any old records first, then insert the new ones. That avoids
     // stale data. The transaction makes it atomic to avoid unstable router
     // states due to random failures.
@@ -120,7 +121,7 @@ class MatcherDumper implements MatcherDumperInterface {
       // We don't use truncate, because it is not guaranteed to be transaction
       // safe.
       try {
-        $this->connection->delete($this->tableName)
+        $this->connection->delete($this->table)
           ->execute();
       }
       catch (\Exception $e) {
@@ -132,7 +133,7 @@ class MatcherDumper implements MatcherDumperInterface {
       // Split the routes into chunks to avoid big INSERT queries.
       $route_chunks = array_chunk($this->routes->all(), 50, TRUE);
       foreach ($route_chunks as $routes) {
-        $insert = $this->connection->insert($this->tableName)->fields([
+        $insert = $this->connection->insert($this->table)->fields([
           'name',
           'fit',
           'path',
@@ -178,7 +179,7 @@ class MatcherDumper implements MatcherDumperInterface {
     // Sort the masks so they are in order of descending fit.
     $masks = array_keys($masks);
     rsort($masks);
-    $this->state->set('routing.menu_masks.' . $this->tableName, $masks);
+    $this->state->set('routing.menu_masks.' . $this->table, $masks);
 
     $this->routes = NULL;
 
@@ -197,36 +198,10 @@ class MatcherDumper implements MatcherDumperInterface {
   }
 
   /**
-   * Checks if the tree table exists and create it if not.
-   *
-   * @return bool
-   *   TRUE if the table was created, FALSE otherwise.
+   * {@inheritdoc}
    */
-  protected function ensureTableExists() {
-    try {
-      $this->connection->schema()->createTable($this->tableName, $this->schemaDefinition());
-    }
-    catch (DatabaseException $e) {
-      // If another process has already created the config table, attempting to
-      // recreate it will throw an exception. In this case just catch the
-      // exception and do nothing.
-    }
-    catch (\Exception $e) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Defines the schema for the router table.
-   *
-   * @return array
-   *   The schema API definition for the SQL storage table.
-   *
-   * @internal
-   */
-  protected function schemaDefinition() {
-    $schema = [
+  public function schemaDefinition() {
+    return [
       'description' => 'Maps paths to various callbacks (access, page and title)',
       'fields' => [
         'name' => [
@@ -274,8 +249,6 @@ class MatcherDumper implements MatcherDumperInterface {
       ],
       'primary key' => ['name'],
     ];
-
-    return $schema;
   }
 
 }
