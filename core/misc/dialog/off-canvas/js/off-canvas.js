@@ -143,7 +143,7 @@
         .on(
           'resize.off-canvas',
           eventData,
-          debounce(Drupal.offCanvas.resetSize, 100, true),
+          debounce(Drupal.offCanvas.resetSize, 100, false),
         )
         .trigger('resize.off-canvas');
     },
