@@ -766,6 +766,18 @@ class Url implements TrustedCallbackInterface {
   }
 
   /**
+   * Implements PHP magic __toString method to convert the URL to a string.
+   *
+   * @return string
+   *   A string URL.
+   *
+   * @see \Drupal\Core\Url::toString()
+   */
+  public function __toString(): string {
+    return $this->toString();
+  }
+
+  /**
    * Returns the route information for a render array.
    *
    * @return array
