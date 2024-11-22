@@ -5,7 +5,6 @@ namespace Drupal\media\OEmbed;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Client\ClientExceptionInterface;
 
