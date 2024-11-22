@@ -6,8 +6,8 @@ module.exports = {
     browser
       .drupalInstall({ installProfile: 'testing' })
       .drupalInstallModule('ckeditor5', true)
-      .drupalInstallModule('node')
-      .drupalInstallModule('field_ui');
+      .drupalInstallModule('field_ui')
+      .drupalInstallModule('node', true);
 
     // Set fixed (desktop-ish) size to ensure a maximum viewport.
     browser.resizeWindow(1920, 1080);
