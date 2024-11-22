@@ -57,7 +57,7 @@ trait LazyTableCreationTrait {
     }
 
     try {
-      $schema_definition = static::schemaDefinition();
+      $schema_definition = $this->schemaDefinition();
       $this->connection->schema()->createTable($this->table, $schema_definition);
     }
     // If another process has already created the table, attempting to create
