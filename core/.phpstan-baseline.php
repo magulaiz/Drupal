@@ -10219,7 +10219,7 @@ $ignoreErrors[] = [
 	'message' => '#^Access to deprecated property \\$tableName of class Drupal\\\\Core\\\\Routing\\\\MatcherDumper\\:
 in drupal\\:11\\.2\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use the
    class variable \\$this\\-\\>table instead\\.$#',
-	'count' => 1,
+	'count' => 3,
 	'path' => __DIR__ . '/lib/Drupal/Core/Routing/MatcherDumper.php',
 ];
 $ignoreErrors[] = [
