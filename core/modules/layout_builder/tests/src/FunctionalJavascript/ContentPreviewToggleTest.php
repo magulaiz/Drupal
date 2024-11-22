@@ -9,7 +9,7 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 
-// cspell:ignore blocknodebundle testbody
+// cspell:ignore blocknodebundle testbody testlinks
 
 /**
  * Tests toggling of content preview.
@@ -162,7 +162,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
       $this->linksBlock,
       $this->bodyBlock,
     ]);
-// stopped fixing assertions here.
+
     $region_content = '.layout__region--content';
     $links_block = ".block-extra-field-blocknodebundle-for-this-particular-testlinks";
     $body_block = ".block-field-blocknodebundle-for-this-particular-testbody";
@@ -198,7 +198,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
   /**
    * Enables and sets the block label.
    */
-  protected function setBlockLabel($selector, $label) {
+  protected function setBlockLabel($selector, $label): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -246,9 +246,9 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     // Confirm block order by comparing expected UUIDs to those found.
     $blocks_that_match_items = array_filter($blocks, function ($block) use ($items) {
       $block_uuid = $block->getAttribute('data-layout-block-uuid');
-        return in_array($block_uuid, array_map(function($item) {
+        return in_array($block_uuid, array_map(function ($item) {
           return $item->getAttribute('data-layout-block-uuid');
-      }, $items), true);
+        }, $items), TRUE);
     });
 
     $this->assertCount(count($items), $blocks_that_match_items);
@@ -257,7 +257,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
   /**
    * Checks if content preview is disabled.
    */
-  protected function assertContentPreviewDisabled() {
+  protected function assertContentPreviewDisabled(): void {
     $this->assertTrue($this->linksFieldPlaceholder->isVisible());
     $this->assertTrue($this->bodyFieldPlaceholder->isVisible());
     $this->assertFalse($this->bodyBlockContent->isVisible());
@@ -268,11 +268,11 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
   /**
    * Checks if content preview is enabled.
    */
-  protected function assertContentPreviewEnabled() {
+  protected function assertContentPreviewEnabled(): void {
     $this->assertFalse($this->linksFieldPlaceholder->isVisible());
     $this->assertFalse($this->bodyFieldPlaceholder->isVisible());
     $this->assertTrue($this->linksBlockContent->isVisible());
     $this->assertTrue($this->linksFieldBlockLabel->isVisible());
- }
+  }
 
 }

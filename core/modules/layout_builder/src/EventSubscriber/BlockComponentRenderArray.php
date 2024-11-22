@@ -12,8 +12,8 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\layout_builder\Access\LayoutPreviewAccessAllowed;
 use Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent;
-use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\layout_builder\LayoutBuilderEvents;
+use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -130,7 +130,7 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
 
         // Placeholder label is added as prefix so it is adjacent to the theme
         // wrapper. This makes it possible to toggle visibility with css rules.
-        $pre_existing_prefix = isset($content['#prefix']) ? $content['#prefix'] : '';
+        $pre_existing_prefix = $content['#prefix'] ?? '';
         $content['#prefix'] = "$pre_existing_prefix<div class=\"layout-builder-block__content-preview-placeholder-label\">$content_preview_placeholder_string</div>";
 
         // If the block content has existing classes, copy them to the wrapper.
