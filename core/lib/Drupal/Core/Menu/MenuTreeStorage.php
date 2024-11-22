@@ -1116,30 +1116,6 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   }
 
   /**
-<<<<<<< HEAD
-=======
-   * Checks if the tree table exists and create it if not.
-   *
-   * @return bool
-   *   TRUE if the table was created, FALSE otherwise.
-   */
-  protected function ensureTableExists() {
-    try {
-      $this->connection->schema()->createTable($this->table, static::schemaDefinition());
-    }
-    catch (DatabaseException) {
-      // If another process has already created the config table, attempting to
-      // recreate it will throw an exception. In this case just catch the
-      // exception and do nothing.
-    }
-    catch (\Exception) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
->>>>>>> 11.x
    * Determines serialized fields in the storage.
    *
    * @return array
