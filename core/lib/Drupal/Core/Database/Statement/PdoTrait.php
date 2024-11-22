@@ -108,10 +108,10 @@ trait PdoTrait {
    * @param int|null $cursorOffset
    *   Not implemented in all database drivers, don't use.
    *
-   * @return array<string|int|float|bool>|object|false
+   * @return array<scalar|null>|object|scalar|null|false
    *   A result, formatted according to $mode, or FALSE on failure.
    */
-  protected function clientFetch(?FetchAs $mode = NULL, ?int $cursorOrientation = NULL, ?int $cursorOffset = NULL): array|object|string|int|float|bool {
+  protected function clientFetch(?FetchAs $mode = NULL, ?int $cursorOrientation = NULL, ?int $cursorOffset = NULL): array|object|int|float|string|bool|NULL {
     return match(func_num_args()) {
       0 => $this->getClientStatement()->fetch(),
       1 => $this->getClientStatement()->fetch($this->fetchAsToPdo($mode)),
@@ -127,11 +127,11 @@ trait PdoTrait {
    *   0-indexed number of the column to retrieve from the row. If no value is
    *   supplied, the first column is fetched.
    *
-   * @return string|int|float|bool|false
+   * @return scalar|null|false
    *   A single column from the next row of a result set or false if there are
    *   no more rows.
    */
-  protected function clientFetchColumn(int $column = 0): mixed {
+  protected function clientFetchColumn(int $column = 0): int|float|string|bool|NULL {
     return $this->getClientStatement()->fetchColumn($column);
   }
 
@@ -167,9 +167,10 @@ trait PdoTrait {
    *   If $mode is FetchAs::ClassObject, the arguments to pass to the
    *   constructor.
    *
-   * @return array
+   * @return array<array<scalar|null>|object|scalar|null>
    *   An array of results.
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidReturn
   protected function clientFetchAll(?FetchAs $mode = NULL, int|string|null $columnOrClass = NULL, array|null $constructorArguments = NULL): array {
     return match ($mode) {
       FetchAs::Column => $this->getClientStatement()->fetchAll(
