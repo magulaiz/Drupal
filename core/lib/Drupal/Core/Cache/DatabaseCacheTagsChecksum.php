@@ -21,6 +21,13 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
   protected $connection;
 
   /**
+   * The database table name.
+   *
+   * @var string
+   */
+  protected $table = 'cachetags';
+
+  /**
    * Constructs a DatabaseCacheTagsChecksum object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -36,7 +43,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
   protected function doInvalidateTags(array $tags) {
     try {
       foreach ($tags as $tag) {
-        $this->connection->merge('cachetags')
+        $this->connection->merge($this->table)
           ->insertFields(['invalidations' => 1])
           ->expression('invalidations', '[invalidations] + 1')
           ->key('tag', $tag)
@@ -58,7 +65,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    */
   protected function getTagInvalidationCounts(array $tags) {
     try {
-      return $this->connection->query('SELECT [tag], [invalidations] FROM {cachetags} WHERE [tag] IN ( :tags[] )', [':tags[]' => $tags])
+      return $this->connection->query('SELECT [tag], [invalidations] FROM {' . $this->table . '} WHERE [tag] IN ( :tags[] )', [':tags[]' => $tags])
         ->fetchAllKeyed();
     }
     catch (\Exception $e) {
