@@ -22,7 +22,9 @@ class PersistentDatabaseLockBackend extends DatabaseLockBackend {
   public function __construct(Connection $database) {
     // Do not call the parent constructor to avoid registering a shutdown
     // function that releases all the locks at the end of a request.
+    $this->connection = $database;
     $this->database = $database;
+    $this->table = 'semaphore';
     // Set the lockId to a fixed string to make the lock ID the same across
     // multiple requests. The lock ID is used as a page token to relate all the
     // locks set during a request to each other.

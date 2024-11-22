@@ -55,16 +55,16 @@ class DatabaseLockBackend extends LockBackendAbstract {
   /**
    * Constructs a new DatabaseLockBackend.
    *
-   * @param \Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    */
-  public function __construct(Connection $connection) {
+  public function __construct(Connection $database) {
     // __destruct() is causing problems with garbage collections, register a
     // shutdown function instead.
     drupal_register_shutdown_function([$this, 'releaseAll']);
     $this->table = 'semaphore';
-    $this->connection = $connection;
-    $this->database = $connection;
+    $this->connection = $database;
+    $this->database = $database;
   }
 
   /**
