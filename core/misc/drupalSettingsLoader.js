@@ -16,9 +16,11 @@
    *
    * @type {object}
    */
-  window.drupalSettings = {};
+  if (window.drupalSettings === undefined) {
+    window.drupalSettings = {};
 
-  if (settingsElement !== null) {
-    window.drupalSettings = JSON.parse(settingsElement.textContent);
+    if (settingsElement !== null) {
+      window.drupalSettings = JSON.parse(settingsElement.textContent);
+    }
   }
 })();
