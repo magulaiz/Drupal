@@ -182,11 +182,11 @@ class MenuForm extends EntityForm {
     $edit_link = $this->entity->toLink($this->t('Edit'), 'edit-form')->toString();
     if ($status == SAVED_UPDATED) {
       $this->messenger()->addStatus($this->t('Menu %label has been updated.', ['%label' => $menu->label()]));
-      $this->logger('menu')->notice('Menu %label has been updated.', ['%label' => $menu->label(), 'link' => $edit_link]);
+      $this->logger('menu')->info('Menu %label has been updated.', ['%label' => $menu->label(), 'link' => $edit_link]);
     }
     else {
       $this->messenger()->addStatus($this->t('Menu %label has been added.', ['%label' => $menu->label()]));
-      $this->logger('menu')->notice('Menu %label has been added.', ['%label' => $menu->label(), 'link' => $edit_link]);
+      $this->logger('menu')->info('Menu %label has been added.', ['%label' => $menu->label(), 'link' => $edit_link]);
     }
 
     $form_state->setRedirectUrl($this->entity->toUrl('edit-form'));
