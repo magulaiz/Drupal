@@ -425,7 +425,7 @@ function system_requirements($phase) {
     if (extension_loaded('apcu') && filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN)) {
       $memory_info = apcu_sma_info(TRUE);
       $apcu_actual_size = ByteSizeMarkup::create($memory_info['seg_size']);
-      $apcu_recommended_size = '32 MB';
+      $apcu_recommended_size = ByteSizeMarkup::create(32*1024*1024);
       $requirements['php_apcu_enabled']['value'] = t('Enabled (@size)', ['@size' => $apcu_actual_size]);
       if (Bytes::toNumber($apcu_actual_size) < Bytes::toNumber($apcu_recommended_size)) {
         $requirements['php_apcu_enabled']['severity'] = REQUIREMENT_WARNING;
