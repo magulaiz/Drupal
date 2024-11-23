@@ -444,4 +444,14 @@ class PathValidatorTest extends UnitTestCase {
     $this->assertEquals(['key' => 'value'], $url->getRouteParameters());
   }
 
+  /**
+   * Tests the getUrlIfValidWithoutAccessCheck() method with an invalid path.
+   *
+   * @covers ::getUrlIfValidWithoutAccessCheck
+   * @covers ::getUrl
+   */
+  public function testGetUrlIfValidWithoutAccessCheckWithInvalidPath(): void {
+    $this->assertFalse($this->pathValidator->getUrlIfValidWithoutAccessCheck("\n"));
+  }
+
 }
