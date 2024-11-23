@@ -42,11 +42,11 @@ trait PdoTrait {
    *   If the client-level statement is not set.
    */
   public function getClientStatement(): \PDOStatement {
-    if ($this->clientStatement) {
+    if (isset($this->clientStatement)) {
       assert($this->clientStatement instanceof \PDOStatement);
       return $this->clientStatement;
     }
-    throw new \RuntimeException('\\PDOStatement not initialized');
+    throw new \LogicException('\\PDOStatement not initialized');
   }
 
   /**
