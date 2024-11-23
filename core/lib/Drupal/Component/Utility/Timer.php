@@ -9,6 +9,11 @@ namespace Drupal\Component\Utility;
  */
 class Timer {
 
+  /**
+   * Array to store timers.
+   *
+   * @var array
+   */
   protected static $timers = [];
 
   /**
@@ -21,8 +26,13 @@ class Timer {
    *   The name of the timer.
    */
   public static function start($name) {
-    static::$timers[$name]['start'] = microtime(TRUE);
-    static::$timers[$name]['count'] = isset(static::$timers[$name]['count']) ? ++static::$timers[$name]['count'] : 1;
+    static::$timers[$name]['start'] = hrtime(TRUE);
+    if (isset(static::$timers[$name]['count'])) {
+      static::$timers[$name]['count']++;
+    }
+    else {
+      static::$timers[$name]['count'] = 1;
+    }
   }
 
   /**
@@ -36,15 +46,19 @@ class Timer {
    */
   public static function read($name) {
     if (isset(static::$timers[$name]['start'])) {
-      $stop = microtime(TRUE);
-      $diff = round(($stop - static::$timers[$name]['start']) * 1000, 2);
-
+      $stop = hrtime(TRUE);
+      $start = static::$timers[$name]['start'];
+      $elapsedNanoseconds = $stop[0] * 1e9 + $stop[1] - ($start[0] * 1e9 + $start[1]);
+      $elapsedMilliseconds = $elapsedNanoseconds / 1e6;
+      $diff = round($elapsedMilliseconds, 2);
       if (isset(static::$timers[$name]['time'])) {
         $diff += static::$timers[$name]['time'];
       }
       return $diff;
     }
-    return static::$timers[$name]['time'];
+
+    // If the timer has been stopped previously, return the stored time.
+    return isset(static::$timers[$name]['time']) ?? '';
   }
 
   /**
@@ -59,8 +73,12 @@ class Timer {
    */
   public static function stop($name) {
     if (isset(static::$timers[$name]['start'])) {
-      $stop = microtime(TRUE);
-      $diff = round(($stop - static::$timers[$name]['start']) * 1000, 2);
+      $stop = hrtime(TRUE);
+      $start = static::$timers[$name]['start'];
+      $elapsedNanoseconds = $stop[0] * 1e9 + $stop[1] - ($start[0] * 1e9 + $start[1]);
+      $elapsedMilliseconds = $elapsedNanoseconds / 1e6;
+      $diff = round($elapsedMilliseconds, 2);
+
       if (isset(static::$timers[$name]['time'])) {
         static::$timers[$name]['time'] += $diff;
       }
