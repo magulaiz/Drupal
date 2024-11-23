@@ -17,7 +17,7 @@ class PrefetchedResult {
 
   public function fetchOne(): array|NULL {
     $this->currentRowIndex++;
-    if(!isset($this->data[$this->currentRowIndex])) {
+    if (!isset($this->data[$this->currentRowIndex])) {
       $this->currentRowIndex = NULL;
       return NULL;
     }
