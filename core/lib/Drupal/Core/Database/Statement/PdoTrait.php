@@ -42,7 +42,7 @@ trait PdoTrait {
    *   If the client-level statement is not set.
    */
   public function getClientStatement(): \PDOStatement {
-    if (!isset($this->clientStatement)) {
+    if (isset($this->clientStatement)) {
       assert($this->clientStatement instanceof \PDOStatement);
       return $this->clientStatement;
     }
