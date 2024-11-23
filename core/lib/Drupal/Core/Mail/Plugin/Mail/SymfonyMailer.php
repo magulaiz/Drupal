@@ -77,7 +77,8 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('logger.channel.mail')
+      $container->get('logger.channel.mail'),
+      $container->get('mailer.transport')
     );
   }
 
@@ -86,12 +87,15 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
    *
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger service.
+   * @param \Symfony\Component\Mailer\Transport $transport
+   *   The Symfony Transport
    * @param \Symfony\Component\Mailer\MailerInterface $mailer
    *   The mailer service. Only specify an instance in unit tests, pass NULL in
    *   production.
    */
   public function __construct(
     protected LoggerInterface $logger,
+    protected Transport $transport,
     protected ?MailerInterface $mailer = NULL) {
   }
 
@@ -150,20 +154,7 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
     if (!isset($this->mailer)) {
       $dsn = \Drupal::config('system.mail')->get('mailer_dsn');
       $dsnObject = new Dsn(...$dsn);
-
-      // Symfony Mailer and Transport classes both optionally depend on the
-      // event dispatcher. When provided, a MessageEvent is fired whenever an
-      // email is prepared before sending.
-      //
-      // The MessageEvent will likely play an important role in an upcoming mail
-      // API. However, emails handled by this plugin already were processed by
-      // hook_mail and hook_mail_alter. Firing the MessageEvent would leak those
-      // mails into the code path (i.e., event subscribers) of the new API.
-      // Therefore, this plugin deliberately refrains from injecting the event
-      // dispatcher.
-      $factories = Transport::getDefaultFactories(logger: $this->logger);
-      $transportFactory = new Transport($factories);
-      $transport = $transportFactory->fromDsnObject($dsnObject);
+      $transport = $this->transport->fromDsnObject($dsnObject);
       $this->mailer = new Mailer($transport);
     }
 
