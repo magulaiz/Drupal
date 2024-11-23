@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Site\Settings;
 
 /**
@@ -93,8 +94,10 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
       $this->doStore($cid, $data);
     }
     catch (\Exception $e) {
-      // If there was an exception, try to create the bins.
-      if (!$try_again = $this->ensureBinExists()) {
+      // If there was an exception, try to create the bin. However, special case
+      // the early installer so that the bin is not creeated if Drupal as
+      // a whole has not been installed yet.
+      if (InstallerKernel::installationAttempted() && !$try_again = $this->ensureBinExists()) {
         // If the exception happened for other reason than the missing bin
         // table, propagate the exception.
         throw $e;
@@ -104,7 +107,6 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
     if ($try_again) {
       $this->doStore($cid, $data);
     }
-
   }
 
   /**
