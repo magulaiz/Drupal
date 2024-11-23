@@ -202,29 +202,39 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     // Associate the cache tags for the form display.
     $this->renderer->addCacheableDependency($form, $this);
 
-    // Add a process callback so we can assign weights and hide extra fields.
-    $form['#process'][] = [$this, 'processForm'];
+    // This needs to happen prior to input processing.
+    $form['#process'][] = [$this, 'processAccess'];
+    // This is purely visual and does not impact input processing.
+    $form['#after_build'][] = [$this, 'processWeights'];
   }
 
   /**
-   * Process callback: assigns weights and hides extra fields.
+   * A process callback to determine access of extra fields.
    *
    * @see \Drupal\Core\Entity\Entity\EntityFormDisplay::buildForm()
    */
-  public function processForm($element, FormStateInterface $form_state, $form) {
-    // Assign the weights configured in the form display.
-    foreach ($this->getComponents() as $name => $options) {
-      if (isset($element[$name])) {
-        $element[$name]['#weight'] = $options['weight'];
-      }
-    }
-
+  public function processAccess(array $element): array {
     // Hide extra fields.
     $extra_fields = \Drupal::service('entity_field.manager')->getExtraFields($this->targetEntityType, $this->bundle);
     $extra_fields = $extra_fields['form'] ?? [];
     foreach ($extra_fields as $extra_field => $info) {
       if (!$this->getComponent($extra_field)) {
         $element[$extra_field]['#access'] = FALSE;
+      }
+    }
+    return $element;
+  }
+
+  /**
+   * An after build callback to determine weights of extra fields.
+   *
+   * @see \Drupal\Core\Entity\Entity\EntityFormDisplay::buildForm()
+   */
+  public function processWeights(array $element): array {
+    // Assign the weights configured in the form display.
+    foreach ($this->getComponents() as $name => $options) {
+      if (isset($element[$name])) {
+        $element[$name]['#weight'] = $options['weight'];
       }
     }
     return $element;
