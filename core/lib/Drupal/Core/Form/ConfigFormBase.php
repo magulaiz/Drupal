@@ -219,8 +219,7 @@ abstract class ConfigFormBase extends FormBase {
       /** @var \Symfony\Component\Validator\ConstraintViolationInterface $violation */
       foreach ($violations as $violation) {
         $property_path = $violation->getPropertyPath();
-        // Default to index 0.
-        $index = 0;
+        $index = NULL;
 
         // Detect if this is a sequence item property path, and if so, attempt
         // to fall back to the containing sequence's property path.
@@ -240,7 +239,13 @@ abstract class ConfigFormBase extends FormBase {
           // is the entire form.
           $form_element_name = '';
         }
-        $violations_per_form_element[$form_element_name][$index] = $violation;
+
+        if (is_int($index)) {
+          $violations_per_form_element[$form_element_name][$index] = $violation;
+        }
+        else {
+          $violations_per_form_element[$form_element_name][] = $violation;
+        }
       }
 
       // Now that we know how many constraint violation messages exist per form
