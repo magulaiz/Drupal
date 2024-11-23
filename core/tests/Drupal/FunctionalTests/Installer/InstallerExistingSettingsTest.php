@@ -62,10 +62,10 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
   protected function visitInstaller(): void {
     // Should redirect to the installer.
     $this->drupalGet($GLOBALS['base_url']);
-    // Ensure only the file_cache database table has been created. This is
-    // because it can be created via a container rebuild without specific
+    // Ensure only the database_file_cache database table has been created. This
+    // is because it can be created via a container rebuild without specific
     // interaction with the installer.
-    $this->assertSame(['file_cache' => 'file_cache'], Database::getConnection()->schema()->findTables('%'));
+    $this->assertSame(['database_file_cache' => 'database_file_cache'], Database::getConnection()->schema()->findTables('%'));
     $this->assertSession()->addressEquals($GLOBALS['base_url'] . '/core/install.php');
   }
 

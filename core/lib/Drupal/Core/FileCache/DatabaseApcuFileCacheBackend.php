@@ -18,7 +18,7 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
   /**
    * The database table to use.
    */
-  protected string $table = 'file_cache';
+  protected string $table = 'database_file_cache';
 
   /**
    * The time to live for cache items.
