@@ -57,7 +57,6 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
     $this->entity = EntityTest::create();
     $links = $this->getLinkFieldsValues();
     $this->entity->field_test->setValue($links);
-    $this->entity->save();
   }
 
   /**
