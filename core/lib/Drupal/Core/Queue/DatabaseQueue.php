@@ -31,7 +31,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
    *
    * @var string
    */
-  protected $table = 'queue';
+  protected readonly string $table = 'queue';
 
   /**
    * The name of the queue this instance is working with.

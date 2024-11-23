@@ -31,7 +31,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
    *
    * @var string
    */
-  protected $table = 'semaphore';
+  protected readonly string $table = 'semaphore';
 
   /**
    * The database connection.

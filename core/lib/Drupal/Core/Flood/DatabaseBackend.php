@@ -29,7 +29,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
    *
    * @var string
    */
-  protected $table = 'flood';
+  protected readonly string $table = 'flood';
 
   /**
    * Construct the DatabaseBackend.

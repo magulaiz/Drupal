@@ -27,7 +27,7 @@ class BatchStorage implements BatchStorageInterface {
    *
    * @var string
    */
-  protected $table = 'batch';
+  protected readonly string $table = 'batch';
 
   /**
    * Constructs the database batch storage service.
