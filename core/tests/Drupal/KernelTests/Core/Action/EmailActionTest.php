@@ -37,6 +37,7 @@ class EmailActionTest extends KernelTestBase {
     $plugin_manager = $this->container->get('plugin.manager.action');
     $configuration = [
       'recipient' => 'test@example.com',
+      'cc' => 'testcc@example.com',
       'subject' => 'Test subject',
       'message' => 'Test message',
     ];
@@ -47,6 +48,7 @@ class EmailActionTest extends KernelTestBase {
     $mails = $this->getMails();
     $this->assertCount(1, $this->getMails());
     $this->assertEquals('test@example.com', $mails[0]['to']);
+    $this->assertEquals('testcc@example.com', $mails[0]['params']['context']['cc']);
     $this->assertEquals('Test subject', $mails[0]['subject']);
     $this->assertEquals("Test message\n", $mails[0]['body']);
 
@@ -59,9 +61,10 @@ class EmailActionTest extends KernelTestBase {
       ->execute()
       ->fetch();
 
-    $this->assertEquals('Sent email to %recipient', $log->message);
+    $this->assertEquals('Sent email to %recipient with cc %cc', $log->message);
     $variables = unserialize($log->variables);
     $this->assertEquals('test@example.com', $variables['%recipient']);
+    $this->assertEquals('testcc@example.com', $variables['%cc']);
   }
 
 }
