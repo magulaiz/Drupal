@@ -1,0 +1,4 @@
+dependencies:
+  module:
+    - config_install_test_dependency
+id: optional

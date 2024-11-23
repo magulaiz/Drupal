@@ -1,0 +1,5 @@
+name: "Optional Config Install Test - Dependency"
+type: module
+description: "The dependency for the optional config."
+package: Testing
+version: VERSION
