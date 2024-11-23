@@ -244,6 +244,18 @@ class OEmbedFormatter extends FormatterBase {
           $element[$delta]['#attributes']['title'] = $title;
         }
 
+        // Loading attribute equals intersection.
+        if ($this->getSetting('loading')['attribute'] === 'intersection') {
+          // Set src to empty string.
+          $element[$delta]['#attributes']['src'] = '';
+          // Set data-src to iframe src.
+          $element[$delta]['#attributes']['data-src'] = $url->toString();
+          // Set loading attribute to lazy.
+          $element[$delta]['#attributes']['loading'] = 'lazy';
+          // Attached intersection observer JS code.
+          $element[$delta]['#attached']['library'][] = 'media/media_embed_intersection_observer';
+        }
+
         CacheableMetadata::createFromObject($resource)
           ->addCacheTags($this->config->getCacheTags())
           ->applyTo($element[$delta]);
@@ -286,6 +298,7 @@ class OEmbedFormatter extends FormatterBase {
           '#options' => [
             'lazy' => $this->t('Lazy (<em>loading="lazy"</em>)'),
             'eager' => $this->t('Eager (<em>loading="eager"</em>)'),
+            'intersection' => $this->t('Intersection Observer (<em>data-src="[iframe_src]"</em>)'),
           ],
           '#description' => $this->t('Select the loading attribute for oEmbed. <a href=":link">Learn more about the loading attribute for oEmbed.</a>', [
             ':link' => 'https://html.spec.whatwg.org/multipage/urls-and-fetching.html#lazy-loading-attributes',
@@ -295,6 +308,7 @@ class OEmbedFormatter extends FormatterBase {
     ];
     $form['loading']['attribute']['lazy']['#description'] = $this->t('Delays loading the resource until that section of the page is visible in the browser. When in doubt, lazy loading is recommended.');
     $form['loading']['attribute']['eager']['#description'] = $this->t('Force browsers to download a resource as soon as possible. This is the browser default for legacy reasons. Only use this option when the resource is always expected to render.');
+    $form['loading']['attribute']['intersection']['#description'] = $this->t('Use Javascript Intersection Observer to lazy load the iframe only when in view. Set loading attribute to lazy.');
 
     return $form;
   }

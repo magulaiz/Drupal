@@ -48,3 +48,10 @@ drupal.media-icon:
       css/media.icon.theme.css: {}
   dependencies:
     - field_ui/drupal.field_ui.manage_fields
+
+media_embed_intersection_observer:
+  version: VERSION
+  js:
+    js/media_embed_intersection_observer.js: {}
+  dependencies:
+    - core/drupal
