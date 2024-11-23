@@ -1,3 +1,4 @@
+# cspell:ignore oddbird iife
 # All libraries are defined in alphabetical order.
 
 internal.backbone:
@@ -879,6 +880,32 @@ drupal.dialog.off_canvas:
     - core/drupal.dialog.ajax
     - core/drupal.touchevents-test
 
+drupal.toggletip:
+  version: VERSION
+  js:
+    misc/toggletip.js: {}
+  css:
+    component:
+      misc/toggletip.css: {}
+  dependencies:
+    - core/once
+    - core/drupal
+    - core/drupal.tip
+
+drupal.tip:
+  version: VERSION
+  js:
+    misc/tip.js: {}
+  css:
+    component:
+      misc/tip.css: {}
+  dependencies:
+    - core/once
+    - core/drupal
+    - core/drupal.displace
+    - core/internal.floating-ui
+    - core/popover.polyfill
+
 js-cookie:
   remote: https://github.com/js-cookie/js-cookie
   version: "3.0.5"
@@ -897,3 +924,13 @@ drupal.fieldListKeyboardNavigation:
   dependencies:
     - core/drupal
     - core/tabbable
+
+popover.polyfill:
+  remote: https://github.com/oddbird/popover-polyfill
+  version: "0.4.3"
+  license:
+    name: BSD 3-Clause
+    url: https://raw.githubusercontent.com/oddbird/popover-polyfill/v0.4.3/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/oddbird/popover-polyfill/popover.iife.min.js: {}

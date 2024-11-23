@@ -84,6 +84,16 @@ libraries-override:
       component:
         misc/components/sticky-header.module.css: css/core/components/sticky-header.module.css
 
+  core/drupal.toggletip:
+    css:
+      component:
+        misc/toggletip.css: css/core/toggletip.css
+
+  core/drupal.tip:
+    css:
+      component:
+        misc/tip.css: css/core/tip.css
+
   core/drupal.vertical-tabs:
     css:
       component:

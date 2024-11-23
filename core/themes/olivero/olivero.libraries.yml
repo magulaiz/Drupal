@@ -288,3 +288,17 @@ tags:
   css:
     theme:
       css/components/tags.css: {}
+
+toggletip:
+  version: VERSION
+  css:
+    component:
+      css/components/toggletip.css: {}
+  js:
+    js/toggletip.js: {}
+
+tip:
+  version: VERSION
+  css:
+    component:
+      css/components/tip.css: {}

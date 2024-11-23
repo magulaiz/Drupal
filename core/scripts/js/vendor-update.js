@@ -1,3 +1,4 @@
+// cspell:ignore oddbird iife
 /**
  * @file
  * Copy files for JS vendor dependencies from node_modules to the assets/vendor
@@ -135,6 +136,17 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         { from: 'dist/browser/bundle.umd.min.js', to: 'bundle.umd.min.js' },
         { from: 'dist/browser/bundle.umd.min.js.map', to: 'bundle.umd.min.js.map' },
       ],
+    },
+    {
+      pack: '@oddbird/popover-polyfill',
+      files: [
+        { from: 'dist/popover.iife.min.js', to: 'popover.iife.min.js' },
+        {
+          from: 'dist/popover.iife.min.js.map',
+          to: 'popover.iife.min.js.map',
+        },
+      ],
+      folder: 'oddbird/popover-polyfill',
     },
     {
       pack: 'jquery-ui',

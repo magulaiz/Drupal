@@ -44,6 +44,7 @@ beatle
 bebebe
 beforeclose
 beforecreate
+beforetoggle
 behat
 bergmann
 berne
@@ -422,6 +423,7 @@ pjpeg
 placeholdered
 placeholdering
 plusthick
+popovertarget
 porterstemmer
 postcondition
 postorder
@@ -610,6 +612,9 @@ titlebar
 tlds
 tmpfs
 toggleable
+toggletip
+toggletips
+togglewrap
 tongatapu
 toolkits
 toplevel

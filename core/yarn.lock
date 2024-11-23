@@ -2059,6 +2059,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@oddbird/popover-polyfill@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "@oddbird/popover-polyfill@npm:0.4.4"
+  checksum: 10c0/ab7d338b4cd473d49a14fc65335826ebb90b0fe1841e560ac11a50023739d42a605fcf5f88fae591fd30706e6e3aa5bc0eee5865d8f08486b669459f6ebcdee4
+  languageName: node
+  linkType: hard
+
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
@@ -2397,6 +2404,7 @@ __metadata:
     "@ckeditor/ckeditor5-table": "npm:~43.3.1"
     "@drupal/once": "npm:^1.0.1"
     "@floating-ui/dom": "npm:^1.6.8"
+    "@oddbird/popover-polyfill": "npm:^0.4.4"
     backbone: "npm:^1.6.0"
     chokidar: "npm:^3.6.0"
     ckeditor5: "npm:~43.3.1"
