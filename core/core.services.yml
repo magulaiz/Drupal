@@ -1440,6 +1440,11 @@ services:
     class: Drupal\Core\Mail\MailManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@config.factory', '@logger.factory', '@string_translation', '@renderer']
   Drupal\Core\Mail\MailManagerInterface: '@plugin.manager.mail'
+  mail.transport_factory_manager:
+    class: Drupal\Core\Mail\TransportFactoryManager
+    tags:
+      - { name: service_collector, tag: 'mailer.transport_factory', call: addTransportFactory }
+  Drupal\Core\Mail\TransportFactoryManagerInterface: '@mail.transport_factory_manager'
   plugin.manager.condition:
     class: Drupal\Core\Condition\ConditionManager
     parent: default_plugin_manager

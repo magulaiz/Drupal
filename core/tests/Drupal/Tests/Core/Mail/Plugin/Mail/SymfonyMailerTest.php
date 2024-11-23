@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\Mail\Plugin\Mail;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\Plugin\Mail\SymfonyMailer;
+use Drupal\Core\Mail\TransportFactoryManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -53,7 +54,10 @@ class SymfonyMailerTest extends UnitTestCase {
     /** @var \Psr\Log\LoggerInterface|\PHPUnit\Framework\MockObject\MockObject */
     $logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
-    $plugin = new SymfonyMailer($logger, $mailer);
+    /** @var \Drupal\Core\Mail\TransportFactoryManagerInterface|\PHPUnit\Framework\MockObject\MockObject */
+    $factoryManager = $this->getMockBuilder(TransportFactoryManagerInterface::class)->getMock();
+
+    $plugin = new SymfonyMailer($logger, $factoryManager, $mailer);
     $message = $plugin->format($message);
 
     $expect = MailFormatHelper::wrapMail($plain . "\n\n" . strtr($template, $variables) . "\n");
@@ -136,7 +140,10 @@ class SymfonyMailerTest extends UnitTestCase {
     /** @var \Psr\Log\LoggerInterface|\PHPUnit\Framework\MockObject\MockObject */
     $logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
 
-    $plugin = new SymfonyMailer($logger, $mailer);
+    /** @var \Drupal\Core\Mail\TransportFactoryManagerInterface|\PHPUnit\Framework\MockObject\MockObject */
+    $factoryManager = $this->getMockBuilder(TransportFactoryManagerInterface::class)->getMock();
+
+    $plugin = new SymfonyMailer($logger, $factoryManager, $mailer);
     $this->assertTrue($plugin->mail($message));
   }
 
