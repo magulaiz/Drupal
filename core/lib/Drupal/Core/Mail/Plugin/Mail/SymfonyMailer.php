@@ -51,6 +51,7 @@ use Symfony\Component\Mime\Email;
  * @Mail(
  *   id = "symfony_mailer",
  *   label = @Translation("Symfony mailer (Experimental)"),
+ *   description = @Translation("Sends the message, using Symfony mailer.")
  * )
  *
  * @internal
