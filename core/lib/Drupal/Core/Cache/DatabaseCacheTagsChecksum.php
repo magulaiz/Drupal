@@ -25,7 +25,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    *
    * @var string
    */
-  protected readonly string $table = 'cachetags';
+  protected string $table = 'cachetags';
 
   /**
    * Constructs a DatabaseCacheTagsChecksum object.
