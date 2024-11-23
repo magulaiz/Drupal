@@ -350,7 +350,7 @@ class Html {
    */
   public static function escapeCdataElement(\DOMNode $node, $comment_start = '//', $comment_end = '') {
     foreach ($node->childNodes as $child_node) {
-      if ($child_node instanceof \DOMCdataSection) {
+      if ($child_node instanceof \DOMText) {
         $data = $child_node->data;
         if (!str_contains($child_node->data, 'CDATA')) {
           $embed_prefix = "\n{$comment_start}<![CDATA[{$comment_end}\n";
@@ -360,7 +360,7 @@ class Html {
         }
 
         $fragment = $node->ownerDocument->createDocumentFragment();
-        $fragment->appendXML($data);
+        $fragment->append($data);
         $node->appendChild($fragment);
         $node->removeChild($child_node);
       }
