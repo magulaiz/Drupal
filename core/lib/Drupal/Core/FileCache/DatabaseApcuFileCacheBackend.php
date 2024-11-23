@@ -133,9 +133,11 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
    */
   public function garbageCollection(): void {
     try {
-      $this->connection->delete($this->table)
-        ->condition('expire', time(), '<')
-        ->execute();
+      if ($this->connection) {
+        $this->connection->delete($this->table)
+          ->condition('expire', time(), '<')
+          ->execute();
+      }
     }
     catch (\Exception) {
       // If the table does not exist, it surely does not have garbage in it.
