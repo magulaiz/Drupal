@@ -150,6 +150,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processDefaultArgumentSkipUrlUpdate($handler, $handler_type)) {
         $changed = TRUE;
       }
+      if ($this->processEntityArgumentUpdate($handler, $handler_type)) {
+        $changed = TRUE;
+      }
       if ($this->addLabelIfMissing($view)) {
         $changed = TRUE;
       }
@@ -524,6 +527,47 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       $changed = TRUE;
     }
     return $changed;
+  }
+
+  /**
+   * Checks if 'numeric' arguments should be converted to 'entity_target_id'.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   TRUE if the view has any arguments that reference an entity reference
+   *   that need to be converted from 'numeric' to 'entity_target_id'.
+   */
+  public function needsEntityArgumentUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) {
+      return $this->processEntityArgumentUpdate($handler, $handler_type);
+    });
+  }
+
+  /**
+   * Processes arguments and convert 'numeric' to 'entity_target_id' if needed.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  public function processEntityArgumentUpdate(array &$handler, string $handler_type): bool {
+    $plugin_id = $handler['plugin_id'] ?? '';
+    if ($handler_type === 'argument' && $plugin_id === 'numeric') {
+      $argument_table_data = $this->viewsData->get($handler['table']);
+      $argument_definition = $argument_table_data[$handler['field']]['argument'] ?? [];
+      if (isset($argument_definition['id']) && $argument_definition['id'] === 'entity_target_id') {
+        $handler['plugin_id'] = 'entity_target_id';
+        $handler['target_entity_type_id'] = $argument_definition['target_entity_type_id'];
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
 }
