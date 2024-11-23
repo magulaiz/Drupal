@@ -60,16 +60,24 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
   }
 
   /**
+   * Run tests without dataProvider to improve speed.
+   */
+  public function testInternalLinksRender(): void {
+    foreach ($this->getTestCases() as $case_options) {
+      [$display_settings, $expected_results] = array_values($case_options);
+      $this->checkInternalLinksRender($display_settings, $expected_results);
+    }
+  }
+
+  /**
    * Test rendered entity field with complex internal url.
    *
    * @param array $display_settings
    *   Display settings for link field formatter.
    * @param array $expected_results
    *   Render result using these display settings.
-   *
-   * @dataProvider getTestCases
    */
-  public function testInternalLinksRender(array $display_settings, array $expected_results): void {
+  public function checkInternalLinksRender(array $display_settings, array $expected_results): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
