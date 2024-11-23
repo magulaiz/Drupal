@@ -1,0 +1,11 @@
+.toolbar-badge {
+  padding: 0.25rem;
+  text-transform: uppercase;
+  border-radius: 0.25rem;
+  font-size: 0.625rem;
+}
+
+.toolbar-badge--info {
+  color: white;
+  background-color: var(--admin-toolbar-color-green-200);
+}

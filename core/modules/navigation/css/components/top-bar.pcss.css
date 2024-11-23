@@ -45,6 +45,16 @@
   }
 }
 
+.top-bar__actions {
+  display: flex;
+  gap: 0.5rem;
+
+  @media (--admin-toolbar-desktop) {
+    justify-content: end;
+    gap: var(--admin-toolbar-space-4);
+  }
+}
+
 .top-bar__burger {
   align-self: start;
   @media (--admin-toolbar-desktop) {
@@ -59,6 +69,12 @@
   justify-content: space-between;
   gap: var(--admin-toolbar-space-16);
   width: 100%;
+
+  @media (--admin-toolbar-desktop) {
+    grid-template-columns: auto 1fr auto;
+    gap: var(--admin-toolbar-space-24);
+    grid-auto-flow: row;
+  }
 }
 
 .top-bar__controls {
@@ -68,4 +84,20 @@
     display: flex;
     gap: var(--admin-toolbar-space-8);
   }
+}
+
+.top-bar__path {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: start;
+}
+
+.top-bar__title {
+  margin-block: 0;
+}
+
+.top-bar__tools {
+  display: flex;
+  gap: 0.5rem;
 }

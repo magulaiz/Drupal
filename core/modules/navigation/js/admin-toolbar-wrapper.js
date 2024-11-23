@@ -186,3 +186,18 @@
     };
   }
 )(Drupal, once);
+
+((Drupal, once) => {
+  Drupal.behaviors.tempEditSidebar = {
+    attach: (context) => {
+      once(
+        'toolbar-switcher',
+        context.querySelectorAll('[aria-controls="edit-advanced"]'),
+      ).forEach((trigger) => {
+        trigger.addEventListener('click', (e) => {
+          trigger.setAttribute('aria-expanded', e.currentTarget.getAttribute('aria-expanded') === 'false')
+        })
+      });
+    },
+  };
+})(Drupal, once);

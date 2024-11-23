@@ -326,8 +326,8 @@ body {
     display: flex;
   }
 }
-[data-admin-toolbar="expanded"] :is([data-drupal-tooltip]:hover + .admin-toolbar__tooltip),
-[data-admin-toolbar="expanded"] :is([data-drupal-tooltip]:focus + .admin-toolbar__tooltip) {
+[data-admin-toolbar="expanded"] :is(.admin-toolbar [data-drupal-tooltip]:hover + .admin-toolbar__tooltip),
+[data-admin-toolbar="expanded"] :is(.admin-toolbar [data-drupal-tooltip]:focus + .admin-toolbar__tooltip) {
   display: none;
 }
 /**

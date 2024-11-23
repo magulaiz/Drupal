@@ -10,11 +10,74 @@
  */
 #}
 {% set attributes = create_attribute() %}
-{% if local_tasks %}
-  {% set attributes = attributes.setAttribute('data-offset-top', '') %}
-  <div {{ attributes.addClass('top-bar').setAttribute('data-drupal-admin-styles', '') }}>
-    <div class="top-bar__content">
+<div {{ attributes.addClass('top-bar').setAttribute('data-drupal-admin-styles', '') }}>
+  <div class="top-bar__content">
+    <div class="top-bar__tools">
+      {% include 'navigation:toolbar-button' with {
+        action: 'Clear cache'|t,
+        attributes: create_attribute().setAttribute('data-drupal-tooltip', 'Clear cache'|t).setAttribute('data-drupal-tooltip-class', 'admin-toolbar__tooltip'),
+        extra_classes: ['toolbar-button--small-offset'],
+        icon: 'broom',
+      } only %}
+      {% include 'navigation:toolbar-button' with {
+        action: 'Run cron'|t,
+        attributes: create_attribute().setAttribute('data-drupal-tooltip', 'Run cron'|t).setAttribute('data-drupal-tooltip-class', 'admin-toolbar__tooltip'),
+        extra_classes: ['toolbar-button--small-offset'],
+        icon: 'clock-countdown',
+      } only %}
+
+    </div>
+    <div class="top-bar__path">
+      {% include 'navigation:title' with {
+        attributes: create_attribute({class:['tollbar-title--h6']}),
+        extra_classes: ['top-bar__title'],
+        content: 'Edit article "Best Article ever"',
+        html_tag: 'h6',
+      } only %}
+      {% include 'navigation:badge' with {
+        attributes: create_attribute(),
+        label: 'published',
+        status: 'info'
+      } only %}
+    </div>
+    <div class="top-bar__actions">
       {{ local_tasks }}
+
+      {% include 'navigation:toolbar-button' with {
+        attributes: create_attribute({ 'aria-controls': 'edit-advanced', 'type': 'button'}),
+        extra_classes: ['toolbar-button--small-offset'],
+        text: 'Preview'|t,
+      } only %}
+
+      {% include 'navigation:toolbar-button' with {
+        attributes: create_attribute({ 'aria-controls': 'edit-advanced', 'type': 'button'}),
+        extra_classes: ['toolbar-button--primary', 'toolbar-button--small-offset'],
+        text: 'Save'|t,
+      } only %}
+
+      {% include 'navigation:toolbar-button' with {
+        action: 'Expand extra'|t,
+        attributes: create_attribute({ 'aria-controls': 'edit-advanced', 'type': 'button', 'aria-expanded': 'false' }),
+        extra_classes: ['toolbar-button--small-offset'],
+        icon: 'dots-three-vertical',
+      } only %}
+
     </div>
   </div>
-{% endif %}
+</div>
+
+<style>
+  html:has([aria-controls="edit-advanced"][aria-expanded="false"]) {
+    [data-drupal-selector="edit-advanced"] {
+      display: none;
+    }
+
+    @media(min-width: 61rem) {
+      --layout-region-edit-width: 100%;
+      .layout-form {
+        grid-template-columns: 1fr;
+        width: 100%;
+      }
+    }
+  }
+</style>
