@@ -24,7 +24,8 @@ class LanguageBlock extends DeriverBase {
       $configurable_types = $language_manager->getLanguageTypes();
       foreach ($configurable_types as $type) {
         $this->derivatives[$type] = $base_plugin_definition;
-        $this->derivatives[$type]['admin_label'] = $this->t('Language switcher (@type)', ['@type' => $info[$type]['name']]);
+        $admin_label = $info[$type]['name'] ?? $type;
+        $this->derivatives[$type]['admin_label'] = $this->t('Language switcher (@type)', ['@type' => $admin_label]);
       }
       // If there is just one configurable type then change the title of the
       // block.
