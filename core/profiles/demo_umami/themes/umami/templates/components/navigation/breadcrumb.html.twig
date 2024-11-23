@@ -24,7 +24,7 @@
       Once the breadcrumb loop completes, we add the current page title.
       This variable is created in umami.theme.
     #}
-    <li> {{ current_page_title }}</li>
+    <li {{ current == key ? ' aria-current="page"' : '' }}> {{ current_page_title }}</li>
     </ol>
   </nav>
 {% endif %}
