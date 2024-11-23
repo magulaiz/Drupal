@@ -111,7 +111,6 @@ class StatementPrefetchIterator extends StatementBase {
     $data = $this->clientFetchAll(FetchAs::Associative);
     $this->prefetchedResult = new PrefetchedResult(
       $data,
-      count($data) > 0 ? array_keys($data[0]) : [],
       $this->rowCountEnabled ? $this->clientRowCount() : NULL,
     );
 
@@ -168,6 +167,13 @@ class StatementPrefetchIterator extends StatementBase {
   /**
    * {@inheritdoc}
    */
+  public function getQueryString(): string {
+    return $this->queryString;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
     if (is_int($mode)) {
       @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
@@ -192,16 +198,15 @@ class StatementPrefetchIterator extends StatementBase {
 
     // We can remove the current record from the prefetched data, before
     // moving to the next record.
-    unset($this->prefetchedResult->data[$currentKey]);
+    $rowAssoc = $this->prefetchedResult->fetchOne();
     $currentKey++;
-    if (!isset($this->prefetchedResult->data[$currentKey])) {
+    if ($rowAssoc === NULL) {
       $this->markResultsetFetchingComplete();
       return FALSE;
     }
 
     // Now, format the next prefetched record according to the required fetch
     // style.
-    $rowAssoc = $this->prefetchedResult->data[$currentKey];
     $mode = $fetch_style ?? $this->defaultFetchMode;
     $row = match($mode) {
       FetchAs::Associative => $rowAssoc,
@@ -247,13 +252,6 @@ class StatementPrefetchIterator extends StatementBase {
       'constructor_args' => $constructor_arguments,
     ];
     return $this->fetch(FetchAs::ClassObject);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAssoc() {
-    return $this->fetch(FetchAs::Associative);
   }
 
   /**
@@ -322,17 +320,16 @@ class StatementPrefetchIterator extends StatementBase {
     }
 
     $result = [];
-    while ($row = $this->fetch($fetch ?? $this->defaultFetchMode)) {
-      $result[$this->prefetchedResult->data[$this->getResultsetCurrentRowIndex()][$key]] = $row;
+    while ($rowAssoc = $this->prefetchedResult->fetchOne()) {
+      $result[$rowAssoc[$key]] = match ($fetch ?? $this->defaultFetchMode) {
+        FetchAs::Associative => $rowAssoc,
+        FetchAs::ClassObject => $this->assocToClass($rowAssoc, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
+        FetchAs::Column => $this->assocToColumn($rowAssoc, $this->prefetchedResult->columnNames, $this->fetchOptions['column']),
+        FetchAs::List => $this->assocToNum($rowAssoc),
+        FetchAs::Object => $this->assocToObj($rowAssoc),
+      };
     }
     return $result;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function clientQueryString(): string {
-    return $this->queryString;
   }
 
 }
