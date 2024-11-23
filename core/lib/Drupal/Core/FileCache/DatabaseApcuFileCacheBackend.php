@@ -28,10 +28,12 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
   /**
    * The database connection.
    */
-  protected Connection $connection;
+  protected ?Connection $connection = NULL;
 
   public function __construct() {
-    $this->connection = Database::getConnection();
+    if (Database::getConnectionInfo('default')) {
+      $this->connection = Database::getConnection();
+    }
     // Set a default TTL to 90 days, this is to allow cache items for cache keys
     // that are no longer relevant to be garbage collected from the database.
     $this->ttl = Settings::get('file_cache_ttl', 86400 * 90);
@@ -52,11 +54,13 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
     }
     $result = [];
     try {
-      $result = $this->connection->select('file_cache')
-        ->fields('cid', 'data', 'serialized', 'created', 'expire')
-        ->condition('cid', array_keys($cid_mapping), 'IN')
-        ->sort('cid', 'ASC')
-        ->execute();
+      if ($this->connection) {
+        $result = $this->connection->select('file_cache')
+          ->fields('cid', 'data', 'serialized', 'created', 'expire')
+          ->condition('cid', array_keys($cid_mapping), 'IN')
+          ->sort('cid', 'ASC')
+          ->execute();
+      }
     }
     catch (\Exception) {
       // Nothing to do.
@@ -111,9 +115,11 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
     // a stale cache item from the database back to APCu.
     $database_cid = $this->normalizeCid($cid);
     try {
-      $this->connection->delete($this->table)
-        ->condition('cid', $database_cid)
-        ->execute();
+      if ($this->connection) {
+        $this->connection->delete($this->table)
+          ->condition('cid', $database_cid)
+          ->execute();
+      }
     }
     catch (\Exception) {
       // Nothing to do.
@@ -192,12 +198,14 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
     }
     // Use an upsert query which is atomic and optimized for multiple-row
     // merges.
-    $this->connection
-      ->upsert($this->table)
-      ->key('cid')
-      ->fields(['cid', 'expire', 'created', 'data', 'serialized'])
-      ->values($fields)
-      ->execute();
+    if ($this->connection) {
+      $this->connection
+        ->upsert($this->table)
+        ->key('cid')
+        ->fields(['cid', 'expire', 'created', 'data', 'serialized'])
+        ->values($fields)
+        ->execute();
+    }
   }
 
   /**
