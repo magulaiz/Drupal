@@ -95,7 +95,7 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
     }
     catch (\Exception $e) {
       // If there was an exception, try to create the bin. However, special case
-      // the early installer so that the bin is not creeated if Drupal as
+      // the early installer so that the bin is not created if Drupal as
       // a whole has not been installed yet.
       if (InstallerKernel::installationAttempted() && !$try_again = $this->ensureBinExists()) {
         // If the exception happened for other reason than the missing bin
