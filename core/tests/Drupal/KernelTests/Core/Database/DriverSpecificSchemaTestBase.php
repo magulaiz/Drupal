@@ -1045,10 +1045,10 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $tables = $test_schema->findTables('%');
     sort($tables);
     $expected = [
-      // The 'config' and file_cache tables are added by
+      // The 'config' and database_file_cache tables are added by
       // \Drupal\KernelTests\KernelTestBase::containerBuild().
       'config',
-      'file_cache',
+      'database_file_cache',
       'test_1_table',
       // This table uses a per-table prefix, yet it is returned as un-prefixed.
       'test_2_table',
