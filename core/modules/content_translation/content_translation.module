@@ -683,6 +683,11 @@ function content_translation_page_attachments(&$page) {
 
     $entity = $route_match->getParameter($name);
     if ($entity instanceof ContentEntityInterface && $entity->hasLinkTemplate('canonical')) {
+      // Do nothing if entity has no translations.
+      if (count($entity->getTranslationLanguages()) === 1) {
+        return;
+      }
+
       // Current route represents a content entity. Build hreflang links.
       foreach ($entity->getTranslationLanguages() as $language) {
         // Skip any translation that cannot be viewed.
