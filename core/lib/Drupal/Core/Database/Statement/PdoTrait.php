@@ -46,7 +46,7 @@ trait PdoTrait {
       assert($this->clientStatement instanceof \PDOStatement);
       return $this->clientStatement;
     }
-    throw new \RuntimeException('\\PDOStatement not initialized');
+    throw new \LogicException('\\PDOStatement not initialized');
   }
 
   /**
