@@ -224,20 +224,7 @@ class StatementPrefetchIterator extends StatementBase {
       @trigger_error("Passing the \$mode argument as an integer to fetchAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
       $mode = $this->pdoToFetchAs($mode);
     }
-
-    $fetchStyle = $mode ?? $this->defaultFetchMode;
-    if (isset($column_index)) {
-      $this->fetchOptions['column'] = $column_index;
-    }
-    if (isset($constructor_arguments)) {
-      $this->fetchOptions['constructor_args'] = $constructor_arguments;
-    }
-
-    $result = [];
-    while ($row = $this->fetch($fetchStyle)) {
-      $result[] = $row;
-    }
-    return $result;
+    return parent::fetchAll($mode, $column_index, $constructor_arguments);
   }
 
   /**

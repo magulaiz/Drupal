@@ -327,7 +327,9 @@ abstract class StatementBase implements \Iterator, StatementInterface {
       $this->fetchOptions['constructor_args'] = $constructorArguments;
     }
 
-    $return = $this->clientFetchAll($fetchMode, $columnIndex, $constructorArguments);
+    $return = $this->prefetchedResult ?
+      $this->prefetchedResult->fetchAll($fetchMode, $this->fetchOptions) :
+      $this->clientFetchAll($fetchMode, $columnIndex, $constructorArguments);
 
     $this->markResultsetFetchingComplete();
 
