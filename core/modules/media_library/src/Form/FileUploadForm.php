@@ -200,19 +200,27 @@ class FileUploadForm extends AddFormBase {
    * @return array
    *   The processed upload element.
    */
-  public function validateUploadElement(array $element, FormStateInterface $form_state) {
+  public function validateUploadElement(array $element, FormStateInterface $form_state): array {
     if ($form_state::hasAnyErrors()) {
       // When an error occurs during uploading files, remove all files so the
       // user can re-upload the files.
       $element['#value'] = [];
     }
     $values = $form_state->getValue('upload', []);
-    if (count($values['fids']) > $element['#cardinality'] && $element['#cardinality'] !== FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
-      $form_state->setError($element, $this->t('A maximum of @count files can be uploaded.', [
-        '@count' => $element['#cardinality'],
-      ]));
-      $form_state->setValue('upload', []);
-      $element['#value'] = [];
+    // Check if the 'fids' value is set and is an array.
+    if (!isset($values['fids']) || !is_array($values['fids']) || count($values['fids']) === 0) {
+      // Set an error if no files are uploaded.
+      $form_state->setError($element, $this->t('No files have been uploaded. Upload at least one file.'));
+    }
+    else {
+      // Ensure the file count does not exceed the allowed cardinality.
+      if (count($values['fids']) > $element['#cardinality'] && $element['#cardinality'] !== FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
+        $form_state->setError($element, $this->t('A maximum of @count files can be uploaded.', [
+          '@count' => $element['#cardinality'],
+        ]));
+        $form_state->setValue('upload', []);
+        $element['#value'] = [];
+      }
     }
     return $element;
   }
