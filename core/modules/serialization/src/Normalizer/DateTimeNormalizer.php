@@ -69,7 +69,7 @@ class DateTimeNormalizer extends NormalizerBase implements DenormalizerInterface
    * @see ::normalize
    * @see \Drupal\Core\Datetime\DrupalDateTime::prepareTimezone()
    *
-   * @returns \DateTimeZone
+   * @return \DateTimeZone
    *   The timezone to use.
    */
   protected function getNormalizationTimezone() {
@@ -108,15 +108,6 @@ class DateTimeNormalizer extends NormalizerBase implements DenormalizerInterface
 
     $formats = implode(', ', $format_strings);
     throw new UnexpectedValueException(sprintf('The specified date "%s" is not in an accepted format: %s.', $data, $formats));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function hasCacheableSupportsMethod(): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use getSupportedTypes() instead. See https://www.drupal.org/node/3359695', E_USER_DEPRECATED);
-
-    return TRUE;
   }
 
   /**
