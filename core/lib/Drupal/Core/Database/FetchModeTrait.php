@@ -104,7 +104,7 @@ trait FetchModeTrait {
    */
   protected function assocToColumn(array $rowAssoc, array $columnNames, int $columnIndex): mixed {
     if (!isset($columnNames[$columnIndex])) {
-      throw new \OutOfBoundsException("Column with index {$columnIndex} does not exist");
+      throw new \ValueError("Column with index {$columnIndex} does not exist");
     }
     return $rowAssoc[$columnNames[$columnIndex]];
   }
