@@ -27,11 +27,6 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
    */
   protected int $ttl;
 
-  /**
-   * The database connection.
-   */
-  protected ?Connection $connection = NULL;
-
   public function __construct() {
     // Set a default TTL to 90 days, this is to allow cache items for cache keys
     // that are no longer relevant to be garbage collected from the database.
