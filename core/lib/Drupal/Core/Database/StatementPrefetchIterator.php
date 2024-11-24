@@ -194,27 +194,13 @@ class StatementPrefetchIterator extends StatementBase {
       $fetch_style = $this->pdoToFetchAs($fetch_style);
     }
 
-    $currentKey = $this->getResultsetCurrentRowIndex();
+    $row = $this->prefetchedResult->fetch($fetch_style ?? $this->defaultFetchMode, $this->fetchOptions);
 
-    // We can remove the current record from the prefetched data, before
-    // moving to the next record.
-    $rowAssoc = $this->prefetchedResult->fetchOne();
-    $currentKey++;
-    if ($rowAssoc === NULL) {
+    if ($row === FALSE) {
       $this->markResultsetFetchingComplete();
       return FALSE;
     }
 
-    // Now, format the next prefetched record according to the required fetch
-    // style.
-    $mode = $fetch_style ?? $this->defaultFetchMode;
-    $row = match($mode) {
-      FetchAs::Associative => $rowAssoc,
-      FetchAs::ClassObject => $this->assocToClass($rowAssoc, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
-      FetchAs::Column => $this->assocToColumn($rowAssoc, $this->prefetchedResult->columnNames, $this->fetchOptions['column']),
-      FetchAs::List => $this->assocToNum($rowAssoc),
-      FetchAs::Object => $this->assocToObj($rowAssoc),
-    };
     $this->setResultsetCurrentRow($row);
     return $row;
   }
@@ -224,16 +210,6 @@ class StatementPrefetchIterator extends StatementBase {
    *   StatementWrapperIterator class either.
    */
   public function fetchColumn($index = 0) {
-    if ($row = $this->fetch(FetchAs::Associative)) {
-      return $row[$this->prefetchedResult->columnNames[$index]];
-    }
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchField($index = 0) {
     if ($row = $this->fetch(FetchAs::Associative)) {
       return $row[$this->prefetchedResult->columnNames[$index]];
     }
@@ -320,7 +296,7 @@ class StatementPrefetchIterator extends StatementBase {
     }
 
     $result = [];
-    while ($rowAssoc = $this->prefetchedResult->fetchOne()) {
+    while ($rowAssoc = $this->prefetchedResult->fetch(FetchAs::Associative, $this->fetchOptions)) {
       $result[$rowAssoc[$key]] = match ($fetch ?? $this->defaultFetchMode) {
         FetchAs::Associative => $rowAssoc,
         FetchAs::ClassObject => $this->assocToClass($rowAssoc, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),

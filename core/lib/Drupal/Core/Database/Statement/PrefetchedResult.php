@@ -2,7 +2,11 @@
 
 namespace Drupal\Core\Database\Statement;
 
+use Drupal\Core\Database\FetchModeTrait;
+
 class PrefetchedResult {
+
+  use FetchModeTrait;
 
   public readonly array $columnNames;
   protected ?int $currentRowIndex = NULL;
@@ -15,15 +19,21 @@ class PrefetchedResult {
     $this->currentRowIndex = -1;
   }
 
-  public function fetchOne(): array|NULL {
+  public function fetch(FetchAs $mode, array $fetchOptions): array|object|int|float|string|bool|NULL {
     $this->currentRowIndex++;
     if (!isset($this->data[$this->currentRowIndex])) {
       $this->currentRowIndex = NULL;
-      return NULL;
+      return FALSE;
     }
-    $row = $this->data[$this->currentRowIndex];
+    $rowAssoc = $this->data[$this->currentRowIndex];
     unset($this->data[$this->currentRowIndex]);
-    return $row;
+    return match($mode) {
+      FetchAs::Associative => $rowAssoc,
+      FetchAs::ClassObject => $this->assocToClass($rowAssoc, $fetchOptions['class'], $fetchOptions['constructor_args']),
+      FetchAs::Column => $this->assocToColumn($rowAssoc, $this->columnNames, $fetchOptions['column']),
+      FetchAs::List => $this->assocToNum($rowAssoc),
+      FetchAs::Object => $this->assocToObj($rowAssoc),
+    };
   }
 
 }

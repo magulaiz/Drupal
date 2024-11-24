@@ -208,7 +208,9 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchField($index = 0) {
-    $column = $this->clientFetchColumn($index);
+    $column = $this->prefetchedResult ?
+      $this->prefetchedResult->fetch(FetchAs::Column, ['column' => $index]) :
+      $this->clientFetchColumn($index);
 
     if ($column === FALSE) {
       $this->markResultsetFetchingComplete();
@@ -247,7 +249,9 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   public function rowCount() {
     // SELECT query should not use the method.
     if ($this->rowCountEnabled) {
-      return $this->prefetchedResult ? $this->prefetchedResult->rowCount : $this->clientRowCount();
+      return $this->prefetchedResult ?
+        $this->prefetchedResult->rowCount :
+        $this->clientRowCount();
     }
     else {
       throw new RowCountException();
@@ -273,7 +277,9 @@ abstract class StatementBase implements \Iterator, StatementInterface {
 
     }
     try {
-      return $this->prefetchedResult ? TRUE : $this->clientSetFetchMode($mode, $a1, $a2);
+      return $this->prefetchedResult ?
+        TRUE :
+        $this->clientSetFetchMode($mode, $a1, $a2);
     }
     catch (\RuntimeException) {
       // The client statement is missing, just do with the properties setting.
