@@ -96,7 +96,7 @@ class PhpTransliteration implements TransliterationInterface {
     $result = '';
 
     foreach (preg_split('//u', $string, 0, PREG_SPLIT_NO_EMPTY) as $character) {
-      $code = self::ordUTF8($character);
+      $code = self::ordUtf8($character);
 
       // These two Unicode ranges include the accented US-ASCII letters, with a
       // few characters that aren't accented letters mixed in. So define the
@@ -154,7 +154,7 @@ class PhpTransliteration implements TransliterationInterface {
 
     // Split into Unicode characters and transliterate each one.
     foreach (preg_split('//u', $string, 0, PREG_SPLIT_NO_EMPTY) as $character) {
-      $code = self::ordUTF8($character);
+      $code = self::ordUtf8($character);
       if ($code == -1) {
         $to_add = $unknown_character;
       }
@@ -186,7 +186,7 @@ class PhpTransliteration implements TransliterationInterface {
    * @return int
    *   The character code, or -1 if an illegal character is found.
    */
-  protected static function ordUTF8($character) {
+  protected static function ordUtf8($character) {
     $first_byte = ord($character[0]);
 
     if (($first_byte & 0x80) == 0) {

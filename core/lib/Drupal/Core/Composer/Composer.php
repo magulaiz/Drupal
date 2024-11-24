@@ -79,7 +79,7 @@ class Composer {
    *
    * @internal
    */
-  public static function upgradePHPUnit(Event $event) {
+  public static function upgradePhpUnit(Event $event) {
     $repository = $event->getComposer()->getRepositoryManager()->getLocalRepository();
     // This is, essentially, a null constraint. We only care whether the package
     // is present in the vendor directory yet, but findPackage() requires it.
@@ -93,7 +93,7 @@ class Composer {
 
     // If the PHP version is 7.4 or above and PHPUnit is less than version 9
     // call the drupal-phpunit-upgrade script to upgrade PHPUnit.
-    if (!static::upgradePHPUnitCheck($phpunit_package->getVersion())) {
+    if (!static::upgradePhpUnitCheck($phpunit_package->getVersion())) {
       $event->getComposer()
         ->getEventDispatcher()
         ->dispatchScript('drupal-phpunit-upgrade');
@@ -114,7 +114,7 @@ class Composer {
    *
    * @internal
    */
-  public static function upgradePHPUnitCheck($phpunit_version) {
+  public static function upgradePhpUnitCheck($phpunit_version) {
     return !(version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, '7.4') >= 0 && version_compare($phpunit_version, '9.0') < 0);
   }
 

@@ -20,7 +20,7 @@ class ConfigHandler extends ViewsFormBase {
    */
   public function __construct($type = NULL, $id = NULL) {
     $this->setType($type);
-    $this->setID($id);
+    $this->setId($id);
   }
 
   /**
@@ -35,7 +35,7 @@ class ConfigHandler extends ViewsFormBase {
    */
   public function getForm(ViewEntityInterface $view, $display_id, $js, $type = NULL, $id = NULL) {
     $this->setType($type);
-    $this->setID($id);
+    $this->setId($id);
     return parent::getForm($view, $display_id, $js);
   }
 

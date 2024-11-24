@@ -50,7 +50,7 @@ class Gettext {
     // Instantiate and initialize the stream reader for this file.
     $reader = new PoStreamReader();
     $reader->setLangcode($file->langcode);
-    $reader->setURI($file->uri);
+    $reader->setUri($file->uri);
 
     try {
       $reader->open();

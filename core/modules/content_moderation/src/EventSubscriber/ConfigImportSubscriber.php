@@ -93,7 +93,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
 
     /** @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface $entity_type */
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-    $entity_id = ConfigEntityStorage::getIDFromConfigName($config_name, $entity_type->getConfigPrefix());
+    $entity_id = ConfigEntityStorage::getIdFromConfigName($config_name, $entity_type->getConfigPrefix());
     return $this->entityTypeManager->getStorage($entity_type_id)->load($entity_id);
   }
 

@@ -471,6 +471,7 @@ EOD;
     return $map;
   }
 
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   protected function _createKeySql($fields) {
     $return = [];
     foreach ($fields as $field) {
@@ -1020,12 +1021,14 @@ EOD;
     $this->resetTableInformation($table);
   }
 
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   protected function _createIndexSql($table, $name, $fields) {
     $query = 'CREATE INDEX ' . $this->ensureIdentifiersLength($table, $name, 'idx') . ' ON {' . $table . '} (';
     $query .= $this->_createKeySql($fields) . ')';
     return $query;
   }
 
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   protected function _createKeys($table, $new_keys) {
     if (isset($new_keys['primary key'])) {
       $this->addPrimaryKey($table, $new_keys['primary key']);

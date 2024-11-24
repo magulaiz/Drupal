@@ -173,7 +173,7 @@ class DateTimePlus {
       // DateTime class won't handle, like a year outside the range
       // of -9999 to 9999, which will pass checkdate() but
       // fail to construct a date object.
-      $iso_date = static::arrayToISO($date_parts);
+      $iso_date = static::arrayToIso($date_parts);
       return new static($iso_date, $timezone, $settings);
     }
     else {
@@ -543,7 +543,7 @@ class DateTimePlus {
    * @return string
    *   The date as an ISO string.
    */
-  public static function arrayToISO($array, $force_valid_date = FALSE) {
+  public static function arrayToIso($array, $force_valid_date = FALSE) {
     $array = static::prepareArray($array, $force_valid_date);
     $input_time = '';
     if ($array['year'] !== '') {

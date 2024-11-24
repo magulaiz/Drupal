@@ -39,6 +39,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
    * @return string
    *   The form field name.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function form_element_name(): string {
     return $this->field;
   }
@@ -54,6 +55,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
    * @return string
    *   The ID of a media entity.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function form_element_row_id(int $row_id): string {
     return $this->view->result[$row_id]->mid;
   }

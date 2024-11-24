@@ -205,6 +205,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
    * @return array
    *   The browser's langcode mapping configuration array.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   protected function language_get_browser_drupal_langcode_mappings() {
     $config = $this->config('language.mappings');
     if ($config->isNew()) {

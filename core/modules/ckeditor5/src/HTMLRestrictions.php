@@ -15,7 +15,7 @@ use Masterminds\HTML5\Elements;
  * Represents a set of HTML restrictions.
  *
  * This is a value object to represent HTML restrictions as defined by
- * \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions(). It:
+ * \Drupal\filter\Plugin\FilterInterface::getHtmlRestrictions(). It:
  * - accepts the array structure documented on that interface as its constructor
  *   argument
  * - provides convenience constructors for common sources of HTML restrictions
@@ -29,7 +29,7 @@ use Masterminds\HTML5\Elements;
  * restrictions and perform complex comparisons by performing these simple
  * operations.
  *
- * @see FilterInterface::getHTMLRestrictions()
+ * @see FilterInterface::getHtmlRestrictions()
  *
  * NOTE: Wildcard tags are not a concept of the Drupal filter system or HTML
  * filter; they are a CKEditor 5 concept. This allows CKEditor 5 plugins to
@@ -46,18 +46,18 @@ final class HTMLRestrictions {
    * An array of allowed elements.
    *
    * @var array
-   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
+   * @see \Drupal\filter\Plugin\FilterInterface::getHtmlRestrictions()
    */
   private $elements;
 
   /**
    * Whether unrestricted, in other words: arbitrary HTML allowed.
    *
-   * Used for when FilterFormatInterface::getHTMLRestrictions() returns `FALSE`,
+   * Used for when FilterFormatInterface::getHtmlRestrictions() returns `FALSE`,
    * e.g. in case of the default "Full HTML" text format.
    *
    * @var bool
-   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
+   * @see \Drupal\filter\Plugin\FilterInterface::getHtmlRestrictions()
    */
   private $unrestricted = FALSE;
 
@@ -77,7 +77,7 @@ final class HTMLRestrictions {
    * @param array $elements
    *   The allowed elements.
    *
-   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
+   * @see \Drupal\filter\Plugin\FilterInterface::getHtmlRestrictions()
    */
   public function __construct(array $elements) {
     self::validateAllowedRestrictionsPhase1($elements);
@@ -459,7 +459,7 @@ final class HTMLRestrictions {
   /**
    * Constructs a set of HTML restrictions matching the given object.
    *
-   * Note: there is no interface for the ::getHTMLRestrictions() method that
+   * Note: there is no interface for the ::getHtmlRestrictions() method that
    * both text filter plugins and the text format configuration entity type
    * implement. To avoid duplicating this logic, this private helper method
    * exists: to simplify the two public static methods that each accept one of
@@ -475,11 +475,11 @@ final class HTMLRestrictions {
    * @see ::fromTextFormat()
    */
   private static function fromObjectWithHtmlRestrictions(object $object): HTMLRestrictions {
-    if (!method_exists($object, 'getHTMLRestrictions')) {
+    if (!method_exists($object, 'getHtmlRestrictions')) {
       throw new \InvalidArgumentException();
     }
 
-    $restrictions = $object->getHTMLRestrictions();
+    $restrictions = $object->getHtmlRestrictions();
     if ($restrictions === FALSE || $restrictions === []) {
       return self::unrestricted();
     }
@@ -507,7 +507,7 @@ final class HTMLRestrictions {
     //   is globally disallowed by FilterHtml
     // @see ::validateAllowedRestrictionsPhase5()
     // @see \Drupal\filter\Plugin\Filter\FilterHtml::process()
-    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHtmlRestrictions()
     $conflict = self::findElementsOverridingGloballyDisallowedAttributes($allowed);
     if ($conflict) {
       [, $elements_overriding_globally_disallowed_attributes] = $conflict;
@@ -550,14 +550,14 @@ final class HTMLRestrictions {
       return "<$replacement";
     }, $elements_string);
 
-    // Reuse the parsing logic from FilterHtml::getHTMLRestrictions().
+    // Reuse the parsing logic from FilterHtml::getHtmlRestrictions().
     $configuration = ['settings' => ['allowed_html' => $elements_string]];
     $filter = new FilterHtml($configuration, 'filter_html', ['provider' => 'filter']);
-    $allowed_elements = $filter->getHTMLRestrictions()['allowed'];
-    // Omit the broad wildcard addition that FilterHtml::getHTMLRestrictions()
+    $allowed_elements = $filter->getHtmlRestrictions()['allowed'];
+    // Omit the broad wildcard addition that FilterHtml::getHtmlRestrictions()
     // always sets; it is specific to how FilterHTML works and irrelevant here.
     unset($allowed_elements['*']);
-    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHtmlRestrictions()
     // @todo remove this in https://www.drupal.org/project/drupal/issues/3226368
     // cSpell:disable-next-line
     unset($allowed_elements['__zqh6vxfbk3cg__']);
@@ -1181,7 +1181,7 @@ final class HTMLRestrictions {
    *
    * @return array
    *
-   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
+   * @see \Drupal\filter\Plugin\FilterInterface::getHtmlRestrictions()
    */
   public function getAllowedElements(bool $resolve_wildcards = TRUE): array {
     if ($resolve_wildcards) {
@@ -1200,6 +1200,7 @@ final class HTMLRestrictions {
    *
    * @see https://ckeditor.com/docs/ckeditor5/latest/framework/guides/contributing/package-metadata.html
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function toCKEditor5ElementsArray(): array {
     $readable = [];
     foreach ($this->elements as $tag => $attributes) {

@@ -52,7 +52,7 @@ class FilterNull extends FilterBase {
   /**
    * {@inheritdoc}
    */
-  public function getHTMLRestrictions() {
+  public function getHtmlRestrictions() {
     // Nothing is allowed.
     return ['allowed' => []];
   }

@@ -129,14 +129,14 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getURI() {
+  public function getUri() {
     return $this->uri;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setURI($uri) {
+  public function setUri($uri) {
     $this->uri = $uri;
   }
 
@@ -262,7 +262,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
 
       // Initialize common values for error logging.
       $log_vars = [
-        '%uri' => $this->getURI(),
+        '%uri' => $this->getUri(),
         '%line' => $this->lineNumber,
       ];
 

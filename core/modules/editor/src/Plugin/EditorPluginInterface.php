@@ -51,7 +51,7 @@ interface EditorPluginInterface extends PluginInspectionInterface, PluginFormInt
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
    * @see EditorManager::getAttachments()
    */
-  public function getJSSettings(Editor $editor);
+  public function getJsSettings(Editor $editor);
 
   /**
    * Returns libraries to be attached.

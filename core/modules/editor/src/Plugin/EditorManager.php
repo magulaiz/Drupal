@@ -79,7 +79,7 @@ class EditorManager extends DefaultPluginManager {
       $settings['editor']['formats'][$format_id] = [
         'format' => $format_id,
         'editor' => $editor->getEditor(),
-        'editorSettings' => $plugin->getJSSettings($editor),
+        'editorSettings' => $plugin->getJsSettings($editor),
         'editorSupportsContentFiltering' => $plugin_definition['supports_content_filtering'],
         'isXssSafe' => $plugin_definition['is_xss_safe'],
       ];

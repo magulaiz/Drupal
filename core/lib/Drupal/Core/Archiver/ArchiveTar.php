@@ -10,6 +10,7 @@ class ArchiveTar extends \Archive_Tar {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function _error($p_message) {
     throw new \Exception($p_message);
   }
@@ -17,6 +18,7 @@ class ArchiveTar extends \Archive_Tar {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function _warning($p_message) {
     throw new \Exception($p_message);
   }

@@ -295,6 +295,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   /**
    * Determine if the field table should be added to the query.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function add_field_table($use_groupby) {
     // Grouping is enabled.
     if ($use_groupby) {
@@ -558,6 +559,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   /**
    * Provide options for multiple value fields.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function multiple_options_form(&$form, FormStateInterface $form_state) {
     $field = $this->getFieldDefinition();
 
@@ -966,6 +968,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     return $processed_entity;
   }
 
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function render_item($count, $item) {
     return $this->renderer->render($item['rendered']);
   }

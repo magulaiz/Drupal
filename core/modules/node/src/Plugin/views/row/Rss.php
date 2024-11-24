@@ -49,6 +49,7 @@ class Rss extends RssPluginBase {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function buildOptionsForm_summary_options() {
     $options = parent::buildOptionsForm_summary_options();
     $options['title'] = $this->t('Title only');

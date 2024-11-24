@@ -435,7 +435,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function getReplacementID() {
+  public function getReplacementId() {
     /** @var \Drupal\image\ImageStyleStorageInterface $storage */
     $storage = $this->entityTypeManager()->getStorage($this->getEntityTypeId());
     return $storage->getReplacementId($this->id());

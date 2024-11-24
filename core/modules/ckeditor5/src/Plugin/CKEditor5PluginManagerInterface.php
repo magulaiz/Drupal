@@ -93,8 +93,9 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
    *
    * @see https://ckeditor.com/docs/ckeditor5/latest/api/module_editor-classic_classiceditor-ClassicEditor.html
    *
-   * @see \Drupal\ckeditor5\Plugin\Editor\CKEditor5::getJSSettings()
+   * @see \Drupal\ckeditor5\Plugin\Editor\CKEditor5::getJsSettings()
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function getCKEditor5PluginConfig(EditorInterface $editor): array;
 
   /**
@@ -116,7 +117,7 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
    *
    * @return array
    *   A nested array with a structure as described in
-   *   \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions().
+   *   \Drupal\filter\Plugin\FilterInterface::getHtmlRestrictions().
    *
    * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::getCreatableElements()
    *
@@ -124,7 +125,7 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
    *   Thrown when an invalid CKEditor5PluginElementsSubsetInterface
    *   implementation is encountered.
    *
-   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
+   * @see \Drupal\filter\Plugin\FilterInterface::getHtmlRestrictions()
    */
   public function getProvidedElements(array $plugin_ids = [], ?EditorInterface $editor = NULL, bool $resolve_wildcards = TRUE, bool $creatable_elements_only = FALSE): array;
 

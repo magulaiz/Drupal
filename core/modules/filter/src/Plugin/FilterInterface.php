@@ -249,7 +249,7 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    *
    * @see \Drupal\filter\Entity\FilterFormatInterface::getHtmlRestrictions()
    */
-  public function getHTMLRestrictions();
+  public function getHtmlRestrictions();
 
   /**
    * Generates a filter's tip.

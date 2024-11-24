@@ -1211,7 +1211,7 @@ abstract class Connection {
    *   TRUE if this connection supports transactions for DDL queries, FALSE
    *   otherwise.
    */
-  public function supportsTransactionalDDL() {
+  public function supportsTransactionalDdl() {
     return $this->transactionalDDLSupport;
   }
 
@@ -1279,7 +1279,7 @@ abstract class Connection {
    * @return string
    *   The five character error code.
    */
-  protected static function getSQLState(\Exception $e) {
+  protected static function getSqlState(\Exception $e) {
     // The PDOException code is not always reliable, try to see whether the
     // message has something usable.
     if (preg_match('/^SQLSTATE\[(\w{5})\]/', $e->getMessage(), $matches)) {

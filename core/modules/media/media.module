@@ -177,7 +177,7 @@ function media_filter_format_edit_form_validate($form, FormStateInterface $form_
 
     $filter_html = clone $filter_format->filters()->get('filter_html');
     $filter_html->setConfiguration(['settings' => $form_state->getValue($filter_html_settings_path)]);
-    $restrictions = $filter_html->getHTMLRestrictions();
+    $restrictions = $filter_html->getHtmlRestrictions();
     $allowed = $restrictions['allowed'];
 
     // Require `<drupal-media>` HTML tag if filter_html is enabled.

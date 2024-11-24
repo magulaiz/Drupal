@@ -313,6 +313,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function getCKEditor5PluginConfig(EditorInterface $editor): array {
     $definitions = $this->getEnabledDefinitions($editor);
 

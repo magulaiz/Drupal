@@ -11,7 +11,7 @@ namespace Drupal\Component\Gettext;
 interface PoStreamInterface {
 
   /**
-   * Open the stream. Set the URI for the stream earlier with setURI().
+   * Open the stream. Set the URI for the stream earlier with setUri().
    */
   public function open();
 
@@ -26,7 +26,7 @@ interface PoStreamInterface {
    * @return string
    *   URI string for this stream.
    */
-  public function getURI();
+  public function getUri();
 
   /**
    * Set the URI of the PO stream that is going to be read or written.
@@ -34,6 +34,6 @@ interface PoStreamInterface {
    * @param string $uri
    *   URI string to set for this stream.
    */
-  public function setURI($uri);
+  public function setUri($uri);
 
 }

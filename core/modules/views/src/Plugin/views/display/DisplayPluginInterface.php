@@ -75,7 +75,7 @@ interface DisplayPluginInterface {
    *
    * @return bool
    */
-  public function usesAJAX();
+  public function usesAjax();
 
   /**
    * Whether the display is actually using AJAX or not.

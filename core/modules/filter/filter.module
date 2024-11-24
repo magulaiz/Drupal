@@ -231,6 +231,7 @@ function filter_fallback_format() {
  *
  * @ingroup sanitization
  */
+// phpcs:ignore Drupal.NamingConventions.ValidFunctionName.InvalidPrefix, Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to_skip = []) {
   $build = [
     '#type' => 'processed_text',

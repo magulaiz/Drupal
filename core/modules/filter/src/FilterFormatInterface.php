@@ -71,7 +71,7 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    * no information granularity is lost.
    *
    * @return array|false
-   *   A structured array as returned by FilterInterface::getHTMLRestrictions(),
+   *   A structured array as returned by FilterInterface::getHtmlRestrictions(),
    *   but with the intersection of all filters in this text format. FALSE means
    *   there are no HTML restrictions.
    */

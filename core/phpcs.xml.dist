@@ -116,6 +116,15 @@
     <exclude name="Drupal.Methods.MethodDeclaration.Underscore"/>
   </rule>
   <rule ref="Drupal.NamingConventions.ValidClassName"/>
+  <rule ref="Drupal.NamingConventions.ValidFunctionName">
+    <exclude-pattern>./core/lib/Drupal/Core/Diff/DiffFormatter.php</exclude-pattern>
+    <exclude-pattern>./core/lib/Drupal/Core/StreamWrapper/LocalReadOnlyStream.php</exclude-pattern>
+    <exclude-pattern>./core/lib/Drupal/Core/StreamWrapper/LocalStream.php</exclude-pattern>
+    <exclude-pattern>./core/lib/Drupal/Core/StreamWrapper/PhpStreamWrapperInterface.php</exclude-pattern>
+    <exclude-pattern>./core/lib/Drupal/Core/StreamWrapper/ReadOnlyStream.php</exclude-pattern>
+    <exclude-pattern>./core/modules/ckeditor5/src/Plugin/CKEditor5PluginDefinition.php</exclude-pattern>
+    <exclude-pattern>.*/tests/*</exclude-pattern>
+  </rule>
   <rule ref="Drupal.NamingConventions.ValidGlobal"/>
   <rule ref="Drupal.NamingConventions.ValidVariableName"/>
   <rule ref="Drupal.NamingConventions.ValidVariableName.LowerCamelName"/>

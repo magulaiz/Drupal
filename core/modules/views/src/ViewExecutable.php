@@ -1062,6 +1062,7 @@ class ViewExecutable {
   /**
    * Runs the preQuery() on all active handlers.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   protected function _preQuery() {
     foreach ($this::getHandlerTypes() as $key => $info) {
       $handlers = &$this->$key;
@@ -1077,6 +1078,7 @@ class ViewExecutable {
   /**
    * Runs the postExecute() on all active handlers.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   protected function _postExecute() {
     foreach ($this::getHandlerTypes() as $key => $info) {
       $handlers = &$this->$key;
@@ -1095,6 +1097,7 @@ class ViewExecutable {
    *   An array of views handler types use in the view with additional
    *   information about them.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   protected function _initHandler($key, $info) {
     // Load the requested items from the display onto the object.
     $this->$key = &$this->display_handler->getHandlers($key);
@@ -1116,6 +1119,7 @@ class ViewExecutable {
    * @return bool
    *   TRUE if the arguments were built successfully, FALSE otherwise.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   protected function _buildArguments() {
     // Initially, we want to build sorts and fields. This can change, though,
     // if we get a summary view.
@@ -1404,6 +1408,7 @@ class ViewExecutable {
    *   The type of handlers (filter etc.) which should be iterated over to build
    *   the relationship and query information.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function _build($key) {
     $handlers = &$this->$key;
     foreach ($handlers as $id => $data) {

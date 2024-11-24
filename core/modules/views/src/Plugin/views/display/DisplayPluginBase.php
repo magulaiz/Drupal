@@ -76,7 +76,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    *
    * @var bool
    */
-  protected $usesAJAX = TRUE;
+  protected $usesAjax = TRUE;
 
   /**
    * Whether the display allows the use of a pager or not.
@@ -282,15 +282,15 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function usesAJAX() {
-    return $this->usesAJAX;
+  public function usesAjax() {
+    return $this->usesAjax;
   }
 
   /**
    * {@inheritdoc}
    */
   public function ajaxEnabled() {
-    if ($this->usesAJAX()) {
+    if ($this->usesAjax()) {
       return $this->getOption('use_ajax');
     }
     return FALSE;
@@ -1178,7 +1178,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $options['row']['links']['row_options'] = $this->t('Change settings for this style');
       }
     }
-    if ($this->usesAJAX()) {
+    if ($this->usesAjax()) {
       $options['use_ajax'] = [
         'category' => 'other',
         'title' => $this->t('Use AJAX'),

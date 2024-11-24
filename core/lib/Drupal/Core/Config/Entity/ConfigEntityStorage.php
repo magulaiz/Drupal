@@ -134,7 +134,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   /**
    * {@inheritdoc}
    */
-  public static function getIDFromConfigName($config_name, $config_prefix) {
+  public static function getIdFromConfigName($config_name, $config_prefix) {
     return substr($config_name, strlen($config_prefix . '.'));
   }
 
@@ -345,7 +345,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * {@inheritdoc}
    */
   public function importUpdate($name, Config $new_config, Config $old_config) {
-    $id = static::getIDFromConfigName($name, $this->entityType->getConfigPrefix());
+    $id = static::getIdFromConfigName($name, $this->entityType->getConfigPrefix());
     $entity = $this->load($id);
     if (!$entity) {
       throw new ConfigImporterException("Attempt to update non-existing entity '$id'.");
@@ -360,7 +360,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * {@inheritdoc}
    */
   public function importDelete($name, Config $new_config, Config $old_config) {
-    $id = static::getIDFromConfigName($name, $this->entityType->getConfigPrefix());
+    $id = static::getIdFromConfigName($name, $this->entityType->getConfigPrefix());
     $entity = $this->load($id);
     $entity->setSyncing(TRUE);
     $entity->delete();
@@ -398,6 +398,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * @see \Drupal\Core\Config\Entity\ConfigEntityStorageInterface::createFromStorageRecord()
    * @see \Drupal\Core\Config\Entity\ImportableEntityStorageInterface::importCreate()
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   protected function _doCreateFromStorageRecord(array $values, $is_syncing = FALSE) {
     // Assign a new UUID if there is none yet.
     if ($this->uuidKey && $this->uuidService && !isset($values[$this->uuidKey])) {

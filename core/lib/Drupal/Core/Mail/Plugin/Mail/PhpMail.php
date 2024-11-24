@@ -194,6 +194,7 @@ class PhpMail implements MailInterface {
    * @todo Rename to ::isShellSafe() and/or discuss whether this is the correct
    *   location for this helper.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   protected static function _isShellSafe($string) {
     if (escapeshellcmd($string) !== $string || !in_array(escapeshellarg($string), ["'$string'", "\"$string\""])) {
       return FALSE;

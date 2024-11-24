@@ -292,7 +292,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
       $text_format,
       FilterInterface::TYPE_HTML_RESTRICTOR,
       function (FilterInterface $filter) {
-        return $filter->getHTMLRestrictions() !== FALSE;
+        return $filter->getHtmlRestrictions() !== FALSE;
       }
     );
 

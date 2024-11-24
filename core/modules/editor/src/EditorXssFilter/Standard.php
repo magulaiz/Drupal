@@ -108,12 +108,12 @@ class Standard extends Xss implements EditorXssFilterInterface {
    * Get all allowed tags from a restrictions data structure.
    *
    * @param array|false $restrictions
-   *   Restrictions as returned by FilterInterface::getHTMLRestrictions().
+   *   Restrictions as returned by FilterInterface::getHtmlRestrictions().
    *
    * @return array
    *   An array of allowed HTML tags.
    *
-   * @see \Drupal\filter\Plugin\Filter\FilterInterface::getHTMLRestrictions()
+   * @see \Drupal\filter\Plugin\Filter\FilterInterface::getHtmlRestrictions()
    */
   protected static function getAllowedTags($restrictions) {
     if ($restrictions === FALSE || !isset($restrictions['allowed'])) {

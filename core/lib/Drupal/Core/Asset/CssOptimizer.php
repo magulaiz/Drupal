@@ -12,11 +12,11 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
 class CssOptimizer implements AssetOptimizerInterface {
 
   /**
-   * The base path used by rewriteFileURI().
+   * The base path used by rewriteFileUri().
    *
    * @var string
    */
-  public $rewriteFileURIBasePath;
+  public $rewriteFileUriBasePath;
 
   /**
    * The file URL generator.
@@ -88,10 +88,10 @@ class CssOptimizer implements AssetOptimizerInterface {
     // Get the parent directory of this file, relative to the Drupal root.
     $css_base_path = substr($css_asset['data'], 0, strrpos($css_asset['data'], '/'));
     // Store base path.
-    $this->rewriteFileURIBasePath = $css_base_path . '/';
+    $this->rewriteFileUriBasePath = $css_base_path . '/';
 
     // Anchor all paths in the CSS with its base URL, ignoring external and absolute paths and paths starting with '#'.
-    return preg_replace_callback('/url\(\s*[\'"]?(?![a-z]+:|\/+|#|%23)([^\'")]+)[\'"]?\s*\)/i', [$this, 'rewriteFileURI'], $contents);
+    return preg_replace_callback('/url\(\s*[\'"]?(?![a-z]+:|\/+|#|%23)([^\'")]+)[\'"]?\s*\)/i', [$this, 'rewriteFileUri'], $contents);
   }
 
   /**
@@ -148,7 +148,7 @@ class CssOptimizer implements AssetOptimizerInterface {
     if ($contents = @file_get_contents($file)) {
       // If a BOM is found, convert the file to UTF-8, then use substr() to
       // remove the BOM from the result.
-      if ($encoding = (Unicode::encodingFromBOM($contents))) {
+      if ($encoding = (Unicode::encodingFromBom($contents))) {
         $contents = mb_substr(Unicode::convertToUtf8($contents, $encoding), 1);
       }
       // If no BOM, check for fallback encoding. Per CSS spec the regex is very strict.
@@ -281,9 +281,9 @@ class CssOptimizer implements AssetOptimizerInterface {
    * @return string
    *   The file path.
    */
-  public function rewriteFileURI($matches) {
+  public function rewriteFileUri($matches) {
     // Prefix with base and remove '../' segments where possible.
-    $path = $this->rewriteFileURIBasePath . $matches[1];
+    $path = $this->rewriteFileUriBasePath . $matches[1];
     $last = '';
     while ($path != $last) {
       $last = $path;
