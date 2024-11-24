@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\FileCache;
 
 use Drupal\Component\FileCache\FileCacheBackendInterface;
@@ -31,12 +33,22 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
   protected ?Connection $connection = NULL;
 
   public function __construct() {
-    if (Database::getConnectionInfo('default')) {
-      $this->connection = Database::getConnection();
-    }
     // Set a default TTL to 90 days, this is to allow cache items for cache keys
     // that are no longer relevant to be garbage collected from the database.
     $this->ttl = Settings::get('file_cache_ttl', 86400 * 90);
+  }
+
+  /**
+   * Gets a database connection.
+   *
+   * @return \Drupal\Core\Database\Connection|null
+   *   The default database connection if it's available or FALSE.
+   */
+  public function getConnection(): ?Connection {
+    if (Database::getConnectionInfo('default')) {
+      return Database::getConnection();
+    }
+    return NULL;
   }
 
   /**
@@ -54,8 +66,8 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
     }
     $result = [];
     try {
-      if ($this->connection) {
-        $result = $this->connection->select($this->table)
+      if ($connection = $this->getConnection()) {
+        $result = $connection->select($this->table)
           ->fields('cid', 'data', 'serialized', 'created', 'expire')
           ->condition('cid', array_keys($cid_mapping), 'IN')
           ->sort('cid', 'ASC')
@@ -115,8 +127,8 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
     // a stale cache item from the database back to APCu.
     $database_cid = $this->normalizeCid($cid);
     try {
-      if ($this->connection) {
-        $this->connection->delete($this->table)
+      if ($connection = $this->getConnection()) {
+        $connection->delete($this->table)
           ->condition('cid', $database_cid)
           ->execute();
       }
@@ -133,8 +145,8 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
    */
   public function garbageCollection(): void {
     try {
-      if ($this->connection) {
-        $this->connection->delete($this->table)
+      if ($connection = $this->getConnection()) {
+        $connection->delete($this->table)
           ->condition('expire', time(), '<')
           ->execute();
       }
@@ -200,8 +212,8 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
     }
     // Use an upsert query which is atomic and optimized for multiple-row
     // merges.
-    if ($this->connection) {
-      $this->connection
+    if ($connection = $this->getConnection()) {
+      $connection
         ->upsert($this->table)
         ->key('cid')
         ->fields(['cid', 'expire', 'created', 'data', 'serialized'])
@@ -218,7 +230,7 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
    */
   private function ensureBinExists(): bool {
     try {
-      $database_schema = $this->connection->schema();
+      $database_schema = $this->getConnection()->schema();
       if (!$database_schema->tableExists($this->table)) {
         $schema_definition = $this->schemaDefinition();
         $database_schema->createTable($this->table, $schema_definition);
