@@ -136,7 +136,12 @@ class EntityLabel extends FieldPluginBase {
     }
 
     foreach ($entity_ids_per_type as $type => $ids) {
-      $this->loadedReferencers[$type] = $this->entityTypeManager->getStorage($type)->loadMultiple($ids);
+      // Check that given entity type has valid plugin definition before
+      // calling the getStorage() method.
+      // @see https://www.drupal.org/project/drupal/issues/3442346
+      if ($this->entityTypeManager->hasDefinition($type)) {
+        $this->loadedReferencers[$type] = $this->entityTypeManager->getStorage($type)->loadMultiple($ids);
+      }
     }
   }
 
