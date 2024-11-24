@@ -1250,7 +1250,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     // Finding all tables.
     $tables = $this->schema->findTables('%');
     sort($tables);
-    $this->assertEquals(['config', 'file_cache', 'select'], $tables);
+    $this->assertEquals(['config', 'database_file_cache', 'select'], $tables);
 
     // Renaming a table.
     $table_name_new = 'from';
