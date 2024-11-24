@@ -30,7 +30,6 @@ use Drupal\field\FieldStorageConfigInterface;
  * \Drupal::service('datetime.views_helper')
  * ->fieldViewsDataHelper($field_storage, $data, $column_name); instead.
  * @see https://www.drupal.org/node/3489498
-
  */
 function datetime_type_field_views_data_helper(FieldStorageConfigInterface $field_storage, array $data, $column_name) {
   @trigger_error('datetime_type_field_views_data_helper() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal::service(\'datetime.views_helper\')->fieldViewsDataHelper($field_storage, $data, $column_name). See https://www.drupal.org/node/3489498', E_USER_DEPRECATED);
