@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
@@ -110,7 +110,7 @@ class ValidatorsTest extends KernelTestBase {
   /**
    * Provides a list of Text Editor config entities using CKEditor 5 to test.
    */
-  public function provider(): array {
+  public static function provider(): array {
     $data = [];
     $data['CKEditor5::getDefaultSettings()'] = [
       // @see ::test()
@@ -632,7 +632,6 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following attribute(s) can optionally be supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">List (&lt;ol start&gt;)</em>.',
       ],
     ];
-
     return $data;
   }
 
@@ -703,7 +702,7 @@ class ValidatorsTest extends KernelTestBase {
   /**
    * Provides a list of Text Editor + Text Format pairs to test.
    */
-  public function providerPair(): array {
+  public static function providerPair(): array {
     // cspell:ignore donk
     $data = [];
     $data['INVALID: allow_view_mode_override condition not met: filter must be configured to allow 2 or more view modes'] = [
@@ -1043,7 +1042,7 @@ class ValidatorsTest extends KernelTestBase {
               // Tag + attributes; attributes supported by disabled plugin.
               '<code class="language-*">',
               // Tag + attributes; tag already supported by enabled plugin,
-              // attributes supported by disabled plugin
+              // attributes supported by disabled plugin.
               '<h2 class="text-align-center">',
               // Tag + attributes; tag already supported by enabled plugin,
               // attribute not supported by no plugin.
@@ -1063,9 +1062,8 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">Bold (&lt;strong&gt;)</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.1' => 'The following tag(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these tags: <em class="placeholder">Table (&lt;table&gt;)</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.3' => 'The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">Language (&lt;span lang&gt;)</em>.',
-        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.5' => 'The following attribute(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these attributes: <em class="placeholder">Code Block (&lt;code class=&quot;language-*&quot;&gt;)</em>.',
-        // @todo "Style" should be removed from the suggestions in https://www.drupal.org/project/drupal/issues/3271179
-        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.6' => 'The following attribute(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these attributes: <em class="placeholder">Style (&lt;h2 class=&quot;text-align-center&quot;&gt;), Alignment (&lt;h2 class=&quot;text-align-center&quot;&gt;)</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.5' => 'The following attribute(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these attributes: <em class="placeholder">Code (&lt;code&gt;), Code Block (&lt;code class=&quot;language-*&quot;&gt;)</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.6' => 'The following attribute(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these attributes: <em class="placeholder">Alignment (&lt;h2 class=&quot;text-align-center&quot;&gt;)</em>.',
       ],
     ];
     $data['INVALID some invalid Source Editable tags provided by plugin and another available in a not enabled plugin'] = [
@@ -1563,6 +1561,56 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [],
+    ];
+    $data['INVALID: SourceEditing plugin configuration: <p class="text-align-center"> must not be allowed because Text Alignment can generate <p class="text-align-center">'] = [
+      'settings' => [
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<p class="text-align-center">',
+            ],
+          ],
+          'ckeditor5_alignment' => [
+            'enabled_alignments' => ['center'],
+          ],
+        ],
+        'toolbar' => [
+          'items' => [
+            'sourceEditing',
+            'alignment',
+          ],
+        ],
+      ],
+      'image_upload' => [],
+      'filters' => [],
+      'violations' => [
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">Alignment (&lt;p class=&quot;text-align-center&quot;&gt;), Paragraph (&lt;p&gt;)</em>.',
+      ],
+    ];
+    $data['INVALID Source Editable tag and attribute already provided by not enabled plugin'] = [
+      'settings' => [
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<h2 class="text-align-center">',
+            ],
+          ],
+          'ckeditor5_alignment' => [
+            'enabled_alignments' => ['center'],
+          ],
+        ],
+        'toolbar' => [
+          'items' => [
+            'sourceEditing',
+            'alignment',
+          ],
+        ],
+      ],
+      'image_upload' => [],
+      'filters' => [],
+      'violations' => [
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following attribute(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these attributes: <em class="placeholder">Headings (&lt;h2&gt;)</em>.',
+      ],
     ];
     return $data;
   }
