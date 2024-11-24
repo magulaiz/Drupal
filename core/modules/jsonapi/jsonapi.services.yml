@@ -142,7 +142,7 @@ services:
   cache.jsonapi_normalizations:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
-      - { name: cache.bin }
+      - { name: cache.bin, bin: jsonapi_normalizations }
     factory: ['@cache_factory', 'get']
     arguments: [jsonapi_normalizations]
   variation_cache.jsonapi_normalizations:
