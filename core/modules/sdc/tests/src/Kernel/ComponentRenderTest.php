@@ -124,7 +124,7 @@ final class ComponentRenderTest extends ComponentKernelTestBase {
     ];
     $metadata = new BubbleableMetadata();
     $this->renderComponentRenderArray($build, $metadata);
-    $this->assertEquals(['sdc/sdc_test--my-cta', 'sdc/sdc_test--my-banner'], $metadata->getAttachments()['library']);
+    $this->assertEquals(['sdc/sdc_test--my-banner', 'sdc/sdc_test--my-cta'], $metadata->getAttachments()['library']);
   }
 
   /**
