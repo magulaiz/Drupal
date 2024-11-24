@@ -67,12 +67,16 @@ class CommentWidget extends WidgetBase {
 
       // Override widget title to be helpful for end users.
       $element['#title'] = $this->t('Comment settings');
+      $status = $items->status;
+      if (isset($field_default_values[0]) && $status != $field_default_values[0]['status']) {
+        $status = $field_default_values[0]['status'];
+      }
 
       $element += [
         '#type' => 'details',
         // Open the details when the selected value is different to the stored
         // default values for the field.
-        '#open' => ($items->status != $field_default_values[0]['status']),
+        '#open' => $status,
         '#group' => 'advanced',
         '#attributes' => [
           'class' => ['comment-' . Html::getClass($entity->getEntityTypeId()) . '-settings-form'],

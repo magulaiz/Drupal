@@ -22,7 +22,9 @@ class CommentFieldItemList extends FieldItemList {
     // field.
     if ($index == 0 && empty($this->list)) {
       $field_default_value = $this->getFieldDefinition()->getDefaultValue($this->getEntity());
-      return $this->appendItem($field_default_value[0]);
+      if (isset($field_default_value[0])) {
+        return $this->appendItem($field_default_value[0]);
+      }
     }
     return parent::get($index);
   }
