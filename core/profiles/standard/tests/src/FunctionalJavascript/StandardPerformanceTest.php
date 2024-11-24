@@ -92,7 +92,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('user/' . $user->id());
     });
     $this->assertNoJavaScript($performance_data);
-    $this->assertSame(40, $performance_data->getQueryCount());
+    $this->assertSame(41, $performance_data->getQueryCount());
 
     // This test observes a variable number of cache gets and sets, so to avoid
     // random test failures, assert greater than equal the highest and lowest

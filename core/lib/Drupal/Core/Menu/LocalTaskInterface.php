@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -13,7 +14,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
  *
  * @see \Drupal\Core\Menu\LocalTaskManagerInterface
  */
-interface LocalTaskInterface {
+interface LocalTaskInterface extends PluginInspectionInterface {
 
   /**
    * Get the route name from the settings.

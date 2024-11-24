@@ -57,9 +57,19 @@ class BlockLocalTasksTest extends LocalTaskIntegrationTestBase {
         ['test_c', TRUE],
       ]);
 
+    $metadataBubblingUrlGenerator = $this->getMockBuilder('Drupal\Core\Render\MetadataBubblingUrlGenerator')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $metadataBubblingUrlGenerator->expects($this->any())
+      ->method('generateFromRoute')
+      ->willReturnCallback(function ($name, $parameters = []) {
+        return '/';
+      });
+
     $container = new ContainerBuilder();
     $container->set('config.factory', $config_factory);
     $container->set('theme_handler', $theme_handler);
+    $container->set('url_generator', $metadataBubblingUrlGenerator);
     $container->setParameter('app.root', $this->root);
     \Drupal::setContainer($container);
   }

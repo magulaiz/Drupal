@@ -101,6 +101,8 @@ class LocalTaskManagerTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
+    $container = new ContainerBuilder();
+
     $this->argumentResolver = $this->createMock('Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface');
     $this->request = new Request();
     $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
@@ -112,7 +114,20 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
 
     $this->setupLocalTaskManager();
-    $this->setupNullCacheabilityMetadataValidation();
+    $this->setupNullCacheabilityMetadataValidation($container);
+
+    $metadataBubblingUrlGenerator = $this->getMockBuilder('Drupal\Core\Render\MetadataBubblingUrlGenerator')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $metadataBubblingUrlGenerator->expects($this->any())
+      ->method('generateFromRoute')
+      ->willReturnCallback(function ($name, $parameters = []) {
+        return '/';
+      });
+
+    $container->set('url_generator', $metadataBubblingUrlGenerator);
+
+    \Drupal::setContainer($container);
   }
 
   /**
@@ -126,6 +141,12 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
       ->willReturn($definitions);
+
+    $this->routeMatch->expects($this->any())
+      ->method('getRawParameters')
+      ->willReturnCallback(function () {
+        return new InputBag([]);
+      });
 
     $mock_plugin = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
 
@@ -151,6 +172,12 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->willReturn($definitions);
 
+    $this->routeMatch->expects($this->any())
+      ->method('getRawParameters')
+      ->willReturnCallback(function () {
+        return new InputBag([]);
+      });
+
     $mock_plugin = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
 
     $this->setupFactory($mock_plugin);
@@ -172,6 +199,12 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
       ->willReturn($definitions);
+
+    $this->routeMatch->expects($this->any())
+      ->method('getRawParameters')
+      ->willReturnCallback(function () {
+        return new InputBag([]);
+      });
 
     $mock_plugin = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
     $this->setupFactory($mock_plugin);
@@ -206,6 +239,12 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $mock_plugin = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
     $this->setupFactory($mock_plugin);
+
+    $this->routeMatch->expects($this->any())
+      ->method('getRawParameters')
+      ->willReturnCallback(function () {
+        return new InputBag([]);
+      });
 
     $this->setupLocalTaskManager();
 
@@ -452,6 +491,8 @@ class LocalTaskManagerTest extends UnitTestCase {
       $mock->getRouteParameters(Argument::cetera())->willReturn([]);
       $mock->getOptions(Argument::cetera())->willReturn([]);
       $mock->getActive()->willReturn($plugin_id === $active_plugin_id);
+      $mock->setActive()->willReturn($mock);
+      $mock->getPluginDefinition()->willReturn($info);
       $mock->getWeight()->willReturn($info['weight'] ?? 0);
       $mock->getCacheContexts()->willReturn($info['cache_contexts'] ?? []);
       $mock->getCacheTags()->willReturn($info['cache_tags'] ?? []);
@@ -471,8 +512,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->willReturnMap($map);
   }
 
-  protected function setupNullCacheabilityMetadataValidation() {
-    $container = \Drupal::hasContainer() ? \Drupal::getContainer() : new ContainerBuilder();
+  protected function setupNullCacheabilityMetadataValidation($container) {
 
     $cache_context_manager = $this->prophesize(CacheContextsManager::class);
 
@@ -481,7 +521,6 @@ class LocalTaskManagerTest extends UnitTestCase {
     }
 
     $container->set('cache_contexts_manager', $cache_context_manager->reveal());
-    \Drupal::setContainer($container);
   }
 
 }
