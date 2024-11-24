@@ -99,6 +99,8 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
     $options = [
       'all pages' => $this->t('Show block on all pages'),
       'book pages' => $this->t('Show block only on book pages'),
+      'primary book page' => $this->t('Show block only on the top level book page'),
+      'child book pages' => $this->t('Show block only on child book pages'),
     ];
     $form['book_block_mode'] = [
       '#type' => 'radios',
@@ -128,6 +130,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
     if ($node instanceof NodeInterface && !empty($node->book['bid'])) {
       $current_bid = $node->book['bid'];
     }
+
     if ($this->configuration['block_mode'] == 'all pages') {
       $book_menus = [];
       $pseudo_tree = [0 => ['below' => FALSE]];
@@ -169,12 +172,30 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
 
       // Only show the block if the user has view access for the top-level node.
       if ($nid) {
+        $node = $this->routeMatch->getParameter('node');
+        $current_nid = $node->id();
         $tree = $this->bookManager->bookTreeAllData($node->book['bid'], $node->book);
+
         // There should only be one element at the top level.
         $data = array_shift($tree);
+        $primary_book_nid = array_pop($nid);
         $below = $this->bookManager->bookTreeOutput($data['below']);
-        if (!empty($below)) {
-          return $below;
+
+        if ($this->configuration['block_mode'] == 'primary book page') {
+          if ($current_nid === $primary_book_nid) {
+            return $below;
+          }
+        }
+        elseif ($this->configuration['block_mode'] == 'child book pages') {
+          if ($current_nid !== $primary_book_nid) {
+            return $below;
+          }
+        }
+        else {
+          // All book pages.
+          if (!empty($below)) {
+            return $below;
+          }
         }
       }
     }
