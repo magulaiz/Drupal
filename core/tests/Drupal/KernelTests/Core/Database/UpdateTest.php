@@ -24,7 +24,7 @@ class UpdateTest extends DatabaseTestBase {
       ->execute();
     $this->assertSame(1, $num_updated, 'Updated 1 record.');
 
-    $saved_name = $this->connection->query('SELECT [name] FROM {test} WHERE [id] = :id', [':id' => 1])->fetchField();
+    $saved_name = $this->connection->query('SELECT [name] FROM {test} WHERE [id] = :id', [':id' => 1])->fetchField(200);
     $this->assertSame('Tiffany', $saved_name, 'Updated name successfully.');
   }
 

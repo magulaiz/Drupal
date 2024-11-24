@@ -103,7 +103,10 @@ trait FetchModeTrait {
    *   The value of the column, or FALSE if the column is not defined.
    */
   protected function assocToColumn(array $rowAssoc, array $columnNames, int $columnIndex): mixed {
-    return $rowAssoc[$columnNames[$columnIndex]] ?? FALSE;
+    if (!isset($columnNames[$columnIndex])) {
+      throw new \OutOfBoundsException("Column with index {$columnIndex} does not exist");
+    }
+    return $rowAssoc[$columnNames[$columnIndex]];
   }
 
 }
