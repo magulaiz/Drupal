@@ -313,7 +313,6 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
   $token_service = \Drupal::token();
 
   if (isset($options['langcode'])) {
-    $url_options['language'] = \Drupal::languageManager()->getLanguage($options['langcode']);
     $langcode = $options['langcode'];
   }
   else {
