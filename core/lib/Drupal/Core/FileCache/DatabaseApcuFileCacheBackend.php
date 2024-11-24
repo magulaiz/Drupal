@@ -55,7 +55,7 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
     $result = [];
     try {
       if ($this->connection) {
-        $result = $this->connection->select('file_cache')
+        $result = $this->connection->select($this->table)
           ->fields('cid', 'data', 'serialized', 'created', 'expire')
           ->condition('cid', array_keys($cid_mapping), 'IN')
           ->sort('cid', 'ASC')
