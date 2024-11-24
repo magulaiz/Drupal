@@ -305,6 +305,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
             }
           }
           elseif ($is_fieldable_entity_type) {
+            // During installation, an entity's base field definitions can be
+            // populated and cached before other modules with additional base
+            // field definitions on the same entity can make their changes. In
+            // order to avoid this, we need to clear the entity_field.manager's
+            // caches and recalculate available base field definitions.
+            $entity_field_manager->useCaches();
             // The module being installed may be adding new fields to existing
             // entity types. Field definitions for any entity type defined by
             // the module are handled in the if branch.
@@ -366,6 +372,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // Record the fact that it was installed.
         \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
       }
+    }
+    if (!empty($entity_field_manager)) {
+      // Turn entity field caches back on now that we're done calculating and
+      // installing them.
+      $entity_field_manager->useCaches(TRUE);
     }
 
     // If any modules were newly installed, invoke hook_modules_installed().
