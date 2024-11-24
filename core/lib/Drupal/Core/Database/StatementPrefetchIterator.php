@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 
 /**
@@ -15,6 +16,7 @@ use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
   use StatementIteratorTrait;
+  use FetchModeTrait;
 
   /**
    * Main data store.
@@ -110,15 +112,27 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
       $this->connection->dispatchEvent($startEvent);
     }
 
-    // Prepare the query.
-    $statement = $this->getStatement($this->queryString, $args);
-    if (!$statement) {
-      $this->throwPDOException();
+    // Prepare and execute the statement.
+    try {
+      $statement = $this->getStatement($this->queryString, $args);
+      $return = $statement->execute($args);
     }
-
-    $return = $statement->execute($args);
-    if (!$return) {
-      $this->throwPDOException();
+    catch (\Exception $e) {
+      if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionFailureEvent::class)) {
+        $this->connection->dispatchEvent(new StatementExecutionFailureEvent(
+          $startEvent->statementObjectId,
+          $startEvent->key,
+          $startEvent->target,
+          $startEvent->queryString,
+          $startEvent->args,
+          $startEvent->caller,
+          $startEvent->time,
+          get_class($e),
+          $e->getCode(),
+          $e->getMessage(),
+        ));
+      }
+      throw $e;
     }
 
     // Fetch all the data from the reply, in order to release any lock as soon
@@ -145,17 +159,6 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
     }
 
     return $return;
-  }
-
-  /**
-   * Throw a PDO Exception based on the last PDO error.
-   */
-  protected function throwPDOException(): void {
-    $error_info = $this->connection->errorInfo();
-    // We rebuild a message formatted in the same way as PDO.
-    $exception = new \PDOException("SQLSTATE[" . $error_info[0] . "]: General error " . $error_info[1] . ": " . $error_info[2]);
-    $exception->errorInfo = $error_info;
-    throw $exception;
   }
 
   /**
@@ -187,6 +190,8 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
+    assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+
     $this->defaultFetchStyle = $mode;
     switch ($mode) {
       case \PDO::FETCH_CLASS:
@@ -237,70 +242,15 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
     // Now, format the next prefetched record according to the required fetch
     // style.
     $rowAssoc = $this->data[$currentKey];
-    switch ($fetch_style ?? $this->defaultFetchStyle) {
-      case \PDO::FETCH_ASSOC:
-        $row = $rowAssoc;
-        break;
-
-      case \PDO::FETCH_BOTH:
-        // \PDO::FETCH_BOTH returns an array indexed by both the column name
-        // and the column number.
-        $row = $rowAssoc + array_values($rowAssoc);
-        break;
-
-      case \PDO::FETCH_NUM:
-        $row = array_values($rowAssoc);
-        break;
-
-      case \PDO::FETCH_LAZY:
-        // We do not do lazy as everything is fetched already. Fallback to
-        // \PDO::FETCH_OBJ.
-      case \PDO::FETCH_OBJ:
-        $row = (object) $rowAssoc;
-        break;
-
-      case \PDO::FETCH_CLASS | \PDO::FETCH_CLASSTYPE:
-        $class_name = array_shift($rowAssoc);
-        // Deliberate no break.
-      case \PDO::FETCH_CLASS:
-        if (!isset($class_name)) {
-          $class_name = $this->fetchOptions['class'];
-        }
-        if (count($this->fetchOptions['constructor_args'])) {
-          $reflector = new \ReflectionClass($class_name);
-          $result = $reflector->newInstanceArgs($this->fetchOptions['constructor_args']);
-        }
-        else {
-          $result = new $class_name();
-        }
-        foreach ($rowAssoc as $k => $v) {
-          $result->$k = $v;
-        }
-        $row = $result;
-        break;
-
-      case \PDO::FETCH_INTO:
-        foreach ($rowAssoc as $k => $v) {
-          $this->fetchOptions['object']->$k = $v;
-        }
-        $row = $this->fetchOptions['object'];
-        break;
-
-      case \PDO::FETCH_COLUMN:
-        if (isset($this->columnNames[$this->fetchOptions['column']])) {
-          $row = $rowAssoc[$this->columnNames[$this->fetchOptions['column']]];
-        }
-        else {
-          return FALSE;
-        }
-        break;
-
-    }
-    // @todo in Drupal 11, throw an exception if $row is undefined at this
-    //   point.
-    if (!isset($row)) {
-      return FALSE;
-    }
+    $mode = $fetch_style ?? $this->defaultFetchStyle;
+    $row = match($mode) {
+      \PDO::FETCH_ASSOC => $rowAssoc,
+      \PDO::FETCH_CLASS, \PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE => $this->assocToClass($rowAssoc, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
+      \PDO::FETCH_COLUMN => $this->assocToColumn($rowAssoc, $this->columnNames, $this->fetchOptions['column']),
+      \PDO::FETCH_NUM => $this->assocToNum($rowAssoc),
+      \PDO::FETCH_OBJ => $this->assocToObj($rowAssoc),
+      default => throw new DatabaseExceptionWrapper('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.'),
+    };
     $this->setResultsetCurrentRow($row);
     return $row;
   }
@@ -325,7 +275,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function fetchObject(string $class_name = NULL, array $constructor_arguments = NULL) {
+  public function fetchObject(?string $class_name = NULL, array $constructor_arguments = []) {
     if (!isset($class_name)) {
       return $this->fetch(\PDO::FETCH_OBJ);
     }
@@ -348,6 +298,9 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
     $fetchStyle = $mode ?? $this->defaultFetchStyle;
+
+    assert(in_array($fetchStyle, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$fetchStyle] ?? $fetchStyle) . ' is not supported. Use supported modes only.');
+
     if (isset($column_index)) {
       $this->fetchOptions['column'] = $column_index;
     }
