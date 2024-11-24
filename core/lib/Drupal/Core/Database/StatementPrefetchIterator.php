@@ -219,20 +219,6 @@ class StatementPrefetchIterator extends StatementBase {
   /**
    * {@inheritdoc}
    */
-  public function fetchObject(?string $class_name = NULL, array $constructor_arguments = []) {
-    if (!isset($class_name)) {
-      return $this->fetch(FetchAs::Object);
-    }
-    $this->fetchOptions = [
-      'class' => $class_name,
-      'constructor_args' => $constructor_arguments,
-    ];
-    return $this->fetch(FetchAs::ClassObject);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
     if (is_int($mode)) {
       @trigger_error("Passing the \$mode argument as an integer to fetchAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);

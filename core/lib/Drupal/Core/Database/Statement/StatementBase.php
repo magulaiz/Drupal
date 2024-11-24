@@ -232,7 +232,15 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchObject(?string $className = NULL, array $constructorArguments = []) {
-    $row = $this->clientFetchObject($className, $constructorArguments);
+    $row = $this->prefetchedResult ? (
+        $className === NULL ?
+        $this->prefetchedResult->fetch(FetchAs::Object, []) :
+        $this->prefetchedResult->fetch(FetchAs::ClassObject, [
+          'class' => $className,
+          'constructor_args' => $constructorArguments,
+        ])
+      ) :
+      $this->clientFetchObject($className, $constructorArguments);
 
     if ($row === FALSE) {
       $this->markResultsetFetchingComplete();
