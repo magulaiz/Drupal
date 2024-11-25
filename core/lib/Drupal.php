@@ -746,7 +746,7 @@ class Drupal {
    *
    * @return string
    */
-  public static function version(): string {
+  public static function version() {
     return InstalledVersions::getPrettyVersion('drupal/core');
   }
 
