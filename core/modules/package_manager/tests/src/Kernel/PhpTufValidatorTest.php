@@ -192,7 +192,7 @@ class PhpTufValidatorTest extends PackageManagerKernelTestBase {
    * @dataProvider providerInvalidConfiguration
    */
   public function testInvalidConfigurationInProjectRoot(array $config, array $expected_messages): void {
-    (new ActiveFixtureManipulator())->addConfig($config)->commitChanges();
+    (new ActiveFixtureManipulator())->addConfig($config)->commitChanges()->updateLock();
 
     $result = ValidationResult::createError($expected_messages, t('The active directory is not protected by PHP-TUF, which is required to use Package Manager securely.'));
     $this->assertStatusCheckResults([$result]);
@@ -215,7 +215,8 @@ class PhpTufValidatorTest extends PackageManagerKernelTestBase {
     $listener = function (PreRequireEvent|PreApplyEvent $event) use ($config): void {
       (new FixtureManipulator())
         ->addConfig($config)
-        ->commitChanges($event->stage->getStageDirectory());
+        ->commitChanges($event->stage->getStageDirectory())
+        ->updateLock();
     };
     $this->addEventTestListener($listener, $event_class);
 
