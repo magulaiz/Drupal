@@ -25,10 +25,20 @@ class PrefetchedResult {
       $this->currentRowIndex = NULL;
       return FALSE;
     }
-
     $rowAssoc = $this->data[$this->currentRowIndex];
     unset($this->data[$this->currentRowIndex]);
+    return $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
+  }
 
+  public function fetchAll(FetchAs $mode, array $fetchOptions): array {
+    $result = [];
+    while ($rowAssoc = $this->fetch(FetchAs::Associative, $fetchOptions)) {
+      $result[] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
+    }
+    return $result;
+  }
+
+  protected function assocToFetchMode(array $rowAssoc, FetchAs $mode, array $fetchOptions): array|object|int|float|string|bool|NULL {
     return match($mode) {
       FetchAs::Associative => $rowAssoc,
       FetchAs::ClassObject => $this->assocToClass($rowAssoc, $fetchOptions['class'], $fetchOptions['constructor_args']),
@@ -36,15 +46,6 @@ class PrefetchedResult {
       FetchAs::List => $this->assocToNum($rowAssoc),
       FetchAs::Object => $this->assocToObj($rowAssoc),
     };
-  }
-
-  public function fetchAll(FetchAs $mode, array $fetchOptions): array {
-    $result = [];
-    while ($row = $this->fetch($mode, $fetchOptions)) {
-      $result[] = $row;
-    }
-
-    return $result;
   }
 
 }
