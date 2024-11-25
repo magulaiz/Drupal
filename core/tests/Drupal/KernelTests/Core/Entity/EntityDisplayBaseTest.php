@@ -38,6 +38,7 @@ class EntityDisplayBaseTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('comment');
     $this->installEntitySchema('entity_test');
+    $this->installConfig(['entity_test']);
     $this->installSchema('user', ['users_data']);
   }
 
@@ -187,6 +188,53 @@ class EntityDisplayBaseTest extends KernelTestBase {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage("'a.b' is not a valid entity display ID.");
     $display->set('id', 'a.b');
+  }
+
+  /**
+   * @covers ::createCopy
+   */
+  public function testCreateCopy(): void {
+    // Create 'default' entity view display entity for entity_test.
+    // By default, when loading the view display with entity display repository
+    // if no display exists, the fresh object is returned. So for test the
+    // display needs to be created first.
+    $entity_display = EntityViewDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+      'status' => TRUE,
+      'content' => [
+        'test_field' => ['type' => 'comment_default', 'region' => 'content', 'settings' => ['view_mode' => 'default'], 'label' => 'hidden', 'third_party_settings' => []],
+      ],
+      'third_party_settings' => [
+        'entity_test_third_party' => [
+          'key' => 'value',
+        ],
+      ],
+    ]);
+    $entity_display->save();
+    $this->assertFalse($entity_display->isNew());
+    $copy = $entity_display->createCopy('test');
+    $this->assertTrue($copy->isNew());
+    // Check that the display was copied correctly with existing components.
+    $expected_component = [
+      'type' => 'comment_default',
+      'region' => 'content',
+      'settings' => ['view_mode' => 'default'],
+      'label' => 'hidden',
+      'third_party_settings' => [],
+    ];
+    $this->assertEquals($expected_component, $copy->getComponent('test_field'));
+    // Save the copy.
+    $copy->save();
+    // Check that the copy has correct id.
+    $this->assertSame('entity_test.entity_test.test', $copy->id());
+    // Try creating another copy with `use_existing` flag.
+    $another_copy = $entity_display->createCopy('test', TRUE);
+    // When using existing display, it won't be new anymore.
+    $this->assertFalse($another_copy->isNew());
+    // Let's check that the ids are the same.
+    $this->assertSame($copy->id(), $another_copy->id());
   }
 
 }
