@@ -60,7 +60,7 @@
         "symfony/translation-contracts": "~v3.5.0",
         "symfony/validator": "~v7.2.0-RC1",
         "symfony/var-dumper": "~v7.2.0-RC1",
-        "symfony/var-exporter": "~v7.1.6",
+        "symfony/var-exporter": "~v7.2.0-RC1",
         "symfony/yaml": "~v7.2.0-RC1",
         "twig/twig": "~v3.14.2"
     }
