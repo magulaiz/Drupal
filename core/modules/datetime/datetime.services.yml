@@ -1,0 +1,5 @@
+services:
+  datetime.views_helper:
+    class: Drupal\datetime\DateTimeViewsHelper
+    arguments: []
+  Drupal\datetime\DateTimeViewsHelper: '@datetime.views_helper'
