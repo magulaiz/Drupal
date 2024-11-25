@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Views data helper for datetime fields.
+ * @file
+ * Views data helper for datetime fields.
  */
 
 use Drupal\field\FieldStorageConfigInterface;
