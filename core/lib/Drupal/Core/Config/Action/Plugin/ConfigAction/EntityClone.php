@@ -59,13 +59,13 @@ final class EntityClone implements ConfigActionPluginInterface, ContainerFactory
 
     // Treat the original ID like a period-separated array of strings, and
     // replace positional tokens in the clone's ID (like `${1}`) with the
-    // corresponding part of the original ID. For example, if we're cloning
-    // `core.entity_view_display.node.foo.teaser` and the clone's ID is
-    // `node.${1}.search_result`, the final ID of the clone will be
+    // corresponding part of the original ID. For example, if we're cloning an
+    // entity view display with the ID `node.foo.teaser`, and the clone's ID is
+    // `node.${2}.search_result`, the final ID of the clone will be
     // `node.foo.search_result`.
     $tokens = [];
     foreach (explode('.', $original->id()) as $index => $replacement) {
-      $search_for = sprintf('${%d}', $index);
+      $search_for = sprintf('${%d}', $index + 1);
       $tokens[$search_for] = $replacement;
     }
     $value['id'] = str_replace(array_keys($tokens), $tokens, $value['id']);
