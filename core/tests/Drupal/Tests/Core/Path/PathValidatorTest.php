@@ -451,7 +451,10 @@ class PathValidatorTest extends UnitTestCase {
    * @covers ::getUrl
    */
   public function testGetUrlIfValidWithoutAccessCheckWithInvalidPath(): void {
+    // Urls must not start nor end with ASCII control characters or spaces.
     $this->assertFalse($this->pathValidator->getUrlIfValidWithoutAccessCheck("\n"));
+    // Also check urlencoded variant.
+    $this->assertFalse($this->pathValidator->getUrlIfValidWithoutAccessCheck('%0A'));
   }
 
 }

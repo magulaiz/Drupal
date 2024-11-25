@@ -178,6 +178,9 @@ class PathValidator implements PathValidatorInterface {
     catch (MethodNotAllowedException $e) {
       $result = FALSE;
     }
+    catch (BadRequestException) {
+      $result = FALSE;
+    }
 
     $router->setContext($initial_request_context);
     return $result;
