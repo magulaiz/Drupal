@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * File test form class.
  */
 class FileTestSaveUploadFromForm extends FormBase {
-  use FileTestFormTrait;
+  use baseForm;
 
   /**
    * Stores the state storage service.

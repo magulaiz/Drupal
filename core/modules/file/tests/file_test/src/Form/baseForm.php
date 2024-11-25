@@ -11,7 +11,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * This trait provides common code common for Forms.
  */
-trait FileTestFormTrait {
+trait baseForm {
 
   /**
    * Adds common form elements to the form.

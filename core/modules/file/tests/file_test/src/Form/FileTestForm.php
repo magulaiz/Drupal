@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  * File test form class.
  */
 class FileTestForm implements FormInterface {
-  use FileTestFormTrait;
+  use baseForm;
 
   /**
    * {@inheritdoc}
