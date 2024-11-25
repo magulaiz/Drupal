@@ -303,7 +303,6 @@ class FixtureManipulator {
    *
    * @param array $additional_config
    *   The configuration to add.
-   *
    * @param bool $update_lock
    *   Whether to run composer update --lock. Defaults to FALSE.
    */
@@ -353,9 +352,8 @@ class FixtureManipulator {
    *
    * @param string $dir
    *   The directory to commit the changes to.
-   * @param bool $validate_composer.
+   * @param bool $validate_composer
    *   Whether to run composer validate or not.
-   *
    */
   final protected function doCommitChanges(string $dir, $validate_composer = FALSE): void {
     if ($this->committed) {
@@ -635,10 +633,10 @@ class FixtureManipulator {
    * Sets up the path repos at absolute paths.
    *
    * @param bool $composer_refresh
-   *   Whether to run composer update --lock && compser install. Defaults to
+   *   Whether to run composer update --lock && composer install. Defaults to
    *   FALSE.
    */
-  public function setUpRepos($composer_refresh = TRUE): void {
+  public function setUpRepos($composer_refresh = FALSE): void {
     $fs = new SymfonyFileSystem();
     $path_repo_base = \Drupal::state()->get(self::PATH_REPO_STATE_KEY);
     if (empty($path_repo_base)) {

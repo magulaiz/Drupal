@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Kernel;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\Event\PreApplyEvent;

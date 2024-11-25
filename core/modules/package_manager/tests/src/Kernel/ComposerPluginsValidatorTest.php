@@ -9,7 +9,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Exception\StageEventException;
 use Drupal\package_manager\ValidationResult;
 
 /**
