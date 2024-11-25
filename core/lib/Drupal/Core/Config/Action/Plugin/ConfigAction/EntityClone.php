@@ -65,6 +65,7 @@ final class EntityClone implements ConfigActionPluginInterface, ContainerFactory
     // `node.foo.search_result`.
     $original_id_parts = explode('.', $original->id());
     $clone_id_parts = explode('.', $value['id']);
+    assert(count($original_id_parts) === count($clone_id_parts));
     foreach ($clone_id_parts as $index => $part) {
       $clone_id_parts[$index] = $part === '%' ? $original_id_parts[$index] : $part;
     }
