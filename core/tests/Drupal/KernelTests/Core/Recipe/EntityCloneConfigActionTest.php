@@ -112,7 +112,7 @@ class EntityCloneConfigActionTest extends KernelTestBase {
     // Use the action to clone the default view displays to the `rss` view mode.
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
-    $manager->applyAction('cloneAs', 'core.entity_view_display.node.*.default', 'node.%2.rss');
+    $manager->applyAction('cloneAs', 'core.entity_view_display.node.*.default', 'node.%.rss');
     $this->assertFalse($display_repository->getViewDisplay('node', 'alpha', 'rss')->isNew());
     $this->assertFalse($display_repository->getViewDisplay('node', 'beta', 'rss')->isNew());
   }

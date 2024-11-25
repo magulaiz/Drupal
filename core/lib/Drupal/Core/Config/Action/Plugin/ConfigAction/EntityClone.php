@@ -58,17 +58,17 @@ final class EntityClone implements ConfigActionPluginInterface, ContainerFactory
     }
 
     // Treat the original ID like a period-separated array of strings, and
-    // replace positional tokens in the clone's ID (like `%1`) with the
-    // corresponding part of the original ID. For example, if we're cloning an
-    // entity view display with the ID `node.foo.teaser`, and the clone's ID is
-    // `node.%2.search_result`, the final ID of the clone will be
+    // replace any `%` parts in the clone's ID with the corresponding part of
+    // the original ID. For example, if we're cloning an entity view display
+    // with the ID `node.foo.teaser`, and the clone's ID is
+    // `node.%.search_result`, the final ID of the clone will be
     // `node.foo.search_result`.
-    $tokens = [];
-    foreach (explode('.', $original->id()) as $index => $replacement) {
-      $search_for = '%' . ($index + 1);
-      $tokens[$search_for] = $replacement;
+    $original_id_parts = explode('.', $original->id());
+    $clone_id_parts = explode('.', $value['id']);
+    foreach ($clone_id_parts as $index => $part) {
+      $clone_id_parts[$index] = $part === '%' ? $original_id_parts[$index] : $part;
     }
-    $value['id'] = str_replace(array_keys($tokens), $tokens, $value['id']);
+    $value['id'] = implode('.', $clone_id_parts);
 
     $clone = $original->createDuplicate();
     $clone->set($original->getEntityType()->getKey('id'), $value['id']);
