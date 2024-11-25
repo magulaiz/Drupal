@@ -341,10 +341,16 @@ class FixtureManipulator {
 
   /**
    * Commits the changes to the directory.
+   *
+   * @param string $dir
+   *   The directory to commit the changes to.
+   * @param bool $validate_composer
+   *   Whether to run composer validate or not.
    */
-  public function commitChanges(string $dir): void {
+  public function commitChanges(string $dir, bool $validate_composer = FALSE): self {
     $this->doCommitChanges($dir);
     $this->committed = TRUE;
+    return $this;
   }
 
   /**
@@ -355,7 +361,7 @@ class FixtureManipulator {
    * @param bool $validate_composer
    *   Whether to run composer validate or not.
    */
-  final protected function doCommitChanges(string $dir, $validate_composer = FALSE): void {
+  final protected function doCommitChanges(string $dir, bool $validate_composer = FALSE): void {
     if ($this->committed) {
       throw new \BadMethodCallException('Already committed.');
     }
@@ -376,6 +382,11 @@ class FixtureManipulator {
     if ($validate_composer) {
       $this->validateComposer();
     }
+  }
+
+  public function updateLock(): self {
+    $this->runComposerCommand(['update', '--lock']);
+    return $this;
   }
 
   /**

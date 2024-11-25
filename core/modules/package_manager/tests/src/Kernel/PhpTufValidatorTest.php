@@ -49,7 +49,8 @@ class PhpTufValidatorTest extends PackageManagerKernelTestBase {
           'class' => 'PhpTufComposerPlugin',
         ],
       ])
-      ->commitChanges();
+      ->commitChanges()
+      ->updateLock();
   }
 
   /**
@@ -66,7 +67,8 @@ class PhpTufValidatorTest extends PackageManagerKernelTestBase {
   public function testPluginNotInstalledInProjectRoot(): void {
     (new ActiveFixtureManipulator())
       ->removePackage(PhpTufValidator::PLUGIN_NAME)
-      ->commitChanges();
+      ->commitChanges()
+      ->updateLock();
 
     $messages = [
       t('The <code>php-tuf/composer-integration</code> plugin is not installed.'),
