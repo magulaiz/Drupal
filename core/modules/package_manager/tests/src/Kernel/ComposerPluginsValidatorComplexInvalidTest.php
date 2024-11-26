@@ -7,6 +7,7 @@ namespace Drupal\Tests\package_manager\Kernel;
 /**
  * @covers \Drupal\package_manager\Validator\ComposerPluginsValidator
  * @group package_manager
+ * @group #slow
  * @internal
  */
 class ComposerPluginsValidatorComplexInvalidTest extends ComposerPluginsValidatorTestBase {
