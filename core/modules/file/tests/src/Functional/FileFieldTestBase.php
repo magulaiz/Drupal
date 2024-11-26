@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -102,7 +104,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    *   The File to be uploaded.
    * @param string $field_name
    *   The name of the field on which the files should be saved.
-   * @param $nid_or_type
+   * @param int|string $nid_or_type
    *   A numeric node id to upload files to an existing node, or a string
    *   indicating the desired bundle for a new node.
    * @param bool $new_revision
@@ -124,7 +126,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    *   The files to be uploaded.
    * @param string $field_name
    *   The name of the field on which the files should be saved.
-   * @param $nid_or_type
+   * @param int|string $nid_or_type
    *   A numeric node id to upload files to an existing node, or a string
    *   indicating the desired bundle for a new node.
    * @param bool $new_revision

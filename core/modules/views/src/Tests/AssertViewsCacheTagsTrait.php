@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Cache\Cache;
@@ -44,7 +46,7 @@ trait AssertViewsCacheTagsTrait {
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = \Drupal::service('request_stack');
     $request = Request::createFromGlobals();
-    $request->server->set('REQUEST_TIME', REQUEST_TIME);
+    $request->server->set('REQUEST_TIME', \Drupal::time()->getRequestTime());
     $request->setSession(new Session(new MockArraySessionStorage()));
     $view->setRequest($request);
     $request_stack->push($request);
@@ -125,7 +127,7 @@ trait AssertViewsCacheTagsTrait {
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = \Drupal::service('request_stack');
     $request = new Request();
-    $request->server->set('REQUEST_TIME', REQUEST_TIME);
+    $request->server->set('REQUEST_TIME', \Drupal::time()->getRequestTime());
     $request->setSession(new Session(new MockArraySessionStorage()));
     $request_stack->push($request);
     $renderer->renderRoot($build);
