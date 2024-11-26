@@ -2,9 +2,12 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\PluginSettingsInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -184,6 +187,61 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
       'view_mode' => $this->entity->getMode(),
     ];
     $this->moduleHandler->alter('field_formatter_settings_summary', $summary, $context);
+  }
+
+  public function form(array $form, FormStateInterface $form_state) {
+    $form = parent::form($form, $form_state);
+    $entity_type_id = $this->entity->getTargetEntityTypeId();
+    $view_mode = $this->entityTypeManager->getStorage('entity_view_mode')->load(\sprintf('%s.%s', $entity_type_id, $this->entity->getMode()));
+    if (!$view_mode instanceof EntityViewModeInterface) {
+      return $form;
+    }
+
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+    if (!$entity_type->hasLinkTemplate('canonical')) {
+      return $form;
+    }
+
+    $path = $view_mode->getPath();
+    if ($this->entity->getMode() !== 'full' && $path === '') {
+      return $form;
+    }
+
+    $form['pageDisplay'] = [
+      '#type' => 'details',
+      '#title' => t('Page display'),
+      '#group' => 'additional_settings',
+    ];
+
+    $form['pageDisplay']['pageDisplay'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Page display'),
+      '#description' => t('Enable the page display for this @label.', [
+        '@label' => $entity_type->getBundleLabel(),
+      ]),
+      '#default_value' => $this->entity->hasPageDisplay(),
+    ];
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function save(array $form, FormStateInterface $form_state) {
+    $return = parent::save($form, $form_state);
+    if ($this->entity->hasPageDisplay() !== (bool) $form_state->getValue('pageDisplay')) {
+      \Drupal::service(RouteBuilderInterface::class)->setRebuildNeeded();
+    }
+    return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+    $entity->setPageDisplay((bool) $form_state->getValue('pageDisplay'));
+    parent::copyFormValuesToEntity($entity, $form, $form_state);
   }
 
 }

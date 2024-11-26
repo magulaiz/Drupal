@@ -19,6 +19,10 @@ core.entity_view_mode.*.*:
     cache:
       type: boolean
       label: 'Cached'
+    path:
+      type: string
+      label: 'Route'
+      nullable: true
 
 core.entity_form_mode.*.*:
   type: config_entity
