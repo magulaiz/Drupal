@@ -28,6 +28,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     'locale_test',
     'language',
     'block',
+    'language_test',
     'content_translation',
     'menu_ui',
     'node',
