@@ -218,7 +218,13 @@ export default class DrupalMediaGeneralHtmlSupport extends Plugin {
       }
 
       schema.extend('drupalMedia', {
-        allowAttributes: ['htmlLinkAttributes', 'htmlAttributes'],
+        allowAttributes: [
+          'htmlLinkAttributes',
+          'htmlAttributes',
+          'drupalLinkEntityType',
+          'drupalLinkEntityUuid',
+          'drupalLinkEntityMetadata',
+        ],
       });
 
       conversion
