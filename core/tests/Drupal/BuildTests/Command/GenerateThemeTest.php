@@ -101,6 +101,10 @@ FIXTURE;
 simple_theme
 # label
 Simple Theme
+# machine_class_name
+SimpleTheme
+# label_class_name
+SimpleTheme
 FIXTURE;
     $this->assertSame($fixture, file_get_contents($readme_file));
   }
