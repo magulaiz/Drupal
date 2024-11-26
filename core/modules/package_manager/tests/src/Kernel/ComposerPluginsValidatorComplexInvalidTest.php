@@ -16,7 +16,7 @@ class ComposerPluginsValidatorComplexInvalidTest extends ComposerPluginsValidato
    *
    * @dataProvider providerComplexInvalidCases
    */
-  public  function testValidationDuringPreCreate(array $composer_config_to_add, array $packages_to_add, array $expected_results): void {
+  public function testValidationDuringPreCreate(array $composer_config_to_add, array $packages_to_add, array $expected_results): void {
     $this->doTestValidationDuringPreCreate($composer_config_to_add, $packages_to_add, $expected_results);
   }
 
