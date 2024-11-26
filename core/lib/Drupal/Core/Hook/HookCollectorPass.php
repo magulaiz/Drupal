@@ -158,7 +158,7 @@ class HookCollectorPass implements CompilerPassInterface {
    */
   protected function collectModuleHookImplementations($dir, $module, $module_preg): void {
     $hook_file_cache = FileCacheFactory::get('hook_implementations');
-    $procedural_hook_file_cache = FileCacheFactory::get('procedural_hook_implementations' . ':' . $module_preg);
+    $procedural_hook_file_cache = FileCacheFactory::get('procedural_hook_implementations:' . $module_preg);
 
     $iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS);
     $iterator = new \RecursiveCallbackFilterIterator($iterator, static::filterIterator(...));
@@ -192,11 +192,8 @@ class HookCollectorPass implements CompilerPassInterface {
         }
       }
       else {
-        $cached = $procedural_hook_file_cache->get($filename);
-        if ($cached) {
-          $implementations = $cached;
-        }
-        else {
+        $implementations = $procedural_hook_file_cache->get($filename);
+        if ($implementations === NULL) {
           $finder = MockFileFinder::create($filename);
           $parser = new StaticReflectionParser('', $finder);
           $implementations = [];
