@@ -41,9 +41,6 @@ class StageBaseTest extends PackageManagerKernelTestBase {
   public function register(ContainerBuilder $container): void {
     parent::register($container);
 
-    $container->getDefinition('datetime.time')
-      ->setClass(TestTime::class);
-
     // Since this test adds arbitrary event listeners that aren't services, we
     // need to ensure they will persist even if the container is rebuilt when
     // staged changes are applied.
