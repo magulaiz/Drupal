@@ -173,9 +173,12 @@ class NodeTest extends ResourceTestBase {
           'default_langcode' => TRUE,
           'langcode' => 'en',
           'path' => [
-            'alias' => '/llama',
-            'pid' => 1,
-            'langcode' => 'en',
+            [
+              'alias' => '/llama',
+              'pid' => 1,
+              'langcode' => 'en',
+              'variant' => 'default',
+            ],
           ],
           'promote' => TRUE,
           'revision_timestamp' => '1973-11-29T21:33:09+00:00',
@@ -294,7 +297,7 @@ class NodeTest extends ResourceTestBase {
     $normalization = $this->getDocumentFromResponse($response);
 
     // Change node's path alias.
-    $normalization['data']['attributes']['path']['alias'] .= 's-rule-the-world';
+    $normalization['data']['attributes']['path'][0]['alias'] .= 's-rule-the-world';
 
     // Create node PATCH request.
     $request_options = $this->getAuthenticationRequestOptions();

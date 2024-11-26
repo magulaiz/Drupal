@@ -65,7 +65,7 @@ class AliasRepository implements AliasRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function lookupBySystemPath($path, $langcode) {
+  public function lookupBySystemPath(string $path, string $langcode, ?string $variant = NULL) {
     // See the queries above. Use LIKE for case-insensitive matching.
     $select = $this->getBaseQuery()
       ->fields('base_table', ['id', 'path', 'alias', 'langcode'])
@@ -75,7 +75,17 @@ class AliasRepository implements AliasRepositoryInterface {
 
     $select->orderBy('base_table.id', 'DESC');
 
-    return $select->execute()->fetchAssoc() ?: NULL;
+    $variant === NULL
+      ? $select->condition('base_table.variant', operator: 'IS NULL')
+      : $select->condition('base_table.variant', value: $variant);
+
+    $result = $select->execute()->fetchAssoc();
+    if ($result === FALSE) {
+      return NULL;
+    }
+
+    $result['id'] = (int) $result['id'];
+    return $result;
   }
 
   /**

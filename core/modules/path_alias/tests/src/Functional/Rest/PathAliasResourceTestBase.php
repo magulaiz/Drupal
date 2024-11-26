@@ -97,6 +97,7 @@ abstract class PathAliasResourceTestBase extends EntityResourceTestBase {
           'value' => $this->entity->uuid(),
         ],
       ],
+      'variant' => [],
     ];
   }
 

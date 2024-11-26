@@ -42,12 +42,12 @@ interface AliasRepositoryInterface {
    * @param string $langcode
    *   Language code to search the path with. If there's no path defined for
    *   that language it will search paths without language.
+   * @param string|null $variant
+   *   The path variant to get.
    *
-   * @return array|null
-   *   An array containing the 'id', 'path', 'alias' and 'langcode' properties
-   *   of a path alias, or NULL if none was found.
+   * @phpstan-return array{id: positive-int, alias: string, alias: string, langcode: string}|null
    */
-  public function lookupBySystemPath($path, $langcode);
+  public function lookupBySystemPath(string $path, string $langcode, ?string $variant = NULL);
 
   /**
    * Searches a path alias for a given alias.

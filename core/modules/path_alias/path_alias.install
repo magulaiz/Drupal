@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Update functions for the path module.
+ */
+
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Update the path_alias_revision indices.
+ */
+function path_alias_update_11001(array &$sandbox): TranslatableMarkup {
+  /** @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $update_manager */
+  $update_manager = \Drupal::service('entity.definition_update_manager');
+  $entity_type = $update_manager->getEntityType('path_alias');
+  $update_manager->updateEntityType($entity_type);
+
+  return new TranslatableMarkup('Updated {path_alias_revision} indices.');
+}
+
+/**
+ * Installs the `variant` field on `path_alias` entity type.
+ */
+function path_alias_update_11002(array &$sandbox): TranslatableMarkup {
+  $field = BaseFieldDefinition::create('string')
+    ->setLabel(new TranslatableMarkup('Variant'))
+    ->setDescription(new TranslatableMarkup('An alternative alias used with this path.'))
+    ->setRequired(FALSE)
+    ->setDefaultValue(NULL)
+    ->setRevisionable(TRUE);
+
+  $entityDefinitionUpdateManager = \Drupal::entityDefinitionUpdateManager();
+  $entityDefinitionUpdateManager->installFieldStorageDefinition('variant', 'path_alias', 'path', $field);
+
+  return new TranslatableMarkup('Installed the `variant` field on `path_alias` entity type.');
+}
