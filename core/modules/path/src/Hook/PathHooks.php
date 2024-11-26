@@ -2,6 +2,7 @@
 
 namespace Drupal\path\Hook;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
