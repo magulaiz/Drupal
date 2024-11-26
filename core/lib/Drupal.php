@@ -752,6 +752,7 @@ class Drupal {
 
   /**
    * Returns current system version.
+   * @phpstan-ignore return.type
    */
   public static function version() {
     return InstalledVersions::getPrettyVersion('drupal/core');
