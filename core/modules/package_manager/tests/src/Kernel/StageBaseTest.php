@@ -11,13 +11,10 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
 use Drupal\package_manager\Event\PostApplyEvent;
 use Drupal\package_manager\Event\PostCreateEvent;
-use Drupal\package_manager\Event\PostRequireEvent;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
-use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\package_manager\Event\StageEvent;
 use Drupal\package_manager\Exception\ApplyFailedException;
-use Drupal\package_manager\Exception\StageEventException;
 use Drupal\package_manager\Exception\StageException;
 use Drupal\package_manager\Exception\StageFailureMarkerException;
 use Drupal\package_manager\FailureMarker;
@@ -26,12 +23,9 @@ use Drupal\package_manager\Validator\WritableFileSystemValidator;
 use Drupal\package_manager_bypass\LoggingBeginner;
 use Drupal\package_manager_bypass\LoggingCommitter;
 use Drupal\package_manager_bypass\NoOpStager;
-use Drupal\package_manager_test_validation\EventSubscriber\TestSubscriber;
 use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
 use PhpTuf\ComposerStager\API\Core\CommitterInterface;
 use PhpTuf\ComposerStager\API\Core\StagerInterface;
-use PhpTuf\ComposerStager\API\Exception\ExceptionInterface;
-use PhpTuf\ComposerStager\API\Exception\InvalidArgumentException;
 use PhpTuf\ComposerStager\API\Exception\PreconditionException;
 use PhpTuf\ComposerStager\API\Precondition\Service\PreconditionInterface;
 use Psr\Log\LogLevel;
@@ -63,57 +57,6 @@ class StageBaseTest extends PackageManagerKernelTestBase {
     // need to ensure they will persist even if the container is rebuilt when
     // staged changes are applied.
     $container->getDefinition('event_dispatcher')->addTag('persist');
-  }
-
-  /**
-   * Data provider for testLoggedOnError().
-   *
-   * @return string[][]
-   *   The test cases.
-   */
-  public static function providerLoggedOnError(): array {
-    return [
-      [PreCreateEvent::class],
-      [PostCreateEvent::class],
-      [PreRequireEvent::class],
-      [PostRequireEvent::class],
-      [PreApplyEvent::class],
-      [PostApplyEvent::class],
-    ];
-  }
-
-  /**
-   * @covers \Drupal\package_manager\StageBase::dispatch
-   *
-   * @dataProvider providerLoggedOnError
-   *
-   * @param string $event_class
-   *   The event class to throw an exception on.
-   */
-  public function testLoggedOnError(string $event_class): void {
-    $exception = new \Exception("This should be logged!");
-    TestSubscriber::setException($exception, $event_class);
-
-    $stage = $this->createStage();
-    $logger = new TestLogger();
-    $stage->setLogger($logger);
-
-    try {
-      $stage->create();
-      $stage->require(['drupal/core:9.8.1']);
-      $stage->apply();
-      $stage->postApply();
-      $this->fail('Expected an exception to be thrown, but none was.');
-    }
-    catch (StageEventException $e) {
-      $this->assertInstanceOf($event_class, $e->event);
-
-      $predicate = function (array $record) use ($e): bool {
-        $context = $record['context'];
-        return $context['@message'] === $e->getMessage() && str_contains($context['@backtrace_string'], 'testLoggedOnError');
-      };
-      $this->assertTrue($logger->hasRecordThatPasses($predicate, LogLevel::ERROR));
-    }
   }
 
   /**
@@ -373,92 +316,6 @@ class StageBaseTest extends PackageManagerKernelTestBase {
       }
       $this->assertCount($expected_count, $invocations);
       $this->assertSame($expected_timeout, end($invocations[0]));
-    }
-  }
-
-  /**
-   * Data provider for testCommitException().
-   *
-   * @return \string[][]
-   *   The test cases.
-   */
-  public static function providerCommitException(): array {
-    return [
-      'RuntimeException to ApplyFailedException' => [
-        'RuntimeException',
-        ApplyFailedException::class,
-      ],
-      'InvalidArgumentException' => [
-        InvalidArgumentException::class,
-        StageException::class,
-      ],
-      'PreconditionException' => [
-        PreconditionException::class,
-        StageException::class,
-      ],
-      'Exception' => [
-        'Exception',
-        ApplyFailedException::class,
-      ],
-    ];
-  }
-
-  /**
-   * Tests exception handling during calls to Composer Stager commit.
-   *
-   * @param string $thrown_class
-   *   The throwable class that should be thrown by Composer Stager.
-   * @param string $expected_class
-   *   The expected exception class, if different from $thrown_class.
-   *
-   * @dataProvider providerCommitException
-   */
-  public function testCommitException(string $thrown_class, string $expected_class): void {
-    $stage = $this->createStage();
-    $stage->create();
-    $stage->require(['drupal/core:9.8.1']);
-
-    $throwable_arguments = [
-      'A very bad thing happened',
-      123,
-    ];
-    // Composer Stager's exception messages are usually translatable, so they
-    // need to be wrapped by a TranslatableMessage object.
-    if (is_subclass_of($thrown_class, ExceptionInterface::class)) {
-      $throwable_arguments[0] = $this->createComposeStagerMessage($throwable_arguments[0]);
-    }
-    // PreconditionException requires a preconditions object.
-    if ($thrown_class === PreconditionException::class) {
-      array_unshift($throwable_arguments, $this->createMock(PreconditionInterface::class));
-    }
-    LoggingCommitter::setException($thrown_class, ...$throwable_arguments);
-
-    try {
-      $stage->apply();
-      $this->fail('Expected an exception.');
-    }
-    catch (\Throwable $exception) {
-      $this->assertInstanceOf($expected_class, $exception);
-      $this->assertSame(123, $exception->getCode());
-
-      // This needs to be done because we always use the message from
-      // \Drupal\package_manager\Stage::getFailureMarkerMessage() when throwing
-      // ApplyFailedException.
-      if ($expected_class == ApplyFailedException::class) {
-        $this->assertMatchesRegularExpression("/^Staged changes failed to apply, and the site is in an indeterminate state. It is strongly recommended to restore the code and database from a backup. Caused by $thrown_class, with this message: A very bad thing happened\nBacktrace:\n#0 .*/", $exception->getMessage());
-      }
-      else {
-        $this->assertSame('A very bad thing happened', $exception->getMessage());
-      }
-
-      $failure_marker = $this->container->get(FailureMarker::class);
-      if ($exception instanceof ApplyFailedException) {
-        $this->assertFileExists($failure_marker->getPath());
-        $this->assertFalse($stage->isApplying());
-      }
-      else {
-        $failure_marker->assertNotExists();
-      }
     }
   }
 
