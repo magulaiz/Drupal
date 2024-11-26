@@ -72,7 +72,7 @@ class ComposerPluginsValidatorTestBase extends PackageManagerKernelTestBase {
 
     // Reuse the test logic that does not trust additional packages, but with
     // updated expected results.
-    $this->testValidationDuringPreCreate($composer_config_to_add, $packages_to_add, $expected_results_without_composer_plugin_violations);
+    $this->doTestValidationDuringPreCreate($composer_config_to_add, $packages_to_add, $expected_results_without_composer_plugin_violations);
   }
 
   /**
@@ -91,7 +91,7 @@ class ComposerPluginsValidatorTestBase extends PackageManagerKernelTestBase {
 
     // Reuse the test logic that does not trust additional packages, but with
     // updated expected results.
-    $this->testValidationDuringPreApply($composer_config_to_add, $packages_to_add, $expected_results_without_composer_plugin_violations);
+    $this->doTestValidationDuringPreApply($composer_config_to_add, $packages_to_add, $expected_results_without_composer_plugin_violations);
   }
 
   /**
