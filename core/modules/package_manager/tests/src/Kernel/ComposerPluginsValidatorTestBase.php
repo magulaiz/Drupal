@@ -12,20 +12,15 @@ use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\ValidationResult;
 
 /**
- * @covers \Drupal\package_manager\Validator\ComposerPluginsValidator
  * @group package_manager
  * @internal
  */
-class ComposerPluginsValidatorTest extends PackageManagerKernelTestBase {
+class ComposerPluginsValidatorTestBase extends PackageManagerKernelTestBase {
 
   /**
    * Tests composer plugins are validated during pre-create.
-   *
-   * @dataProvider providerSimpleValidCases
-   * @dataProvider providerSimpleInvalidCases
-   * @dataProvider providerComplexInvalidCases
    */
-  public function testValidationDuringPreCreate(array $composer_config_to_add, array $packages_to_add, array $expected_results): void {
+  protected function doTestValidationDuringPreCreate(array $composer_config_to_add, array $packages_to_add, array $expected_results): void {
     $active_manipulator = new ActiveFixtureManipulator();
     if ($composer_config_to_add) {
       $active_manipulator->addConfig($composer_config_to_add);
@@ -41,12 +36,8 @@ class ComposerPluginsValidatorTest extends PackageManagerKernelTestBase {
 
   /**
    * Tests composer plugins are validated during pre-apply.
-   *
-   * @dataProvider providerSimpleValidCases
-   * @dataProvider providerSimpleInvalidCases
-   * @dataProvider providerComplexInvalidCases
    */
-  public function testValidationDuringPreApply(array $composer_config_to_add, array $packages_to_add, array $expected_results): void {
+  protected function doTestValidationDuringPreApply(array $composer_config_to_add, array $packages_to_add, array $expected_results): void {
     $stage_manipulator = $this->getStageFixtureManipulator();
     if ($composer_config_to_add) {
       $stage_manipulator->addConfig($composer_config_to_add);
@@ -67,11 +58,8 @@ class ComposerPluginsValidatorTest extends PackageManagerKernelTestBase {
 
   /**
    * Tests additional composer plugins can be trusted during pre-create.
-   *
-   * @dataProvider providerSimpleInvalidCases
-   * @dataProvider providerComplexInvalidCases
    */
-  public function testValidationAfterTrustingDuringPreCreate(array $composer_config_to_add, array $packages_to_add, array $expected_results): void {
+  protected function doTestValidationAfterTrustingDuringPreCreate(array $composer_config_to_add, array $packages_to_add, array $expected_results): void {
     $expected_results_without_composer_plugin_violations = array_filter(
       $expected_results,
       fn (ValidationResult $v) => !$v->summary || !str_contains(strtolower($v->summary->getUntranslatedString()), 'unsupported composer plugin'),
@@ -89,11 +77,8 @@ class ComposerPluginsValidatorTest extends PackageManagerKernelTestBase {
 
   /**
    * Tests additional composer plugins can be trusted during pre-apply.
-   *
-   * @dataProvider providerSimpleInvalidCases
-   * @dataProvider providerComplexInvalidCases
    */
-  public function testValidationAfterTrustingDuringPreApply(array $composer_config_to_add, array $packages_to_add, array $expected_results): void {
+  protected function doTestValidationAfterTrustingDuringPreApply(array $composer_config_to_add, array $packages_to_add, array $expected_results): void {
     $expected_results_without_composer_plugin_violations = array_filter(
       $expected_results,
       fn (ValidationResult $v) => !$v->summary || !str_contains(strtolower($v->summary->getUntranslatedString()), 'unsupported composer plugin'),
