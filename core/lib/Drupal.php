@@ -81,7 +81,6 @@ class Drupal {
    * @see https://www.drupal.org/node/3481012
    */
   const VERSION = '11.0-dev';
-  @trigger_error('Using the constant \Drupal::VERSION is deprecated in drupal:11.0.9 and will be required in drupal:12.0.0. Use \Composer\InstalledVersions::getVersion instead. See https://www.drupal.org/node/3481012', E_USER_DEPRECATED);
 
   /**
    * Core API compatibility.
