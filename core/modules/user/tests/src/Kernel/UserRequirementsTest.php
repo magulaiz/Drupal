@@ -47,4 +47,19 @@ class UserRequirementsTest extends KernelTestBase {
     $this->assertArrayHasKey('conflicting emails', $output);
   }
 
+  /**
+   * Tests that the requirements check does not incorrectly flag blank emails.
+   */
+  public function testBlankUserEmails(): void {
+
+    $output = \user_requirements('runtime');
+    $this->assertArrayNotHasKey('conflicting emails', $output);
+
+    $this->createUser([], 'User A', FALSE, ['mail' => '']);
+    $this->createUser([], 'User B', FALSE, ['mail' => '']);
+
+    $output = \user_requirements('runtime');
+    $this->assertArrayNotHasKey('conflicting emails', $output);
+  }
+
 }
