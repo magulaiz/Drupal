@@ -17,6 +17,7 @@ use Drupal\package_manager\Validator\PhpTufValidator;
 /**
  * @coversDefaultClass \Drupal\package_manager\Validator\PhpTufValidator
  * @group package_manager
+ * @group #slow
  * @internal
  */
 class PhpTufValidatorTest extends PackageManagerKernelTestBase {
