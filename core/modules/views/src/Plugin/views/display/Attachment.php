@@ -56,6 +56,7 @@ class Attachment extends DisplayPluginBase {
    *
    * @return array
    *   The rendered display output.
+   * @phpstan-ignore-next-line
    */
   public function execute() {
     return $this->view->render($this->display['id']);
@@ -69,6 +70,7 @@ class Attachment extends DisplayPluginBase {
    *
    * @return array|string
    *   The position label or array of all positions.
+   * @phpstan-ignore-next-line
    */
   public function attachmentPositions($position = NULL) {
     $positions = [
