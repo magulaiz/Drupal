@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Cache;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\DatabaseBackendFactory;
 use Drupal\Core\Database\Database;
@@ -10,6 +13,9 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\Reference;
+use Drupal\Component\Serialization\PhpSerialize;
+
+// cspell:ignore pretransaction
 
 /**
  * Tests delaying of cache tag invalidation queries to the end of transactions.
@@ -44,14 +50,17 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
 
+    $container->register('serializer', PhpSerialize::class);
     // Register a database cache backend rather than memory-based.
     $container->register('cache_factory', DatabaseBackendFactory::class)
       ->addArgument(new Reference('database'))
       ->addArgument(new Reference('cache_tags.invalidator.checksum'))
-      ->addArgument(new Reference('settings'));
+      ->addArgument(new Reference('settings'))
+      ->addArgument(new Reference('serializer'))
+      ->addArgument(new Reference(TimeInterface::class));
   }
 
   /**
@@ -145,13 +154,13 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
    *
    * @param string[] $statements
    *   A list of query statements.
-   * @param $table_name
+   * @param string $table_name
    *   The name of the table to filter by.
    *
    * @return string[]
    *   Filtered statement list.
    */
-  protected function getStatementsForTable(array $statements, $table_name) {
+  protected function getStatementsForTable(array $statements, $table_name): array {
     return array_filter($statements, function ($statement) use ($table_name) {
       return $this->isStatementRelatedToTable($statement, $table_name);
     });
