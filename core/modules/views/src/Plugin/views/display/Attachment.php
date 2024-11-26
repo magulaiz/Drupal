@@ -63,11 +63,6 @@ class Attachment extends DisplayPluginBase {
    *
    * @param string|null $position
    *   The specific position to retrieve, or NULL to retrieve all options.
-   *
-   * @return array|string
-   *   The position label or array of all positions.
-   *
-   * @phpstan-ignore-next-line
    */
   public function attachmentPositions($position = NULL) {
     $positions = [
@@ -329,9 +324,6 @@ class Attachment extends DisplayPluginBase {
 
   /**
    * Checks if the pager should be rendered for this display.
-   *
-   * @return bool
-   *   TRUE if the pager is used and should be rendered, FALSE otherwise.
    */
   public function renderPager() {
     return $this->usesPager() && $this->getOption('render_pager');
