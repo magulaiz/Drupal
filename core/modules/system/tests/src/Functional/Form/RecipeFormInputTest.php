@@ -35,6 +35,7 @@ class RecipeFormInputTest extends BrowserTestBase {
     // The default value and description should be visible.
     $assert_session->fieldValueEquals('input_test[owner]', 'Dries Buytaert');
     $assert_session->pageTextContains('The name of the site owner.');
+    $this->assertSame('checkbox', $assert_session->fieldExists('Allow mischief')->getAttribute('type'));
     // All recipe inputs are required, except for checkboxes, for which that
     // behavior makes no sense.
     $this->submitForm(['input_test[owner]' => ''], 'Apply recipe');
