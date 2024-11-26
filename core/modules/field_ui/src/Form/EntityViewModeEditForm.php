@@ -28,13 +28,14 @@ final class EntityViewModeEditForm extends EntityDisplayModeEditForm {
   public function save(array $form, FormStateInterface $form_state) {
     $original_path = $this->entity->getPath();
     $this->markRouteRebuild($form_state->getValue('path') !== $original_path);
-    parent::save($form, $form_state);
+    $saved = parent::save($form, $form_state);
     if ($original_path !== NULL && $this->entity->getPath() !== NULL) {
       // We already had a page display, no need to update entity_view_displays.
       return;
     }
     [, $view_mode] = \explode('.', $this->entity->id());
     $this->setPageDisplayOnViewDisplays($this->entity->getTargetType(), $view_mode, $original_path === NULL);
+    return $saved;
   }
 
 }

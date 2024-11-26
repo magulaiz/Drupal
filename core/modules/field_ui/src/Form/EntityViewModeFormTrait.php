@@ -10,6 +10,8 @@ use Drupal\Core\Routing\RouteBuilderInterface;
 
 /**
  * Defines a trait for entity view mode forms.
+ *
+ * @phpstan-require-implements \Drupal\Core\Entity\EntityFormInterface
  */
 trait EntityViewModeFormTrait {
 
@@ -63,7 +65,7 @@ trait EntityViewModeFormTrait {
         // We can't use :input format here because the page checkbox field has
         // no name.
         'visible' => ['[data-drupal-selector="edit-page"]' => ['checked' => TRUE]],
-      ]
+      ],
     ];
   }
 

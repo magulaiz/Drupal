@@ -18971,12 +18971,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityDisplayModeFormBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityDisplayModeFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityDisplayModeFormBase.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityFormDisplayEditForm\\:\\:alterSettingsSummary\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -19005,6 +18999,24 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityViewDisplayEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityViewDisplayEditForm.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityViewDisplayEditForm\\:\\:form\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityViewDisplayEditForm.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityViewModeAddForm\\:\\:form\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityViewModeAddForm.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityViewModeEditForm\\:\\:form\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityViewModeEditForm.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -23967,12 +23979,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\LayoutBuilderDisableForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/LayoutBuilderDisableForm.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\LayoutBuilderEntityViewDisplayForm\\:\\:copyFormValuesToEntity\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/LayoutBuilderEntityViewDisplayForm.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return

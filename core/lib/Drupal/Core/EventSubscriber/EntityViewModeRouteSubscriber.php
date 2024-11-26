@@ -22,7 +22,7 @@ class EntityViewModeRouteSubscriber extends RouteSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  protected function alterRoutes(RouteCollection $collection) {
+  protected function alterRoutes(RouteCollection $collection): void {
     $viewModeStorage = $this->entityTypeManager->getStorage('entity_view_mode');
     $query = $viewModeStorage->getQuery();
     $or = $query->orConditionGroup();

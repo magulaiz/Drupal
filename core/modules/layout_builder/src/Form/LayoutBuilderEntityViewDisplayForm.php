@@ -183,7 +183,7 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
   /**
    * {@inheritdoc}
    */
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state): void {
     // Do not process field values if Layout Builder is or will be enabled.
     $set_enabled = (bool) $form_state->getValue(['layout', 'enabled'], FALSE);
     /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface $entity */

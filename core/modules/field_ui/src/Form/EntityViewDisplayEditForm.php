@@ -189,6 +189,9 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
     $this->moduleHandler->alter('field_formatter_settings_summary', $summary, $context);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     $entity_type_id = $this->entity->getTargetEntityTypeId();
@@ -239,7 +242,7 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state): void {
     $entity->setPageDisplay((bool) $form_state->getValue('pageDisplay'));
     parent::copyFormValuesToEntity($entity, $form, $form_state);
   }

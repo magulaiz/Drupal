@@ -26,12 +26,13 @@ final class EntityViewModeAddForm extends EntityDisplayModeAddForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    parent::save($form, $form_state);
+    $saved = parent::save($form, $form_state);
     $this->markRouteRebuild($form_state->getValue('path') !== '');
     if ($form_state->getValue('path') !== '') {
       [, $view_mode] = \explode('.', $this->entity->id());
       $this->setPageDisplayOnViewDisplays($this->entity->getTargetType(), $view_mode, TRUE);
     }
+    return $saved;
   }
 
 }
