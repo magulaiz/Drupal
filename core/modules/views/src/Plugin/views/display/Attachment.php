@@ -57,7 +57,7 @@ class Attachment extends DisplayPluginBase {
    * @return array<array>
    *   The rendered display output.
    */
-  public function execute() {
+  public function execute(): array {
     return $this->view->render($this->display['id']);
   }
 
