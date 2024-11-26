@@ -2,6 +2,7 @@
 
 namespace Drupal\path\Hook;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -81,7 +82,7 @@ class PathHooks {
    * Implements hook_entity_base_field_info_alter().
    */
   #[Hook('entity_base_field_info_alter')]
-  public function entityBaseFieldInfoAlter(&$fields, EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfoAlter(&$fields, EntityTypeInterface $entity_type): void {
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
     if ($entity_type->id() === 'path_alias') {
       $fields['langcode']->setDisplayOptions('form', [
@@ -102,7 +103,13 @@ class PathHooks {
   #[Hook('entity_base_field_info')]
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
     if (in_array($entity_type->id(), ['taxonomy_term', 'node', 'media'], TRUE)) {
-      $fields['path'] = BaseFieldDefinition::create('path')->setLabel(t('URL alias'))->setTranslatable(TRUE)->setDisplayOptions('form', ['type' => 'path', 'weight' => 30])->setDisplayConfigurable('form', TRUE)->setComputed(TRUE);
+      $fields['path'] = BaseFieldDefinition::create('path')
+        ->setLabel(t('URL alias'))
+        ->setTranslatable(TRUE)
+        ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+        ->setDisplayOptions('form', ['type' => 'path', 'weight' => 30])
+        ->setDisplayConfigurable('form', TRUE)
+        ->setComputed(TRUE);
       return $fields;
     }
   }
@@ -126,7 +133,7 @@ class PathHooks {
    * Implements hook_field_widget_single_element_form_alter().
    */
   #[Hook('field_widget_single_element_form_alter')]
-  public function fieldWidgetSingleElementFormAlter(&$element, FormStateInterface $form_state, $context) {
+  public function fieldWidgetSingleElementFormAlter(&$element, FormStateInterface $form_state, $context): void {
     $field_definition = $context['items']->getFieldDefinition();
     $field_name = $field_definition->getName();
     $entity_type = $field_definition->getTargetEntityTypeId();

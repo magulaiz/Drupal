@@ -7,6 +7,9 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\path\PathVariant\PathVariantRepositoryInterface;
+use Drupal\path\Plugin\Field\FieldType\PathItem;
+use Drupal\path_alias\PathAliasStorage;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -25,40 +28,39 @@ class PathWidget extends WidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $entity = $items->getEntity();
 
-    $element += [
-      '#element_validate' => [[static::class, 'validateFormElement']],
-    ];
+    $item = $items[$delta];
+    assert($item instanceof PathItem);
+
+    $element += ['#element_validate' => [[static::class, 'validateFormElement']]];
+
     $element['alias'] = [
       '#type' => 'textfield',
-      '#title' => $element['#title'],
-      '#default_value' => $items[$delta]->alias,
+      '#title' => $this->fieldDefinition->getLabel(),
+      '#default_value' => $item->alias,
       '#required' => $element['#required'],
       '#maxlength' => 255,
       '#description' => $this->t('Specify an alternative path by which this data can be accessed. For example, type "/about" when writing an about page.'),
     ];
-    $element['pid'] = [
-      '#type' => 'value',
-      '#value' => $items[$delta]->pid,
-    ];
+
+    // Pass through item values as hidden values:
+    $element['langcode'] = ['#type' => 'value', '#value' => $item->langcode];
+    $element['pid'] = ['#type' => 'value', '#value' => $item->pid];
     $element['source'] = [
       '#type' => 'value',
-      '#value' => !$entity->isNew() ? '/' . $entity->toUrl()->getInternalPath() : NULL,
+      '#value' => $entity->isNew() ? NULL : static::pathVariantRepository()->getInternalPathByPathVariant($entity, $item->variant),
     ];
-    $element['langcode'] = [
-      '#type' => 'value',
-      '#value' => $items[$delta]->langcode,
-    ];
+    $element['variant'] = ['#type' => 'value', '#value' => $item->variant];
 
     // If the advanced settings tabs-set is available (normally rendered in the
     // second column on wide-resolutions), place the field as a details element
     // in this tab-set.
-    if (isset($form['advanced'])) {
+    if (array_key_exists('advanced', $form)) {
       $element += [
         '#type' => 'details',
         '#title' => $this->t('URL path settings'),
-        '#open' => !empty($items[$delta]->alias),
+        '#open' => $item->alias !== NULL,
         '#group' => 'advanced',
-        '#access' => $entity->get('path')->access('edit'),
+        '#access' => $entity->get($items->getName())->access('edit'),
         '#attributes' => [
           'class' => ['path-form'],
         ],
@@ -66,10 +68,34 @@ class PathWidget extends WidgetBase {
           'library' => ['path/drupal.path'],
         ],
       ];
-      $element['#weight'] = 30;
+      $element['#weight'] = (float) sprintf('30.%s', $delta);
     }
 
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state): array {
+    $elements = [];
+
+    foreach ($items as $delta => $item) {
+      $titleArgs = [
+        '@title' => $this->fieldDefinition->getLabel(),
+        '@variant' => $item->variant?->getLabel() ?? $this->t('Unknown'),
+      ];
+
+      $element = [
+        '#title' => $items->count() === 1
+          ? $this->t('@title', $titleArgs, ['context' => 'entity path no variants'])
+          // Display variant label when there is at least one available.
+          : $this->t('@title (@variant)', $titleArgs, ['context' => 'entity path variants']),
+      ];
+      $elements[$delta] = $this->formSingleElement($items, $delta, $element, $form, $form_state);
+    }
+
+    return $elements;
   }
 
   /**
@@ -87,14 +113,13 @@ class PathWidget extends WidgetBase {
       $form_state->setValueForElement($element['alias'], $alias);
 
       /** @var \Drupal\path_alias\PathAliasInterface $path_alias */
-      $path_alias = \Drupal::entityTypeManager()->getStorage('path_alias')->create([
+      $path_alias = static::pathAliasStorage()->create([
         'path' => $element['source']['#value'],
         'alias' => $alias,
         'langcode' => $element['langcode']['#value'],
       ]);
-      $violations = $path_alias->validate();
 
-      foreach ($violations as $violation) {
+      foreach ($path_alias->validate() as $violation) {
         // Newly created entities do not have a system path yet, so we need to
         // disregard some violations.
         if (!$path_alias->getPath() && $violation->getPropertyPath() === 'path') {
@@ -110,6 +135,22 @@ class PathWidget extends WidgetBase {
    */
   public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state) {
     return $element['alias'];
+  }
+
+  /**
+   * Get path variant repository service.
+   */
+  private static function pathVariantRepository(): PathVariantRepositoryInterface {
+    /** @var \Drupal\path\PathVariant\PathVariantRepositoryInterface */
+    return \Drupal::service(PathVariantRepositoryInterface::class);
+  }
+
+  /**
+   * Path alias storage.
+   */
+  private static function pathAliasStorage(): PathAliasStorage {
+    /** @var \Drupal\path_alias\PathAliasStorage */
+    return \Drupal::entityTypeManager()->getStorage('path_alias');
   }
 
 }

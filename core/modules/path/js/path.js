@@ -16,9 +16,7 @@
       $(context)
         .find('.path-form')
         .drupalSetSummary((context) => {
-          const pathElement = document.querySelector(
-            '.js-form-item-path-0-alias input',
-          );
+          const pathElement = context.querySelector('.js-form-item input');
           const path = pathElement && pathElement.value;
           return path
             ? Drupal.t('Alias: @alias', { '@alias': path })

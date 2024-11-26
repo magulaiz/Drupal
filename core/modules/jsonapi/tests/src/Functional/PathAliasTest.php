@@ -99,6 +99,7 @@ class PathAliasTest extends ResourceTestBase {
           'self' => ['href' => $self_url->toString()],
         ],
         'attributes' => [
+          'variant' => NULL,
           'alias' => '/frontpage1',
           'path' => '/<front>',
           'langcode' => 'en',
