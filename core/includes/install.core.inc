@@ -16,6 +16,7 @@ use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormState;
@@ -493,13 +494,17 @@ function install_begin_request($class_loader, &$install_state) {
     \Drupal::translation()->setDefaultLangcode($install_state['parameters']['langcode']);
   }
 
-  // Override the module list with a minimal set of modules.
-  $module_handler = \Drupal::moduleHandler();
+  // Ensure system and the install profile is available.
+  $app_root = dirname(__DIR__, 2);
+  $module_filenames = [];
   if (!$module_handler->moduleExists('system')) {
-    $module_handler->addModule('system', 'core/modules/system');
+    $module_filenames['system'] = new Extension($app_root, 'module', 'core/modules/system/system.info.yml', 'system.module');
   }
   if ($profile && !$module_handler->moduleExists($profile)) {
-    $module_handler->addProfile($profile, $install_state['profiles'][$profile]->getPath());
+    $module_filenames[$profile] = $install_state['profiles'][$profile];
+  }
+  if ($module_filenames) {
+    $kernel->updateModules($module_filenames, $module_filenames);
   }
 
   // Load all modules and perform request related initialization.
