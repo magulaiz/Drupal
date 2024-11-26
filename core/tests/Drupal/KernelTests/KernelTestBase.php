@@ -587,6 +587,12 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
         ->addTag('event_subscriber');
     }
 
+    // Add event subscriber to check that an entity schema is installed before
+    // any field storages are created on the entity.
+    $container
+      ->register('kernel_test.field_storage.create_check', 'Drupal\Core\Test\KernelTestFieldStorageCreateCheckSubscriber')
+      ->addTag('event_subscriber');
+
     // Relax the password hashing cost in tests to avoid performance issues.
     if ($container->hasDefinition('password')) {
       $container->getDefinition('password')
