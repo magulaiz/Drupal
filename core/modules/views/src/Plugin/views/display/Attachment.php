@@ -54,7 +54,7 @@ class Attachment extends DisplayPluginBase {
   /**
    * Executes the view for the attachment display.
    *
-   * @return array<array>
+   * @return array
    *   The rendered display output.
    */
   public function execute(): array {
