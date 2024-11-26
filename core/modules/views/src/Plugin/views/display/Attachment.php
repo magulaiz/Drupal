@@ -54,10 +54,8 @@ class Attachment extends DisplayPluginBase {
   /**
    * Executes the view for the attachment display.
    *
-   * @return array
+   * @return array<array>
    *   The rendered display output.
-   *
-   * @phpstan-ignore-next-line
    */
   public function execute() {
     return $this->view->render($this->display['id']);
