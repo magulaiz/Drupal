@@ -495,6 +495,7 @@ function install_begin_request($class_loader, &$install_state) {
   }
 
   // Ensure system and the install profile is available.
+  $module_handler = \Drupal::moduleHandler();
   $app_root = dirname(__DIR__, 2);
   $module_filenames = [];
   if (!$module_handler->moduleExists('system')) {
