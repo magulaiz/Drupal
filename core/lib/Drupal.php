@@ -77,7 +77,7 @@ class Drupal {
    * The current system version.
    *
    * @deprecated in drupal:11.0.9 and is removed from drupal:12.0.0.
-   * Use \Composer\InstalledVersions::getVersion('drupal/core') instead.
+   * Use \Drupal::version() instead.
    * @see https://www.drupal.org/node/3481012
    */
   const VERSION = '11.0-dev';
