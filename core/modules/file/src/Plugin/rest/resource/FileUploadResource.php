@@ -523,29 +523,14 @@ class FileUploadResource extends ResourceBase {
    *   element's '#upload_validators' property.
    */
   protected function getUploadValidators(FieldDefinitionInterface $field_definition) {
-    $validators = [
-      // Add in our check of the file name length.
-      'FileNameLength' => [],
-    ];
-    $settings = $field_definition->getSettings();
+    $item_definition = $field_definition->getItemDefinition();
+    $class = $item_definition->getClass();
+    /** @var \Drupal\file\Plugin\Field\FieldType\FileItem $item */
+    $item = new $class($item_definition);
 
-    // Cap the upload size according to the PHP limit.
-    $max_filesize = Bytes::toNumber(Environment::getUploadMaxSize());
-    if (!empty($settings['max_filesize'])) {
-      $max_filesize = min($max_filesize, Bytes::toNumber($settings['max_filesize']));
-    }
-
-    // There is always a file size limit due to the PHP server limit.
-    $validators['FileSizeLimit'] = [
-      'fileLimit' => $max_filesize,
-    ];
-
-    // Add the extension check if necessary.
-    if (!empty($settings['file_extensions'])) {
-      $validators['FileExtension'] = [
-        'extensions' => $settings['file_extensions'],
-      ];
-    }
+    $validators = $item->getUploadValidators();
+    // Add in our check of the file name length.
+    $validators['FileNameLength'] = [];
 
     return $validators;
   }
