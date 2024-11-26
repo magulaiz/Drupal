@@ -32,13 +32,12 @@ trait EntityViewModeFormTrait {
     if ($canonical_template === FALSE) {
       return;
     }
-    $display_id = NULL;
-    if (!$this->entity->isNew()) {
-      [, $display_id] = \explode('.', $this->entity->id());
-    }
-    if ($display_id === 'full') {
+
+    // Don't add path on add form or full mode.
+    if (!$this->entity->isNew() && $this->entity->getMode() === EntityViewModeInterface::FULL_MODE) {
       return;
     }
+
     $path = $this->entity->getPath();
     $form['path'] = [
       '#type' => 'details',
@@ -50,7 +49,7 @@ trait EntityViewModeFormTrait {
       '#type' => 'checkbox',
       '#title' => $this->t('Page display'),
       '#value' => $path !== NULL,
-      '#description' => t('Add a page-display for this view-mode.'),
+      '#description' => t('Add a page display for this view mode.'),
       // This should not make it into submitted values.
       '#input' => FALSE,
     ];
@@ -59,7 +58,7 @@ trait EntityViewModeFormTrait {
       '#type' => 'textfield',
       '#title' => $this->t('Path'),
       '#field_prefix' => $canonical_template . '/',
-      '#description' => $this->t('Path to use for this view-mode.'),
+      '#description' => $this->t('Path to use for this view mode.'),
       '#default_value' => $path,
       '#states' => [
         // We can't use :input format here because the page checkbox field has
@@ -71,41 +70,33 @@ trait EntityViewModeFormTrait {
 
   /**
    * Mark routes as needing rebuild.
-   *
-   * @param bool $rebuild
-   *   TRUE to rebuild.
    */
-  protected function markRouteRebuild(bool $rebuild): void {
-    if ($rebuild) {
-      \Drupal::service(RouteBuilderInterface::class)->setRebuildNeeded();
-    }
+  protected function rebuildRoute(): void {
+    \Drupal::service(RouteBuilderInterface::class)->setRebuildNeeded();
   }
 
   /**
-   * Set page display on view displays.
+   * Enables or disables a page on all bundles.
    *
-   * @param string $entity_type_id
+   * @param string $entityTypeId
    *   Entity type ID.
-   * @param string $view_mode
+   * @param string $viewMode
    *   View mode.
-   * @param bool $page_display
-   *   Value to set for page displays.
+   * @param bool $enablePageDisplay
+   *   Whether to enable page display for all bundles.
    */
-  protected function setPageDisplayOnViewDisplays(string $entity_type_id, string $view_mode, bool $page_display): void {
+  protected function setPageDisplayOnViewDisplays(string $entityTypeId, string $viewMode, bool $enablePageDisplay): void {
     $storage = $this->entityTypeManager->getStorage('entity_view_display');
     $display_ids = $storage
       ->getQuery()
       ->accessCheck(FALSE)
-      ->condition('mode', $view_mode)
-      ->condition('targetEntityType', $entity_type_id)
-      ->condition('pageDisplay', $page_display, '<>')
+      ->condition('targetEntityType', $entityTypeId)
+      ->condition('mode', $viewMode)
+      ->condition('pageDisplay', $enablePageDisplay, '<>')
       ->execute();
-    if (\count($display_ids) === 0) {
-      return;
-    }
     /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display */
     foreach ($storage->loadMultiple($display_ids) as $display) {
-      $display->setPageDisplay($page_display)->save();
+      $display->setPageDisplay($enablePageDisplay)->save();
     }
   }
 

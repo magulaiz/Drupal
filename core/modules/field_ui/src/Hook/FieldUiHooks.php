@@ -3,6 +3,8 @@
 namespace Drupal\field_ui\Hook;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\field_ui\Form\EntityViewModeAddForm;
+use Drupal\field_ui\Form\EntityViewModeEditForm;
 use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
 use Drupal\Core\Entity\EntityFormModeInterface;
 use Drupal\Core\Entity\EntityViewModeInterface;
@@ -124,8 +126,8 @@ class FieldUiHooks {
     $form_mode->setLinkTemplate('collection', '/admin/structure/display-modes/form');
     $view_mode = $entity_types['entity_view_mode'];
     $view_mode->setListBuilderClass('Drupal\field_ui\EntityDisplayModeListBuilder');
-    $view_mode->setFormClass('add', 'Drupal\field_ui\Form\EntityDisplayModeAddForm');
-    $view_mode->setFormClass('edit', 'Drupal\field_ui\Form\EntityDisplayModeEditForm');
+    $view_mode->setFormClass('add', EntityViewModeAddForm::class);
+    $view_mode->setFormClass('edit', EntityViewModeEditForm::class);
     $view_mode->setFormClass('delete', 'Drupal\field_ui\Form\EntityDisplayModeDeleteForm');
     $view_mode->set('admin_permission', 'administer display modes');
     $view_mode->setLinkTemplate('delete-form', '/admin/structure/display-modes/view/manage/{entity_view_mode}/delete');

@@ -6,6 +6,7 @@ namespace Drupal\path\EventSubscriber;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\path\Event\EntityPathsEvent;
 use Drupal\path\Event\PathVariantEvent;
 use Drupal\path\PathVariant\PathVariant;
@@ -51,7 +52,7 @@ final class EntityPathsEventSubscriber implements EventSubscriberInterface {
 
       [$entityTypeId, $mode] = \explode('.', \substr($variantStringed, 10), 2);
 
-      if ($mode === 'full') {
+      if ($mode === EntityViewModeInterface::FULL_MODE) {
         // Full mode is handled by canonicalInternalPath().
         continue;
       }

@@ -53,7 +53,6 @@ class EntityViewMode extends EntityDisplayModeBase implements EntityViewModeInte
 
   /**
    * The path for this view mode.
-   * @var string|null
    */
   protected ?string $path = NULL;
 

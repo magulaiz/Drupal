@@ -47,7 +47,7 @@ interface EntityViewBuilderInterface {
    *   comment belongs to, or not passing one, and having the comment node not
    *   be available for loading.
    */
-  public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL);
+  public function view(EntityInterface $entity, $view_mode = EntityViewModeInterface::FULL_MODE, $langcode = NULL);
 
   /**
    * Builds the render array for the provided entities.

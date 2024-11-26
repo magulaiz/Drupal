@@ -67,9 +67,6 @@ interface EntityViewDisplayInterface extends EntityDisplayInterface {
    *
    * @param bool $hasPageDisplay
    *   TRUE to enable a page display for this view mode.
-   *
-   * @return bool
-   *   TRUE when this view display is routed.
    */
   public function setPageDisplay(bool $hasPageDisplay = TRUE): static;
 

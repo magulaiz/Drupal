@@ -8,6 +8,13 @@ namespace Drupal\Core\Entity;
 interface EntityViewModeInterface extends EntityDisplayModeInterface {
 
   /**
+   * Represents the "full" view mode.
+   *
+   * @final
+   */
+  public const FULL_MODE = 'full';
+
+  /**
    * Gets the path for this view mode.
    *
    * For example a summary view mode might appear at {canonical_url}/summary. In

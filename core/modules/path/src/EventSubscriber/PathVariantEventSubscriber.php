@@ -6,6 +6,7 @@ namespace Drupal\path\EventSubscriber;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\path\Event\PathVariantEvent;
 use Drupal\path\PathVariant\PathVariant;
@@ -43,7 +44,7 @@ final class PathVariantEventSubscriber implements EventSubscriberInterface {
       ->getQuery()
       ->exists('path')
       ->condition('id', sprintf('%s.', $entityTypeId), 'STARTS_WITH')
-      ->condition('id', sprintf('%s.%s', $entityTypeId, 'full'), '<>')
+      ->condition('id', sprintf('%s.%s', $entityTypeId, EntityViewModeInterface::FULL_MODE), '<>')
       ->accessCheck(FALSE)
       ->execute();
 

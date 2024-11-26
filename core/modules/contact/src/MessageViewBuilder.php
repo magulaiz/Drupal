@@ -4,6 +4,7 @@ namespace Drupal\contact;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -25,7 +26,7 @@ class MessageViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
+  public function view(EntityInterface $entity, $view_mode = EntityViewModeInterface::FULL_MODE, $langcode = NULL) {
     $build = parent::view($entity, $view_mode, $langcode);
 
     if ($view_mode == 'mail') {

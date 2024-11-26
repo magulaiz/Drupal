@@ -8,6 +8,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines a class for a view mode add form.
+ *
+ * @method \Drupal\Core\Entity\EntityViewModeInterface getEntity()
  */
 final class EntityViewModeAddForm extends EntityDisplayModeAddForm {
 
@@ -16,7 +18,7 @@ final class EntityViewModeAddForm extends EntityDisplayModeAddForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, FormStateInterface $form_state) {
+  public function form(array $form, FormStateInterface $form_state): array {
     $form = parent::form($form, $form_state);
     $this->addPathField($form, $form_state);
     return $form;
@@ -25,13 +27,14 @@ final class EntityViewModeAddForm extends EntityDisplayModeAddForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, FormStateInterface $form_state) {
+  public function save(array $form, FormStateInterface $form_state): int {
     $saved = parent::save($form, $form_state);
-    $this->markRouteRebuild($form_state->getValue('path') !== '');
-    if ($form_state->getValue('path') !== '') {
-      [, $view_mode] = \explode('.', $this->entity->id());
-      $this->setPageDisplayOnViewDisplays($this->entity->getTargetType(), $view_mode, TRUE);
+
+    if ($this->getEntity()->getPath() !== NULL) {
+      $this->rebuildRoute();
+      $this->setPageDisplayOnViewDisplays($this->getEntity()->getTargetType(), $this->getEntity()->getMode(), TRUE);
     }
+
     return $saved;
   }
 

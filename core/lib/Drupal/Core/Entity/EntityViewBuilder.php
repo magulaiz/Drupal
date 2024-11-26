@@ -119,7 +119,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   /**
    * {@inheritdoc}
    */
-  public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
+  public function view(EntityInterface $entity, $view_mode = EntityViewModeInterface::FULL_MODE, $langcode = NULL) {
     $build_list = $this->viewMultiple([$entity], $view_mode, $langcode);
 
     // The default ::buildMultiple() #pre_render callback won't run, because we

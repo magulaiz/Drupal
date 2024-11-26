@@ -4,6 +4,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -62,7 +63,7 @@ class EntityViewModeRouteSubscriber extends RouteSubscriberBase {
         $enabled_bundles = \array_diff(\array_keys($bundles), \array_map(static fn (string $id) => \explode('.', $id)[1], $hidden_displays));
       }
 
-      if ($view_mode === 'full') {
+      if ($view_mode === EntityViewModeInterface::FULL_MODE) {
         if (count($hidden_displays) === 0) {
           continue;
         }

@@ -8,6 +8,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\Element;
@@ -28,7 +29,7 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
   /**
    * {@inheritdoc}
    */
-  public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
+  public function view(EntityInterface $entity, $view_mode = EntityViewModeInterface::FULL_MODE, $langcode = NULL) {
     $build = $this->viewMultiple([$entity], $view_mode, $langcode);
     return reset($build);
   }
@@ -36,7 +37,7 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
   /**
    * {@inheritdoc}
    */
-  public function viewMultiple(array $entities = [], $view_mode = 'full', $langcode = NULL) {
+  public function viewMultiple(array $entities = [], $view_mode = EntityViewModeInterface::FULL_MODE, $langcode = NULL) {
     /** @var \Drupal\block\BlockInterface[] $entities */
     $build = [];
     foreach ($entities as $entity) {

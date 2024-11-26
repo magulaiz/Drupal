@@ -8,6 +8,8 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines a class for a view mode edit form.
+ *
+ * @method \Drupal\Core\Entity\EntityViewModeInterface getEntity()
  */
 final class EntityViewModeEditForm extends EntityDisplayModeEditForm {
 
@@ -16,7 +18,7 @@ final class EntityViewModeEditForm extends EntityDisplayModeEditForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, FormStateInterface $form_state) {
+  public function form(array $form, FormStateInterface $form_state): array {
     $form = parent::form($form, $form_state);
     $this->addPathField($form, $form_state);
     return $form;
@@ -25,16 +27,18 @@ final class EntityViewModeEditForm extends EntityDisplayModeEditForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, FormStateInterface $form_state) {
-    $original_path = $this->entity->getPath();
-    $this->markRouteRebuild($form_state->getValue('path') !== $original_path);
-    $saved = parent::save($form, $form_state);
-    if ($original_path !== NULL && $this->entity->getPath() !== NULL) {
-      // We already had a page display, no need to update entity_view_displays.
-      return;
+  public function save(array $form, FormStateInterface $form_state): int {
+    /** @var \Drupal\Core\Entity\EntityViewModeInterface $original */
+    $original = $this->entityTypeManager->getStorage('entity_view_mode')->loadUnchanged($this->getEntity()->id());
+    $newPath = $this->getEntity()->getPath();
+    $pathChanged = $newPath !== $original->getPath();
+    if ($pathChanged) {
+      $this->rebuildRoute();
     }
-    [, $view_mode] = \explode('.', $this->entity->id());
-    $this->setPageDisplayOnViewDisplays($this->entity->getTargetType(), $view_mode, $original_path === NULL);
+
+    $saved = parent::save($form, $form_state);
+    $this->setPageDisplayOnViewDisplays($this->entity->getTargetType(), $this->getEntity()->getMode(), $newPath !== NULL);
+
     return $saved;
   }
 

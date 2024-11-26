@@ -205,11 +205,6 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
       return $form;
     }
 
-    $path = $view_mode->getPath();
-    if ($this->entity->getMode() !== 'full' && $path === '') {
-      return $form;
-    }
-
     $form['pageDisplay'] = [
       '#type' => 'details',
       '#title' => t('Page display'),
@@ -231,7 +226,7 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, FormStateInterface $form_state) {
+  public function save(array $form, FormStateInterface $form_state): int {
     $return = parent::save($form, $form_state);
     if ($this->entity->hasPageDisplay() !== (bool) $form_state->getValue('pageDisplay')) {
       \Drupal::service(RouteBuilderInterface::class)->setRebuildNeeded();
@@ -241,8 +236,10 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-return void
    */
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state): void {
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
     $entity->setPageDisplay((bool) $form_state->getValue('pageDisplay'));
     parent::copyFormValuesToEntity($entity, $form, $form_state);
   }
