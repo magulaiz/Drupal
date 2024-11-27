@@ -384,6 +384,8 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * @covers ::getHookListeners
+   *
+   * @group legacy
    */
   public function testGroupIncludes(): void {
     self::setupGroupIncludes();
