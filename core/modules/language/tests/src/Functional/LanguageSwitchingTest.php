@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Functional;
 
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\Tests\BrowserTestBase;
-use Drupal\Core\Url;
 
 // cspell:ignore publi publié
 
@@ -74,7 +74,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $edit = [$test_type . '[configurable]' => TRUE];
     $this->drupalGet('admin/config/regional/language/detection');
     $this->submitForm($edit, 'Save settings');
-    
+
     $this->drupalGet('admin/structure/block/list/' . $this->defaultTheme);
     $this->clickLink('Place block');
     $this->assertSession()->pageTextContains('Language switcher (Content)');
@@ -380,11 +380,11 @@ class LanguageSwitchingTest extends BrowserTestBase {
     /** @var \Drupal\Core\Routing\UrlGenerator $generator */
     $generator = $this->container->get('url_generator');
 
-    // Verify the English URL is correct
+    // Verify the English URL is correct.
     $english_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['en']]);
     $this->assertSession()->elementAttributeContains('xpath', '//div[@id="block-test-language-block"]/ul/li/a[@hreflang="en"]', 'href', $english_url);
 
-    // Verify the Italian URL is correct
+    // Verify the Italian URL is correct.
     $italian_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['it']]);
     $this->assertSession()->elementAttributeContains('xpath', '//div[@id="block-test-language-block"]/ul/li/a[@hreflang="it"]', 'href', $italian_url);
   }
