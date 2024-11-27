@@ -62,11 +62,9 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
     $result = [];
     try {
       if ($connection = $this->getConnection()) {
-        $result = $connection->select($this->table)
-          ->fields($this->table, ['cid', 'data', 'serialized', 'created', 'expire'])
-          ->condition('cid', array_keys($cid_mapping), 'IN')
-          ->orderBy('cid', 'ASC')
-          ->execute();
+        // On a cold cache, this can be called thousands of times, so avoid
+        // using the query builder.
+        $result = $connection->query('SELECT [cid], [data], [serialized], [created], [expire] FROM {' . $connection->escapeTable($this->table) . '}   WHERE [cid] IN ( :cids[] ) ORDER BY [cid]', [':cids[]' => array_keys($cid_mapping)]);
       }
     }
     catch (\Exception) {
