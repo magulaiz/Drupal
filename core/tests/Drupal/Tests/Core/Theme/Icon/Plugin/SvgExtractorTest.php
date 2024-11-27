@@ -287,7 +287,7 @@ class SvgExtractorTest extends UnitTestCase {
       }
       $this->assertInstanceOf(IconDefinitionInterface::class, $icon_loaded);
 
-      $data_loaded = $icon_loaded->getData();
+      $data_loaded = $icon_loaded->getAllData();
       $expected_content[$index] = new FormattableMarkup($expected_content[$index], []);
       $this->assertEquals($expected_content[$index], $data_loaded['content']);
 

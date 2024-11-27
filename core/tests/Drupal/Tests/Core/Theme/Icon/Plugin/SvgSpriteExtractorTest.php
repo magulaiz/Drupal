@@ -126,7 +126,7 @@ class SvgSpriteExtractorTest extends UnitTestCase {
       ['foo', 'bar'],
     ];
 
-    yield 'svg sprite with attributes' => [
+    yield 'suspicious symbol id ignored' => [
       [
         'foo' => [
           'icon_id' => 'foo',
@@ -135,15 +135,9 @@ class SvgSpriteExtractorTest extends UnitTestCase {
         ],
       ],
       [
-        ['/path/source/foo.svg', '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-foo="bar" data-baz="foo"><symbol id="foo"></symbol></svg>'],
+        ['/path/source/foo.svg', '<svg><symbol id="!script"></symbol><symbol id="not valid"></symbol><symbol id="_foo-bar_"></symbol></svg>'],
       ],
-      ['foo'],
-      [
-        [
-          'data-foo' => 'bar',
-          'data-baz' => 'foo',
-        ],
-      ],
+      ['_foo-bar_'],
     ];
   }
 

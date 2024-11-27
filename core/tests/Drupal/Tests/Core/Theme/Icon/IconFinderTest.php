@@ -656,7 +656,7 @@ class IconFinderTest extends UnitTestCase {
 
     $this->logger->expects($this->once())
       ->method('warning')
-      ->with('Invalid Icon path extension @filename.@extension in source: @source');
+      ->with('Invalid icon path extension @filename.@extension in source: @source');
 
     $method->invoke($this->iconFinder, self::TEST_ICONS_PATH . '/icons/flat/foo.webp', '');
   }
@@ -683,7 +683,7 @@ class IconFinderTest extends UnitTestCase {
 
     $this->logger->expects($this->once())
       ->method('warning')
-      ->with('Invalid Icon source: @source');
+      ->with('Invalid icon source: @source');
 
     $method->invoke($this->iconFinder, 'invalid_scheme', '', '');
   }
@@ -697,7 +697,7 @@ class IconFinderTest extends UnitTestCase {
 
     $this->logger->expects($this->once())
       ->method('warning')
-      ->with('Invalid Icon path in source: @source');
+      ->with('Invalid icon path in source: @source');
 
     $method->invoke($this->iconFinder, 'invalid_path', '*');
   }
@@ -802,13 +802,61 @@ class IconFinderTest extends UnitTestCase {
   }
 
   /**
-   * Test the IconFinder::getFileContents method.
+   * Data provider for ::testGetFileContents().
+   *
+   * @return array
+   *   The test cases as uri and expected valid.
    */
-  public function testGetFileContents(): void {
-    $valid_uri = DRUPAL_ROOT . '/' . self::TEST_ICONS_PATH . '/icons/flat/foo.svg';
-    $result = $this->iconFinder->getFileContents($valid_uri);
-    $expected = file_get_contents($valid_uri);
-    $this->assertEquals($expected, $result);
+  public static function providerGetFileContents(): array {
+    return [
+      'valid local file' => [
+        DRUPAL_ROOT . '/' . self::TEST_ICONS_PATH . '/icons/flat/foo.svg',
+        TRUE,
+      ],
+      'do not exist' => [
+        DRUPAL_ROOT . '/' . self::TEST_ICONS_PATH . '/icons/do/not/exist.svg',
+        FALSE,
+      ],
+      [
+        'http://foo.com/bar.png',
+        FALSE,
+      ],
+      [
+        'https://foo.com/bar.png',
+        FALSE,
+      ],
+      [
+        'ftp://foo.com/bar.png',
+        FALSE,
+      ],
+      [
+        'ssh://foo.com/bar.png',
+        FALSE,
+      ],
+      [
+        '//foo.com/bar.png',
+        FALSE,
+      ],
+    ];
+  }
+
+  /**
+   * Test the IconFinder::getFileContents method.
+   *
+   * @param string $uri
+   *   The uri to test result.
+   * @param bool $expected
+   *   The result of the file content is expected or not.
+   *
+   * @dataProvider providerGetFileContents
+   */
+  public function testGetFileContents(string $uri, bool $expected): void {
+    if ($expected) {
+      $result = $this->iconFinder->getFileContents($uri);
+      $this->assertEquals(file_get_contents($uri), $result);
+      return;
+    }
+    $this->assertFalse($this->iconFinder->getFileContents($uri));
   }
 
 }

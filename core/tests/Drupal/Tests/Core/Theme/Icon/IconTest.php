@@ -111,7 +111,7 @@ class IconTest extends UnitTestCase {
         'group' => 'test_group',
         // Special library will be transformed to #attached.
         'library' => 'my_theme/my_library',
-        // Icon data will move to context.
+        // Icon data will moved to Twig #context.
         'content' => 'test_content',
         'baz' => 'qux',
       ],
@@ -161,7 +161,7 @@ class IconTest extends UnitTestCase {
         'icon_id' => 'icon_id',
         'source' => '/foo/bar',
         'template' => 'my_template',
-        // Icon data will move to context.
+        // Icon data will moved to Twig #context.
         'enabled' => 'foo',
         'foo' => 'bar',
       ],

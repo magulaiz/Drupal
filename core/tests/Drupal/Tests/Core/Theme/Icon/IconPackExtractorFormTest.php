@@ -17,7 +17,7 @@ use Drupal\Core\Theme\Icon\IconPackExtractorForm;
 class IconPackExtractorFormTest extends UnitTestCase {
 
   /**
-   * The Icon Pack form.
+   * The icon pack form.
    *
    * @var \Drupal\Core\Theme\Icon\IconPackExtractorForm
    */
