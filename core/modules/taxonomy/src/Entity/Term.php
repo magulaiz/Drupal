@@ -47,7 +47,6 @@ use Drupal\user\StatusItem;
  *   revision_data_table = "taxonomy_term_field_revision",
  *   show_revision_ui = TRUE,
  *   translatable = TRUE,
- *   show_revision_ui = TRUE,
  *   entity_keys = {
  *     "id" = "tid",
  *     "revision" = "revision_id",
