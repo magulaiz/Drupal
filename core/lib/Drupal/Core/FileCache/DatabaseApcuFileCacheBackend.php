@@ -51,7 +51,7 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
    */
   public function fetch(array $cids) {
     $cache = apcu_fetch($cids);
-    $remaining_cids = array_diff_key($cache, array_flip($cids));
+    $remaining_cids = array_flip(array_diff_key(array_flip($cids), $cache));
     if (!$remaining_cids) {
       return $cache;
     }
@@ -63,9 +63,9 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
     try {
       if ($connection = $this->getConnection()) {
         $result = $connection->select($this->table)
-          ->fields('cid', 'data', 'serialized', 'created', 'expire')
+          ->fields($this->table, ['cid', 'data', 'serialized', 'created', 'expire'])
           ->condition('cid', array_keys($cid_mapping), 'IN')
-          ->sort('cid', 'ASC')
+          ->orderBy('cid', 'ASC')
           ->execute();
       }
     }
