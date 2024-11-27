@@ -29,10 +29,10 @@ class BlockContentThemeSuggestionsTestHooks {
   }
 
   /**
-   * Implements hook_entity_node_view().
+   * Implements hook_node_view().
    */
-  #[Hook('entity_node_view')]
-  public function entityNodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, string $view_mode): void {
+  #[Hook('node_view')]
+  public function nodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, string $view_mode): void {
     // Provide content for the extra field in the form of a content block.
     if ($display->getComponent('block_content_extra_field_test')) {
       $block_content = BlockContent::create([
