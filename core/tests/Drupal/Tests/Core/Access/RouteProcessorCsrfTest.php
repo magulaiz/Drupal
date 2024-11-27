@@ -9,6 +9,7 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Access\RouteProcessorCsrf;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
@@ -18,6 +19,8 @@ use Symfony\Component\Routing\Route;
  * @group Access
  */
 class RouteProcessorCsrfTest extends UnitTestCase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * The mock CSRF token generator.
@@ -170,6 +173,16 @@ class RouteProcessorCsrfTest extends UnitTestCase {
     $this->assertEquals('real_token_value', $parameters['token']);
     $this->processor->processOutbound('test', $route, $parameters, new BubbleableMetadata());
     $this->assertEquals('real_token_value', $parameters['token']);
+  }
+
+  /**
+   * Tests deprecation warning for missing request stack argument.
+   *
+   * @group legacy
+   */
+  public function testRouteProcessorCsrfWithoutRequestStackArgumentDeprecation(): void {
+    $processor = new RouteProcessorCsrf($this->csrfToken);
+    $this->expectDeprecation('Calling Drupal\Core\Access\RouteProcessorCsrf constructor without the $requestStack argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3485174');
   }
 
 }
