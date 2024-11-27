@@ -26,7 +26,7 @@ class EntityLabelTest extends KernelTestBase {
       $paths["Drupal\\{$module}"] = $base_directory . $module . '/src/';
     }
     $namespaces = new \ArrayObject($paths);
-    $discovery = new AttributeClassDiscovery('Entity', $namespaces, EntityType::class);
+    $discovery = new AttributeClassDiscovery('Entity', $namespaces, EntityType::class, $this->container->get('module_handler'));
     $definitions = $discovery->getDefinitions();
 
     foreach ($definitions as $definition) {
