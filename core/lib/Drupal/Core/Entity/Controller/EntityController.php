@@ -145,7 +145,7 @@ class EntityController implements ContainerInjectionInterface {
    *
    * @param string $entity_type_id
    *   The entity type ID.
-   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param ?\Symfony\Component\HttpFoundation\Request $request
    *   The request object. If this contains a destination query parameter, it is
    *   "forwarded" to the add links (or the redirect response).
    *
@@ -153,7 +153,12 @@ class EntityController implements ContainerInjectionInterface {
    *   If there's only one available bundle, a redirect response.
    *   Otherwise, a render array with the add links for each bundle.
    */
-  public function addPage($entity_type_id, Request $request) {
+  public function addPage($entity_type_id, ?Request $request = NULL) {
+    if ($request === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $request argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3490141', E_USER_DEPRECATED);
+      $request = \Drupal::request();
+    }
+
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
     $bundle_key = $entity_type->getKey('bundle');
