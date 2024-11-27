@@ -110,30 +110,6 @@ class BlockContentHooks {
   }
 
   /**
-   * Implements hook_theme_suggestions_HOOK_alter() for block templates.
-   */
-  #[Hook('theme_suggestions_block_alter')]
-  public function themeSuggestionsBlockAlter(array &$suggestions, array $variables): void {
-    $suggestions_new = [];
-    $content = $variables['elements']['content'];
-    $block_content = $variables['elements']['content']['#block_content'] ?? NULL;
-    if ($block_content instanceof BlockContentInterface) {
-      $bundle = $content['#block_content']->bundle();
-      $view_mode = strtr($variables['elements']['content']['#view_mode'], '.', '_');
-      $suggestions_new[] = 'block__block_content__view__' . $view_mode;
-      $suggestions_new[] = 'block__block_content__type__' . $bundle;
-      $suggestions_new[] = 'block__block_content__view_type__' . $bundle . '__' . $view_mode;
-      if (!empty($variables['elements']['#id'])) {
-        $suggestions_new[] = 'block__block_content__id__' . $variables['elements']['#id'];
-        $suggestions_new[] = 'block__block_content__id_view__' . $variables['elements']['#id'] . '__' . $view_mode;
-      }
-      // Remove duplicate block__block_content.
-      $suggestions = array_unique($suggestions);
-      array_splice($suggestions, 1, 0, $suggestions_new);
-    }
-  }
-
-  /**
    * Implements hook_entity_operation().
    */
   #[Hook('entity_operation')]
