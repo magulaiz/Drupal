@@ -104,7 +104,7 @@ function _block_content_has_reusable_condition(array $condition, array $tables) 
 /**
  * Implements hook_theme_suggestions_HOOK_alter() for block templates.
  */
-function block_content_theme_suggestions_block_alter(array &$suggestions, array $variables) {
+function block_content_theme_suggestions_block_alter(array &$suggestions, array $variables): array {
   $suggestions_new = [];
   $content = $variables['elements']['content'];
 
