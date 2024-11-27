@@ -17,5 +17,9 @@ view all taxonomy revisions:
 view vocabulary labels:
   title: 'View vocabulary labels'
 
+view all taxonomy revisions:
+  title: 'View all taxonomy revisions'
+  description: 'To view a revision, you also need "access content" permission.'
+
 permission_callbacks:
   - Drupal\taxonomy\TaxonomyPermissions::permissions
