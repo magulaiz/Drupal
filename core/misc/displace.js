@@ -159,12 +159,9 @@
     const n = displacingElements.length;
     for (let i = 0; i < n; i++) {
       const el = displacingElements[i];
-      // If the element is set to display: none; do not consider its dimensions.
-      //
-      // @see https://api.jquery.com/hidden-selector/
-      //   For a more thorough implementation that considers other properties
-      //   and whether the element has layout at all.
-      if (getComputedStyle(el).display === 'none') {
+      // If the element is hidden or not visible, do not consider its
+      // dimensions.
+      if (Drupal.elementIsHidden(el)) {
         continue;
       }
       // If the offset data attribute contains a displacing value, use it.
