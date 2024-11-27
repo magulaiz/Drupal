@@ -291,10 +291,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    *   StatementWrapperIterator class either.
    */
   public function fetchColumn($index = 0) {
-    if ($row = $this->fetch(FetchAs::Associative)) {
-      return $row[$this->columnNames[$index]];
-    }
-    return FALSE;
+    return $this->fetchField($index);
   }
 
   /**
@@ -302,7 +299,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    */
   public function fetchField($index = 0) {
     if ($row = $this->fetch(FetchAs::Associative)) {
-      return $row[$this->columnNames[$index]];
+      return $this->assocToColumn($row, $this->columnNames, $index);
     }
     return FALSE;
   }
