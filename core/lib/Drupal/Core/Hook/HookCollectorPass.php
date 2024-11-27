@@ -184,8 +184,13 @@ class HookCollectorPass implements CompilerPassInterface {
           $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
           $class = $namespace . '/' . $fileinfo->getBasename('.php');
           $class = str_replace('/', '\\', $class);
-          $attributes = static::getHookAttributesInClass($class);
-          $hook_file_cache->set($filename, ['class' => $class, 'attributes' => $attributes]);
+          if (class_exists($class)) {
+            $attributes = static::getHookAttributesInClass($class);
+            $hook_file_cache->set($filename, ['class' => $class, 'attributes' => $attributes]);
+          }
+          else {
+            $attributes = [];
+          }
         }
         foreach ($attributes as $attribute) {
           $this->addFromAttribute($attribute, $class, $module);
@@ -246,9 +251,6 @@ class HookCollectorPass implements CompilerPassInterface {
    *   An array of Hook attributes on this class. The $method property is guaranteed to be set.
    */
   protected static function getHookAttributesInClass(string $class): array {
-    if (!class_exists($class)) {
-      return [];
-    }
     $reflection_class = new \ReflectionClass($class);
     $class_implementations = [];
     // Check for #[Hook] on the class itself.
