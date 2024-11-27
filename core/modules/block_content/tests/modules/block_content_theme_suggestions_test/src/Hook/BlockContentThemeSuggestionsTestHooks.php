@@ -18,7 +18,7 @@ class BlockContentThemeSuggestionsTestHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  function entityExtraFieldInfo(): array {
+  public function entityExtraFieldInfo(): array {
     // Add an extra field to the test bundle.
     $extra['node']['bundle_with_extra_field']['display']['block_content_extra_field_test'] = [
       'label' => t('Extra field'),
@@ -32,7 +32,7 @@ class BlockContentThemeSuggestionsTestHooks {
    * Implements hook_entity_node_view().
    */
   #[Hook('entity_node_view')]
-  function entityNodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, string $view_mode): void {
+  public function entityNodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, string $view_mode): void {
     // Provide content for the extra field in the form of a content block.
     if ($display->getComponent('block_content_extra_field_test')) {
       $block_content = BlockContent::create([
@@ -49,7 +49,7 @@ class BlockContentThemeSuggestionsTestHooks {
    * Implements hook_theme().
    */
   #[Hook('theme')]
-  function theme(): array {
+  public function theme(): array {
     // It is necessary to explicitly register the template via hook_theme()
     // because it is added via a module, not a theme.
     return [
