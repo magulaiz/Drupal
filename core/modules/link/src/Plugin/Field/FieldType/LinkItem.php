@@ -205,13 +205,12 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
   }
 
   /**
-  * {@inheritdoc}
-  */
-  public function preSave() {
+   * {@inheritdoc}
+   */
+  public function preSave(): void {
     if (!empty($this->uri)) {
       $this->uri = trim($this->uri);
     }
-    
     if (!empty($this->title)) {
       $this->title = trim($this->title);
     }
