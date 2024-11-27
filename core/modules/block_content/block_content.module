@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\block_content\BlockContentInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Core\Database\Query\ConditionInterface;
