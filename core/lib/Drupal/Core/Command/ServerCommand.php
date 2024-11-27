@@ -116,7 +116,7 @@ class ServerCommand extends Command {
   protected function findAvailablePort($host) {
     $port = 8888;
     while ($port >= 8888 && $port <= 9999) {
-      $connection = fsockopen($host, $port);
+      $connection = @fsockopen($host, $port);
       if (is_resource($connection)) {
         // Port is being used.
         fclose($connection);
