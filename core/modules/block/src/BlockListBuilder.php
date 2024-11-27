@@ -8,6 +8,7 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -60,6 +61,13 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   protected $messenger;
 
   /**
+   * The theme handler interface.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected ThemeHandlerInterface $themeHandler;
+
+  /**
    * Constructs a new BlockListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -72,13 +80,16 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    *   The form builder.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, MessengerInterface $messenger) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, MessengerInterface $messenger, ThemeHandlerInterface $theme_handler) {
     parent::__construct($entity_type, $storage);
 
     $this->themeManager = $theme_manager;
     $this->formBuilder = $form_builder;
     $this->messenger = $messenger;
+    $this->themeHandler = $theme_handler;
     $this->limit = FALSE;
   }
 
@@ -91,7 +102,8 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('theme.manager'),
       $container->get('form_builder'),
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('theme_handler')
     );
   }
 
@@ -197,7 +209,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     }
 
     // Loop over each region and build blocks.
-    $regions = $this->systemRegionList($this->getThemeName(), REGIONS_VISIBLE);
+    $regions = $this->themeHandler->getTheme($this->getThemeName())->listVisibleRegions();
     foreach ($regions as $region => $title) {
       $form['#tabledrag'][] = [
         'action' => 'match',
@@ -396,8 +408,15 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
 
   /**
    * Wraps system_region_list().
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   $this->themeHandler->getTheme()->listAllRegions() or
+   *   $this->themeHandler->getTheme()->listVisibleRegions() instead.
+   *
+   * @see https://www.drupal.org/node/3015925
    */
   protected function systemRegionList($theme, $show = REGIONS_ALL) {
+    @trigger_error(__CLASS__ . '::systemRegionList() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use $this->themeHandler->getTheme()->listAllRegions() or $this->themeHandler->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925', E_USER_DEPRECATED);
     return system_region_list($theme, $show);
   }
 

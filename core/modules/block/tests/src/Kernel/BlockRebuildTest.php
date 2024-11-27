@@ -106,7 +106,7 @@ class BlockRebuildTest extends KernelTestBase {
     $expected = ['warning' => [new TranslatableMarkup('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block1->id(), '%region' => 'INVALID'])]];
     $this->assertEquals($expected, $messages);
 
-    $default_region = system_default_region('stark');
+    $default_region = \Drupal::service('theme_handler')->getTheme('stark')->getDefaultRegion();
     $this->assertSame($default_region, $block1->getRegion());
     $this->assertFalse($block1->status());
     $this->assertSame($default_region, $block2->getRegion());

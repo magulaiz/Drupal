@@ -18,44 +18,6 @@ use Drupal\Core\State\StateInterface;
 class ThemeExtensionList extends ExtensionList {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaults = [
-    'engine' => 'twig',
-    'regions' => [
-      'sidebar_first' => 'Left sidebar',
-      'sidebar_second' => 'Right sidebar',
-      'content' => 'Content',
-      'header' => 'Header',
-      'primary_menu' => 'Primary menu',
-      'secondary_menu' => 'Secondary menu',
-      'footer' => 'Footer',
-      'highlighted' => 'Highlighted',
-      'help' => 'Help',
-      'page_top' => 'Page top',
-      'page_bottom' => 'Page bottom',
-      'breadcrumb' => 'Breadcrumb',
-    ],
-    'description' => '',
-    // The following array should be kept inline with
-    // _system_default_theme_features().
-    'features' => [
-      'favicon',
-      'logo',
-      'node_user_picture',
-      'comment_user_picture',
-      'comment_user_verification',
-    ],
-    'screenshot' => 'screenshot.png',
-    'version' => NULL,
-    'php' => \Drupal::MINIMUM_PHP,
-    'libraries' => [],
-    'libraries_extend' => [],
-    'libraries_override' => [],
-    'dependencies' => [],
-  ];
-
-  /**
    * The config factory.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -106,17 +68,36 @@ class ThemeExtensionList extends ExtensionList {
   }
 
   /**
+   * Returns all available themes.
+   *
+   * @return \Drupal\Core\Extension\Theme[]
+   *   Processed theme extension objects, keyed by machine name.
+   */
+  public function getList() {
+    $list = parent::getList();
+    // If the cached list contains Extension objects and not Theme objects we
+    // need to rebuild it.
+    // @todo Remove this entire method in Drupal 11.
+    if (!empty($list) && !(reset($list) instanceof Theme)) {
+      $this->reset();
+      $list = parent::getList();
+    }
+    return $list;
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function doList() {
-    // Find themes.
-    $themes = parent::doList();
-
-    $engines = $this->engineList->getList();
     // Always get the freshest list of themes (rather than the already cached
     // list in $this->installedThemes) when building the theme listing because a
     // theme could have just been installed or uninstalled.
     $this->installedThemes = $this->configFactory->get('core.extension')->get('theme') ?: [];
+
+    // Find themes.
+    /** @var \Drupal\Core\Extension\Theme[] $themes */
+    $themes = parent::doList();
+    $engines = $this->engineList->getList();
 
     $sub_themes = [];
     // Read info files for each theme.
@@ -131,8 +112,6 @@ class ThemeExtensionList extends ExtensionList {
       if (!empty($theme->info['base theme'])) {
         $sub_themes[] = $name;
       }
-      // Add status.
-      $theme->status = (int) isset($this->installedThemes[$name]);
     }
 
     // Build dependencies.
@@ -268,29 +247,10 @@ class ThemeExtensionList extends ExtensionList {
   /**
    * {@inheritdoc}
    */
-  protected function createExtensionInfo(Extension $extension) {
-    $info = parent::createExtensionInfo($extension);
-
-    if (!isset($info['base theme'])) {
-      throw new InfoParserException(sprintf('Missing required key ("base theme") in %s, see https://www.drupal.org/node/3066038', $extension->getPathname()));
-    }
-
-    // Remove the base theme when 'base theme: false' is set in a theme
-    // .info.yml file.
-    if ($info['base theme'] === FALSE) {
-      unset($info['base theme']);
-    }
-
-    if (!empty($info['base theme'])) {
-      // Add the base theme as a proper dependency.
-      $info['dependencies'][] = $info['base theme'];
-    }
-
-    // Prefix screenshot with theme path.
-    if (!empty($info['screenshot'])) {
-      $info['screenshot'] = $extension->getPath() . '/' . $info['screenshot'];
-    }
-    return $info;
+  protected function decorateExtension(Extension $extension): Theme {
+    $info = $this->infoParser->parse($extension->getPathname());
+    $status = (int) isset($this->installedThemes[$extension->getName()]);
+    return new Theme($this->root, $extension->getPathname(), $info, $status, $extension->getExtensionFilename());
   }
 
   /**

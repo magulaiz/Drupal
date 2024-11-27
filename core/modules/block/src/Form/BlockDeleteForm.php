@@ -3,7 +3,9 @@
 namespace Drupal\block\Form;
 
 use Drupal\Core\Entity\EntityDeleteForm;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a deletion confirmation form for the block instance deletion form.
@@ -11,6 +13,30 @@ use Drupal\Core\Url;
  * @internal
  */
 class BlockDeleteForm extends EntityDeleteForm {
+
+  /**
+   * Theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected ThemeHandlerInterface $themeHandler;
+
+  /**
+   * Constructs a new BlockDeleteForm object.
+   *
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   Theme handler.
+   */
+  public function __construct(ThemeHandlerInterface $theme_handler) {
+    $this->themeHandler = $theme_handler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('theme_handler'));
+  }
 
   /**
    * {@inheritdoc}
@@ -31,7 +57,7 @@ class BlockDeleteForm extends EntityDeleteForm {
    */
   public function getQuestion() {
     $entity = $this->getEntity();
-    $regions = $this->systemRegionList($entity->getTheme(), REGIONS_VISIBLE);
+    $regions = $this->themeHandler->getTheme($entity->getTheme())->listVisibleRegions();
     return $this->t('Are you sure you want to remove the @entity-type %label from the %region region?', [
       '@entity-type' => $entity->getEntityType()->getSingularLabel(),
       '%label' => $entity->label(),
@@ -53,7 +79,7 @@ class BlockDeleteForm extends EntityDeleteForm {
    */
   protected function getDeletionMessage() {
     $entity = $this->getEntity();
-    $regions = $this->systemRegionList($entity->getTheme(), REGIONS_VISIBLE);
+    $regions = $this->themeHandler->getTheme($entity->getTheme())->listVisibleRegions();
     return $this->t('The @entity-type %label has been removed from the %region region.', [
       '@entity-type' => $entity->getEntityType()->getSingularLabel(),
       '%label' => $entity->label(),
@@ -63,8 +89,15 @@ class BlockDeleteForm extends EntityDeleteForm {
 
   /**
    * Wraps system_region_list().
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   $this->themeHandler->getTheme()->listAllRegions() or
+   *   $this->themeHandler->getTheme()->listVisibleRegions() instead.
+   *
+   * @see https://www.drupal.org/node/3015925
    */
   protected function systemRegionList($theme, $show = REGIONS_ALL) {
+    @trigger_error(__CLASS__ . '::systemRegionList() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use $this->themeHandler->getTheme()->listAllRegions() or $this->themeHandler->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925', E_USER_DEPRECATED);
     return system_region_list($theme, $show);
   }
 
