@@ -233,7 +233,6 @@ function drupal_install_system($install_state) {
   // @todo Try to install system as any other module, see
   //   https://www.drupal.org/node/2719315.
   \Drupal::service('extension.list.module')->setPathname('system', 'core/modules/system/system.info.yml');
-  \Drupal::service('module_handler')->addModule('system', 'core/modules/system');
 
   // Install base system configuration.
   \Drupal::service('config.installer')->installDefaultConfig('core', 'core');
