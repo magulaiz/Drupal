@@ -41,7 +41,7 @@ class DatabaseApcuFileCacheBackend implements FileCacheBackendInterface, Garbage
    */
   public function getConnection(): ?Connection {
     if (Database::getConnectionInfo('default')) {
-      return Database::getConnection();
+      return Database::getConnection('default', 'default');
     }
     return NULL;
   }
