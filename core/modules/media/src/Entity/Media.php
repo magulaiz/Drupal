@@ -66,6 +66,10 @@ use Drupal\user\EntityOwnerTrait;
       'html' => MediaRouteProvider::class,
       'revision' => RevisionHtmlRouteProvider::class,
     ],
+    "link_target" => [
+      'view' => '\Drupal\media\Entity\MediaLinkTargetStandaloneWhenAvailable',
+      'download' => '\Drupal\media\Entity\MediaLinkTarget',
+    ],
   ],
   links: [
     'add-page' => '/media/add',
@@ -79,10 +83,6 @@ use Drupal\user\EntityOwnerTrait;
     'revision-delete-form' => '/media/{media}/revision/{media_revision}/delete',
     'revision-revert-form' => '/media/{media}/revision/{media_revision}/revert',
     'version-history' => '/media/{media}/revisions',
-    "link_target" => [
-      'view' => '\Drupal\media\Entity\MediaLinkTargetStandaloneWhenAvailable',
-      'download' => '\Drupal\media\Entity\MediaLinkTarget',
-    ],
   ],
   admin_permission: 'administer media',
   permission_granularity: 'bundle',
