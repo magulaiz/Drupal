@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\menu_ui\Unit;
 
 use Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd;
@@ -67,14 +69,14 @@ class MenuUiDeprecationTest extends UnitTestCase {
   /**
    * Setups the local action default.
    */
-  protected function setupLocalActionDefault() {
+  protected function setupLocalActionDefault(): void {
     $this->menuLinkAdd = new MenuLinkAdd($this->config, $this->pluginId, $this->pluginDefinition, $this->routeProvider, $this->redirectDestination);
   }
 
   /**
    * Test MenuLinkAdd class' deprecation.
    */
-  public function testMenuLinkAddDeprecation() {
+  public function testMenuLinkAddDeprecation(): void {
     $this->expectDeprecation('The Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd is deprecated. Instead, use \Drupal\Core\Menu\LocalActionWithDestination. See https://www.drupal.org/project/drupal/issues/2762131');
 
     $this->pluginDefinition['title'] = 'Example';
