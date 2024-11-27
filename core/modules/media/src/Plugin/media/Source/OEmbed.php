@@ -34,6 +34,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Mime\MimeTypes;
+use Drupal\Core\GeneratedUrl;
 
 /**
  * Provides a media source plugin for oEmbed resources.
