@@ -4,7 +4,6 @@ namespace Drupal\block_content\Hook;
 
 use Drupal\block\BlockInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Url;
