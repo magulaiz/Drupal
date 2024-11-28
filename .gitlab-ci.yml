@@ -45,5 +45,127 @@ deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - *prepare-lint-directory
+    - *eslint-cache
+    - cd core
+    - corepack enable
+    - yarn install
+    - yarn run check:ckeditor5
+    - yarn run lint:core-js-passing --cache --cache-strategy content --format gitlab
+  artifacts:
+    reports:
+      codequality: eslint-quality-report.json
+
+'🧹 CSS linting (stylelint)':
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  # Run on push, or on MRs if CSS files have changed, or manually.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - core/.stylelintrc.json
+        - core/.prettier*
+        - core/package.json
+        - core/yarn.lock
+        - "**/*.css"
+    - when: manual
+      allow_failure: true
+  script:
+    - *prepare-lint-directory
+    - *stylelint-cache
+    - corepack enable
+    - cd core
+    - yarn install
+    - yarn run build:css --check
+    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color  --custom-formatter=@gitlab-formatters/stylelint-formatter-gitlab --output-file=$CI_PROJECT_DIR/gl-codequality.json
+  artifacts:
+    reports:
+      codequality: gl-codequality.json
+
+'📔 Spell-checking':
+  <<: [ *default-job-settings-lint ]
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  script:
+    - *prepare-lint-directory
+    - *cspell-cache
+    - *core-spellcheck
+    - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
+    - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
+    - mv /build/core/node_modules $CI_PROJECT_DIR/core
+  cache:
+    key:
+      files:
+        - ./core/package.json
+        - ./core/yarn.lock
+    paths:
+      - ./core/node_modules
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor'
+    paths:
+      - core/node_modules/
+
+'📔 Validatable config':
+  <<: [ *default-job-settings-lint ]
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+    _TARGET_PHP: "8.3-ubuntu"
+  # Run on MRs if config schema files have changed, or manually.
+  rules:
+    - if: $PERFORMANCE_TEST != "1"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - "**/config/schema/*.schema.yml"
+        # Modules may alter config schema using hook_config_schema_info_alter().
+        - "**/*.module"
+    - when: manual
+      allow_failure: true
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'validatable-config'
+    paths:
+      - HEAD.json
+      - MR.json
+  # This job must pass, but must also not disrupt Drupal core's CI if dependencies are not core-compatible.
+  allow_failure:
+    exit_codes:
+      # `composer require …` fails (implies no version available compatible with Drupal core)
+      - 100
+      # `drush pm:install config_inspector …` fails (implies failure during module installation)
+      - 101
+      # Temporarily allow this to fail as there's are bugs with adding/removing/modifying config schemas.
+      - 1
+  script:
+    # Revert back to the tip of the branch this MR started from.
+    - git checkout -f $CI_MERGE_REQUEST_DIFF_BASE_SHA
+    # Composer-install Drush & the Config Inspector module.
+    - composer require drush/drush drupal/config_inspector || exit 100
+    # Install Drupal's Standard install profile + all core modules (except obsolete ones) + the config inspector module.
+    - php core/scripts/drupal install standard
+    - ls core/modules | grep -v sdc | xargs vendor/bin/drush pm:install --yes
+    - vendor/bin/drush pm:install config_inspector --yes --quiet || exit 101
+    # Compute statistics for coverage of validatable config for HEAD.
+    - vendor/bin/drush config:inspect --statistics > HEAD.json
+    # Return to the MR commit being tested, conditionally install updates, always rebuild the container.
+    - git checkout -f $CI_COMMIT_SHA
+    - git diff $CI_MERGE_REQUEST_DIFF_BASE_SHA $CI_COMMIT_SHA --name-only | grep -q '.install$\|.post_update\.php$' && echo '🤖 Installing DB updates…' && vendor/bin/drush updatedb --yes --quiet
+    - vendor/bin/drush cr --quiet
+    # Compute statistics for coverage of validatable config for MR.
+    - vendor/bin/drush config:inspect --statistics > MR.json
+    # Output diff, but never fail the job.
+    - diff -u HEAD.json MR.json || true
+    # Determine if this increased or decreased coverage. Fail the job if it is worse. All the
+    # percentages must be equal or higher, with the exception of `typesInUse`.
+    - |
+      php -r '
+         $head = json_decode(file_get_contents("HEAD.json"), TRUE)["assessment"];
+         $mr = json_decode(file_get_contents("MR.json"), TRUE)["assessment"];
+         unset($head["_description"], $head["typesInUse"], $mr["_description"], $mr["typesInUse"]);
+         $impact = array_map(fn (float $h, float $m) => $m-$h, $head, $mr);
+         exit((int) (min($impact) < 0));
+      '
