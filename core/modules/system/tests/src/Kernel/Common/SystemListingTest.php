@@ -57,7 +57,7 @@ class SystemListingTest extends KernelTestBase {
    */
   public function testFileScanIgnoreDirectory(): void {
     $listing = new ExtensionDiscovery($this->root, FALSE);
-    $listing->setProfileDirectories(['core/profiles/testing']);
+    $listing->setProfileDirectories(['core/profiles/tests/testing']);
     $files = $listing->scan('module');
     $this->assertArrayHasKey('drupal_system_listing_compatible_test', $files);
 
