@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Kernel\Logging;
 
 use Drupal\Core\Logger\RfcLoggerTrait;
@@ -15,7 +17,7 @@ use Psr\Log\LogLevel;
 class LoggingTest extends KernelTestBase implements LoggerInterface {
   use RfcLoggerTrait;
 
-  public static $modules = ['syslog', 'syslog_test'];
+  protected static $modules = ['syslog', 'syslog_test'];
   protected $logFileName;
 
   const CHANNEL_A = 'test_channel_a';
@@ -68,7 +70,7 @@ class LoggingTest extends KernelTestBase implements LoggerInterface {
    * @param string $channel
    *   The channel on which to log messages.
    */
-  protected function fireLogs($channel) {
+  protected function fireLogs($channel): void {
     $logger = \Drupal::logger($channel);
 
     $logger->debug(LoggingTest::DEBUG_MESSAGE);
@@ -84,7 +86,7 @@ class LoggingTest extends KernelTestBase implements LoggerInterface {
   /**
    * Helper method for getting log records.
    */
-  protected function getLogRecords() {
+  protected function getLogRecords(): array {
     $file_contents = file_exists($this->logFileName) ? file_get_contents($this->logFileName) : '';
 
     return explode(PHP_EOL, $file_contents);
@@ -100,7 +102,7 @@ class LoggingTest extends KernelTestBase implements LoggerInterface {
    * @param array $records
    *   Array of log records to assert.
    */
-  protected function assertLogCount($count, $message, array $records) {
+  protected function assertLogCount($count, $message, array $records): void {
     $this->assertEquals($count, count(array_filter($records, function ($v) use ($message) {
       return strpos($v, $message);
     })));
@@ -109,7 +111,7 @@ class LoggingTest extends KernelTestBase implements LoggerInterface {
   /**
    * Test backward compatibility.
    */
-  public function testLoggingEmptyIgnoreConfig() {
+  public function testLoggingEmptyIgnoreConfig(): void {
     $this->fireLogs(LoggingTest::CHANNEL_A);
     $this->fireLogs(LoggingTest::CHANNEL_B);
     $log_records = $this->getLogRecords();
@@ -122,16 +124,27 @@ class LoggingTest extends KernelTestBase implements LoggerInterface {
    * Test ignore logging.
    *
    * @param array $settings
+   *   The 'ignore_logs' settings array.
    * @param int $debug_messages_count
+   *   The expected number of debug messages.
    * @param int $info_messages_count
+   *   The expected number of info messages.
    * @param int $notice_messages_count
+   *   The expected number of notice messages.
    * @param int $warning_messages_count
+   *   The expected number of warning messages.
    * @param int $error_messages_count
+   *   The expected number of error messages.
    * @param int $critical_messages_count
+   *   The expected number of critical messages.
    * @param int $alert_messages_count
+   *   The expected number of alert messages.
    * @param int $emergency_messages_count
+   *   The expected number of emergency messages.
    * @param int $total_channel_a_messages_count
+   *   The expected number of channel A messages.
    * @param int $total_channel_b_messages_count
+   *   The expected number of channel B messages.
    *
    * @dataProvider providerTestIgnoreLogging
    */
@@ -146,8 +159,8 @@ class LoggingTest extends KernelTestBase implements LoggerInterface {
     $alert_messages_count,
     $emergency_messages_count,
     $total_channel_a_messages_count,
-    $total_channel_b_messages_count
-  ) {
+    $total_channel_b_messages_count,
+  ): void {
     $this->setSetting('ignore_logs', $settings);
 
     $this->fireLogs(LoggingTest::CHANNEL_A);
@@ -169,7 +182,7 @@ class LoggingTest extends KernelTestBase implements LoggerInterface {
   /**
    * Data provider for self::testIgnoreLogging().
    */
-  public function providerTestIgnoreLogging() {
+  public static function providerTestIgnoreLogging(): array {
     $cases['full_match'] = [
       'settings' => [
         [

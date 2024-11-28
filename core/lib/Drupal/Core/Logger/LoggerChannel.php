@@ -82,7 +82,7 @@ class LoggerChannel implements LoggerChannelInterface {
   /**
    * Array of ignore log rules.
    *
-   * @var string[]|NULL
+   * @var string[]|null
    */
   protected $ignoreLogs = NULL;
 
@@ -99,7 +99,7 @@ class LoggerChannel implements LoggerChannelInterface {
   /**
    * Initializes $ignoreLogs settings array.
    */
-  protected function initializeSettings() {
+  protected function initializeSettings(): void {
     // Prepare an array of ignore log rules.
     $this->ignoreLogs = [];
 
@@ -128,8 +128,7 @@ class LoggerChannel implements LoggerChannelInterface {
       $this->initializeSettings();
     }
 
-    return
-      !empty($this->ignoreLogs) &&
+    return !empty($this->ignoreLogs) &&
       (
         $this->ignoreLogs["{$channel}:{$level}:{$logger}"] ??
         $this->ignoreLogs["{$channel}:{$level}:*"] ??

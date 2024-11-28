@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-
 /**
  * @coversDefaultClass \Drupal\Core\Logger\LoggerChannel
  * @group Logger
@@ -92,7 +91,7 @@ class LoggerChannelTest extends UnitTestCase {
    * @dataProvider providerTestIsIgnoredLog
    * @covers ::isIgnoredLog
    */
-  public function testIsIgnoredLog(array $ignore_logs, array $sub_cases) {
+  public function testIsIgnoredLog(array $ignore_logs, array $sub_cases): void {
     new Settings([
       'ignore_logs' => $ignore_logs,
     ]);
@@ -222,7 +221,7 @@ class LoggerChannelTest extends UnitTestCase {
   /**
    * Data provider for self::testIsIgnoredLog().
    */
-  public function providerTestIsIgnoredLog() {
+  public static function providerTestIsIgnoredLog(): void {
     // Full match.
     $cases['full_match'] = [
       [
