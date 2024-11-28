@@ -152,7 +152,7 @@ class ThemeTest extends KernelTestBase {
    */
   public function testFindThemeTemplates(): void {
 
-    $registry = $this->container->get('theme.registry')->get();
+    $registry = $this->container->get('theme.registry');
     $cache = $registry->get();
     $extension = '.html.twig';
     $path = $this->getThemePath('test_theme');
