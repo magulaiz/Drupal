@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityLastInstalledSchemaRepository;
 class UpdateEntityLastInstalledSchemaRepository extends EntityLastInstalledSchemaRepository {
 
   /**
-   * Function to get Last Installed Field Storage Definitions.
+   * {@inheritdoc}
    */
   public function getLastInstalledFieldStorageDefinitions($entity_type_id) {
     $old_store = $this->keyValueFactory->get('entity.definitions.installed');

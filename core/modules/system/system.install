@@ -1748,7 +1748,7 @@ function system_update_11001(): void {
 /**
  * Rearrange field storage definition installed storage.
  */
-function system_update_11002() {
+function system_update_11002(): void {
   $store = \Drupal::keyValue('entity.definitions.installed');
   foreach ($store->getAll() as $key => $definitions) {
     $parts = explode('.', $key);
