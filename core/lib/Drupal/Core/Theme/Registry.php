@@ -183,12 +183,12 @@ class Registry implements DestructableInterface {
    *   The module list.
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
    *   The kernel.
-   * @param string $theme_name
-   *   (optional) The name of the theme for which to construct the registry.
    * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system service.
+   * @param string $theme_name
+   *   (optional) The name of the theme for which to construct the registry.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, protected HttpKernelInterface $kernel, $theme_name = NULL, protected FileSystemInterface $fileSystem) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, protected HttpKernelInterface $kernel, protected FileSystemInterface $fileSystem, $theme_name = NULL) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
