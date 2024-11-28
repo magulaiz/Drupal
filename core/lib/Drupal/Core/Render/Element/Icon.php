@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Render\Element;
 
-use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Icon\IconDefinition;
 
 /**
