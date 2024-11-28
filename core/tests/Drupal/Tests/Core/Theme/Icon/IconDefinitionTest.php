@@ -222,7 +222,7 @@ class IconDefinitionTest extends UnitTestCase {
    * Test the IconDefinition::getRenderable method.
    */
   public function testGetRenderable(): void {
-    $icon = IconDefinition::create('foo', 'bar', 'baz');
+    $icon = IconDefinition::create('foo', 'bar', '_template_');
 
     $expected = [
       '#type' => 'icon',
@@ -233,7 +233,7 @@ class IconDefinitionTest extends UnitTestCase {
       ],
     ];
 
-    $actual = $icon->getRenderable(['baz' => 'corge']);
+    $actual = IconDefinition::getRenderable('foo:bar', ['baz' => 'corge']);
 
     $this->assertEquals($expected, $actual);
   }
