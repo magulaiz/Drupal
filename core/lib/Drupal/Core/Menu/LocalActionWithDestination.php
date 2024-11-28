@@ -57,6 +57,7 @@ class LocalActionWithDestination extends LocalActionDefault {
   public function getOptions(RouteMatchInterface $route_match) {
     $options = parent::getOptions($route_match);
     // Append the current path or destination to the query string.
+    $options += ['query' => []];
     $options['query'] += $this->redirectDestination->getAsArray();
     return $options;
   }
