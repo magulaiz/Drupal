@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @file
  * Install functions for the testing_site_config module.
  */
+
+declare(strict_types=1);
 
 /**
  * Implements hook_install().
