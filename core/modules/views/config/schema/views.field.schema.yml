@@ -295,6 +295,7 @@ views.field.field:
     suffix:
       type: label
       label: 'Suffix'
+
 views.field.field_language:
   type: views.field.field
   label: 'Views language field handler'
