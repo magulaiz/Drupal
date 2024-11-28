@@ -77,11 +77,11 @@ class RegistryTest extends KernelTestBase {
     $module_list = $this->container->get('extension.list.module');
     assert($module_list instanceof ModuleExtensionList);
 
-    $registry_subsub_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $module_list, \Drupal::service('kernel'), 'test_subsubtheme');
+    $registry_subsub_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $module_list, \Drupal::service('kernel'), \Drupal::service('file_system'), 'test_subsubtheme');
     $registry_subsub_theme->setThemeManager(\Drupal::theme());
-    $registry_sub_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $module_list, \Drupal::service('kernel'), 'test_subtheme',);
+    $registry_sub_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $module_list, \Drupal::service('kernel'), \Drupal::service('file_system'), 'test_subtheme',);
     $registry_sub_theme->setThemeManager(\Drupal::theme());
-    $registry_base_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $module_list, \Drupal::service('kernel'), 'test_base_theme');
+    $registry_base_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $module_list, \Drupal::service('kernel'), \Drupal::service('file_system'), 'test_base_theme');
     $registry_base_theme->setThemeManager(\Drupal::theme());
 
     $preprocess_functions = $registry_subsub_theme->get()['theme_test_template_test']['preprocess functions'];
@@ -115,7 +115,7 @@ class RegistryTest extends KernelTestBase {
 
     $extension_list = $this->container->get('extension.list.module');
     assert($extension_list instanceof ModuleExtensionList);
-    $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $extension_list, \Drupal::service('kernel'), 'test_theme');
+    $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $extension_list, \Drupal::service('kernel'), \Drupal::service('file_system'), 'test_theme');
     $registry_theme->setThemeManager(\Drupal::theme());
 
     $suggestions = ['__kitten', '__flamingo'];
@@ -157,7 +157,7 @@ class RegistryTest extends KernelTestBase {
 
     $extension_list = $this->container->get('extension.list.module');
     assert($extension_list instanceof ModuleExtensionList);
-    $registry = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $extension_list, \Drupal::service('kernel'), 'test_theme');
+    $registry = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $extension_list, \Drupal::service('kernel'), \Drupal::service('file_system'), 'test_theme');
     $registry->setThemeManager(\Drupal::theme());
     $this->assertEquals('value', $registry->get()['theme_test_template_test']['variables']['additional']);
   }
@@ -266,7 +266,7 @@ class RegistryTest extends KernelTestBase {
 
     $extension_list = \Drupal::service('extension.list.module');
     assert($extension_list instanceof ModuleExtensionList);
-    $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $extension_list, \Drupal::service('kernel'), 'test_theme');
+    $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $extension_list, \Drupal::service('kernel'),\Drupal::service('file_system'), 'test_theme');
     $registry_theme->setThemeManager(\Drupal::theme());
 
     $expected = [

@@ -199,7 +199,7 @@ class Registry implements DestructableInterface {
     $this->moduleList = $module_list;
     $this->themeName = $theme_name;
     if (!$fileSystem instanceof FileSystemInterface) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $fileSystem argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/1', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $fileSystem argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3490392', E_USER_DEPRECATED);
       $this->fileSystem = \Drupal::service('file_system');
     }
 
