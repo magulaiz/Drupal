@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Icon;
 
-use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\Core\Template\IconsTwigExtension;
 use PHPUnit\Framework\TestCase;
 
@@ -14,13 +13,6 @@ use PHPUnit\Framework\TestCase;
  * @group icon
  */
 class IconsTwigExtensionTest extends TestCase {
-
-  /**
-   * The plugin manager.
-   *
-   * @var \Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface|\PHPUnit\Framework\MockObject\MockObject
-   */
-  private IconPackManagerInterface $pluginManagerIconPack;
 
   /**
    * The twig extension.
@@ -33,8 +25,7 @@ class IconsTwigExtensionTest extends TestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->pluginManagerIconPack = $this->createMock(IconPackManagerInterface::class);
-    $this->iconsTwigExtension = new IconsTwigExtension($this->pluginManagerIconPack);
+    $this->iconsTwigExtension = new IconsTwigExtension();
   }
 
   /**
