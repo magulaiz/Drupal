@@ -281,11 +281,11 @@ class RegistryTest extends KernelTestBase {
    * @see drupal_theme_rebuild()
    * @group legacy
    */
-  public function testLegacyThemeRegistryRebuild() {
+  public function testLegacyThemeRegistryRebuild(): void {
     $registry = \Drupal::service('theme.registry');
     $runtime = $registry->getRuntime();
     $hooks = $registry->get();
-    $this->expectDeprecation('drupal_theme_rebuild() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service reset() method instead. See https://www.drupal.org/node/3348853');
+    $this->expectDeprecation('drupal_theme_rebuild() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use theme.registry service reset() method instead. See https://www.drupal.org/node/3348853');
     drupal_theme_rebuild();
     $this->assertNotSame($runtime, $registry->getRuntime());
     $this->assertSame($hooks, $registry->get());
@@ -297,11 +297,11 @@ class RegistryTest extends KernelTestBase {
    * @see theme_get_registry()
    * @group legacy
    */
-  public function testLegacyThemeGetRegistry() {
+  public function testLegacyThemeGetRegistry(): void {
     $registry = \Drupal::service('theme.registry');
-    $this->expectDeprecation('theme_get_registry() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service method get() instead. See https://www.drupal.org/node/3348850');
+    $this->expectDeprecation('theme_get_registry() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use theme.registry service method get() instead. See https://www.drupal.org/node/3348850');
     $this->assertEquals($registry->get(), theme_get_registry());
-    $this->expectDeprecation('theme_get_registry() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service method getRuntime() instead. See https://www.drupal.org/node/3348850');
+    $this->expectDeprecation('theme_get_registry() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use theme.registry service method getRuntime() instead. See https://www.drupal.org/node/3348850');
     $this->assertEquals($registry->getRuntime(), theme_get_registry(FALSE));
   }
 
@@ -311,7 +311,7 @@ class RegistryTest extends KernelTestBase {
    * @see drupal_find_theme_templates()
    * @group legacy
    */
-  public function testLegacyfindThemeTemplates() {
+  public function testLegacyfindThemeTemplates(): void {
 
     $registry = \Drupal::service('theme.registry');
     $cache = $registry->get();
@@ -319,7 +319,7 @@ class RegistryTest extends KernelTestBase {
     $path = $this->getThemePath('test_theme');
     $this->assertEquals($registry->findThemeTemplates($cache, $extension, $path), drupal_find_theme_templates($cache, $extension, $path));
 
-    $this->expectDeprecation('drupal_find_theme_templates() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service findThemeTemplates() method instead. See https://www.drupal.org/node/3351736');
+    $this->expectDeprecation('drupal_find_theme_templates() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use theme.registry service findThemeTemplates() method instead. See https://www.drupal.org/node/3351736');
 
   }
 

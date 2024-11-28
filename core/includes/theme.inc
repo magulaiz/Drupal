@@ -92,13 +92,13 @@ function _system_default_theme_features() {
  * @param $path
  *   The path to search.
  *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
  *   theme.registry service findThemeTemplates() method instead.
  *
  * @see https://www.drupal.org/node/3351736
  */
 function drupal_find_theme_templates($cache, $extension, $path) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service findThemeTemplates() method instead. See https://www.drupal.org/node/3351736', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use theme.registry service findThemeTemplates() method instead. See https://www.drupal.org/node/3351736', E_USER_DEPRECATED);
   return \Drupal::service('theme.registry')->findThemeTemplates($cache, $extension, $path);
 }
 
@@ -1193,7 +1193,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
     // Remove slashes or null per SA-CORE-2009-003 and change - (hyphen) to _
     // (underscore).
     //
-    // When we discover templates in @see \\Drupal\Core\Theme\Registry::findThemeFunctions(),
+    // When we discover templates in @see \\Drupal\Core\Theme\Registry::findThemeTemplates(),
     // hyphens (-) are converted to underscores (_) before the theme hook
     // is registered. We do this because the hyphens used for delimiters
     // in hook suggestions cannot be used in the function names of the

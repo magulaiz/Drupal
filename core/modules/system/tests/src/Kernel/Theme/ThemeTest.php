@@ -148,11 +148,11 @@ class ThemeTest extends KernelTestBase {
   }
 
   /**
-   * Tests \Drupal\Core\Theme\Registry:findThemeFunctions().
+   * Tests \Drupal\Core\Theme\Registry:findThemeTemplates().
    */
-  public function testFindThemeTemplates() {
+  public function testFindThemeTemplates(): void {
 
-    $registry = \Drupal::service('theme.registry');
+    $registry = $this->container->get('theme.registry')->get();
     $cache = $registry->get();
     $extension = '.html.twig';
     $path = $this->getThemePath('test_theme');
