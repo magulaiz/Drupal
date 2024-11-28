@@ -287,6 +287,8 @@ class Registry implements DestructableInterface {
    * Gets the theme registry cache.
    *
    * @return array|null
+   *   Returns existing cache entry or null if no cache entry exists in theme
+   *   registry cache.
    */
   protected function cacheGet(): ?array {
     $theme_name = $this->theme->getName();
@@ -524,9 +526,9 @@ class Registry implements DestructableInterface {
     if ($result) {
       foreach ($result as $hook => $info) {
         // When a theme or engine overrides a module's theme function
-        // $result[$hook] will only contain key/value pairs for information being
-        // overridden.  Pull the rest of the information from what was defined by
-        // an earlier hook.
+        // $result[$hook] will only contain key/value pairs for information
+        // being overridden. Pull the rest of the information from what was
+        // defined by an earlier hook.
         // Fill in the type and path of the module, theme, or engine that
         // implements this theme function.
         $result[$hook]['type'] = $type;
@@ -863,13 +865,13 @@ class Registry implements DestructableInterface {
   /**
    * Gets all user functions grouped by the word before the first underscore.
    *
-   * @param $prefixes
+   * @param array $prefixes
    *   An array of function prefixes by which the list can be limited.
    *
    * @return array
    *   Functions grouped by the first prefix.
    */
-  public function getPrefixGroupedUserFunctions($prefixes = []) {
+  public function getPrefixGroupedUserFunctions(array $prefixes = []) {
     $functions = get_defined_functions();
 
     // If a list of prefixes is supplied, trim down the list to those items
@@ -894,14 +896,17 @@ class Registry implements DestructableInterface {
   /**
    * Allows themes and/or theme engines to easily discover overridden templates.
    *
-   * @param $cache
+   * @param array $cache
    *   The existing cache of theme hooks to test against.
-   * @param $extension
+   * @param string $extension
    *   The extension that these templates will have.
-   * @param $path
+   * @param string $path
    *   The path to search.
+   *
+   * @return array|null
+   *   The Theme Templates found in the given path of the extension.
    */
-  public function findThemeTemplates($cache, $extension, $path) {
+  public function findThemeTemplates(array $cache, string $extension, string $path) {
     $implementations = $files = [];
 
     // Collect paths to all sub-themes grouped by base themes. These will be
@@ -963,8 +968,8 @@ class Registry implements DestructableInterface {
       }
     }
 
-    // Find templates that implement possible "suggestion" variants of registered
-    // theme hooks and add those as new registered theme hooks. See
+    // Find templates that implement possible "suggestion" variants of
+    // registered theme hooks and add those as new registered theme hooks. See
     // hook_theme_suggestions_alter() for more information about suggestions and
     // the use of 'pattern' and 'base hook'.
     $patterns = array_keys($files);

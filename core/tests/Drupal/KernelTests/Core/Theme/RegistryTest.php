@@ -24,6 +24,9 @@ class RegistryTest extends KernelTestBase {
    */
   protected static $modules = ['theme_test', 'system'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected $profile = 'testing';
 
   /**
