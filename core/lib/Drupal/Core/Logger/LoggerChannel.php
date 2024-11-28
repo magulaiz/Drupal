@@ -3,6 +3,7 @@
 namespace Drupal\Core\Logger;
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\Settings;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
 use Psr\Log\LogLevel;
@@ -79,6 +80,13 @@ class LoggerChannel implements LoggerChannelInterface {
   protected $currentUser;
 
   /**
+   * Array of ignore log rules.
+   *
+   * @var string[]|NULL
+   */
+  protected $ignoreLogs = NULL;
+
+  /**
    * Constructs a LoggerChannel object.
    *
    * @param string $channel
@@ -86,6 +94,52 @@ class LoggerChannel implements LoggerChannelInterface {
    */
   public function __construct($channel) {
     $this->channel = $channel;
+  }
+
+  /**
+   * Initializes $ignoreLogs settings array.
+   */
+  protected function initializeSettings() {
+    // Prepare an array of ignore log rules.
+    $this->ignoreLogs = [];
+
+    foreach (Settings::get('ignore_logs', []) as $ignore_log) {
+      // Convert level to integer equivalent.
+      $level = $ignore_log['level'] == '*' ? $ignore_log['level'] : $this->levelTranslation[$ignore_log['level']];
+      $this->ignoreLogs["{$ignore_log['channel']}:{$level}:{$ignore_log['logger']}"] = TRUE;
+    }
+  }
+
+  /**
+   * Checks if current log record must be ignored.
+   *
+   * @param string $channel
+   *   Channel name.
+   * @param string $level
+   *   Severity level.
+   * @param string $logger
+   *   Logger class name.
+   *
+   * @return bool
+   *   Returns TRUE if log record must be ignored, FALSE otherwise.
+   */
+  protected function isIgnoredLog($channel, $level, $logger) {
+    if ($this->ignoreLogs === NULL) {
+      $this->initializeSettings();
+    }
+
+    return
+      !empty($this->ignoreLogs) &&
+      (
+        $this->ignoreLogs["{$channel}:{$level}:{$logger}"] ??
+        $this->ignoreLogs["{$channel}:{$level}:*"] ??
+        $this->ignoreLogs["{$channel}:*:{$logger}"] ??
+        $this->ignoreLogs["*:{$level}:{$logger}"] ??
+        $this->ignoreLogs["{$channel}:*:*"] ??
+        $this->ignoreLogs["*:{$level}:*"] ??
+        $this->ignoreLogs["*:*:${logger}"] ??
+        FALSE
+      );
   }
 
   /**
@@ -124,7 +178,9 @@ class LoggerChannel implements LoggerChannelInterface {
     }
     // Call all available loggers.
     foreach ($this->sortLoggers() as $logger) {
-      $logger->log($level, $message, $context);
+      if (!$this->isIgnoredLog($this->channel, $level, get_class($logger))) {
+        $logger->log($level, $message, $context);
+      }
     }
 
     $this->callDepth--;
