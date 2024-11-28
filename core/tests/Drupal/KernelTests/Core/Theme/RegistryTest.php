@@ -296,4 +296,21 @@ class RegistryTest extends KernelTestBase {
 
   }
 
+  /**
+   * Tests Legacy Constructor of theme registry service.
+   *
+   * @group legacy
+   * @covers \Drupal\Core\Theme\Registry::__construct()
+   */
+  public function testLegacyConstructor(): void {
+
+    \Drupal::service('theme_installer')->install(['test_theme']);
+
+    $this->expectDeprecation('Calling Drupal\Core\Theme\Registry::__construct() without the $fileSystem argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3490392');
+
+    $registry = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(),\Drupal::service('theme_handler'), \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), \Drupal::service('extension.list.module'), \Drupal::service('kernel'), 'test_theme');
+    $registry->setThemeManager(\Drupal::theme());
+
+  }
+
 }
