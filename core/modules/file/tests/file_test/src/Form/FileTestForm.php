@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  * File test form class.
  */
 class FileTestForm implements FormInterface {
-  use baseForm;
+  use FileTestFormTrait;
 
   /**
    * {@inheritdoc}
@@ -27,7 +27,7 @@ class FileTestForm implements FormInterface {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-    $form = $this->buildFormTrait($form, $form_state);
+    $form = $this->baseForm($form, $form_state);
 
     $form['file_test_upload'] = [
       '#type' => 'file',
