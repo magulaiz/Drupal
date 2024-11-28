@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Icon;
 
-use Drupal\Core\Theme\Icon\IconDefinitionInterface;
 use Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface;
 use Drupal\Core\Template\IconsTwigExtension;
 use PHPUnit\Framework\TestCase;
@@ -50,31 +49,16 @@ class IconsTwigExtensionTest extends TestCase {
   /**
    * Test the IconsTwigExtension::getIconRenderable method.
    */
-  public function testGetIconRenderableIconNotFound(): void {
-    $this->pluginManagerIconPack
-      ->method('getIcon')
-      ->willReturn(NULL);
-
-    $result = $this->iconsTwigExtension->getIconRenderable('pack_id', 'icon_id');
-    $this->assertEmpty($result);
-  }
-
-  /**
-   * Test the IconsTwigExtension::getIconRenderable method.
-   */
   public function testGetIconRenderable(): void {
     $settings = ['foo' => 'bar'];
-    $iconMock = $this->createMock(IconDefinitionInterface::class);
-    $iconMock->method('getRenderable')
-      ->with($settings)
-      ->willReturn(['rendered_icon'] + $settings);
-
-    $this->pluginManagerIconPack
-      ->method('getIcon')
-      ->willReturn($iconMock);
-
     $result = $this->iconsTwigExtension->getIconRenderable('pack_id', 'icon_id', $settings);
-    $this->assertEquals(['rendered_icon'] + $settings, $result);
+    $expected = [
+      '#type' => 'icon',
+      '#pack_id' => 'pack_id',
+      '#icon_id' => 'icon_id',
+      '#settings' => $settings,
+    ];
+    $this->assertEquals($expected, $result);
   }
 
 }

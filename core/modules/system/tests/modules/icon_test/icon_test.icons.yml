@@ -91,12 +91,13 @@ test_svg_sprite:
       default: 32
   template: >-
     {{ icon_id }}: <svg
-      xmlns="https://www.w3.org/2000/svg"
-      width="{{ width|default(32) }}"
-      height="{{ height|default(32) }}"
-      aria-hidden="true"
+      {{ attributes
+          .setAttribute('viewBox', attributes.viewBox|default('0 0 50 50'))
+          .setAttribute('width', width|default('32'))
+          .setAttribute('height', height|default('32'))
+      }}
     >
-      <use xlink:href="{{ source }}#{{ icon_id }}"/>
+      {{ content }}
     </svg>
 
 test_settings:

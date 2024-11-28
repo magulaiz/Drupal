@@ -73,6 +73,8 @@ class IconExtractorSettingsForm {
         'number' => self::buildNumberForm($setting_id, $setting, $saved_values),
         'integer' => self::buildNumberForm($setting_id, $setting, $saved_values),
         'string' => self::buildStringForm($setting_id, $setting, $saved_values),
+        // Default to string if unsupported type.
+        default => self::buildStringForm($setting_id, $setting, $saved_values),
       };
     }
 
