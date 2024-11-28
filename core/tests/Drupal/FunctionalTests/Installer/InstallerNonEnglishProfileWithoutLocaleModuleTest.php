@@ -48,7 +48,7 @@ class InstallerNonEnglishProfileWithoutLocaleModuleTest extends InstallerTestBas
     ];
 
     // File API functions are not available yet.
-    $profile_dir = "{$this->root}/{$this->siteDirectory}/profiles" . self::PROFILE;
+    $profile_dir = "{$this->root}/{$this->siteDirectory}/profiles/" . self::PROFILE;
     $profile_config_dir = "$profile_dir/config/install";
     mkdir($profile_config_dir, 0777, TRUE);
     $profile_info_file = $profile_dir . '/' . static::PROFILE . '.info.yml';
