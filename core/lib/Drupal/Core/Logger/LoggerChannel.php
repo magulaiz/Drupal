@@ -137,7 +137,7 @@ class LoggerChannel implements LoggerChannelInterface {
         $this->ignoreLogs["*:{$level}:{$logger}"] ??
         $this->ignoreLogs["{$channel}:*:*"] ??
         $this->ignoreLogs["*:{$level}:*"] ??
-        $this->ignoreLogs["*:*:${logger}"] ??
+        $this->ignoreLogs["*:*:{$logger}"] ??
         FALSE
       );
   }
