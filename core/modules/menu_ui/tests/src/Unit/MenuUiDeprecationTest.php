@@ -77,7 +77,7 @@ class MenuUiDeprecationTest extends UnitTestCase {
    * Test MenuLinkAdd class' deprecation.
    */
   public function testMenuLinkAddDeprecation(): void {
-    $this->expectDeprecation('The Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd is deprecated. Instead, use \Drupal\Core\Menu\LocalActionWithDestination. See https://www.drupal.org/project/drupal/issues/2762131');
+    $this->expectDeprecation('Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Menu\LocalActionWithDestination instead. See https://www.drupal.org/node/3490245');
 
     $this->pluginDefinition['title'] = 'Example';
     $this->setupLocalActionDefault();
