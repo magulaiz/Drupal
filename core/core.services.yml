@@ -1811,7 +1811,6 @@ services:
   update.entity.last_installed_schema.repository:
     class: Drupal\Core\Update\UpdateEntityLastInstalledSchemaRepository
     arguments: ['@keyvalue', '@cache.discovery']
-  Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface: '@update.entity.last_installed_schema.repository'
   update.update_hook_registry:
     class: Drupal\Core\Update\UpdateHookRegistry
     arguments: ['%container.modules%', '@keyvalue']
