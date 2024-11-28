@@ -266,7 +266,7 @@ class RegistryTest extends KernelTestBase {
 
     $extension_list = \Drupal::service('extension.list.module');
     assert($extension_list instanceof ModuleExtensionList);
-    $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $extension_list, \Drupal::service('kernel'),\Drupal::service('file_system'), 'test_theme');
+    $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $extension_list, \Drupal::service('kernel'), \Drupal::service('file_system'), 'test_theme');
     $registry_theme->setThemeManager(\Drupal::theme());
 
     $expected = [
