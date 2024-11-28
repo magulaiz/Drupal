@@ -40,7 +40,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
     $this->resetAll();
-    $registry = \Drupal::service('theme.registry');
+    $registry = $this->container->get('theme.registry');
     $cache = $registry->get();
     // Create array of Twig templates.
     $templates = $registry->findThemeTemplates($cache, $extension, $this->getThemePath('test_theme'));
