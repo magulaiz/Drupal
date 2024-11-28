@@ -1744,3 +1744,20 @@ function system_update_11001(): void {
   ];
   $schema->changeField('menu_tree', 'route_param_key', 'route_param_key', $spec);
 }
+
+/**
+ * Rearrange field storage definition installed storage.
+ */
+function system_update_11002(): void {
+  $store = \Drupal::keyValue('entity.definitions.installed');
+  foreach ($store->getAll() as $key => $definitions) {
+    $parts = explode('.', $key);
+    if (($parts[1] ?? '') === 'field_storage_definitions') {
+      \Drupal::service('entity.last_installed_schema.repository')->setLastInstalledFieldStorageDefinitions($parts[0], $definitions);
+      $delete[] = $key;
+    }
+  }
+  if (!empty($delete)) {
+    $store->deleteMultiple($delete);
+  }
+}

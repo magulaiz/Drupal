@@ -23,7 +23,6 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
       ->register('update.cache_factory', UpdateCacheBackendFactory::class)
       ->setDecoratedService('cache_factory')
       ->addArgument(new Reference('update.cache_factory.inner'));
-
     $container->addCompilerPass(new UpdateCompilerPass(), PassConfig::TYPE_REMOVE, 128);
   }
 
