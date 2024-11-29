@@ -19,7 +19,7 @@ class BackendChainTest extends GenericCacheBackendUnitTestBase {
     $chain = new BackendChain();
 
     // We need to create some various backends in the chain.
-    $time = \Drupal::service(TimeInterface::class);
+    $time = \Drupal::serviceByClass(TimeInterface::class);
     $chain
       ->appendBackend(new MemoryBackend($time))
       ->prependBackend(new MemoryBackend($time))
