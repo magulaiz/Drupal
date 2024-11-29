@@ -4,7 +4,7 @@ dependencies:
   module:
     - user
 id: test_format_plural_update
-label: Test format plural update
+label: test_format_plural_update
 module: views
 description: ''
 tag: ''
