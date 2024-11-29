@@ -2,6 +2,7 @@
 
 use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
  * Static Service Container wrapper.
@@ -195,6 +196,46 @@ class Drupal {
    */
   public static function service($id) {
     return static::getContainer()->get($id);
+  }
+
+  /**
+   * Retrieves a service for a given class or interface.
+   *
+   * @template T of object
+   *
+   * @param class-string<T> $class
+   *   Class or interface.
+   * @param string|null $id
+   *   Service id, or NULL to use the type as id.
+   *
+   * @return object&T
+   *   A service that is an instance of $class.
+   *
+   * @throws \Psr\Container\ContainerExceptionInterface
+   *   The service is not available, or does not have the expected type.
+   */
+  public static function serviceByClass(string $class, string|null $id = NULL): object {
+    $service = self::getContainer()->get($id ?? $class);
+    if (!$service instanceof $class) {
+      if ($id === NULL) {
+        // @todo Introduce a dedicated exception type.
+        throw new ServiceNotFoundException(sprintf(
+          "Expected '%s' object, found '%s' object, for the service with that class/interface as id.",
+          $class,
+          get_class($service),
+        ));
+      }
+      else {
+        // @todo Introduce a dedicated exception type.
+        throw new ServiceNotFoundException(sprintf(
+          "Expected '%s' object, found '%s' object, for service '%s'.",
+          $class,
+          get_class($service),
+          $id,
+        ));
+      }
+    }
+    return $service;
   }
 
   /**
