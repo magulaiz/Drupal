@@ -87,6 +87,16 @@ class InfoParserDynamic implements InfoParserInterface {
       }
     }
 
+    $parsed_info += [ExtensionHookStatus::PROCEDURAL_HOOKS => ExtensionHookStatus::SCAN];
+    $procedural_hooks = $parsed_info[ExtensionHookStatus::PROCEDURAL_HOOKS];
+    if (!ExtensionHookStatus::isValid($procedural_hooks)) {
+      $valid_values = [
+        ExtensionHookStatus::SCAN,
+        ExtensionHookStatus::SKIP,
+      ];
+      throw new InfoParserException("'procedural_hooks: {$procedural_hooks}' is not valid in $filename. Valid values are: '" . implode("', '", $valid_values) . "'.");
+    }
+
     return $parsed_info;
   }
 

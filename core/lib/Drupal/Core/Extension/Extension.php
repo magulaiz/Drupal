@@ -225,4 +225,14 @@ class Extension {
         && $this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE);
   }
 
+  /**
+   * Checks if an extension should skip procedural hooks.
+   *
+   * @return string
+   *   FALSE if an extension has procedural hooks, TRUE otherwise.
+   */
+  public function scanProceduralHooks(): string {
+    return $this->info[ExtensionHookStatus::PROCEDURAL_HOOKS] ?? 'scan';
+  }
+
 }
