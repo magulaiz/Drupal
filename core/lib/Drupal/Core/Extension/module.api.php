@@ -989,7 +989,7 @@ function hook_update_dependencies() {
  *
  * @see hook_update_N()
  */
-function hook_update_last_removed() {
+function hook_update_last_removed(): int {
   // We've removed the 8.x-1.x version of my_module, including database updates.
   // The next update function is my_module_update_8200().
   return 8103;
@@ -1108,11 +1108,12 @@ function hook_updater_info_alter(&$updaters) {
  *     install phase, this should only be used for version numbers, do not set
  *     it if not applicable.
  *   - description: The description of the requirement/status.
- *   - severity: The requirement's result/severity level, one of:
+ *   - severity: (optional) The requirement's result/severity level, one of:
  *     - REQUIREMENT_INFO: For info only.
  *     - REQUIREMENT_OK: The requirement is satisfied.
  *     - REQUIREMENT_WARNING: The requirement failed with a warning.
  *     - REQUIREMENT_ERROR: The requirement failed with an error.
+ *     Defaults to REQUIREMENT_OK when installing, REQUIREMENT_INFO otherwise.
  */
 function hook_requirements($phase) {
   $requirements = [];
