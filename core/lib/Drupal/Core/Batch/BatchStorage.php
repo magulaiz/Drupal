@@ -41,8 +41,8 @@ class BatchStorage implements BatchStorageInterface {
     // Ensure that a session is started before using the CSRF token generator.
     $this->session->start();
     $batch = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function (): array|FALSE {
-        $batch = $this->connection->select('batch', 'b')
+      execute: function () use ($id): array|FALSE {
+        return $this->connection->select('batch', 'b')
           ->fields('b', ['batch'])
           ->condition('bid', $id)
           ->condition('token', $this->csrfToken->get($id))
@@ -64,7 +64,7 @@ class BatchStorage implements BatchStorageInterface {
    */
   public function delete($id) {
     $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function (): void {
+      execute: function () use ($id): void {
         $this->connection->delete('batch')
           ->condition('bid', $id)
           ->execute();
@@ -80,7 +80,7 @@ class BatchStorage implements BatchStorageInterface {
    */
   public function update(array $batch) {
     $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function (): void {
+      execute: function () use ($batch): void {
         $this->connection->update('batch')
           ->fields(['batch' => serialize($batch)])
           ->condition('bid', $batch['id'])
