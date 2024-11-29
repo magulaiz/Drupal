@@ -1922,3 +1922,5 @@ services:
         '@cache.default',
         '@lock',
       ]
+      tags:
+        - { name: needs_destruction }
