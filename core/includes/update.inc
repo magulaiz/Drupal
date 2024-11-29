@@ -10,8 +10,8 @@
 
 use Drupal\Component\Graph\Graph;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
-use Drupal\Core\Utility\Error;
 use Drupal\Core\Update\EquivalentUpdate;
+use Drupal\Core\Utility\Error;
 
 /**
  * Returns whether the minimum schema requirement has been satisfied.
@@ -192,7 +192,8 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     $ret['results']['query'] = $equivalent_update->toSkipMessage();
     $ret['results']['success'] = TRUE;
     $context['sandbox']['#finished'] = TRUE;
-  } elseif (function_exists($function)) {
+  }
+  elseif (function_exists($function)) {
     try {
       // Update functions can return a single message, an array of messages, or
       // nothing at all.
