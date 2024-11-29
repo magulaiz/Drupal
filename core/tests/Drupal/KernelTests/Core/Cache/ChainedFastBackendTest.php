@@ -7,6 +7,8 @@ namespace Drupal\KernelTests\Core\Cache;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\ObjectAwareSerializationInterface;
 use Drupal\Core\Cache\CacheTagsChecksumInterface;
+use Drupal\Core\Cache\CacheTagsInvalidator;
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Cache\ChainedFastBackend;
 use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Cache\PhpBackend;
@@ -42,7 +44,7 @@ class ChainedFastBackendTest extends GenericCacheBackendUnitTestBase {
     $backend = new ChainedFastBackend($consistent_backend, $fast_backend, $bin);
     // Explicitly register the cache bin as it can not work through the
     // cache bin list in the container.
-    \Drupal::service('cache_tags.invalidator')->addInvalidator($backend);
+    \Drupal::serviceByClass(CacheTagsInvalidator::class, CacheTagsInvalidatorInterface::class)->addInvalidator($backend);
     return $backend;
   }
 
