@@ -32,15 +32,14 @@ class FormatPluralUpdateTest extends UpdatePathTestBase {
   public function testViewsFieldFormatPluralConversion(): void {
     $view = View::load('test_format_plural_update');
     $data = $view->toArray();
-    $this->assertEquals('0', $data['display']['default']['display_options']['fields']['uid']['format_plural']);
-    $this->assertNotEquals('false', $data['display']['default']['display_options']['fields']['uid']['format_plural']);
+    $this->assertSame(0, $data['display']['default']['display_options']['fields']['uid']['format_plural']);
 
     $this->runUpdates();
 
     $view = View::load('test_format_plural_update');
     $data = $view->toArray();
-    $this->assertEquals('false', $data['display']['default']['display_options']['fields']['uid']['format_plural']);
-    $this->assertNotEquals('0', $data['display']['default']['display_options']['fields']['uid']['format_plural']);
+    // Ensure that integer 0 has become a boolean false.
+    $this->assertSame(FALSE, $data['display']['default']['display_options']['fields']['uid']['format_plural']);
   }
 
 }
