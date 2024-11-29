@@ -39,7 +39,7 @@ class FormatPluralUpdateTest extends UpdatePathTestBase {
     $view = View::load('test_format_plural_update');
     $data = $view->toArray();
     // Ensure that integer 0 has become a boolean false.
-    $this->assertSame(FALSE, $data['display']['default']['display_options']['fields']['uid']['format_plural']);
+    $this->assertFalse($data['display']['default']['display_options']['fields']['uid']['format_plural']);
   }
 
 }
