@@ -5,7 +5,7 @@ namespace Drupal\Core\Batch;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class BatchStorage implements BatchStorageInterface {
@@ -126,23 +126,14 @@ class BatchStorage implements BatchStorageInterface {
    *   A batch id.
    */
   public function getId(): int {
-    $try_again = FALSE;
-    try {
-      // The batch table might not yet exist.
-      return $this->doInsertBatchRecord();
-    }
-    catch (\Exception $e) {
-      // If there was an exception, try to create the table.
-      if (!$try_again = $this->ensureTableExists()) {
-        // If the exception happened for other reason than the missing table,
-        // propagate the exception.
-        throw $e;
-      }
-    }
-    // Now that the table has been created, try again if necessary.
-    if ($try_again) {
-      return $this->doInsertBatchRecord();
-    }
+    $event = new ExecuteMethodEnsuringSchemaEvent(
+      function (): int {
+        return $this->doInsertBatchRecord();
+      },
+      [static::TABLE_NAME => $this->schemaDefinition()],
+    );
+    $this->connection->dispatchEvent($event);
+    return $event->getResult();
   }
 
   /**
@@ -151,7 +142,7 @@ class BatchStorage implements BatchStorageInterface {
    * @return int
    *   A batch id.
    */
-  protected function doInsertBatchRecord(): int {
+  public function doInsertBatchRecord(): int {
     return $this->connection->insert('batch')
       ->fields([
         'timestamp' => $this->time->getRequestTime(),
@@ -159,26 +150,6 @@ class BatchStorage implements BatchStorageInterface {
         'batch' => NULL,
       ])
       ->execute();
-  }
-
-  /**
-   * Check if the table exists and create it if not.
-   */
-  protected function ensureTableExists() {
-    try {
-      $database_schema = $this->connection->schema();
-      $schema_definition = $this->schemaDefinition();
-      $database_schema->createTable(static::TABLE_NAME, $schema_definition);
-    }
-    // If another process has already created the batch table, attempting to
-    // recreate it will throw an exception. In this case just catch the
-    // exception and do nothing.
-    catch (DatabaseException) {
-    }
-    catch (\Exception) {
-      return FALSE;
-    }
-    return TRUE;
   }
 
   /**
