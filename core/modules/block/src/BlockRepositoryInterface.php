@@ -17,7 +17,7 @@ interface BlockRepositoryInterface {
   /**
    * Return all regions.
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead,
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Instead,
    *   use \Drupal\Core\Extension\Theme::listAllRegions().
    *
    * @see https://www.drupal.org/node/3015925

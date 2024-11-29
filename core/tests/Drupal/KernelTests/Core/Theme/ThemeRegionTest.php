@@ -46,8 +46,8 @@ class ThemeRegionTest extends KernelTestBase {
    * @group legacy
    */
   public function testLegacyRegionListing() {
-    $this->expectDeprecation("system_region_list() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal::service('theme_handler')->getTheme()->listAllRegions() or \Drupal::service('theme_handler')->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925");
-    $this->expectDeprecation("system_default_region() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal::service('theme_handler')->getTheme()->getDefaultRegion() instead. See https://www.drupal.org/node/3015925");
+    $this->expectDeprecation("system_region_list() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal::service('theme_handler')->getTheme()->listAllRegions() or \Drupal::service('theme_handler')->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925");
+    $this->expectDeprecation("system_default_region() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal::service('theme_handler')->getTheme()->getDefaultRegion() instead. See https://www.drupal.org/node/3015925");
     $all_regions = system_region_list('stark', REGIONS_ALL);
     $visible_regions = system_region_list('stark', REGIONS_VISIBLE);
     // There's no theme installed.

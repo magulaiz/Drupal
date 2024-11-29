@@ -31,7 +31,7 @@ const DRUPAL_REQUIRED = 2;
 /**
  * Return only visible regions.
  *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead,
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Instead,
  *   use \Drupal\Core\Extension\ThemeInfo::listVisibleRegions().
  *
  * @see https://www.drupal.org/node/2831620
@@ -41,7 +41,7 @@ const REGIONS_VISIBLE = 'visible';
 /**
  * Return all regions.
  *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead,
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Instead,
  *   use \Drupal\Core\Extension\Theme::listAllRegions().
  *
  * @see https://www.drupal.org/node/2831620
@@ -391,7 +391,7 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
  * @return string[]
  *   An array of regions in the form $region['name'] = 'description'.
  *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
  *   \Drupal::service('theme_handler')->getTheme()->listAllRegions() or
  *   \Drupal::service('theme_handler')->getTheme()->listVisibleRegions()
  *   instead.
@@ -399,7 +399,7 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
  * @see https://www.drupal.org/node/3015925
  */
 function system_region_list($theme, $show = REGIONS_ALL) {
-  @trigger_error("system_region_list() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal::service('theme_handler')->getTheme()->listAllRegions() or \Drupal::service('theme_handler')->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925", E_USER_DEPRECATED);
+  @trigger_error("system_region_list() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal::service('theme_handler')->getTheme()->listAllRegions() or \Drupal::service('theme_handler')->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925", E_USER_DEPRECATED);
   if (!($theme instanceof Theme)) {
     // For true backwards-compatibility we have to handle the case where this is
     // passed an extension object created before it has been processed by the
@@ -448,14 +448,14 @@ function system_sort_themes($a, $b) {
  * @return string
  *   A string that is the region name.
  *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
  *   \Drupal::service('theme_handler')->getTheme()->getDefaultRegion()
  *   instead.
  *
  * @see https://www.drupal.org/node/3015925
  */
 function system_default_region($theme) {
-  @trigger_error("system_default_region() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal::service('theme_handler')->getTheme()->getDefaultRegion() instead. See https://www.drupal.org/node/3015925", E_USER_DEPRECATED);
+  @trigger_error("system_default_region() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal::service('theme_handler')->getTheme()->getDefaultRegion() instead. See https://www.drupal.org/node/3015925", E_USER_DEPRECATED);
   try {
     /** @var \Drupal\core\Extension\Theme $theme */
     $theme = \Drupal::service('theme_handler')->getTheme($theme);

@@ -62,7 +62,7 @@ class BlockRegionsLegacyTest extends BrowserTestBase {
    * Tests systemRegionList method deprecation.
    */
   public function testSystemRegionListListBuilder() {
-    $this->expectDeprecation('Drupal\block\BlockListBuilder::systemRegionList() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use $this->themeHandler->getTheme()->listAllRegions() or $this->themeHandler->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925');
+    $this->expectDeprecation('Drupal\block\BlockListBuilder::systemRegionList() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use $this->themeHandler->getTheme()->listAllRegions() or $this->themeHandler->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925');
     $currentResult = $this->listBuilder->systemRegionList($this->defaultTheme);
     $expected = $this->themeHandler->getTheme($this->defaultTheme)->listAllRegions();
     $this->assertEquals($expected, $currentResult);
@@ -75,7 +75,7 @@ class BlockRegionsLegacyTest extends BrowserTestBase {
    * Tests systemRegionList method deprecation.
    */
   public function testSystemRegionListDeleteForm() {
-    $this->expectDeprecation('Drupal\block\Form\BlockDeleteForm::systemRegionList() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use $this->themeHandler->getTheme()->listAllRegions() or $this->themeHandler->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925');
+    $this->expectDeprecation('Drupal\block\Form\BlockDeleteForm::systemRegionList() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use $this->themeHandler->getTheme()->listAllRegions() or $this->themeHandler->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925');
     $currentResult = $this->deleteForm->systemRegionList($this->defaultTheme);
     $expected = $this->themeHandler->getTheme($this->defaultTheme)->listAllRegions();
     $this->assertEquals($expected, $currentResult);

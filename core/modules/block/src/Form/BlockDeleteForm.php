@@ -90,14 +90,14 @@ class BlockDeleteForm extends EntityDeleteForm {
   /**
    * Wraps system_region_list().
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
    *   $this->themeHandler->getTheme()->listAllRegions() or
    *   $this->themeHandler->getTheme()->listVisibleRegions() instead.
    *
    * @see https://www.drupal.org/node/3015925
    */
   protected function systemRegionList($theme, $show = REGIONS_ALL) {
-    @trigger_error(__CLASS__ . '::systemRegionList() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use $this->themeHandler->getTheme()->listAllRegions() or $this->themeHandler->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925', E_USER_DEPRECATED);
+    @trigger_error(__CLASS__ . '::systemRegionList() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use $this->themeHandler->getTheme()->listAllRegions() or $this->themeHandler->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925', E_USER_DEPRECATED);
     return system_region_list($theme, $show);
   }
 

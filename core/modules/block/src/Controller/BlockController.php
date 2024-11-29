@@ -101,13 +101,13 @@ class BlockController extends ControllerBase {
    * @return array
    *   An array of human-readable region names keyed by machine name.
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
    *   $this->themeHandler->getTheme()->listVisibleRegions() instead.
    *
    * @see https://www.drupal.org/node/3015925
    */
   protected function getVisibleRegionNames($theme) {
-    @trigger_error(__CLASS__ . '::getVisibleRegionNames() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use $this->themeHandler->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925', E_USER_DEPRECATED);
+    @trigger_error(__CLASS__ . '::getVisibleRegionNames() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use $this->themeHandler->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925', E_USER_DEPRECATED);
     return $this->themeHandler->getTheme($theme)->listVisibleRegions();
   }
 
