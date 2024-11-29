@@ -10,8 +10,9 @@ class ExecuteMethodEnsuringSchemaEvent extends DatabaseEvent {
   protected mixed $callMethodResult;
 
   public function __construct(
-    public \Closure $callMethod,
+    public readonly \Closure $execute,
     public readonly array $schema,
+    public readonly bool $retryAfterSchemaEnsured = FALSE,
   ) {
     parent::__construct();
   }

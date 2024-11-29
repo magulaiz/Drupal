@@ -4,6 +4,7 @@ namespace Drupal\Core\Database;
 
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Database\Event\DatabaseEvent;
+use Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent;
 use Drupal\Core\Database\Exception\EventException;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
@@ -1610,6 +1611,12 @@ abstract class Connection {
     // @todo Allow a backtrace including all arguments as an option.
     //   https://www.drupal.org/project/drupal/issues/3401906
     return debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+  }
+
+  public function executeEnsuringSchemaOnFailure(\Closure $execute, array $schema, bool $retryAfterSchemaEnsured = FALSE): mixed {
+    $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $retryAfterSchemaEnsured);
+    $this->dispatchEvent($event);
+    return $event->getResult();
   }
 
 }

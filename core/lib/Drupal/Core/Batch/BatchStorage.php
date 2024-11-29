@@ -5,7 +5,6 @@ namespace Drupal\Core\Batch;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class BatchStorage implements BatchStorageInterface {
@@ -41,18 +40,19 @@ class BatchStorage implements BatchStorageInterface {
   public function load($id) {
     // Ensure that a session is started before using the CSRF token generator.
     $this->session->start();
-    try {
-      $batch = $this->connection->select('batch', 'b')
-        ->fields('b', ['batch'])
-        ->condition('bid', $id)
-        ->condition('token', $this->csrfToken->get($id))
-        ->execute()
-        ->fetchField();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-      $batch = FALSE;
-    }
+    $batch = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): array|FALSE {
+        $batch = $this->connection->select('batch', 'b')
+          ->fields('b', ['batch'])
+          ->condition('bid', $id)
+          ->condition('token', $this->csrfToken->get($id))
+          ->execute()
+          ->fetchField();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
     if ($batch) {
       return unserialize($batch);
     }
@@ -63,44 +63,50 @@ class BatchStorage implements BatchStorageInterface {
    * {@inheritdoc}
    */
   public function delete($id) {
-    try {
-      $this->connection->delete('batch')
-        ->condition('bid', $id)
-        ->execute();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): void {
+        $this->connection->delete('batch')
+          ->condition('bid', $id)
+          ->execute();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function update(array $batch) {
-    try {
-      $this->connection->update('batch')
-        ->fields(['batch' => serialize($batch)])
-        ->condition('bid', $batch['id'])
-        ->execute();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): void {
+        $this->connection->update('batch')
+          ->fields(['batch' => serialize($batch)])
+          ->condition('bid', $batch['id'])
+          ->execute();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function cleanup() {
-    try {
-      // Cleanup the batch table and the queue for failed batches.
-      $this->connection->delete('batch')
-        ->condition('timestamp', $this->time->getRequestTime() - 864000, '<')
-        ->execute();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): void {
+        // Cleanup the batch table and the queue for failed batches.
+        $this->connection->delete('batch')
+          ->condition('timestamp', $this->time->getRequestTime() - 864000, '<')
+          ->execute();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
   }
 
   /**
@@ -126,48 +132,21 @@ class BatchStorage implements BatchStorageInterface {
    *   A batch id.
    */
   public function getId(): int {
-    $event = new ExecuteMethodEnsuringSchemaEvent(
-      function (): int {
-        return $this->doInsertBatchRecord();
+    return $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): int {
+        return $this->connection->insert('batch')
+          ->fields([
+            'timestamp' => $this->time->getRequestTime(),
+            'token' => '',
+            'batch' => NULL,
+          ])
+          ->execute();
       },
-      [static::TABLE_NAME => $this->schemaDefinition()],
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+      retryAfterSchemaEnsured: TRUE,
     );
-    $this->connection->dispatchEvent($event);
-    return $event->getResult();
-  }
-
-  /**
-   * Inserts a record in the table and returns the batch id.
-   *
-   * @return int
-   *   A batch id.
-   */
-  public function doInsertBatchRecord(): int {
-    return $this->connection->insert('batch')
-      ->fields([
-        'timestamp' => $this->time->getRequestTime(),
-        'token' => '',
-        'batch' => NULL,
-      ])
-      ->execute();
-  }
-
-  /**
-   * Act on an exception when batch might be stale.
-   *
-   * If the table does not yet exist, that's fine, but if the table exists and
-   * yet the query failed, then the batch is stale and the exception needs to
-   * propagate.
-   *
-   * @param $e
-   *   The exception.
-   *
-   * @throws \Exception
-   */
-  protected function catchException(\Exception $e) {
-    if ($this->connection->schema()->tableExists(static::TABLE_NAME)) {
-      throw $e;
-    }
   }
 
   /**

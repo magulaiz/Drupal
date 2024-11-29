@@ -33,60 +33,36 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    * {@inheritdoc}
    */
   protected function doInvalidateTags(array $tags) {
-    try {
-      foreach ($tags as $tag) {
-        $this->connection->merge('cachetags')
-          ->insertFields(['invalidations' => 1])
-          ->expression('invalidations', '[invalidations] + 1')
-          ->key('tag', $tag)
-          ->execute();
-      }
-    }
-    catch (\Exception $e) {
-      // Create the cache table, which will be empty. This fixes cases during
-      // core install where cache tags are invalidated before the table is
-      // created.
-      if (!$this->ensureTableExists()) {
-        throw $e;
-      }
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($tags): void {
+        foreach ($tags as $tag) {
+          $this->connection->merge('cachetags')
+            ->insertFields(['invalidations' => 1])
+            ->expression('invalidations', '[invalidations] + 1')
+            ->key('tag', $tag)
+            ->execute();
+        }
+      },
+      schema: [
+        'cachetags' => $this->schemaDefinition(),
+      ],
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getTagInvalidationCounts(array $tags) {
-    try {
-      return $this->connection->query('SELECT [tag], [invalidations] FROM {cachetags} WHERE [tag] IN ( :tags[] )', [':tags[]' => $tags])
-        ->fetchAllKeyed();
-    }
-    catch (\Exception $e) {
-      // If the table does not exist yet, create.
-      if (!$this->ensureTableExists()) {
-        throw $e;
-      }
-    }
-    return [];
-  }
-
-  /**
-   * Check if the cache tags table exists and create it if not.
-   */
-  protected function ensureTableExists() {
-    try {
-      $database_schema = $this->connection->schema();
-      $schema_definition = $this->schemaDefinition();
-      $database_schema->createTable('cachetags', $schema_definition);
-    }
-    // If another process has already created the cachetags table, attempting to
-    // recreate it will throw an exception. In this case just catch the
-    // exception and do nothing.
-    catch (DatabaseException) {
-    }
-    catch (\Exception) {
-      return FALSE;
-    }
-    return TRUE;
+    $return = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($tags): array {
+        return $this->connection->query('SELECT [tag], [invalidations] FROM {cachetags} WHERE [tag] IN ( :tags[] )', [':tags[]' => $tags])
+          ->fetchAllKeyed();
+      },
+      schema: [
+        'cachetags' => $this->schemaDefinition(),
+      ],
+    );
+    return $return === FALSE ? [] : $return;
   }
 
   /**
