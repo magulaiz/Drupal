@@ -210,11 +210,11 @@ class EntityConstraintViolationListTest extends UnitTestCase {
 
     // Ensure violation caches are reset after the operation.
     $violationOffsetsByField = new \ReflectionProperty(EntityConstraintViolationList::class, 'violationOffsetsByField');
-    $violationOffsetsByField->setAccessible(true);
+    $violationOffsetsByField->setAccessible(TRUE);
     $this->assertNull($violationOffsetsByField->getValue($originalList));
 
     $entityViolationOffsets = new \ReflectionProperty(EntityConstraintViolationList::class, 'entityViolationOffsets');
-    $entityViolationOffsets->setAccessible(true);
+    $entityViolationOffsets->setAccessible(TRUE);
     $this->assertNull($entityViolationOffsets->getValue($originalList));
   }
 
