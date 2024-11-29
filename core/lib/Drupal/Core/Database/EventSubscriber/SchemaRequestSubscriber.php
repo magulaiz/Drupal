@@ -3,7 +3,6 @@
 namespace Drupal\Core\Database\EventSubscriber;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Core\Database\DatabaseException;
@@ -23,7 +22,7 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     return [
-        ExecuteMethodEnsuringSchemaEvent::class => 'onExecuteMethodEnsuringSchema',
+      ExecuteMethodEnsuringSchemaEvent::class => 'onExecuteMethodEnsuringSchema',
     ];
   }
 
