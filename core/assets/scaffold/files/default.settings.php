@@ -765,6 +765,68 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
 # $settings['trusted_host_patterns'] = [];
 
 /**
+ * Logging configuration.
+ *
+ * Allows ignoring log messages by channel, severity level or logger class name.
+ *
+ * For example:
+ * @code
+ * $settings['ignore_logs'] = [
+ *   [
+ *     'channel' => 'page not found',
+ *     'level' => \Psr\Log\LogLevel::DEBUG,
+ *     'logger' => \Drupal\dblog\Logger\DbLog::class,
+ *   ],
+ * ];
+ * @endcode
+ * With the setting described above, if you call
+ * @code
+ * \Drupal::logger('page not found')->debug('my_message');
+ * @endcode
+ * then this log record will not be saved into the database as it's ignored
+ * for 'Drupal\dblog\Logger\DbLog' logger in 'page not found' channel and
+ * 'debug' severity level. You can use a wildcard symbol in order to ignore
+ * log records from all the channels, all the levels or all the loggers.
+ *
+ * For example:
+ * @code
+ * $settings['ignore_logs'] = [
+ *   [
+ *     'channel' => 'page not found',
+ *     'level' => '*',
+ *     'logger' => '*',
+ *   ],
+ * ];
+ * @endcode
+ * With the settings above all the log records in 'page not found' channel
+ * will be ignored. The wildcard symbol can be used with any parameter in
+ * any sequence.
+ *
+ * You can define as many ignore rules as you need.
+ *
+ * List of the most relevant channels called by core:
+ *  - 'access denied'
+ *  - 'page not found'
+ *  - 'cron'
+ *  - 'file system'
+ *  - 'php'
+ *  - 'security'
+ *  - 'system'
+ *
+ * List of available severity levels:
+ *  - \Psr\Log\LogLevel::DEBUG
+ *  - \Psr\Log\LogLevel::INFO
+ *  - \Psr\Log\LogLevel::NOTICE
+ *  - \Psr\Log\LogLevel::WARNING
+ *  - \Psr\Log\LogLevel::ERROR
+ *  - \Psr\Log\LogLevel::CRITICAL
+ *  - \Psr\Log\LogLevel::ALERT
+ *  - \Psr\Log\LogLevel::EMERGENCY
+ *
+ * @see \Psr\Log\LogLevel
+ */
+
+/**
  * The default list of directories that will be ignored by Drupal's file API.
  *
  * By default ignore node_modules and bower_components folders to avoid issues
