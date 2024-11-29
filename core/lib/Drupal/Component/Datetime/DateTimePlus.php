@@ -2,8 +2,6 @@
 
 namespace Drupal\Component\Datetime;
 
-use Drupal\Component\Utility\ToStringTrait;
-
 /**
  * Wraps DateTime().
  *
@@ -38,8 +36,6 @@ use Drupal\Component\Utility\ToStringTrait;
  * @method \DateTimeZone getTimezone()
  */
 class DateTimePlus {
-
-  use ToStringTrait;
 
   const FORMAT = 'Y-m-d H:i:s';
 
@@ -727,6 +723,15 @@ class DateTimePlus {
    */
   public function getPhpDateTime() {
     return clone $this->dateTimeObject;
+  }
+
+  /**
+   * Implements the magic __toString() method.
+   *
+   * @return string
+   */
+  public function __toString() {
+    return (string) $this->render();
   }
 
 }
