@@ -106,10 +106,7 @@ function _update_fix_missing_schema() {
         $last_update = max($last_update, $last_removed);
       }
       $update_registry->setInstalledVersion($module, $last_update);
-      $args = [
-        '%module' => $module,
-        '%last_update_hook' => $module . '_update_' . $last_update . '()',
-      ];
+      $args = ['%module' => $module, '%last_update_hook' => $module . '_update_' . $last_update . '()'];
       \Drupal::messenger()->addWarning(t('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args));
       \Drupal::logger('update')->warning('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args);
     }
@@ -167,20 +164,20 @@ function _update_fix_missing_schema() {
  * returns will be accumulated into a list, so that all messages associated
  * with it can be displayed together at the end of the update process.
  *
- * @param string $module
+ * @param $module
  *   The module whose update will be run.
- * @param int $number
+ * @param $number
  *   The update number to run.
- * @param array $dependency_map
+ * @param $dependency_map
  *   An array whose keys are the names of all update functions that will be
  *   performed during this batch process, and whose values are arrays of other
  *   update functions that each one depends on.
- * @param array $context
+ * @param $context
  *   The batch context array.
  *
  * @see update_resolve_dependencies()
  */
-function update_do_one($module, $number, array $dependency_map, array &$context) {
+function update_do_one($module, $number, $dependency_map, &$context) {
   $function = $module . '_update_' . $number;
 
   // If this update was aborted in a previous step, or has a dependency that
@@ -258,7 +255,7 @@ function update_do_one($module, $number, array $dependency_map, array &$context)
  * @param array $context
  *   The batch context array.
  */
-function update_invoke_post_update($function, array &$context) {
+function update_invoke_post_update($function, &$context) {
   $ret = [];
 
   // If this update was aborted in a previous step, or has a dependency that was
@@ -428,7 +425,7 @@ function update_get_update_list() {
  * dependency chain for each update, as provided by the depth-first search
  * algorithm in Drupal\Component\Graph\Graph::searchAndSort().
  *
- * @param array $starting_updates
+ * @param $starting_updates
  *   An array whose keys contain the names of modules with updates to be run
  *   and whose values contain the number of the first requested update for that
  *   module.
@@ -455,7 +452,7 @@ function update_get_update_list() {
  *
  * @see \Drupal\Component\Graph\Graph::searchAndSort()
  */
-function update_resolve_dependencies(array $starting_updates) {
+function update_resolve_dependencies($starting_updates) {
   // Obtain a dependency graph for the requested update functions.
   $update_functions = update_get_update_function_list($starting_updates);
   $graph = update_build_dependency_graph($update_functions);
@@ -495,7 +492,7 @@ function update_resolve_dependencies(array $starting_updates) {
 /**
  * Returns an organized list of update functions for a set of modules.
  *
- * @param array $starting_updates
+ * @param $starting_updates
  *   An array whose keys contain the names of modules and whose values contain
  *   the number of the first requested update for that module.
  *
@@ -508,7 +505,7 @@ function update_resolve_dependencies(array $starting_updates) {
  *
  * @see update_resolve_dependencies()
  */
-function update_get_update_function_list(array $starting_updates) {
+function update_get_update_function_list($starting_updates) {
   // Go through each module and find all updates that we need (including the
   // first update that was requested and any updates that run after it).
   $update_functions = [];
@@ -553,7 +550,7 @@ function update_get_update_function_list(array $starting_updates) {
  * modules which implement hook_update_dependencies(), and builds them into the
  * graph as well.
  *
- * @param array $update_functions
+ * @param $update_functions
  *   An organized array of update functions, in the format returned by
  *   update_get_update_function_list().
  *
@@ -574,7 +571,7 @@ function update_get_update_function_list(array $starting_updates) {
  * @see \Drupal\Component\Graph\Graph::searchAndSort()
  * @see update_resolve_dependencies()
  */
-function update_build_dependency_graph(array $update_functions) {
+function update_build_dependency_graph($update_functions) {
   // Initialize an array that will define a directed graph representing the
   // dependencies between update functions.
   $graph = [];
@@ -616,11 +613,11 @@ function update_build_dependency_graph(array $update_functions) {
 /**
  * Determines if a module update is missing or unavailable.
  *
- * @param string $module
+ * @param $module
  *   The name of the module.
- * @param int $number
+ * @param $number
  *   The number of the update within that module.
- * @param array $update_functions
+ * @param $update_functions
  *   An organized array of update functions, in the format returned by
  *   update_get_update_function_list(). This should represent all module
  *   updates that are requested to run at the time this function is called.
@@ -629,16 +626,16 @@ function update_build_dependency_graph(array $update_functions) {
  *   TRUE if the provided module update is not installed or is not in the
  *   provided list of updates to run; FALSE otherwise.
  */
-function update_is_missing($module, $number, array $update_functions) {
+function update_is_missing($module, $number, $update_functions) {
   return !isset($update_functions[$module][$number]) || !function_exists($update_functions[$module][$number]);
 }
 
 /**
  * Determines if a module update has already been performed.
  *
- * @param string $module
+ * @param $module
  *   The name of the module.
- * @param int $number
+ * @param $number
  *   The number of the update within that module.
  *
  * @return bool
