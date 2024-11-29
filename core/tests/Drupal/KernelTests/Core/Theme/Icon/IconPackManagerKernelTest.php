@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Core\Theme\Icon;
+namespace Drupal\KernelTests\Core\Theme\Icon;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Core\Theme\Icon\Exception\IconPackConfigErrorException;
