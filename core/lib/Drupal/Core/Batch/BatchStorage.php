@@ -128,28 +128,18 @@ class BatchStorage implements BatchStorageInterface {
   public function getId(): int {
     $event = new ExecuteMethodEnsuringSchemaEvent(
       function (): int {
-        return $this->doInsertBatchRecord();
+        return $this->connection->insert('batch')
+          ->fields([
+            'timestamp' => $this->time->getRequestTime(),
+            'token' => '',
+            'batch' => NULL,
+          ])
+          ->execute();
       },
       [static::TABLE_NAME => $this->schemaDefinition()],
     );
     $this->connection->dispatchEvent($event);
     return $event->getResult();
-  }
-
-  /**
-   * Inserts a record in the table and returns the batch id.
-   *
-   * @return int
-   *   A batch id.
-   */
-  public function doInsertBatchRecord(): int {
-    return $this->connection->insert('batch')
-      ->fields([
-        'timestamp' => $this->time->getRequestTime(),
-        'token' => '',
-        'batch' => NULL,
-      ])
-      ->execute();
   }
 
   /**
