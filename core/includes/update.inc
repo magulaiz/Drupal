@@ -11,7 +11,6 @@
 use Drupal\Component\Graph\Graph;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Utility\Error;
-use Drupal\Core\Update\EquivalentUpdate;
 
 /**
  * Returns whether the minimum schema requirement has been satisfied.
@@ -133,7 +132,7 @@ function _update_fix_missing_schema() {
  * foreach ($accounts as $account) {
  *   // Perform the update.
  *   // ...
- *   $messages[] = t('Updated account information for user %name', array('%name' => $account->name));
+ *   $messages[] = t('Updated account information for user %name', ['%name' => $account->name]);
  * }
  * return $messages;
  * @endcode
