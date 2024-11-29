@@ -221,7 +221,7 @@ class LoggerChannelTest extends UnitTestCase {
   /**
    * Data provider for self::testIsIgnoredLog().
    */
-  public static function providerTestIsIgnoredLog(): void {
+  public static function providerTestIsIgnoredLog(): array {
     // Full match.
     $cases['full_match'] = [
       [
