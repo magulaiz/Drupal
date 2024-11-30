@@ -469,6 +469,17 @@ class ExtensionDiscovery {
         if (empty($type)) {
           continue;
         }
+        $procedural_hooks = FALSE;
+        $file = $fileinfo->openFile('r');
+        while (!$procedural_hooks && !$file->eof()) {
+          preg_match('@^procedural_hooks:\s*(\'|")?(\w+)\1?\s*(?:\#.*)?$@', $file->fgets(), $matches);
+          if (isset($matches[2])) {
+            $procedural_hooks = $matches[2];
+          }
+        }
+        if (empty($procedural_hooks)) {
+          $procedural_hooks = 'scan';
+        }
         $name = $fileinfo->getBasename('.info.yml');
         $pathname = $dir_prefix . $fileinfo->getSubPathname();
 
@@ -489,6 +500,7 @@ class ExtensionDiscovery {
           'pathname' => $pathname,
           'filename' => $filename,
           'subpath' => $fileinfo->getSubPath(),
+          'procedural_hooks' => $procedural_hooks,
         ];
 
         if ($this->fileCache) {
