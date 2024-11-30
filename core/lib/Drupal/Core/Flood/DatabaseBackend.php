@@ -42,42 +42,22 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
     if (!isset($identifier)) {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
-    $try_again = FALSE;
-    try {
-      $this->doInsert($name, $window, $identifier);
-    }
-    catch (\Exception $e) {
-      $try_again = $this->ensureTableExists();
-      if (!$try_again) {
-        throw $e;
-      }
-    }
-    if ($try_again) {
-      $this->doInsert($name, $window, $identifier);
-    }
-  }
-
-  /**
-   * Inserts an event into the flood table.
-   *
-   * @param string $name
-   *   The name of an event.
-   * @param int $window
-   *   Number of seconds before this event expires.
-   * @param string $identifier
-   *   Unique identifier of the current user.
-   *
-   * @see \Drupal\Core\Flood\DatabaseBackend::register
-   */
-  protected function doInsert($name, $window, $identifier) {
-    $this->connection->insert(static::TABLE_NAME)
-      ->fields([
-        'event' => $name,
-        'identifier' => $identifier,
-        'timestamp' => $this->time->getRequestTime(),
-        'expiration' => $this->time->getRequestTime() + $window,
-      ])
-      ->execute();
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($name, $window, $identifier): int {
+        return $this->connection->insert(DatabaseBackend::TABLE_NAME)
+          ->fields([
+            'event' => $name,
+            'identifier' => $identifier,
+            'timestamp' => $this->time->getRequestTime(),
+            'expiration' => $this->time->getRequestTime() + $window,
+          ])
+          ->execute();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+      retryAfterSchemaEnsured: TRUE,
+    );
   }
 
   /**
@@ -87,30 +67,34 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
     if (!isset($identifier)) {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
-    try {
-      $this->connection->delete(static::TABLE_NAME)
-        ->condition('event', $name)
-        ->condition('identifier', $identifier)
-        ->execute();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($name, $identifier): void {
+        $this->connection->delete(DatabaseBackend::TABLE_NAME)
+          ->condition('event', $name)
+          ->condition('identifier', $identifier)
+          ->execute();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function clearByPrefix(string $name, string $prefix): void {
-    try {
-      $this->connection->delete(static::TABLE_NAME)
-        ->condition('event', $name)
-        ->condition('identifier', $prefix . '-%', 'LIKE')
-        ->execute();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($name, $prefix): void {
+        $this->connection->delete(DatabaseBackend::TABLE_NAME)
+          ->condition('event', $name)
+          ->condition('identifier', $prefix . '-%', 'LIKE')
+          ->execute();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
   }
 
   /**
@@ -120,74 +104,37 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
     if (!isset($identifier)) {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
-    try {
-      $number = $this->connection->select(static::TABLE_NAME, 'f')
-        ->condition('event', $name)
-        ->condition('identifier', $identifier)
-        ->condition('timestamp', $this->time->getRequestTime() - $window, '>')
-        ->countQuery()
-        ->execute()
-        ->fetchField();
-      return ($number < $threshold);
-    }
-    catch (\Exception $e) {
-      if (!$this->ensureTableExists()) {
-        throw $e;
-      }
-      return TRUE;
-    }
+    return $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($name, $window, $identifier): bool {
+        $number = $this->connection->select(DatabaseBackend::TABLE_NAME, 'f')
+          ->condition('event', $name)
+          ->condition('identifier', $identifier)
+          ->condition('timestamp', $this->time->getRequestTime() - $window, '>')
+          ->countQuery()
+          ->execute()
+          ->fetchField();
+        return ($number < $threshold);
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function garbageCollection() {
-    try {
-      $this->connection->delete(static::TABLE_NAME)
-        ->condition('expiration', $this->time->getRequestTime(), '<')
-        ->execute();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-    }
-  }
-
-  /**
-   * Check if the flood table exists and create it if not.
-   */
-  protected function ensureTableExists() {
-    try {
-      $database_schema = $this->connection->schema();
-      $schema_definition = $this->schemaDefinition();
-      $database_schema->createTable(static::TABLE_NAME, $schema_definition);
-    }
-    // If another process has already created the table, attempting to create
-    // it will throw an exception. In this case just catch the exception and do
-    // nothing.
-    catch (DatabaseException) {
-    }
-    catch (\Exception) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Act on an exception when flood might be stale.
-   *
-   * If the table does not yet exist, that's fine, but if the table exists and
-   * yet the query failed, then the flood is stale and the exception needs to
-   * propagate.
-   *
-   * @param $e
-   *   The exception.
-   *
-   * @throws \Exception
-   */
-  protected function catchException(\Exception $e) {
-    if ($this->connection->schema()->tableExists(static::TABLE_NAME)) {
-      throw $e;
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): void {
+        $this->connection->delete(DatabaseBackend::TABLE_NAME)
+          ->condition('expiration', $this->time->getRequestTime(), '<')
+          ->execute();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
   }
 
   /**
