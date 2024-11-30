@@ -509,6 +509,7 @@ class ExtensionDiscovery {
       }
 
       $extension = new Extension($this->root, $extension_arguments['type'], $extension_arguments['pathname'], $extension_arguments['filename']);
+      $extension->setProceduralScan($extension_arguments['procedural_hooks']);
 
       // Track the originating directory for sorting purposes.
       $extension->subpath = $extension_arguments['subpath'];
