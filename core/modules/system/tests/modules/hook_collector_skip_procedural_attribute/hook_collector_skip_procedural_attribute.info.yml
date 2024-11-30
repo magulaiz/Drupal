@@ -1,6 +1,6 @@
-name: 'Test Hooks on behalf of other modules'
+name: 'Test skipping procedural for part of the module'
 type: module
-description: 'Test hooks invoked on behalf of other modules when installed later.'
+description: 'Test skipping procedural for part of the module.'
 package: Testing
 version: VERSION
 procedural_hooks: scan
