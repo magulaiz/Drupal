@@ -139,9 +139,8 @@ class HookCollectorPass implements CompilerPassInterface {
     usort($modules, fn($a, $b) => strlen($b) - strlen($a));
     $module_preg = '/^(?<function>(?<module>' . implode('|', $modules) . ')_(?!preprocess_)(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
     $collector = new static();
-    file_put_contents('/tmp/log', print_r($module_filenames, TRUE));
     foreach ($module_filenames as $module => $info) {
-      $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, 'scan');
+      $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, $info['procedural_hooks']);
     }
     return $collector;
   }
@@ -161,7 +160,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *
    * @return void
    */
-  protected function collectModuleHookImplementations($dir, $module, $module_preg, $procedural_hook_status): void {
+  protected function collectModuleHookImplementations($dir, $module, $module_preg, $process_procedural_hooks): void {
     $hook_file_cache = FileCacheFactory::get('hook_implementations');
     $procedural_hook_file_cache = FileCacheFactory::get('procedural_hook_implementations:' . $module_preg);
 
@@ -203,7 +202,7 @@ class HookCollectorPass implements CompilerPassInterface {
       }
       else {
         $implementations = $procedural_hook_file_cache->get($filename);
-        if ($implementations === NULL && ExtensionHookStatus::SCAN) {
+        if ($implementations === NULL && $process_procedural_hooks == ExtensionHookStatus::SCAN) {
           $finder = MockFileFinder::create($filename);
           $parser = new StaticReflectionParser('', $finder);
           $implementations = [];
@@ -216,6 +215,9 @@ class HookCollectorPass implements CompilerPassInterface {
             }
           }
           $procedural_hook_file_cache->set($filename, $implementations);
+        }
+        else {
+          $procedural_hook_file_cache->set($filename, $implementations = []);
         }
         foreach ($implementations as $implementation) {
           $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module'], $implementation['function']);

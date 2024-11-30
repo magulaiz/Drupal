@@ -24,21 +24,4 @@ final class ExtensionHookStatus {
    */
   const SKIP = 'skip';
 
-  /**
-   * Determines if a given extension hook status is valid.
-   *
-   * @param bool $procedural_hooks
-   *   The procedural_hooks to validate.
-   *
-   * @return bool
-   *   TRUE if the procedural_hooks value is valid, otherwise FALSE.
-   */
-  public static function isValid(string $procedural_hooks) : bool {
-    $valid_values = [
-      self::SCAN,
-      self::SKIP,
-    ];
-    return in_array($procedural_hooks, $valid_values, TRUE);
-  }
-
 }
