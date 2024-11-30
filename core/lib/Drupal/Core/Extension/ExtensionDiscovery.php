@@ -459,24 +459,30 @@ class ExtensionDiscovery {
       if (empty($extension_arguments) || !is_array($extension_arguments)) {
         // Determine extension type from info file.
         $type = FALSE;
+        $procedural_hooks = FALSE;
         $file = $fileinfo->openFile('r');
-        while (!$type && !$file->eof()) {
-          preg_match('@^type:\s*(\'|")?(\w+)\1?\s*(?:\#.*)?$@', $file->fgets(), $matches);
-          if (isset($matches[2])) {
-            $type = $matches[2];
+        while ((!$type || !$procedural_hooks) && !$file->eof()) {
+          $line = $file->fgets();
+
+          if (!$type) {
+            preg_match('@^type:\s*(\'|")?(\w+)\1?\s*(?:\#.*)?$@', $line, $matches);
+            if (isset($matches[2])) {
+              $type = $matches[2];
+            }
+          }
+
+          if (!$procedural_hooks) {
+            preg_match('@^procedural_hooks:\s*(\'|")?(\w+)\1?\s*(?:\#.*)?$@', $line, $matches);
+            if (isset($matches[2])) {
+              $procedural_hooks = $matches[2];
+            }
           }
         }
+
         if (empty($type)) {
           continue;
         }
-        $procedural_hooks = FALSE;
-        $file = $fileinfo->openFile('r');
-        while (!$procedural_hooks && !$file->eof()) {
-          preg_match('@^procedural_hooks:\s*(\'|")?(\w+)\1?\s*(?:\#.*)?$@', $file->fgets(), $matches);
-          if (isset($matches[2])) {
-            $procedural_hooks = $matches[2];
-          }
-        }
+
         if (empty($procedural_hooks)) {
           $procedural_hooks = 'scan';
         }
