@@ -459,32 +459,15 @@ class ExtensionDiscovery {
       if (empty($extension_arguments) || !is_array($extension_arguments)) {
         // Determine extension type from info file.
         $type = FALSE;
-        $procedural_hooks = FALSE;
         $file = $fileinfo->openFile('r');
-        while ((!$type || !$procedural_hooks) && !$file->eof()) {
-          $line = $file->fgets();
-
-          if (!$type) {
-            preg_match('@^type:\s*(\'|")?(\w+)\1?\s*(?:\#.*)?$@', $line, $matches);
-            if (isset($matches[2])) {
-              $type = $matches[2];
-            }
-          }
-
-          if (!$procedural_hooks) {
-            preg_match('@^procedural_hooks:\s*(\'|")?(\w+)\1?\s*(?:\#.*)?$@', $line, $matches);
-            if (isset($matches[2])) {
-              $procedural_hooks = $matches[2];
-            }
+        while (!$type && !$file->eof()) {
+          preg_match('@^type:\s*(\'|")?(\w+)\1?\s*(?:\#.*)?$@', $file->fgets(), $matches);
+          if (isset($matches[2])) {
+            $type = $matches[2];
           }
         }
-
         if (empty($type)) {
           continue;
-        }
-
-        if (empty($procedural_hooks)) {
-          $procedural_hooks = 'scan';
         }
         $name = $fileinfo->getBasename('.info.yml');
         $pathname = $dir_prefix . $fileinfo->getSubPathname();
@@ -506,7 +489,6 @@ class ExtensionDiscovery {
           'pathname' => $pathname,
           'filename' => $filename,
           'subpath' => $fileinfo->getSubPath(),
-          'procedural_hooks' => $procedural_hooks,
         ];
 
         if ($this->fileCache) {
@@ -515,7 +497,6 @@ class ExtensionDiscovery {
       }
 
       $extension = new Extension($this->root, $extension_arguments['type'], $extension_arguments['pathname'], $extension_arguments['filename']);
-      $extension->setProceduralScan($extension_arguments['procedural_hooks']);
 
       // Track the originating directory for sorting purposes.
       $extension->subpath = $extension_arguments['subpath'];

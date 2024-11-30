@@ -3,4 +3,3 @@ type: module
 description: Displays announcements from the Drupal community.
 version: VERSION
 package: Core
-procedural_hooks: skip

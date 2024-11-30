@@ -225,24 +225,4 @@ class Extension {
         && $this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE);
   }
 
-  /**
-   * Sets procedural value.
-   *
-   * @param string $scan
-   *   Should the module be scanned for procedural hooks.
-   */
-  public function setProceduralScan(string $scan): void {
-    $this->info[ExtensionHookStatus::PROCEDURAL_HOOKS] = $scan;
-  }
-
-  /**
-   * Checks if an extension should skip procedural hooks.
-   *
-   * @return string
-   *   FALSE if an extension has procedural hooks, TRUE otherwise.
-   */
-  public function scanProceduralHooks(): string {
-    return $this->info[ExtensionHookStatus::PROCEDURAL_HOOKS] ?? 'scan';
-  }
-
 }

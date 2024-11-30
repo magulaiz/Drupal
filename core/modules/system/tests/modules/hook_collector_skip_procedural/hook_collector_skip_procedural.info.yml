@@ -3,4 +3,3 @@ type: module
 description: 'Test skipping procedural for whole module.'
 package: Testing
 version: VERSION
-procedural_hooks: skip

@@ -4,4 +4,3 @@ description: 'Allows importing and exporting configuration changes.'
 package: Core
 version: VERSION
 configure: config.sync
-procedural_hooks: skip

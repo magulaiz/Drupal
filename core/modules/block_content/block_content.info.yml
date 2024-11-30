@@ -8,4 +8,3 @@ dependencies:
   - drupal:text
   - drupal:user
 configure: entity.block_content.collection
-procedural_hooks: skip

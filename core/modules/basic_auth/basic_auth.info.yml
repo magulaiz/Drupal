@@ -5,4 +5,3 @@ package: Web services
 version: VERSION
 dependencies:
   - drupal:user
-procedural_hooks: skip
