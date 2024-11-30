@@ -41,7 +41,7 @@ class BatchStorage implements BatchStorageInterface {
     // Ensure that a session is started before using the CSRF token generator.
     $this->session->start();
     $batch = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($id): array|FALSE {
+      execute: function () use ($id): string|FALSE {
         return $this->connection->select('batch', 'b')
           ->fields('b', ['batch'])
           ->condition('bid', $id)
