@@ -53251,7 +53251,7 @@ $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function views_entity_field_label\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/views/views.views.inc',
+	'path' => __DIR__ . '/modules/views/views.module',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return

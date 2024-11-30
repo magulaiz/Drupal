@@ -5,6 +5,7 @@
  */
 
 use Drupal\content_moderation\ContentPreprocess;
+use Drupal\content_moderation\ViewsData;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -13,4 +14,17 @@ function content_moderation_preprocess_node(&$variables): void {
   \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(ContentPreprocess::class)
     ->preprocessNode($variables);
+}
+
+/**
+ * Creates a ViewsData object to respond to views hooks.
+ *
+ * @return \Drupal\content_moderation\ViewsData
+ *   The content moderation ViewsData object.
+ */
+function _content_moderation_views_data_object() {
+  return new ViewsData(
+    \Drupal::service('entity_type.manager'),
+    \Drupal::service('content_moderation.moderation_information')
+  );
 }
