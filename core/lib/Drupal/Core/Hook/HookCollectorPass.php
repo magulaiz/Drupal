@@ -140,7 +140,8 @@ class HookCollectorPass implements CompilerPassInterface {
     $module_preg = '/^(?<function>(?<module>' . implode('|', $modules) . ')_(?!preprocess_)(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
     $collector = new static();
     foreach ($module_filenames as $module => $info) {
-      $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, $info['procedural_hooks']);
+      $process_procedural_hooks = $info['procedural_hooks'] ?? 'scan';
+      $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, $process_procedural_hooks);
     }
     return $collector;
   }
