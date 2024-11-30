@@ -40,171 +40,178 @@ class ViewsViewsHooks {
    */
   #[Hook('views_data')]
   public function viewsData(): array {
-  $data['views']['table']['group'] = t('Global');
-  $data['views']['table']['join'] = ['#global' => []];
-  $data['views']['random'] = [
-    'title' => t('Random'),
-    'help' => t('Randomize the display order.'),
-    'sort' => [
-      'id' => 'random',
-    ],
-  ];
-  $data['views']['null'] = [
-    'title' => t('Null'),
-    'help' => t('Allow a contextual filter value to be ignored. The query will not be altered by this contextual filter value. Can be used when contextual filter values come from the URL, and a part of the URL needs to be ignored.'),
-    'argument' => [
-      'id' => 'null',
-    ],
-  ];
-  $data['views']['nothing'] = [
-    'title' => t('Custom text'),
-    'help' => t('Provide custom text or link.'),
-    'field' => [
-      'id' => 'custom',
-      'click sortable' => FALSE,
-    ],
-  ];
-  $data['views']['counter'] = [
-    'title' => t('View result counter'),
-    'help' => t('Displays the actual position of the view result'),
-    'field' => [
-      'id' => 'counter',
-    ],
-  ];
-  $data['views']['area'] = [
-    'title' => t('Text area'),
-    'help' => t('Provide markup for the area using any available text format.'),
-    'area' => [
-      'id' => 'text',
-    ],
-  ];
-  $data['views']['area_text_custom'] = [
-    'title' => t('Unfiltered text'),
-    'help' => t('Provide markup for the area with minimal filtering.'),
-    'area' => [
-      'id' => 'text_custom',
-    ],
-  ];
-  $data['views']['title'] = [
-    'title' => t('Title override'),
-    'help' => t('Override the default view title for this view. This is useful to display an alternative title when a view is empty.'),
-    'area' => [
-      'id' => 'title',
-      'sub_type' => 'empty',
-    ],
-  ];
-  $data['views']['view'] = [
-    'title' => t('View area'),
-    'help' => t('Insert a view inside an area.'),
-    'area' => [
-      'id' => 'view',
-    ],
-  ];
-  $data['views']['result'] = [
-    'title' => t('Result summary'),
-    'help' => t('Shows result summary, for example the items per page.'),
-    'area' => [
-      'id' => 'result',
-    ],
-  ];
-  $data['views']['messages'] = [
-    'title' => t('Messages'),
-    'help' => t('Displays messages in an area.'),
-    'area' => [
-      'id' => 'messages',
-    ],
-  ];
-  $data['views']['http_status_code'] = [
-    'title' => t('Response status code'),
-    'help' => t('Alter the HTTP response status code used by this view, mostly helpful for empty results.'),
-    'area' => [
-      'id' => 'http_status_code',
-    ],
-  ];
-  $data['views']['combine'] = [
-    'title' => t('Combine fields filter'),
-    'help' => t('Combine multiple fields together and search by them.'),
-    'filter' => [
-      'id' => 'combine',
-    ],
-  ];
-  $data['views']['dropbutton'] = [
-    'title' => t('Dropbutton'),
-    'help' => t('Display fields in a dropbutton.'),
-    'field' => [
-      'id' => 'dropbutton',
-    ],
-  ];
-  $data['views']['display_link'] = [
-    'title' => t('Link to display'),
-    'help' => t('Displays a link to a path-based display of this view while keeping the filter criteria, sort criteria, pager settings and contextual filters.'),
-    'area' => [
-      'id' => 'display_link',
-    ],
-  ];
-  // Registers an entity area handler per entity type.
-  foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
-    // Excludes entity types, which cannot be rendered.
-    if ($entity_type->hasViewBuilderClass()) {
-      $label = $entity_type->getLabel();
-      $data['views']['entity_' . $entity_type_id] = [
-        'title' => t('Rendered entity - @label', [
-          '@label' => $label,
-        ]),
-        'help' => t('Displays a rendered @label entity in an area.', [
-          '@label' => $label,
-        ]),
-        'area' => [
-          'entity_type' => $entity_type_id,
-          'id' => 'entity',
+    $data['views']['table']['group'] = t('Global');
+    $data['views']['table']['join'] = ['#global' => []];
+    $data['views']['random'] = [
+      'title' => t('Random'),
+      'help' => t('Randomize the display order.'),
+      'sort' => [
+        'id' => 'random',
+      ],
+    ];
+    $data['views']['null'] = [
+      'title' => t('Null'),
+      'help' => t('Allow a contextual filter value to be ignored. The query will not be altered by this contextual filter value. Can be used when contextual filter values come from the URL, and a part of the URL needs to be ignored.'),
+      'argument' => [
+        'id' => 'null',
+      ],
+    ];
+    $data['views']['nothing'] = [
+      'title' => t('Custom text'),
+      'help' => t('Provide custom text or link.'),
+      'field' => [
+        'id' => 'custom',
+        'click sortable' => FALSE,
+      ],
+    ];
+    $data['views']['counter'] = [
+      'title' => t('View result counter'),
+      'help' => t('Displays the actual position of the view result'),
+      'field' => [
+        'id' => 'counter',
+      ],
+    ];
+    $data['views']['area'] = [
+      'title' => t('Text area'),
+      'help' => t('Provide markup for the area using any available text format.'),
+      'area' => [
+        'id' => 'text',
+      ],
+    ];
+    $data['views']['area_text_custom'] = [
+      'title' => t('Unfiltered text'),
+      'help' => t('Provide markup for the area with minimal filtering.'),
+      'area' => [
+        'id' => 'text_custom',
+      ],
+    ];
+    $data['views']['title'] = [
+      'title' => t('Title override'),
+      'help' => t('Override the default view title for this view. This is useful to display an alternative title when a view is empty.'),
+      'area' => [
+        'id' => 'title',
+        'sub_type' => 'empty',
+      ],
+    ];
+    $data['views']['view'] = [
+      'title' => t('View area'),
+      'help' => t('Insert a view inside an area.'),
+      'area' => [
+        'id' => 'view',
+      ],
+    ];
+    $data['views']['result'] = [
+      'title' => t('Result summary'),
+      'help' => t('Shows result summary, for example the items per page.'),
+      'area' => [
+        'id' => 'result',
+      ],
+    ];
+    $data['views']['messages'] = [
+      'title' => t('Messages'),
+      'help' => t('Displays messages in an area.'),
+      'area' => [
+        'id' => 'messages',
+      ],
+    ];
+    $data['views']['http_status_code'] = [
+      'title' => t('Response status code'),
+      'help' => t('Alter the HTTP response status code used by this view, mostly helpful for empty results.'),
+      'area' => [
+        'id' => 'http_status_code',
+      ],
+    ];
+    $data['views']['combine'] = [
+      'title' => t('Combine fields filter'),
+      'help' => t('Combine multiple fields together and search by them.'),
+      'filter' => [
+        'id' => 'combine',
+      ],
+    ];
+    $data['views']['dropbutton'] = [
+      'title' => t('Dropbutton'),
+      'help' => t('Display fields in a dropbutton.'),
+      'field' => [
+        'id' => 'dropbutton',
+      ],
+    ];
+    $data['views']['display_link'] = [
+      'title' => t('Link to display'),
+      'help' => t('Displays a link to a path-based display of this view while keeping the filter criteria, sort criteria, pager settings and contextual filters.'),
+      'area' => [
+        'id' => 'display_link',
+      ],
+    ];
+    // Registers an entity area handler per entity type.
+    foreach (\Drupal::entityTypeManager()
+      ->getDefinitions() as $entity_type_id => $entity_type) {
+      // Excludes entity types, which cannot be rendered.
+      if ($entity_type->hasViewBuilderClass()) {
+        $label = $entity_type->getLabel();
+        $data['views']['entity_' . $entity_type_id] = [
+          'title' => t('Rendered entity - @label', [
+            '@label' => $label,
+          ]),
+          'help' => t('Displays a rendered @label entity in an area.', [
+            '@label' => $label,
+          ]),
+          'area' => [
+            'entity_type' => $entity_type_id,
+            'id' => 'entity',
+          ],
+        ];
+      }
+    }
+    // Registers an action bulk form per entity.
+    foreach (\Drupal::entityTypeManager()
+      ->getDefinitions() as $entity_type => $entity_info) {
+      $actions = array_filter(\Drupal::entityTypeManager()
+        ->getStorage('action')
+        ->loadMultiple(), function(ActionConfigEntityInterface $action) use ($entity_type) {
+        return $action->getType() == $entity_type;
+      });
+      if (empty($actions)) {
+        continue;
+      }
+      $data[$entity_info->getBaseTable()][$entity_type . '_bulk_form'] = [
+        'title' => t('Bulk update'),
+        'help' => t('Allows users to apply an action to one or more items.'),
+        'field' => [
+          'id' => 'bulk_form',
         ],
       ];
     }
-  }
-  // Registers an action bulk form per entity.
-  foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $entity_info) {
-    $actions = array_filter(\Drupal::entityTypeManager()->getStorage('action')->loadMultiple(), function (ActionConfigEntityInterface $action) use ($entity_type) {
-      return $action->getType() == $entity_type;
-    });
-    if (empty($actions)) {
-      continue;
+    // Registers views data for the entity itself.
+    foreach (\Drupal::entityTypeManager()
+      ->getDefinitions() as $entity_type_id => $entity_type) {
+      if ($entity_type->hasHandlerClass('views_data')) {
+        /** @var \Drupal\views\EntityViewsDataInterface $views_data */
+        $views_data = \Drupal::entityTypeManager()
+          ->getHandler($entity_type_id, 'views_data');
+        $data = NestedArray::mergeDeep($data, $views_data->getViewsData());
+      }
     }
-    $data[$entity_info->getBaseTable()][$entity_type . '_bulk_form'] = [
-      'title' => t('Bulk update'),
-      'help' => t('Allows users to apply an action to one or more items.'),
-      'field' => [
-        'id' => 'bulk_form',
-      ],
-    ];
-  }
-  // Registers views data for the entity itself.
-  foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
-    if ($entity_type->hasHandlerClass('views_data')) {
-      /** @var \Drupal\views\EntityViewsDataInterface $views_data */
-      $views_data = \Drupal::entityTypeManager()->getHandler($entity_type_id, 'views_data');
-      $data = NestedArray::mergeDeep($data, $views_data->getViewsData());
-    }
-  }
-  // Field modules can implement hook_field_views_data() to override the default
-  // behavior for adding fields.
-  $module_handler = \Drupal::moduleHandler();
-  $entity_type_manager = \Drupal::entityTypeManager();
-  if ($entity_type_manager->hasDefinition('field_storage_config')) {
-    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
-    foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
-      if (_views_field_get_entity_type_storage($field_storage)) {
-        $provider = $field_storage->getTypeProvider();
-        $result = (array) $module_handler->invoke($provider === 'core' ? 'views' : $provider, 'field_views_data', [$field_storage]);
-        if (empty($result)) {
-          $result = views_field_default_views_data($field_storage);
-        }
-        $module_handler->alter('field_views_data', $result, $field_storage);
-        if (is_array($result)) {
-          $data = NestedArray::mergeDeep($result, $data);
+    // Field modules can implement hook_field_views_data() to override the default
+    // behavior for adding fields.
+    $module_handler = \Drupal::moduleHandler();
+    $entity_type_manager = \Drupal::entityTypeManager();
+    if ($entity_type_manager->hasDefinition('field_storage_config')) {
+      /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
+      foreach ($entity_type_manager->getStorage('field_storage_config')
+        ->loadMultiple() as $field_storage) {
+        if (_views_field_get_entity_type_storage($field_storage)) {
+          $provider = $field_storage->getTypeProvider();
+          $result = (array) $module_handler->invoke($provider === 'core' ? 'views' : $provider, 'field_views_data', [$field_storage]);
+          if (empty($result)) {
+            $result = views_field_default_views_data($field_storage);
+          }
+          $module_handler->alter('field_views_data', $result, $field_storage);
+          if (is_array($result)) {
+            $data = NestedArray::mergeDeep($result, $data);
+          }
         }
       }
     }
-  }
   return $data;
 }
 
