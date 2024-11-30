@@ -227,8 +227,11 @@ class Extension {
 
   /**
    * Sets procedural value.
+   *
+   * @param string $scan
+   *   Should the module be scanned for procedural hooks.
    */
-  public function setProceduralScan(string $scan) {
+  public function setProceduralScan(string $scan): void {
     $this->info[ExtensionHookStatus::PROCEDURAL_HOOKS] = $scan;
   }
 

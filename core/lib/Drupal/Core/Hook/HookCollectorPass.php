@@ -155,7 +155,7 @@ class HookCollectorPass implements CompilerPassInterface {
    * @param $module_preg
    *   A regular expression matching every module, longer module names are
    *   matched first.
-   * @param $procedural_hook_status
+   * @param $process_procedural_hooks
    *   Whether HookCollectorPass should scan for procedural hooks.
    *
    * @return void
