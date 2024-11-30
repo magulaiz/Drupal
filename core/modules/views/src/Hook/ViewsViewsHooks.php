@@ -142,7 +142,7 @@ class ViewsViewsHooks {
     // Registers an action bulk form per entity.
     foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $entity_info) {
       $actions = array_filter(\Drupal::entityTypeManager()->getStorage('action')->loadMultiple(), function (ActionConfigEntityInterface $action) use ($entity_type) {
-        return $action->getType() == $entity_type;
+          return $action->getType() == $entity_type;
       });
       if (empty($actions)) {
         continue;
@@ -272,11 +272,11 @@ class ViewsViewsHooks {
           'field table' => $table_mapping->getDedicatedDataTableName($field_storage),
           'field field' => $field_name . '_target_id',
           'join_extra' => [
-            [
-              'field' => 'deleted',
-              'value' => 0,
-              'numeric' => TRUE,
-            ],
+                  [
+                    'field' => 'deleted',
+                    'value' => 0,
+                    'numeric' => TRUE,
+                  ],
           ],
         ];
       }
