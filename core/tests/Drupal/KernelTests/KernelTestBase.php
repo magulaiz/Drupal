@@ -9,7 +9,6 @@ use Drupal\Component\FileCache\FileCache;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\EventSubscriber\SchemaRequestSubscriber;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DrupalKernel;
@@ -554,9 +553,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $container
       ->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory')
       ->addArgument(new Reference('datetime.time'));
-    $container
-      ->get('event_dispatcher')
-      ->addSubscriber(new SchemaRequestSubscriber($container->get('database')));
 
     // Disable the super user access policy so that we are sure our tests check
     // for the right permissions.
