@@ -77,7 +77,7 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
    * @param array $expected_results
    *   Render result using these display settings.
    */
-  public function checkInternalLinksRender(array $display_settings, array $expected_results): void {
+  protected function checkInternalLinksRender(array $display_settings, array $expected_results): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
@@ -103,7 +103,7 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
    * @return array
    *   The URLs to test.
    */
-  public static function getTestingUrls(): array {
+  protected function getTestingUrls(): array {
     return [
       [
         'input' => 'internal:?a[]=1&a[]=2',
@@ -151,44 +151,44 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
    * @return array
    *   Test cases.
    */
-  public static function getTestCases(): array {
+  protected function getTestCases(): array {
     $cases = [];
     $cases['default settings'] = [
       'display settings' => [],
       'results' => array_map(function ($values) {
         return '<a href="' . $values['expected_href'] . '">' . $values['expected_href'] . '</a>';
-      }, self::getTestingUrls()),
+      }, $this->getTestingUrls()),
     ];
     $cases['trim title to 6'] = [
       'display settings' => ['trim_length' => 6],
       'results' => array_map(function ($values) {
         $title = Unicode::truncate($values['expected_href'], 6, FALSE, TRUE);
         return '<a href="' . $values['expected_href'] . '">' . $title . '</a>';
-      }, self::getTestingUrls()),
+      }, $this->getTestingUrls()),
     ];
     $cases['attribute rel'] = [
       'display settings' => ['rel' => 'nofollow'],
       'results' => array_map(function ($values) {
         return '<a href="' . $values['expected_href'] . '" rel="nofollow">' . $values['expected_href'] . '</a>';
-      }, self::getTestingUrls()),
+      }, $this->getTestingUrls()),
     ];
     $cases['attribute target'] = [
       'display settings' => ['target' => '_blank'],
       'results' => array_map(function ($values) {
         return '<a href="' . $values['expected_href'] . '" target="_blank">' . $values['expected_href'] . '</a>';
-      }, self::getTestingUrls()),
+      }, $this->getTestingUrls()),
     ];
     $cases['url_only'] = [
       'display settings' => ['url_only' => TRUE],
       'results' => array_map(function ($values) {
         return '<a href="' . $values['expected_href'] . '">' . $values['expected_href'] . '</a>';
-      }, self::getTestingUrls()),
+      }, $this->getTestingUrls()),
     ];
     $cases['url_only and url_plain'] = [
       'display settings' => ['url_only' => TRUE, 'url_plain' => TRUE],
       'results' => array_map(function ($values) {
         return $values['expected_href'];
-      }, self::getTestingUrls()),
+      }, $this->getTestingUrls()),
     ];
 
     return $cases;
@@ -200,9 +200,9 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
    * @return array
    *   Values to use at link field setter.
    */
-  public static function getLinkFieldsValues(): array {
+  protected function getLinkFieldsValues(): array {
     $links = [];
-    foreach (self::getTestingUrls() as $key => $test_url) {
+    foreach ($this->getTestingUrls() as $key => $test_url) {
       $links[$key] = [
         'uri' => $test_url['input'],
       ];
