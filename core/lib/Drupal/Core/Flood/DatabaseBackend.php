@@ -4,7 +4,6 @@ namespace Drupal\Core\Flood;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\DatabaseException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -105,7 +104,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
     return $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($name, $window, $identifier): bool {
+      execute: function () use ($name, $threshold, $window, $identifier): bool {
         $number = $this->connection->select(DatabaseBackend::TABLE_NAME, 'f')
           ->condition('event', $name)
           ->condition('identifier', $identifier)
