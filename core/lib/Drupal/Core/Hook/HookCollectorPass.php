@@ -199,23 +199,25 @@ class HookCollectorPass implements CompilerPassInterface {
       }
       else {
         $implementations = $procedural_hook_file_cache->get($filename);
-        $skip_procedural = file_exists("$dir/$module.skip.yml");
-        if ($implementations === NULL && !$skip_procedural) {
-          $finder = MockFileFinder::create($filename);
-          $parser = new StaticReflectionParser('', $finder);
-          $implementations = [];
-          foreach ($parser->getMethodAttributes() as $function => $attributes) {
-            if (StaticReflectionParser::hasAttribute($attributes, StopProceduralHookScan::class)) {
-              break;
+        if ($implementations === NULL) {
+          $skip_procedural = file_exists("$dir/$module.skip.yml");
+          if (!$skip_procedural) {
+            $finder = MockFileFinder::create($filename);
+            $parser = new StaticReflectionParser('', $finder);
+            $implementations = [];
+            foreach ($parser->getMethodAttributes() as $function => $attributes) {
+              if (StaticReflectionParser::hasAttribute($attributes, StopProceduralHookScan::class)) {
+                break;
+              }
+              if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches)) {
+                $implementations[] = ['function' => $function, 'module' => $matches['module'], 'hook' => $matches['hook']];
+              }
             }
-            if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches)) {
-              $implementations[] = ['function' => $function, 'module' => $matches['module'], 'hook' => $matches['hook']];
-            }
+            $procedural_hook_file_cache->set($filename, $implementations);
           }
-          $procedural_hook_file_cache->set($filename, $implementations);
-        }
-        else {
-          $procedural_hook_file_cache->set($filename, $implementations = []);
+          else {
+            $procedural_hook_file_cache->set($filename, $implementations = []);
+          }
         }
         foreach ($implementations as $implementation) {
           $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module'], $implementation['function']);
