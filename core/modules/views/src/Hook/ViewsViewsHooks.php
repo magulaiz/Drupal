@@ -14,28 +14,6 @@ use Drupal\Core\Hook\Attribute\Hook;
 class ViewsViewsHooks {
 
   /**
-   * Implements hook_views_data_alter().
-   *
-   * Field modules can implement hook_field_views_data_views_data_alter() to
-   * alter the views data on a per field basis. This is weirdly named so as
-   * not to conflict with the \Drupal::moduleHandler()->alter('field_views_data')
-   * in views_views_data().
-   */
-  #[Hook('views_data_alter')]
-  public function viewsDataAlter(&$data): void {
-    $entity_type_manager = \Drupal::entityTypeManager();
-    if (!$entity_type_manager->hasDefinition('field_storage_config')) {
-      return;
-    }
-    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
-    foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
-      if (_views_field_get_entity_type_storage($field_storage)) {
-        \Drupal::moduleHandler()->invoke($field_storage->getTypeProvider(), 'field_views_data_views_data_alter', [&$data, $field_storage]);
-      }
-    }
-  }
-
-  /**
    * Implements hook_views_data().
    */
   #[Hook('views_data')]
@@ -143,8 +121,7 @@ class ViewsViewsHooks {
       ],
     ];
     // Registers an entity area handler per entity type.
-    foreach (\Drupal::entityTypeManager()
-      ->getDefinitions() as $entity_type_id => $entity_type) {
+    foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
       // Excludes entity types, which cannot be rendered.
       if ($entity_type->hasViewBuilderClass()) {
         $label = $entity_type->getLabel();
@@ -163,11 +140,8 @@ class ViewsViewsHooks {
       }
     }
     // Registers an action bulk form per entity.
-    foreach (\Drupal::entityTypeManager()
-      ->getDefinitions() as $entity_type => $entity_info) {
-      $actions = array_filter(\Drupal::entityTypeManager()
-        ->getStorage('action')
-        ->loadMultiple(), function(ActionConfigEntityInterface $action) use ($entity_type) {
+    foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $entity_info) {
+      $actions = array_filter(\Drupal::entityTypeManager()->getStorage('action')->loadMultiple(), function (ActionConfigEntityInterface $action) use ($entity_type) {
         return $action->getType() == $entity_type;
       });
       if (empty($actions)) {
@@ -182,12 +156,10 @@ class ViewsViewsHooks {
       ];
     }
     // Registers views data for the entity itself.
-    foreach (\Drupal::entityTypeManager()
-      ->getDefinitions() as $entity_type_id => $entity_type) {
+    foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
       if ($entity_type->hasHandlerClass('views_data')) {
         /** @var \Drupal\views\EntityViewsDataInterface $views_data */
-        $views_data = \Drupal::entityTypeManager()
-          ->getHandler($entity_type_id, 'views_data');
+        $views_data = \Drupal::entityTypeManager()->getHandler($entity_type_id, 'views_data');
         $data = NestedArray::mergeDeep($data, $views_data->getViewsData());
       }
     }
@@ -197,8 +169,7 @@ class ViewsViewsHooks {
     $entity_type_manager = \Drupal::entityTypeManager();
     if ($entity_type_manager->hasDefinition('field_storage_config')) {
       /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
-      foreach ($entity_type_manager->getStorage('field_storage_config')
-        ->loadMultiple() as $field_storage) {
+      foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
         if (_views_field_get_entity_type_storage($field_storage)) {
           $provider = $field_storage->getTypeProvider();
           $result = (array) $module_handler->invoke($provider === 'core' ? 'views' : $provider, 'field_views_data', [$field_storage]);
@@ -212,8 +183,30 @@ class ViewsViewsHooks {
         }
       }
     }
-  return $data;
-}
+    return $data;
+  }
+
+  /**
+   * Implements hook_views_data_alter().
+   *
+   * Field modules can implement hook_field_views_data_views_data_alter() to
+   * alter the views data on a per field basis. This is weirdly named so as
+   * not to conflict with the \Drupal::moduleHandler()->alter('field_views_data')
+   * in views_views_data().
+   */
+  #[Hook('views_data_alter')]
+  public function viewsDataAlter(&$data): void {
+    $entity_type_manager = \Drupal::entityTypeManager();
+    if (!$entity_type_manager->hasDefinition('field_storage_config')) {
+      return;
+    }
+    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
+    foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
+      if (_views_field_get_entity_type_storage($field_storage)) {
+        \Drupal::moduleHandler()->invoke($field_storage->getTypeProvider(), 'field_views_data_views_data_alter', [&$data, $field_storage]);
+      }
+    }
+  }
 
   /**
    * Implements hook_field_views_data().
@@ -279,11 +272,11 @@ class ViewsViewsHooks {
           'field table' => $table_mapping->getDedicatedDataTableName($field_storage),
           'field field' => $field_name . '_target_id',
           'join_extra' => [
-                  [
-                    'field' => 'deleted',
-                    'value' => 0,
-                    'numeric' => TRUE,
-                  ],
+            [
+              'field' => 'deleted',
+              'value' => 0,
+              'numeric' => TRUE,
+            ],
           ],
         ];
       }
