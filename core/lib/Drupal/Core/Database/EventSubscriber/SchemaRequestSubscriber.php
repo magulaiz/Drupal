@@ -27,10 +27,10 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
   }
 
   public function onExecuteMethodEnsuringSchema(ExecuteMethodEnsuringSchemaEvent $event): void {
-    $callMethod = $event->execute;
     $tryAgain = FALSE;
     try {
-      $event->setResult($callMethod());
+      $event->returnValue = ($event->execute)();
+      $event->setResult(TRUE);
     }
     catch (\Exception $e) {
       // If there was an exception, try to create the table.
@@ -43,7 +43,8 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
     }
     // Now that the table has been created, try again if necessary.
     if ($event->retryAfterSchemaEnsured && $tryAgain) {
-      $event->setResult($callMethod());
+      $event->returnValue = ($event->execute)();
+      $event->setResult(TRUE);
     }
   }
 

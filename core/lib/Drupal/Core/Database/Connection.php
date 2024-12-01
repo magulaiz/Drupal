@@ -1613,8 +1613,13 @@ abstract class Connection {
     return debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
   }
 
-  public function executeEnsuringSchemaOnFailure(\Closure $execute, array $schema, bool $retryAfterSchemaEnsured = FALSE): mixed {
-    $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $retryAfterSchemaEnsured);
+  public function executeEnsuringSchemaOnFailure(
+    \Closure $execute,
+    array $schema,
+    mixed &$returnValue = NULL,
+    bool $retryAfterSchemaEnsured = FALSE,
+  ): bool {
+    $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $returnValue, $retryAfterSchemaEnsured);
     $this->dispatchEvent($event);
     return $event->getResult();
   }

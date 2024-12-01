@@ -52,16 +52,17 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    * {@inheritdoc}
    */
   protected function getTagInvalidationCounts(array $tags) {
-    $return = $this->connection->executeEnsuringSchemaOnFailure(
+    $this->connection->executeEnsuringSchemaOnFailure(
       execute: function () use ($tags): array {
         return $this->connection->query('SELECT [tag], [invalidations] FROM {cachetags} WHERE [tag] IN ( :tags[] )', [':tags[]' => $tags])
           ->fetchAllKeyed();
       },
+      returnValue: $counts,
       schema: [
         'cachetags' => $this->schemaDefinition(),
       ],
     );
-    return $return === FALSE ? [] : $return;
+    return $counts;
   }
 
   /**

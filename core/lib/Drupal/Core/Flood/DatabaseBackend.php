@@ -41,9 +41,10 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
     if (!isset($identifier)) {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
+
     $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($name, $window, $identifier): int {
-        return $this->connection->insert(DatabaseBackend::TABLE_NAME)
+      execute: function () use ($name, $window, $identifier): void {
+        $this->connection->insert(DatabaseBackend::TABLE_NAME)
           ->fields([
             'event' => $name,
             'identifier' => $identifier,
@@ -66,6 +67,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
     if (!isset($identifier)) {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
+
     $this->connection->executeEnsuringSchemaOnFailure(
       execute: function () use ($name, $identifier): void {
         $this->connection->delete(DatabaseBackend::TABLE_NAME)
@@ -103,7 +105,8 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
     if (!isset($identifier)) {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
-    return $this->connection->executeEnsuringSchemaOnFailure(
+
+    $this->connection->executeEnsuringSchemaOnFailure(
       execute: function () use ($name, $threshold, $window, $identifier): bool {
         $number = $this->connection->select(DatabaseBackend::TABLE_NAME, 'f')
           ->condition('event', $name)
@@ -114,10 +117,13 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
           ->fetchField();
         return ($number < $threshold);
       },
+      returnValue: $return,
       schema: [
         static::TABLE_NAME => $this->schemaDefinition(),
       ],
     );
+
+    return $return;
   }
 
   /**

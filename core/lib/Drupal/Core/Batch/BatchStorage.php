@@ -40,7 +40,7 @@ class BatchStorage implements BatchStorageInterface {
   public function load($id) {
     // Ensure that a session is started before using the CSRF token generator.
     $this->session->start();
-    $batch = $this->connection->executeEnsuringSchemaOnFailure(
+    $this->connection->executeEnsuringSchemaOnFailure(
       execute: function () use ($id): string|FALSE {
         return $this->connection->select('batch', 'b')
           ->fields('b', ['batch'])
@@ -49,6 +49,7 @@ class BatchStorage implements BatchStorageInterface {
           ->execute()
           ->fetchField();
       },
+      returnValue: $batch,
       schema: [
         static::TABLE_NAME => $this->schemaDefinition(),
       ],
@@ -132,7 +133,7 @@ class BatchStorage implements BatchStorageInterface {
    *   A batch id.
    */
   public function getId(): int {
-    return $this->connection->executeEnsuringSchemaOnFailure(
+    $this->connection->executeEnsuringSchemaOnFailure(
       execute: function (): int {
         return $this->connection->insert('batch')
           ->fields([
@@ -142,11 +143,14 @@ class BatchStorage implements BatchStorageInterface {
           ])
           ->execute();
       },
+      returnValue: $id,
       schema: [
         static::TABLE_NAME => $this->schemaDefinition(),
       ],
       retryAfterSchemaEnsured: TRUE,
     );
+
+    return $id;
   }
 
   /**
