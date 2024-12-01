@@ -1629,7 +1629,7 @@ abstract class Connection {
     // event_dispatcher service has not been reactivated yet. In that case,
     // execute the closure and return its result, without performing the schema
     // enforcement.
-    $returnValue = ($execute)();
+    $returnValue = $execute();
     return TRUE;
   }
 
