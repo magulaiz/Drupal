@@ -123,7 +123,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
       ],
     );
 
-    return $return;
+    return $return ?? TRUE;
   }
 
   /**
