@@ -39,6 +39,9 @@ class BatchKernelTest extends KernelTestBase {
     $this->assertEquals(FALSE, _batch_needs_update());
   }
 
+  /**
+   * Tests BatchStorage::getId().
+   */
   public function testGetStorageId(): void {
     $storage = $this->container->get('batch.storage');
     $this->assertIsNumeric($storage->getId());
