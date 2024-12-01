@@ -7,23 +7,31 @@ namespace Drupal\Core\Database\Event;
  */
 class ExecuteMethodEnsuringSchemaEvent extends DatabaseEvent {
 
-  protected bool $callMethodResult;
+  protected mixed $closureExecutionResult;
+  protected bool $closureExecutionSuccess;
 
   public function __construct(
     public readonly \Closure $execute,
     public readonly array $schema,
-    public mixed &$returnValue = NULL,
     public readonly bool $retryAfterSchemaEnsured = FALSE,
   ) {
     parent::__construct();
   }
 
-  public function setResult(bool $result): void {
-    $this->callMethodResult = $result;
+  public function setResult(mixed $result): void {
+    $this->closureExecutionResult = $result;
   }
 
-  public function getResult(): bool {
-    return $this->callMethodResult;
+  public function getResult(): mixed {
+    return $this->closureExecutionResult;
+  }
+
+  public function setSuccess(bool $success): void {
+    $this->closureExecutionSuccess = $success;
+  }
+
+  public function getSuccess(): bool {
+    return $this->closureExecutionSuccess;
   }
 
 }

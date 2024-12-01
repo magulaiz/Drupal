@@ -1628,9 +1628,12 @@ abstract class Connection {
         $dispatcher->addSubscriber(new SchemaRequestSubscriber($this));
       }
 
-      $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $returnValue, $retryAfterSchemaEnsured);
+      $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $retryAfterSchemaEnsured);
       $dispatcher->dispatch($event);
-      return $event->getResult();
+      if ($event->getSuccess()) {
+        $returnValue = $event->getResult();
+      }
+      return $event->getSuccess();
     }
 
     // When rebuilding the container, there's a stage where the

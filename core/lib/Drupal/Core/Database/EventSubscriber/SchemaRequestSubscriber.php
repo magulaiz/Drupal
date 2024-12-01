@@ -29,12 +29,12 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
   public function onExecuteMethodEnsuringSchema(ExecuteMethodEnsuringSchemaEvent $event): void {
     $tryAgain = FALSE;
     try {
-      $event->returnValue = ($event->execute)();
-      $event->setResult(TRUE);
+      $event->setResult(($event->execute)());
+      $event->setSuccess(TRUE);
     }
     catch (\Exception $e) {
       // If there was an exception, try to create the table.
-      $event->setResult(FALSE);
+      $event->setSuccess(FALSE);
       if (!$tryAgain = $this->ensureSchemaExists($event->schema)) {
         // If the exception happened for other reason than the missing table,
         // propagate the exception.
@@ -43,8 +43,8 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
     }
     // Now that the table has been created, try again if necessary.
     if ($event->retryAfterSchemaEnsured && $tryAgain) {
-      $event->returnValue = ($event->execute)();
-      $event->setResult(TRUE);
+      $event->setResult(($event->execute)());
+      $event->setSuccess(TRUE);
     }
   }
 
