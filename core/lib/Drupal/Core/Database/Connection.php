@@ -5,6 +5,7 @@ namespace Drupal\Core\Database;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Database\Event\DatabaseEvent;
 use Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent;
+use Drupal\Core\Database\EventSubscriber\SchemaRequestSubscriber;
 use Drupal\Core\Database\Exception\EventException;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
@@ -1620,8 +1621,15 @@ abstract class Connection {
     bool $retryAfterSchemaEnsured = FALSE,
   ): bool {
     if (\Drupal::hasService('event_dispatcher')) {
+      $dispatcher = \Drupal::service('event_dispatcher');
+
+      // @todo Temporary, Drush does not add the subscriber on cache rebuild.
+      if (!$dispatcher->hasListeners(ExecuteMethodEnsuringSchemaEvent::class)) {
+        $dispatcher->addSubscriber(new SchemaRequestSubscriber($this));
+      }
+
       $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $returnValue, $retryAfterSchemaEnsured);
-      \Drupal::service('event_dispatcher')->dispatch($event);
+      $dispatcher->dispatch($event);
       return $event->getResult();
     }
 
