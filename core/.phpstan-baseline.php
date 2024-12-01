@@ -1917,12 +1917,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Batch\\\\BatchStorage\\:\\:catchException\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Batch/BatchStorage.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Batch\\\\BatchStorage\\:\\:cleanup\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Batch/BatchStorage.php',
@@ -2622,6 +2616,12 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\Context\\\\SessionCacheContext\\:\\:getLabel\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/Context/SessionCacheContext.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\DatabaseBackend\\:\\:catchException\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Cache/DatabaseBackend.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
