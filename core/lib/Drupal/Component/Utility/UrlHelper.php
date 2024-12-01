@@ -210,9 +210,11 @@ class UrlHelper {
       $parts = explode('?', $url, 2);
 
       // Don't support URLs without a path, like 'http://'.
-      [, $path] = explode('://', $parts[0], 2);
-      if ($path != '') {
-        $options['path'] = $parts[0];
+      if (!empty($parts[0])) {
+        [, $path] = explode('://', $parts[0], 2);
+        if ($path != '') {
+          $options['path'] = $parts[0];
+        }
       }
       // If there is a query string, transform it into keyed query parameters.
       if (isset($parts[1])) {
