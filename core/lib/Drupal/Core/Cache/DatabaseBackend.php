@@ -366,8 +366,8 @@ class DatabaseBackend implements CacheBackendInterface {
     $this->connection->executeEnsuringSchemaOnFailure(
       execute: function (): void {
         $this->connection->update($this->bin)
-        ->fields(['expire' => $this->time->getRequestTime() - 1])
-        ->execute();
+          ->fields(['expire' => $this->time->getRequestTime() - 1])
+          ->execute();
       },
       schema: [
         $this->bin => $this->schemaDefinition(),
