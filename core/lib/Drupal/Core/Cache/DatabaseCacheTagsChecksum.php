@@ -62,7 +62,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
         'cachetags' => $this->schemaDefinition(),
       ],
     );
-    return $counts;
+    return $counts ?? [];
   }
 
   /**
