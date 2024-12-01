@@ -1619,9 +1619,18 @@ abstract class Connection {
     mixed &$returnValue = NULL,
     bool $retryAfterSchemaEnsured = FALSE,
   ): bool {
-    $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $returnValue, $retryAfterSchemaEnsured);
-    $this->dispatchEvent($event);
-    return $event->getResult();
+    if (\Drupal::hasService('event_dispatcher')) {
+      $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $returnValue, $retryAfterSchemaEnsured);
+      \Drupal::service('event_dispatcher')->dispatch($event);
+      return $event->getResult();
+    }
+
+    // When rebuilding the container, there's a stage where the
+    // event_dispatcher service has not been reactivated yet. In that case,
+    // execute the closure and return its result, without performing the schema
+    // enforcement.
+    $returnValue = ($execute)();
+    return TRUE;
   }
 
 }
