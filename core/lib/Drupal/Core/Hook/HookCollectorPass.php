@@ -7,9 +7,11 @@ namespace Drupal\Core\Hook;
 use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Core\Extension\ExtensionHookStatus;
 use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -138,7 +140,8 @@ class HookCollectorPass implements CompilerPassInterface {
     $module_preg = '/^(?<function>(?<module>' . implode('|', $modules) . ')_(?!preprocess_)(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
     $collector = new static();
     foreach ($module_filenames as $module => $info) {
-      $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg);
+      $process_procedural_hooks = $info['procedural_hooks'] ?? 'scan';
+      $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, $process_procedural_hooks);
     }
     return $collector;
   }
@@ -153,10 +156,12 @@ class HookCollectorPass implements CompilerPassInterface {
    * @param $module_preg
    *   A regular expression matching every module, longer module names are
    *   matched first.
+   * @param $process_procedural_hooks
+   *   Whether HookCollectorPass should scan for procedural hooks.
    *
    * @return void
    */
-  protected function collectModuleHookImplementations($dir, $module, $module_preg): void {
+  protected function collectModuleHookImplementations($dir, $module, $module_preg, $process_procedural_hooks): void {
     $hook_file_cache = FileCacheFactory::get('hook_implementations');
     $procedural_hook_file_cache = FileCacheFactory::get('procedural_hook_implementations:' . $module_preg);
 
@@ -198,16 +203,22 @@ class HookCollectorPass implements CompilerPassInterface {
       }
       else {
         $implementations = $procedural_hook_file_cache->get($filename);
-        if ($implementations === NULL) {
+        if ($implementations === NULL && $process_procedural_hooks == ExtensionHookStatus::SCAN) {
           $finder = MockFileFinder::create($filename);
           $parser = new StaticReflectionParser('', $finder);
           $implementations = [];
           foreach ($parser->getMethodAttributes() as $function => $attributes) {
+            if (StaticReflectionParser::hasAttribute($attributes, StopProceduralHookScan::class)) {
+              break;
+            }
             if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches)) {
               $implementations[] = ['function' => $function, 'module' => $matches['module'], 'hook' => $matches['hook']];
             }
           }
           $procedural_hook_file_cache->set($filename, $implementations);
+        }
+        else {
+          $procedural_hook_file_cache->set($filename, $implementations = []);
         }
         foreach ($implementations as $implementation) {
           $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module'], $implementation['function']);

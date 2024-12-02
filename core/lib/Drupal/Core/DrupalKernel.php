@@ -1478,6 +1478,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
           'type' => $data->getType(),
           'pathname' => $data->getPathname(),
           'filename' => $data->getExtensionFilename(),
+          'procedural_hooks' => $data->scanProceduralHooks(),
         ];
       }
     }
