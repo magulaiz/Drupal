@@ -4,6 +4,7 @@ namespace Drupal\Core\Flood;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -124,6 +125,58 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
     );
 
     return $return ?? TRUE;
+  }
+
+  /**
+   * Check if the flood table exists and create it if not.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3489185
+   */
+  protected function ensureTableExists() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
+    try {
+      $database_schema = $this->connection->schema();
+      $schema_definition = $this->schemaDefinition();
+      $database_schema->createTable(static::TABLE_NAME, $schema_definition);
+    }
+    // If another process has already created the table, attempting to create
+    // it will throw an exception. In this case just catch the exception and do
+    // nothing.
+    catch (DatabaseException) {
+    }
+    catch (\Exception) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
+   * Act on an exception when flood might be stale.
+   *
+   * If the table does not yet exist, that's fine, but if the table exists and
+   * yet the query failed, then the flood is stale and the exception needs to
+   * propagate.
+   *
+   * @param $e
+   *   The exception.
+   *
+   * @throws \Exception
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3489185
+   */
+  protected function catchException(\Exception $e) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
+    if ($this->connection->schema()->tableExists(static::TABLE_NAME)) {
+      throw $e;
+    }
   }
 
   /**
