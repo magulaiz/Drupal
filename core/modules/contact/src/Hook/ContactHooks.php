@@ -18,7 +18,7 @@ class ContactHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
     switch ($route_name) {
       case 'help.page.contact':
         $menu_page = \Drupal::moduleHandler()->moduleExists('menu_ui') ? Url::fromRoute('entity.menu.collection')->toString() : '#';

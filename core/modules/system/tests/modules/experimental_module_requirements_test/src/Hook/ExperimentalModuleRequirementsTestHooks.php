@@ -15,7 +15,7 @@ class ExperimentalModuleRequirementsTestHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name) {
+  public function help($route_name): string {
     switch ($route_name) {
       case 'help.page.experimental_module_requirements_test':
         // Make the help text conform to core standards.

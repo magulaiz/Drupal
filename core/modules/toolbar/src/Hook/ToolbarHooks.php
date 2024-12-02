@@ -16,7 +16,7 @@ class ToolbarHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
     switch ($route_name) {
       case 'help.page.toolbar':
         $output = '<h2>' . t('About') . '</h2>';

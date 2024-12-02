@@ -14,7 +14,7 @@ class PackageManagerHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name) : ?string {
+  public function help($route_name): string {
     switch ($route_name) {
       case 'help.page.package_manager':
         $output = '<h3 id="package-manager-about">' . t('About') . '</h3>';
@@ -97,7 +97,7 @@ class PackageManagerHooks {
         $output .= "<pre><code>composer require cweagans/composer-patches</code></pre>";
         return $output;
     }
-    return NULL;
+    return '';
   }
 
 }
