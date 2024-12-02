@@ -3,6 +3,7 @@
 namespace Drupal\config\Form;
 
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Ajax\Htmx;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -99,15 +100,19 @@ class ConfigSingleExportForm extends FormBase {
       'system.simple' => $this->t('Simple configuration'),
     ] + $entity_types;
 
-    // Prepare an HtmxAttribute for each dynamic select.
-    $config_type_htmx = new HtmxAttribute();
-    $config_name_htmx = new HtmxAttribute();
+    // Prepare an Htmx object for each dynamic select.
+    $config_type_htmx = new Htmx();
+    $config_name_htmx = new Htmx();
 
     $form_url = Url::fromRoute(
       route_name: 'config.export_single',
       route_parameters: ['config_type' => $config_type, 'config_name' => $config_name],
     );
-
+    $config_type_htmx->attributes
+      ->post($form_url)
+      ->select('select[data-drupal-selector="edit-config-name"]')
+      ->target('select[data-drupal-selector="edit-config-name"]')
+      ->swap('outerHTML');
     $form['config_type'] = [
       '#title' => $this->t('Configuration type'),
       '#type' => 'select',
@@ -123,25 +128,22 @@ class ConfigSingleExportForm extends FormBase {
        * - Replace using the outerHTML strategy: that is replace the whole tag.
        * - Also select and replace the export value.
        */
-      '#htmx' => $config_type_htmx
-        ->post($form_url)
-        ->select('select[data-drupal-selector="edit-config-name"]')
-        ->target('select[data-drupal-selector="edit-config-name"]')
-        ->swap('outerHTML'),
+      '#htmx' => $config_type_htmx,
     ];
 
     $default_type = $form_state->getValue('config_type', $config_type);
+    $config_name_htmx->attributes
+      ->post($form_url)
+      ->select('#edit-export-wrapper')
+      ->target('#edit-export-wrapper')
+      ->swap('outerHTML');
     $form['config_name'] = [
       '#title' => $this->t('Configuration name'),
       '#type' => 'select',
       '#options' => $this->findConfiguration($default_type, $form_state),
       '#empty_value' => '',
       '#default_value' => $config_name,
-      '#htmx' => $config_name_htmx
-        ->post($form_url)
-        ->select('#edit-export-wrapper')
-        ->target('#edit-export-wrapper')
-        ->swap('outerHTML'),
+      '#htmx' => $config_name_htmx,
     ];
 
     $form['export'] = [
@@ -154,9 +156,11 @@ class ConfigSingleExportForm extends FormBase {
     if ($trigger === 'edit-config-type') {
       // Type has changed.
       $form['export']['#value'] = NULL;
-      // Also replace the export element when the response is returned.
+      // Also replace the wrapped export element when the response is returned.
       // See https://htmx.org/attributes/hx-swap-oob/ for a detailed description
       // of selection and targeting with ::swapOob.
+      // Since this is placed directly in the prefix string, use an
+      // HtmxAttribute object directly.
       $export_htmx = new HtmxAttribute();
       $attributes = (string) $export_htmx->swapOob('outerHTML:#edit-export-wrapper');
       $form['export']['#prefix'] = '<div id="edit-export-wrapper" ' . $attributes . '>';
@@ -165,6 +169,12 @@ class ConfigSingleExportForm extends FormBase {
       // A name is selected.
       $default_name = $form_state->getValue('config_name', $config_name);
       $form['export'] = $this->updateExport($form['export'], $default_type, $default_name);
+      // Also update the browser URL.
+      $push = Url::fromRoute(
+        route_name: 'config.export_single',
+        route_parameters: ['config_type' => $default_type, 'config_name' => $default_name],
+      );
+      $config_name_htmx->headers->pushUrl($push);
     }
     elseif ($config_type && $config_name) {
       $form['export'] = $this->updateExport($form['export'], $config_type, $config_name);

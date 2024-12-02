@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Ajax\Htmx;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -449,16 +451,24 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
     // Initialize #htmx_processed, so we do not process this element again.
     $element['#htmx_processed'] = FALSE;
 
-    // Nothing to do if there are no Ajax settings.
-    if (empty($element['#htmx'])) {
+    // Nothing to do if there are no HTMX settings.
+    if (empty($element['#htmx']) || !($element['#htmx'] instanceof Htmx)) {
       return $element;
     }
+    $htmx = $element['#htmx'];
 
     // Attach HTMX and integration javascript.
     $element['#attached']['library'][] = 'core/drupal.htmx';
-    $element['#attributes'] = $element['#attributes'] ?? [];
-    $element['#attributes'] = AttributeHelper::mergeCollections($element['#attributes'], $element['#htmx']);
-
+    // Consolidate headers.
+    if ($htmx->headers->count() !== 0) {
+      $element['#attached']['http_header'] = $element['#attached']['http_header'] ?? [];
+      $element['#attached']['http_header'] = NestedArray::mergeDeep($element['#attached']['http_header'], $htmx->headers->toArray());
+    }
+    if ($htmx->attributes->count() !== 0) {
+      // Consolidate attributes.
+      $element['#attributes'] = $element['#attributes'] ?? [];
+      $element['#attributes'] = AttributeHelper::mergeCollections($element['#attributes'], $htmx->attributes);
+    }
 
     // Indicate that HTMX processing was successful.
     $element['#htmx_processed'] = TRUE;
