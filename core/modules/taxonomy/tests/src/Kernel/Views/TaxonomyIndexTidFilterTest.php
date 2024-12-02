@@ -115,7 +115,10 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
     $view = View::load('test_filter_taxonomy_index_tid__non_existing_dependency');
 
     // Add a second vocabulary to the view 'tid' filter handler.
-    Vocabulary::create(['vid' => 'second_vocab'])->save();
+    Vocabulary::create([
+      'vid' => 'second_vocab',
+      'name' => 'Second vocabulary',
+    ])->save();
     $displays = $view->get('display');
     $displays['default']['display_options']['filters']['tid']['vids'][] = 'second_vocab';
     $view->set('display', $displays);
