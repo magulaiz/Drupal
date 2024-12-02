@@ -90,7 +90,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
       ])
       ->execute();
   }
-  
+
   /**
    * {@inheritdoc}
    */
