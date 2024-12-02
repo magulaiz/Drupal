@@ -218,9 +218,6 @@ class HookCollectorPass implements CompilerPassInterface {
           $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module'], $implementation['function']);
         }
       }
-      else {
-        $procedural_hook_file_cache->set($filename, $implementations = []);
-      }
       if ($extension === 'inc') {
         $parts = explode('.', $fileinfo->getFilename());
         if (count($parts) === 3 && $parts[0] === $module) {
