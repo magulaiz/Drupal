@@ -112,8 +112,6 @@ class TaxonomyIndexTidUiTest extends UITestBase {
         $term->save();
       }
     }
-    ViewTestData::createTestViews(static::class, ['taxonomy_test_views']);
-
     // Extra taxonomy and terms.
     Vocabulary::create([
       'vid' => 'other_tags',

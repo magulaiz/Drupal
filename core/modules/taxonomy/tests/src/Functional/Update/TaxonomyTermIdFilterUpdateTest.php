@@ -34,7 +34,7 @@ class TaxonomyTermIdFilterUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
-      dirname(__DIR__, 5) . '/system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
+      dirname(__DIR__, 5) . '/system/tests/fixtures/update/drupal-10.3.0.bare.standard.php.gz',
     ];
   }
 
