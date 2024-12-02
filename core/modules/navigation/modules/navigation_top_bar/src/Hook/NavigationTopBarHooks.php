@@ -24,6 +24,7 @@ class NavigationTopBarHooks {
         $output .= '<p>' . t('It is recommended to leave this module off while it is under active development and experimental phase.') . '</p>';
         $output .= '<p>' . t('For more information, see the <a href=":docs">online documentation for the Navigation Top Bar module</a>.', [':docs' => 'https://www.drupal.org/project/navigation']) . '</p>';
         return $output;
+
       default:
         return '';
     }
