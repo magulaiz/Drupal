@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Database\EventSubscriber;
 
 use Drupal\Core\Database\Connection;
@@ -26,45 +28,52 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
     ];
   }
 
+  /**
+   * Processes a request to execute a callback with schema enforcement.
+   *
+   * @param \Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent $event
+   *   The event to process.
+   */
   public function onExecuteMethodEnsuringSchema(ExecuteMethodEnsuringSchemaEvent $event): void {
-    $tryAgain = FALSE;
     try {
       $event->setResult(($event->execute)());
       $event->setSuccess(TRUE);
+      return;
     }
     catch (\Exception $e) {
-      // If there was an exception, try to create the table.
+      // If there was an exception, try to create the schema.
       $event->setSuccess(FALSE);
-      if (!$tryAgain = $this->ensureSchemaExists($event->schema)) {
-        // If the exception happened for other reason than the missing table,
+      $tryAgain = $this->processSchema($event->schema);
+      if (!$tryAgain) {
+        // If the exception happened for other reasons than the missing schema,
         // propagate the exception.
         throw $e;
       }
-    }
-    // Now that the table has been created, try again if necessary.
-    if ($event->retryAfterSchemaEnsured && $tryAgain) {
-      $event->setResult(($event->execute)());
-      $event->setSuccess(TRUE);
+      // Now that the schema has been created, try again if requested.
+      if ($event->retryAfterSchemaEnsured && $tryAgain) {
+        $event->setResult(($event->execute)());
+        $event->setSuccess(TRUE);
+      }
     }
   }
 
   /**
-   * Check if the table exists and create it if not.
+   * Processes the schema creating the missing tables.
+   *
+   * @param array<string,array<string,mixed>> $schema
+   *   A database schema specification, with table name as key and schema
+   *   array as value.
    */
-  protected function ensureSchemaExists(array $schema): bool {
-    try {
-      $databaseSchema = $this->connection->schema();
-      foreach ($schema as $name => $definition) {
-        $databaseSchema->createTable($name, $definition);
+  protected function processSchema(array $schema): bool {
+    foreach ($schema as $name => $definition) {
+      try {
+        if (!$this->connection->schema()->tableExists($name)) {
+          $this->connection->schema()->createTable($name, $definition);
+        }
       }
-    }
-    // If another process has already created the batch table, attempting to
-    // recreate it will throw an exception. In this case just catch the
-    // exception and do nothing.
-    catch (DatabaseException) {
-    }
-    catch (\Exception) {
-      return FALSE;
+      catch (\Exception) {
+        return FALSE;
+      }
     }
     return TRUE;
   }

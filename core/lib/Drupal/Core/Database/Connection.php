@@ -1614,6 +1614,25 @@ abstract class Connection {
     return debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
   }
 
+  /**
+   * Executes a callback, and enforces a database schema in case of failure.
+   *
+   * @param \Closure $execute
+   *   The callback to be executed.
+   * @param array<string,array<string,mixed>> $schema
+   *   A database schema specification, with table name as key and schema
+   *   array as value.
+   * @param mixed $returnValue
+   *   A variable, passed by reference, holding the value returned by the
+   *   execution of the callback.
+   * @param bool $retryAfterSchemaEnsured
+   *   (Optional) If TRUE, the callback is executed again after the first
+   *   execution failed, and the schema enforcement was successful. Defaults to
+   *   FALSE.
+   *
+   * @return bool
+   *   TRUE if the closure was executed successfully, FALSE otherwise.
+   */
   public function executeEnsuringSchemaOnFailure(
     \Closure $execute,
     array $schema,
@@ -1636,7 +1655,7 @@ abstract class Connection {
       return $event->getSuccess();
     }
 
-    // When rebuilding the container, there's a stage where the
+    // When rebuilding the container, there's a stage when the
     // event_dispatcher service has not been reactivated yet. In that case,
     // execute the closure and return its result, without performing the schema
     // enforcement.
