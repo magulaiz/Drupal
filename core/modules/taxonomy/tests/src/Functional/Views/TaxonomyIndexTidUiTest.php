@@ -73,7 +73,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
       'vid' => 'other_tags',
       'name' => 'Other tags',
     ])->save();
-    
+
     Vocabulary::create([
       'vid' => 'empty_vocabulary',
       'name' => 'Empty Vocabulary',
