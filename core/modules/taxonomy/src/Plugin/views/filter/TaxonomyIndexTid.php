@@ -163,7 +163,7 @@ class TaxonomyIndexTid extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  public function submitExtraOptionsForm($form, FormStateInterface $form_state) {
+  public function submitExtraOptionsForm($form, FormStateInterface $form_state): void {
     $vids = $form_state->getValue(['options', 'vids']);
     $form_state->setValue(['options', 'vids'], array_keys(array_filter($vids)));
   }

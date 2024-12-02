@@ -130,6 +130,8 @@ class TaxonomyIndexTidUiTest extends UITestBase {
       'vid' => 'empty_vocabulary',
       'name' => 'Empty Vocabulary',
     ])->save();
+
+    return $this->terms;
   }
 
   /**
@@ -187,7 +189,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
    *
    * @group legacy
    */
-  public function testFilterUIWithMultipleVocabularies() {
+  public function testFilterUIWithMultipleVocabularies(): void {
     $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     $terms2 = $this->createVocabularyAndTerms('tags2');
     $node_type = $this->drupalCreateContentType(['type' => 'page']);
