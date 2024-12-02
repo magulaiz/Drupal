@@ -20,7 +20,9 @@ class MoreHelpPageTestHooks {
     switch ($route_name) {
       // Return help for the same route as the help_page_test module.
       case 'help_page_test.test_array':
-        return ['#markup' => 'Help text from more_help_page_test_help module.'];
+        return 'Help text from more_help_page_test_help module.';
+      default:
+        return '';
     }
   }
 

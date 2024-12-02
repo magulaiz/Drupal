@@ -27,11 +27,11 @@ class HelpPageTestHooks {
         return t('I have help!');
 
       case 'help_page_test.test_array':
-        return ['#markup' => 'Help text from help_page_test_help module.'];
+        return 'Help text from help_page_test_help module.';
+
+      default:
+        return '';
     }
-    // Ensure that hook_help() can return an empty string and not cause the block
-    // to display.
-    return '';
   }
 
 }
