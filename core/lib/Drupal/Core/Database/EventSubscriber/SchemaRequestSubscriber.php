@@ -68,7 +68,14 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
     foreach ($schema as $name => $definition) {
       try {
         if (!$this->connection->schema()->tableExists($name)) {
-          $this->connection->schema()->createTable($name, $definition);
+          try {
+            $this->connection->schema()->createTable($name, $definition);
+          }
+          // In a race condition, if another process has already created the
+          // table, attempting to create it will throw an exception. In this
+          // case just catch the exception and do nothing.
+          catch (DatabaseException) {
+          }
         }
       }
       catch (\Exception) {
