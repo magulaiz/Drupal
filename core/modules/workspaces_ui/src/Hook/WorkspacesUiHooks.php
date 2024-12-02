@@ -25,8 +25,10 @@ class WorkspacesUiHooks {
         $output .= '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Workspaces UI module provides an interface for managing workspaces for the <a href=":workspaces_module">Workspaces module</a>. For more information, see the <a href=":workspaces">online documentation for the Workspaces UI module</a>.', [':workspaces_module' => Url::fromRoute('help.page', ['name' => 'workspaces'])->toString(), ':workspaces' => 'https://www.drupal.org/docs/8/core/modules/workspace/overview']) . '</p>';
         return $output;
+
+      default:
+        return '';
     }
-    return '';
   }
 
   /**

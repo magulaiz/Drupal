@@ -83,6 +83,9 @@ class Ckeditor5Hooks {
         $output .= '<dd>' . t('When a necessary tag/attribute is not directly supported by an available plugin, the "Source Editing" plugin is enabled. This plugin is typically used for by passing the CKEditor 5 UI and editing contents as HTML source. In the settings for Source Editing, tags/attributes that aren\'t available via other plugins are added to Source Editing\'s "Manually editable HTML tags" setting so they are supported by the text format.') . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

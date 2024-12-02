@@ -43,6 +43,9 @@ class MigrateDrupalUiHooks {
         $output .= '<dd>' . t('Rolling back an upgrade is not yet supported through the user interface.') . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

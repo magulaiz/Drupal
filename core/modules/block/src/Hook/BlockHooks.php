@@ -51,6 +51,8 @@ class BlockHooks {
       $output .= '<p>' . Link::fromTextAndUrl(t('Demonstrate block regions (@theme)', ['@theme' => $themes[$demo_theme]->info['name']]), Url::fromRoute('block.admin_demo', ['theme' => $demo_theme]))->toString() . '</p>';
       return $output;
     }
+
+    return '';
   }
 
   /**

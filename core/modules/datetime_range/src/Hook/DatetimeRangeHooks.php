@@ -43,6 +43,9 @@ class DatetimeRangeHooks {
         ]) . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

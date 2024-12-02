@@ -53,6 +53,7 @@ class ShortcutHooks {
           return $output;
         }
     }
+    return '';
   }
 
   /**

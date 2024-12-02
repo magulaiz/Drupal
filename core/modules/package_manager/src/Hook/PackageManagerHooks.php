@@ -96,8 +96,10 @@ class PackageManagerHooks {
         $output .= '<p>' . t('If <code>cweagans/composer-patches</code> is installed, it must be defined as a dependency of the main project (i.e., it must be listed in the <code>require</code> or <code>require-dev</code> section of <code>composer.json</code>). You can run the following command in your site root to add it as a dependency of the main project:') . '</p>';
         $output .= "<pre><code>composer require cweagans/composer-patches</code></pre>";
         return $output;
+
+      default:
+        return '';
     }
-    return '';
   }
 
 }

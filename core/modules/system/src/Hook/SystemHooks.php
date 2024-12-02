@@ -151,6 +151,8 @@ class SystemHooks {
       case 'system.status':
         return '<p>' . t("Here you can find a short overview of your site's parameters as well as any problems detected with your installation. It may be useful to copy and paste this information into support requests filed on Drupal.org's support forums and project issue queues. Before filing a support request, ensure that your web server meets the <a href=\":system-requirements\">system requirements.</a>", [':system-requirements' => 'https://www.drupal.org/docs/system-requirements']) . '</p>';
     }
+
+    return '';
   }
 
   /**

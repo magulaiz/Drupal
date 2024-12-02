@@ -65,6 +65,9 @@ class ConfigHooks {
         $output = '';
         $output .= '<p>' . t('Import a single configuration item by pasting its YAML structure into the text field.') . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

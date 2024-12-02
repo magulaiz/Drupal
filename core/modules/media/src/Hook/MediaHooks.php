@@ -66,6 +66,9 @@ class MediaHooks {
         $output .= '</ul>';
         $output .= '<p>' . t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before installing the Media module.') . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

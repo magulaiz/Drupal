@@ -83,6 +83,9 @@ class UserHooks {
 
       case 'entity.entity_view_display.user.default':
         return '<p>' . t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
+
+      default:
+        return '';
     }
   }
 

@@ -39,8 +39,10 @@ class JsonapiHooks {
         $output .= '<dd>' . t('Revision support is currently read-only and only for the "Content" and "Media" entity types in JSON:API. See the <a href=":jsonapi-docs">JSON:API revision support documentation</a> for more information on the current status of revision support.', [':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/revisions']) . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
-    return NULL;
   }
 
   /**

@@ -39,6 +39,9 @@ class ContactHooks {
         $output .= '<dd>' . t('From the <a href=":contact_admin">Contact forms page</a>, you can configure the fields to be shown on contact forms, including their labels and help text. If you would like other content (such as text or images) to appear on a contact form, use a block. You can create and edit blocks on the <a href=":blocks">Block layout page</a>, if the Block module is installed.', [':blocks' => $block_page, ':contact_admin' => $contact_page]) . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

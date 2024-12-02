@@ -58,6 +58,9 @@ class ConfigTranslationHooks {
       case 'config_translation.mapper_list':
         $output = '<p>' . t('This page lists all configuration items on your site that have translatable text, like your site name, role names, etc.') . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

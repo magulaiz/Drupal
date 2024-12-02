@@ -32,6 +32,9 @@ class MigrateDrupalHooks {
           ':migrate_drupal' => 'https://www.drupal.org/documentation/modules/migrate_drupal',
         ]) . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

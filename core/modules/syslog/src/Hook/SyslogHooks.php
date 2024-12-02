@@ -31,6 +31,9 @@ class SyslogHooks {
         $output .= '<dd>' . t('On Microsoft Windows, messages are always sent to the Event Log using the code <code>LOG_USER</code>.') . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

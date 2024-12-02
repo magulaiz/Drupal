@@ -64,6 +64,9 @@ class FieldUiHooks {
 
       case 'entity.field_storage_config.collection':
         return '<p>' . t('This list shows all fields currently in use for easy reference.') . '</p>';
+
+      default:
+        return '';
     }
   }
 

@@ -56,6 +56,9 @@ class UpdateHooks {
           ':update-php' => Url::fromRoute('system.db_update')->toString(),
           ':updates' => Url::fromRoute('update.status')->toString(),
         ]) . '</p>';
+
+      default:
+        return '';
     }
   }
 

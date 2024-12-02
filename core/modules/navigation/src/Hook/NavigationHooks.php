@@ -38,6 +38,8 @@ class NavigationHooks {
       $output .= '<p>' . t('Forms and links inside the content of the layout builder tool have been disabled.') . '</p>';
       return $output;
     }
+
+    return '';
   }
 
   /**

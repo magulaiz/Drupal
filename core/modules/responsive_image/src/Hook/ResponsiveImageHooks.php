@@ -64,6 +64,9 @@ class ResponsiveImageHooks {
 
       case 'entity.responsive_image_style.collection':
         return '<p>' . t('A responsive image style associates an image style with each breakpoint defined by your theme.') . '</p>';
+
+      default:
+        return '';
     }
   }
 

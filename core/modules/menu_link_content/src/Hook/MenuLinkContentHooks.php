@@ -37,6 +37,9 @@ class MenuLinkContentHooks {
         }
         $output .= '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

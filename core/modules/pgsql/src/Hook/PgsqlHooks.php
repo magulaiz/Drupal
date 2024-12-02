@@ -23,6 +23,9 @@ class PgsqlHooks {
           ':pgsql' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/postgresql-module',
         ]) . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

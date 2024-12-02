@@ -77,6 +77,9 @@ class LayoutBuilderHooks {
         ]) . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

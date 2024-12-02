@@ -33,6 +33,9 @@ class AutomatedCronHooks {
         $output .= '<dd>' . t('To disable automated cron, the recommended method is to uninstall the module, to reduce site overhead. If you only want to disable it temporarily, you can set the frequency to Never on the Cron page, and then change the frequency back when you want to start it up again.') . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

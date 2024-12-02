@@ -29,6 +29,9 @@ class BigPipeHooks {
         $output .= '<dd>' . t('The module requires no configuration. Every part of the page contains metadata that allows BigPipe to figure this out on its own.') . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

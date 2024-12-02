@@ -75,6 +75,9 @@ class ContentTranslationHooks {
           ]) . '</p>';
         }
         return $output;
+
+      default:
+        return '';
     }
   }
 

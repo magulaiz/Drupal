@@ -103,6 +103,9 @@ class NodeHooks1 {
         $type = $route_match->getParameter('node_type');
         $help = $type->getHelp();
         return !empty($help) ? Xss::filterAdmin($help) : '';
+
+      default:
+        return '';
     }
   }
 

@@ -65,12 +65,15 @@ class ImageHooks {
 
       case 'image.effect_add_form':
         $effect = \Drupal::service('plugin.manager.image.effect')->getDefinition($route_match->getParameter('image_effect'));
-        return isset($effect['description']) ? '<p>' . $effect['description'] . '</p>' : NULL;
+        return isset($effect['description']) ? '<p>' . $effect['description'] . '</p>' : '';
 
       case 'image.effect_edit_form':
         $effect = $route_match->getParameter('image_style')->getEffect($route_match->getParameter('image_effect'));
         $effect_definition = $effect->getPluginDefinition();
-        return isset($effect_definition['description']) ? '<p>' . $effect_definition['description'] . '</p>' : NULL;
+        return isset($effect_definition['description']) ? '<p>' . $effect_definition['description'] . '</p>' : '';
+
+      default:
+        return '';
     }
   }
 

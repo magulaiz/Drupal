@@ -154,6 +154,9 @@ class FieldHooks {
         $output .= '</ul></dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

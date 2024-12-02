@@ -54,6 +54,9 @@ class PathHooks {
 
       case 'entity.path_alias.add_form':
         return '<p>' . t('Enter the path you wish to create the alias for, followed by the name of the new alias.') . '</p>';
+
+      default:
+        return '';
     }
   }
 

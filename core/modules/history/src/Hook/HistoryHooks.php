@@ -29,6 +29,9 @@ class HistoryHooks {
           ':url' => 'https://www.drupal.org/documentation/modules/history',
         ]) . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

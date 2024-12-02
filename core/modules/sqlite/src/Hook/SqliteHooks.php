@@ -23,6 +23,9 @@ class SqliteHooks {
           ':sqlite' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/sqlite-module',
         ]) . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

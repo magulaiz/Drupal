@@ -38,6 +38,9 @@ class PageCacheHooks {
         ]) . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

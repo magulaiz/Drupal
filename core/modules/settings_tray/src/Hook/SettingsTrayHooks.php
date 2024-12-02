@@ -44,7 +44,10 @@ class SettingsTrayHooks {
         $output .= '<p>' . t('Save the form and the changes will be immediately visible on the page.') . '</p>';
         $output .= '</dd>';
         $output .= '</dl>';
-        return ['#markup' => $output];
+        return $output;
+
+      default:
+        return '';
     }
   }
 

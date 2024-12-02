@@ -37,6 +37,9 @@ class DblogHooks {
 
       case 'dblog.overview':
         return '<p>' . t('The Database Logging module logs system events in the Drupal database. Monitor your site or debug site problems on this page.') . '</p>';
+
+      default:
+        return '';
     }
   }
 

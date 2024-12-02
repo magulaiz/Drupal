@@ -70,6 +70,9 @@ class MediaLibraryHooks {
         ]) . '</li>';
         $output .= '</ul>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

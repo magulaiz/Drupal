@@ -56,6 +56,9 @@ class WorkflowsHooks {
         $output .= '<dd>' . t('Depending on the installed workflow type, additional configuration can be available in the edit form of a workflow.') . '</dd>';
         $output .= '<dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

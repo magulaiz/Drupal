@@ -101,6 +101,9 @@ class ContextualHooks {
         $output .= '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

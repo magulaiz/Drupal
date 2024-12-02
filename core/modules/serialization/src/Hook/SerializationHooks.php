@@ -30,6 +30,9 @@ class SerializationHooks {
         ]) . '</p>';
         $output .= '<p>' . t('For more information, see the <a href=":doc_url">online documentation for the Serialization module</a>.', [':doc_url' => 'https://www.drupal.org/documentation/modules/serialization']) . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

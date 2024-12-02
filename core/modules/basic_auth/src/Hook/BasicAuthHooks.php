@@ -27,6 +27,9 @@ class BasicAuthHooks {
           ])->toString() : '#',
         ]) . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

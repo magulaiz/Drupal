@@ -30,6 +30,9 @@ class BanHooks {
 
       case 'ban.admin_page':
         return '<p>' . t('IP addresses listed here are banned from your site. Banned addresses are completely forbidden from accessing the site and instead see a brief message explaining the situation.') . '</p>';
+
+      default:
+        return '';
     }
   }
 

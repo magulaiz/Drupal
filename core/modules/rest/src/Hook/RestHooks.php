@@ -54,6 +54,9 @@ class RestHooks {
         ]) . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

@@ -73,6 +73,9 @@ class ContentModerationHooks {
         $output .= '<dd>' . t('Each transition is exposed as a permission. If a user has the permission for a transition, they can use the transition to change the state of the content item, from Draft to Published.') . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

@@ -33,6 +33,9 @@ class FieldLayoutHooks {
           ':field-layout-documentation' => 'https://www.drupal.org/documentation/modules/field_layout',
         ]) . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

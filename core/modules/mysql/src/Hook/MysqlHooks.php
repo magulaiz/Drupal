@@ -23,6 +23,9 @@ class MysqlHooks {
           ':mysql' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/mysql-module',
         ]) . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

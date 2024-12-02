@@ -22,6 +22,9 @@ class LayoutDiscoveryHooks {
           ':layout-discovery-documentation' => 'https://www.drupal.org/docs/8/api/layout-api',
         ]) . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

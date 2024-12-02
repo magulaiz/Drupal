@@ -31,6 +31,9 @@ class AnnouncementsFeedHooks {
         ]) . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

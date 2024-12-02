@@ -50,6 +50,9 @@ class LinkHooks {
         $output .= '<dd>' . t('All links are validated after a link field is filled in. They can include anchors or query strings.') . '</dd>';
         $output .= '</dl>';
         return $output;
+
+      default:
+        return '';
     }
   }
 
