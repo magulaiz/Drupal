@@ -102,12 +102,13 @@
   & a {
     display: flex;
     align-items: center;
-    margin-bottom: -2px; /* Account for borders. */
-    padding: 0 9px;
+    height: auto;
+    margin: 2px;
+    padding: 0 0.5625rem;
+    -webkit-text-decoration: none;
     text-decoration: none;
     color: var(--dropbutton--text-color);
     font-weight: 600;
-
     &:hover {
       color: inherit;
     }
