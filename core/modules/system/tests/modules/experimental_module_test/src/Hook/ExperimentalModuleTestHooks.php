@@ -21,6 +21,9 @@ class ExperimentalModuleTestHooks {
       case 'help.page.experimental_module_test':
         // Make the help text conform to core standards.
         return t('The Experimental Test module is not done yet. It may eat your data, but you can read the <a href=":url">online documentation for the Experimental Test module</a>.', [':url' => 'http://www.example.com']);
+
+      default:
+        return '';
     }
   }
 

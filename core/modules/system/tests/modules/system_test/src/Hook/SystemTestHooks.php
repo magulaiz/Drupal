@@ -24,6 +24,9 @@ class SystemTestHooks {
         $output .= '<h2>' . t('Test Help Page') . '</h2>';
         $output .= '<p>' . t('This is a test help page for the system_test module for the purpose of testing if the "Help" link displays properly.') . '</p>';
         return $output;
+
+      default:
+        return '';
     }
   }
 

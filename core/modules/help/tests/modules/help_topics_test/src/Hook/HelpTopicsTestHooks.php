@@ -20,6 +20,9 @@ class HelpTopicsTestHooks {
     switch ($route_name) {
       case 'help.page.help_topics_test':
         return 'Some kind of non-empty output for testing';
+
+      default:
+        return '';
     }
   }
 

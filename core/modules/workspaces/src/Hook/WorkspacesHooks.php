@@ -27,7 +27,7 @@ class WorkspacesHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match): string {
+  public function help($route_name, RouteMatchInterface $route_match): {
     switch ($route_name) {
       // Main module help for the Workspaces module.
       case 'help.page.workspaces':
