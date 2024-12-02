@@ -26,6 +26,7 @@ class LayoutBuilderExposeAllFieldBlocksHooks {
           ':href' => 'https://www.drupal.org/node/3223395#s-layout-builder-expose-all-field-blocks',
         ]) . '</p>';
         return $output;
+
       default:
         return '';
     }
