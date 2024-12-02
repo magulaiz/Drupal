@@ -71,9 +71,15 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     ViewTestData::createTestViews(get_class($this), ['taxonomy_test_views']);
 
     Vocabulary::create([
+      'vid' => 'other_tags',
+      'name' => 'Other tags',
+    ])->save();
+
+    Vocabulary::create([
       'vid' => 'empty_vocabulary',
       'name' => 'Empty Vocabulary',
     ])->save();
+
   }
 
   /**
@@ -112,22 +118,12 @@ class TaxonomyIndexTidUiTest extends UITestBase {
         $term->save();
       }
     }
-    // Extra taxonomy and terms.
-    Vocabulary::create([
-      'vid' => 'other_tags',
-      'name' => 'Other tags',
-    ])->save();
 
     $this->terms[3][0] = $term = Term::create([
       'vid' => 'tags',
       'name' => "Term 3.0",
     ]);
     $term->save();
-
-    Vocabulary::create([
-      'vid' => 'empty_vocabulary',
-      'name' => 'Empty Vocabulary',
-    ])->save();
 
     return $this->terms;
   }
