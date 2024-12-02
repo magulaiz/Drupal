@@ -413,7 +413,7 @@ class TaxonomyIndexTid extends ManyToOne {
 
     $vocabularies = $this->vocabularyStorage->loadMultiple($this->options['vids']);
     foreach ($vocabularies as $vocabulary) {
-    $dependencies[$vocabulary->getConfigDependencyKey()][] = $vocabulary->getConfigDependencyName();
+      $dependencies[$vocabulary->getConfigDependencyKey()][] = $vocabulary->getConfigDependencyName();
     }
 
     foreach ($this->termStorage->loadMultiple($this->options['value']) as $term) {
