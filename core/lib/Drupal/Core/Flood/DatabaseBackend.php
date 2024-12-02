@@ -62,6 +62,36 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
   }
 
   /**
+   * Inserts an event into the flood table.
+   *
+   * @param string $name
+   *   The name of an event.
+   * @param int $window
+   *   Number of seconds before this event expires.
+   * @param string $identifier
+   *   Unique identifier of the current user.
+   *
+   * @see \Drupal\Core\Flood\DatabaseBackend::register
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3489185
+   */
+  protected function doInsert($name, $window, $identifier) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
+    $this->connection->insert(static::TABLE_NAME)
+      ->fields([
+        'event' => $name,
+        'identifier' => $identifier,
+        'timestamp' => $this->time->getRequestTime(),
+        'expiration' => $this->time->getRequestTime() + $window,
+      ])
+      ->execute();
+  }
+  
+  /**
    * {@inheritdoc}
    */
   public function clear($name, $identifier = NULL) {
@@ -128,6 +158,22 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function garbageCollection() {
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): void {
+        $this->connection->delete(DatabaseBackend::TABLE_NAME)
+          ->condition('expiration', $this->time->getRequestTime(), '<')
+          ->execute();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
+  }
+
+  /**
    * Check if the flood table exists and create it if not.
    *
    * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
@@ -177,22 +223,6 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
     if ($this->connection->schema()->tableExists(static::TABLE_NAME)) {
       throw $e;
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function garbageCollection() {
-    $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function (): void {
-        $this->connection->delete(DatabaseBackend::TABLE_NAME)
-          ->condition('expiration', $this->time->getRequestTime(), '<')
-          ->execute();
-      },
-      schema: [
-        static::TABLE_NAME => $this->schemaDefinition(),
-      ],
-    );
   }
 
   /**
