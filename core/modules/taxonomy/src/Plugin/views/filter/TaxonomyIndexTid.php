@@ -173,14 +173,14 @@ class TaxonomyIndexTid extends ManyToOne {
     $vocabularies = $this->vocabularyStorage->loadMultiple($this->options['vids']);
     if (empty($vocabularies) && $this->options['limit']) {
       $form['markup'] = [
-        '#markup' => '<div class="js-form-item form-item">' . $this->t('Invalid or no vocabularies are selected. Please select valid vocabularies in filter settings.') . '</div>',
+        '#markup' => '<div class="js-form-item form-item">' . $this->t('Invalid or no vocabularies are selected. Select valid vocabularies in filter settings.') . '</div>',
       ];
       return;
     }
 
     $form['value'] = [
-      '#title' => $this->options['limit'] ? $this->formatPlural(count($vocabularies), 'Select terms from vocabulary @vocabs', 'Select terms from vocabularies @vocabs', [
-        '@vocabs' => "'" . implode("', '", $this->getVocabularyLabels($vocabularies)) . "'",
+      '#title' => $this->options['limit'] ? $this->formatPlural(count($vocabularies), 'Select terms from vocabulary @vocabulary_labels', 'Select terms from vocabularies @vocabulary_labels', [
+        '@vocabulary_labels' => "'" . implode("', '", $this->getVocabularyLabels($vocabularies)) . "'",
       ]) : $this->t('Select terms'),
     ];
 
