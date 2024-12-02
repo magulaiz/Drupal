@@ -416,7 +416,9 @@ class DatabaseBackend implements CacheBackendInterface {
       $this->connection->schema()->dropTable($this->bin);
     }
     catch (\Exception $e) {
-      $this->catchException($e);
+      if ($this->connection->schema()->tableExists($this->bin)) {
+        throw $e;
+      }
     }
   }
 
@@ -461,8 +463,14 @@ class DatabaseBackend implements CacheBackendInterface {
    *   The table name. Defaults to $this->bin.
    *
    * @throws \Exception
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Catch
+   *   exceptions directly instead.
+   *
+   * @see https://www.drupal.org/node/3489185
    */
   protected function catchException(\Exception $e, $table_name = NULL) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Catch exceptions directly instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
     if ($this->connection->schema()->tableExists($table_name ?: $this->bin)) {
       throw $e;
     }

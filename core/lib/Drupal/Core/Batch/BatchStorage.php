@@ -154,6 +154,81 @@ class BatchStorage implements BatchStorageInterface {
   }
 
   /**
+   * Inserts a record in the table and returns the batch id.
+   *
+   * @return int
+   *   A batch id.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3489185
+   */
+  protected function doInsertBatchRecord(): int {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
+    return $this->connection->insert('batch')
+      ->fields([
+        'timestamp' => $this->time->getRequestTime(),
+        'token' => '',
+        'batch' => NULL,
+      ])
+      ->execute();
+  }
+
+  /**
+   * Check if the table exists and create it if not.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3489185
+   */
+  protected function ensureTableExists() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
+    try {
+      $database_schema = $this->connection->schema();
+      $schema_definition = $this->schemaDefinition();
+      $database_schema->createTable(static::TABLE_NAME, $schema_definition);
+    }
+    // If another process has already created the batch table, attempting to
+    // recreate it will throw an exception. In this case just catch the
+    // exception and do nothing.
+    catch (DatabaseException) {
+    }
+    catch (\Exception) {
+      return FALSE;
+    }
+    return TRUE;
+  }
+
+  /**
+   * Act on an exception when batch might be stale.
+   *
+   * If the table does not yet exist, that's fine, but if the table exists and
+   * yet the query failed, then the batch is stale and the exception needs to
+   * propagate.
+   *
+   * @param $e
+   *   The exception.
+   *
+   * @throws \Exception
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3489185
+   */
+  protected function catchException(\Exception $e) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
+    if ($this->connection->schema()->tableExists(static::TABLE_NAME)) {
+      throw $e;
+    }
+  }
+
+  /**
    * Defines the schema for the batch table.
    *
    * @internal
