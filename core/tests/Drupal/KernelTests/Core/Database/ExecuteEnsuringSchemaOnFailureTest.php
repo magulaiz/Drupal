@@ -114,7 +114,7 @@ class ExecuteEnsuringSchemaOnFailureTest extends DatabaseTestBase {
         ],
         'primary key' => ['did'],
         'indexes' => [
-            'hdid' => ['hid', 'did'],
+          'hid_did' => ['hid', 'did'],
         ],
       ],
     ];
