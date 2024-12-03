@@ -1,2 +1,7 @@
 parameters:
   datetime_range.hooks_converted: true
+
+services:
+  Drupal\datetime_range\Hook\DatetimeRangeHooks:
+    class: Drupal\datetime_range\Hook\DatetimeRangeHooks
+    autowire: true

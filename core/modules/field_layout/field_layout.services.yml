@@ -1,2 +1,7 @@
 parameters:
   field_layout.hooks_converted: true
+
+services:
+  Drupal\field_layout\Hook\FieldLayoutHooks:
+    class: Drupal\field_layout\Hook\FieldLayoutHooks
+    autowire: true
