@@ -163,7 +163,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
    */
   public function testFilterUI(): void {
     $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
-    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->drupalGet('/admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
 
     $result = $this->assertSession()->selectExists('edit-options-value')->findAll('css', 'option');
 
@@ -186,7 +186,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $display =& $view->getDisplay('default');
     $display['display_options']['filters']['tid']['type'] = 'textfield';
     $view->save();
-    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->drupalGet('/admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
     $this->assertSession()->fieldExists('edit-options-value');
 
     // Tests \Drupal\taxonomy\Plugin\views\filter\TaxonomyIndexTid::calculateDependencies().
@@ -241,10 +241,10 @@ class TaxonomyIndexTidUiTest extends UITestBase {
       'options[vids][tags2]' => TRUE,
       'options[type]' => 'textfield',
     ];
-    $this->drupalGet('admin/structure/views/nojs/handler-extra/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->drupalGet('/admin/structure/views/nojs/handler-extra/test_filter_taxonomy_index_tid/default/filter/tid');
     $this->submitForm($edit, 'Apply');
     // Expose the filter.
-    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->drupalGet('/admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
     $this->submitForm([], 'Expose filter');
 
     $edit = [
@@ -255,11 +255,11 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
     // Check that the terms from both vocabularies are available in the UI.
-    $this->drupalGet('test-filter-taxonomy-index-tid', ['query' => ['tid' => '']]);
+    $this->drupalGet('/test-filter-taxonomy-index-tid', ['query' => ['tid' => '']]);
     $xpath = $this->xpath('//div[@class="views-row"]//a');
     $this->assertCount(3, $xpath);
     // The nodes tagged with the term from the first vocabulary should be shown.
-    $this->drupalGet('test-filter-taxonomy-index-tid', ['query' => ['tid' => "{$this->terms[0][0]->getName()}"]]);
+    $this->drupalGet('/test-filter-taxonomy-index-tid', ['query' => ['tid' => "{$this->terms[0][0]->getName()}"]]);
     $xpath = $this->xpath('//div[@class="views-row"]//a');
     $this->assertCount(2, $xpath);
     $xpath = $this->xpath('//div[@class="views-row"]//a[@href=:href]', [
@@ -270,7 +270,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
       ':href' => $node2->toUrl()->toString(),
     ]);
     $this->assertCount(1, $xpath);
-    $this->drupalGet('test-filter-taxonomy-index-tid', ['query' => ['tid' => "{$terms2[0][0]->getName()}"]]);
+    $this->drupalGet('/test-filter-taxonomy-index-tid', ['query' => ['tid' => "{$terms2[0][0]->getName()}"]]);
     $xpath = $this->xpath('//div[@class="views-row"]//a');
     $this->assertCount(2, $xpath);
     $xpath = $this->xpath('//div[@class="views-row"]//a[@href=:href]', [
@@ -281,7 +281,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
       ':href' => $node2->toUrl()->toString(),
     ]);
     $this->assertCount(1, $xpath);
-    $this->drupalGet('test-filter-taxonomy-index-tid', ['query' => ['tid' => "{$this->terms[0][0]->getName()}, {$terms2[0][0]->getName()}"]]);
+    $this->drupalGet('/test-filter-taxonomy-index-tid', ['query' => ['tid' => "{$this->terms[0][0]->getName()}, {$terms2[0][0]->getName()}"]]);
     $xpath = $this->xpath('//div[@class="views-row"]//a');
     $this->assertCount(1, $xpath);
     $xpath = $this->xpath('//div[@class="views-row"]//a[@href=:href]', [
@@ -317,7 +317,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     ]);
 
     // Only the nodes with the selected term should be shown.
-    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $this->drupalGet('/test-filter-taxonomy-index-tid');
     $this->assertSession()->pageTextNotContains($node1->getTitle());
     $this->assertSession()->linkByHrefNotExists($node1->toUrl()->toString());
     $xpath_node2_link = $this->assertSession()->buildXPathQuery('//div[@class="views-row"]//a[@href=:url and text()=:label]', [
@@ -334,7 +334,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $this->assertSession()->linkByHrefNotExists($node4->toUrl()->toString());
 
     // Expose the filter.
-    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->drupalGet('/admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
     $this->submitForm([], 'Expose filter');
     // Set the operator to 'empty' and remove the default term ID.
     $this->submitForm([
@@ -346,7 +346,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
 
     // After switching to 'empty' operator, the node without a term should be
     // shown.
-    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $this->drupalGet('/test-filter-taxonomy-index-tid');
     $xpath_node1_link = $this->assertSession()->buildXPathQuery('//div[@class="views-row"]//a[@href=:url and text()=:label]', [
       ':url' => $node1->toUrl()->toString(),
       ':label' => $node1->label(),
@@ -360,14 +360,14 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $this->assertSession()->linkByHrefNotExists($node4->toUrl()->toString());
 
     // Set the operator to 'not empty'.
-    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->drupalGet('/admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
     $this->submitForm(['options[operator]' => 'not empty'], 'Apply');
     // Save the view.
     $this->submitForm([], 'Save');
 
     // After switching to 'not empty' operator, all nodes with terms should be
     // shown.
-    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $this->drupalGet('/test-filter-taxonomy-index-tid');
     $this->assertSession()->pageTextNotContains($node1->getTitle());
     $this->assertSession()->linkByHrefNotExists($node1->toUrl()->toString());
     $xpath_node2_link = $this->assertSession()->buildXPathQuery('//div[@class="views-row"]//a[@href=:url and text()=:label]', [
@@ -388,33 +388,33 @@ class TaxonomyIndexTidUiTest extends UITestBase {
 
     // Select 'Term ID' as the field to be displayed.
     $edit = ['name[taxonomy_term_field_data.tid]' => TRUE];
-    $this->drupalGet('admin/structure/views/nojs/add-handler/test_taxonomy_term_name/default/field');
+    $this->drupalGet('/admin/structure/views/nojs/add-handler/test_taxonomy_term_name/default/field');
     $this->submitForm($edit, 'Add and configure fields');
     // Select 'Term' and 'Vocabulary' as filters.
     $edit = [
       'name[taxonomy_term_field_data.tid]' => TRUE,
       'name[taxonomy_term_field_data.vid]' => TRUE,
     ];
-    $this->drupalGet('admin/structure/views/nojs/add-handler/test_taxonomy_term_name/default/filter');
+    $this->drupalGet('/admin/structure/views/nojs/add-handler/test_taxonomy_term_name/default/filter');
     $this->submitForm($edit, 'Add and configure filter criteria');
     // Select 'Empty Vocabulary' and 'Autocomplete' from the list of options.
     $edit = [
       'options[vids][empty_vocabulary]' => TRUE,
       'options[type]' => 'textfield',
     ];
-    $this->drupalGet('admin/structure/views/nojs/handler-extra/test_taxonomy_term_name/default/filter/tid');
+    $this->drupalGet('/admin/structure/views/nojs/handler-extra/test_taxonomy_term_name/default/filter/tid');
     $this->submitForm($edit, 'Apply and continue');
     // Expose the filter.
     $edit = ['options[expose_button][checkbox][checkbox]' => TRUE];
-    $this->drupalGet('admin/structure/views/nojs/handler/test_taxonomy_term_name/default/filter/tid');
+    $this->drupalGet('/admin/structure/views/nojs/handler/test_taxonomy_term_name/default/filter/tid');
     $this->submitForm($edit, 'Expose filter');
-    $this->drupalGet('admin/structure/views/nojs/handler/test_taxonomy_term_name/default/filter/tid');
+    $this->drupalGet('/admin/structure/views/nojs/handler/test_taxonomy_term_name/default/filter/tid');
     $this->submitForm($edit, 'Apply');
     // Filter 'Taxonomy terms' belonging to 'Empty Vocabulary'.
     $edit = ['options[value][empty_vocabulary]' => TRUE];
-    $this->drupalGet('admin/structure/views/nojs/handler/test_taxonomy_term_name/default/filter/vid');
+    $this->drupalGet('/admin/structure/views/nojs/handler/test_taxonomy_term_name/default/filter/vid');
     $this->submitForm($edit, 'Apply');
-    $this->drupalGet('admin/structure/views/view/test_taxonomy_term_name/edit/default');
+    $this->drupalGet('/admin/structure/views/view/test_taxonomy_term_name/edit/default');
     $this->submitForm([], 'Save');
     $this->submitForm([], 'Update preview');
     $this->assertSession()->pageTextNotContains($node1->getTitle());
@@ -484,17 +484,17 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     $this->terms[1][0]->setUnpublished()->save();
     // Expose the filter.
-    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->drupalGet('/admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
     $this->submitForm([], 'Expose filter');
     $edit = ['options[expose_button][checkbox][checkbox]' => TRUE];
     $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
     // Make sure the unpublished term is shown to the admin user.
-    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $this->drupalGet('/test-filter-taxonomy-index-tid');
     $this->assertNotEmpty($this->cssSelect('option[value="' . $this->terms[0][0]->id() . '"]'));
     $this->assertNotEmpty($this->cssSelect('option[value="' . $this->terms[1][0]->id() . '"]'));
     $this->drupalLogout();
-    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $this->drupalGet('/test-filter-taxonomy-index-tid');
     // Make sure the unpublished term isn't shown to the anonymous user.
     $this->assertNotEmpty($this->cssSelect('option[value="' . $this->terms[0][0]->id() . '"]'));
     $this->assertEmpty($this->cssSelect('option[value="' . $this->terms[1][0]->id() . '"]'));
@@ -504,14 +504,14 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $edit = [
       'options[hierarchy]' => FALSE,
     ];
-    $this->drupalGet('admin/structure/views/nojs/handler-extra/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->drupalGet('/admin/structure/views/nojs/handler-extra/test_filter_taxonomy_index_tid/default/filter/tid');
     $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
-    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $this->drupalGet('/test-filter-taxonomy-index-tid');
     $this->assertNotEmpty($this->cssSelect('option[value="' . $this->terms[0][0]->id() . '"]'));
     $this->assertNotEmpty($this->cssSelect('option[value="' . $this->terms[1][0]->id() . '"]'));
     $this->drupalLogout();
-    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $this->drupalGet('/test-filter-taxonomy-index-tid');
     // Make sure the unpublished term isn't shown to the anonymous user.
     $this->assertNotEmpty($this->cssSelect('option[value="' . $this->terms[0][0]->id() . '"]'));
     $this->assertEmpty($this->cssSelect('option[value="' . $this->terms[1][0]->id() . '"]'));
@@ -521,6 +521,8 @@ class TaxonomyIndexTidUiTest extends UITestBase {
    * Tests using the TaxonomyIndexTid in a filter group.
    */
   public function testFilterGrouping(): void {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
+
     $node_type = $this->drupalCreateContentType(['type' => 'page']);
 
     // Create the tag field itself.
@@ -579,7 +581,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     ];
     $view->save();
 
-    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $this->drupalGet('/test-filter-taxonomy-index-tid');
     // We expect no nodes tagged with term 1.0 or 1.1. The node tagged with
     // term 2.0 and the untagged node will be shown.
     $this->assertSession()->pageTextNotContains($node_with_term_1_0->label());
@@ -603,7 +605,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $display['display_options']['filters']['tid_2']['group'] = 2;
     $view->save();
 
-    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $this->drupalGet('/test-filter-taxonomy-index-tid');
     // We expect all the tagged nodes but not the untagged node.
     $this->assertSession()->pageTextContainsOnce($node_with_term_1_0->label());
     // The view does not have DISTINCT query enabled, the node tagged with
@@ -628,7 +630,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $display['display_options']['filters']['tid_2']['group'] = 2;
     $view->save();
 
-    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $this->drupalGet('/test-filter-taxonomy-index-tid');
     // We expect none of the nodes tagged with term 1.0. The node tagged with
     // term 2.0 and the untagged node should be shown.
     $this->assertSession()->pageTextNotContains($node_with_term_1_0->label());
@@ -650,7 +652,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $display['display_options']['filters']['tid_2']['value'][0] = $this->terms[2][0]->id();
     $view->save();
 
-    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $this->drupalGet('/test-filter-taxonomy-index-tid');
     // We expect all the tagged nodes to be shown but not the untagged node.
     $this->assertSession()->pageTextContainsOnce($node_with_term_1_0->label());
     $this->assertSession()->pageTextContainsOnce($node_with_terms_1_0_and_1_1->label());
@@ -685,7 +687,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     ];
     $view->save();
 
-    $this->drupalGet('test-filter-taxonomy-index-tid');
+    $this->drupalGet('/test-filter-taxonomy-index-tid');
     // We expect no nodes tagged with term 1.0 or 1.1. The node tagged with
     // term 3.0 and the untagged node will be shown.
     $this->assertSession()->pageTextContainsOnce($node_with_term_1_0->label());
