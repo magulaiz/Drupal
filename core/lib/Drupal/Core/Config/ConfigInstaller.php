@@ -188,7 +188,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $existing_config = $this->getActiveStorages()->listAll();
 
     // Get proper storage for non-default collection.
-    if (!empty($storage) && $storage->getCollectionName() != $collection) {
+    if ($storage !== NULL && $storage->getCollectionName() !== $collection) {
       $default_storage = $storage;
       $storage = $storage->createCollection($collection);
     }
