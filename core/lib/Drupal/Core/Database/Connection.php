@@ -1631,7 +1631,11 @@ abstract class Connection {
    *   FALSE.
    *
    * @return bool
-   *   TRUE if the closure was executed successfully, FALSE otherwise.
+   *   TRUE if the closure was executed without exceptions, FALSE otherwise.
+   *
+   * @throws \Exception
+   *   When the failure of the callback execution was not related to missing
+   *   tables in the database schema.
    */
   public function executeEnsuringSchemaOnFailure(
     \Closure $execute,
@@ -1639,28 +1643,30 @@ abstract class Connection {
     mixed &$returnValue = NULL,
     bool $retryAfterSchemaEnsured = FALSE,
   ): bool {
-    if (\Drupal::hasService('event_dispatcher')) {
-      $dispatcher = \Drupal::service('event_dispatcher');
 
-      // @todo Temporary, Drush does not add the subscriber on cache rebuild.
-      if (!$dispatcher->hasListeners(ExecuteMethodEnsuringSchemaEvent::class)) {
-        $dispatcher->addSubscriber(new SchemaRequestSubscriber($this));
-      }
-
-      $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $retryAfterSchemaEnsured);
-      $dispatcher->dispatch($event);
-      if ($event->getSuccess()) {
-        $returnValue = $event->getResult();
-      }
-      return $event->getSuccess();
+    // When rebuilding the container, there's a stage when the event_dispatcher
+    // service has not been reactivated yet. In that case, execute the closure,
+    // set its returned value to the $returnValue variable, and return TRUE;
+    // if the callback throws an exception, it will just propagate so it's
+    // useless to return FALSE.
+    if (!\Drupal::hasService('event_dispatcher')) {
+      $returnValue = $execute();
+      return TRUE;
     }
 
-    // When rebuilding the container, there's a stage when the
-    // event_dispatcher service has not been reactivated yet. In that case,
-    // execute the closure and return its result, without performing the schema
-    // enforcement.
-    $returnValue = $execute();
-    return TRUE;
+    $dispatcher = \Drupal::service('event_dispatcher');
+
+    // @todo Temporary, Drush does not add the subscriber on cache rebuild.
+    if (!$dispatcher->hasListeners(ExecuteMethodEnsuringSchemaEvent::class)) {
+      $dispatcher->addSubscriber(new SchemaRequestSubscriber($this));
+    }
+
+    $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $retryAfterSchemaEnsured);
+    $dispatcher->dispatch($event);
+    if ($event->getSuccess()) {
+      $returnValue = $event->getResult();
+    }
+    return $event->getSuccess();
   }
 
 }
