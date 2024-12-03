@@ -214,7 +214,7 @@ class Drupal {
    * @throws \Psr\Container\ContainerExceptionInterface
    *   The service is not available, or does not have the expected type.
    */
-  public static function serviceByClass(string $class, string|null $id = NULL): object {
+  public static function serviceByClass(string $class, ?string $id = NULL): object {
     $service = self::getContainer()->get($id ?? $class);
     if (!$service instanceof $class) {
       if ($id === NULL) {
