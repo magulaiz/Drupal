@@ -17,6 +17,7 @@ use Drupal\media_library\Form\FileUploadForm;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Render\Element;
 
 /**
  * Hook implementations for media_library.
@@ -208,13 +209,6 @@ class MediaLibraryHooks {
 
   /**
    * Implements hook_form_FORM_ID_alter().
-   *
-   * Alter the bulk form to add a more accessible label.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
    *
    * @todo Remove in https://www.drupal.org/node/2983454
    */
