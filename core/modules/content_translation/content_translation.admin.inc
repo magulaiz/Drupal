@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 
@@ -27,6 +28,7 @@ use Drupal\Core\Render\Element;
  * @return array
  *   A form element to configure field synchronization.
  */
+#[StopProceduralHookScan]
 function content_translation_field_sync_widget(FieldDefinitionInterface $field, $element_name = 'third_party_settings[content_translation][translation_sync]') {
   // No way to store field sync information on this field.
   if (!($field instanceof ThirdPartySettingsInterface)) {
