@@ -46,7 +46,7 @@ class NodeViewsData extends EntityViewsData {
       $this->moduleHandler->invokeAllWith(
         'node_grants',
         static function (callable $hook, string $module) use (&$implementations, $module_data) {
-          $implementations[$module] = $module_data[$module]->info['name'];
+          $implementations[$module] = $module_data[$module]['name'];
         }
       );
       $this->moduleHandler->invokeAllWith(
