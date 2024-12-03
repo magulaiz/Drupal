@@ -52,7 +52,7 @@ class NodeViewsData extends EntityViewsData {
       $this->moduleHandler->invokeAllWith(
         'node_grants_alter',
         static function (callable $hook, string $module) use (&$implementations, $module_data) {
-          $implementations[$module] = $module_data[$module]->info['name'];
+          $implementations[$module] = $module_data[$module]['name'];
         }
       );
       uasort($implementations, 'strnatcasecmp');
