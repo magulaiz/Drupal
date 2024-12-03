@@ -475,8 +475,11 @@ class TaxonomyIndexTidUiTest extends UITestBase {
 
   /**
    * Tests using the TaxonomyIndexTid in a filter group.
+   *
+   * @greoup legacy
    */
   public function testFilterGrouping() {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     $node_type = $this->drupalCreateContentType(['type' => 'page']);
 
     // Create the tag field itself.
