@@ -225,15 +225,13 @@ class Drupal {
           get_class($service),
         ));
       }
-      else {
-        // @todo Introduce a dedicated exception type.
-        throw new ServiceNotFoundException(sprintf(
-          "Expected '%s' object, found '%s' object, for service '%s'.",
-          $class,
-          get_class($service),
-          $id,
-        ));
-      }
+      // @todo Introduce a dedicated exception type.
+      throw new ServiceNotFoundException(sprintf(
+        "Expected '%s' object, found '%s' object, for service '%s'.",
+        $class,
+        get_class($service),
+        $id,
+      ));
     }
     return $service;
   }
