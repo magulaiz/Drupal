@@ -55205,6 +55205,30 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceFormValidationTest\\:\\:isLabelInContentOverview\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceFormValidationTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceFormValidationTest\\:\\:setupWorkspaceSwitcherBlock\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceFormValidationTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceFormValidationTest\\:\\:switchToLive\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceFormValidationTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceFormValidationTest\\:\\:switchToWorkspace\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceFormValidationTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceMenuLinkContentIntegrationTest\\:\\:isLabelInContentOverview\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceMenuLinkContentIntegrationTest.php',
