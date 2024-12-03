@@ -7,6 +7,7 @@
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 
 /*
  * Load all public Field API functions. Drupal currently has no
@@ -22,6 +23,11 @@ require_once __DIR__ . '/field.purge.inc';
 /**
  * Assembles a partial entity structure with initial IDs.
  *
+ * Procedural hook scanning is stopped here because field.purge.inc
+ * has some procedural hooks. Since it is manually included here we do not
+ * utilize the attribute in the .inc file otherwise no hooks in this file would
+ * be scanned if they were to be added.
+ *
  * @param object $ids
  *   An object with the properties entity_type (required), entity_id (required),
  *   revision_id (optional) and bundle (optional).
@@ -29,6 +35,7 @@ require_once __DIR__ . '/field.purge.inc';
  * @return \Drupal\Core\Entity\EntityInterface
  *   An entity, initialized with the provided IDs.
  */
+#[StopProceduralHookScan]
 function _field_create_entity_from_ids($ids) {
   $id_properties = [];
   $entity_type = \Drupal::entityTypeManager()->getDefinition($ids->entity_type);
