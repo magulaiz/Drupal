@@ -43,14 +43,14 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
     catch (\Exception $e) {
       // If there was an exception, try to create the schema.
       $event->setSuccess(FALSE);
-      $tryAgain = $this->processSchema($event->schema);
-      if (!$tryAgain) {
+      $schemaChanged = $this->processSchema($event->schema);
+      if (!$schemaChanged) {
         // If the exception happened for other reasons than the missing schema,
         // propagate the exception.
         throw $e;
       }
       // Now that the schema has been created, try again if requested.
-      if ($event->retryAfterSchemaEnsured && $tryAgain) {
+      if ($event->retryAfterSchemaEnsured && $schemaChanged) {
         $event->setResult(($event->execute)());
         $event->setSuccess(TRUE);
       }
@@ -65,16 +65,19 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
    *   array as value.
    */
   protected function processSchema(array $schema): bool {
+    $schemaChanged = FALSE;
     foreach ($schema as $name => $definition) {
       try {
         if (!$this->connection->schema()->tableExists($name)) {
           try {
             $this->connection->schema()->createTable($name, $definition);
+            $schemaChanged = TRUE;
           }
           // In a race condition, if another process has already created the
           // table, attempting to create it will throw an exception. In this
-          // case just catch the exception and do nothing.
+          // case just assume the schema was changed here.
           catch (DatabaseException) {
+            $schemaChanged = TRUE;
           }
         }
       }
@@ -82,7 +85,7 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
         return FALSE;
       }
     }
-    return TRUE;
+    return $schemaChanged;
   }
 
 }

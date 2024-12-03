@@ -1617,6 +1617,9 @@ abstract class Connection {
   /**
    * Executes a callback, and enforces a database schema in case of failure.
    *
+   * Any exception thrown by the callback that is not related to a missing
+   * schema object is propagated to the caller.
+   *
    * @param \Closure $execute
    *   The callback to be executed.
    * @param array<string,array<string,mixed>> $schema
