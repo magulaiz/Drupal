@@ -22,7 +22,7 @@ class BlockThemeInstalledHook {
     if (InstallerKernel::installationAttempted() && \Drupal::config('core.extension')->get('module.' . \Drupal::installProfile()) === NULL) {
       return;
     }
-  
+
     foreach ($theme_list as $theme) {
       // Don't initialize themes that are not displayed in the UI.
       if (\Drupal::service('theme_handler')->hasUi($theme)) {

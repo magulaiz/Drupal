@@ -1,11 +1,11 @@
 <?php
 
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
-
 /**
  * @file
  * Install, update and uninstall functions for File module.
  */
+
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 
 /**
  * Implements hook_requirements().
