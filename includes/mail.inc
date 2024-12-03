@@ -10,8 +10,19 @@
  *
  * $conf['mail_line_endings'] will override this setting.
  */
-define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'], 'Win32') !== FALSE) ? "\r\n" : "\n");
-
+if (defined('PHP_VERSION_ID') && PHP_VERSION_ID < 80000 ) {
+  if (isset($_SERVER['WINDIR']) || isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'], 'Win32') !== FALSE) {
+    define('MAIL_LINE_ENDINGS', "\r\n");
+  }
+  else {
+    //If PHP version is below 8 and server software is not Windows then keep using LF instead of CRLF
+    define('MAIL_LINE_ENDINGS', "\n");
+  }
+}
+else {
+  //If PHP version is 8 and above use CRLF line endings
+  define('MAIL_LINE_ENDINGS', "\r\n");
+}
 
 /**
  * Special characters, defined in RFC_2822.
