@@ -314,6 +314,7 @@ mbytes
 mediaimagetextalternative
 mediaimagetextalternativeediting
 mediaimagetextalternativeui
+mediumblob
 mediumint
 mediumtext
 messagekey
@@ -578,6 +579,7 @@ tids
 timegate
 timemap
 timespan
+tinyblob
 tinyint
 tinytext
 titlealert
