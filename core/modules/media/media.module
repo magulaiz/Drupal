@@ -16,7 +16,6 @@ use Drupal\media\Plugin\media\Source\OEmbedInterface;
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-#[StopProceduralHookScan]
 function media_theme_suggestions_media(array $variables) {
   $suggestions = [];
   /** @var \Drupal\media\MediaInterface $media */
@@ -67,6 +66,7 @@ function media_theme_suggestions_media(array $variables) {
  *   - name: The label for the media item.
  *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
  */
+#[StopProceduralHookScan]
 function template_preprocess_media(array &$variables): void {
   $variables['media'] = $variables['elements']['#media'];
   $variables['view_mode'] = $variables['elements']['#view_mode'];

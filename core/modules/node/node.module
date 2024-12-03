@@ -23,6 +23,23 @@ use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function node_theme_suggestions_node(array $variables) {
+  $suggestions = [];
+  $node = $variables['elements']['#node'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'node__' . $sanitized_view_mode;
+  $suggestions[] = 'node__' . $node->bundle();
+  $suggestions[] = 'node__' . $node->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'node__' . $node->id();
+  $suggestions[] = 'node__' . $node->id() . '__' . $sanitized_view_mode;
+
+  return $suggestions;
+}
+
+/**
  * Gathers a listing of links to nodes.
  *
  * @param \Drupal\Core\Database\StatementInterface $result
@@ -275,23 +292,6 @@ function node_preprocess_field__node(&$variables): void {
     $skip_custom_preprocessing = $node->getEntityType()->get('enable_base_field_custom_preprocess_skipping');
     $variables['is_inline'] = !$skip_custom_preprocessing || !$node->getFieldDefinition($variables['field_name'])->isDisplayConfigurable('view');
   }
-}
-
-/**
- * Implements hook_theme_suggestions_HOOK().
- */
-function node_theme_suggestions_node(array $variables) {
-  $suggestions = [];
-  $node = $variables['elements']['#node'];
-  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
-
-  $suggestions[] = 'node__' . $sanitized_view_mode;
-  $suggestions[] = 'node__' . $node->bundle();
-  $suggestions[] = 'node__' . $node->bundle() . '__' . $sanitized_view_mode;
-  $suggestions[] = 'node__' . $node->id();
-  $suggestions[] = 'node__' . $node->id() . '__' . $sanitized_view_mode;
-
-  return $suggestions;
 }
 
 /**
