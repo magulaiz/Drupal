@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Render\Element;
 
 /**
@@ -15,6 +16,7 @@ use Drupal\Core\Render\Element;
  *   An associative array containing:
  *   - style: \Drupal\image\ImageStyleInterface image style being previewed.
  */
+#[StopProceduralHookScan]
 function template_preprocess_image_style_preview(&$variables): void {
 
   /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
