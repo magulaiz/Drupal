@@ -60,8 +60,9 @@ class DefaultMailSystem implements MailSystemInterface {
     // line-ending format appropriate for your system. If you need to
     // override this, adjust $conf['mail_line_endings'] in settings.php.
     $mail_body = preg_replace('@\r?\n@', $line_endings, $message['body']);
-    // Use here also the variable MAIL_LINE_ENDINGS
-    $mail_headers = join($line_endings, $mimeheaders);
+    // For headers, PHP's API suggests that we use CRLF normally,
+    // but some MTAs incorrectly replace LF with CRLF. See #234403.
+    $mail_headers = join("\n", $mimeheaders);
 
     // We suppress warnings and notices from mail() because of issues on some
     // hosts. The return value of this method will still indicate whether mail
