@@ -119,11 +119,11 @@ views.field.taxonomy_index_tid:
 views.filter.taxonomy_index_tid:
   type: views.filter.many_to_one
   label: 'Taxonomy term ID'
+  deprecated: "The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414"
   mapping:
     vid:
       type: string
       label: 'Vocabulary'
-      deprecated: "The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414"
     vids:
       type: sequence
       label: 'Vocabularies'
