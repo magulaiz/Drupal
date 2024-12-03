@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * @file
  * Views data altering to test use of the entity reference plugin.
  */
+
+declare(strict_types=1);
 
 /**
  * Implements hook_views_data_alter().
