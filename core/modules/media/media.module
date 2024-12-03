@@ -6,6 +6,7 @@
 
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Core\Template\Attribute;
@@ -15,6 +16,7 @@ use Drupal\media\Plugin\media\Source\OEmbedInterface;
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
+#[StopProceduralHookScan]
 function media_theme_suggestions_media(array $variables) {
   $suggestions = [];
   /** @var \Drupal\media\MediaInterface $media */

@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Template\Attribute;
 
@@ -15,6 +16,7 @@ use Drupal\Core\Template\Attribute;
  *   - content: An associative array containing the properties of the element.
  *     Properties used: #settings, #layout, #in_preview.
  */
+#[StopProceduralHookScan]
 function template_preprocess_layout(&$variables): void {
   $variables['settings'] = $variables['content']['#settings'] ?? [];
   $variables['layout'] = $variables['content']['#layout'] ?? [];
