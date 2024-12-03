@@ -705,10 +705,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *
    * Hooks called during install will remain procedural.
    * - hook_install()
-   * - hook_module_preinstall()
-   * - hook_module_preuninstall()
-   * - hook_modules_installed()
-   * - hook_modules_uninstalled()
+   * - hook_install_tasks()
+   * - hook_install_tasks_alter()
    * - hook_post_update_NAME()
    * - hook_schema()
    * - hook_uninstall()
@@ -724,9 +722,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
    */
   protected function invokeAll($hook, $args = []): void {
     $this->moduleHandler->loadAll();
-    foreach ($this->moduleHandler->getModuleList() as $module => $extension) {
-      $this->moduleHandler->invoke($module, $hook, $args);
-    }
+    $this->moduleHandler->invokeAll($hook, $args);
   }
 
   /**

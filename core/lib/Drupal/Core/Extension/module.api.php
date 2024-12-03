@@ -349,6 +349,8 @@ function hook_uninstall($is_syncing): void {
 /**
  * Return an array of tasks to be performed by an installation profile.
  *
+ * Only procedural implementations are supported for this hook.
+ *
  * Any tasks you define here will be run, in order, after the installer has
  * finished the site configuration step but before it has moved on to the
  * final import of languages and the end of the installation. This is invoked
@@ -512,6 +514,8 @@ function hook_install_tasks(&$install_state) {
 
 /**
  * Alter the full list of installation tasks.
+ *
+ * Only procedural implementations are supported for this hook.
  *
  * You can use this hook to change or replace any part of the Drupal
  * installation process that occurs after the installation profile is selected.
@@ -1108,11 +1112,12 @@ function hook_updater_info_alter(&$updaters) {
  *     install phase, this should only be used for version numbers, do not set
  *     it if not applicable.
  *   - description: The description of the requirement/status.
- *   - severity: The requirement's result/severity level, one of:
+ *   - severity: (optional) The requirement's result/severity level, one of:
  *     - REQUIREMENT_INFO: For info only.
  *     - REQUIREMENT_OK: The requirement is satisfied.
  *     - REQUIREMENT_WARNING: The requirement failed with a warning.
  *     - REQUIREMENT_ERROR: The requirement failed with an error.
+ *     Defaults to REQUIREMENT_OK when installing, REQUIREMENT_INFO otherwise.
  */
 function hook_requirements($phase) {
   $requirements = [];
