@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\HeaderBag;
  * Principally used in the composite Htmx value object.
  *
  * @see \Drupal\Core\Ajax\Htmx
- * @see https://htmx.org/reference/
+ * @see https://htmx.org/reference/#response_headers
  */
 class HtmxResponseHeaders implements HtmxHeaderInterface {
 

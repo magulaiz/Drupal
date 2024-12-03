@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\HtmxAttribute;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -160,10 +161,12 @@ class ConfigSingleExportForm extends FormBase {
       // See https://htmx.org/attributes/hx-swap-oob/ for a detailed description
       // of selection and targeting with ::swapOob.
       // Since this is placed directly in the prefix string, use an
-      // HtmxAttribute object directly.
-      $export_htmx = new HtmxAttribute();
-      $attributes = (string) $export_htmx->swapOob('outerHTML:#edit-export-wrapper');
-      $form['export']['#prefix'] = '<div id="edit-export-wrapper" ' . $attributes . '>';
+      // HtmxAttribute object directly and merge it with standard attributes.
+      $attributes = new Attribute(['id' => 'edit-export-wrapper']);
+      $export_htmx_attributes = new HtmxAttribute();
+      $export_htmx_attributes->swapOob('outerHTML:#edit-export-wrapper');
+      $attributes = $attributes->merge($export_htmx_attributes);
+      $form['export']['#prefix'] = '<div  ' . $attributes . '>';
     }
     elseif ($trigger === 'edit-config-name') {
       // A name is selected.

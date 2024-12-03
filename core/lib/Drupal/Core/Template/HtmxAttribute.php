@@ -6,16 +6,27 @@ use Drupal\Core\Url;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 /**
- * Adds methods for creating HTMX attributes.
+ * Collects, sanitizes, and renders attributes for HTMX integration.
  *
- * References to HTMX attributes are given on each method.
+ * This object is composed into \Drupal\Core\Ajax\Htmx. The most common usage
+ * will be to access it as a property there.
  *
- * We hope to add an interface, AttributeInterface, to core and implement that
- * rather than extend a class.  For now, this is what we can do.
+ * There are times when this class is needed directly because a portion of
+ * HTML is being managed directly, such as a prefix
+ * element.
  *
+ * @code
+ * $attributes = new Attribute(['id' => 'edit-export-wrapper']);
+ * $export_htmx_attributes = new HtmxAttribute();
+ * $export_htmx_attributes->swapOob('outerHTML:#edit-export-wrapper');
+ * $attributes = $attributes->merge($export_htmx_attributes);
+ * $form['export']['#prefix'] = '<div  ' . $attributes . '>';
+ * @endcode
+ *
+ * @see \Drupal\Core\Ajax\Htmx
  * @see https://htmx.org/reference/
  */
-class HtmxAttribute Implements HtmlAttributeInterface {
+class HtmxAttribute implements HtmlAttributeInterface {
 
   use HtmlAttributeTrait;
 
