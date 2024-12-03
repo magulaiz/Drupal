@@ -37,10 +37,12 @@ class NodeViewsData extends EntityViewsData {
     // Use status = 1 instead of status <> 0 in WHERE statement.
     $data['node_field_data']['status']['filter']['use_equal'] = TRUE;
 
+    // Check for any extensions that use node grants and block the use of this
+    // filter. If this filter is blocked then provide a helpful message.
     $status_extra_help_text = $this->t('Filters out unpublished content if the current user cannot view it.');
     if ($this->moduleHandler->hasImplementations('node_grants')) {
       $implementations = [];
-      $module_data = \Drupal::getContainer()->get('extension.list.module')->getList();
+      $module_data = \Drupal::getContainer()->get('extension.list.module')->getAllInstalledInfo();
       $this->moduleHandler->invokeAllWith(
         'node_grants',
         static function (callable $hook, string $module) use (&$implementations, $module_data) {
