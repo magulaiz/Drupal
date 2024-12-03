@@ -131,17 +131,27 @@ class DatabaseStorage implements StorageInterface {
    */
   public function write($name, array $data) {
     $data = $this->encode($data);
-    try {
-      return $this->doWrite($name, $data);
-    }
-    catch (\Exception $e) {
-      // If there was an exception, try to create the table.
-      if ($this->ensureTableExists()) {
-        return $this->doWrite($name, $data);
-      }
+
+    $writeSuccess = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use($name, $data): bool {
+        return (bool) $this->connection->merge($this->table, $this->options)
+          ->keys(['collection', 'name'], [$this->collection, $name])
+          ->fields(['data' => $data])
+          ->execute();
+      },
+      returnValue: $mergeResult,
+      schema: [
+        $this->table => static::schemaDefinition(),
+      ],
+      retryAfterSchemaEnsured: TRUE,
+    );
+
+    if (!$writeSuccess) {
       // Some other failure that we can not recover from.
-      throw new StorageException($e->getMessage(), 0, $e);
+      throw new StorageException('Write failure');
     }
+
+    return $mergeResult;
   }
 
   /**
@@ -153,8 +163,15 @@ class DatabaseStorage implements StorageInterface {
    *   The config data, already dumped to a string.
    *
    * @return bool
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3489185
    */
   protected function doWrite($name, $data) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
     return (bool) $this->connection->merge($this->table, $this->options)
       ->keys(['collection', 'name'], [$this->collection, $name])
       ->fields(['data' => $data])
@@ -169,8 +186,15 @@ class DatabaseStorage implements StorageInterface {
    *
    * @throws \Drupal\Core\Config\StorageException
    *   If a database error occurs.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3489185
    */
   protected function ensureTableExists() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
     try {
       $this->connection->schema()->createTable($this->table, static::schemaDefinition());
     }
