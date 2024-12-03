@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the navigation module.
  */
 
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+
 /**
  * Implements hook_requirements().
  */
@@ -27,6 +29,7 @@ function navigation_requirements($phase) {
 /**
  * Reorganizes the values for the logo settings.
  */
+#[StopProceduralHookScan]
 function navigation_update_11001(array &$sandbox): void {
   $settings = \Drupal::configFactory()->getEditable('navigation.settings');
   $settings->setData([

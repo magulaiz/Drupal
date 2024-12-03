@@ -5,6 +5,7 @@
  */
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Link;
 use Drupal\node\NodeInterface;
 
@@ -30,6 +31,7 @@ use Drupal\node\NodeInterface;
  *   (optional) TRUE if $nodes contains an array of revision IDs instead of
  *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
  */
+#[StopProceduralHookScan]
 function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load = FALSE, $revisions = FALSE) {
   // We use batch processing to prevent timeout when updating a large number
   // of nodes.

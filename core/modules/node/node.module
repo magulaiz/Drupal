@@ -9,6 +9,7 @@ use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
@@ -36,6 +37,7 @@ use Drupal\node\NodeTypeInterface;
  *   A renderable array containing a list of linked node titles fetched from
  *   $result, or FALSE if there are no rows in $result.
  */
+#[StopProceduralHookScan]
 function node_title_list(StatementInterface $result, $title = NULL) {
   $items = [];
   $num_rows = FALSE;
