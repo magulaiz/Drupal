@@ -8,7 +8,7 @@
 /**
  * Implements hook_views_data_alter().
  */
-function views_test_entity_reference_views_data_alter(&$data) {
+function views_test_entity_reference_views_data_alter(&$data): void {
   $manager = \Drupal::entityTypeManager();
   $field_config_storage = $manager->getStorage('field_config');
   /** @var \Drupal\field\FieldConfigInterface[] $field_configs */
