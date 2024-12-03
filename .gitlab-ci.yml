@@ -241,20 +241,32 @@ stages:
     _TARGET_PHP: "8.3"
     _TARGET_DB: "pgsql-14.1"
 
+'PHP 8.3 MySQL 8.4':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "8.3"
+    _TARGET_DB: "mysql-8.4"
+
+'PHP 8.3 PostgreSQL 17':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "8.3"
+    _TARGET_DB: "pgsql-17"
+
 'PHP 8.4 SQLite 3.27.0':
   <<: *default-stage
   variables:
     _TARGET_PHP: "8.4"
     _TARGET_DB: "sqlite-3"
 
-'PHP 8.4 MySQL 8.4':
+'PHP 8.4 MySQL 8':
   <<: *default-stage
   variables:
     _TARGET_PHP: "8.4"
-    _TARGET_DB: "mysql-8.4"
+    _TARGET_DB: "mysql-8"
 
-'PHP 8.4 PostgreSQL 17':
+'PHP 8.4 PostgreSQL 14.1':
   <<: *default-stage
   variables:
     _TARGET_PHP: "8.4"
-    _TARGET_DB: "pgsql-17"
+    _TARGET_DB: "pgsql-14.1"
