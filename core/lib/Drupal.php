@@ -218,14 +218,12 @@ class Drupal {
     $service = self::getContainer()->get($id ?? $class);
     if (!$service instanceof $class) {
       if ($id === NULL) {
-        // @todo Introduce a dedicated exception type.
         throw new ServiceNotFoundException(sprintf(
           "Expected '%s' object, found '%s' object, for the service with that class/interface as id.",
           $class,
           get_class($service),
         ));
       }
-      // @todo Introduce a dedicated exception type.
       throw new ServiceNotFoundException(sprintf(
         "Expected '%s' object, found '%s' object, for service '%s'.",
         $class,
