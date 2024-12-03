@@ -207,6 +207,32 @@ class MediaLibraryHooks {
   }
 
   /**
+   * Implements hook_form_FORM_ID_alter().
+   *
+   * Alter the bulk form to add a more accessible label.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @todo Remove in https://www.drupal.org/node/2983454
+   */
+  #[Hook('form_views_form_media_library_page_alter')]
+  public function formViewsFormMediaLibraryPageAlter(array &$form, FormStateInterface $form_state, $form_id) : void {
+    if (isset($form['media_bulk_form']) && isset($form['output'])) {
+      /** @var \Drupal\views\ViewExecutable $view */
+      $view = $form['output'][0]['#view'];
+      foreach (Element::getVisibleChildren($form['media_bulk_form']) as $key) {
+        if (isset($view->result[$key])) {
+          $media = $view->field['media_bulk_form']->getEntity($view->result[$key]);
+          $form['media_bulk_form'][$key]['#title'] = $media ? t('Select @label', ['@label' => $media->label()]) : '';
+        }
+      }
+    }
+  }
+
+  /**
    * Implements hook_field_ui_preconfigured_options_alter().
    */
   #[Hook('field_ui_preconfigured_options_alter')]
