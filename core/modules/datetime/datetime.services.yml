@@ -1,7 +1,3 @@
 parameters:
   datetime.hooks_converted: true
 
-services:
-  Drupal\datetime\Hook\DatetimeHooks:
-    class: Drupal\datetime\Hook\DatetimeHooks
-    autowire: true

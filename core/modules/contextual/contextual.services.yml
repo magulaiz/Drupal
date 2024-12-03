@@ -1,7 +1,3 @@
 parameters:
   contextual.hooks_converted: true
 
-services:
-  Drupal\contextual\Hook\ContextualHooks:
-    class: Drupal\contextual\Hook\ContextualHooks
-    autowire: true

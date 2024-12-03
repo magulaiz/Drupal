@@ -1,7 +1,2 @@
 parameters:
   inline_form_errors.hooks_converted: true
-
-services:
-  Drupal\inline_form_errors\Hook\InlineFormErrorsHooks:
-    class: Drupal\inline_form_errors\Hook\InlineFormErrorsHooks
-    autowire: true

@@ -1,7 +1,2 @@
 parameters:
   history.hooks_converted: true
-
-services:
-  Drupal\history\Hook\HistoryHooks:
-    class: Drupal\history\Hook\HistoryHooks
-    autowire: true
