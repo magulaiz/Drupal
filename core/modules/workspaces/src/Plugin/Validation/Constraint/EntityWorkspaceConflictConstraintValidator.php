@@ -44,7 +44,7 @@ class EntityWorkspaceConflictConstraintValidator extends ConstraintValidator imp
     $config = $this->configFactory->get('workspaces.settings');
 
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
-    if (isset($entity) && !$entity->isNew() && !$config->get('allow_parallel')) {
+    if (isset($entity) && !$entity->isNew() && !$config->get('parallel')) {
       $active_workspace = $this->workspaceManager->getActiveWorkspace();
 
       // If the entity is tracked in a workspace, it can only be edited in

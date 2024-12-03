@@ -22,6 +22,11 @@ class WorkspacesEntityRepository extends EntityRepository {
    * workspace.
    */
   public function getActiveMultiple($entity_type_id, array $entity_ids, array $contexts = NULL): array {
+    if (!\Drupal::config('workspaces.settings')->get('parallel')) {
+      // No support for parallel editing.
+      return parent::getActiveMultiple($entity_type_id, $entity_ids, $contexts);
+    }
+
     /** @var \Drupal\workspaces\WorkspaceInformationInterface $workspaceInformation */
     $workspaceInformation = \Drupal::service('workspaces.information');
 
