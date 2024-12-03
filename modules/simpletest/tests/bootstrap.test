@@ -1001,23 +1001,23 @@ class BootstrapTrustedHostsTestCase extends DrupalUnitTestCase {
    * Provides test data for testTrustedHosts().
    */
   public function providerTestTrustedHosts() {
-    $data = [];
+    $data = array();
 
     // Tests canonical URL.
-    $data[] = ['www.example.com', 'canonical URL is trusted', TRUE];
+    $data[] = array('www.example.com', 'canonical URL is trusted', TRUE);
 
     // Tests missing hostname for HTTP/1.0 compatability where the Host
     // header is optional.
-    $data[] = [NULL, 'empty Host is valid', TRUE];
+    $data[] = array(NULL, 'empty Host is valid', TRUE);
 
     // Tests the additional patterns from the settings.
-    $data[] = ['example.com', 'host from settings is trusted', TRUE];
-    $data[] = ['subdomain.example.com', 'host from settings is trusted', TRUE];
-    $data[] = ['www.example.org', 'host from settings is trusted', TRUE];
-    $data[] = ['example.org', 'host from settings is trusted', TRUE];
+    $data[] = array('example.com', 'host from settings is trusted', TRUE);
+    $data[] = array('subdomain.example.com', 'host from settings is trusted', TRUE);
+    $data[] = array('www.example.org', 'host from settings is trusted', TRUE);
+    $data[] = array('example.org', 'host from settings is trusted', TRUE);
 
     // Tests mismatch.
-    $data[] = ['www.blackhat.com', 'unspecified host is untrusted', FALSE];
+    $data[] = array('www.blackhat.com', 'unspecified host is untrusted', FALSE);
 
     return $data;
   }
