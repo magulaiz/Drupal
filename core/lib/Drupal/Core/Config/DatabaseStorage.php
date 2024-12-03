@@ -133,7 +133,7 @@ class DatabaseStorage implements StorageInterface {
     $data = $this->encode($data);
 
     $writeSuccess = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use($name, $data): bool {
+      execute: function () use ($name, $data): bool {
         return (bool) $this->connection->merge($this->table, $this->options)
           ->keys(['collection', 'name'], [$this->collection, $name])
           ->fields(['data' => $data])
