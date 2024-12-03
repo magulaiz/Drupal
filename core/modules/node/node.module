@@ -84,10 +84,10 @@ function node_mark($nid, $timestamp): int {
  *
  * This list can include types that are queued for addition or deletion.
  *
- * @return string[]
+ * @return array[]
  *   An array of node type labels, keyed by the node type name.
  */
-function node_type_get_names(): string {
+function node_type_get_names(): array {
   return array_map(function ($bundle_info) {
     return $bundle_info['label'];
   }, \Drupal::service('entity_type.bundle.info')->getBundleInfo('node'));
