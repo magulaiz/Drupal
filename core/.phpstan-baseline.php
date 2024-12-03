@@ -11622,12 +11622,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function block_themes_installed\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/block.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\block\\\\BlockAccessControlHandler\\:\\:mergeCacheabilityFromConditions\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block/src/BlockAccessControlHandler.php',
