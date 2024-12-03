@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 
 /**
@@ -23,6 +24,7 @@ function layout_builder_module_implements_alter(&$implementations, $hook) {
 /**
  * Implements hook_preprocess_HOOK() for language-content-settings-table.html.twig.
  */
+#[StopProceduralHookScan]
 function layout_builder_preprocess_language_content_settings_table(&$variables): void {
   foreach ($variables['build']['#rows'] as &$row) {
     if (isset($row['#field_name']) && $row['#field_name'] === OverridesSectionStorage::FIELD_NAME) {
