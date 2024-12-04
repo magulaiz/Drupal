@@ -7,6 +7,10 @@ use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 
 /**
  * A base entity storage class.
+ *
+ * @template TEntity of \Drupal\Core\Entity\EntityInterface
+ *
+ * @template-implements EntityStorageInterface<TEntity>
  */
 abstract class EntityStorageBase extends EntityHandlerBase implements EntityStorageInterface, EntityHandlerInterface {
 

@@ -16,6 +16,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for content entity storage handlers.
+ *
+ * @template TEntity of \Drupal\Core\Entity\EntityInterface
+ *
+ * @template-extends EntityStorageBase<TEntity>
  */
 abstract class ContentEntityStorageBase extends EntityStorageBase implements ContentEntityStorageInterface, DynamicallyFieldableEntityStorageInterface, BundleEntityStorageInterface {
 

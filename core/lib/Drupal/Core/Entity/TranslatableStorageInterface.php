@@ -4,6 +4,10 @@ namespace Drupal\Core\Entity;
 
 /**
  * A storage that supports translatable entity types.
+ *
+ * @template TEntity of \Drupal\Core\Entity\EntityInterface
+ *
+ * @template-extends EntityStorageInterface<TEntity>
  */
 interface TranslatableStorageInterface extends EntityStorageInterface {
 
