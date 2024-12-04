@@ -137,9 +137,9 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
 
-    $this->connection->executeEnsuringSchemaOnFailure(
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
       execute: function () use ($name, $threshold, $window, $identifier): bool {
-        $number = $this->connection->select(DatabaseBackend::TABLE_NAME, 'f')
+        $number = (int) $this->connection->select(DatabaseBackend::TABLE_NAME, 'f')
           ->condition('event', $name)
           ->condition('identifier', $identifier)
           ->condition('timestamp', $this->time->getRequestTime() - $window, '>')
@@ -148,13 +148,12 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
           ->fetchField();
         return ($number < $threshold);
       },
-      returnValue: $return,
       schema: [
         static::TABLE_NAME => $this->schemaDefinition(),
       ],
     );
 
-    return $return ?? TRUE;
+    return $execution->isSuccessful() ? $execution->getResult() : TRUE;
   }
 
   /**
