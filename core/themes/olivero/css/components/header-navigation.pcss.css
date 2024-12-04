@@ -126,7 +126,7 @@ body.is-always-mobile-nav {
     background: canvastext;
   }
 
-  @nest .is-overlay-active & {
+  .is-overlay-active & {
     display: block;
   }
 }

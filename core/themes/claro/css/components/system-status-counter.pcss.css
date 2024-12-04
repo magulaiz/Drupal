@@ -38,7 +38,7 @@
       mask-size: 40px;
     }
 
-    @nest [dir="rtl"] & {
+    [dir="rtl"] & {
       background-position: left center;
     }
   }
