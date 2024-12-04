@@ -7,15 +7,15 @@ use Drupal\Core\Hook\Attribute\Hook;
 /**
  * Hook implementations for block.
  */
-class BigPiBlockThemeSuggestionHookpeHooks {
+class BlockThemeSuggestionHook {
 
   /**
    * Implements hook_theme_suggestions_HOOK().
    */
   #[Hook('theme_suggestions_block')]
-  public function themeSuggestionsBlock(array $variables) {
+  public function themeSuggestionsBlock(array $variables): array {
     $suggestions = [];
-  
+
     $suggestions[] = 'block__' . $variables['elements']['#configuration']['provider'];
     // Hyphens (-) and underscores (_) play a special role in theme suggestions.
     // Theme suggestions should only contain underscores, because within
@@ -25,7 +25,7 @@ class BigPiBlockThemeSuggestionHookpeHooks {
     // contains a hyphen, it will end up as an underscore after this conversion,
     // and your function names won't be recognized. So, we need to convert
     // hyphens to underscores in block deltas for the theme suggestions.
-  
+
     // We can safely explode on : because we know the Block plugin type manager
     // enforces that delimiter for all derivatives.
     $parts = explode(':', $variables['elements']['#plugin_id']);
@@ -33,11 +33,11 @@ class BigPiBlockThemeSuggestionHookpeHooks {
     while ($part = array_shift($parts)) {
       $suggestions[] = $suggestion .= '__' . strtr($part, '-', '_');
     }
-  
+
     if (!empty($variables['elements']['#id'])) {
       $suggestions[] = 'block__' . $variables['elements']['#id'];
     }
-  
+
     return $suggestions;
   }
 

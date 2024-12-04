@@ -15,16 +15,16 @@ class MediaThemeSuggestionHook {
    * Implements hook_theme_suggestions_HOOK().
    */
   #[Hook('theme_suggestions_media')]
-  public function themeSuggestionsMedia(array $variables) {
+  public function themeSuggestionsMedia(array $variables): array {
     $suggestions = [];
     /** @var \Drupal\media\MediaInterface $media */
     $media = $variables['elements']['#media'];
     $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
-  
+
     $suggestions[] = 'media__' . $sanitized_view_mode;
     $suggestions[] = 'media__' . $media->bundle();
     $suggestions[] = 'media__' . $media->bundle() . '__' . $sanitized_view_mode;
-  
+
     // Add suggestions based on the source plugin ID.
     $source = $media->getSource();
     if ($source instanceof DerivativeInspectionInterface) {
@@ -38,7 +38,7 @@ class MediaThemeSuggestionHook {
       $source_id = $source->getPluginId();
     }
     $suggestions[] = "media__source_$source_id";
-  
+
     // If the source plugin uses oEmbed, add a suggestion based on the provider
     // name, if available.
     if ($source instanceof OEmbedInterface) {
@@ -49,7 +49,7 @@ class MediaThemeSuggestionHook {
         $suggestions[] = end($suggestions) . "__provider_$provider_id";
       }
     }
-  
+
     return $suggestions;
   }
 
