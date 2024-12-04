@@ -7,7 +7,7 @@ use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
- * Filter by published status.
+ * Filters out unpublished content if the current user cannot view it.
  *
  * @ingroup views_filter_handlers
  */
