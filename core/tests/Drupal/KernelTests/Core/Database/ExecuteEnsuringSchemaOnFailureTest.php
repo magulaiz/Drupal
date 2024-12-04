@@ -46,16 +46,19 @@ class ExecuteEnsuringSchemaOnFailureTest extends DatabaseTestBase {
 
     // The initial callback execution failed, but the schema creation was
     // successful and the callback retry was successful too.
-    $this->assertFalse($callbackSuccess);
+    $this->assertTrue($callbackSuccess);
     $this->assertSame(1, $id);
     $this->assertEquals(1, $this->connection->select('fixture_header', 'h')->countQuery()->execute()->fetchField());
     $this->assertEquals(1, $this->connection->select('fixture_detail', 'h')->countQuery()->execute()->fetchField());
   }
 
-  public function testInvalidCallbackOnExistingMultiTableSchema(): void {
+  public function testInvalidCallbackOnExistingSchema(): void {
     $this->connection->schema()->createTable('fixture_header', $this->validMultiTableFixtureSchema()['fixture_header']);
     $this->connection->schema()->createTable('fixture_detail', $this->validMultiTableFixtureSchema()['fixture_detail']);
 
+    // The schema is there already, so callback execution just throws an
+    // exception, which is propagated through to the caller of
+    // ::executeEnsuringSchemaOnFailure().
     $this->expectException(DatabaseExceptionWrapper::class);
 
     $this->connection->executeEnsuringSchemaOnFailure(
@@ -79,28 +82,28 @@ class ExecuteEnsuringSchemaOnFailureTest extends DatabaseTestBase {
       schema: $this->validMultiTableFixtureSchema(),
     );
 
+    // The initial callback execution failed, but the schema creation was
+    // successful. The callback retry still failed afterwards, so the method
+    // execution is unsuccessful and the returned value is NULL.
     $this->assertFalse($callbackSuccess);
     $this->assertNull($id);
     $this->assertTrue($this->connection->schema()->tableExists('fixture_header'));
     $this->assertTrue($this->connection->schema()->tableExists('fixture_detail'));
   }
 
-  public function testCallbackFailureAndMultiTableSchemaBuilt(): void {
-    $this->assertFalse($this->connection->schema()->tableExists('fixture_header'));
-    $this->assertFalse($this->connection->schema()->tableExists('fixture_detail'));
-
-    $this->connection->executeEnsuringSchemaOnFailure(
+  public function testValidCallbackOnMissingInvalidSchema(): void {
+    $callbackSuccess = $this->connection->executeEnsuringSchemaOnFailure(
       execute: function (): int {
         return $this->insertIntoFixtureTables();
       },
       returnValue: $id,
-      schema: $this->validMultiTableFixtureSchema(),
+      schema: $this->invalidFixtureSchema(),
       retryAfterSchemaEnsured: TRUE,
     );
 
-    $this->assertSame(1, $id);
-    $this->assertEquals(1, $this->connection->select('fixture_header', 'h')->countQuery()->execute()->fetchField());
-    $this->assertEquals(1, $this->connection->select('fixture_detail', 'h')->countQuery()->execute()->fetchField());
+    // The initial callback execution failed, and the schema creation was
+    // unsuccessful too.
+    $this->assertFalse($callbackSuccess);
   }
 
   protected function validMultiTableFixtureSchema(): array {
@@ -161,6 +164,14 @@ class ExecuteEnsuringSchemaOnFailureTest extends DatabaseTestBase {
       ->execute();
 
     return $hid;
+  }
+
+  protected function invalidFixtureSchema(): array {
+    return [
+      'pineapple' => [
+        'description' => 'under the sea',
+      ],
+    ];
   }
 
 }

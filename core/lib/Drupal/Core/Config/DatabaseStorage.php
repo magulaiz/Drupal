@@ -109,21 +109,25 @@ class DatabaseStorage implements StorageInterface {
       return [];
     }
 
-    $list = [];
-    try {
-      $list = $this->connection->query('SELECT [name], [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] IN ( :names[] )', [':collection' => $this->collection, ':names[]' => $names], $this->options)->fetchAllKeyed();
-      foreach ($list as &$data) {
-        $data = $this->decode($data);
-      }
-    }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
-      // If we attempt a read without actually having the table available,
-      // return an empty array so the caller can handle it.
-    }
-    return $list;
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($names): array {
+        $list = $this->connection
+          ->query('SELECT [name], [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] IN ( :names[] )', [':collection' => $this->collection, ':names[]' => $names], $this->options)
+          ->fetchAllKeyed();
+
+        foreach ($list as &$data) {
+          $data = $this->decode($data);
+        }
+
+        return $list;
+      },
+      returnValue: $list,
+      schema: [
+        $this->table => static::schemaDefinition(),
+      ],
+    );
+
+    return $list ?? [];
   }
 
   /**
@@ -132,26 +136,27 @@ class DatabaseStorage implements StorageInterface {
   public function write($name, array $data) {
     $data = $this->encode($data);
 
-    $writeSuccess = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($name, $data): bool {
-        return (bool) $this->connection->merge($this->table, $this->options)
-          ->keys(['collection', 'name'], [$this->collection, $name])
-          ->fields(['data' => $data])
-          ->execute();
-      },
-      returnValue: $mergeResult,
-      schema: [
-        $this->table => static::schemaDefinition(),
-      ],
-      retryAfterSchemaEnsured: TRUE,
-    );
-
-    if (!$writeSuccess) {
+    try {
+      $this->connection->executeEnsuringSchemaOnFailure(
+        execute: function () use ($name, $data): bool {
+          return (bool) $this->connection->merge($this->table, $this->options)
+            ->keys(['collection', 'name'], [$this->collection, $name])
+            ->fields(['data' => $data])
+            ->execute();
+        },
+        returnValue: $mergeResult,
+        schema: [
+          $this->table => static::schemaDefinition(),
+        ],
+        retryAfterSchemaEnsured: TRUE,
+      );
+    }
+    catch (\Exception $e) {
       // Some other failure that we can not recover from.
-      throw new StorageException('Write failure');
+      throw new StorageException($e->getMessage(), 0, $e);
     }
 
-    return $mergeResult;
+    return $mergeResult ?? FALSE;
   }
 
   /**
