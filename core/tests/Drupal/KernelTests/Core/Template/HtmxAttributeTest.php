@@ -20,7 +20,7 @@ final class HtmxAttributeTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system'];
+  protected static $modules = ['common_test'];
 
   /**
    * Class under test.
@@ -43,12 +43,12 @@ final class HtmxAttributeTest extends KernelTestBase {
    * @covers ::get
    */
   public function testHxGet(): void {
-    $url = Url::fromRoute('system.404');
+    $url = Url::fromRoute('common_test.destination');
     $this->htmxAttribute->get($url);
     $rendered = (string) $this->htmxAttribute;
     // The paths in GitLabCI include a subfolder.
     $this->assertStringStartsWith(' data-hx-get="', $rendered);
-    $this->assertStringEndsWith('/system/404"', $rendered);
+    $this->assertStringEndsWith('/common-test/destination"', $rendered);
   }
 
   /**
@@ -57,12 +57,12 @@ final class HtmxAttributeTest extends KernelTestBase {
    * @covers ::post
    */
   public function testHxPost(): void {
-    $url = Url::fromRoute('system.404');
+    $url = Url::fromRoute('common_test.destination');
     $this->htmxAttribute->post($url);
     $rendered = (string) $this->htmxAttribute;
     // The paths in GitLabCI include a subfolder.
     $this->assertStringStartsWith(' data-hx-post="', $rendered);
-    $this->assertStringEndsWith('/system/404"', $rendered);
+    $this->assertStringEndsWith('/common-test/destination"', $rendered);
   }
 
   /**
@@ -71,12 +71,12 @@ final class HtmxAttributeTest extends KernelTestBase {
    * @covers ::put
    */
   public function testHxPut(): void {
-    $url = Url::fromRoute('system.404');
+    $url = Url::fromRoute('common_test.destination');
     $this->htmxAttribute->put($url);
     $rendered = (string) $this->htmxAttribute;
     // The paths in GitLabCI include a subfolder.
     $this->assertStringStartsWith(' data-hx-put="', $rendered);
-    $this->assertStringEndsWith('/system/404"', $rendered);
+    $this->assertStringEndsWith('/common-test/destination"', $rendered);
   }
 
   /**
@@ -85,12 +85,12 @@ final class HtmxAttributeTest extends KernelTestBase {
    * @covers ::patch
    */
   public function testHxPatch(): void {
-    $url = Url::fromRoute('system.404');
+    $url = Url::fromRoute('common_test.destination');
     $this->htmxAttribute->patch($url);
     $rendered = (string) $this->htmxAttribute;
     // The paths in GitLabCI include a subfolder.
     $this->assertStringStartsWith(' data-hx-patch="', $rendered);
-    $this->assertStringEndsWith('/system/404"', $rendered);
+    $this->assertStringEndsWith('/common-test/destination"', $rendered);
   }
 
   /**
@@ -99,12 +99,12 @@ final class HtmxAttributeTest extends KernelTestBase {
    * @covers ::delete
    */
   public function testHxDelete(): void {
-    $url = Url::fromRoute('system.404');
+    $url = Url::fromRoute('common_test.destination');
     $this->htmxAttribute->delete($url);
     $rendered = (string) $this->htmxAttribute;
     // The paths in GitLabCI include a subfolder.
     $this->assertStringStartsWith(' data-hx-delete="', $rendered);
-    $this->assertStringEndsWith('/system/404"', $rendered);
+    $this->assertStringEndsWith('/common-test/destination"', $rendered);
   }
 
   /**
@@ -177,11 +177,11 @@ final class HtmxAttributeTest extends KernelTestBase {
    *   Array of bool|Url, expected.
    */
   public static function hxPushUrlDataProvider(): array {
-    $url = Url::fromRoute('system.404');
+    $url = Url::fromRoute('common_test.destination');
     return [
       [TRUE, 'true"'],
       [FALSE, 'false"'],
-      [$url, '/system/404"'],
+      [$url, '/common-test/destination"'],
     ];
   }
 
@@ -385,7 +385,7 @@ final class HtmxAttributeTest extends KernelTestBase {
       ['select', 'info[data-drupal-selector="edit-select"]', " data-hx-select='$singleQuotedSyntax'"],
       ['selectOob', '#info-details', ' data-hx-select-oob="#info-details"'],
       ['selectOob', '#info-details:afterbegin, #alert', ' data-hx-select-oob="#info-details:afterbegin, #alert"'],
-      ['swap', 'afterbegin', ' data-hx-swap="afterbegin"'],
+      ['swap', 'afterbegin', ' data-hx-swap="afterbegin  ignoreTitle:true"'],
       ['target', 'descriptor', ' data-hx-target="descriptor"'],
       ['trigger', 'event', ' data-hx-trigger="event"'],
       ['confirm', 'A confirmation message', ' data-hx-confirm="A confirmation message"'],
