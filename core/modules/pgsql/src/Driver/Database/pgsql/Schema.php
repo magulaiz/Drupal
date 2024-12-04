@@ -72,7 +72,7 @@ class Schema extends DatabaseSchema {
    *   - idx for indexes
    *   - key for constraints
    *   - pkey for primary keys
-   *   - seq for sequences
+   *   - seq for sequences.
    *
    * @param string $table_identifier_part
    *   The first argument used to build the identifier string. This usually
@@ -243,7 +243,7 @@ EOD;
    *   - t: constraint trigger;
    *   - x: exclusion constraint.
    *   Defaults to 'c' for a CHECK constraint.
-   *   @see https://www.postgresql.org/docs/current/catalog-pg-constraint.html
+   *   @see https://www.postgresql.org/docs/current/catalog-pg-constraint.html.
    *
    * @return array
    *   An array containing all the constraint names for the field.
