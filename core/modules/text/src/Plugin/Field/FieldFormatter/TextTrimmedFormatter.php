@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'text_trimmed' formatter.
@@ -165,7 +166,7 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
    * @param \Drupal\Core\Field\FieldItemInterface $item
    *   The item being rendered.
    */
-  protected function createSummary(array &$element, FieldItemInterface $item) {
+  protected function createSummary(array &$element, FieldItemInterface $item): void {
     $element['#text'] = $item->value;
     // Make sure any default #pre_render callbacks are set on the element,
     // because text_pre_render_summary() must run last.
