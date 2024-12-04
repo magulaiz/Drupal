@@ -138,12 +138,12 @@ html.js .header-nav {
   background: var(--color--gray-5);
 }
 
+.is-overlay-active .header-nav-overlay {
+  display: block;
+}
+
 @media (forced-colors: active) {
   .header-nav-overlay {
     background: canvastext;
   }
-}
-
-.is-overlay-active .header-nav-overlay {
-  display: block;
 }
