@@ -4012,6 +4012,13 @@ function drupal_setcookie($name, $value, $options) {
     setcookie($name, $value, $options);
   }
   else {
+    global $is_https;
+    if ($is_https && variable_get('https', FALSE) && strpos($name, 'SESS') === 0) {
+      // The insecure session cookie path is copied from the secure session
+      // cookie path, so the SameSite attribute must be removed. Other
+      // attributes are kept.
+      $options['path'] = preg_replace('/;(?:\s*)SameSite=.*?(?=;|$)/i', '', $options['path']);
+    }
     $defaults = array(
       'expires' => 0,
       'path' => '',
