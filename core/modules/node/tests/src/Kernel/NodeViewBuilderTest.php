@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel;
 
+use Drupal\Core\DependencyInjection\AutoSetupTrait;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -17,6 +19,8 @@ use Drupal\user\Entity\User;
  * @coversDefaultClass \Drupal\node\NodeViewBuilder
  */
 class NodeViewBuilderTest extends EntityKernelTestBase {
+
+  use AutoSetupTrait;
 
   /**
    * {@inheritdoc}
@@ -39,20 +43,18 @@ class NodeViewBuilderTest extends EntityKernelTestBase {
 
   /**
    * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
    */
-  protected $renderer;
+  protected RendererInterface $renderer;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->autoSetup();
 
     $this->storage = $this->entityTypeManager->getStorage('node');
     $this->viewBuilder = $this->entityTypeManager->getViewBuilder('node');
-    $this->renderer = $this->container->get('renderer');
 
     $type = NodeType::create([
       'type' => 'article',
