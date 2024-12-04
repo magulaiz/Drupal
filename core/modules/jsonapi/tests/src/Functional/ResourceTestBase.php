@@ -111,8 +111,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected static $patchProtectedFieldNames;
 
   /**
-   * The fields that are protected against view during GET requests.
-   * E.g. [ internal_name => reason ]
+   * The fields that are protected against view during GET requests, E.g. [ internal_name => reason ].
    *
    * @var string[]
    */
