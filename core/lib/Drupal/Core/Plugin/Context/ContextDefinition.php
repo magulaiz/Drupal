@@ -251,10 +251,6 @@ class ContextDefinition implements ContextDefinitionInterface {
     else {
       $definition = $this->getTypedDataManager()->createDataDefinition($this->getDataType());
     }
-
-    if (!$definition) {
-      throw new \Exception("The data type '{$this->getDataType()}' is invalid");
-    }
     $definition->setLabel($this->getLabel())
       ->setDescription($this->getDescription())
       ->setRequired($this->isRequired());
