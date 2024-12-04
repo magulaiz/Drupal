@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database\Event;
 
+use Drupal\Core\Database\SchemaException;
+
 /**
  * Represents the execution of a method enforcing an indicated schema exists.
  */
@@ -12,12 +14,22 @@ final class ExecuteMethodEnsuringSchemaEvent extends DatabaseEvent {
   /**
    * Value returned by the execution of the callback.
    */
-  protected mixed $closureExecutionResult;
+  protected mixed $callbackExecutionResult;
 
   /**
-   * Indicates if the callback execution was successful or not.
+   * Indicates the initial callback execution state.
    */
-  protected bool $closureExecutionSuccess;
+  protected bool|\Exception $callbackExecutionState = FALSE;
+
+  /**
+   * Indicates the retried callback execution state.
+   */
+  protected bool|\Exception $callbackRetryExecutionState = FALSE;
+
+  /**
+   * Indicates the schema creation state.
+   */
+  protected bool|SchemaException $schemaCreationState = FALSE;
 
   /**
    * Constructor.
@@ -47,7 +59,7 @@ final class ExecuteMethodEnsuringSchemaEvent extends DatabaseEvent {
    *   The value returned by the execution of the callback.
    */
   public function setResult(mixed $result): void {
-    $this->closureExecutionResult = $result;
+    $this->callbackExecutionResult = $result;
   }
 
   /**
@@ -57,27 +69,78 @@ final class ExecuteMethodEnsuringSchemaEvent extends DatabaseEvent {
    *   The value returned by the execution of the callback.
    */
   public function getResult(): mixed {
-    return $this->closureExecutionResult;
+    assert(isset($this->callbackExecutionResult), __METHOD__ . '() was called before successful execution of the callback');
+    return $this->callbackExecutionResult;
   }
 
   /**
-   * Stores the success of the execution of the callback.
+   * Stores the outcome of the initial execution of the callback.
    *
-   * @param bool $success
-   *   The success of the execution of the callback.
+   * @param true|\Exception $outcome
+   *   The outcome of the execution of the callback.
    */
-  public function setSuccess(bool $success): void {
-    $this->closureExecutionSuccess = $success;
+  public function setCallbackExecutionState(TRUE|\Exception $outcome): void {
+    $this->callbackExecutionState = $outcome;
   }
 
   /**
-   * Stores the success of the execution of the callback.
+   * Stores the outcome of the retried execution of the callback.
+   *
+   * @param true|\Exception $outcome
+   *   The outcome of the execution of the callback.
+   */
+  public function setCallbackRetryExecutionState(TRUE|\Exception $outcome): void {
+    $this->callbackRetryExecutionState = $outcome;
+  }
+
+  /**
+   * Stores the outcome of the schema creation.
+   *
+   * @param true|\Drupal\Core\Database\SchemaException $outcome
+   *   The outcome of the schema creation.
+   */
+  public function setSchemaCreationState(TRUE|SchemaException $outcome): void {
+    $this->schemaCreationState = $outcome;
+  }
+
+  /**
+   * Get the overall success of the execution of the callback.
    *
    * @return bool
    *   The success of the execution of the callback.
    */
-  public function getSuccess(): bool {
-    return $this->closureExecutionSuccess;
+  public function isSuccessful(): bool {
+    return $this->callbackExecutionState === TRUE || $this->callbackRetryExecutionState === TRUE;
+  }
+
+  /**
+   * Gets the outcome of the initial execution of the callback.
+   *
+   * @return bool|\Exception
+   *   The outcome of the execution of the callback.
+   */
+  public function getCallbackExecutionState(): bool|\Exception {
+    return $this->callbackExecutionState;
+  }
+
+  /**
+   * Gets the outcome of the retried execution of the callback.
+   *
+   * @return bool|\Exception
+   *   The outcome of the execution of the callback.
+   */
+  public function getCallbackRetryExecutionState(): bool|\Exception {
+    return $this->callbackRetryExecutionState;
+  }
+
+  /**
+   * Gets the outcome of the schema creation.
+   *
+   * @return bool|\Drupal\Core\Database\SchemaException
+   *   The outcome of the schema creation.
+   */
+  public function getSchemaCreationState(): bool|SchemaException {
+    return $this->schemaCreationState;
   }
 
 }

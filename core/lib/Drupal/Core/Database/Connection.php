@@ -1625,16 +1625,13 @@ abstract class Connection {
    * @param array<string,array<string,mixed>> $schema
    *   A database schema specification, with table name as key and schema
    *   array as value.
-   * @param mixed $returnValue
-   *   A variable, passed by reference, holding the value returned by the
-   *   execution of the callback.
    * @param bool $retryAfterSchemaEnsured
    *   (Optional) If TRUE, the callback is executed again after the first
    *   execution failed, and the schema enforcement was successful. Defaults to
    *   FALSE.
    *
-   * @return bool
-   *   TRUE if the closure was executed without exceptions, FALSE otherwise.
+   * @return \Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent
+   *   The event that has collected data about the execution.
    *
    * @throws \Exception
    *   When the failure of the callback execution was not related to missing
@@ -1643,18 +1640,19 @@ abstract class Connection {
   public function executeEnsuringSchemaOnFailure(
     \Closure $execute,
     array $schema,
-    mixed &$returnValue = NULL,
     bool $retryAfterSchemaEnsured = FALSE,
-  ): bool {
+  ): ExecuteMethodEnsuringSchemaEvent {
+
+    $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $retryAfterSchemaEnsured);
 
     // When rebuilding the container, there's a stage when the event_dispatcher
     // service has not been reactivated yet. In that case, execute the closure,
-    // set its returned value to the $returnValue variable, and return TRUE;
-    // if the callback throws an exception, it will just propagate so it's
-    // useless to return FALSE.
+    // and set its returned value; if the callback throws an exception, it will
+    // just propagate to the caller.
     if (!\Drupal::hasService('event_dispatcher')) {
-      $returnValue = $execute();
-      return TRUE;
+      $event->setResult($execute());
+      $event->setCallbackExecutionState(TRUE);
+      return $event;
     }
 
     $dispatcher = \Drupal::service('event_dispatcher');
@@ -1664,12 +1662,21 @@ abstract class Connection {
       $dispatcher->addSubscriber(new SchemaRequestSubscriber($this));
     }
 
-    $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $retryAfterSchemaEnsured);
     $dispatcher->dispatch($event);
-    if ($event->getSuccess()) {
-      $returnValue = $event->getResult();
+
+    if (!$event->isSuccessful()) {
+      if ($event->getSchemaCreationState() instanceof \Exception) {
+        throw $event->getSchemaCreationState();
+      }
+      if ($event->getCallbackRetryExecutionState() instanceof \Exception) {
+        throw $event->getCallbackRetryExecutionState();
+      }
+      if ($event->getCallbackExecutionState() instanceof \Exception) {
+        throw $event->getCallbackExecutionState();
+      }
     }
-    return $event->getSuccess();
+
+    return $event;
   }
 
 }

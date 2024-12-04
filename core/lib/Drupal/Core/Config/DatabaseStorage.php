@@ -109,7 +109,7 @@ class DatabaseStorage implements StorageInterface {
       return [];
     }
 
-    $this->connection->executeEnsuringSchemaOnFailure(
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
       execute: function () use ($names): array {
         $list = $this->connection
           ->query('SELECT [name], [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] IN ( :names[] )', [':collection' => $this->collection, ':names[]' => $names], $this->options)
@@ -121,13 +121,12 @@ class DatabaseStorage implements StorageInterface {
 
         return $list;
       },
-      returnValue: $list,
       schema: [
         $this->table => static::schemaDefinition(),
       ],
     );
 
-    return $list ?? [];
+    return $execution->isSuccessful() ? $execution->getResult() : [];
   }
 
   /**
@@ -137,26 +136,26 @@ class DatabaseStorage implements StorageInterface {
     $data = $this->encode($data);
 
     try {
-      $this->connection->executeEnsuringSchemaOnFailure(
+      $execution = $this->connection->executeEnsuringSchemaOnFailure(
         execute: function () use ($name, $data): bool {
           return (bool) $this->connection->merge($this->table, $this->options)
             ->keys(['collection', 'name'], [$this->collection, $name])
             ->fields(['data' => $data])
             ->execute();
         },
-        returnValue: $mergeResult,
         schema: [
           $this->table => static::schemaDefinition(),
         ],
         retryAfterSchemaEnsured: TRUE,
       );
+      return $execution->isSuccessful() ? $execution->getResult() : FALSE;
     }
     catch (\Exception $e) {
       // Some other failure that we can not recover from.
       throw new StorageException($e->getMessage(), 0, $e);
     }
 
-    return $mergeResult ?? FALSE;
+    return FALSE;
   }
 
   /**

@@ -6,6 +6,7 @@ namespace Drupal\Core\Database\EventSubscriber;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent;
+use Drupal\Core\Database\Exception\SchemaObjectCreationFailureException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\Core\Database\DatabaseException;
 
@@ -37,22 +38,28 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
   public function onExecuteMethodEnsuringSchema(ExecuteMethodEnsuringSchemaEvent $event): void {
     try {
       $event->setResult(($event->execute)());
-      $event->setSuccess(TRUE);
+      $event->setCallbackExecutionState(TRUE);
       return;
     }
     catch (\Exception $e) {
       // If there was an exception, try to create the schema.
-      $event->setSuccess(FALSE);
-      $schemaChanged = $this->processSchema($event->schema);
+      $event->setCallbackExecutionState($e);
+      $schemaChanged = $this->processSchema($event);
       if (!$schemaChanged) {
         // If the exception happened for other reasons than the missing schema,
-        // propagate the exception.
-        throw $e;
+        // we have stored it and can return.
+        return;
       }
       // Now that the schema has been created, try again if requested.
       if ($event->retryAfterSchemaEnsured && $schemaChanged) {
-        $event->setResult(($event->execute)());
-        $event->setSuccess(TRUE);
+        try {
+          $event->setResult(($event->execute)());
+          $event->setCallbackRetryExecutionState(TRUE);
+        }
+        catch (\Exception $e) {
+          $event->setCallbackRetryExecutionState($e);
+          return;
+        }
       }
     }
   }
@@ -60,29 +67,29 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
   /**
    * Processes the schema creating the missing tables.
    *
-   * @param array<string,array<string,mixed>> $schema
-   *   A database schema specification, with table name as key and schema
-   *   array as value.
+   * @param \Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent $event
+   *   The event to process.
    */
-  protected function processSchema(array $schema): bool {
+  protected function processSchema(ExecuteMethodEnsuringSchemaEvent $event): bool {
     $schemaChanged = FALSE;
-    foreach ($schema as $name => $definition) {
-      try {
-        if (!$this->connection->schema()->tableExists($name)) {
-          try {
-            $this->connection->schema()->createTable($name, $definition);
-            $schemaChanged = TRUE;
-          }
-          // In a race condition, if another process has already created the
-          // table, attempting to create it will throw an exception. In this
-          // case just assume the schema was changed here.
-          catch (DatabaseException) {
-            $schemaChanged = TRUE;
-          }
-        }
+    foreach ($event->schema as $name => $definition) {
+      if ($this->connection->schema()->tableExists($name)) {
+        continue;
       }
-      catch (\Exception) {
-        return FALSE;
+      try {
+        $this->connection->schema()->createTable($name, $definition);
+        $schemaChanged = TRUE;
+      }
+      // In a race condition, if another process has already created the
+      // table, attempting to create it will throw an exception. In this
+      // case just assume the schema was changed here.
+      catch (DatabaseException $e) {
+        if (!$this->connection->schema()->tableExists($name)) {
+          $exception = new SchemaObjectCreationFailureException(sprintf('Failed creation of table {%s}', $name), 0, $e);
+          $event->setSchemaCreationState($exception);
+          return FALSE;
+        }
+        $schemaChanged = TRUE;
       }
     }
     return $schemaChanged;
