@@ -1,0 +1,103 @@
+htmx_headers_test.location_url:
+  path: '/test-htmx-headers/location-url'
+  defaults:
+    _title: 'Location: URL'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::locationUrl'
+  requirements:
+    _permission: 'access content'
+
+htmx_headers_test.location_json:
+  path: '/test-htmx-headers/location-json'
+  defaults:
+    _title: 'Location: JSON'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::locationJson'
+  requirements:
+    _permission: 'access content'
+
+htmx_headers_test.push_url:
+  path: '/test-htmx-headers/push-url'
+  defaults:
+    _title: 'Push-url'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::pushUrl'
+  requirements:
+    _permission: 'access content'
+
+htmx_headers_test.push_url_false:
+  path: '/test-htmx-headers/push-url-false'
+  defaults:
+    _title: 'Push-url false'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::pushUrlFalse'
+  requirements:
+    _permission: 'access content'
+
+htmx_headers_test.replace_url:
+  path: '/test-htmx-headers/replace-url'
+  defaults:
+    _title: 'Replace-url'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::replaceUrl'
+  requirements:
+    _permission: 'access content'
+
+htmx_headers_test.replace_url_false:
+  path: '/test-htmx-headers/replace-url-false'
+  defaults:
+    _title: 'Replace-url false'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::replaceUrlFalse'
+  requirements:
+    _permission: 'access content'
+
+htmx_headers_test.refresh:
+  path: '/test-htmx-headers/refresh'
+  defaults:
+    _title: 'Refresh'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::refresh'
+  requirements:
+    _permission: 'access content'
+
+htmx_headers_test.reselect:
+  path: '/test-htmx-headers/reselect'
+  defaults:
+    _title: 'Reselect'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::reselect'
+  requirements:
+    _permission: 'access content'
+
+htmx_headers_test.redirect:
+  path: '/test-htmx-headers/redirect'
+  defaults:
+    _title: 'Redirect'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::redirectHeader'
+  requirements:
+    _permission: 'access content'
+
+htmx_headers_test.reswap:
+  path: '/test-htmx-headers/reswap'
+  defaults:
+    _title: 'Reswap'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::reswap'
+  requirements:
+    _permission: 'access content'
+
+htmx_headers_test.retarget:
+  path: '/test-htmx-headers/retarget'
+  defaults:
+    _title: 'Retarget'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::retarget'
+  requirements:
+    _permission: 'access content'
+
+htmx_headers_test.triggers:
+  path: '/test-htmx-headers/triggers'
+  defaults:
+    _title: 'Triggers'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::triggers'
+  requirements:
+    _permission: 'access content'
+
+htmx_headers_test.triggers_json:
+  path: '/test-htmx-headers/triggers-json'
+  defaults:
+    _title: 'Triggers'
+    _controller: '\Drupal\htmx_headers_test\Controller\TestHtmxHeadersController::triggersJson'
+  requirements:
+    _permission: 'access content'

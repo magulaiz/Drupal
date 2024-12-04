@@ -1,0 +1,5 @@
+name: 'HTMX Header test'
+type: module
+description: 'Provides routes that return render arrays for testing HtmxResponseHeader methods.'
+package: Testing
+version: VERSION
