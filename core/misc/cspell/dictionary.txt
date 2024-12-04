@@ -365,6 +365,7 @@ nojs
 nolink
 nomask
 nonconfigurable
+nontransactional
 noquotes
 nosniff
 notnull

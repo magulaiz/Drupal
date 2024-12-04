@@ -25,7 +25,7 @@ use Drupal\Core\Pager\PagerManagerInterface;
  *
  * @see http://php.net/manual/book.pdo.php
  */
-abstract class Connection {
+abstract class Connection implements DatabaseConnectionInterface {
 
   /**
    * The database target this connection is for.
@@ -1213,6 +1213,17 @@ abstract class Connection {
    */
   public function supportsTransactionalDDL() {
     return $this->transactionalDDLSupport;
+  }
+
+  /**
+   * Allows opening a concurrent non-transactional connection.
+   *
+   * @return bool
+   *   TRUE if this connection allows a concurrent non-transactional
+   *   connection, FALSE otherwise.
+   */
+  public function allowsConcurrentNonTransactionalConnection(): bool {
+    return FALSE;
   }
 
   /**

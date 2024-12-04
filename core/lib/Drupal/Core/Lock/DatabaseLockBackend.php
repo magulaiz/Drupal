@@ -4,6 +4,7 @@ namespace Drupal\Core\Lock;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseConnectionInterface;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 
@@ -22,17 +23,17 @@ class DatabaseLockBackend extends LockBackendAbstract {
   /**
    * The database connection.
    *
-   * @var \Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\DatabaseConnectionInterface
    */
   protected $database;
 
   /**
    * Constructs a new DatabaseLockBackend.
    *
-   * @param \Drupal\Core\Database\Connection $database
+   * @param \Drupal\Core\Database\Connection|\Drupal\Core\Database\DatabaseConnectionInterface $database
    *   The database connection.
    */
-  public function __construct(Connection $database) {
+  public function __construct(Connection|DatabaseConnectionInterface $database) {
     // __destruct() is causing problems with garbage collections, register a
     // shutdown function instead.
     drupal_register_shutdown_function([$this, 'releaseAll']);

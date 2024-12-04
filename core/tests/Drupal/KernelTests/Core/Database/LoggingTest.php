@@ -65,19 +65,19 @@ class LoggingTest extends DatabaseTestBase {
     // Clone the primary credentials to a replica connection and to another fake
     // connection.
     $connection_info = Database::getConnectionInfo('default');
-    Database::addConnectionInfo('default', 'replica', $connection_info['default']);
+    Database::addConnectionInfo(Database::DEFAULT_KEY, Database::REPLICA_TARGET, $connection_info[Database::DEFAULT_TARGET]);
 
     Database::startLog('testing1');
 
     $this->connection->query('SELECT [name] FROM {test} WHERE [age] > :age', [':age' => 25])->fetchCol();
 
-    Database::getConnection('replica')->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Ringo'])->fetchCol();
+    Database::getConnection(Database::REPLICA_TARGET)->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Ringo'])->fetchCol();
 
     $queries1 = Database::getLog('testing1');
 
     $this->assertCount(2, $queries1, 'Recorded queries from all targets.');
-    $this->assertEquals('default', $queries1[0]['target'], 'First query used default target.');
-    $this->assertEquals('replica', $queries1[1]['target'], 'Second query used replica target.');
+    $this->assertEquals(Database::DEFAULT_TARGET, $queries1[0]['target'], 'First query used default target.');
+    $this->assertEquals(Database::REPLICA_TARGET, $queries1[1]['target'], 'Second query used replica target.');
   }
 
   /**
@@ -122,7 +122,7 @@ class LoggingTest extends DatabaseTestBase {
 
     $old_key = Database::setActiveConnection('test2');
 
-    Database::getConnection('replica')->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Ringo'])->fetchCol();
+    Database::getConnection(Database::REPLICA_TARGET)->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Ringo'])->fetchCol();
 
     Database::setActiveConnection($old_key);
 

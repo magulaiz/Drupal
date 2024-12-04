@@ -351,7 +351,7 @@ class SelectComplexTest extends DatabaseTestBase {
       'mail' => $this->randomMachineName() . '@example.com',
     ]);
 
-    $query = Database::getConnection('replica')->select('test_task', 'tt');
+    $query = Database::getConnection(Database::REPLICA_TARGET)->select('test_task', 'tt');
     $query->addExpression('[tt].[pid] + 1', 'abc');
     $query->condition('priority', 1, '>');
     $query->condition('priority', 100, '<');

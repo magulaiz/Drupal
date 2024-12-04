@@ -212,6 +212,13 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     return $pdo;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function allowsConcurrentNonTransactionalConnection(): bool {
+    return TRUE;
+  }
+
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
   }

@@ -3,6 +3,7 @@
 namespace Drupal\Core\Lock;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseConnectionInterface;
 
 /**
  * Defines the persistent database lock backend.
@@ -16,10 +17,10 @@ class PersistentDatabaseLockBackend extends DatabaseLockBackend {
   /**
    * Constructs a new PersistentDatabaseLockBackend.
    *
-   * @param \Drupal\Core\Database\Connection $database
+   * @param \Drupal\Core\Database\Connection|\Drupal\Core\Database\DatabaseConnectionInterface $database
    *   The database connection.
    */
-  public function __construct(Connection $database) {
+  public function __construct(Connection|DatabaseConnectionInterface $database) {
     // Do not call the parent constructor to avoid registering a shutdown
     // function that releases all the locks at the end of a request.
     $this->database = $database;

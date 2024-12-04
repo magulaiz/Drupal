@@ -4,6 +4,7 @@ namespace Drupal\dblog\Logger;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseConnectionInterface;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Logger\LogMessageParserInterface;
@@ -25,7 +26,7 @@ class DbLog implements LoggerInterface {
   /**
    * The database connection object.
    *
-   * @var \Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\DatabaseConnectionInterface
    */
   protected $connection;
 
@@ -39,12 +40,15 @@ class DbLog implements LoggerInterface {
   /**
    * Constructs a DbLog object.
    *
-   * @param \Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\Connection|\Drupal\Core\Database\DatabaseConnectionInterface $connection
    *   The database connection object.
    * @param \Drupal\Core\Logger\LogMessageParserInterface $parser
    *   The parser to use when extracting message variables.
    */
-  public function __construct(Connection $connection, LogMessageParserInterface $parser) {
+  public function __construct(
+    Connection|DatabaseConnectionInterface $connection,
+    LogMessageParserInterface $parser,
+  ) {
     $this->connection = $connection;
     $this->parser = $parser;
   }
