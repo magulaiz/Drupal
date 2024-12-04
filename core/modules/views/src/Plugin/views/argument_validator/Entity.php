@@ -218,6 +218,7 @@ class Entity extends ArgumentValidatorPluginBase {
     // If access restricted by entity operation.
     if ($this->options['access']) {
       $access = $entity->access($this->options['operation'], NULL, TRUE);
+      // Add runtime cacheability of the access result to the executable.
       CacheableMetadata::createFromRenderArray($this->view->element)
         ->merge(CacheableMetadata::createFromObject($access))
         ->applyTo($this->view->element);
