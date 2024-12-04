@@ -3,6 +3,8 @@
 namespace Drupal\Core\Entity;
 
 /**
+ * @template TEntity of \Drupal\Core\Entity\EntityInterface
+ *
  * Defines the interface for entity storage classes.
  *
  * For common default implementations, see
@@ -41,7 +43,7 @@ interface EntityStorageInterface {
    * @param $ids
    *   An array of entity IDs, or NULL to load all entities.
    *
-   * @return \Drupal\Core\Entity\EntityInterface[]
+   * @return (TEntity&\Drupal\Core\Entity\EntityInterface)[]
    *   An array of entity objects indexed by their IDs. Returns an empty array
    *   if no matching entities are found.
    */
@@ -53,7 +55,7 @@ interface EntityStorageInterface {
    * @param mixed $id
    *   The ID of the entity to load.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|null
+   * @return (TEntity&\Drupal\Core\Entity\EntityInterface)|null
    *   An entity object. NULL if no matching entity is found.
    */
   public function load($id);
@@ -64,7 +66,7 @@ interface EntityStorageInterface {
    * @param mixed $id
    *   The ID of the entity to load.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|null
+   * @return (TEntity&\Drupal\Core\Entity\EntityInterface)|null
    *   The unchanged entity, or NULL if the entity cannot be loaded.
    *
    * @todo Remove this method once we have a reliable way to retrieve the
@@ -80,7 +82,7 @@ interface EntityStorageInterface {
    *   values are the values those properties must have. If a property takes
    *   multiple values, passing an array of values will produce an IN condition.
    *
-   * @return \Drupal\Core\Entity\EntityInterface[]
+   * @return (TEntity&\Drupal\Core\Entity\EntityInterface)[]
    *   An array of entity objects indexed by their ids.
    */
   public function loadByProperties(array $values = []);
@@ -92,7 +94,7 @@ interface EntityStorageInterface {
    *   (optional) An array of values to set, keyed by property name. If the
    *   entity type has bundles, the bundle key has to be specified.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
+   * @return TEntity&\Drupal\Core\Entity\EntityInterface
    *   A new entity object.
    */
   public function create(array $values = []);
@@ -111,7 +113,7 @@ interface EntityStorageInterface {
   /**
    * Saves the entity permanently.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param TEntity&\Drupal\Core\Entity\EntityInterface $entity
    *   The entity to save.
    *
    * @return int|null
@@ -130,7 +132,7 @@ interface EntityStorageInterface {
    * the restore process does not invoke any hooks, nor does it perform any pre
    * or post-save operations.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param TEntity&\Drupal\Core\Entity\EntityInterface $entity
    *   The entity to restore.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -206,7 +208,7 @@ interface EntityStorageInterface {
    *   (optional) A specific entity type bundle identifier. Can be omitted in
    *   the case of entity types without bundles, like User.
    *
-   * @return string
+   * @return class-string<TEntity>
    *   The entity class name.
    */
   public function getEntityClass(?string $bundle = NULL): string;
