@@ -13,6 +13,60 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
  */
 class ExecuteEnsuringSchemaOnFailureTest extends DatabaseTestBase {
 
+  public function testValidCallbackOnExistingSchema(): void {
+    // Create the tables before executing the test.
+    $this->connection->schema()->createTable('fixture_header', $this->validMultiTableFixtureSchema()['fixture_header']);
+    $this->connection->schema()->createTable('fixture_detail', $this->validMultiTableFixtureSchema()['fixture_detail']);
+
+    $callbackSuccess = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): int {
+        return $this->insertIntoFixtureTables();
+      },
+      returnValue: $id,
+      schema: $this->validMultiTableFixtureSchema(),
+      retryAfterSchemaEnsured: TRUE,
+    );
+
+    // The schema was there so first callback execution was successful.
+    $this->assertTrue($callbackSuccess);
+    $this->assertSame(1, $id);
+    $this->assertEquals(1, $this->connection->select('fixture_header', 'h')->countQuery()->execute()->fetchField());
+    $this->assertEquals(1, $this->connection->select('fixture_detail', 'h')->countQuery()->execute()->fetchField());
+  }
+
+  public function testValidCallbackOnMissingMultiTableSchema(): void {
+    $callbackSuccess = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): int {
+        return $this->insertIntoFixtureTables();
+      },
+      returnValue: $id,
+      schema: $this->validMultiTableFixtureSchema(),
+      retryAfterSchemaEnsured: TRUE,
+    );
+
+    // The initial callback execution failed, but the schema creation was
+    // successful and the callback retry was successful too.
+    $this->assertFalse($callbackSuccess);
+    $this->assertSame(1, $id);
+    $this->assertEquals(1, $this->connection->select('fixture_header', 'h')->countQuery()->execute()->fetchField());
+    $this->assertEquals(1, $this->connection->select('fixture_detail', 'h')->countQuery()->execute()->fetchField());
+  }
+
+  public function testInvalidCallbackOnExistingMultiTableSchema(): void {
+    $this->connection->schema()->createTable('fixture_header', $this->validMultiTableFixtureSchema()['fixture_header']);
+    $this->connection->schema()->createTable('fixture_detail', $this->validMultiTableFixtureSchema()['fixture_detail']);
+
+    $this->expectException(DatabaseExceptionWrapper::class);
+
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): int {
+        return $this->connection->query('bananas')->execute()->fetchField();
+      },
+      returnValue: $id,
+      schema: $this->validMultiTableFixtureSchema(),
+    );
+  }
+
   public function testInvalidCallbackOnMissingMultiTableSchema(): void {
     $this->assertFalse($this->connection->schema()->tableExists('fixture_header'));
     $this->assertFalse($this->connection->schema()->tableExists('fixture_detail'));
@@ -22,7 +76,7 @@ class ExecuteEnsuringSchemaOnFailureTest extends DatabaseTestBase {
         return $this->connection->query('bananas')->execute()->fetchField();
       },
       returnValue: $id,
-      schema: $this->validMultiTableSchemaFixture(),
+      schema: $this->validMultiTableFixtureSchema(),
     );
 
     $this->assertFalse($callbackSuccess);
@@ -31,44 +85,16 @@ class ExecuteEnsuringSchemaOnFailureTest extends DatabaseTestBase {
     $this->assertTrue($this->connection->schema()->tableExists('fixture_detail'));
   }
 
-  public function testInvalidCallbackOnExistingMultiTableSchema(): void {
-    $this->connection->schema()->createTable('fixture_header', $this->validMultiTableSchemaFixture()['fixture_header']);
-    $this->connection->schema()->createTable('fixture_detail', $this->validMultiTableSchemaFixture()['fixture_detail']);
-
-    $this->expectException(DatabaseExceptionWrapper::class);
-
-    $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function (): int {
-        return $this->connection->query('bananas')->execute()->fetchField();
-      },
-      returnValue: $id,
-      schema: $this->validMultiTableSchemaFixture(),
-    );
-  }
-
   public function testCallbackFailureAndMultiTableSchemaBuilt(): void {
     $this->assertFalse($this->connection->schema()->tableExists('fixture_header'));
     $this->assertFalse($this->connection->schema()->tableExists('fixture_detail'));
 
     $this->connection->executeEnsuringSchemaOnFailure(
       execute: function (): int {
-        $hid = (int) $this->connection->insert('fixture_header')
-          ->fields([
-            'message' => 'foo',
-          ])
-          ->execute();
-
-        $this->connection->insert('fixture_detail')
-          ->fields([
-            'hid' => $hid,
-            'message' => 'bar',
-          ])
-          ->execute();
-
-        return $hid;
+        return $this->insertIntoFixtureTables();
       },
       returnValue: $id,
-      schema: $this->validMultiTableSchemaFixture(),
+      schema: $this->validMultiTableFixtureSchema(),
       retryAfterSchemaEnsured: TRUE,
     );
 
@@ -77,7 +103,7 @@ class ExecuteEnsuringSchemaOnFailureTest extends DatabaseTestBase {
     $this->assertEquals(1, $this->connection->select('fixture_detail', 'h')->countQuery()->execute()->fetchField());
   }
 
-  protected function validMultiTableSchemaFixture(): array {
+  protected function validMultiTableFixtureSchema(): array {
     return [
       'fixture_header' => [
         'fields' => [
@@ -118,6 +144,23 @@ class ExecuteEnsuringSchemaOnFailureTest extends DatabaseTestBase {
         ],
       ],
     ];
+  }
+
+  protected function insertIntoFixtureTables(): int {
+    $hid = (int) $this->connection->insert('fixture_header')
+      ->fields([
+        'message' => 'foo',
+      ])
+      ->execute();
+
+    $this->connection->insert('fixture_detail')
+      ->fields([
+        'hid' => $hid,
+        'message' => 'bar',
+      ])
+      ->execute();
+
+    return $hid;
   }
 
 }
