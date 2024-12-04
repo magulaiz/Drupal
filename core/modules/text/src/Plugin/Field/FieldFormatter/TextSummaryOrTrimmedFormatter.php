@@ -23,7 +23,7 @@ class TextSummaryOrTrimmedFormatter extends TextTrimmedFormatter {
   /**
    * {@inheritdoc}
    */
-  protected function createSummary(array &$element, FieldItemInterface $item) {
+  protected function createSummary(array &$element, FieldItemInterface $item): void {
     if (!$item instanceof TextWithSummaryItem) {
       parent::createSummary($element, $item);
     }
