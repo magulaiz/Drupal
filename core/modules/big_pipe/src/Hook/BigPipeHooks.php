@@ -100,4 +100,20 @@ class BigPipeHooks {
     ];
   }
 
+  /**
+   * Implements hook_theme_suggestions_HOOK().
+   */
+  #[Hook('theme_suggestions_big_pipe_interface_preview')]
+  public function themeSuggestionsBigPipeInterfacePreview() : array {
+    return [
+      'big_pipe_interface_preview' => [
+        'variables' => [
+          'callback' => NULL,
+          'arguments' => NULL,
+          'preview' => NULL,
+        ],
+      ],
+    ];
+  }
+
 }
