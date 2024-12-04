@@ -40,6 +40,7 @@ final class AdminAccountSwitcher implements AccountSwitcherInterface {
       ->condition('is_admin', TRUE)
       ->execute();
 
+    /** @var \Drupal\Core\Entity\EntityStorageInterface<\Drupal\user\UserInterface> $user_storage */
     $user_storage = $this->entityTypeManager->getStorage('user');
 
     if ($admin_roles) {

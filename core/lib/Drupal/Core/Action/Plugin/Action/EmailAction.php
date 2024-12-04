@@ -38,7 +38,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   /**
    * The user storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface<\Drupal\user\UserInterface>
    */
   protected $storage;
 

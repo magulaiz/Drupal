@@ -28,7 +28,7 @@ class DateFormatter implements DateFormatterInterface {
   /**
    * The date format storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface<\Drupal\Core\Datetime\DateFormatInterface>
    */
   protected $dateFormatStorage;
 

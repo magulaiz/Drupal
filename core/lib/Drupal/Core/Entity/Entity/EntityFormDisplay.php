@@ -115,6 +115,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
       ->execute();
 
     // Load the first valid candidate display, if any.
+    /** @var \Drupal\Core\Entity\EntityStorageInterface<\Drupal\Core\Entity\Display\EntityFormDisplayInterface> $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('entity_form_display');
     foreach ($candidate_ids as $candidate_id) {
       if (isset($results[$candidate_id])) {
