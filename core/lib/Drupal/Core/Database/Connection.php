@@ -1645,10 +1645,10 @@ abstract class Connection {
 
     $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $retryAfterSchemaEnsured);
 
-    // When rebuilding the container, there's a stage when the event_dispatcher
-    // service has not been reactivated yet. In that case, execute the closure,
-    // and set its returned value; if the callback throws an exception, it will
-    // just propagate to the caller.
+    // When rebuilding the container, or very early during a test, there's a
+    // stage when the event_dispatcher service has not been activated yet. In
+    // that case, execute the closure, and set its returned value; if the
+    // callback throws an exception, it will just propagate to the caller.
     if (!\Drupal::hasService('event_dispatcher')) {
       $event->setResult($execute());
       $event->setCallbackExecutionState(TRUE);

@@ -83,21 +83,25 @@ class DatabaseStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function read($name) {
-    $execution = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($name): array|FALSE {
-        $data = FALSE;
-        $raw = $this->connection->query('SELECT [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', [':collection' => $this->collection, ':name' => $name], $this->options)->fetchField();
-        if ($raw !== FALSE) {
-          $data = $this->decode($raw);
-        }
-        return $data;
-      },
-      schema: [
-        $this->table => static::schemaDefinition(),
-      ],
-    );
-
-    return $execution->isSuccessful() ? $execution->getResult() : FALSE;
+    try {
+      $execution = $this->connection->executeEnsuringSchemaOnFailure(
+        execute: function () use ($name): array|FALSE {
+          $data = FALSE;
+          $raw = $this->connection->query('SELECT [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', [':collection' => $this->collection, ':name' => $name], $this->options)->fetchField();
+          if ($raw !== FALSE) {
+            $data = $this->decode($raw);
+          }
+          return $data;
+        },
+        schema: [
+          $this->table => static::schemaDefinition(),
+        ],
+      );
+      return $execution->isSuccessful() ? $execution->getResult() : FALSE;
+    }
+    catch (DatabaseException) {
+      return FALSE;
+    }
   }
 
   /**
@@ -361,7 +365,7 @@ class DatabaseStorage implements StorageInterface {
    */
   public function getAllCollectionNames() {
     $execution = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function (): bool {
+      execute: function (): array {
         return $this->connection->query('SELECT DISTINCT [collection] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] <> :collection ORDER by [collection]', [
           ':collection' => StorageInterface::DEFAULT_COLLECTION,
         ])->fetchCol();
