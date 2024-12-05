@@ -64,41 +64,40 @@ class DatabaseStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function exists($name) {
-    try {
-      return (bool) $this->connection->queryRange('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', 0, 1, [
-        ':collection' => $this->collection,
-        ':name' => $name,
-      ], $this->options)->fetchField();
-    }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
-      // If we attempt a read without actually having the table available,
-      // return false so the caller can handle it.
-      return FALSE;
-    }
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($name): bool {
+        return (bool) $this->connection->queryRange('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', 0, 1, [
+          ':collection' => $this->collection,
+          ':name' => $name,
+        ], $this->options)->fetchField();
+      },
+      schema: [
+        $this->table => static::schemaDefinition(),
+      ],
+    );
+
+    return $execution->isSuccessful() ? $execution->getResult() : FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function read($name) {
-    $data = FALSE;
-    try {
-      $raw = $this->connection->query('SELECT [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', [':collection' => $this->collection, ':name' => $name], $this->options)->fetchField();
-      if ($raw !== FALSE) {
-        $data = $this->decode($raw);
-      }
-    }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
-      // If we attempt a read without actually having the table available,
-      // return false so the caller can handle it.
-    }
-    return $data;
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($name): string|FALSE {
+        $data = FALSE;
+        $raw = $this->connection->query('SELECT [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', [':collection' => $this->collection, ':name' => $name], $this->options)->fetchField();
+        if ($raw !== FALSE) {
+          $data = $this->decode($raw);
+        }
+        return $data;
+      },
+      schema: [
+        $this->table => static::schemaDefinition(),
+      ],
+    );
+
+    return $execution->isSuccessful() ? $execution->getResult() : FALSE;
   }
 
   /**
@@ -151,6 +150,9 @@ class DatabaseStorage implements StorageInterface {
       return $execution->isSuccessful() ? $execution->getResult() : FALSE;
     }
     catch (\Exception $e) {
+      if ($e instanceof DatabaseException) {
+        throw $e;
+      }
       // Some other failure that we can not recover from.
       throw new StorageException($e->getMessage(), 0, $e);
     }
@@ -192,8 +194,8 @@ class DatabaseStorage implements StorageInterface {
    *   If a database error occurs.
    *
    * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
-   * instead.
+   *   \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   *   instead.
    *
    * @see https://www.drupal.org/node/3489185
    */
@@ -299,42 +301,40 @@ class DatabaseStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function listAll($prefix = '') {
-    try {
-      $query = $this->connection->select($this->table);
-      $query->fields($this->table, ['name']);
-      $query->condition('collection', $this->collection, '=');
-      $query->condition('name', $prefix . '%', 'LIKE');
-      $query->orderBy('collection')->orderBy('name');
-      return $query->execute()->fetchCol();
-    }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
-      // If we attempt a read without actually having the table available,
-      // return an empty array so the caller can handle it.
-      return [];
-    }
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($prefix): array {
+        $query = $this->connection->select($this->table);
+        $query->fields($this->table, ['name']);
+        $query->condition('collection', $this->collection, '=');
+        $query->condition('name', $prefix . '%', 'LIKE');
+        $query->orderBy('collection')->orderBy('name');
+        return $query->execute()->fetchCol();
+      },
+      schema: [
+        $this->table => static::schemaDefinition(),
+      ],
+    );
+
+    return $execution->isSuccessful() ? $execution->getResult() : [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function deleteAll($prefix = '') {
-    try {
-      return (bool) $this->connection->delete($this->table, $this->options)
-        ->condition('name', $prefix . '%', 'LIKE')
-        ->condition('collection', $this->collection)
-        ->execute();
-    }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
-      // If we attempt a delete without actually having the table available,
-      // return false so the caller can handle it.
-      return FALSE;
-    }
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($prefix): bool {
+        return (bool) $this->connection->delete($this->table, $this->options)
+          ->condition('name', $prefix . '%', 'LIKE')
+          ->condition('collection', $this->collection)
+          ->execute();
+      },
+      schema: [
+        $this->table => static::schemaDefinition(),
+      ],
+    );
+
+    return $execution->isSuccessful() ? $execution->getResult() : FALSE;
   }
 
   /**
@@ -360,19 +360,18 @@ class DatabaseStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function getAllCollectionNames() {
-    try {
-      return $this->connection->query('SELECT DISTINCT [collection] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] <> :collection ORDER by [collection]', [
-        ':collection' => StorageInterface::DEFAULT_COLLECTION,
-      ])->fetchCol();
-    }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
-      // If we attempt a read without actually having the table available,
-      // return an empty array so the caller can handle it.
-      return [];
-    }
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): bool {
+        return $this->connection->query('SELECT DISTINCT [collection] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] <> :collection ORDER by [collection]', [
+          ':collection' => StorageInterface::DEFAULT_COLLECTION,
+        ])->fetchCol();
+      },
+      schema: [
+        $this->table => static::schemaDefinition(),
+      ],
+    );
+
+    return $execution->isSuccessful() ? $execution->getResult() : [];
   }
 
 }
