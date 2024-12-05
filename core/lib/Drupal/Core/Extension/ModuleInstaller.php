@@ -221,7 +221,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
     }
     foreach ($module_groups as $modules) {
       $this->doInstall($modules, $installed_modules, $sync_status);
-      $installed_modules = array_merge($installed_modules, array_flip($modules));
+      // Refresh the installed modules list from configuration to preserve
+      // module weight.
+      $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+      $installed_modules = $extension_config->get('module') ?: [];
     }
     return TRUE;
   }
