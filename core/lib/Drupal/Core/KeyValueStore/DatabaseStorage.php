@@ -103,7 +103,7 @@ class DatabaseStorage extends StorageBase {
    */
   public function getAll() {
     $execution = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($key): ?StatementInterface {
+      execute: function (): ?StatementInterface {
         return $this->connection->query('SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection', [':collection' => $this->collection]);
       },
       schema: [

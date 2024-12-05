@@ -42,60 +42,62 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * {@inheritdoc}
    */
   public function has($key) {
-    try {
-      return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :key AND [expire] > :now', [
-        ':collection' => $this->collection,
-        ':key' => $key,
-        ':now' => $this->time->getRequestTime(),
-      ])->fetchField();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-      return FALSE;
-    }
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($key): bool {
+        return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :key AND [expire] > :now', [
+          ':collection' => $this->collection,
+          ':key' => $key,
+          ':now' => $this->time->getRequestTime(),
+        ])->fetchField();
+      },
+      schema: [
+        $this->table => static::schemaDefinition(),
+      ],
+    );
+    return $execution->isSuccessful() ? $execution->getResult() : [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getMultiple(array $keys) {
-    try {
-      $values = $this->connection->query(
-        'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [expire] > :now AND [name] IN ( :keys[] ) AND [collection] = :collection',
-        [
-          ':now' => $this->time->getRequestTime(),
-          ':keys[]' => $keys,
-          ':collection' => $this->collection,
-        ])->fetchAllKeyed();
-      return array_map([$this->serializer, 'decode'], $values);
-    }
-    catch (\Exception $e) {
-      // @todo Perhaps if the database is never going to be available,
-      // key/value requests should return FALSE in order to allow exception
-      // handling to occur but for now, keep it an array, always.
-      // https://www.drupal.org/node/2787737
-      $this->catchException($e);
-    }
-    return [];
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($keys): array {
+        $values = $this->connection->query(
+          'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [expire] > :now AND [name] IN ( :keys[] ) AND [collection] = :collection',
+          [
+            ':now' => $this->time->getRequestTime(),
+            ':keys[]' => $keys,
+            ':collection' => $this->collection,
+          ])->fetchAllKeyed();
+        return array_map([$this->serializer, 'decode'], $values);
+      },
+      schema: [
+        $this->table => static::schemaDefinition(),
+      ],
+    );
+    return $execution->isSuccessful() ? $execution->getResult() : [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getAll() {
-    try {
-      $values = $this->connection->query(
-        'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [expire] > :now',
-        [
-          ':collection' => $this->collection,
-          ':now' => $this->time->getRequestTime(),
-        ])->fetchAllKeyed();
-      return array_map([$this->serializer, 'decode'], $values);
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-    }
-    return [];
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): array {
+        $values = $this->connection->query(
+          'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [expire] > :now',
+          [
+            ':collection' => $this->collection,
+            ':now' => $this->time->getRequestTime(),
+          ])->fetchAllKeyed();
+        return array_map([$this->serializer, 'decode'], $values);
+      },
+      schema: [
+        $this->table => static::schemaDefinition(),
+      ],
+    );
+    return $execution->isSuccessful() ? $execution->getResult() : [];
   }
 
   /**
@@ -109,8 +111,15 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    *   The data to store.
    * @param int $expire
    *   The time to live for items, in seconds.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   *   \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3489185
    */
   protected function doSetWithExpire($key, $value, $expire) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
     $this->connection->merge($this->table)
       ->keys([
         'name' => $key,
@@ -127,18 +136,23 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * {@inheritdoc}
    */
   public function setWithExpire($key, $value, $expire) {
-    try {
-      $this->doSetWithExpire($key, $value, $expire);
-    }
-    catch (\Exception $e) {
-      // If there was an exception, then try to create the table.
-      if ($this->ensureTableExists()) {
-        $this->doSetWithExpire($key, $value, $expire);
-      }
-      else {
-        throw $e;
-      }
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($key, $value, $expire): void {
+        $this->connection->merge($this->table)
+        ->keys([
+          'name' => $key,
+          'collection' => $this->collection,
+        ])
+        ->fields([
+          'value' => $this->serializer->encode($value),
+          'expire' => $this->time->getRequestTime() + $expire,
+        ])
+        ->execute();
+      },
+      schema: [
+        $this->table => static::schemaDefinition(),
+      ],
+    );
   }
 
   /**
@@ -155,8 +169,15 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    *
    * @return bool
    *   TRUE if the data was set, or FALSE if it already existed.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   *   \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3489185
    */
   protected function doSetWithExpireIfNotExists($key, $value, $expire) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
     if (!$this->has($key)) {
       $this->setWithExpire($key, $value, $expire);
       return TRUE;
@@ -168,18 +189,18 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * {@inheritdoc}
    */
   public function setWithExpireIfNotExists($key, $value, $expire) {
-    try {
-      return $this->doSetWithExpireIfNotExists($key, $value, $expire);
-    }
-    catch (\Exception $e) {
-      // If there was an exception, try to create the table.
-      if ($this->ensureTableExists()) {
-        return $this->doSetWithExpireIfNotExists($key, $value, $expire);
-      }
-      else {
-        throw $e;
-      }
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($key, $value, $expire): bool {
+        if (!$this->has($key)) {
+          $this->setWithExpire($key, $value, $expire);
+          return TRUE;
+        }
+        return FALSE;
+      },
+      schema: [
+        $this->table => static::schemaDefinition(),
+      ],
+    );
   }
 
   /**
