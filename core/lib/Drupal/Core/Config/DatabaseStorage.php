@@ -305,21 +305,25 @@ class DatabaseStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function listAll($prefix = '') {
-    $execution = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($prefix): array {
-        $query = $this->connection->select($this->table);
-        $query->fields($this->table, ['name']);
-        $query->condition('collection', $this->collection, '=');
-        $query->condition('name', $prefix . '%', 'LIKE');
-        $query->orderBy('collection')->orderBy('name');
-        return $query->execute()->fetchCol();
-      },
-      schema: [
-        $this->table => static::schemaDefinition(),
-      ],
-    );
-
-    return $execution->isSuccessful() ? $execution->getResult() : [];
+    try {
+      $execution = $this->connection->executeEnsuringSchemaOnFailure(
+        execute: function () use ($prefix): array {
+          $query = $this->connection->select($this->table);
+          $query->fields($this->table, ['name']);
+          $query->condition('collection', $this->collection, '=');
+          $query->condition('name', $prefix . '%', 'LIKE');
+          $query->orderBy('collection')->orderBy('name');
+          return $query->execute()->fetchCol();
+        },
+        schema: [
+          $this->table => static::schemaDefinition(),
+        ],
+      );
+      return $execution->isSuccessful() ? $execution->getResult() : [];
+    }
+    catch (DatabaseException) {
+      return FALSE;
+    }
   }
 
   /**
