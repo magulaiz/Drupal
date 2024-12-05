@@ -345,7 +345,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // If the module has no current updates, but has some that were
       // previously removed, set the version to the value of
       // hook_update_last_removed().
-      if ($last_removed = $this->moduleHandler->invoke($module, 'update_last_removed')) {
+      if ($last_removed = $this->invoke($module, 'update_last_removed')) {
         $version = max($version, $last_removed);
       }
       $this->updateRegistry->setInstalledVersion($module, $version);
@@ -378,7 +378,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::InstallEntities);
 
       // Allow the module to perform install tasks.
-      $this->moduleHandler->invoke($module, 'install', [$sync_status]);
+      $this->invoke($module, 'install', [$sync_status]);
 
       // Record the fact that it was installed.
       \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
