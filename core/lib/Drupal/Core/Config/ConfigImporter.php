@@ -887,7 +887,23 @@ class ConfigImporter {
     \Drupal::service('config.installer')
       ->setSourceStorage($this->storageComparer->getSourceStorage());
     if ($type == 'module') {
-      $this->moduleInstaller->$op($names, FALSE);
+      if ($op === 'install') {
+        $files = \Drupal::service('extension.list.module')->getList();
+        $index = 0;
+        $module_groups = [];
+        foreach ($names as $name) {
+          $module_groups[$index][$name] = $name;
+          if (!isset($files[$name]->container_rebuild_required) || $files[$name]->container_rebuild_required) {
+            $index++;
+          }
+        }
+        foreach ($module_groups as $modules) {
+          $this->moduleInstaller->install($modules, FALSE);
+        }
+      }
+      else {
+        $this->moduleInstaller->$op($names, FALSE);
+      }
       // Installing a module can cause a kernel boot therefore inject all the
       // services again.
       $this->reInjectMe();
