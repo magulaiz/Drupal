@@ -67,7 +67,7 @@ class LayoutBuilderLayoutSectionDBLimitUpdateTest extends UpdatePathTestBase {
   /**
    * Assert equals expected data type of layout section column.
    */
-  protected function assertEqualLayoutSectionDataType($expected) {
+  protected function assertEqualLayoutSectionDataType($expected): void {
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_field_manager = \Drupal::service('entity_field.manager');
     $field_map = $entity_field_manager->getFieldMapByFieldType('layout_section');
