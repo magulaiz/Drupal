@@ -62,6 +62,13 @@ class BaseFieldOverride extends FieldConfigBase {
   protected $baseFieldDefinition;
 
   /**
+   * The array holding values for all definition keys.
+   *
+   * @var array
+   */
+  protected $definition = [];
+
+  /**
    * The original override.
    */
   public BaseFieldOverride $original;

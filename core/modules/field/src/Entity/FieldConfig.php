@@ -78,6 +78,13 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
   protected $deleted = FALSE;
 
   /**
+   * The array holding values for all definition keys.
+   *
+   * @var array
+   */
+  protected $definition = [];
+
+  /**
    * The associated FieldStorageConfig entity.
    *
    * @var \Drupal\field\Entity\FieldStorageConfig
