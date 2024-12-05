@@ -176,11 +176,18 @@ class Bundle extends InOperator {
     // In case of 'not in' operation, not allowed options have to be explicitly
     // added.
     if ('not in' === $this->operator) {
-      $this->value += $this->unavailableOptions();
+      $unavailableOptionsKey = array_keys($this->unavailableOptions());
+      $unavailableOptions = array_combine($unavailableOptionsKey, $unavailableOptionsKey);
+      $this->value = array_merge($this->value, $unavailableOptions);
     }
     // In case of 'in' operation, not allowed options have to be removed.
     else {
-      $this->value = array_intersect_key($this->value, $this->getValueOptions());
+      // Keep only values of $this->value which are keys in $this->getValueOptions().
+      $options = $this->getValueOptions();
+      $this->value = array_filter($this->value, function($value) use ($options) {
+        return array_key_exists($value, $options);
+      });
+
     }
 
     // Make sure that the entity base table is in the query.
