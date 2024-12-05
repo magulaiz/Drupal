@@ -152,6 +152,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
       schema: [
         $this->table => static::schemaDefinition(),
       ],
+      retryAfterSchemaEnsured: TRUE,
     );
   }
 
