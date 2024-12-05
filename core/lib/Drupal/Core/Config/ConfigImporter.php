@@ -892,7 +892,7 @@ class ConfigImporter {
         $index = 0;
         $module_groups = [];
         foreach ($names as $name) {
-          $module_groups[$index][] = $name;
+          $module_groups[$index][$name] = $name;
           if (!isset($files[$name]->container_rebuild_required) || $files[$name]->container_rebuild_required) {
             $index++;
           }
