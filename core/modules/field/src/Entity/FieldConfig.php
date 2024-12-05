@@ -3,15 +3,15 @@
 namespace Drupal\field\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityStorageInterface;
 use Drupal\Core\Field\FieldConfigBase;
 use Drupal\Core\Field\FieldException;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\FieldConfigAccessControlHandler;
+use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldConfigStorage;
 use Drupal\field\FieldStorageConfigInterface;
-use Drupal\field\FieldConfigInterface;
 
 /**
  * Defines the Field entity.
@@ -424,4 +424,5 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     $this->definition['internal'] = $internal;
     return $this;
   }
+
 }
