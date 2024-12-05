@@ -208,6 +208,37 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // exceptions if the configuration is not valid.
     $config_installer->checkConfigurationToInstall('module', $module_list);
 
+    // Some modules require a container rebuild immediately after install, so
+    // group modules such tht as many are installed together as possible until
+    // one needs sa container rebuild.
+    $module_groups = [];
+    $index = 0;
+    foreach ($module_list as $module) {
+      $module_groups[$index][] = $module;
+      if (!isset($module_data[$module]->container_rebuild_required) || $module_data[$module]->container_rebuild_required) {
+        $index++;
+      }
+    }
+    foreach ($module_groups as $modules) {
+      $this->doInstall($modules, $installed_modules, $sync_status);
+      $installed_modules = array_merge($installed_modules, array_flip($modules));
+    }
+    return TRUE;
+  }
+
+  /**
+   * Installs a set of modules.
+   *
+   * @param array $module_list
+   *   The list of modules to install.
+   * @param array $installed_modules
+   *   An array of the already installed modules.
+   * @param bool $sync_status
+   *   The config sync status.
+   */
+  private function doInstall(array $module_list, array $installed_modules, bool $sync_status): void {
+    $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+
     // Save this data without checking schema. This is a performance
     // improvement for module installation.
     $extension_config
@@ -441,8 +472,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
     }
 
     $this->moduleHandler->invokeAll('modules_installed', [$module_list, $sync_status]);
-
-    return TRUE;
   }
 
   /**
