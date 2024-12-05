@@ -164,8 +164,8 @@ class ConfigImportUITest extends BrowserTestBase {
     // Ensure installations and uninstallation occur as expected.
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', []);
     $expected = ['automated_cron', 'ban', 'text', 'options'];
-    $installed = \Drupal::state()->get('config_import_test_modules_installed.list');
-    $this->assertSame($expected, $installed, 'Automated Cron, Ban, Text and Options modules installed in the correct order.');
+    $installed = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_installed');
+    $this->assertSame(array_values($expected), array_keys($installed), 'Automated Cron, Ban, Text and Options modules installed in the correct order.');
     $this->assertEmpty($uninstalled, 'No modules uninstalled during import');
 
     // Verify that the automated_cron configuration object was only written
