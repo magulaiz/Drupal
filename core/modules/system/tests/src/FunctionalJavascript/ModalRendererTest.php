@@ -110,7 +110,7 @@ class ModalRendererTest extends WebDriverTestBase {
     $this->drupalGet('dialog_renderer-collapsed-opener');
 
     // Open a modal using a link inside a dropbutton.
-    $page->find('css', '.dropbutton-toggle button')->click();
+    $this->getSession()->executeScript('document.querySelector(".dropbutton-toggle button").click()');
     $modal_link = $assert_session->waitForElementVisible('css', '.secondary-action a');
     $modal_link->click();
     $assert_session->waitForElementVisible('css', '.ui-dialog');

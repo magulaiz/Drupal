@@ -95,7 +95,7 @@ JS;
     $this->assertNotEmpty($web_assert->waitForElementVisible('css', '#drupal-modal'));
     hold_test_response(TRUE);
     $this->clickLink('Place block');
-    $this->assertNotNull($web_assert->waitForElement('xpath', '//div[contains(@class, "dropbutton-wrapper")]/following-sibling::div[contains(@class, "ajax-progress-throbber")]'));
+    $this->assertNotNull($web_assert->waitForElement('xpath', '//drupal-dropbutton[contains(@class, "dropbutton-wrapper")]/following-sibling::div[contains(@class, "ajax-progress-throbber")]'));
     hold_test_response(FALSE);
     $web_assert->assertNoElementAfterWait('css', '.ajax-progress-throbber');
   }

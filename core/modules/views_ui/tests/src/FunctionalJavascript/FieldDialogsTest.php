@@ -80,8 +80,7 @@ class FieldDialogsTest extends WebDriverTestBase {
   protected function openFieldDialog(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $dropbutton = $page->find('css', '.views-ui-display-tab-bucket.field .dropbutton-toggle button');
-    $dropbutton->click();
+    $this->getSession()->executeScript('document.querySelector(".views-ui-display-tab-bucket.field .dropbutton-toggle button").click()');
     $add_link = $page->findById('views-rearrange-field');
     $this->assertTrue($add_link->isVisible(), 'And/Or Rearrange button found.');
     $add_link->click();

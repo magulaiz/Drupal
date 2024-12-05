@@ -572,15 +572,13 @@ drupal.displace:
 drupal.dropbutton:
   version: VERSION
   js:
-    misc/dropbutton/dropbutton.js: {}
+    # Needed to make sure the element is loaded before connectedCallback is executed.
+    misc/dropbutton/dropbutton.js: { attributes: { defer: true } }
   css:
     component:
       misc/dropbutton/dropbutton.css: {}
   dependencies:
-    - core/jquery
     - core/drupal
-    - core/drupalSettings
-    - core/once
 
 drupal.entity-form:
   version: VERSION

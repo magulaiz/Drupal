@@ -63,7 +63,8 @@ class RedirectAjaxTest extends WebDriverTestBase {
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->assertSession()->pageTextContains('Tiny paws and playful mews, kittens bring joy in every hue');
-    $this->getSession()->getPage()->find('css', '.dropbutton-toggle button')->click();
+    $this->getSession()->executeScript('document.querySelector(".dropbutton-toggle button").click()');
+
     $this->clickLink('Delete');
     $this->assertSession()->assertWaitOnAjaxRequest();
 

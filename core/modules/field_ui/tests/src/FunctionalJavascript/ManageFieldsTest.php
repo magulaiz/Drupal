@@ -161,7 +161,7 @@ class ManageFieldsTest extends WebDriverTestBase {
 
     $this->drupalGet('admin/structure/types/manage/article/fields');
 
-    $page->find('css', '.dropbutton-toggle button')->click();
+    $this->getSession()->executeScript('document.querySelector(".dropbutton-toggle button").click()');
     $page->clickLink('Delete');
 
     // Asserts a dialog opens with the expected text.

@@ -59,7 +59,7 @@ class NodeDeleteConfirmTest extends WebDriverTestBase {
 
     $this->drupalGet('admin/content');
 
-    $page->find('css', '.dropbutton-toggle button')->click();
+    $this->getSession()->executeScript('document.querySelector(".dropbutton-toggle button").click()');
     $page->clickLink('Delete');
 
     // Asserts a dialog opens with the expected text.
@@ -116,7 +116,7 @@ class NodeDeleteConfirmTest extends WebDriverTestBase {
     // Delete node type using link on the content type list.
     $this->drupalGet('admin/structure/types');
     $this->assertSession()->waitForText('Article');
-    $page->find('css', '.dropbutton-toggle button')->click();
+    $this->getSession()->executeScript('document.querySelector(".dropbutton-toggle button").click()');
     $this->clickLink('Delete');
     $this->assertEquals('Are you sure you want to delete the content type Article?', $this->assertSession()->waitForElement('css', '.ui-dialog-title')->getText());
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Delete');

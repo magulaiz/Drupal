@@ -3,234 +3,117 @@
  * Dropbutton feature.
  */
 
-(function ($, Drupal) {
-  /**
-   * A DropButton presents an HTML list as a button with a primary action.
-   *
-   * All secondary actions beyond the first in the list are presented in a
-   * dropdown list accessible through a toggle arrow associated with the button.
-   *
-   * @constructor Drupal.DropButton
-   *
-   * @param {HTMLElement} dropbutton
-   *   A DOM element.
-   * @param {object} settings
-   *   A list of options including:
-   * @param {string} settings.title
-   *   The text inside the toggle link element. This text is hidden
-   *   from visual UAs.
-   */
-  function DropButton(dropbutton, settings) {
-    // Merge defaults with settings.
-    const options = $.extend(
-      { title: Drupal.t('List additional actions') },
-      settings,
-    );
-    const $dropbutton = $(dropbutton);
+customElements.define(
+  'drupal-dropbutton',
+  class DrupalDropbutton extends HTMLElement {
+    connectedCallback() {
+      const settings = drupalSettings?.dropbutton;
+      // Merge defaults with settings.
+      const options = {
+        title: Drupal.t('List additional actions'),
+        ...settings,
+      };
 
-    /**
-     * @type {jQuery}
-     */
-    this.$dropbutton = $dropbutton;
+      const actions = this.querySelectorAll('.dropbutton li');
 
-    /**
-     * @type {jQuery}
-     */
-    this.$list = $dropbutton.find('.dropbutton');
+      // Add the special dropdown only if there are hidden actions.
+      if (actions.length > 1) {
+        // Identify the first element of the collection.
+        const primary = actions[0];
 
-    /**
-     * Find actions and mark them.
-     *
-     * @type {jQuery}
-     */
-    this.$actions = this.$list.find('li').addClass('dropbutton-action');
+        this.classList.add('dropbutton-multiple');
+        actions.forEach((li) =>
+          li.classList.add('dropbutton-action', 'secondary-action'),
+        );
+        primary.classList.remove('secondary-action');
+        // Add toggle link.
+        primary.insertAdjacentHTML(
+          'afterend',
+          DrupalDropbutton.dropbuttonToggle(options),
+        );
 
-    // Add the special dropdown only if there are hidden actions.
-    if (this.$actions.length > 1) {
-      // Identify the first element of the collection.
-      const $primary = this.$actions.slice(0, 1);
-      // Identify the secondary actions.
-      const $secondary = this.$actions.slice(1);
-      $secondary.addClass('secondary-action');
-      // Add toggle link.
-      $primary.after(Drupal.theme('dropbuttonToggle', options));
-      // Bind mouse events.
-      this.$dropbutton.addClass('dropbutton-multiple').on({
-        /**
-         * Adds a timeout to close the dropdown on mouseleave.
-         *
-         * @ignore
-         */
-        'mouseleave.dropbutton': this.hoverOut.bind(this),
-
-        /**
-         * Clears timeout when mouseout of the dropdown.
-         *
-         * @ignore
-         */
-        'mouseenter.dropbutton': this.hoverIn.bind(this),
-
-        /**
-         * Similar to mouseleave/mouseenter, but for keyboard navigation.
-         *
-         * @ignore
-         */
-        'focusout.dropbutton': this.focusOut.bind(this),
-
-        /**
-         * @ignore
-         */
-        'focusin.dropbutton': this.focusIn.bind(this),
-      });
-    } else {
-      this.$dropbutton.addClass('dropbutton-single');
-    }
-  }
-
-  /**
-   * Delegated callback for opening and closing dropbutton secondary actions.
-   *
-   * @function Drupal.DropButton~dropbuttonClickHandler
-   *
-   * @param {jQuery.Event} e
-   *   The event triggered.
-   */
-  function dropbuttonClickHandler(e) {
-    e.preventDefault();
-    $(e.target).closest('.dropbutton-wrapper').toggleClass('open');
-  }
-
-  /**
-   * Process elements with the .dropbutton class on page load.
-   *
-   * @type {Drupal~behavior}
-   *
-   * @prop {Drupal~behaviorAttach} attach
-   *   Attaches dropButton behaviors.
-   */
-  Drupal.behaviors.dropButton = {
-    attach(context, settings) {
-      const dropbuttons = once('dropbutton', '.dropbutton-wrapper', context);
-      if (dropbuttons.length) {
-        // Adds the delegated handler that will toggle dropdowns on click.
-        const body = once('dropbutton-click', 'body');
-        if (body.length) {
-          $(body).on('click', '.dropbutton-toggle', dropbuttonClickHandler);
-        }
-        // Initialize all buttons.
-        dropbuttons.forEach((dropbutton) => {
-          DropButton.dropbuttons.push(
-            new DropButton(dropbutton, settings.dropbutton),
-          );
-        });
+        this.addEventListener('click', this);
+        this.addEventListener('mouseleave', this);
+        this.addEventListener('mouseenter', this);
+        this.addEventListener('focusout', this);
+        this.addEventListener('focusin', this);
+      } else {
+        this.classList.add('dropbutton-single');
       }
-    },
-  };
+    }
 
-  /**
-   * Extend the DropButton constructor.
-   */
-  $.extend(
-    DropButton,
-    /** @lends Drupal.DropButton */ {
-      /**
-       * Store all processed DropButtons.
-       *
-       * @type {Array.<Drupal.DropButton>}
-       */
-      dropbuttons: [],
-    },
-  );
+    disconnectedCallback() {
+      this.removeEventListener('click', this);
+      this.removeEventListener('mouseleave', this);
+      this.removeEventListener('mouseenter', this);
+      this.removeEventListener('focusout', this);
+      this.removeEventListener('focusin', this);
+    }
 
-  /**
-   * Extend the DropButton prototype.
-   */
-  $.extend(
-    DropButton.prototype,
-    /** @lends Drupal.DropButton# */ {
-      /**
-       * Toggle the dropbutton open and closed.
-       *
-       * @param {boolean} [show]
-       *   Force the dropbutton to open by passing true or to close by
-       *   passing false.
-       */
-      toggle(show) {
-        const isBool = typeof show === 'boolean';
-        show = isBool ? show : !this.$dropbutton.hasClass('open');
-        this.$dropbutton.toggleClass('open', show);
-      },
+    handleEvent(event) {
+      if (
+        event.type === 'click' &&
+        event.target.matches('[data-drupal-dropbutton-toggle]')
+      ) {
+        event.preventDefault();
+        this.toggle();
+      } else if (['mouseleave', 'focusout'].includes(event.type)) {
+        this.hoverOut();
+      } else if (['mouseenter', 'focusin'].includes(event.type)) {
+        this.hoverIn();
+      }
+    }
 
-      /**
-       * @method
-       */
-      hoverIn() {
-        // Clear any previous timer we were using.
-        if (this.timerID) {
-          window.clearTimeout(this.timerID);
-        }
-      },
+    /**
+     * Toggle the dropbutton open and closed.
+     *
+     * @param {boolean} [show]
+     *   Force the dropbutton to open by passing true or to close by
+     *   passing false.
+     */
+    toggle(show) {
+      const isBool = typeof show === 'boolean';
+      show = isBool ? show : !this.classList.contains('open');
+      this.classList.toggle('open', show);
+    }
 
-      /**
-       * @method
-       */
-      hoverOut() {
-        // Wait half a second before closing.
-        this.timerID = window.setTimeout(this.close.bind(this), 500);
-      },
+    /**
+     * @method
+     */
+    hoverIn() {
+      // Clear any previous timer we were using.
+      if (this.timerID) {
+        window.clearTimeout(this.timerID);
+      }
+    }
 
-      /**
-       * @method
-       */
-      open() {
-        this.toggle(true);
-      },
+    /**
+     * @method
+     */
+    hoverOut() {
+      // Wait half a second before closing.
+      this.timerID = window.setTimeout(() => this.close(), 500);
+    }
 
-      /**
-       * @method
-       */
-      close() {
-        this.toggle(false);
-      },
+    /**
+     * @method
+     */
+    open() {
+      this.toggle(true);
+    }
 
-      /**
-       * @param {jQuery.Event} e
-       *   The event triggered.
-       */
-      focusOut(e) {
-        this.hoverOut.call(this, e);
-      },
+    /**
+     * @method
+     */
+    close() {
+      this.toggle(false);
+    }
 
-      /**
-       * @param {jQuery.Event} e
-       *   The event triggered.
-       */
-      focusIn(e) {
-        this.hoverIn.call(this, e);
-      },
-    },
-  );
-
-  $.extend(
-    Drupal.theme,
-    /** @lends Drupal.theme */ {
-      /**
-       * A toggle is an interactive element often bound to a click handler.
-       *
-       * @param {object} options
-       *   Options object.
-       * @param {string} [options.title]
-       *   The button text.
-       *
-       * @return {string}
-       *   A string representing a DOM fragment.
-       */
-      dropbuttonToggle(options) {
-        return `<li class="dropbutton-toggle"><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">${options.title}</span></span></button></li>`;
-      },
-    },
-  );
-
-  // Expose constructor in the public space.
-  Drupal.DropButton = DropButton;
-})(jQuery, Drupal);
+    static dropbuttonToggle(options) {
+      if (Drupal?.theme?.dropbuttonToggle) {
+        return Drupal.theme.dropbuttonToggle(options);
+      }
+      return `<li class="dropbutton-toggle"><button type="button" data-drupal-dropbutton-toggle><span class="dropbutton-arrow"><span class="visually-hidden">${options.title}</span></span></button></li>`;
+    }
+  },
+);

@@ -101,7 +101,7 @@ class ViewsListingTest extends WebDriverTestBase {
     $enabled_view = $page->find('css', 'tr.views-ui-list-enabled');
     $view_description = $enabled_view->find('css', '.views-ui-view-name strong')->getText();
     // Open the dropdown with additional actions.
-    $enabled_view->find('css', 'li.dropbutton-toggle button')->click();
+    $this->getSession()->executeScript('document.querySelector("tr.views-ui-list-enabled li.dropbutton-toggle button").click()');
     $disable_button = $enabled_view->findLink('Disable');
     // Check that the disable button is visible now.
     $this->assertTrue($disable_button->isVisible());

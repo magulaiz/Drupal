@@ -182,7 +182,7 @@ icon-link:
 dropbutton:
   version: VERSION
   js:
-    js/dropbutton.js: {}
+    js/dropbutton.js: {weight: -1}
   dependencies:
     - core/drupal
 
