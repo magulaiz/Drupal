@@ -154,7 +154,7 @@ class DatabaseStorage extends StorageBase {
   public function set($key, $value) {
     $this->connection->executeEnsuringSchemaOnFailure(
       execute: function () use ($key, $value): void {
-        return $this->connection->merge($this->table)
+        $this->connection->merge($this->table)
           ->keys([
             'name' => $key,
             'collection' => $this->collection,
@@ -274,7 +274,6 @@ class DatabaseStorage extends StorageBase {
           $this->connection->delete($this->table)
             ->condition('collection', $this->collection)
             ->execute();
-        }
       },
       schema: [
         $this->table => static::schemaDefinition(),
