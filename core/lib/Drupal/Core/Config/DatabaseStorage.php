@@ -84,7 +84,7 @@ class DatabaseStorage implements StorageInterface {
    */
   public function read($name) {
     $execution = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($name): string|FALSE {
+      execute: function () use ($name): array|FALSE {
         $data = FALSE;
         $raw = $this->connection->query('SELECT [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', [':collection' => $this->collection, ':name' => $name], $this->options)->fetchField();
         if ($raw !== FALSE) {
