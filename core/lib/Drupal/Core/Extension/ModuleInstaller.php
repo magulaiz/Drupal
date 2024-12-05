@@ -226,6 +226,29 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $extension_config = \Drupal::configFactory()->getEditable('core.extension');
       $installed_modules = $extension_config->get('module') ?: [];
     }
+    if (!InstallerKernel::installationAttempted()) {
+      // If the container was rebuilt during hook_install() it might not have
+      // the 'router.route_provider.old' service.
+      if (\Drupal::hasService('router.route_provider.old')) {
+        \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.old'));
+      }
+      if (!\Drupal::service('router.route_provider.lazy_builder')->hasRebuilt()) {
+        // Rebuild routes after installing module. This is done here on top of
+        // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
+        // fastCGI which executes ::destruct() after the module installation
+        // page was sent already.
+        \Drupal::service('router.builder')->rebuild();
+      }
+      else {
+        // Rebuild the router immediately if it is marked as needing a rebuild.
+        // @todo Work this through a bit more. This fixes
+        //   \Drupal\Tests\standard\Functional\StandardTest::testStandard()
+        //   after separately out the optional configuration install.
+        \Drupal::service('router.builder')->rebuildIfNeeded();
+      }
+    }
+
+    $this->moduleHandler->invokeAll('modules_installed', [$module_list, $sync_status]);
     return TRUE;
   }
 
@@ -451,30 +474,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // @todo This fixes \Drupal\Tests\views\Functional\ViewsFormAlterTest().
       Cache::invalidateTags(['config:core.extension']);
     }
-
-    if (!InstallerKernel::installationAttempted()) {
-      // If the container was rebuilt during hook_install() it might not have
-      // the 'router.route_provider.old' service.
-      if (\Drupal::hasService('router.route_provider.old')) {
-        \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.old'));
-      }
-      if (!\Drupal::service('router.route_provider.lazy_builder')->hasRebuilt()) {
-        // Rebuild routes after installing module. This is done here on top of
-        // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
-        // fastCGI which executes ::destruct() after the module installation
-        // page was sent already.
-        \Drupal::service('router.builder')->rebuild();
-      }
-      else {
-        // Rebuild the router immediately if it is marked as needing a rebuild.
-        // @todo Work this through a bit more. This fixes
-        //   \Drupal\Tests\standard\Functional\StandardTest::testStandard()
-        //   after separately out the optional configuration install.
-        \Drupal::service('router.builder')->rebuildIfNeeded();
-      }
-    }
-
-    $this->moduleHandler->invokeAll('modules_installed', [$module_list, $sync_status]);
   }
 
   /**
