@@ -3,13 +3,13 @@
 namespace Drupal\Core\Field\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
-use Drupal\Core\Field\BaseFieldOverrideAccessControlHandler;
-use Drupal\Core\Field\BaseFieldOverrideStorage;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\BaseFieldOverrideAccessControlHandler;
+use Drupal\Core\Field\BaseFieldOverrideStorage;
 use Drupal\Core\Field\FieldConfigBase;
 use Drupal\Core\Field\FieldException;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the base field override entity.
@@ -182,6 +182,7 @@ class BaseFieldOverride extends FieldConfigBase {
    * Gets the base field definition.
    *
    * @return \Drupal\Core\Field\BaseFieldDefinition
+   *   Returns Base field definition.
    */
   protected function getBaseFieldDefinition() {
     if (!isset($this->baseFieldDefinition)) {
@@ -314,4 +315,5 @@ class BaseFieldOverride extends FieldConfigBase {
     $this->definition['internal'] = $internal;
     return $this;
   }
+
 }
