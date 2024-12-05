@@ -42,6 +42,10 @@ class MediaSettingsTest extends MediaFunctionalTestBase {
 
     $this->drupalGet('admin/reports/status');
     $assert_session->pageTextContains('It is potentially insecure to display oEmbed content in a frame');
+
+    $this->config('media.settings')->set('suppress_oembed_warning', TRUE)->save();
+    $this->drupalGet('admin/reports/status');
+    $assert_session->pageTextNotContains('It is potentially insecure to display oEmbed content in a frame');
   }
 
   /**

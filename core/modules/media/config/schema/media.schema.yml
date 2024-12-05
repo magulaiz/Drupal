@@ -15,6 +15,9 @@ media.settings:
     standalone_url:
       type: boolean
       label: 'Allow media items to be viewed standalone at /media/{id}'
+    suppress_oembed_warning:
+      type: boolean
+      label: 'Suppress oEmbed warning on the Status page'
 
 media.type.*:
   type: config_entity

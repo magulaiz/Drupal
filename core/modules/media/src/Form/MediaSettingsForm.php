@@ -115,6 +115,14 @@ class MediaSettingsForm extends ConfigFormBase {
       '#config_target' => 'media.settings:standalone_url',
       '#description' => $this->t("Allow users to access @media-entities at /media/{id}.", ['@media-entities' => $this->entityTypeManager->getDefinition('media')->getPluralLabel()]),
     ];
+
+    $form['security']['suppress_oembed_warning'] = [
+      '#prefix' => '<hr>',
+      '#type' => 'checkbox',
+      '#title' => $this->t('Suppress oEmbed warning on the Status page'),
+      '#config_target' => 'media.settings:suppress_oembed_warning',
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
