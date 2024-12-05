@@ -173,6 +173,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    *   The view mode that should be used.
    *
    * @return array
+   *   The updated renderable array.
    */
   protected function getBuildDefaults(EntityInterface $entity, $view_mode) {
     // Allow modules to change the view mode.
@@ -197,7 +198,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
 
     // Cache the rendered output if permitted by the view mode and global entity
     // type configuration.
-    if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && $entity->isDefaultRevision() && $this->entityType->isRenderCacheable()) {
+    if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && $this->entityType->isRenderCacheable() && (!($entity instanceof RevisionableInterface) || $entity->isDefaultRevision())) {
       $build['#cache'] += [
         'keys' => [
           'entity_view',
@@ -501,6 +502,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    *   The display options passed to the viewField() method.
    *
    * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
+   *   Return entity view display for the field.
    */
   protected function getSingleFieldDisplay($entity, $field_name, $display_options) {
     if (is_string($display_options)) {
