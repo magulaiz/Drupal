@@ -31,7 +31,6 @@ use Drupal\node\NodeInterface;
  *   (optional) TRUE if $nodes contains an array of revision IDs instead of
  *   node IDs. Defaults to FALSE; will be ignored if $load is FALSE.
  */
-#[StopProceduralHookScan]
 function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load = FALSE, $revisions = FALSE) {
   // We use batch processing to prevent timeout when updating a large number
   // of nodes.
@@ -80,6 +79,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
  *
  * @see node_mass_update()
  */
+#[StopProceduralHookScan]
 function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode = NULL) {
   $langcodes = isset($langcode) ? [$langcode] : array_keys($node->getTranslationLanguages());
   // For efficiency manually save the original node before applying any changes.
