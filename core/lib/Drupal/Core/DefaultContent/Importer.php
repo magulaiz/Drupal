@@ -18,6 +18,7 @@ use Drupal\link\Plugin\Field\FieldType\LinkItem;
 use Drupal\user\EntityOwnerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * A service for handling import of content.
@@ -45,6 +46,7 @@ final class Importer implements LoggerAwareInterface {
     private readonly FileSystemInterface $fileSystem,
     private readonly LanguageManagerInterface $languageManager,
     private readonly EntityRepositoryInterface $entityRepository,
+    private readonly EventDispatcherInterface $eventDispatcher,
   ) {}
 
   /**
@@ -66,6 +68,8 @@ final class Importer implements LoggerAwareInterface {
    *     $existing is \Drupal\Core\DefaultContent\Existing::Error.
    */
   public function importContent(Finder $content, Existing $existing = Existing::Error): void {
+    $event = new DefaultContentPreImportEvent($content);
+    $this->eventDispatcher->dispatch($event);
     if (count($content->data) === 0) {
       return;
     }

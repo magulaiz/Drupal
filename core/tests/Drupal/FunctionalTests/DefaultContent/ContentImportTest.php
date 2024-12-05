@@ -8,6 +8,7 @@ use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\DefaultContent\DefaultContentPreImportEvent;
 use Drupal\Core\DefaultContent\Existing;
 use Drupal\Core\DefaultContent\Finder;
 use Drupal\Core\DefaultContent\Importer;
@@ -31,6 +32,7 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Psr\Log\LogLevel;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @covers \Drupal\Core\DefaultContent\Importer
@@ -68,6 +70,8 @@ class ContentImportTest extends BrowserTestBase {
   ];
 
   private readonly string $contentDir;
+
+  private readonly EventDispatcherInterface $eventDispatcher;
 
   /**
    * {@inheritdoc}
@@ -108,6 +112,8 @@ class ContentImportTest extends BrowserTestBase {
 
     $this->contentDir = $this->getDrupalRoot() . '/core/tests/fixtures/default_content';
     \Drupal::service('file_system')->copy($this->contentDir . '/file/druplicon_copy.png', $this->publicFilesDirectory . '/druplicon_copy.png', FileExists::Error);
+    $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+    \Drupal::getContainer()->set('event_dispatcher', $this->eventDispatcher);
   }
 
   /**
@@ -141,6 +147,14 @@ class ContentImportTest extends BrowserTestBase {
   public function testDirectContentImport(): void {
     $logger = new TestLogger();
 
+    $collectedEvents = [];
+    $this->eventDispatcher->expects($this->atLeastOnce())
+      ->method('dispatch')
+      ->will($this->returnCallback(function ($object) use (&$collectedEvents) {
+        $collectedEvents[$object::class] = isset($collectedEvents[$object::class]) ? $collectedEvents[$object::class]++ : 1;
+        return $object;
+      }));
+
     /** @var \Drupal\Core\DefaultContent\Importer $importer */
     $importer = $this->container->get(Importer::class);
     $importer->setLogger($logger);
@@ -157,6 +171,9 @@ class ContentImportTest extends BrowserTestBase {
       );
     };
     $this->assertTrue($logger->hasRecordThatPasses($predicate, LogLevel::WARNING));
+
+    $this->assertArrayHasKey(DefaultContentPreImportEvent::class, $collectedEvents);
+    $this->assertSame(1, $collectedEvents[DefaultContentPreImportEvent::class]);
   }
 
   /**
