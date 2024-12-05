@@ -139,15 +139,15 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
     $this->connection->executeEnsuringSchemaOnFailure(
       execute: function () use ($key, $value, $expire): void {
         $this->connection->merge($this->table)
-        ->keys([
-          'name' => $key,
-          'collection' => $this->collection,
-        ])
-        ->fields([
-          'value' => $this->serializer->encode($value),
-          'expire' => $this->time->getRequestTime() + $expire,
-        ])
-        ->execute();
+          ->keys([
+            'name' => $key,
+            'collection' => $this->collection,
+          ])
+          ->fields([
+            'value' => $this->serializer->encode($value),
+            'expire' => $this->time->getRequestTime() + $expire,
+          ])
+          ->execute();
       },
       schema: [
         $this->table => static::schemaDefinition(),
@@ -189,7 +189,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * {@inheritdoc}
    */
   public function setWithExpireIfNotExists($key, $value, $expire) {
-    $this->connection->executeEnsuringSchemaOnFailure(
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
       execute: function () use ($key, $value, $expire): bool {
         if (!$this->has($key)) {
           $this->setWithExpire($key, $value, $expire);
@@ -201,6 +201,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
         $this->table => static::schemaDefinition(),
       ],
     );
+    return $execution->getResult();
   }
 
   /**
