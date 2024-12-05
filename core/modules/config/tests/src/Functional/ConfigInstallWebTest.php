@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config\Functional;
 
+use Drupal\config_enum_test\EnumValue;
 use Drupal\config_test\Entity\ConfigTest;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\StorageInterface;
@@ -242,6 +243,29 @@ class ConfigInstallWebTest extends BrowserTestBase {
     }
     $this->drupalGet('/admin/reports/status');
     $this->assertSession()->pageTextContains("The directory $directory does not exist.");
+  }
+
+  /**
+   * Tests the behavior of an enum in module configuration.
+   */
+  public function testEnumInModule() {
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('admin/modules');
+    // Enable a module which does not have Enum in configuration.
+    $this->assertSession()->fieldExists('edit-modules-config-test-enable')->check();
+    $this->submitForm([], 'Install');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Module Configuration test has been installed.');
+
+    // Enable a module which has Enum in configuration.
+    $this->assertSession()->fieldExists('edit-modules-config-enum-test-enable')->check();
+    $this->submitForm([], 'Install');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Module Configuration test for enums has been installed.');
+
+    // Ensure the value returned from config is an enum.
+    $this->assertSame(EnumValue::Maybe, $this->config('config_enum_test.settings')->get('foo'));
+    $this->assertSame(1, $this->config('config_enum_test.settings')->get('bar'));
   }
 
 }

@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Module file for config enum test.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Test constant.
+ */
+const CONFIG_ENUM_TEST_VALUE = 1;

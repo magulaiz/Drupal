@@ -1,0 +1,2 @@
+foo: !php/enum Drupal\config_enum_test\EnumValue::Maybe
+bar: !php/const CONFIG_ENUM_TEST_VALUE
