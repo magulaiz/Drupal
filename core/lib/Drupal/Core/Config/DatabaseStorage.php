@@ -322,7 +322,7 @@ class DatabaseStorage implements StorageInterface {
       return $execution->isSuccessful() ? $execution->getResult() : [];
     }
     catch (DatabaseException) {
-      return FALSE;
+      return [];
     }
   }
 

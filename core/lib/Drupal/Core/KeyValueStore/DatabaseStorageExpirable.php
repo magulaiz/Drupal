@@ -189,19 +189,11 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * {@inheritdoc}
    */
   public function setWithExpireIfNotExists($key, $value, $expire) {
-    $execution = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($key, $value, $expire): bool {
-        if (!$this->has($key)) {
-          $this->setWithExpire($key, $value, $expire);
-          return TRUE;
-        }
-        return FALSE;
-      },
-      schema: [
-        $this->table => static::schemaDefinition(),
-      ],
-    );
-    return $execution->getResult();
+    if (!$this->has($key)) {
+      $this->setWithExpire($key, $value, $expire);
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**
