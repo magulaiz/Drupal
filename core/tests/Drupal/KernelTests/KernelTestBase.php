@@ -929,9 +929,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     if (!\Drupal::moduleHandler()->moduleExists('system')) {
       throw new \Exception(__METHOD__ . ' requires system module to be installed.');
     }
-    // Ensure all modules are loaded before rendering.
-    $module_handler = $this->container->get('module_handler');
-    $module_handler->reload();
 
     // Use the bare HTML page renderer to render our links.
     $renderer = $this->container->get('bare_html_page_renderer');
