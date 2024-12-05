@@ -12,6 +12,8 @@ use Drupal\Core\Database\DatabaseException;
 
 /**
  * Response subscriber to schema handling requests.
+ *
+ * @internal
  */
 class SchemaRequestSubscriber implements EventSubscriberInterface {
 
@@ -45,11 +47,6 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
       // If there was an exception, try to create the schema.
       $event->setCallbackExecutionState($e);
       $schemaChanged = $this->processSchema($event);
-      if (!$schemaChanged) {
-        // If the exception happened for other reasons than the missing schema,
-        // we have stored it and can return.
-        return;
-      }
       // Now that the schema has been created, try again if requested.
       if ($event->retryAfterSchemaEnsured && $schemaChanged) {
         try {
@@ -69,8 +66,11 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent $event
    *   The event to process.
+   *
+   * @return bool
+   *   TRUE if a schema change happened, FALSE otherwise.
    */
-  protected function processSchema(ExecuteMethodEnsuringSchemaEvent $event): bool {
+  private function processSchema(ExecuteMethodEnsuringSchemaEvent $event): bool {
     $schemaChanged = FALSE;
     foreach ($event->schema as $name => $definition) {
       if ($this->connection->schema()->tableExists($name)) {
@@ -78,6 +78,7 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
       }
       try {
         $this->connection->schema()->createTable($name, $definition);
+        $event->setSchemaCreationState(TRUE);
         $schemaChanged = TRUE;
       }
       // In a race condition, if another process has already created the
@@ -89,6 +90,7 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
           $event->setSchemaCreationState($exception);
           return FALSE;
         }
+        $event->setSchemaCreationState(TRUE);
         $schemaChanged = TRUE;
       }
     }

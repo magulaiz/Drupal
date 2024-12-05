@@ -14,22 +14,22 @@ final class ExecuteMethodEnsuringSchemaEvent extends DatabaseEvent {
   /**
    * Value returned by the execution of the callback.
    */
-  protected mixed $callbackExecutionResult;
+  private mixed $callbackExecutionResult;
 
   /**
    * Indicates the initial callback execution state.
    */
-  protected bool|\Exception $callbackExecutionState = FALSE;
+  private bool|\Exception $callbackExecutionState = FALSE;
 
   /**
    * Indicates the retried callback execution state.
    */
-  protected bool|\Exception $callbackRetryExecutionState = FALSE;
+  private bool|\Exception $callbackRetryExecutionState = FALSE;
 
   /**
    * Indicates the schema creation state.
    */
-  protected bool|SchemaException $schemaCreationState = FALSE;
+  private bool|SchemaException $schemaCreationState = FALSE;
 
   /**
    * Constructor.

@@ -1665,13 +1665,21 @@ abstract class Connection {
     $dispatcher->dispatch($event);
 
     if (!$event->isSuccessful()) {
+      // Callback calls were not successful and schema creation failed, throw
+      // the schema creation failure.
       if ($event->getSchemaCreationState() instanceof \Exception) {
         throw $event->getSchemaCreationState();
       }
+
+      // Otherwise throw the latest callback execution exception.
       if ($event->getCallbackRetryExecutionState() instanceof \Exception) {
         throw $event->getCallbackRetryExecutionState();
       }
-      if ($event->getCallbackExecutionState() instanceof \Exception) {
+      elseif ($event->getCallbackExecutionState() instanceof \Exception) {
+        // No retry requested, but a change to schema happened; do not throw.
+        if ($event->getSchemaCreationState() === TRUE && !$retryAfterSchemaEnsured) {
+          return $event;
+        }
         throw $event->getCallbackExecutionState();
       }
     }
