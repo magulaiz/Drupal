@@ -83,8 +83,10 @@ function module_test_load($param) {
  */
 function module_test_modules_installed($modules) {
   // Record the ordered list of modules that were passed in to this hook so we
-  // can check that the modules were enabled in the correct sequence.
-  \Drupal::state()->set('module_test.install_order', $modules);
+  // can check that the modules were enabled in the correct sequence. Include
+  // any previously installed modules.
+  $previous = \Drupal::state()->get('module_test.install_order', []);
+  \Drupal::state()->set('module_test.install_order', array_merge($previous, $modules));
 }
 
 /**
