@@ -275,4 +275,43 @@ class BaseFieldOverride extends FieldConfigBase {
     return parent::__sleep();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setDataType($type) {
+    $this->definition['type'] = $type;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setReadOnly($read_only) {
+    $this->definition['read-only'] = $read_only;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setComputed($computed) {
+    $this->definition['computed'] = $computed;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setClass($class) {
+    $this->definition['class'] = $class;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setInternal($internal) {
+    $this->definition['internal'] = $internal;
+    return $this;
+  }
 }
