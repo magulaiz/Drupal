@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\File\FileSystemInterface;
@@ -28,6 +29,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Yaml\Yaml;
 
 // cspell:ignore quickedit
 
@@ -1743,4 +1745,20 @@ function system_update_11001(): void {
     'length' => 2048,
   ];
   $schema->changeField('menu_tree', 'route_param_key', 'route_param_key', $spec);
+}
+
+/**
+ * Creates the new default short date only date format.
+ */
+function system_update_11102(): void {
+  // Only create if the date format doesn't exist.
+  if (DateFormat::load('short_date_only') === NULL) {
+    $config_path = \Drupal::service('extension.list.module')->getPath('system') . '/config/install/core.date_format.short_date_only.yml';
+    $data = Yaml::parseFile($config_path);
+    \Drupal::configFactory()->getEditable('core.date_format.short_date_only')->setData($data)->save(TRUE);
+    \Drupal::logger('system')->info('The new default short date only date format has been created.');
+  }
+  else {
+    \Drupal::logger('system')->warning('Not creating default short date only date format since it already exists.');
+  }
 }
