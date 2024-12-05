@@ -120,7 +120,7 @@ class FileStorage implements PhpStorageInterface {
       }
       else {
         // Something failed and the directory doesn't exist.
-        trigger_error('mkdir(): Permission Denied', E_USER_WARNING);
+        trigger_error('mkdir(): Permission Denied for ' . $directory . ', mode: ' . $mode, E_USER_WARNING);
       }
     }
     return FALSE;
