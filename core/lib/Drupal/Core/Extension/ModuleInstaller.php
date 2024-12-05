@@ -215,7 +215,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $index = 0;
     foreach ($module_list as $module) {
       $module_groups[$index][] = $module;
-      if (!isset($module_data[$module]->container_rebuild_required) || $module_data[$module]->container_rebuild_required) {
+      if (!isset($module_data[$module]->info['container_rebuild_required']) || $module_data[$module]->info['container_rebuild_required']) {
         $index++;
       }
     }
