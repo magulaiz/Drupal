@@ -150,10 +150,10 @@ class ContentImportTest extends BrowserTestBase {
     $collectedEvents = [];
     $this->eventDispatcher->expects($this->atLeastOnce())
       ->method('dispatch')
-      ->will($this->returnCallback(function ($object) use (&$collectedEvents) {
+      ->willReturnCallback(function ($object) use (&$collectedEvents) {
         $collectedEvents[$object::class] = isset($collectedEvents[$object::class]) ? $collectedEvents[$object::class]++ : 1;
         return $object;
-      }));
+      });
 
     /** @var \Drupal\Core\DefaultContent\Importer $importer */
     $importer = $this->container->get(Importer::class);
