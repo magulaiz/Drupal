@@ -374,6 +374,8 @@ abstract class BrowserTestBase extends TestCase {
     // Set up the browser test output file.
     $this->initBrowserOutputFile();
 
+    // Ensure modules are loaded for API calls within the test.
+    $this->container->get('module_handler')->reload();
   }
 
   /**
