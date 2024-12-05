@@ -86,7 +86,7 @@ function module_test_modules_installed($modules) {
   // can check that the modules were enabled in the correct sequence. Include
   // any previously installed modules.
   $previous = \Drupal::state()->get('module_test.install_order', []);
-  \Drupal::state()->set('module_test.install_order', array_unique(array_merge($previous, $modules)));
+  \Drupal::state()->set('module_test.install_order', array_merge($previous, $modules));
 }
 
 /**
