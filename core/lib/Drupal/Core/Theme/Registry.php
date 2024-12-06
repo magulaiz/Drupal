@@ -391,7 +391,7 @@ class Registry implements DestructableInterface {
       $cache = $cached->data;
     }
     else {
-      if (defined('MAINTENANCE_MODE') && constant('MAINTENANCE_MODE') === 'install') {
+      if (defined('MAINTENANCE_MODE') && constant('MAINTENANCE_MODE') === 'install' && !$this->moduleHandler->moduleExists('system')) {
         // System is still set here so preprocess can be updated in install.
         $this->processExtension($cache, 'system', 'install', 'system', $this->moduleList->getPath('system'));
       }
