@@ -1937,7 +1937,7 @@ function install_finished(&$install_state) {
 function _install_module_batch(array $modules, array $module_names, array &$context) {
   \Drupal::service('module_installer')->install($modules, FALSE);
   $context['results'] = array_merge($context['results'], $modules);
-  $context['message'] = t('Installed %module module(s).', ['%module' => implode(', ', $module_names)]);
+  $context['message'] = \Drupal::translation()->formatPlural(count($module_names), 'Installed %module module.', 'Installed %module modules.', ['%module' => implode(', ', $module_names)]);
 }
 
 /**
