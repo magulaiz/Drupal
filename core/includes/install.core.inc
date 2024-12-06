@@ -1620,7 +1620,7 @@ function install_profile_modules(&$install_state) {
     }
     // @todo Consider reversing this logic so that modules must explicitly
     // state that they need a container build.
-    // See https://www.drupal.org/project/drupal/issues/3492235
+    // @see https://www.drupal.org/project/drupal/issues/3492235
     elseif (!isset($files[$module]->info['container_rebuild_required']) || $files[$module]->info['container_rebuild_required']) {
       $index++;
     }
