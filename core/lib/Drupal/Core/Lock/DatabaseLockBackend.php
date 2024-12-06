@@ -67,7 +67,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
       $retry = FALSE;
       // We always want to do this code at least once.
       do {
-        $execution = $this->connection->executeEnsuringSchemaOnFailure(
+        $this->database->executeEnsuringSchemaOnFailure(
           execute: function () use ($name, $expire, &$retry): void {
             try {
               $this->database->insert('semaphore')
@@ -110,7 +110,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
   public function lockMayBeAvailable($name) {
     $name = $this->normalizeName($name);
 
-    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+    $execution = $this->database->executeEnsuringSchemaOnFailure(
       execute: function () use ($name): array|FALSE {
         return $this->database
           ->query('SELECT [expire], [value] FROM {semaphore} WHERE [name] = :name', [':name' => $name])
@@ -146,7 +146,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
     $name = $this->normalizeName($name);
 
     unset($this->locks[$name]);
-    $this->connection->executeEnsuringSchemaOnFailure(
+    $this->database->executeEnsuringSchemaOnFailure(
       execute: function () use ($name): void {
         $this->database->delete('semaphore')
           ->condition('name', $name)
