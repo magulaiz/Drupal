@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
@@ -39,7 +39,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   protected $defaultCacheContexts = [
     'theme',
     'timezone',
-    'url.query_args:_wrapper_format',
+    'url.query_args',
     'url.site',
     'user.permissions',
   ];
@@ -78,6 +78,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests the basic translation UI.
    */
+  // phpcs:ignore
   public function testTranslationUI(): void {
     parent::testTranslationUI();
     $this->doUninstallTest();
@@ -144,7 +145,12 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getAdministratorPermissions(): array {
-    return array_merge(parent::getAdministratorPermissions(), ['access administration pages', 'administer content types', 'administer node fields', 'access content overview', 'bypass node access', 'administer languages', 'administer themes', 'view the administration theme']);
+    return array_merge(parent::getAdministratorPermissions(),
+    ['access administration pages', 'administer content types',
+      'administer node fields', 'access content overview',
+      'bypass node access', 'administer languages', 'administer themes',
+      'view the administration theme',
+    ]);
   }
 
   /**
