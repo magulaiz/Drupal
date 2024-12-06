@@ -133,7 +133,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
     while (TRUE) {
       $execution = $this->connection->executeEnsuringSchemaOnFailure(
         execute: function (): object {
-          $item = $this->connection
+          return $this->connection
             ->queryRange('SELECT [data], [created], [item_id] FROM {' . static::TABLE_NAME . '} q WHERE [expire] = 0 AND [name] = :name ORDER BY [created], [item_id] ASC', 0, 1, [':name' => $this->name])
             ->fetchObject();
         },
