@@ -154,13 +154,6 @@ class FieldEntityTest extends ViewsKernelTestBase {
     // Tests optional relationships with NULL entities don't log an error.
     $nodeReference->delete();
 
-    // @todo This test should be a kernel test and swapping the logger.factory
-    //   service out this way is not correct. Get the file_system service so it
-    //   is injected correctly. This is necessary due to the second container
-    //   rebuild in the ModuleInstaller. This might become unnecessary if we
-    //   swap that for a views hook.
-    \Drupal::service('file_system');
-
     // Use a mock logger so we can check that no errors were logged.
     $loggerFactory = $this->createMock(LoggerChannelFactoryInterface::class);
     $loggerFactory->expects($this->never())
@@ -174,7 +167,6 @@ class FieldEntityTest extends ViewsKernelTestBase {
     // First row will be $node since the other is now deleted.
     $row = $view->result[0];
     $this->assertNull($view->field['nid']->getEntity($row));
-
   }
 
 }
