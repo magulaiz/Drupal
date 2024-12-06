@@ -26,7 +26,7 @@ class Batch extends DatabaseQueue {
    */
   public function claimItem($lease_time = 0) {
     $execution = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($item): object|FALSE {
+      execute: function (): bool|object {
         $item = $this->connection->queryRange('SELECT [data], [item_id] FROM {queue} q WHERE [name] = :name ORDER BY [item_id] ASC', 0, 1, [':name' => $this->name])->fetchObject();
         if ($item) {
           $item->data = unserialize($item->data);
@@ -52,7 +52,7 @@ class Batch extends DatabaseQueue {
    */
   public function getAllItems() {
     $execution = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($item): array {
+      execute: function (): array {
         $items = $this->connection->select('queue', 'q')
           ->fields('q', ['data'])
           ->condition('name', $this->name)
