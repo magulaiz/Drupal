@@ -177,7 +177,7 @@ class ModuleInstallerTest extends KernelTestBase {
    *
    * @dataProvider containerRebuildRequiredProvider
    */
-  public function testContainerRebuildRequired(array $modules, $count): void {
+  public function testContainerRebuildRequired(array $modules, int $count): void {
     $this->container->get('module_installer')->install(['module_test']);
     $GLOBALS['container_rebuilt'] = 0;
     $this->container->get('module_installer')->install($modules);
