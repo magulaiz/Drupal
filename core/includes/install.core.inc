@@ -1615,11 +1615,12 @@ function install_profile_modules(&$install_state) {
   $module_groups = [];
   foreach ($required + $non_required as $module => $weight) {
     $module_groups[$index][$module] = $weight;
-    if (count($module_groups[$index]) === Settings::get('core.multi-module-install', 20)) {
+    if (count($module_groups[$index]) === Settings::get('core.multi_module_install', 20)) {
       $index++;
     }
     // @todo Consider reversing this logic so that modules must explicitly
     // state that they need a container build.
+    // See https://www.drupal.org/project/drupal/issues/3492235
     elseif (!isset($files[$module]->info['container_rebuild_required']) || $files[$module]->info['container_rebuild_required']) {
       $index++;
     }
