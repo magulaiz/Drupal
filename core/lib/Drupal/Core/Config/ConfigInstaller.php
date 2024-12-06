@@ -558,20 +558,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
         continue;
       }
 
-      // Store the config names for the checked module in order to add them to
-      // the list of active configuration for the next module.
-      if (isset($previous_storage)) {
-        foreach ($this->configManager->getConfigCollectionInfo()->getCollectionNames() as $collection) {
-          $config_to_create = array_keys($this->getConfigToCreate($previous_storage, $collection));
-          if (!isset($previous_config_names[$collection])) {
-            $previous_config_names[$collection] = $config_to_create;
-          }
-          else {
-            $previous_config_names[$collection] = array_merge($previous_config_names[$collection], $config_to_create);
-          }
-        }
-      }
-
       $storage = new FileStorage($config_install_path, StorageInterface::DEFAULT_COLLECTION);
 
       // Gets profile storages to search for overrides if necessary.
@@ -599,6 +585,18 @@ class ConfigInstaller implements ConfigInstallerInterface {
       }
 
       $previous_storage = $storage;
+
+      // Store the config names for the checked module in order to add them to
+      // the list of active configuration for the next module.
+      foreach ($this->configManager->getConfigCollectionInfo()->getCollectionNames() as $collection) {
+        $config_to_create = array_keys($this->getConfigToCreate($previous_storage, $collection));
+        if (!isset($previous_config_names[$collection])) {
+          $previous_config_names[$collection] = $config_to_create;
+        }
+        else {
+          $previous_config_names[$collection] = array_merge($previous_config_names[$collection], $config_to_create);
+        }
+      }
     }
   }
 
