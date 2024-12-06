@@ -215,7 +215,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $index = 0;
     foreach ($module_list as $module) {
       $module_groups[$index][] = $module;
-      // @todo: consider reversing the behavior when the info key is not set.
+      // @todo Consider reversing the behavior when the info key is not set.
       // See https://www.drupal.org/project/drupal/issues/3492235
       if (!isset($module_data[$module]->info['container_rebuild_required']) || $module_data[$module]->info['container_rebuild_required']) {
         $index++;
