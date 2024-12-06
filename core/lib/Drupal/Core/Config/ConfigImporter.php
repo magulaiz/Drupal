@@ -878,7 +878,7 @@ class ConfigImporter {
    * @param string $op
    *   The change operation.
    * @param string|array $names
-   *   The name or names of the extension to process.
+   *   The name or names of the extension(s) to process.
    */
   protected function processExtension(string $type, string $op, string|array $names) {
     $names = (array) $names;
