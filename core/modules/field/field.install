@@ -27,6 +27,7 @@ function field_update_9001(): void {
       ->get('entity.definitions.bundle_field_map')
       ->getAll();
     // Get all the bundles for which the multivalued fields are configured.
+    $fieldMap = [];
     foreach ($bundle_field_maps as $entity_type_id => $bundle_field_map) {
       foreach ($bundle_field_map as $field_name => $map_entry) {
         if (in_array("$entity_type_id.$field_name", $results)) {
@@ -40,20 +41,18 @@ function field_update_9001(): void {
         }
       }
     }
-    if (!empty($fieldMap)) {
-      foreach ($fieldMap as $field_storage => $array_bundles) {
-        [$entity_type, $field_name] = explode('.', $field_storage);
-        foreach ($array_bundles['bundles'] as $bundle) {
-          // Update Show add more for the fields in entity form display.
-          $entity_form_display = \Drupal::entityTypeManager()
-            ->getStorage('entity_form_display')
-            ->load("$entity_type.$bundle.default");
-          if ($component = $entity_form_display->getComponent($field_name)) {
-            $component['settings']['add_more'] = FALSE;
-            $entity_form_display->setComponent($field_name, $component)->save();
-            \Drupal::logger('field')
-              ->notice("Show add more configured FALSE for $field_name");
-          }
+    foreach ($fieldMap as $field_storage => $array_bundles) {
+      [$entity_type, $field_name] = explode('.', $field_storage);
+      foreach ($array_bundles['bundles'] as $bundle) {
+        // Update Show add more for the fields in entity form display.
+        $entity_form_display = \Drupal::entityTypeManager()
+          ->getStorage('entity_form_display')
+          ->load("$entity_type.$bundle.default");
+        if ($component = $entity_form_display->getComponent($field_name)) {
+          $component['settings']['add_more'] = FALSE;
+          $entity_form_display->setComponent($field_name, $component)->save();
+          \Drupal::logger('field')
+            ->notice("Show add more configured FALSE for $field_name");
         }
       }
     }
