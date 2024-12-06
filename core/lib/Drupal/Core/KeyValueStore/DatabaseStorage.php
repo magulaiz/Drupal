@@ -271,9 +271,9 @@ class DatabaseStorage extends StorageBase {
   public function deleteAll() {
     $this->connection->executeEnsuringSchemaOnFailure(
       execute: function (): void {
-          $this->connection->delete($this->table)
-            ->condition('collection', $this->collection)
-            ->execute();
+        $this->connection->delete($this->table)
+          ->condition('collection', $this->collection)
+          ->execute();
       },
       schema: [
         $this->table => static::schemaDefinition(),
