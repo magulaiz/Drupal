@@ -160,7 +160,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
     $this->submitForm(['modules[config_install_fail_test][enable]' => TRUE], 'Install');
     $this->submitForm([], 'Continue');
     // @todo improve error message as the config does not exist. But both modules
-    //   being install have the same configuration object and therefore we
+    //   being installed have the same configuration object and therefore we
     //   cannot install both together.
     $this->assertSession()->responseContains('Unable to install Configuration install fail test, <em class="placeholder">config_test.dynamic.dotted.default</em> already exists in active configuration.');
 
