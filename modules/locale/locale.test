@@ -282,6 +282,9 @@ class LocaleJavascriptTranslationTest extends DrupalWebTestCase {
       "Context Single Quoted @count plural" => "Context string single quoted",
       "Context Double Quoted plural" => "Context string double quoted",
       "Context Double Quoted @count plural" => "Context string double quoted",
+
+      "No count argument plural - singular" => '',
+      "No count argument plural - plural" => '',
     );
 
     // Assert that all strings were found properly.
@@ -317,7 +320,7 @@ class LocaleJavascriptTranslationTest extends DrupalWebTestCase {
     _locale_parse_js_file($filename);
 
     $num_records = db_select('locales_source')->fields(NULL, array('lid'))->countQuery()->execute()->fetchField();
-    $this->assertEqual($num_records, 32, 'Correct number of strings parsed from JS file');
+    $this->assertEqual($num_records, 34, 'Correct number of strings parsed from JS file');
   }
 }
 /**
