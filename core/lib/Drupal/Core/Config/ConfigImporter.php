@@ -368,7 +368,7 @@ class ConfigImporter {
    * @param string $op
    *   The change operation performed, either install or uninstall.
    * @param string|array $name
-   *   The name or names of the extension processed.
+   *   The name or names of the extension(s) processed.
    */
   protected function setProcessedExtension($type, $op, $name) {
     $name = (array) $name;
