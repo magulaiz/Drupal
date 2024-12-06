@@ -111,7 +111,8 @@ class CronForm extends FormBase {
       '#value' => $this->t('Run cron'),
       '#submit' => ['::runCron'],
     ];
-    $status = '<p>' . $this->t('Last run: %time ago.', ['%time' => $this->dateFormatter->formatTimeDiffSince($this->state->get('system.cron_last'))]) . '</p>';
+    $time_ago = $this->state->get('system.cron_last') ? $this->dateFormatter->formatTimeDiffSince($this->state->get('system.cron_last')) : $this->t('Never');
+    $status = '<p>' . $this->t('Last run: %time ago.', ['%time' => $time_ago]) . '</p>';
     $form['status'] = [
       '#markup' => $status,
     ];
