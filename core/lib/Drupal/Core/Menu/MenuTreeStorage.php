@@ -220,8 +220,9 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         schema: [
           $this->table => static::schemaDefinition(),
         ],
+        retryAfterSchemaEnsured: TRUE,
       );
-      return $execution->isSuccessful() ? $execution->getResult() : [];
+      return $execution->getResult();
     }
     catch (\Exception $e) {
       // Some other failure that we can not recover from.
