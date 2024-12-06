@@ -1615,7 +1615,7 @@ function install_profile_modules(&$install_state) {
   $module_groups = [];
   foreach ($required + $non_required as $module => $weight) {
     $module_groups[$index][$module] = $weight;
-    if (count($module_groups[$index]) === Settings::get('core.multi_module_install', 20)) {
+    if (count($module_groups[$index]) === Settings::get('core.multi_module_install_batch_size', 20)) {
       $index++;
     }
     // @todo Consider reversing this logic so that modules must explicitly
