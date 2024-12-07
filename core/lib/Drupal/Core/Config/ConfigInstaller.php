@@ -515,6 +515,11 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   it and the extension has been uninstalled and is about to the
    *   reinstalled.
    *
+   * @param \Drupal\Core\Config\StorageInterface $storage
+   *   The storage containing the default configuration.
+   * @param $previous_config_names
+   *   An array of configuration names that have previously been checked.
+   *
    * @return array
    *   Array of configuration object names that already exist keyed by
    *   collection.
