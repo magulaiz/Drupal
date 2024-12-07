@@ -101,6 +101,7 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
     else {
       try {
         $schemaChanged = ($event->schema)();
+        $event->setSchemaCreationState($schemaChanged);
       }
       catch (DatabaseException $e) {
         $exception = new SchemaCreationFailureException(sprintf('Schema creation callback failed: %s', $e->getMessage()), 0, $e);

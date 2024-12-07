@@ -169,6 +169,31 @@ class ExecuteEnsuringSchemaOnFailureTest extends DatabaseTestBase {
     );
   }
 
+  public function testValidCallbackOnSuccessfulSchemaCallback(): void {
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): int {
+        return $this->insertIntoFixtureTables();
+      },
+      schema: function (): bool {
+        $this->connection->schema()->createTable('fixture_header', $this->validMultiTableFixtureSchema()['fixture_header']);
+        $this->connection->schema()->createTable('fixture_detail', $this->validMultiTableFixtureSchema()['fixture_detail']);
+        return TRUE;
+      },
+      retryAfterSchemaEnsured: TRUE,
+    );
+
+    // The initial callback execution failed, but the schema creation was
+    // successful and the callback retry was successful too.
+    $this->assertTrue($execution->isSuccessful());
+    $this->assertInstanceOf(\Exception::class, $execution->getCallbackExecutionState());
+    $this->assertTrue($execution->getSchemaCreationState());
+    $this->assertTrue($execution->getCallbackRetryExecutionState());
+    $this->assertSame(1, $execution->getResult());
+
+    $this->assertEquals(1, $this->connection->select('fixture_header', 'h')->countQuery()->execute()->fetchField());
+    $this->assertEquals(1, $this->connection->select('fixture_detail', 'h')->countQuery()->execute()->fetchField());
+  }
+
   public function testValidCallbackOnBrokenSchemaCallback(): void {
     // The initial callback execution failed, and the schema creation was
     // unsuccessful too. We expect an exception reporting the failed schema
