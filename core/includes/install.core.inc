@@ -1633,7 +1633,7 @@ function install_profile_modules(&$install_state) {
     }
     $batch_builder->addOperation(
       '_install_module_batch',
-      [array_keys($module_group), $names],
+      [$module_group, $names],
     );
   }
   $batch_builder
