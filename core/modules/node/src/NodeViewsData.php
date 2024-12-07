@@ -39,30 +39,18 @@ class NodeViewsData extends EntityViewsData {
 
     // Check for any extensions that use node grants and block the use of this
     // filter. If this filter is blocked then provide a helpful message.
-    $status_extra_help_text = $this->t('Filters out unpublished content if the current user cannot view it.');
-    if ($this->moduleHandler->hasImplementations('node_grants')) {
-      $implementations = [];
-      $module_data = \Drupal::getContainer()->get('extension.list.module')->getAllInstalledInfo();
-      $this->moduleHandler->invokeAllWith(
-        'node_grants',
-        static function (callable $hook, string $module) use (&$implementations, $module_data) {
-          $implementations[$module] = $module_data[$module]['name'];
-        }
-      );
-      $this->moduleHandler->invokeAllWith(
-        'node_grants_alter',
-        static function (callable $hook, string $module) use (&$implementations, $module_data) {
-          $implementations[$module] = $module_data[$module]['name'];
-        }
-      );
-      uasort($implementations, 'strnatcasecmp');
-      $implementation_count = count($implementations);
-      $last_module = array_pop($implementations);
+    $node_access_implementations = $this->getNodeAccessImplementations();
+    $node_access_implementation_count = count($node_access_implementations);
+    if ($node_access_implementation_count === 0) {
+      $status_extra_help_text = $this->t('Filters out unpublished content if the current user cannot view it.');
+    }
+    else {
+      uasort($node_access_implementations, 'strnatcasecmp');
       $status_extra_help_text = new PluralTranslatableMarkup(
-        $implementation_count,
+        $node_access_implementation_count,
         'This filter has no effect because the %module module controls access.',
-        'This filter has no effect because the %modules, and %module modules control access.',
-        ['%module' => $last_module, '%modules' => implode(', ', $implementations)]
+        'This filter has no effect because these modules control access: %modules.',
+        ['%module' => reset($node_access_implementations), '%modules' => implode(', ', $node_access_implementations)]
       );
     }
 
@@ -378,6 +366,29 @@ class NodeViewsData extends EntityViewsData {
     }
 
     return $data;
+  }
+
+  /**
+   * Returns a list of modules that implements a node access hook.
+   *
+   * @return array<string,string>
+   *   An associative array where keys are module machine names and values are
+   *   the human-readable names.
+   */
+  private function getNodeAccessImplementations(): array {
+    $implementations = [];
+    if ($this->moduleHandler->hasImplementations('node_grants')) {
+      $module_data = \Drupal::getContainer()->get('extension.list.module')->getAllInstalledInfo();
+      foreach (['node_grants', 'node_grants_alter'] as $hook) {
+        $this->moduleHandler->invokeAllWith(
+          $hook,
+          static function (callable $hook, string $module) use (&$implementations, $module_data) {
+            $implementations[$module] = $module_data[$module]['name'];
+          }
+        );
+      }
+    }
+    return $implementations;
   }
 
 }
