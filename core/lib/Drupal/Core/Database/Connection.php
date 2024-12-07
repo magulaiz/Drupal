@@ -1622,9 +1622,11 @@ abstract class Connection {
    *
    * @param \Closure $execute
    *   The callback to be executed.
-   * @param array<string,array<string,mixed>> $schema
+   * @param array<string,array<string,mixed>>|\Closure $schema
    *   A database schema specification, with table name as key and schema
-   *   array as value.
+   *   array as value, or a callback to be executed. The callback must return
+   *   TRUE if the database was changed, FALSE if it was executed but did not
+   *   change the database, or throw an exception.
    * @param bool $retryAfterSchemaEnsured
    *   (Optional) If TRUE, the callback is executed again after the first
    *   execution failed, and the schema enforcement was successful. Defaults to
@@ -1639,7 +1641,7 @@ abstract class Connection {
    */
   public function executeEnsuringSchemaOnFailure(
     \Closure $execute,
-    array $schema,
+    array|\Closure $schema,
     bool $retryAfterSchemaEnsured = FALSE,
   ): ExecuteMethodEnsuringSchemaEvent {
 

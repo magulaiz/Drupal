@@ -6,7 +6,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\Exception\SchemaObjectCreationFailureException;
+use Drupal\Core\Database\Exception\SchemaCreationFailureException;
 
 /**
  * Tests Connection::executeEnsuringSchemaOnFailure().
@@ -169,18 +169,21 @@ class ExecuteEnsuringSchemaOnFailureTest extends DatabaseTestBase {
     );
   }
 
-  public function testValidCallbackOnMissingInvalidSchema(): void {
+  public function testValidCallbackOnBrokenSchemaCallback(): void {
     // The initial callback execution failed, and the schema creation was
     // unsuccessful too. We expect an exception reporting the failed schema
     // operation.
-    $this->expectException(SchemaObjectCreationFailureException::class);
-    $this->expectExceptionMessage("Failed creation of table {pineapple}");
+    $this->expectException(SchemaCreationFailureException::class);
+    $this->expectExceptionMessage("Schema creation callback failed");
 
     $this->connection->executeEnsuringSchemaOnFailure(
       execute: function (): int {
         return $this->insertIntoFixtureTables();
       },
-      schema: $this->invalidFixtureSchema(),
+      schema: function (): bool {
+        $this->connection->query('CREATE BANANAS ON THE TREE')->execute();
+        return TRUE;
+      },
       retryAfterSchemaEnsured: TRUE,
     );
   }
@@ -243,15 +246,6 @@ class ExecuteEnsuringSchemaOnFailureTest extends DatabaseTestBase {
       ->execute();
 
     return $hid;
-  }
-
-  protected function invalidFixtureSchema(): array {
-    return [
-      'pineapple' => [
-        'description' => 'under the sea',
-        'fields' => [],
-      ],
-    ];
   }
 
 }
