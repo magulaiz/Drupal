@@ -66,7 +66,7 @@
   color: var(--admin-toolbar-color-gray-950);
 }
 .toolbar-menu__link.current {
-  color: var(--admin-toolbar-color-gray-990);
+  color: var(--admin-toolbar-color-blue-600);
 }
 .toolbar-menu__link.current::after {
   position: absolute;
@@ -75,7 +75,7 @@
   inset-inline-start: calc(var(--admin-toolbar-space-4) * -0.5);
   content: "";
   border-radius: 50%;
-  background-color: currentColor;
+  background-color: var(--admin-toolbar-color-blue-670);
   inline-size: var(--admin-toolbar-space-8);
   block-size: var(--admin-toolbar-space-8);
 }
@@ -97,6 +97,9 @@
   background-color: currentColor;
   inline-size: var(--admin-toolbar-space-8);
   block-size: 100%;
+}
+.toolbar-menu__link:hover::after {
+  content: none;
 }
 .toolbar-menu__link[aria-expanded]::after {
   flex-shrink: 0;

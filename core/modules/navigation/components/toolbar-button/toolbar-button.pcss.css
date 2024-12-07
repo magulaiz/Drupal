@@ -30,14 +30,14 @@
   gap: calc(0.5 * var(--admin-toolbar-rem));
 
   &:has(+ .toolbar-popover__wrapper .is-active) {
-    color: var(--admin-toolbar-color-gray-950);
+    color: var(--admin-toolbar-color-blue-670);
     background-color: var(--admin-toolbar-color-gray-050);
   }
 
   &:hover {
     z-index: 20;
     color: var(--admin-toolbar-color-gray-990);
-    outline: 2px solid var(--admin-toolbar-color-blue-200);
+    outline: 2px solid var(--admin-toolbar-color-blue-600);
     outline-offset: var(--toolbar-button-outline-offset);
     background-color: var(--admin-toolbar-color-gray-050);
   }
