@@ -6,6 +6,7 @@ use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Event\StatementEvent;
 use Drupal\Core\Extension\DatabaseDriverList;
 use Drupal\Core\Cache\NullBackend;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Primary front-controller for the database system.
@@ -125,11 +126,16 @@ abstract class Database {
    *   The database target name.
    * @param string $key
    *   The database connection key. Defaults to NULL which means the active key.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcher|null $eventDispatcher
+   *   The event dispatcher.
    *
    * @return \Drupal\Core\Database\Connection
    *   The corresponding connection object.
    */
-  final public static function getConnection($target = 'default', $key = NULL) {
+  final public static function getConnection($target = 'default', $key = NULL, ?EventDispatcher $eventDispatcher = NULL) {
+    if ($eventDispatcher === NULL) {
+      @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
+    }
     if (!isset($key)) {
       // By default, we want the active connection, set in setActiveConnection.
       $key = self::$activeKey;
@@ -145,7 +151,7 @@ abstract class Database {
 
     if (!isset(self::$connections[$key][$target])) {
       // If necessary, a new connection is opened.
-      self::$connections[$key][$target] = self::openConnection($key, $target);
+      self::$connections[$key][$target] = self::openConnection($key, $target, $eventDispatcher);
     }
     return self::$connections[$key][$target];
   }
@@ -397,11 +403,16 @@ abstract class Database {
    *   "default".
    * @param string $target
    *   The database target to open.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcher|null $eventDispatcher
+   *   The event dispatcher.
    *
    * @throws \Drupal\Core\Database\ConnectionNotDefinedException
    * @throws \Drupal\Core\Database\DriverNotSpecifiedException
    */
-  final protected static function openConnection($key, $target) {
+  final protected static function openConnection($key, $target, ?EventDispatcher $eventDispatcher = NULL) {
+    if ($eventDispatcher === NULL) {
+      @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
+    }
     // If the requested database does not exist then it is an unrecoverable
     // error.
     if (!isset(self::$databaseInfo[$key])) {
@@ -415,7 +426,7 @@ abstract class Database {
     $driver_class = self::$databaseInfo[$key][$target]['namespace'] . '\\Connection';
 
     $client_connection = $driver_class::open(self::$databaseInfo[$key][$target]);
-    $new_connection = new $driver_class($client_connection, self::$databaseInfo[$key][$target]);
+    $new_connection = new $driver_class($client_connection, self::$databaseInfo[$key][$target], $eventDispatcher);
     $new_connection->setTarget($target);
     $new_connection->setKey($key);
 
