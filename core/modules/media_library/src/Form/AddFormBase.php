@@ -15,7 +15,7 @@ use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
@@ -27,7 +27,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a base class for creating media items from within the media library.
  */
-abstract class AddFormBase extends FormBase implements BaseFormIdInterface, TrustedCallbackInterface {
+abstract class AddFormBase extends FormBase implements BaseFormIdInterface {
 
   /**
    * The entity type manager.
@@ -341,13 +341,6 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRenderAddedMedia'];
-  }
-
-  /**
    * Converts the set of newly added media into an item list for rendering.
    *
    * @param array $element
@@ -356,6 +349,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    * @return array
    *   The transformed render element.
    */
+  #[TrustedCallback]
   public function preRenderAddedMedia(array $element) {
     // Transform the element into an item list for rendering.
     $element['#theme'] = 'item_list__media_library_add_form_media_list';

@@ -14,7 +14,7 @@ use Drupal\Core\Render\PlaceholderGeneratorInterface;
 use Drupal\Core\Render\RenderCacheInterface;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Routing\RequestContext;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
@@ -110,7 +110,7 @@ class FiberPlaceholderTest extends UnitTestCase {
 
 }
 
-class TurtleLazyBuilder implements TrustedCallbackInterface {
+class TurtleLazyBuilder {
 
   /**
    * #lazy_builder callback.
@@ -119,6 +119,7 @@ class TurtleLazyBuilder implements TrustedCallbackInterface {
    *
    * @return array
    */
+  #[TrustedCallback]
   public static function turtle(): array {
     if (\Fiber::getCurrent() !== NULL) {
       \Fiber::suspend();
@@ -129,13 +130,6 @@ class TurtleLazyBuilder implements TrustedCallbackInterface {
     return [
       '#markup' => '<span>Turtle is finally here. But how?</span>',
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['turtle'];
   }
 
 }

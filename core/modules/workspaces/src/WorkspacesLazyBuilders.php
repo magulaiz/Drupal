@@ -6,7 +6,7 @@ namespace Drupal\workspaces;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Render\ElementInfoManagerInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
@@ -15,7 +15,7 @@ use Drupal\Core\Url;
  *
  * @internal
  */
-final class WorkspacesLazyBuilders implements TrustedCallbackInterface {
+final class WorkspacesLazyBuilders {
 
   use StringTranslationTrait;
 
@@ -30,6 +30,7 @@ final class WorkspacesLazyBuilders implements TrustedCallbackInterface {
    * @return array
    *   A render array.
    */
+  #[TrustedCallback]
   public function renderToolbarTab(): array {
     $active_workspace = $this->workspaceManager->getActiveWorkspace();
 
@@ -72,16 +73,10 @@ final class WorkspacesLazyBuilders implements TrustedCallbackInterface {
   /**
    * Render callback for the workspace toolbar tab.
    */
+  #[TrustedCallback]
   public static function removeTabAttributes(array $element): array {
     unset($element['tab']['#attributes']);
     return $element;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks(): array {
-    return ['removeTabAttributes', 'renderToolbarTab'];
   }
 
 }

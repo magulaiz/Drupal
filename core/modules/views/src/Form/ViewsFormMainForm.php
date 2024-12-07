@@ -8,12 +8,12 @@ use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\WorkspaceDynamicSafeFormInterface;
 use Drupal\Core\Form\WorkspaceSafeFormInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
-class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
+class ViewsFormMainForm implements FormInterface {
 
   use StringTranslationTrait;
 
@@ -34,6 +34,7 @@ class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
    *   The $element with prepared variables ready for #theme 'form'
    *   in views_form_views_form.
    */
+  #[TrustedCallback]
   public static function preRenderViewsForm(array $element) {
     // Placeholders and their substitutions (usually rendered form elements).
     $search = [];
@@ -63,13 +64,6 @@ class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
     $element['output'] = ['#markup' => ViewsRenderPipelineMarkup::create($output)];
 
     return $element;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRenderViewsForm'];
   }
 
   /**

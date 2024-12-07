@@ -30,6 +30,11 @@ interface TrustedCallbackInterface {
    *   List of method names implemented by the class that can be used as trusted
    *   callbacks.
    *
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Instead,
+   *   you should use \Drupal\Core\Security\Attribute\TrustedCallback attribute
+   *   for the method.
+   *
+   * @see https://www.drupal.org/node/3355686
    * @see \Drupal\Core\Security\DoTrustedCallbackTrait::doTrustedCallback()
    */
   public static function trustedCallbacks();

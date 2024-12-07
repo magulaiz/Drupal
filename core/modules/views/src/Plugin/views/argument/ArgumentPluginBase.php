@@ -9,6 +9,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\HandlerBase;
@@ -204,15 +205,6 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     $options['validate_options'] = ['default' => []];
 
     return $options;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    $callbacks = parent::trustedCallbacks();
-    $callbacks[] = 'preRenderMoveArgumentOptions';
-    return $callbacks;
   }
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
@@ -1243,6 +1235,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * So if #argument_option is specified as 'default', the element is moved
    * to the 'default_options' fieldset.
    */
+  #[TrustedCallback]
   public static function preRenderMoveArgumentOptions($form) {
     foreach (Element::children($form) as $key) {
       $element = $form[$key];

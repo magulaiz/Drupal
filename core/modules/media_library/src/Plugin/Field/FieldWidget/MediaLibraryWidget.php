@@ -18,7 +18,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
@@ -42,7 +42,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
   field_types: ['entity_reference'],
   multiple_values: TRUE,
 )]
-class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface {
+class MediaLibraryWidget extends WidgetBase {
 
   /**
    * Entity type manager service.
@@ -593,13 +593,6 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRenderWidget'];
-  }
-
-  /**
    * Prepares the widget's render element for rendering.
    *
    * @param array $element
@@ -610,6 +603,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    *
    * @see ::formElement()
    */
+  #[TrustedCallback]
   public function preRenderWidget(array $element) {
     if (isset($element['open_button'])) {
       $element['#field_suffix']['open_button'] = $element['open_button'];

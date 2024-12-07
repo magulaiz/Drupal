@@ -14,7 +14,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
@@ -41,7 +41,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
     "allowed_media_types" => [],
   ],
 )]
-class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
+class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface {
 
   /**
    * The entity repository.
@@ -432,6 +432,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    *
    * @see \Drupal\Core\Entity\EntityViewBuilder::addContextualLinks()
    */
+  #[TrustedCallback]
   public static function disableContextualLinks(array $build) {
     unset($build['#contextual_links']);
     return $build;
@@ -505,13 +506,6 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       return $field_definition->getName();
     }
     return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['disableContextualLinks'];
   }
 
   /**

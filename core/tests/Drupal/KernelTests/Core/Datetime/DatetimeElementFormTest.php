@@ -9,7 +9,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Security\UntrustedCallbackException;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -18,7 +18,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group Form
  */
-class DatetimeElementFormTest extends KernelTestBase implements FormInterface, TrustedCallbackInterface {
+class DatetimeElementFormTest extends KernelTestBase implements FormInterface {
 
   /**
    * {@inheritdoc}
@@ -42,6 +42,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function datetimeDateCallbackTrusted(array &$element, FormStateInterface $form_state, ?DrupalDateTime $date = NULL): void {
     $element['datetimeDateCallbackExecuted'] = [
       '#value' => TRUE,
@@ -62,6 +63,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function datetimeTimeCallbackTrusted(array &$element, FormStateInterface $form_state, ?DrupalDateTime $date = NULL): void {
     $element['timeCallbackExecuted'] = [
       '#value' => TRUE,
@@ -205,16 +207,6 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
     $form = \Drupal::formBuilder()->getForm($this);
     $this->render($form);
     $this->assertEquals('UTC', $form['datetime_element']['#date_timezone']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return [
-      'datetimeDateCallbackTrusted',
-      'datetimeTimeCallbackTrusted',
-    ];
   }
 
 }

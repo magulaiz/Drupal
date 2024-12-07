@@ -7,7 +7,7 @@ namespace Drupal\filter_test\Plugin\Filter;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\filter\Plugin\FilterInterface;
@@ -21,7 +21,7 @@ use Drupal\filter\Plugin\FilterInterface;
   description: new TranslatableMarkup("Appends placeholders to the content; associates #lazy_builder callbacks."),
   type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE
 )]
-class FilterTestPlaceholders extends FilterBase implements TrustedCallbackInterface {
+class FilterTestPlaceholders extends FilterBase {
 
   /**
    * {@inheritdoc}
@@ -43,6 +43,7 @@ class FilterTestPlaceholders extends FilterBase implements TrustedCallbackInterf
    * @return array
    *   A renderable array.
    */
+  #[TrustedCallback]
   public static function renderDynamicThing($thing) {
     return [
       '#markup' => new FormattableMarkup('This is a dynamic @thing.', ['@thing' => $thing]),
@@ -55,19 +56,10 @@ class FilterTestPlaceholders extends FilterBase implements TrustedCallbackInterf
    * @return array
    *   A renderable array.
    */
+  #[TrustedCallback]
   public static function renderStaticThing(): array {
     return [
       '#markup' => 'This is a static llama.',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return [
-      'renderDynamicThing',
-      'renderStaticThing',
     ];
   }
 

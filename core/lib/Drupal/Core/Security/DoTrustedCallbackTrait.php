@@ -68,18 +68,27 @@ trait DoTrustedCallbackTrait {
       if ($extra_trusted_interface && is_subclass_of($object_or_classname, $extra_trusted_interface)) {
         $safe_callback = TRUE;
       }
-      elseif (is_subclass_of($object_or_classname, TrustedCallbackInterface::class)) {
+      if (!$safe_callback) {
+        $method = new \ReflectionMethod($object_or_classname, $method_name);
+        $safe_callback = (bool) $method->getAttributes(TrustedCallback::class);
+        while (!$safe_callback && $method->hasPrototype()) {
+          $method = $method->getPrototype();
+          $safe_callback = (bool) $method->getAttributes(TrustedCallback::class);
+          if ($safe_callback) {
+            @trigger_error('Discovery of overridden trusted methods is deprecated in drupal:11.1.0 and will throw an error from drupal:12.0.0. Add #[TrustedCallback] to the overridden method. See https://www.drupal.org/node/3355686', E_USER_DEPRECATED);
+          }
+        }
+      }
+      if (!$safe_callback && is_subclass_of($object_or_classname, TrustedCallbackInterface::class)) {
+        @trigger_error('Usage of the ' . TrustedCallbackInterface::class . " is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Instead, you should use \Drupal\Core\Security\Attribute\TrustedCallback attribute for the method. See https://www.drupal.org/node/3355686", E_USER_DEPRECATED);
         if (is_object($object_or_classname)) {
+          // @phpstan-ignore-next-line
           $methods = $object_or_classname->trustedCallbacks();
         }
         else {
           $methods = call_user_func($object_or_classname . '::trustedCallbacks');
         }
         $safe_callback = in_array($method_name, $methods, TRUE);
-      }
-      if (!$safe_callback) {
-        $method = new \ReflectionMethod($object_or_classname, $method_name);
-        $safe_callback = (bool) $method->getAttributes(TrustedCallback::class);
       }
     }
     elseif ($callback instanceof \Closure) {

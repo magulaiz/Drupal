@@ -7,13 +7,13 @@ namespace Drupal\big_pipe_test;
 use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber;
 use Drupal\Core\Form\EnforcedResponseException;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Returns responses for Big Pipe routes.
  */
-class BigPipeTestController implements TrustedCallbackInterface {
+class BigPipeTestController {
 
   /**
    * Returns all BigPipe placeholder test case render arrays.
@@ -130,6 +130,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
    *
    * @return array
    */
+  #[TrustedCallback]
   public static function currentTime() {
     return [
       '#markup' => '<time datetime="' . date('Y-m-d', 668948400) . '"></time>',
@@ -142,6 +143,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
    *
    * @return array
    */
+  #[TrustedCallback]
   public static function piggy(): array {
     // Immediately call Fiber::suspend(), so that other placeholders are
     // executed next. When this is resumed, it will immediately return the
@@ -160,6 +162,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
    *
    * @return array
    */
+  #[TrustedCallback]
   public static function helloOrHi() {
     return [
       '#markup' => BigPipeMarkup::create('<marquee>llamas forever!</marquee>'),
@@ -175,6 +178,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
    *
    * @throws \Exception
    */
+  #[TrustedCallback]
   public static function exception() {
     throw new \Exception('You are not allowed to say llamas are not cool!');
   }
@@ -186,6 +190,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
    *
    * @return array
    */
+  #[TrustedCallback]
   public static function responseException() {
     return ['#plain_text' => BigPipeTestSubscriber::CONTENT_TRIGGER_EXCEPTION];
   }
@@ -198,6 +203,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
    * @return array
    *   The render array.
    */
+  #[TrustedCallback]
   public static function counter() {
     // Lazy builders are not allowed to build their own state like this function
     // does, but in this case we're intentionally doing that for testing
@@ -238,6 +244,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
    * @throws \Drupal\Core\Form\EnforcedResponseException
    *   Trigger catch of Big Pipe enforced redirect response exception.
    */
+  #[TrustedCallback]
   public static function redirectTrusted(): void {
     $response = new RedirectResponse('/big_pipe_test');
     throw new EnforcedResponseException($response);
@@ -264,16 +271,10 @@ class BigPipeTestController implements TrustedCallbackInterface {
    * @throws \Drupal\Core\Form\EnforcedResponseException
    *   Trigger catch of Big Pipe enforced redirect response exception.
    */
+  #[TrustedCallback]
   public static function redirectUntrusted(): void {
     $response = new RedirectResponse('https://example.com');
     throw new EnforcedResponseException($response);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['currentTime', 'piggy', 'helloOrHi', 'exception', 'responseException', 'counter', 'redirectTrusted', 'redirectUntrusted'];
   }
 
 }

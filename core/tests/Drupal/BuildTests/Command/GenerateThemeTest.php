@@ -496,14 +496,14 @@ FIXTURE;
 
 namespace Drupal\starterkit_theme;
 
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Implements trusted prerender callbacks for the Starterkit theme.
  *
  * @internal
  */
-class StarterkitThemePreRender implements TrustedCallbackInterface {
+class StarterkitThemePreRender {
 
 }
 PHP);
@@ -539,14 +539,14 @@ EDITED, file_get_contents($theme_path_absolute . '/edit_fixture.txt'));
 
 namespace Drupal\\test_custom_theme;
 
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Implements trusted prerender callbacks for the Test custom starterkit theme.
  *
  * @internal
  */
-class TestCustomThemePreRender implements TrustedCallbackInterface {
+class TestCustomThemePreRender {
 
 }
 EDITED, file_get_contents($theme_path_absolute . '/src/TestCustomThemePreRender.php'));

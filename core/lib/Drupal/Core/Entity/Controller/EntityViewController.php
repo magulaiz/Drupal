@@ -6,14 +6,14 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a generic controller to render a single entity.
  */
-class EntityViewController implements ContainerInjectionInterface, TrustedCallbackInterface {
+class EntityViewController implements ContainerInjectionInterface {
 
   /**
    * The entity type manager.
@@ -74,6 +74,7 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
    * @return array
    *   The changed page render array.
    */
+  #[TrustedCallback]
   public function buildTitle(array $page) {
     $entity_type = $page['#entity_type'];
     $entity = $page['#' . $entity_type];
@@ -162,13 +163,6 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
     }
 
     return $page;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['buildTitle'];
   }
 
 }

@@ -6,11 +6,11 @@ namespace Drupal\render_placeholder_message_test;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Render\RenderContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class RenderPlaceholderMessageTestController implements TrustedCallbackInterface, ContainerInjectionInterface {
+class RenderPlaceholderMessageTestController implements ContainerInjectionInterface {
 
   /**
    * Constructs a new RenderPlaceholderMessageTestController object.
@@ -114,6 +114,7 @@ class RenderPlaceholderMessageTestController implements TrustedCallbackInterface
    * @return array
    *   A renderable array containing the message.
    */
+  #[TrustedCallback]
   public static function setAndLogMessage($message) {
     // Ensure that messages are rendered last even when earlier placeholders
     // suspend the Fiber, this will cause BigPipe::renderPlaceholders() to loop
@@ -127,13 +128,6 @@ class RenderPlaceholderMessageTestController implements TrustedCallbackInterface
 
     // Print which message is expected.
     return ['#markup' => '<p class="logged-message">Message: ' . $message . '</p>'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['setAndLogMessage'];
   }
 
 }

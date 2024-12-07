@@ -13,6 +13,7 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -2219,15 +2220,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    $callbacks = parent::trustedCallbacks();
-    $callbacks[] = 'elementPreRender';
-    return $callbacks;
-  }
-
-  /**
    * Applies the cacheability of the current display to the given render array.
    *
    * @param array $element
@@ -2248,6 +2240,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function elementPreRender(array $element) {
     $view = $element['#view'];
     $empty = empty($view->result);
