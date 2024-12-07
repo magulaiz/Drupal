@@ -43,22 +43,17 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
 
-    $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($name, $window, $identifier): void {
-        $this->connection->insert(DatabaseBackend::TABLE_NAME)
-          ->fields([
-            'event' => $name,
-            'identifier' => $identifier,
-            'timestamp' => $this->time->getRequestTime(),
-            'expiration' => $this->time->getRequestTime() + $window,
-          ])
-          ->execute();
-      },
-      schema: [
-        static::TABLE_NAME => $this->schemaDefinition(),
-      ],
-      retryAfterSchemaEnsured: TRUE,
-    );
+    $this->connection->insert(static::TABLE_NAME)
+      ->fields([
+        'event' => $name,
+        'identifier' => $identifier,
+        'timestamp' => $this->time->getRequestTime(),
+        'expiration' => $this->time->getRequestTime() + $window,
+      ])
+      ->executeEnsuringSchemaOnFailure(
+        schema: [static::TABLE_NAME => $this->schemaDefinition()],
+        retryAfterSchemaEnsured: TRUE,
+      );
   }
 
   /**
@@ -99,34 +94,24 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
 
-    $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($name, $identifier): void {
-        $this->connection->delete(DatabaseBackend::TABLE_NAME)
-          ->condition('event', $name)
-          ->condition('identifier', $identifier)
-          ->execute();
-      },
-      schema: [
+    $this->connection->delete(static::TABLE_NAME)
+      ->condition('event', $name)
+      ->condition('identifier', $identifier)
+      ->executeEnsuringSchemaOnFailure([
         static::TABLE_NAME => $this->schemaDefinition(),
-      ],
-    );
+      ]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function clearByPrefix(string $name, string $prefix): void {
-    $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($name, $prefix): void {
-        $this->connection->delete(DatabaseBackend::TABLE_NAME)
-          ->condition('event', $name)
-          ->condition('identifier', $prefix . '-%', 'LIKE')
-          ->execute();
-      },
-      schema: [
+    $this->connection->delete(static::TABLE_NAME)
+      ->condition('event', $name)
+      ->condition('identifier', $prefix . '-%', 'LIKE')
+      ->executeEnsuringSchemaOnFailure([
         static::TABLE_NAME => $this->schemaDefinition(),
-      ],
-    );
+      ]);
   }
 
   /**
@@ -137,39 +122,29 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
 
-    $execution = $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function () use ($name, $threshold, $window, $identifier): bool {
-        $number = (int) $this->connection->select(DatabaseBackend::TABLE_NAME, 'f')
-          ->condition('event', $name)
-          ->condition('identifier', $identifier)
-          ->condition('timestamp', $this->time->getRequestTime() - $window, '>')
-          ->countQuery()
-          ->execute()
-          ->fetchField();
-        return ($number < $threshold);
-      },
-      schema: [
-        static::TABLE_NAME => $this->schemaDefinition(),
-      ],
-    );
+    $number = $this->connection->select(static::TABLE_NAME, 'f')
+      ->condition('event', $name)
+      ->condition('identifier', $identifier)
+      ->condition('timestamp', $this->time->getRequestTime() - $window, '>')
+      ->countQuery()
+      ->executeEnsuringSchemaOnFailure(
+        schema: [static::TABLE_NAME => $this->schemaDefinition()],
+        retryAfterSchemaEnsured: TRUE,
+      )
+      ->fetchField();
 
-    return $execution->isSuccessful() ? $execution->getResult() : TRUE;
+    return ($number < $threshold);
   }
 
   /**
    * {@inheritdoc}
    */
   public function garbageCollection() {
-    $this->connection->executeEnsuringSchemaOnFailure(
-      execute: function (): void {
-        $this->connection->delete(DatabaseBackend::TABLE_NAME)
-          ->condition('expiration', $this->time->getRequestTime(), '<')
-          ->execute();
-      },
-      schema: [
+    $this->connection->delete(static::TABLE_NAME)
+      ->condition('expiration', $this->time->getRequestTime(), '<')
+      ->executeEnsuringSchemaOnFailure([
         static::TABLE_NAME => $this->schemaDefinition(),
-      ],
-    );
+      ]);
   }
 
   /**
