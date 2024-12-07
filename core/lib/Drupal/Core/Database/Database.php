@@ -133,9 +133,6 @@ abstract class Database {
    *   The corresponding connection object.
    */
   final public static function getConnection($target = 'default', $key = NULL, ?EventDispatcher $eventDispatcher = NULL) {
-    if ($eventDispatcher === NULL) {
-      @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
-    }
     if (!isset($key)) {
       // By default, we want the active connection, set in setActiveConnection.
       $key = self::$activeKey;
@@ -150,6 +147,9 @@ abstract class Database {
     }
 
     if (!isset(self::$connections[$key][$target])) {
+      if ($eventDispatcher === NULL) {
+        @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
+      }
       // If necessary, a new connection is opened.
       self::$connections[$key][$target] = self::openConnection($key, $target, $eventDispatcher);
     }
