@@ -126,8 +126,6 @@ abstract class Database {
    *   The database target name.
    * @param string $key
    *   The database connection key. Defaults to NULL which means the active key.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcher|null $eventDispatcher
-   *   The event dispatcher.
    *
    * @return \Drupal\Core\Database\Connection
    *   The corresponding connection object.
@@ -147,7 +145,7 @@ abstract class Database {
     }
 
     if (!isset(self::$connections[$key][$target])) {
-      // @trigger_error('Calling ' . __METHOD__ . '() without previously initializing the connection via ::initalizeConnection() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
+      // @trigger_error('Calling ' . __METHOD__ . '() without previously initializing the connection is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
       self::initializeConnection($key, $target, \Drupal::service('event_dispatcher'));
     }
 
@@ -173,8 +171,9 @@ abstract class Database {
     EventDispatcher $eventDispatcher,
   ): Connection {
     if (isset(self::$connections[$key][$target])) {
-      // throw new \LogicException("Database connection {$key}/{$target} is already initialized");
-      // unset(self::$connections[$key][$target]);
+      // Throw new \LogicException("Database connection {$key}/{$target} is
+      // already initialized").
+      // Unset(self::$connections[$key][$target]).
       return self::$connections[$key][$target];
     }
     // Open the connection.
@@ -435,7 +434,7 @@ abstract class Database {
    * @throws \Drupal\Core\Database\ConnectionNotDefinedException
    * @throws \Drupal\Core\Database\DriverNotSpecifiedException
    */
-  final protected static function openConnection($key, $target, EventDispatcher $eventDispatcher = NULL) {
+  final protected static function openConnection($key, $target, EventDispatcher $eventDispatcher) {
     // If the requested database does not exist then it is an unrecoverable
     // error.
     if (!isset(self::$databaseInfo[$key])) {
