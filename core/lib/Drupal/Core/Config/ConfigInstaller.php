@@ -589,12 +589,10 @@ class ConfigInstaller implements ConfigInstallerInterface {
         }
       }
 
-      $previous_storage = $storage;
-
       // Store the config names for the checked module in order to add them to
       // the list of active configuration for the next module.
       foreach ($this->configManager->getConfigCollectionInfo()->getCollectionNames() as $collection) {
-        $config_to_create = array_keys($this->getConfigToCreate($previous_storage, $collection));
+        $config_to_create = array_keys($this->getConfigToCreate($storage, $collection));
         if (!isset($previous_config_names[$collection])) {
           $previous_config_names[$collection] = $config_to_create;
         }
