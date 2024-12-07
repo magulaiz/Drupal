@@ -1613,8 +1613,8 @@ function install_profile_modules(&$install_state) {
   // states that it needs a container rebuild immediately after install.
   $index = 0;
   $module_groups = [];
-  foreach ($required + $non_required as $module => $weight) {
-    $module_groups[$index][$module] = $weight;
+  foreach (array_keys($required + $non_required) as $module) {
+    $module_groups[$index][] = $module;
     if (count($module_groups[$index]) === Settings::get('core.multi_module_install_batch_size', 20)) {
       $index++;
     }
@@ -1628,7 +1628,7 @@ function install_profile_modules(&$install_state) {
 
   foreach ($module_groups as $module_group) {
     $names = [];
-    foreach ($module_group as $module => $weight) {
+    foreach ($module_group as $module) {
       $names[] = $files[$module]->info['name'];
     }
     $batch_builder->addOperation(
