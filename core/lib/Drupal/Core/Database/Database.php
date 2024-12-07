@@ -132,7 +132,7 @@ abstract class Database {
    * @return \Drupal\Core\Database\Connection
    *   The corresponding connection object.
    */
-  final public static function getConnection($target = 'default', $key = NULL, ?EventDispatcher $eventDispatcher = NULL) {
+  final public static function getConnection($target = 'default', $key = NULL) {
     if (!isset($key)) {
       // By default, we want the active connection, set in setActiveConnection.
       $key = self::$activeKey;
@@ -147,12 +147,38 @@ abstract class Database {
     }
 
     if (!isset(self::$connections[$key][$target])) {
-      if ($eventDispatcher === NULL) {
-        @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
-      }
-      // If necessary, a new connection is opened.
-      self::$connections[$key][$target] = self::openConnection($key, $target, $eventDispatcher);
+      // @trigger_error('Calling ' . __METHOD__ . '() without previously initializing the connection via ::initalizeConnection() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
+      self::initializeConnection($key, $target, \Drupal::service('event_dispatcher'));
     }
+
+    return self::$connections[$key][$target];
+  }
+
+  /**
+   * Initializes the connection object for the database key and target.
+   *
+   * @param string $key
+   *   The database connection key.
+   * @param string $target
+   *   The database target name.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
+   *   The event dispatcher.
+   *
+   * @return \Drupal\Core\Database\Connection
+   *   The corresponding connection object.
+   */
+  final public static function initializeConnection(
+    string $key,
+    string $target,
+    EventDispatcher $eventDispatcher,
+  ): Connection {
+    if (isset(self::$connections[$key][$target])) {
+      // throw new \LogicException("Database connection {$key}/{$target} is already initialized");
+      // unset(self::$connections[$key][$target]);
+      return self::$connections[$key][$target];
+    }
+    // Open the connection.
+    self::$connections[$key][$target] = self::openConnection($key, $target, $eventDispatcher);
     return self::$connections[$key][$target];
   }
 
@@ -403,16 +429,13 @@ abstract class Database {
    *   "default".
    * @param string $target
    *   The database target to open.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcher|null $eventDispatcher
+   * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
    *   The event dispatcher.
    *
    * @throws \Drupal\Core\Database\ConnectionNotDefinedException
    * @throws \Drupal\Core\Database\DriverNotSpecifiedException
    */
-  final protected static function openConnection($key, $target, ?EventDispatcher $eventDispatcher = NULL) {
-    if ($eventDispatcher === NULL) {
-      @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
-    }
+  final protected static function openConnection($key, $target, EventDispatcher $eventDispatcher = NULL) {
     // If the requested database does not exist then it is an unrecoverable
     // error.
     if (!isset(self::$databaseInfo[$key])) {
