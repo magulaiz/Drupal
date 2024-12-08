@@ -40,7 +40,7 @@ class StubConnection extends Connection {
    *   An array of options for the connection.
    * @param string[] $identifier_quotes
    *   The identifier quote characters.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcher|null $eventDispatcher
+   * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
    *   The event dispatcher.
    */
   public function __construct(

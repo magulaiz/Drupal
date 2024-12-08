@@ -5,7 +5,6 @@ namespace Drupal\Core\Database;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\EventDispatcher\EventDispatcherFactory;
 use Drupal\Core\Database\Event\DatabaseEvent;
-use Drupal\Core\Database\Exception\EventException;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
 use Drupal\Core\Database\Query\Insert;
@@ -1537,9 +1536,6 @@ abstract class Connection {
    *
    * @return \Drupal\Core\Database\Event\DatabaseEvent
    *   The database event.
-   *
-   * @throws \Drupal\Core\Database\Exception\EventException
-   *   If the container is not initialized.
    */
   public function dispatchEvent(DatabaseEvent $event, ?string $eventName = NULL): DatabaseEvent {
     return $this->eventDispatcher->dispatch($event, $eventName);
