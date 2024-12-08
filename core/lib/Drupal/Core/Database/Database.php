@@ -5,10 +5,9 @@ namespace Drupal\Core\Database;
 use Composer\Autoload\ClassLoader;
 use Drupal\Component\EventDispatcher\EventDispatcherFactory;
 use Drupal\Core\Database\Event\StatementEvent;
-use Drupal\Core\Database\Exception\EventException;
 use Drupal\Core\Extension\DatabaseDriverList;
 use Drupal\Core\Cache\NullBackend;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Primary front-controller for the database system.
@@ -165,7 +164,7 @@ abstract class Database {
    *   The database connection key.
    * @param string $target
    *   The database target name.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
    *
    * @return \Drupal\Core\Database\Connection
@@ -174,7 +173,7 @@ abstract class Database {
   final public static function initializeConnection(
     string $key,
     string $target,
-    EventDispatcher $eventDispatcher,
+    EventDispatcherInterface $eventDispatcher,
   ): Connection {
     if (isset(self::$connections[$key][$target])) {
       // Throw new \LogicException("Database connection {$key}/{$target} is
@@ -434,13 +433,13 @@ abstract class Database {
    *   "default".
    * @param string $target
    *   The database target to open.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
    *
    * @throws \Drupal\Core\Database\ConnectionNotDefinedException
    * @throws \Drupal\Core\Database\DriverNotSpecifiedException
    */
-  final protected static function openConnection($key, $target, EventDispatcher $eventDispatcher) {
+  final protected static function openConnection($key, $target, EventDispatcherInterface $eventDispatcher) {
     // If the requested database does not exist then it is an unrecoverable
     // error.
     if (!isset(self::$databaseInfo[$key])) {
