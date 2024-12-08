@@ -878,6 +878,7 @@ services:
   Drupal\Core\Routing\RouteMatchInterface: '@current_route_match'
   event_dispatcher:
     class: Symfony\Component\EventDispatcher\EventDispatcher
+    factory: Drupal\Component\EventDispatcher\EventDispatcherFactory::getInstance
   Psr\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   Symfony\Contracts\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   controller_resolver:
