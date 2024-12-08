@@ -71,10 +71,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $defaultBootstrapContainerDefinition = [
     'parameters' => [],
     'services' => [
+      'event_dispatcher' => [
+        'class' => 'Symfony\Component\EventDispatcher\EventDispatcher',
+      ],
       'database' => [
         'class' => 'Drupal\Core\Database\Connection',
-        'factory' => 'Drupal\Core\Database\Database::getConnection',
-        'arguments' => ['default'],
+        'factory' => 'Drupal\Core\Database\Database::initializeConnection',
+        'arguments' => ['default', 'default', '@event_dispatcher'],
       ],
       'request_stack' => [
         'class' => 'Symfony\Component\HttpFoundation\RequestStack',
