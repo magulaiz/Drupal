@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\Component\EventDispatcher\EventDispatcherFactory;
 use Drupal\Core\Cache\MemoryCounterBackendFactory;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -40,7 +41,7 @@ abstract class MigrateSqlSourceTestBase extends MigrateSourceTestBase {
     // closed.
     $connection_options = ['database' => ':memory:'];
     $pdo = Connection::open($connection_options);
-    $connection = new Connection($pdo, $connection_options);
+    $connection = new Connection($pdo, $connection_options, EventDispatcherFactory::getInstance());
 
     // Create the tables and fill them with data.
     foreach ($source_data as $table => $rows) {

@@ -7,6 +7,7 @@ namespace Drupal\Tests\sqlite\Unit;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @coversDefaultClass \Drupal\sqlite\Driver\Database\sqlite\Connection
@@ -25,7 +26,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testCreateConnectionOptionsFromUrl(string $url, string $expected): void {
     $root = dirname(__DIR__, 8);
-    $sqlite_connection = new Connection($this->createMock(StubPDO::class), []);
+    $sqlite_connection = new Connection($this->createMock(StubPDO::class), [], new EventDispatcher());
     $database = $sqlite_connection->createConnectionOptionsFromUrl($url, $root);
     $this->assertEquals('sqlite', $database['driver']);
     $this->assertEquals($expected, $database['database']);
