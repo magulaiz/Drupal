@@ -438,10 +438,10 @@ abstract class BrowserTestBase extends TestCase {
     }
     parent::tearDown();
 
-    if ($this->container) {
+    if (\Drupal::getContainer()) {
       // Cleanup mock session started in DrupalKernel::preHandle().
       /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-      $session = $this->container->get('request_stack')->getSession();
+      $session = \Drupal::service('request_stack')->getSession();
       $session->clear();
       $session->save();
     }
