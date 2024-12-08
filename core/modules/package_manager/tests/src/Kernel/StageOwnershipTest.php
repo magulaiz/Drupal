@@ -52,11 +52,6 @@ class StageOwnershipTest extends PackageManagerKernelTestBase {
     $this->setCurrentUser($user_1);
 
     $will_create = $this->createStage();
-    // Rebuild the container so that the shared tempstore factory is made
-    // properly aware of the new current user ($user_2) before another stage
-    // is created.
-    $kernel = $this->container->get('kernel');
-    $this->container = $kernel->rebuildContainer();
     $user_2 = $this->createUser();
     $this->setCurrentUser($user_2);
     $this->assertOwnershipIsEnforced($will_create, $this->createStage());

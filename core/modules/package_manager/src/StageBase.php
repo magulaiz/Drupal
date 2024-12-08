@@ -152,13 +152,6 @@ abstract class StageBase implements LoggerAwareInterface {
   private $lock;
 
   /**
-   * The shared temp store.
-   *
-   * @var \Drupal\Core\TempStore\SharedTempStore
-   */
-  protected SharedTempStore $tempStore;
-
-  /**
    * The stage type.
    *
    * To ensure that stage classes do not unintentionally use another stage's
@@ -181,7 +174,19 @@ abstract class StageBase implements LoggerAwareInterface {
     protected readonly PathFactoryInterface $pathFactory,
     protected readonly FailureMarker $failureMarker,
   ) {
-    $this->tempStore = $tempStoreFactory->get('package_manager_stage');
+  }
+
+  /**
+   * Gets shared temp store.
+   *
+   * We need to get a new instance from the factory for each call because the
+   * user can change during the life-cycle of a request.
+   *
+   * @return \Drupal\Core\TempStore\SharedTempStore
+   *   Temp store.
+   */
+  protected function getTempStore(): SharedTempStore {
+    return $this->tempStoreFactory->get('package_manager_stage');
   }
 
   /**
@@ -216,7 +221,7 @@ abstract class StageBase implements LoggerAwareInterface {
    *   TRUE if the stage directory can be created, otherwise FALSE.
    */
   final public function isAvailable(): bool {
-    return empty($this->tempStore->getMetadata(static::TEMPSTORE_LOCK_KEY));
+    return empty($this->getTempStore()->getMetadata(static::TEMPSTORE_LOCK_KEY));
   }
 
   /**
@@ -234,7 +239,7 @@ abstract class StageBase implements LoggerAwareInterface {
   public function getMetadata(string $key) {
     $this->checkOwnership();
 
-    $metadata = $this->tempStore->get(static::TEMPSTORE_METADATA_KEY) ?: [];
+    $metadata = $this->getTempStore()->get(static::TEMPSTORE_METADATA_KEY) ?: [];
     return $metadata[$key] ?? NULL;
   }
 
@@ -254,9 +259,10 @@ abstract class StageBase implements LoggerAwareInterface {
   public function setMetadata(string $key, $data): void {
     $this->checkOwnership();
 
-    $metadata = $this->tempStore->get(static::TEMPSTORE_METADATA_KEY);
+    $sharedTempStore = $this->getTempStore();
+    $metadata = $sharedTempStore->get(static::TEMPSTORE_METADATA_KEY);
     $metadata[$key] = $data;
-    $this->tempStore->set(static::TEMPSTORE_METADATA_KEY, $metadata);
+    $sharedTempStore->set(static::TEMPSTORE_METADATA_KEY, $metadata);
   }
 
   /**
@@ -325,16 +331,10 @@ abstract class StageBase implements LoggerAwareInterface {
     // be vulnerable to this; the stage ID needs to be unique, but not
     // cryptographically so.)
     $id = (new Random())->name(32);
-    // Re-acquire the tempstore to ensure that the lock is written by whoever is
-    // actually logged in (or not) right now, since it's possible that the stage
-    // was instantiated (i.e., __construct() was called) by a different session,
-    // which would result in the lock having the wrong owner and the stage not
-    // being claimable by whoever is actually creating it.
-    $this->tempStore = $this->tempStoreFactory->get('package_manager_stage');
     // For the lock value, we use both the stage's class and its type in order
     // to prevent a stage from being manipulated by two different classes during
     // a single life cycle.
-    $this->tempStore->set(static::TEMPSTORE_LOCK_KEY, [
+    $this->getTempStore()->set(static::TEMPSTORE_LOCK_KEY, [
       $id,
       static::class,
       $this->getType(),
@@ -468,7 +468,7 @@ abstract class StageBase implements LoggerAwareInterface {
     // If an error occurs while dispatching the events, ensure that ::destroy()
     // doesn't think we're in the middle of applying the staged changes to the
     // active directory.
-    $this->tempStore->set(self::TEMPSTORE_APPLY_TIME_KEY, $this->time->getRequestTime());
+    $this->getTempStore()->set(self::TEMPSTORE_APPLY_TIME_KEY, $this->time->getRequestTime());
     $this->dispatch($event, $this->setNotApplying(...));
 
     // Create a marker file so that we can tell later on if the commit failed.
@@ -502,7 +502,7 @@ abstract class StageBase implements LoggerAwareInterface {
    * Returns a closure that marks this stage as no longer being applied.
    */
   private function setNotApplying(): void {
-    $this->tempStore->delete(self::TEMPSTORE_APPLY_TIME_KEY);
+    $this->getTempStore()->delete(self::TEMPSTORE_APPLY_TIME_KEY);
   }
 
   /**
@@ -516,7 +516,7 @@ abstract class StageBase implements LoggerAwareInterface {
   public function postApply(): void {
     $this->checkOwnership();
 
-    if ($this->tempStore->get(self::TEMPSTORE_APPLY_TIME_KEY) === $this->time->getRequestTime()) {
+    if ($this->getTempStore()->get(self::TEMPSTORE_APPLY_TIME_KEY) === $this->time->getRequestTime()) {
       $this->logger?->warning('Post-apply tasks are running in the same request during which staged changes were applied to the active code base. This can result in unpredictable behavior.');
     }
     // Rebuild the container and clear all caches, to ensure that new services
@@ -569,9 +569,10 @@ abstract class StageBase implements LoggerAwareInterface {
    * Marks the stage as available.
    */
   protected function markAsAvailable(): void {
-    $this->tempStore->delete(static::TEMPSTORE_METADATA_KEY);
-    $this->tempStore->delete(static::TEMPSTORE_LOCK_KEY);
-    $this->tempStore->delete(self::TEMPSTORE_STAGING_ROOT_KEY);
+    $sharedTempStore = $this->getTempStore();
+    $sharedTempStore->delete(static::TEMPSTORE_METADATA_KEY);
+    $sharedTempStore->delete(static::TEMPSTORE_LOCK_KEY);
+    $sharedTempStore->delete(self::TEMPSTORE_STAGING_ROOT_KEY);
     $this->lock = NULL;
   }
 
@@ -651,7 +652,7 @@ abstract class StageBase implements LoggerAwareInterface {
       )->render());
     }
 
-    $stored_lock = $this->tempStore->getIfOwner(static::TEMPSTORE_LOCK_KEY);
+    $stored_lock = $this->getTempStore()->getIfOwner(static::TEMPSTORE_LOCK_KEY);
     if (!$stored_lock) {
       throw new StageOwnershipException($this, $this->computeDestroyMessage(
         $unique_id,
@@ -687,7 +688,7 @@ abstract class StageBase implements LoggerAwareInterface {
   private function computeDestroyMessage(string $unique_id, TranslatableMarkup $fallback_message): TranslatableMarkup {
     // Check to see if we have a specific message about a stage with a
     // specific ID that was given.
-    return $this->tempStore->get(self::TEMPSTORE_DESTROYED_STAGES_INFO_PREFIX . $unique_id) ?? $fallback_message;
+    return $this->getTempStore()->get(self::TEMPSTORE_DESTROYED_STAGES_INFO_PREFIX . $unique_id) ?? $fallback_message;
   }
 
   /**
@@ -707,7 +708,7 @@ abstract class StageBase implements LoggerAwareInterface {
       throw new \LogicException('Stage must be claimed before performing any operations on it.');
     }
 
-    $stored_lock = $this->tempStore->getIfOwner(static::TEMPSTORE_LOCK_KEY);
+    $stored_lock = $this->getTempStore()->getIfOwner(static::TEMPSTORE_LOCK_KEY);
     if ($stored_lock !== $this->lock) {
       throw new StageOwnershipException($this, 'Stage is not owned by the current user or session.');
     }
@@ -740,10 +741,11 @@ abstract class StageBase implements LoggerAwareInterface {
     // Since the stage root can depend on site settings, store it so that
     // things won't break if the settings change during this stage's life
     // cycle.
-    $dir = $this->tempStore->get(self::TEMPSTORE_STAGING_ROOT_KEY);
+    $sharedTempStore = $this->getTempStore();
+    $dir = $sharedTempStore->get(self::TEMPSTORE_STAGING_ROOT_KEY);
     if (empty($dir)) {
       $dir = $this->pathLocator->getStagingRoot();
-      $this->tempStore->set(self::TEMPSTORE_STAGING_ROOT_KEY, $dir);
+      $sharedTempStore->set(self::TEMPSTORE_STAGING_ROOT_KEY, $dir);
     }
     return $dir;
   }
@@ -776,7 +778,7 @@ abstract class StageBase implements LoggerAwareInterface {
    * @see ::apply()
    */
   final public function isApplying(): bool {
-    $apply_time = $this->tempStore->get(self::TEMPSTORE_APPLY_TIME_KEY);
+    $apply_time = $this->getTempStore()->get(self::TEMPSTORE_APPLY_TIME_KEY);
     return isset($apply_time) && $this->time->getRequestTime() - $apply_time < 3600;
   }
 
@@ -831,8 +833,9 @@ abstract class StageBase implements LoggerAwareInterface {
    * @throws \Drupal\Core\TempStore\TempStoreException
    */
   protected function storeDestroyInfo(bool $force, ?TranslatableMarkup $message): void {
+    $sharedTempStore = $this->getTempStore();
     if (!$message) {
-      if ($this->tempStore->get(self::TEMPSTORE_CHANGES_APPLIED) === TRUE) {
+      if ($sharedTempStore->get(self::TEMPSTORE_CHANGES_APPLIED) === TRUE) {
         $message = $this->t('This operation has already been applied.');
       }
       else {
@@ -844,8 +847,8 @@ abstract class StageBase implements LoggerAwareInterface {
         }
       }
     }
-    [$id] = $this->tempStore->get(static::TEMPSTORE_LOCK_KEY);
-    $this->tempStore->set(self::TEMPSTORE_DESTROYED_STAGES_INFO_PREFIX . $id, $message);
+    [$id] = $sharedTempStore->get(static::TEMPSTORE_LOCK_KEY);
+    $sharedTempStore->set(self::TEMPSTORE_DESTROYED_STAGES_INFO_PREFIX . $id, $message);
   }
 
 }
