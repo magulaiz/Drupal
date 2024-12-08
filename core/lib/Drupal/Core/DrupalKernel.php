@@ -4,6 +4,7 @@ namespace Drupal\Core;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\EventFactory;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Component\Utility\UrlHelper;
@@ -1138,6 +1139,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * {@inheritdoc}
    */
   public function rebuildContainer() {
+    EventDispatcherFactory::reset();
     // Empty module properties and for them to be reloaded from scratch.
     $this->moduleList = NULL;
     $this->moduleData = [];
