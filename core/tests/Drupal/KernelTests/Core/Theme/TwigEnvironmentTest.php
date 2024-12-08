@@ -240,7 +240,9 @@ TWIG;
     // webserver A.
     touch('core/lib/Drupal/Core/Template/TwigExtension.php');
     clearstatcache(TRUE, 'core/lib/Drupal/Core/Template/TwigExtension.php');
-    $container_b = \Drupal::service('kernel')->rebuildContainer();
+    $kernel = \Drupal::service('kernel');
+    $request = \Drupal::request();
+    $container_b = $kernel->rebuildContainer();
 
     // Request 2 handled by webserver B.
     \Drupal::setContainer($container_b);
@@ -249,7 +251,9 @@ TWIG;
     $cache_filenames[] = $environment->getCache()->generateKey($template_name, $environment->getTemplateClass($template_name));
 
     // Request 3 handled by webserver A.
+    $container_a->set('kernel', $kernel);
     \Drupal::setContainer($container_a);
+    $container_a->get('request_stack')->push($request);
     $container = \Drupal::getContainer();
     // Emulate twig service reconstruct on new request.
     $container->set('twig', NULL);
@@ -259,6 +263,8 @@ TWIG;
 
     // Request 4 handled by webserver B.
     \Drupal::setContainer($container_b);
+    $container_b->set('kernel', $kernel);
+    $container_b->get('request_stack')->push($request);
     $container = \Drupal::getContainer();
     // Emulate twig service reconstruct on new request.
     $container->set('twig', NULL);
