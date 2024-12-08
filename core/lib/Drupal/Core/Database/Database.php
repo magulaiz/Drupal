@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Component\EventDispatcher\EventDispatcherFactory;
 use Drupal\Core\Database\Event\StatementEvent;
 use Drupal\Core\Database\Exception\EventException;
 use Drupal\Core\Extension\DatabaseDriverList;
@@ -150,10 +151,8 @@ abstract class Database {
       // initializing the connection is deprecated in drupal:11.2.0 and is
       // throwing an error from drupal:12.0.0.
       // See https://www.drupal.org/node/7654312', E_USER_DEPRECATED).
-      if (!\Drupal::hasService('event_dispatcher')) {
-        throw new EventException('The event dispatcher service is not available. Database API events can only be fired if the container is initialized');
-      }
-      self::initializeConnection($key, $target, \Drupal::service('event_dispatcher'));
+      $eventDispatcher = \Drupal::hasService('event_dispatcher') ? \Drupal::service('event_dispatcher') : EventDispatcherFactory::getInstance();
+      self::initializeConnection($key, $target, $eventDispatcher);
     }
 
     return self::$connections[$key][$target];

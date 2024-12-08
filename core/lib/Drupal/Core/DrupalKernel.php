@@ -73,6 +73,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     'services' => [
       'event_dispatcher' => [
         'class' => 'Symfony\Component\EventDispatcher\EventDispatcher',
+        'factory' => 'Drupal\Component\EventDispatcher\EventDispatcherFactory::getInstance',
       ],
       'database' => [
         'class' => 'Drupal\Core\Database\Connection',
