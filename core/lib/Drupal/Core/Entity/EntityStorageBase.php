@@ -592,7 +592,22 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected function buildPropertyQuery(QueryInterface $entity_query, array $values) {
     foreach ($values as $name => $value) {
       // Cast scalars to array so we can consistently use an IN condition.
-      $entity_query->condition($name, (array) $value, 'IN');
+      $value = (array) $value;
+      if (empty($value)) {
+        $entity_query->condition($name, 'IS NULL');
+      }
+      else {
+        if (in_array(NULL, $value, TRUE)) {
+          // The array contains a NULL value.
+          $or = $entity_query->orConditionGroup()
+            ->condition($name, 'IS NULL')
+            ->condition($name, $value, 'IN');
+          $entity_query->condition($or);
+        }
+        else {
+          $entity_query->condition($name, $value, 'IN');
+        }
+      }
     }
   }
 
