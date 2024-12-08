@@ -2,6 +2,7 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
+use Drupal\Component\EventDispatcher\EventDispatcherFactory;
 use Drupal\Component\Utility\FilterArray;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseNotFoundException;
@@ -9,6 +10,7 @@ use Drupal\Core\Database\ExceptionHandler;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Connection.
@@ -75,8 +77,16 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * Constructs a \Drupal\sqlite\Driver\Database\sqlite\Connection object.
    */
-  public function __construct(\PDO $connection, array $connection_options) {
-    parent::__construct($connection, $connection_options);
+  public function __construct(
+    \PDO $connection,
+    array $connection_options,
+    ?EventDispatcherInterface $eventDispatcher = NULL,
+  ) {
+    if ($eventDispatcher === NULL) {
+      @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
+      $eventDispatcher = EventDispatcherFactory::getInstance();
+    }
+    parent::__construct($connection, $connection_options, $eventDispatcher);
 
     // Empty prefix means query the main database -- no need to attach anything.
     $prefix = $this->connectionOptions['prefix'] ?? '';
