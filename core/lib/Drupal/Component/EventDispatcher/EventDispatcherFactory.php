@@ -10,13 +10,17 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 abstract class EventDispatcherFactory {
 
-  private static EventDispatcherInterface $eventDispatcher;
+  private static ?EventDispatcherInterface $eventDispatcher;
 
   public static function getInstance(): EventDispatcherInterface {
     if (!isset(self::$eventDispatcher)) {
       self::$eventDispatcher = new EventDispatcher();
     }
     return self::$eventDispatcher;
+  }
+
+  public static function reset(): void {
+    unset(self::$eventDispatcher);
   }
 
 }
