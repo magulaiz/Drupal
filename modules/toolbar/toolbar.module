@@ -34,6 +34,16 @@ function toolbar_permission() {
 }
 
 /**
+ * Implements hook_user_logout().
+ */
+function toolbar_user_logout($account) {
+  if (isset($_COOKIE['Drupal_toolbar_collapsed'])) {
+    setrawcookie('Drupal_toolbar_collapsed', '', REQUEST_TIME - 3600, '/');
+    unset($_COOKIE['Drupal_toolbar_collapsed']);
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function toolbar_theme($existing, $type, $theme, $path) {
