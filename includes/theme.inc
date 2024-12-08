@@ -813,6 +813,11 @@ function list_themes($refresh = FALSE) {
       if (isset($theme->info['base theme'])) {
         $theme->base_theme = $theme->info['base theme'];
       }
+      // The theme name is usually set. Set it from $theme->filename to prevent
+      // notices.
+      if (!isset($theme->info['name'])) {
+        $name = isset($theme->name) ? $theme->name : pathinfo($theme->filename, PATHINFO_FILENAME);
+      }
       // Status is normally retrieved from the database. Add zero values when
       // read from the installation directory to prevent notices.
       if (!isset($theme->status)) {
