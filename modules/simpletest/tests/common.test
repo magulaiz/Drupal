@@ -246,6 +246,24 @@ class CommonURLUnitTest extends DrupalWebTestCase {
     );
     $this->assertEqual(drupal_parse_url($url), $result, 'External URL parsed correctly.');
 
+    // URL with a question mark in the fragment
+    $url = 'http://drupal.org/path#foo=bar?baz=qux';
+    $result = array(
+      'path' => 'http://drupal.org/path',
+      'query' => NULL,
+      'fragment' => 'foo=bar?baz=qux',
+    );
+    $this->assertEqual(drupal_parse_url($url), $result, 'URL with question mark in fragment parsed correctly.');
+
+    // URL with a fragment value but no query string.
+    $url = 'http://drupal.org/path#foo';
+    $result = array(
+      'path' => 'http://drupal.org/path',
+      'query' => NULL,
+      'fragment' => 'foo',
+    );
+    $this->assertEqual(drupal_parse_url($url), $result, 'URL with a fragment value "foo" but no query string parsed correctly.');
+
     // Verify proper parsing of URLs when clean URLs are disabled.
     $result = array(
       'path' => 'foo/bar',

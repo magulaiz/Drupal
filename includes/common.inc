@@ -578,27 +578,39 @@ function drupal_parse_url($url) {
     'query' => array(),
     'fragment' => '',
   );
-
   // External URLs: not using parse_url() here, so we do not have to rebuild
   // the scheme, host, and path without having any use for it.
-  if (strpos($url, '://') !== FALSE) {
+  // The URL is considered external if it contains the '://' delimiter. Since
+  // a URL can also be passed as a query argument, we check if this delimiter
+  // appears in front of the '?' query argument delimiter.
+  $scheme_delimiter_position = strpos($url, '://');
+  $query_delimiter_position = strpos($url, '?');
+  if ($scheme_delimiter_position !== FALSE && ($query_delimiter_position === FALSE || $scheme_delimiter_position < $query_delimiter_position)) {
+    // Split off the fragment, if any.
+    if (str_contains($url, '#')) {
+      list(
+        $url,
+        $options['fragment'],
+      ) = explode('#', $url, 2);
+    }
     // Split off everything before the query string into 'path'.
-    $parts = explode('?', $url);
-    $options['path'] = $parts[0];
+    $parts = explode('?', $url, 2);
+    // Don't support URLs without a path, like 'http://'.
+    list(
+      ,
+      $path,
+    ) = explode('://', $parts[0], 2);
+    if ($path != '') {
+      $options['path'] = $parts[0];
+    }
     // If there is a query string, transform it into keyed query parameters.
     if (isset($parts[1])) {
-      $query_parts = explode('#', $parts[1]);
-      parse_str($query_parts[0], $options['query']);
-      // Take over the fragment, if there is any.
-      if (isset($query_parts[1])) {
-        $options['fragment'] = $query_parts[1];
-      }
+      parse_str($parts[1], $options['query']);
     }
   }
-  // Internal URLs.
   else {
-    // parse_url() does not support relative URLs, so make it absolute. E.g. the
-    // relative URL "foo/bar:1" isn't properly parsed.
+    // parse_url() does not support relative URLs, so make it absolute. For
+    // instance, the relative URL "foo/bar:1" isn't properly parsed.
     $parts = parse_url('http://example.com/' . $url);
     // Strip the leading slash that was just added.
     $options['path'] = substr($parts['path'], 1);
