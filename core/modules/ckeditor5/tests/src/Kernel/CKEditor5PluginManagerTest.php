@@ -169,6 +169,8 @@ YAML,
     // @see \Drupal\Core\DrupalKernel::guessApplicationRoot()
     $container->getDefinition('module_handler')->setArgument(0, '%app.root%');
 
+    $container->set('event_dispatcher', \Drupal::service('event_dispatcher'));
+
     // To discover per-test case config schema YAML files, work around the
     // static file cache in \Drupal\Core\Extension\ExtensionDiscovery. There is
     // no work-around that allows using both the files on disk and some in vfs.

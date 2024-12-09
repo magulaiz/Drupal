@@ -4,7 +4,7 @@ namespace Drupal\Core;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Component\EventDispatcher\Event;
-use Drupal\Component\EventDispatcher\EventFactory;
+use Drupal\Component\EventDispatcher\EventDispatcherFactory;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Component\Utility\UrlHelper;
@@ -1196,6 +1196,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Set the class loader which was registered as a synthetic service.
     $this->container->set('class_loader', $this->classLoader);
 
+    $this->container->set('event_dispatcher', EventDispatcherFactory::getInstance());
+
     if ($reload_module_handler) {
       $this->container->get('module_handler')->reload();
     }
@@ -1274,6 +1276,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Set the class loader which was registered as a synthetic service.
     $container->set('class_loader', $this->classLoader);
+
+    $container->set('event_dispatcher', EventDispatcherFactory::getInstance());
+
     return $container;
   }
 
@@ -1293,6 +1298,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->initializeServiceProviders();
     $container = $this->getContainerBuilder();
     $container->set('kernel', $this);
+    $container->set('event_dispatcher', EventDispatcherFactory::getInstance());
     $container->setParameter('container.modules', $this->getModulesParameter());
     $container->setParameter('install_profile', $this->getInstallProfile());
 
@@ -1337,6 +1343,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $container->register('class_loader')->setSynthetic(TRUE);
     $container->register('kernel', 'Symfony\Component\HttpKernel\KernelInterface')->setSynthetic(TRUE);
     $container->register('service_container', 'Symfony\Component\DependencyInjection\ContainerInterface')->setSynthetic(TRUE);
+    $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcherInterface')->setSynthetic(TRUE);
 
     // Register aliases of synthetic services for autowiring.
     $container->setAlias(DrupalKernelInterface::class, 'kernel');
