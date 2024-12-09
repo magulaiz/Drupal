@@ -480,8 +480,8 @@ function user_cancel_methods() {
       'access' => \Drupal::currentUser()->hasPermission('administer users'),
     ],
     'user_cancel_reassign_user' => [
-      'title' => t('Delete the account and make its content belong to the selected user. This action cannot be undone.', ['%anonymous-name' => $anonymous_name]),
-      'description' => t('Your account will be removed and all account information deleted. All of your content will be assigned to the configured user.', ['%anonymous-name' => $anonymous_name]),
+      'title' => t('Delete the account and make its content belong to the selected user. This action cannot be undone.'),
+      'description' => t('Your account will be removed and all account information deleted. All of your content will be assigned to the configured user.'),
     ],
   ];
   // Allow modules to customize account cancellation methods.

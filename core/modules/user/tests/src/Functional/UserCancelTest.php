@@ -737,7 +737,7 @@ class UserCancelTest extends BrowserTestBase {
   }
 
   /**
-   * Delete account and anonymize all content.
+   * Delete account and reassign all content to admin.
    */
   public function testUserReassignUser(): void {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
@@ -822,7 +822,7 @@ class UserCancelTest extends BrowserTestBase {
   }
 
   /**
-   * Delete account and anonymize all content using a batch process.
+   * Delete account and reassign content to admin using a batch process.
    */
   public function testUserReassignUserBatch(): void {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
@@ -860,7 +860,7 @@ class UserCancelTest extends BrowserTestBase {
     $user_storage->resetCache([$account->id()]);
     $this->assertNull($user_storage->load($account->id()), 'User is not found in the database.');
 
-    // Confirm that user's content has been attributed to anonymous user.
+    // Confirm that user's content has been attributed to admin user.
     $node_storage->resetCache(array_keys($nodes));
     $test_nodes = $node_storage->loadMultiple(array_keys($nodes));
     foreach ($test_nodes as $test_node) {
