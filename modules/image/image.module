@@ -1059,7 +1059,7 @@ function image_style_flush($style) {
   // Delete the style directory in each registered wrapper.
   $wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE);
   foreach ($wrappers as $wrapper => $wrapper_data) {
-    if (file_exists($directory = $wrapper . '://styles/' . $style['name'])) {
+    if (isset($style['name']) && file_exists($directory = $wrapper . '://styles/' . $style['name'])) {
       file_unmanaged_delete_recursive($directory);
     }
   }
