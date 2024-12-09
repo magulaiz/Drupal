@@ -1609,19 +1609,12 @@ function install_profile_modules(&$install_state) {
 
   $batch_builder = new BatchBuilder();
 
-  // Put modules into groups of up to the maximum batch size, or until a module
-  // states that it needs a container rebuild immediately after install.
+  // Put modules into groups of up to the maximum batch size.
   $index = 0;
   $module_groups = [];
   foreach (array_keys($required + $non_required) as $module) {
     $module_groups[$index][] = $module;
     if (count($module_groups[$index]) === Settings::get('core.multi_module_install_batch_size', 20)) {
-      $index++;
-    }
-    // @todo Consider reversing this logic so that modules must explicitly
-    // state that they need a container build.
-    // @see https://www.drupal.org/project/drupal/issues/3492235
-    elseif (!isset($files[$module]->info['container_rebuild_required']) || $files[$module]->info['container_rebuild_required']) {
       $index++;
     }
   }
