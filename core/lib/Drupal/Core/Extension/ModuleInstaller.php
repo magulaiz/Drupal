@@ -149,29 +149,32 @@ class ModuleInstaller implements ModuleInstallerInterface {
         @trigger_error("The module '$module' is deprecated. See " . $module_data[$module]->info['lifecycle_link'], E_USER_DEPRECATED);
       }
     }
-    if ($enable_dependencies) {
-      $module_list = $module_list ? array_combine($module_list, $module_list) : [];
-      if ($missing_modules = array_diff_key($module_list, $module_data)) {
-        // One or more of the given modules doesn't exist.
-        throw new MissingDependencyException(sprintf('Unable to install modules %s due to missing modules %s.', implode(', ', $module_list), implode(', ', $missing_modules)));
-      }
 
-      // Add dependencies to the list. The new modules will be processed as
-      // the foreach loop continues.
-      foreach ($module_list as $module => $value) {
-        foreach (array_keys($module_data[$module]->requires) as $dependency) {
-          if (!isset($module_data[$dependency])) {
-            // The dependency does not exist.
-            throw new MissingDependencyException("Unable to install modules: module '$module' is missing its dependency module $dependency.");
-          }
+    // Discover dependencies.
+    $dependencies = [];
+    $module_list = $module_list ? array_combine($module_list, $module_list) : [];
+    if ($enable_dependencies && $missing_modules = array_diff_key($module_list, $module_data)) {
+      // One or more of the given modules doesn't exist.
+      throw new MissingDependencyException(sprintf('Unable to install modules %s due to missing modules %s.', implode(', ', $module_list), implode(', ', $missing_modules)));
+    }
 
-          // Skip already installed modules.
-          if (!isset($module_list[$dependency]) && !isset($installed_modules[$dependency])) {
-            if ($module_data[$dependency]->info['core_incompatible']) {
-              throw new MissingDependencyException("Unable to install modules: module '$module'. Its dependency module '$dependency' is incompatible with this version of Drupal core.");
-            }
-            $module_list[$dependency] = $dependency;
+    // Add dependencies to the list. The new modules will be processed as
+    // the foreach loop continues.
+    foreach ($module_list as $module => $value) {
+      foreach (array_keys($module_data[$module]->requires) as $dependency) {
+        if (!isset($module_data[$dependency])) {
+          // The dependency does not exist.
+          throw new MissingDependencyException("Unable to install modules: module '$module' is missing its dependency module $dependency.");
+        }
+        $dependencies[$dependency] = $dependency;
+
+        // Add modules to the list to install if they are not already
+        // installed.
+        if ($enable_dependencies && !isset($module_list[$dependency]) && !isset($installed_modules[$dependency])) {
+          if ($module_data[$dependency]->info['core_incompatible']) {
+            throw new MissingDependencyException("Unable to install modules: module '$module'. Its dependency module '$dependency' is incompatible with this version of Drupal core.");
           }
+          $module_list[$dependency] = $dependency;
         }
       }
 
@@ -215,9 +218,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $index = 0;
     foreach ($module_list as $module) {
       $module_groups[$index][] = $module;
-      // @todo Consider reversing the behavior when the info key is not set.
-      // See https://www.drupal.org/project/drupal/issues/3492235
-      if (!isset($module_data[$module]->info['container_rebuild_required']) || $module_data[$module]->info['container_rebuild_required']) {
+      // If container_rebuild_required is TRUE or of the module is a dependency
+      // of another module currently being installed, make this the last module
+      // of the group so that a container rebuild happens immediately after it
+      // is installed.
+      if (!empty($module_data[$module]->info['container_rebuild_required']) && isset($dependencies[$module])) {
         $index++;
       }
     }
