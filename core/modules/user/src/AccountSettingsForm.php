@@ -458,7 +458,7 @@ class AccountSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     $form_values = $form_state->getValues();
     $method = $form_values['user_cancel_method'];
     $user_cancel_assign_user = $form_values['user_cancel_assign_user'];
