@@ -1297,6 +1297,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->initializeServiceProviders();
     $container = $this->getContainerBuilder();
     $container->set('kernel', $this);
+    $container->set('event_dispatcher', EventDispatcherFactory::getInstance());
     $container->setParameter('container.modules', $this->getModulesParameter());
     $container->setParameter('install_profile', $this->getInstallProfile());
 
