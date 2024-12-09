@@ -137,6 +137,27 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // re-scan and include any new modules that may have been added directly
     // into the filesystem.
     $module_data = \Drupal::service('extension.list.module')->reset()->getList();
+
+    // Add dependencies to the list. The new modules will be processed as
+    // the foreach loop continues.
+    $dependencies = [];
+    $module_list = $module_list ? array_combine($module_list, $module_list) : [];
+
+    foreach ($module_list as $module => $value) {
+      foreach (array_keys($module_data[$module]->requires) as $dependency) {
+        $dependencies[$dependency] = $dependency;
+        if ($enable_dependencies) {
+          $module_list[$dependency] = $dependency;
+        }
+      }
+    }
+
+    // Now that the full list of modules to be installed is built, check that
+    // the modules are actually installable.
+    if ($missing_modules = array_diff_key($module_list, $module_data)) {
+      // One or more of the given modules doesn't exist.
+      throw new MissingDependencyException(sprintf('Unable to install modules %s due to missing modules %s.', implode(', ', $module_list), implode(', ', $missing_modules)));
+    }
     foreach ($module_list as $module) {
       if (!empty($module_data[$module]->info['core_incompatible'])) {
         throw new MissingDependencyException("Unable to install modules: module '$module' is incompatible with this version of Drupal core.");
@@ -149,44 +170,14 @@ class ModuleInstaller implements ModuleInstallerInterface {
         @trigger_error("The module '$module' is deprecated. See " . $module_data[$module]->info['lifecycle_link'], E_USER_DEPRECATED);
       }
     }
+    // Set the actual module weights.
+    $module_list = array_map(function ($module) use ($module_data) {
+      return $module_data[$module]->sort;
+    }, $module_list);
 
-    // Discover dependencies.
-    $dependencies = [];
-    $module_list = $module_list ? array_combine($module_list, $module_list) : [];
-    if ($enable_dependencies && $missing_modules = array_diff_key($module_list, $module_data)) {
-      // One or more of the given modules doesn't exist.
-      throw new MissingDependencyException(sprintf('Unable to install modules %s due to missing modules %s.', implode(', ', $module_list), implode(', ', $missing_modules)));
-    }
-
-    // Add dependencies to the list. The new modules will be processed as
-    // the foreach loop continues.
-    foreach ($module_list as $module => $value) {
-      foreach (array_keys($module_data[$module]->requires) as $dependency) {
-        if (!isset($module_data[$dependency])) {
-          // The dependency does not exist.
-          throw new MissingDependencyException("Unable to install modules: module '$module' is missing its dependency module $dependency.");
-        }
-        $dependencies[$dependency] = $dependency;
-
-        // Add modules to the list to install if they are not already
-        // installed.
-        if ($enable_dependencies && !isset($module_list[$dependency]) && !isset($installed_modules[$dependency])) {
-          if ($module_data[$dependency]->info['core_incompatible']) {
-            throw new MissingDependencyException("Unable to install modules: module '$module'. Its dependency module '$dependency' is incompatible with this version of Drupal core.");
-          }
-          $module_list[$dependency] = $dependency;
-        }
-      }
-
-      // Set the actual module weights.
-      $module_list = array_map(function ($module) use ($module_data) {
-        return $module_data[$module]->sort;
-      }, $module_list);
-
-      // Sort the module list by their weights (reverse).
-      arsort($module_list);
-      $module_list = array_keys($module_list);
-    }
+    // Sort the module list by their weights (reverse).
+    arsort($module_list);
+    $module_list = array_keys($module_list);
 
     // Required for module installation checks.
     include_once $this->root . '/core/includes/install.inc';
