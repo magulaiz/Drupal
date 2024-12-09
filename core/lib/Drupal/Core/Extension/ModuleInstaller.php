@@ -146,7 +146,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     foreach ($module_list as $module => $value) {
       foreach (array_keys($module_data[$module]->requires) as $dependency) {
         $dependencies[$dependency] = $dependency;
-        if ($enable_dependencies) {
+        if ($enable_dependencies && !isset($installed_modules[$dependency])) {
           $module_list[$dependency] = $dependency;
         }
       }
