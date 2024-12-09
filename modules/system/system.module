@@ -2429,6 +2429,16 @@ function _system_rebuild_module_data() {
       continue;
     }
 
+    // Check for xss vulnerabilities.
+    foreach (array('name', 'version', 'package') as $check_plain_key) {
+      if (isset($module->info[$check_plain_key])) {
+        $module->info[$check_plain_key] = check_plain($module->info[$check_plain_key]);
+      }
+    }
+    if (isset($module->info['description'])) {
+      $module->info['description'] = filter_xss_admin($module->info['description']);
+    }
+
     // Add the info file modification time, so it becomes available for
     // contributed modules to use for ordering module lists.
     $module->info['mtime'] = filemtime(dirname($module->uri) . '/' . $module->name . '.info');
