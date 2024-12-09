@@ -805,6 +805,20 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test user password reset name default sanitation.
+   */
+  function testUserPasswordResetNameDefaultSanitation() {
+    // Test that string value is passed correctly.
+    $_GET['name'] = 'test';
+    $form = user_pass();
+    $this->assertEqual($form['name']['#default_value'], 'test');
+    // Non scalar values produce empty value.
+    $_GET['name'] = (object) ['test' => 'test'];
+    $form = user_pass();
+    $this->assertEqual($form['name']['#default_value'], '');
+  }
+
+  /**
    * Attempts login using an expired password reset link.
    */
   function testUserPasswordResetExpired() {
