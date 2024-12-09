@@ -3248,8 +3248,16 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->plainTextContent = FALSE;
     $this->elements = FALSE;
     $this->drupalSettings = array();
-    if (preg_match('/jQuery\.extend\(Drupal\.settings, (.*?)\);/', $content, $matches)) {
-      $this->drupalSettings = drupal_json_decode($matches[1]);
+
+    if (variable_get('drupal_settings_json')) {
+      if (preg_match('/\{(?:[^{}]|(?R))*\}/x', $content, $matches)) {
+        $this->drupalSettings = drupal_json_decode($matches[0]);
+      }
+    }
+    else {
+      if (preg_match('/jQuery\.extend\(Drupal\.settings, (.*?)\);/', $content, $matches)) {
+       $this->drupalSettings = drupal_json_decode($matches[1]);
+      }
     }
   }
 

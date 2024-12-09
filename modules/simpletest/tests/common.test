@@ -1676,6 +1676,11 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->assertRaw('misc/drupal.js', 'Default behavior: The front page of the site includes drupal.js.');
     $this->assertRaw('Drupal.settings', 'Default behavior: The front page of the site includes Drupal settings.');
     $this->assertRaw('basePath', 'Default behavior: The front page of the site includes the basePath Drupal setting.');
+    variable_set('drupal_settings_json', TRUE);
+    $this->drupalGet('');
+    $this->assertRaw('drupal-settings-json', 'When "drupal_settings_json" is TRUE. Default behavior: The front page of the site includes Drupal settings in json format.');
+    $this->assertRaw('misc/drupal-settings-loader.js', 'When "drupal_settings_json" is TRUE. Default behavior: The front page of the site includes Drupal settings loader.');
+    variable_del('drupal_settings_json');
 
     // The default front page should not use jQuery and other standard scripts
     // and settings when the 'javascript_always_use_jquery' variable is set to
@@ -1684,8 +1689,15 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->drupalGet('');
     $this->assertNoRaw('misc/jquery.js', 'When "javascript_always_use_jquery" is FALSE: The front page of the site does not include jquery.js.');
     $this->assertNoRaw('misc/drupal.js', 'When "javascript_always_use_jquery" is FALSE: The front page of the site does not include drupal.js.');
+    $this->assertNoRaw('drupal-settings-json', 'When "javascript_always_use_jquery" is FALSE: The front page of the site does not include Drupal settings in json format.');
+    $this->assertNoRaw('misc/drupal-settings-loader.js', 'When "javascript_always_use_jquery" is FALSE: The front page of the site does not include Drupal settings loader.');
     $this->assertNoRaw('Drupal.settings', 'When "javascript_always_use_jquery" is FALSE: The front page of the site does not include Drupal settings.');
     $this->assertNoRaw('basePath', 'When "javascript_always_use_jquery" is FALSE: The front page of the site does not include the basePath Drupal setting.');
+    variable_set('drupal_settings_json', TRUE);
+    $this->drupalGet('');
+    $this->assertNoRaw('drupal-settings-json', 'When "javascript_always_use_jquery" is FALSE and "drupal_settings_json" is TRUE: The front page of the site does not include Drupal settings in json format.');
+    $this->assertNoRaw('misc/drupal-settings-loader.js', 'When "javascript_always_use_jquery" is FALSE and "drupal_settings_json" is TRUE: The front page of the site does not include Drupal settings loader.');
+    variable_del('drupal_settings_json');
     variable_del('javascript_always_use_jquery');
 
     // When only settings have been added via drupal_add_js(), drupal_get_js()
@@ -1698,6 +1710,14 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->assertTrue(strpos($javascript, 'Drupal.settings') !== FALSE, 'Default behavior: The JavaScript returned by drupal_get_js() when only settings have been added includes Drupal.settings.');
     $this->assertTrue(strpos($javascript, 'basePath') !== FALSE, 'Default behavior: The JavaScript returned by drupal_get_js() when only settings have been added includes the basePath Drupal setting.');
     $this->assertTrue(strpos($javascript, 'testJavaScriptSetting') !== FALSE, 'Default behavior: The JavaScript returned by drupal_get_js() when only settings have been added includes the added Drupal settings.');
+    $this->resetStaticVariables();
+    variable_set('drupal_settings_json', TRUE);
+    drupal_add_js(array('testJavaScriptSetting' => 'test'), 'setting');
+    $javascript = drupal_get_js();
+    $this->assertTrue(strpos($javascript, 'Drupal.settings') === FALSE);
+    $this->assertTrue(strpos($javascript, 'drupal-settings-json') !== FALSE, 'When "drupal_settings_json" is TRUE. Default behavior: The JavaScript returned by drupal_get_js() when only settings have been added includes Drupal.settings in json format.');
+    $this->assertTrue(strpos($javascript, 'misc/drupal-settings-loader.js') !== FALSE, 'When "drupal_settings_json" is TRUE. Default behavior: The JavaScript returned by drupal_get_js() when only settings have been added includes drupal-settings-loader.js.');
+    variable_del('drupal_settings_json');
 
     // When only settings have been added via drupal_add_js() and the
     // 'javascript_always_use_jquery' variable is set to FALSE, drupal_get_js()
@@ -1713,6 +1733,14 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->assertTrue(strpos($javascript, 'Drupal.settings') === FALSE, 'When "javascript_always_use_jquery" is FALSE: The JavaScript returned by drupal_get_js() when only settings have been added does not include Drupal.settings.');
     $this->assertTrue(strpos($javascript, 'basePath') === FALSE, 'When "javascript_always_use_jquery" is FALSE: The JavaScript returned by drupal_get_js() when only settings have been added does not include the basePath Drupal setting.');
     $this->assertTrue(strpos($javascript, 'testJavaScriptSetting') === FALSE, 'When "javascript_always_use_jquery" is FALSE: The JavaScript returned by drupal_get_js() when only settings have been added does not include the added Drupal settings.');
+    $this->resetStaticVariables();
+    variable_set('drupal_settings_json', TRUE);
+    drupal_add_js(array('testJavaScriptSetting' => 'test'), 'setting');
+    $javascript = drupal_get_js();
+    $this->assertTrue(strpos($javascript, 'drupal-settings-json') === FALSE, 'When "javascript_always_use_jquery" is FALSE and "drupal_settings_json" is TRUE: The JavaScript returned by drupal_get_js() when only settings have been added does not include Drupal.settings in json format.');
+    $this->assertTrue(strpos($javascript, 'misc/drupal-settings-loader.js') === FALSE, 'When "javascript_always_use_jquery" is FALSE and "drupal_settings_json" is TRUE: The JavaScript returned by drupal_get_js() when only settings have been added does not include drupal-settings-loader.js.');
+    $this->assertTrue(strpos($javascript, 'Drupal.settings') === FALSE, 'When "javascript_always_use_jquery" is FALSE and "drupal_settings_json" is TRUE: The JavaScript returned by drupal_get_js() when only settings have been added does not include Drupal.settings.');
+    variable_del('drupal_settings_json');
     variable_del('javascript_always_use_jquery');
 
     // When a regular file has been added via drupal_add_js(), drupal_get_js()
@@ -1725,6 +1753,14 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->assertTrue(strpos($javascript, 'Drupal.settings') !== FALSE, 'Default behavior: The JavaScript returned by drupal_get_js() when a custom JavaScript file has been added includes Drupal.settings.');
     $this->assertTrue(strpos($javascript, 'basePath') !== FALSE, 'Default behavior: The JavaScript returned by drupal_get_js() when a custom JavaScript file has been added includes the basePath Drupal setting.');
     $this->assertTrue(strpos($javascript, 'misc/collapse.js') !== FALSE, 'Default behavior: The JavaScript returned by drupal_get_js() when a custom JavaScript file has been added includes the custom file.');
+    $this->resetStaticVariables();
+    variable_set('drupal_settings_json', TRUE);
+    drupal_add_js('misc/collapse.js');
+    $javascript = drupal_get_js();
+    $this->assertTrue(strpos($javascript, 'Drupal.settings') === FALSE, 'When "drupal_settings_json" is TRUE. The JavaScript returned by drupal_get_js() when a custom JavaScript file has been added does not includes Drupal.settings.');
+    $this->assertTrue(strpos($javascript, 'drupal-settings-json') !== FALSE, 'When "drupal_settings_json" is TRUE. The JavaScript returned by drupal_get_js() when a custom JavaScript file has been added includes Drupal.settings in json format.');
+    $this->assertTrue(strpos($javascript, 'misc/drupal-settings-loader.js') !== FALSE, ' When "drupal_settings_json" is TRUE. The JavaScript returned by drupal_get_js() when a custom JavaScript file has been added includes drupal-settings-loader.js.');
+    variable_del('drupal_settings_json');
 
     // When a regular file has been added via drupal_add_js() and the
     // 'javascript_always_use_jquery' variable is set to FALSE, drupal_get_js()
@@ -1739,6 +1775,13 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->assertTrue(strpos($javascript, 'Drupal.settings') !== FALSE, 'When "javascript_always_use_jquery" is FALSE: The JavaScript returned by drupal_get_js() when a custom JavaScript file has been added includes Drupal.settings.');
     $this->assertTrue(strpos($javascript, 'basePath') !== FALSE, 'When "javascript_always_use_jquery" is FALSE: The JavaScript returned by drupal_get_js() when a custom JavaScript file has been added includes the basePath Drupal setting.');
     $this->assertTrue(strpos($javascript, 'misc/collapse.js') !== FALSE, 'When "javascript_always_use_jquery" is FALSE: The JavaScript returned by drupal_get_js() when a custom JavaScript file has been added includes the custom file.');
+    $this->resetStaticVariables();
+    variable_set('drupal_settings_json', TRUE);
+    drupal_add_js('misc/collapse.js');
+    $javascript = drupal_get_js();
+    $this->assertTrue(strpos($javascript, 'drupal-settings-json') !== FALSE, 'When "javascript_always_use_jquery" is FALSE and "drupal_settings_json" is TRUE: The JavaScript returned by drupal_get_js() when a custom JavaScript file has been added includes Drupal.settings in json format.');
+    $this->assertTrue(strpos($javascript, 'misc/drupal-settings-loader.js') !== FALSE, 'When "javascript_always_use_jquery" is FALSE and "drupal_settings_json" is TRUE: The JavaScript returned by drupal_get_js() when a custom JavaScript file has been added includes drupal-settings-loader.js.');
+    variable_del('drupal_settings_json');
     variable_del('javascript_always_use_jquery');
 
     // When a file that does not require jQuery has been added via
@@ -1752,6 +1795,13 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->assertTrue(strpos($javascript, 'Drupal.settings') !== FALSE, 'Default behavior: The JavaScript returned by drupal_get_js() when a custom JavaScript file that does not require jQuery has been added includes Drupal.settings.');
     $this->assertTrue(strpos($javascript, 'basePath') !== FALSE, 'Default behavior: The JavaScript returned by drupal_get_js() when a custom JavaScript file that does not require jQuery has been added includes the basePath Drupal setting.');
     $this->assertTrue(strpos($javascript, 'misc/collapse.js') !== FALSE, 'Default behavior: The JavaScript returned by drupal_get_js() when a custom JavaScript file that does not require jQuery has been added includes the custom file.');
+    $this->resetStaticVariables();
+    variable_set('drupal_settings_json', TRUE);
+    drupal_add_js('misc/collapse.js', array('requires_jquery' => FALSE));
+    $javascript = drupal_get_js();
+    $this->assertTrue(strpos($javascript, 'drupal-settings-json') !== FALSE, 'When "drupal_settings_json" is TRUE. The JavaScript returned by drupal_get_js() when a custom JavaScript file that does not require jQuery has been added includes Drupal.settings in json format.');
+    $this->assertTrue(strpos($javascript, 'misc/drupal-settings-loader.js') !== FALSE, 'When "drupal_settings_json" is TRUE. The JavaScript returned by drupal_get_js() when a custom JavaScript file that does not require jQuery has been added includes drupal-settings-loader.js.');
+    variable_del('drupal_settings_json');
 
     // When a file that does not require jQuery has been added via
     // drupal_add_js() and the 'javascript_always_use_jquery' variable is set
@@ -1766,6 +1816,13 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->assertTrue(strpos($javascript, 'Drupal.settings') === FALSE, 'When "javascript_always_use_jquery" is FALSE: The JavaScript returned by drupal_get_js() when a custom JavaScript file that does not require jQuery has been added does not include Drupal.settings.');
     $this->assertTrue(strpos($javascript, 'basePath') === FALSE, 'When "javascript_always_use_jquery" is FALSE: The JavaScript returned by drupal_get_js() when a custom JavaScript file that does not require jQuery has been added does not include the basePath Drupal setting.');
     $this->assertTrue(strpos($javascript, 'misc/collapse.js') !== FALSE, 'When "javascript_always_use_jquery" is FALSE: The JavaScript returned by drupal_get_js() when a custom JavaScript file that does not require jQuery has been added includes the custom file.');
+    $this->resetStaticVariables();
+    variable_set('drupal_settings_json', TRUE);
+    drupal_add_js('misc/collapse.js', array('requires_jquery' => FALSE));
+    $javascript = drupal_get_js();
+    $this->assertTrue(strpos($javascript, 'drupal-settings-json') === FALSE, 'When "javascript_always_use_jquery" is FALSE and "drupal_settings_json" is TRUE: The JavaScript returned by drupal_get_js() when a custom JavaScript file that does not require jQuery has been added does not include Drupal.settings in json format.');
+    $this->assertTrue(strpos($javascript, 'misc/drupal-settings-loader.js') === FALSE, 'When "javascript_always_use_jquery" is FALSE and "drupal_settings_json" is TRUE: The JavaScript returned by drupal_get_js() when a custom JavaScript file that does not require jQuery has been added does not includes the drupal-settings-loader.js.');
+    variable_del('drupal_settings_json');
     variable_del('javascript_always_use_jquery');
 
     // When 'javascript_always_use_jquery' is set to FALSE and a file that does
@@ -1783,6 +1840,14 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->assertTrue(strpos($javascript, 'basePath') !== FALSE, 'When "javascript_always_use_jquery" is FALSE: The JavaScript returned by drupal_get_js() when at least one custom JavaScript file that requires jQuery has been added includes the basePath Drupal setting.');
     $this->assertTrue(strpos($javascript, 'misc/collapse.js') !== FALSE, 'When "javascript_always_use_jquery" is FALSE: The JavaScript returned by drupal_get_js() when at least one custom JavaScript file that requires jQuery has been added includes the first custom file.');
     $this->assertTrue(strpos($javascript, 'misc/ajax.js') !== FALSE, 'When "javascript_always_use_jquery" is FALSE: The JavaScript returned by drupal_get_js() when at least one custom JavaScript file that requires jQuery has been added includes the second custom file.');
+    $this->resetStaticVariables();
+    variable_set('drupal_settings_json', TRUE);
+    drupal_add_js('misc/collapse.js', array('requires_jquery' => FALSE));
+    drupal_add_js('misc/ajax.js');
+    $javascript = drupal_get_js();
+    $this->assertTrue(strpos($javascript, 'drupal-settings-json') !== FALSE, 'When "javascript_always_use_jquery" is FALSE and "drupal_settings_json" is TRUE: The JavaScript returned by drupal_get_js() when at least one custom JavaScript file that requires jQuery has been added includes Drupal.settings in json format.');
+    $this->assertTrue(strpos($javascript, 'misc/drupal-settings-loader.js') !== FALSE, 'When "javascript_always_use_jquery" is FALSE and "drupal_settings_json" is TRUE: The JavaScript returned by drupal_get_js() when at least one custom JavaScript file that requires jQuery has been added includes drupal-settings-loader.js.');
+    variable_del('drupal_settings_json');
     variable_del('javascript_always_use_jquery');
   }
 

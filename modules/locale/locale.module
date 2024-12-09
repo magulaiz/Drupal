@@ -911,15 +911,17 @@ function locale_js_alter(&$javascript) {
   require_once DRUPAL_ROOT . '/includes/locale.inc';
 
   foreach ($javascript as $item) {
-    if ($item['type'] == 'file') {
-      $files = TRUE;
-      $filepath = $item['data'];
-      if (!in_array($filepath, $parsed)) {
-        // Don't parse our own translations files.
-        if (substr($filepath, 0, strlen($dir)) != $dir) {
-          _locale_parse_js_file($filepath);
-          $parsed[] = $filepath;
-          $new_files = TRUE;
+    if (array_key_exists('type', $item)) {
+      if ($item['type'] == 'file') {
+        $files = TRUE;
+        $filepath = $item['data'];
+        if (!in_array($filepath, $parsed)) {
+          // Don't parse our own translations files.
+          if (substr($filepath, 0, strlen($dir)) != $dir) {
+            _locale_parse_js_file($filepath);
+            $parsed[] = $filepath;
+            $new_files = TRUE;
+          }
         }
       }
     }

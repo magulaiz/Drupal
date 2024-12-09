@@ -4401,13 +4401,29 @@ function drupal_add_js($data = NULL, $options = NULL) {
           'scope' => 'header',
           'group' => JS_LIBRARY,
           'every_page' => TRUE,
-          'weight' => -1,
+          'weight' => -2,
           'requires_jquery' => TRUE,
           'preprocess' => TRUE,
           'cache' => TRUE,
           'defer' => FALSE,
         ),
       );
+
+      if (variable_get('drupal_settings_json')) {
+        $default_javascript['misc/drupal-settings-loader.js'] = array(
+          'data' => 'misc/drupal-settings-loader.js',
+          'type' => 'file',
+          'scope' => 'header',
+          'group' => JS_LIBRARY,
+          'every_page' => TRUE,
+          'weight' => -1,
+          'requires_jquery' => TRUE,
+          'preprocess' => TRUE,
+          'cache' => TRUE,
+          'defer' => FALSE,
+        );
+      }
+
       $javascript = drupal_array_merge_deep($javascript, $default_javascript);
       // Register all required libraries.
       drupal_add_library('system', 'jquery', TRUE);
@@ -4513,7 +4529,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
   // Filter out elements of the given scope.
   $items = array();
   foreach ($javascript as $key => $item) {
-    if ($item['scope'] == $scope) {
+    if (array_key_exists('scope', $item) && $item['scope'] == $scope) {
       $items[$key] = $item;
     }
   }
@@ -4609,13 +4625,31 @@ function drupal_pre_render_scripts(array $elements) {
   );
 
   foreach ($elements['#items'] as $item) {
-    $query_string =  empty($item['version']) ? $default_query_string : $js_version_string . $item['version'];
+    $query_string = empty($item['version']) ? $default_query_string : $js_version_string . $item['version'];
 
     switch ($item['type']) {
       case 'setting':
         $js_element = $element;
+        // The "drupal_settings_json" variable determines if drupalSettings
+        // should be displayed in JSON format, to allow for CSP (content
+        // security policy). This should be set to FALSE by default to allow for
+        // backwards compatibility.
+        if (variable_get('drupal_settings_json', FALSE)) {
+          $js_element['#attributes'] = array(
+            // This type attribute prevents this from being parsed as an inline
+            // script.
+            'type' => 'application/json',
+            'data-drupal-selector' => 'drupal-settings-json',
+          );
+          $js_element['#value'] = drupal_json_encode(drupal_array_merge_deep_array($item['data']));
+          $settings[] = $js_element;
+          // JSON settings object must come before json-settings-loader.js.
+          $settings['#weight'] = $scripts['#weight'] - 10;
+          break;
+        }
+
         $js_element['#value_prefix'] = $embed_prefix;
-        $js_element['#value'] = 'jQuery.extend(Drupal.settings, ' . drupal_json_encode(drupal_array_merge_deep_array($item['data'])) . ");";
+        $js_element['#value'] = 'jQuery.extend(Drupal.settings, ' . drupal_json_encode(drupal_array_merge_deep_array($item['data'])) . ');';
         $js_element['#value_suffix'] = $embed_suffix;
         $settings[] = $js_element;
         break;
