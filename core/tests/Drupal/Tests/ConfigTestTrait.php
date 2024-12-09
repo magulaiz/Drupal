@@ -26,21 +26,21 @@ trait ConfigTestTrait {
     if (!$this->configImporter) {
       // Set up the ConfigImporter object for testing.
       $storage_comparer = new StorageComparer(
-        $this->container->get('config.storage.sync'),
-        $this->container->get('config.storage')
+        \Drupal::service('config.storage.sync'),
+        \Drupal::service('config.storage')
       );
       $this->configImporter = new ConfigImporter(
         $storage_comparer,
-        $this->container->get('event_dispatcher'),
-        $this->container->get('config.manager'),
-        $this->container->get('lock'),
-        $this->container->get('config.typed'),
-        $this->container->get('module_handler'),
-        $this->container->get('module_installer'),
-        $this->container->get('theme_handler'),
-        $this->container->get('string_translation'),
-        $this->container->get('extension.list.module'),
-        $this->container->get('extension.list.theme')
+        \Drupal::service('event_dispatcher'),
+        \Drupal::service('config.manager'),
+        \Drupal::service('lock'),
+        \Drupal::service('config.typed'),
+        \Drupal::service('module_handler'),
+        \Drupal::service('module_installer'),
+        \Drupal::service('theme_handler'),
+        \Drupal::service('string_translation'),
+        \Drupal::service('extension.list.module'),
+        \Drupal::service('extension.list.theme')
       );
     }
     // Always recalculate the changelist when called.

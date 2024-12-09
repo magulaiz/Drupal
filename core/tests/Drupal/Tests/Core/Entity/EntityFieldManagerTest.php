@@ -159,7 +159,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->typedDataManager->getDefinition('field_item:boolean')->willReturn([
       'class' => BooleanItem::class,
     ]);
-    $this->container->get('typed_data_manager')->willReturn($this->typedDataManager->reveal());
+    \Drupal::service('typed_data_manager')->willReturn($this->typedDataManager->reveal());
 
     $this->moduleHandler = $this->prophesize(ModuleHandlerInterface::class);
     $this->moduleHandler->alter('entity_base_field_info', Argument::type('array'), Argument::any())->willReturn(NULL);
@@ -593,10 +593,10 @@ class EntityFieldManagerTest extends UnitTestCase {
     $field_type_manager = $this->prophesize(FieldTypePluginManagerInterface::class);
     $field_type_manager->getDefaultStorageSettings('boolean')->willReturn([]);
     $field_type_manager->getDefaultFieldSettings('boolean')->willReturn([]);
-    $this->container->get('plugin.manager.field.field_type')->willReturn($field_type_manager->reveal());
+    \Drupal::service('plugin.manager.field.field_type')->willReturn($field_type_manager->reveal());
 
     $string_translation = $this->prophesize(TranslationInterface::class);
-    $this->container->get('string_translation')->willReturn($string_translation->reveal());
+    \Drupal::service('string_translation')->willReturn($string_translation->reveal());
 
     $entity_class = EntityTypeManagerTestEntity::class;
 
@@ -650,7 +650,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->setUpEntityTypeDefinitions();
 
     $this->cacheTagsInvalidator->invalidateTags(['entity_field_info'])->shouldBeCalled();
-    $this->container->get('cache_tags.invalidator')->willReturn($this->cacheTagsInvalidator->reveal())->shouldBeCalled();
+    \Drupal::service('cache_tags.invalidator')->willReturn($this->cacheTagsInvalidator->reveal())->shouldBeCalled();
 
     $this->typedDataManager->clearCachedDefinitions()->shouldBeCalled();
 

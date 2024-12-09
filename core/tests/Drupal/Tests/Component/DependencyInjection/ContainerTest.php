@@ -81,8 +81,8 @@ class ContainerTest extends TestCase {
    * @covers ::getParameter
    */
   public function testGetParameter(): void {
-    $this->assertEquals($this->containerDefinition['parameters']['some_config'], $this->container->getParameter('some_config'), 'Container parameter matches for %some_config%.');
-    $this->assertEquals($this->containerDefinition['parameters']['some_other_config'], $this->container->getParameter('some_other_config'), 'Container parameter matches for %some_other_config%.');
+    $this->assertEquals($this->containerDefinition['parameters']['some_config'], \Drupal::serviceParameter('some_config'), 'Container parameter matches for %some_config%.');
+    $this->assertEquals($this->containerDefinition['parameters']['some_other_config'], \Drupal::serviceParameter('some_other_config'), 'Container parameter matches for %some_other_config%.');
   }
 
   /**
@@ -94,7 +94,7 @@ class ContainerTest extends TestCase {
    */
   public function testGetParameterIfNotFound(): void {
     $this->expectException(ParameterNotFoundException::class);
-    $this->container->getParameter('parameter_that_does_not_exist');
+    \Drupal::serviceParameter('parameter_that_does_not_exist');
   }
 
   /**
@@ -104,7 +104,7 @@ class ContainerTest extends TestCase {
    */
   public function testGetParameterIfNotFoundBecauseNull(): void {
     $this->expectException(ParameterNotFoundException::class);
-    $this->container->getParameter(NULL);
+    \Drupal::serviceParameter(NULL);
   }
 
   /**
@@ -127,7 +127,7 @@ class ContainerTest extends TestCase {
     $container_definition['frozen'] = FALSE;
     $this->container = new $this->containerClass($container_definition);
     $this->container->setParameter('some_config', 'new_value');
-    $this->assertEquals('new_value', $this->container->getParameter('some_config'), 'Container parameters can be set.');
+    $this->assertEquals('new_value', \Drupal::serviceParameter('some_config'), 'Container parameters can be set.');
   }
 
   /**
@@ -148,18 +148,18 @@ class ContainerTest extends TestCase {
    * @covers ::createService
    */
   public function testGet(): void {
-    $container = $this->container->get('service_container');
+    $container = \Drupal::service('service_container');
     $this->assertSame($this->container, $container, 'Container can be retrieved from itself.');
 
     // Retrieve services of the container.
     $other_service_class = $this->containerDefinition['services']['other.service']['class'];
-    $other_service = $this->container->get('other.service');
+    $other_service = \Drupal::service('other.service');
     $this->assertInstanceOf($other_service_class, $other_service);
 
     $some_parameter = $this->containerDefinition['parameters']['some_config'];
     $some_other_parameter = $this->containerDefinition['parameters']['some_other_config'];
 
-    $service = $this->container->get('service.provider');
+    $service = \Drupal::service('service.provider');
 
     $this->assertEquals($other_service, $service->getSomeOtherService(), '@other.service was injected via constructor.');
     $this->assertEquals($some_parameter, $service->getSomeParameter(), '%some_config% was injected via constructor.');
@@ -175,8 +175,8 @@ class ContainerTest extends TestCase {
    * @covers ::createService
    */
   public function testGetForNonSharedService(): void {
-    $service = $this->container->get('non_shared_service');
-    $service2 = $this->container->get('non_shared_service');
+    $service = \Drupal::service('non_shared_service');
+    $service2 = \Drupal::service('non_shared_service');
 
     $this->assertNotSame($service, $service2, 'Non shared services are always re-instantiated.');
   }
@@ -203,11 +203,11 @@ class ContainerTest extends TestCase {
    * @covers ::set
    */
   public function testSet(): void {
-    $this->assertNull($this->container->get('new_id', ContainerInterface::NULL_ON_INVALID_REFERENCE));
+    $this->assertNull(\Drupal::service('new_id', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     $mock_service = new MockService();
     $this->container->set('new_id', $mock_service);
 
-    $this->assertSame($mock_service, $this->container->get('new_id'), 'A manual set service works as expected.');
+    $this->assertSame($mock_service, \Drupal::service('new_id'), 'A manual set service works as expected.');
   }
 
   /**
@@ -243,7 +243,7 @@ class ContainerTest extends TestCase {
    */
   public function testGetForCircularServices(): void {
     $this->expectException(ServiceCircularReferenceException::class);
-    $this->container->get('circular_dependency');
+    \Drupal::service('circular_dependency');
   }
 
   /**
@@ -256,7 +256,7 @@ class ContainerTest extends TestCase {
    */
   public function testGetForNonExistentService(): void {
     $this->expectException(ServiceNotFoundException::class);
-    $this->container->get('service_not_exists');
+    \Drupal::service('service_not_exists');
   }
 
   /**
@@ -287,7 +287,7 @@ class ContainerTest extends TestCase {
    * @covers ::resolveServicesAndParameters
    */
   public function testGetForNonExistentParameterDependency(): void {
-    $service = $this->container->get('service_parameter_not_exists', ContainerInterface::NULL_ON_INVALID_REFERENCE);
+    $service = \Drupal::service('service_parameter_not_exists', ContainerInterface::NULL_ON_INVALID_REFERENCE);
     $this->assertNull($service, 'Service is NULL.');
   }
 
@@ -299,13 +299,13 @@ class ContainerTest extends TestCase {
    * @covers ::resolveServicesAndParameters
    */
   public function testGetForParameterDependencyWithExceptionOnSecondCall(): void {
-    $service = $this->container->get('service_parameter_not_exists', ContainerInterface::NULL_ON_INVALID_REFERENCE);
+    $service = \Drupal::service('service_parameter_not_exists', ContainerInterface::NULL_ON_INVALID_REFERENCE);
     $this->assertNull($service, 'Service is NULL.');
 
     // Reset the service.
     $this->container->set('service_parameter_not_exists', NULL);
     $this->expectException(InvalidArgumentException::class);
-    $this->container->get('service_parameter_not_exists');
+    \Drupal::service('service_parameter_not_exists');
   }
 
   /**
@@ -317,7 +317,7 @@ class ContainerTest extends TestCase {
    */
   public function testGetForNonExistentParameterDependencyWithException(): void {
     $this->expectException(InvalidArgumentException::class);
-    $this->container->get('service_parameter_not_exists');
+    \Drupal::service('service_parameter_not_exists');
   }
 
   /**
@@ -328,7 +328,7 @@ class ContainerTest extends TestCase {
    * @covers ::resolveServicesAndParameters
    */
   public function testGetForNonExistentServiceDependency(): void {
-    $service = $this->container->get('service_dependency_not_exists', ContainerInterface::NULL_ON_INVALID_REFERENCE);
+    $service = \Drupal::service('service_dependency_not_exists', ContainerInterface::NULL_ON_INVALID_REFERENCE);
     $this->assertNull($service, 'Service is NULL.');
   }
 
@@ -342,7 +342,7 @@ class ContainerTest extends TestCase {
    */
   public function testGetForNonExistentServiceDependencyWithException(): void {
     $this->expectException(ServiceNotFoundException::class);
-    $this->container->get('service_dependency_not_exists');
+    \Drupal::service('service_dependency_not_exists');
   }
 
   /**
@@ -352,7 +352,7 @@ class ContainerTest extends TestCase {
    * @covers ::createService
    */
   public function testGetForNonExistentServiceWhenUsingNull(): void {
-    $this->assertNull($this->container->get('service_not_exists', ContainerInterface::NULL_ON_INVALID_REFERENCE), 'Not found service does not throw exception.');
+    $this->assertNull(\Drupal::service('service_not_exists', ContainerInterface::NULL_ON_INVALID_REFERENCE), 'Not found service does not throw exception.');
   }
 
   /**
@@ -362,7 +362,7 @@ class ContainerTest extends TestCase {
    */
   public function testGetForNonExistentNULLService(): void {
     $this->expectException(ServiceNotFoundException::class);
-    $this->container->get(NULL);
+    \Drupal::service(NULL);
   }
 
   /**
@@ -386,9 +386,9 @@ class ContainerTest extends TestCase {
    * @covers ::getAlternatives
    */
   public function testGetForNonExistentServiceWithExceptionOnSecondCall(): void {
-    $this->assertNull($this->container->get('service_not_exists', ContainerInterface::NULL_ON_INVALID_REFERENCE), 'Not found service does nto throw exception.');
+    $this->assertNull(\Drupal::service('service_not_exists', ContainerInterface::NULL_ON_INVALID_REFERENCE), 'Not found service does nto throw exception.');
     $this->expectException(ServiceNotFoundException::class);
-    $this->container->get('service_not_exists');
+    \Drupal::service('service_not_exists');
   }
 
   /**
@@ -398,8 +398,8 @@ class ContainerTest extends TestCase {
    * @covers ::createService
    */
   public function testGetForAliasedService(): void {
-    $service = $this->container->get('service.provider');
-    $aliased_service = $this->container->get('service.provider_alias');
+    $service = \Drupal::service('service.provider');
+    $aliased_service = \Drupal::service('service.provider_alias');
     $this->assertSame($service, $aliased_service);
   }
 
@@ -412,7 +412,7 @@ class ContainerTest extends TestCase {
   public function testGetForSyntheticService(): void {
     $synthetic_service = new \stdClass();
     $this->container->set('synthetic', $synthetic_service);
-    $test_service = $this->container->get('synthetic');
+    $test_service = \Drupal::service('synthetic');
     $this->assertSame($synthetic_service, $test_service);
   }
 
@@ -424,7 +424,7 @@ class ContainerTest extends TestCase {
    */
   public function testGetForSyntheticServiceWithException(): void {
     $this->expectException(RuntimeException::class);
-    $this->container->get('synthetic');
+    \Drupal::service('synthetic');
   }
 
   /**
@@ -434,7 +434,7 @@ class ContainerTest extends TestCase {
    * @covers ::createService
    */
   public function testGetWithFileInclude(): void {
-    $this->container->get('container_test_file_service_test');
+    \Drupal::service('container_test_file_service_test');
     $this->assertTrue(function_exists('container_test_file_service_test_service_function'));
     $this->assertEquals('Hello Container', container_test_file_service_test_service_function());
   }
@@ -449,7 +449,7 @@ class ContainerTest extends TestCase {
   public function testGetForInstantiationWithVariousArgumentLengths(): void {
     $args = [];
     for ($i = 0; $i < 12; $i++) {
-      $instantiation_service = $this->container->get('service_test_instantiation_' . $i);
+      $instantiation_service = \Drupal::service('service_test_instantiation_' . $i);
       $this->assertEquals($args, $instantiation_service->getArguments());
       $args[] = 'arg_' . $i;
     }
@@ -463,7 +463,7 @@ class ContainerTest extends TestCase {
    */
   public function testGetForWrongFactory(): void {
     $this->expectException(RuntimeException::class);
-    $this->container->get('wrong_factory');
+    \Drupal::service('wrong_factory');
   }
 
   /**
@@ -473,8 +473,8 @@ class ContainerTest extends TestCase {
    * @covers ::createService
    */
   public function testGetForFactoryService(): void {
-    $factory_service = $this->container->get('factory_service');
-    $factory_service_class = $this->container->getParameter('factory_service_class');
+    $factory_service = \Drupal::service('factory_service');
+    $factory_service_class = \Drupal::serviceParameter('factory_service_class');
     $this->assertInstanceOf($factory_service_class, $factory_service);
   }
 
@@ -485,8 +485,8 @@ class ContainerTest extends TestCase {
    * @covers ::createService
    */
   public function testGetForFactoryClass(): void {
-    $service = $this->container->get('service.provider');
-    $factory_service = $this->container->get('factory_class');
+    $service = \Drupal::service('service.provider');
+    $factory_service = \Drupal::service('factory_class');
 
     $this->assertInstanceOf(get_class($service), $factory_service);
     $this->assertEquals('bar', $factory_service->getSomeParameter(), 'Correct parameter was passed via the factory class instantiation.');
@@ -501,7 +501,7 @@ class ContainerTest extends TestCase {
    */
   public function testGetForConfiguratorWithException(): void {
     $this->expectException(InvalidArgumentException::class);
-    $this->container->get('configurable_service_exception');
+    \Drupal::service('configurable_service_exception');
   }
 
   /**
@@ -535,12 +535,12 @@ class ContainerTest extends TestCase {
    * @covers ::resolveServicesAndParameters
    */
   public function testResolveServicesAndParametersForPrivateService(): void {
-    $service = $this->container->get('service_using_private');
+    $service = \Drupal::service('service_using_private');
     $private_service = $service->getSomeOtherService();
     $this->assertEquals('really_private_lama', $private_service->getSomeParameter(), 'Private was found successfully.');
 
     // Test that sharing the same private services works.
-    $service = $this->container->get('another_service_using_private');
+    $service = \Drupal::service('another_service_using_private');
     $another_private_service = $service->getSomeOtherService();
     $this->assertNotSame($private_service, $another_private_service, 'Private service is not shared.');
     $this->assertEquals('really_private_lama', $private_service->getSomeParameter(), 'Private was found successfully.');
@@ -554,12 +554,12 @@ class ContainerTest extends TestCase {
    * @covers ::resolveServicesAndParameters
    */
   public function testResolveServicesAndParametersForSharedPrivateService(): void {
-    $service = $this->container->get('service_using_shared_private');
+    $service = \Drupal::service('service_using_shared_private');
     $private_service = $service->getSomeOtherService();
     $this->assertEquals('really_private_lama', $private_service->getSomeParameter(), 'Private was found successfully.');
 
     // Test that sharing the same private services works.
-    $service = $this->container->get('another_service_using_shared_private');
+    $service = \Drupal::service('another_service_using_shared_private');
     $same_private_service = $service->getSomeOtherService();
     $this->assertSame($private_service, $same_private_service, 'Private service is shared.');
     $this->assertEquals('really_private_lama', $private_service->getSomeParameter(), 'Private was found successfully.');
@@ -573,8 +573,8 @@ class ContainerTest extends TestCase {
    * @covers ::resolveServicesAndParameters
    */
   public function testResolveServicesAndParametersForArgumentsUsingDeepArray(): void {
-    $service = $this->container->get('service_using_array');
-    $other_service = $this->container->get('other.service');
+    $service = \Drupal::service('service_using_array');
+    $other_service = \Drupal::service('other.service');
     $this->assertEquals($other_service, $service->getSomeOtherService(), '@other.service was injected via constructor.');
   }
 
@@ -586,7 +586,7 @@ class ContainerTest extends TestCase {
    * @covers ::resolveServicesAndParameters
    */
   public function testResolveServicesAndParametersForOptionalServiceDependencies(): void {
-    $service = $this->container->get('service_with_optional_dependency');
+    $service = \Drupal::service('service_with_optional_dependency');
     $this->assertNull($service->getSomeOtherService(), 'other service was NULL was expected.');
   }
 
@@ -598,8 +598,8 @@ class ContainerTest extends TestCase {
    * @covers ::resolveServicesAndParameters
    */
   public function testResolveServicesAndParametersForServiceReferencedViaServiceClosure(): void {
-    $service = $this->container->get('service_within_service_closure');
-    $other_service = $this->container->get('other.service');
+    $service = \Drupal::service('service_within_service_closure');
+    $other_service = \Drupal::service('other.service');
     $factory_function = $service->getSomeOtherService();
     $this->assertInstanceOf(\Closure::class, $factory_function);
     $this->assertEquals($other_service, call_user_func($factory_function));
@@ -614,7 +614,7 @@ class ContainerTest extends TestCase {
    */
   public function testResolveServicesAndParametersForInvalidArgument(): void {
     $this->expectException(InvalidArgumentException::class);
-    $this->container->get('invalid_argument_service');
+    \Drupal::service('invalid_argument_service');
   }
 
   /**
@@ -631,7 +631,7 @@ class ContainerTest extends TestCase {
     if (!$this->machineFormat) {
       throw new InvalidArgumentException('Simulating the test failure.');
     }
-    $this->container->get('invalid_arguments_service');
+    \Drupal::service('invalid_arguments_service');
   }
 
   /**
@@ -642,8 +642,8 @@ class ContainerTest extends TestCase {
    * @covers ::resolveServicesAndParameters
    */
   public function testResolveServicesAndParametersForServiceInstantiatedFromParameter(): void {
-    $service = $this->container->get('service.provider');
-    $test_service = $this->container->get('service_with_parameter_service');
+    $service = \Drupal::service('service.provider');
+    $test_service = \Drupal::service('service_with_parameter_service');
     $this->assertSame($service, $test_service->getSomeOtherService(), 'Service was passed via parameter.');
   }
 
@@ -654,7 +654,7 @@ class ContainerTest extends TestCase {
    */
   public function testInitialized(): void {
     $this->assertFalse($this->container->initialized('late.service'), 'Late service is not initialized.');
-    $this->container->get('late.service');
+    \Drupal::service('late.service');
     $this->assertTrue($this->container->initialized('late.service'), 'Late service is initialized after it was retrieved once.');
   }
 
@@ -665,7 +665,7 @@ class ContainerTest extends TestCase {
    */
   public function testInitializedForAliases(): void {
     $this->assertFalse($this->container->initialized('late.service_alias'), 'Late service is not initialized.');
-    $this->container->get('late.service');
+    \Drupal::service('late.service');
     $this->assertTrue($this->container->initialized('late.service_alias'), 'Late service is initialized after it was retrieved once.');
   }
 
@@ -676,14 +676,14 @@ class ContainerTest extends TestCase {
    */
   public function testGetServiceIds(): void {
     $service_definition_keys = array_merge(['service_container'], array_keys($this->containerDefinition['services']));
-    $this->assertEquals($service_definition_keys, $this->container->getServiceIds(), 'Retrieved service IDs match definition.');
+    $this->assertEquals($service_definition_keys, \Drupal::serviceServiceIds(), 'Retrieved service IDs match definition.');
 
     $mock_service = new MockService();
     $this->container->set('bar', $mock_service);
     $this->container->set('service.provider', $mock_service);
     $service_definition_keys[] = 'bar';
 
-    $this->assertEquals($service_definition_keys, $this->container->getServiceIds(), 'Retrieved service IDs match definition after setting new services.');
+    $this->assertEquals($service_definition_keys, \Drupal::serviceServiceIds(), 'Retrieved service IDs match definition after setting new services.');
   }
 
   /**
@@ -694,14 +694,14 @@ class ContainerTest extends TestCase {
    * @covers ::resolveServicesAndParameters
    */
   public function testResolveServicesAndParametersForRawArgument(): void {
-    $this->assertEquals(['ccc'], $this->container->get('service_with_raw_argument')->getArguments());
+    $this->assertEquals(['ccc'], \Drupal::service('service_with_raw_argument')->getArguments());
   }
 
   /**
    * Tests that service iterators are lazily instantiated.
    */
   public function testIterator(): void {
-    $iterator = $this->container->get('service_iterator')->getArguments()[0];
+    $iterator = \Drupal::service('service_iterator')->getArguments()[0];
     $this->assertIsIterable($iterator);
     $this->assertFalse($this->container->initialized('other.service'));
     foreach ($iterator as $service) {
@@ -717,16 +717,16 @@ class ContainerTest extends TestCase {
    */
   public function testReset(): void {
     $this->assertFalse($this->container->initialized('late.service'), 'Late service is not initialized.');
-    $this->container->get('late.service');
+    \Drupal::service('late.service');
     $this->assertTrue($this->container->initialized('late.service'), 'Late service is initialized after it was retrieved once.');
 
     // Reset the container. All initialized services will be reset.
     $this->container->reset();
 
     $this->assertFalse($this->container->initialized('late.service'), 'Late service is not initialized.');
-    $this->container->get('late.service');
+    \Drupal::service('late.service');
     $this->assertTrue($this->container->initialized('late.service'), 'Late service is initialized after it was retrieved once.');
-    $this->assertSame($this->container, $this->container->get('service_container'));
+    $this->assertSame($this->container, \Drupal::service('service_container'));
   }
 
   /**
