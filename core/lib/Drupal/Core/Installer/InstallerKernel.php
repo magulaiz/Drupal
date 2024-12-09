@@ -18,6 +18,7 @@ class InstallerKernel extends DrupalKernel {
     // Ensure the InstallerKernel's container is not dumped.
     $this->allowDumping = FALSE;
     $container = parent::initializeContainer();
+    $this->container?->reset();
     return $container;
   }
 
