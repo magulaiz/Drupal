@@ -107,7 +107,7 @@ class InstallerTest extends InstallerTestBase {
 
     // Test that SiteConfigureForm::buildForm() has made the site directory and
     // the settings file non-writable.
-    $site_directory = \Drupal::serviceParameter('app.root') . '/' . $this->siteDirectory;
+    $site_directory = \Drupal::getContainer()->getParameter('app.root') . '/' . $this->siteDirectory;
     $this->assertDirectoryIsNotWritable($site_directory);
     $this->assertFileIsNotWritable($site_directory . '/settings.php');
 

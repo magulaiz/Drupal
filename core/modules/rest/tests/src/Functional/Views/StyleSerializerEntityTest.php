@@ -236,7 +236,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
 
     // Ensure that there is no corresponding render cache item yet.
     $original['#cache'] += ['contexts' => []];
-    $original['#cache']['contexts'] = Cache::mergeContexts($original['#cache']['contexts'], \Drupal::serviceParameter('renderer.config')['required_cache_contexts']);
+    $original['#cache']['contexts'] = Cache::mergeContexts($original['#cache']['contexts'], \Drupal::getContainer()->getParameter('renderer.config')['required_cache_contexts']);
 
     $cache_tags = [
       'config:views.view.test_serializer_display_entity',

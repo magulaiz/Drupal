@@ -35,7 +35,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $this->config('system.theme')->set('default', 'test_theme')->save();
     $this->drupalCreateContentType(['type' => 'page']);
     // Enable debug, rebuild the service container, and clear all caches.
-    $parameters = \Drupal::serviceParameter('twig.config');
+    $parameters = \Drupal::getContainer()->getParameter('twig.config');
     $parameters['debug'] = TRUE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
@@ -76,7 +76,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $this->assertStringContainsString('▪️ node--foo--bar' . $extension . PHP_EOL . '   ▪️ node--foo' . $extension . PHP_EOL . '   ▪️ node--&lt;script type=&quot;text/javascript&quot;&gt;alert(&#039;yo&#039;);&lt;/script&gt;' . $extension . PHP_EOL . '   ▪️ node--3--full' . $extension . PHP_EOL . '   ▪️ node--3' . $extension . PHP_EOL . '   ▪️ node--page--full' . $extension . PHP_EOL . '   ▪️ node--page' . $extension . PHP_EOL . '   ▪️ node--full' . $extension . PHP_EOL . '   ✅ node' . $extension, $output, 'Suggested template files found in order and base template shown as current template.');
 
     // Disable debug, rebuild the service container, and clear all caches.
-    $parameters = \Drupal::serviceParameter('twig.config');
+    $parameters = \Drupal::getContainer()->getParameter('twig.config');
     $parameters['debug'] = FALSE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();

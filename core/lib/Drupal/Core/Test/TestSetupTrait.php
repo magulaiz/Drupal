@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Test;
 
+use Drupal\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Database;
 
 /**
@@ -190,7 +191,7 @@ trait TestSetupTrait {
   /**
    * {@inheritdoc}
    */
-  public function __get(string $name) {
+  public function __get(string $name): ?ContainerInterface {
     if ($name === 'container') {
       @trigger_error('Accessing $this->container from Functional tests is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal::service() or \Drupal::getContainer() instead. See https://www.drupal.org/node/3492500', E_USER_DEPRECATED);
       return \Drupal::getContainer();

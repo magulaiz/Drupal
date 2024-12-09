@@ -35,7 +35,7 @@ trait CommonCollectionFilterAccessTestPatternsTrait {
     assert($this instanceof ResourceTestBase);
 
     // Set up data model.
-    $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
     entity_test_create_bundle('bar', NULL, 'entity_test');
     $this->createEntityReferenceField(
       'entity_test',
@@ -95,7 +95,7 @@ trait CommonCollectionFilterAccessTestPatternsTrait {
     // hook_jsonapi_entity_field_filter_access() implementation that forbids
     // access to the spotlight field if the 'filter by spotlight field'
     // permission is not granted.
-    $this->assertTrue($this->container->get('module_installer')->install(['jsonapi_test_field_filter_access'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['jsonapi_test_field_filter_access'], TRUE), 'Installed modules.');
     $this->rebuildAll();
 
     // Ensure that a 403 response is generated for attempting to filter by a
@@ -118,7 +118,7 @@ trait CommonCollectionFilterAccessTestPatternsTrait {
     $this->assertSame($referencing_entity->uuid(), $doc['data'][0]['id']);
     $this->revokePermissionsFromTestedRole(['filter by spotlight field']);
 
-    $this->assertTrue($this->container->get('module_installer')->uninstall(['jsonapi_test_field_filter_access'], TRUE), 'Uninstalled modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->uninstall(['jsonapi_test_field_filter_access'], TRUE), 'Uninstalled modules.');
 
     return $referencing_entity;
   }

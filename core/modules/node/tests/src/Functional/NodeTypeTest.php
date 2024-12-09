@@ -218,7 +218,6 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalGet('admin/structure/types/manage/default/delete');
     $this->assertSession()->statusCodeEquals(403);
     \Drupal::service('module_installer')->uninstall(['node_test_config']);
-    \Drupal::getContainer() = \Drupal::getContainer();
     unset($locked['default']);
     \Drupal::state()->set('node.type.locked', $locked);
     $this->drupalGet('admin/structure/types/manage/default');

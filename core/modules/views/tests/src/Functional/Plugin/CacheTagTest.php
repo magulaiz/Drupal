@@ -116,7 +116,7 @@ class CacheTagTest extends ViewTestBase {
     $render_cache = \Drupal::service('render_cache');
     $view->element = ['#cache' => []];
     $build = $view->buildRenderable();
-    $build['#cache']['contexts'] = Cache::mergeContexts($build['#cache']['contexts'], \Drupal::serviceParameter('renderer.config')['required_cache_contexts']);
+    $build['#cache']['contexts'] = Cache::mergeContexts($build['#cache']['contexts'], \Drupal::getContainer()->getParameter('renderer.config')['required_cache_contexts']);
 
     return $render_cache->get($build);
   }

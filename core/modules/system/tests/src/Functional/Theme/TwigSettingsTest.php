@@ -29,7 +29,7 @@ class TwigSettingsTest extends BrowserTestBase {
    */
   public function testTwigAutoReloadOverride(): void {
     // Enable auto reload and rebuild the service container.
-    $parameters = \Drupal::serviceParameter('twig.config');
+    $parameters = \Drupal::getContainer()->getParameter('twig.config');
     $parameters['auto_reload'] = TRUE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
@@ -38,7 +38,7 @@ class TwigSettingsTest extends BrowserTestBase {
     $this->assertTrue(\Drupal::service('twig')->isAutoReload(), 'Automatic reloading of Twig templates enabled.');
 
     // Disable auto reload and check the service container again.
-    $parameters = \Drupal::serviceParameter('twig.config');
+    $parameters = \Drupal::getContainer()->getParameter('twig.config');
     $parameters['auto_reload'] = FALSE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
@@ -51,7 +51,7 @@ class TwigSettingsTest extends BrowserTestBase {
    */
   public function testTwigDebugOverride(): void {
     // Enable debug and rebuild the service container.
-    $parameters = \Drupal::serviceParameter('twig.config');
+    $parameters = \Drupal::getContainer()->getParameter('twig.config');
     $parameters['debug'] = TRUE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
@@ -61,14 +61,14 @@ class TwigSettingsTest extends BrowserTestBase {
     $this->assertTrue(\Drupal::service('twig')->isAutoReload(), 'Twig automatic reloading is enabled when debug is enabled.');
 
     // Override auto reload when debug is enabled.
-    $parameters = \Drupal::serviceParameter('twig.config');
+    $parameters = \Drupal::getContainer()->getParameter('twig.config');
     $parameters['auto_reload'] = FALSE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::service('twig')->isAutoReload(), 'Twig automatic reloading can be disabled when debug is enabled.');
 
     // Disable debug and check the service container again.
-    $parameters = \Drupal::serviceParameter('twig.config');
+    $parameters = \Drupal::getContainer()->getParameter('twig.config');
     $parameters['debug'] = FALSE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
@@ -112,7 +112,7 @@ class TwigSettingsTest extends BrowserTestBase {
     $this->assertTrue(PhpStorageFactory::get('twig')->exists($cache_filename), 'Cached Twig template found.');
 
     // Disable the Twig cache and rebuild the service container.
-    $parameters = \Drupal::serviceParameter('twig.config');
+    $parameters = \Drupal::getContainer()->getParameter('twig.config');
     $parameters['cache'] = FALSE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
@@ -125,7 +125,7 @@ class TwigSettingsTest extends BrowserTestBase {
    * Tests twig inline templates with auto_reload.
    */
   public function testTwigInlineWithAutoReload(): void {
-    $parameters = \Drupal::serviceParameter('twig.config');
+    $parameters = \Drupal::getContainer()->getParameter('twig.config');
     $parameters['auto_reload'] = TRUE;
     $parameters['debug'] = TRUE;
     $this->setContainerParameter('twig.config', $parameters);
