@@ -3765,7 +3765,9 @@ function drupal_build_css_cache($css) {
 
     // Per the W3C specification at http://www.w3.org/TR/REC-CSS2/cascade.html#at-import,
     // @import rules must proceed any other style, so we move those to the top.
-    $regexp = '/@import[^;]+;/i';
+    $regexp = <<<'REGEXP'
+/@import\s*(?:'(?:\\'|.)*'|"(?:\\"|.)*"|url\(\s*(?:\\[\)\'\"]|[^'")])*\s*\)|url\(\s*'(?:\'|.)*'\s*\)|url\(\s*"(?:\"|.)*"\s*\)).*;/iU
+REGEXP;
     preg_match_all($regexp, $data, $matches);
     $data = preg_replace($regexp, '', $data);
     $data = implode('', $matches[0]) . $data;
