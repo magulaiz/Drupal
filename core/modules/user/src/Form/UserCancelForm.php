@@ -61,7 +61,8 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     $own_account = $this->entity->id() == $this->currentUser()->id();
     // Options supplied via user_cancel_methods() can have a custom
     // #confirm_description property for the confirmation form description.
-    // This text refers to "Your account" so only user it if cancelling own account.
+    // This text refers to "Your account" so only user it if
+    // cancelling own account.
     if ($own_account && isset($this->cancelMethods[$default_method]['#confirm_description'])) {
       return $this->cancelMethods[$default_method]['#confirm_description'];
     }
@@ -93,6 +94,27 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       '#access' => $this->selectCancel,
     ];
     $form['user_cancel_method'] += $this->cancelMethods;
+    $user_cancel_assign_user_uid = $this->config('user.settings')->get('user_cancel_assign_user');
+    $user_cancel_assign_user = '';
+    if (isset($user_cancel_assign_user_uid)) {
+      $user_cancel_assign_user = \Drupal::entityTypeManager()
+        ->getStorage('user')->load($user_cancel_assign_user_uid);
+    }
+    $form['user_cancel_assign_user'] = [
+      '#title' => ('Select User'),
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'user',
+      '#default_value' => $user_cancel_assign_user,
+      '#access' => $this->selectCancel,
+      '#selection_settings' => [
+        'include_anonymous' => FALSE,
+      ],
+      '#states'   => [
+        'visible' => [
+          ':input[name="user_cancel_method"]' => ['value' => 'user_cancel_reassign_user'],
+        ],
+      ],
+    ];
 
     // When managing another user, can skip the account cancellation
     // confirmation mail (by default).
@@ -146,11 +168,15 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       // $this->entity for
       // \Drupal\user\Controller\UserController::confirmCancel().
       $this->entity->user_cancel_method = $form_state->getValue('user_cancel_method');
+      $this->entity->user_cancel_assign_user = $form_state->getValue('user_cancel_assign_user');
       $this->entity->user_cancel_notify = $form_state->getValue('user_cancel_notify');
       $this->entity->save();
+
       _user_mail_notify('cancel_confirm', $this->entity);
+
       $this->messenger()->addStatus($this->t('A confirmation request to cancel your account has been sent to your email address.'));
-      $this->logger('user')->info('Sent account cancellation request to %name %email.', ['%name' => $this->entity->label(), '%email' => '<' . $this->entity->getEmail() . '>']);
+      $this->logger('user')->info('Sent account cancellation request to %name %email.',
+      ['%name' => $this->entity->label(), '%email' => '<' . $this->entity->getEmail() . '>']);
 
       $form_state->setRedirect(
         'entity.user.canonical',

@@ -57,6 +57,9 @@ user.settings:
       label: 'When cancelling a user account'
       constraints:
         UserCancelMethod: []
+    user_cancel_assign_user:
+      type: integer
+      label: 'User to whom content has to be reassigned'
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'

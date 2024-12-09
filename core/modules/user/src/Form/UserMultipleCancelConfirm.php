@@ -6,8 +6,8 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Url;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\Core\Url;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -161,6 +161,19 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
 
     $form['user_cancel_method'] += user_cancel_methods();
 
+    $form['user_cancel_assign_user'] = [
+      '#title' => ('Select User'),
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'user',
+      '#selection_settings' => [
+        'include_anonymous' => FALSE,
+      ],
+      '#states'   => [
+        'visible' => [
+          ':input[name="user_cancel_method"]' => ['value' => 'user_cancel_reassign_user'],
+        ],
+      ],
+    ];
     if (!$selectCancel) {
       // Display an item to inform the user of the setting.
       $default_method = $form['user_cancel_method']['#default_value'];
@@ -195,6 +208,20 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $form_values = $form_state->getValues();
+    $method = $form_values['user_cancel_method'];
+    $user_cancel_assign_user = $form_values['user_cancel_assign_user'];
+    if ($method == 'user_cancel_reassign_user'
+    && (in_array($user_cancel_assign_user, $form_values['accounts']))) {
+      $form_state->setErrorByName('user_cancel_assign_user',
+        $this->t('You cannot assign content to user being deleted'));
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $current_user_id = $this->currentUser()->id();
 
@@ -206,7 +233,8 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
         if ($uid <= 1) {
           continue;
         }
-        // Prevent user administrators from deleting themselves without confirmation.
+        // Prevent user administrators from deleting themselves
+        // without confirmation.
         if ($uid == $current_user_id) {
           $admin_form_mock = [];
           $admin_form_state = $form_state;

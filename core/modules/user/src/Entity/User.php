@@ -3,7 +3,6 @@
 namespace Drupal\user\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -11,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Flood\PrefixFloodInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\Form\UserCancelForm;
 use Drupal\user\ProfileForm;
 use Drupal\user\ProfileTranslationHandler;
@@ -114,7 +114,7 @@ class User extends ContentEntityBase implements UserInterface {
     }
 
     // Store account cancellation information.
-    foreach (['user_cancel_method', 'user_cancel_notify'] as $key) {
+    foreach (['user_cancel_method', 'user_cancel_notify', 'user_cancel_assign_user'] as $key) {
       if (isset($this->{$key})) {
         \Drupal::service('user.data')->set('user', $this->id(), substr($key, 5), $this->{$key});
       }

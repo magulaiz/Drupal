@@ -2,27 +2,30 @@
 
 namespace Drupal\comment\Hook;
 
-use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
-use Drupal\Core\Entity\Entity\EntityViewMode;
-use Drupal\user\UserInterface;
-use Drupal\user\RoleInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\node\NodeInterface;
-use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
+use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\FieldConfigInterface;
-use Drupal\comment\Entity\CommentType;
-use Drupal\Core\Url;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\node\NodeInterface;
+use Drupal\user\RoleInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Hook implementations for comment.
  */
 class CommentHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_help().
@@ -31,12 +34,12 @@ class CommentHooks {
   public function help($route_name, RouteMatchInterface $route_match) {
     switch ($route_name) {
       case 'help.page.comment':
-        $output = '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Comment module allows users to comment on site content, set commenting defaults and permissions, and moderate comments. For more information, see the <a href=":comment">online documentation for the Comment module</a>.', [':comment' => 'https://www.drupal.org/documentation/modules/comment']) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output = '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Comment module allows users to comment on site content, set commenting defaults and permissions, and moderate comments. For more information, see the <a href=":comment">online documentation for the Comment module</a>.', [':comment' => 'https://www.drupal.org/documentation/modules/comment']) . '</p>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Enabling commenting') . '</dt>';
-        $output .= '<dd>' . t('Comment functionality can be enabled for any entity sub-type (for example, a <a href=":content-type">content type</a>) by adding a <em>Comments</em> field on its <em>Manage fields page</em>. Adding or removing commenting for an entity through the user interface requires the <a href=":field_ui">Field UI</a> module to be installed, even though the commenting functionality works without it. For more information on fields and entities, see the <a href=":field">Field module help page</a>.', [
+        $output .= '<dt>' . $this->t('Enabling commenting') . '</dt>';
+        $output .= '<dd>' . $this->t('Comment functionality can be enabled for any entity sub-type (for example, a <a href=":content-type">content type</a>) by adding a <em>Comments</em> field on its <em>Manage fields page</em>. Adding or removing commenting for an entity through the user interface requires the <a href=":field_ui">Field UI</a> module to be installed, even though the commenting functionality works without it. For more information on fields and entities, see the <a href=":field">Field module help page</a>.', [
           ':content-type' => \Drupal::moduleHandler()->moduleExists('node') ? Url::fromRoute('entity.node_type.collection')->toString() : '#',
           ':field' => Url::fromRoute('help.page', [
             'name' => 'field',
@@ -45,16 +48,16 @@ class CommentHooks {
             'name' => 'field_ui',
           ])->toString() : '#',
         ]) . '</dd>';
-        $output .= '<dt>' . t('Configuring commenting settings') . '</dt>';
-        $output .= '<dd>' . t('Commenting settings can be configured by editing the <em>Comments</em> field on the <em>Manage fields page</em> of an entity type if the <em>Field UI module</em> is installed. Configuration includes the label of the comments field, the number of comments to be displayed, and whether they are shown in threaded list. Commenting can be configured as: <em>Open</em> to allow new comments, <em>Closed</em> to view existing comments, but prevent new comments, or <em>Hidden</em> to hide existing comments and prevent new comments. Changing this configuration for an entity type will not change existing entity items.') . '</dd>';
-        $output .= '<dt>' . t('Overriding default settings') . '</dt>';
-        $output .= '<dd>' . t('Users with the appropriate permissions can override the default commenting settings of an entity type when they create an item of that type.') . '</dd>';
-        $output .= '<dt>' . t('Adding comment types') . '</dt>';
-        $output .= '<dd>' . t('Additional <em>comment types</em> can be created per entity sub-type and added on the <a href=":field">Comment types page</a>. If there are multiple comment types available you can select the appropriate one after adding a <em>Comments field</em>.', [
+        $output .= '<dt>' . $this->t('Configuring commenting settings') . '</dt>';
+        $output .= '<dd>' . $this->t('Commenting settings can be configured by editing the <em>Comments</em> field on the <em>Manage fields page</em> of an entity type if the <em>Field UI module</em> is installed. Configuration includes the label of the comments field, the number of comments to be displayed, and whether they are shown in threaded list. Commenting can be configured as: <em>Open</em> to allow new comments, <em>Closed</em> to view existing comments, but prevent new comments, or <em>Hidden</em> to hide existing comments and prevent new comments. Changing this configuration for an entity type will not change existing entity items.') . '</dd>';
+        $output .= '<dt>' . $this->t('Overriding default settings') . '</dt>';
+        $output .= '<dd>' . $this->t('Users with the appropriate permissions can override the default commenting settings of an entity type when they create an item of that type.') . '</dd>';
+        $output .= '<dt>' . $this->t('Adding comment types') . '</dt>';
+        $output .= '<dd>' . $this->t('Additional <em>comment types</em> can be created per entity sub-type and added on the <a href=":field">Comment types page</a>. If there are multiple comment types available you can select the appropriate one after adding a <em>Comments field</em>.', [
           ':field' => Url::fromRoute('entity.comment_type.collection')->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Approving and managing comments') . '</dt>';
-        $output .= '<dd>' . t('Comments from users who have the <em>Skip comment approval</em> permission are published immediately. All other comments are placed in the <a href=":comment-approval">Unapproved comments</a> queue, until a user who has permission to <em>Administer comments and comment settings</em> publishes or deletes them. Published comments can be bulk managed on the <a href=":admin-comment">Published comments</a> administration page. When a comment has no replies, it remains editable by its author, as long as the author has <em>Edit own comments</em> permission.', [
+        $output .= '<dt>' . $this->t('Approving and managing comments') . '</dt>';
+        $output .= '<dd>' . $this->t('Comments from users who have the <em>Skip comment approval</em> permission are published immediately. All other comments are placed in the <a href=":comment-approval">Unapproved comments</a> queue, until a user who has permission to <em>Administer comments and comment settings</em> publishes or deletes them. Published comments can be bulk managed on the <a href=":admin-comment">Published comments</a> administration page. When a comment has no replies, it remains editable by its author, as long as the author has <em>Edit own comments</em> permission.', [
           ':comment-approval' => Url::fromRoute('comment.admin_approval')->toString(),
           ':admin-comment' => Url::fromRoute('comment.admin')->toString(),
         ]) . '</dd>';
@@ -62,7 +65,7 @@ class CommentHooks {
         return $output;
 
       case 'entity.comment_type.collection':
-        $output = '<p>' . t('This page provides a list of all comment types on the site and allows you to manage the fields, form and display settings for each.') . '</p>';
+        $output = '<p>' . $this->t('This page provides a list of all comment types on the site and allows you to manage the fields, form and display settings for each.') . '</p>';
         return $output;
     }
   }
@@ -77,15 +80,15 @@ class CommentHooks {
       $return['comment'][$comment_type->id()] = [
         'form' => [
           'author' => [
-            'label' => t('Author'),
-            'description' => t('Author textfield'),
+            'label' => $this->t('Author'),
+            'description' => $this->t('Author textfield'),
             'weight' => -2,
           ],
         ],
       ];
       $return['comment'][$comment_type->id()]['display']['links'] = [
-        'label' => t('Links'),
-        'description' => t('Comment operation links'),
+        'label' => $this->t('Links'),
+        'description' => $this->t('Comment operation links'),
         'weight' => 100,
         'visible' => TRUE,
       ];
@@ -135,8 +138,8 @@ class CommentHooks {
   #[Hook('field_config_update')]
   public function fieldConfigUpdate(FieldConfigInterface $field) {
     if ($field->getType() == 'comment') {
-      // Comment field settings also affects the rendering of *comment* entities,
-      // not only the *commented* entities.
+      // Comment field settings also affects the rendering of *comment*
+      // entities, not only the *commented* entities.
       \Drupal::entityTypeManager()->getViewBuilder('comment')->resetCache();
     }
   }
@@ -178,8 +181,8 @@ class CommentHooks {
   #[Hook('node_links_alter')]
   public function nodeLinksAlter(array &$links, NodeInterface $node, array &$context): void {
     // Comment links are only added to node entity type for backwards
-    // compatibility. Should you require comment links for other entity types you
-    // can do so by implementing a new field formatter.
+    // compatibility. Should you require comment links for other entity types
+    // you can do so by implementing a new field formatter.
     // @todo Make this configurable from the formatter. See
     //   https://www.drupal.org/node/1901110.
     $comment_links = \Drupal::service('comment.link_builder')->buildCommentedEntityLinks($node, $context);
@@ -278,7 +281,8 @@ class CommentHooks {
       return;
     }
     // Load comment information from the database and update the entity's
-    // comment statistics properties, which are defined on each CommentItem field.
+    // comment statistics properties, which are defined on each CommentItem
+    // field.
     $result = \Drupal::service('comment.statistics')->read($entities, $entity_type);
     foreach ($result as $record) {
       // Skip fields that entity does not have.
@@ -312,10 +316,10 @@ class CommentHooks {
   #[Hook('entity_predelete')]
   public function entityPredelete(EntityInterface $entity) {
     // Entities can have non-numeric IDs, but {comment} and
-    // {comment_entity_statistics} tables have integer columns for entity ID, and
-    // PostgreSQL throws exceptions if you attempt query conditions with
-    // mismatched types. So, we need to verify that the ID is numeric (even for an
-    // entity type that has an integer ID, $entity->id() might be a string
+    // {comment_entity_statistics} tables have integer columns for entity ID,
+    // and PostgreSQL throws exceptions if you attempt query conditions with
+    // mismatched types. So, we need to verify that the ID is numeric (even for
+    // an entity type that has an integer ID, $entity->id() might be a string
     // containing a number), and then cast it to an integer when querying.
     if ($entity instanceof FieldableEntityInterface && is_numeric($entity->id())) {
       $entity_query = \Drupal::entityQuery('comment')->accessCheck(FALSE);
@@ -438,17 +442,27 @@ class CommentHooks {
         break;
 
       case 'user_cancel_reassign':
+      case 'user_cancel_reassign_user':
         /** @var \Drupal\comment\CommentInterface[] $comments */
         $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);
+        if ($method === 'user_cancel_reassign_user') {
+          $uid = $edit['user_cancel_assign_user'];
+          $user_entity = \Drupal::entityTypeManager()->getStorage('user')->load($uid);
+          $user_name = $user_entity->getAccountName();
+        }
+        else {
+          $uid = 0;
+          $user_name = \Drupal::config('user.settings')->get('anonymous');
+        }
         foreach ($comments as $comment) {
           $langcodes = array_keys($comment->getTranslationLanguages());
-          // For efficiency manually save the original comment before applying any
-          // changes.
+          // For efficiency manually save the original comment before applying
+          // any changes.
           $comment->original = clone $comment;
           foreach ($langcodes as $langcode) {
             $comment_translated = $comment->getTranslation($langcode);
-            $comment_translated->setOwnerId(0);
-            $comment_translated->setAuthorName(\Drupal::config('user.settings')->get('anonymous'));
+            $comment_translated->setOwnerId($uid);
+            $comment_translated->setAuthorName($user_name);
           }
           $comment->save();
         }
@@ -490,7 +504,8 @@ class CommentHooks {
     if (!$storage->loadUnchanged($display->getOriginalId())->status()) {
       return;
     }
-    // Disable the comment field formatter when the used view display is disabled.
+    // Disable the comment field formatter when the used view display
+    // is disabled.
     foreach ($storage->loadMultiple() as $view_display) {
       $changed = FALSE;
       /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display */

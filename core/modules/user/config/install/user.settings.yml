@@ -12,5 +12,6 @@ notify:
   register_pending_approval: true
 register: visitors
 cancel_method: user_cancel_block
+user_cancel_assign_user: 1
 password_reset_timeout: 86400
 password_strength: true
