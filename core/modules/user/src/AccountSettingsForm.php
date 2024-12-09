@@ -168,19 +168,11 @@ class AccountSettingsForm extends ConfigFormBase {
       ),
     ];
     $form['registration_cancellation']['user_cancel_method'] += user_cancel_methods();
-    $user_cancel_assign_user_uid = $config->get('user_cancel_assign_user');
-    $user_cancel_assign_user = '';
-    if (isset($user_cancel_assign_user_uid)) {
-      $user_cancel_assign_user = $this->userStorage->load($user_cancel_assign_user_uid);
-    }
+
     $form['registration_cancellation']['user_cancel_assign_user'] = [
-      '#title' => ('Select User'),
-      '#type' => 'entity_autocomplete',
-      '#target_type' => 'user',
-      '#default_value' => $user_cancel_assign_user,
-      '#selection_settings' => [
-        'include_anonymous' => FALSE,
-      ],
+      '#title' => ('User Uid'),
+      '#type' => 'textfield',
+      '#config_target' => 'user.settings:user_cancel_assign_user',
       '#states'   => [
         'visible' => [
           ':input[name="user_cancel_method"]' => ['value' => 'user_cancel_reassign_user'],
@@ -462,9 +454,16 @@ class AccountSettingsForm extends ConfigFormBase {
     $form_values = $form_state->getValues();
     $method = $form_values['user_cancel_method'];
     $user_cancel_assign_user = $form_values['user_cancel_assign_user'];
-    if ($method == 'user_cancel_reassign_user' && empty($user_cancel_assign_user)) {
-      $form_state->setErrorByName('user_cancel_assign_user',
+    if ($method == 'user_cancel_reassign_user') {
+      if ($user_cancel_assign_user == "") {
+        $form_state->setErrorByName('user_cancel_assign_user',
         $this->t('User cannot be empty'));
+      }
+      $user = $this->userStorage->load($user_cancel_assign_user);
+      if (!$user) {
+        $form_state->setErrorByName('user_cancel_assign_user',
+        $this->t('No matching user found'));
+      }
     }
   }
 
