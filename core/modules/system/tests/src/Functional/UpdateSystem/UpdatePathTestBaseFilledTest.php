@@ -383,7 +383,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
       'standard',
     ];
     foreach ($expected_enabled_modules as $module) {
-      $this->assertTrue($this->container->get('module_handler')->moduleExists($module), 'The "' . $module . '" module is still enabled.');
+      $this->assertTrue(\Drupal::service('module_handler')->moduleExists($module), 'The "' . $module . '" module is still enabled.');
     }
 
     // Make sure our themes are still enabled.
@@ -393,7 +393,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
       'stark',
     ];
     foreach ($expected_enabled_themes as $theme) {
-      $this->assertTrue($this->container->get('theme_handler')->themeExists($theme), 'The "' . $theme . '" is still enabled.');
+      $this->assertTrue(\Drupal::service('theme_handler')->themeExists($theme), 'The "' . $theme . '" is still enabled.');
     }
   }
 

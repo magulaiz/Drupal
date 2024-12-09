@@ -89,7 +89,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->uuidService = $this->container->get('uuid');
+    $this->uuidService = \Drupal::service('uuid');
     EntityViewMode::create([
       'id' => 'media.view_mode_1',
       'targetEntityType' => 'media',
@@ -217,7 +217,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
    */
   public function testApi(): void {
     $path = '/ckeditor5/filtered_html/media-entity-metadata';
-    $token = $this->container->get('csrf_token')->get(ltrim($path, '/'));
+    $token = \Drupal::service('csrf_token')->get(ltrim($path, '/'));
     $uuid = $this->mediaImage->uuid();
 
     $this->drupalGet($path, ['query' => ['token' => $token]]);
@@ -266,7 +266,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     // Ensure that users that don't have access to the filter format receive
     // either 404 or 403.
     $this->drupalLogout();
-    $token = $this->container->get('csrf_token')->get(ltrim($path, '/'));
+    $token = \Drupal::service('csrf_token')->get(ltrim($path, '/'));
     $this->drupalGet($path, ['token' => $token]);
     $this->assertSession()->statusCodeEquals(400);
 
@@ -282,10 +282,10 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
    * Tests the media entity metadata API with translations.
    */
   public function testApiTranslation(): void {
-    $this->container->get('module_installer')->install(['language', 'content_translation']);
+    \Drupal::service('module_installer')->install(['language', 'content_translation']);
     $this->resetAll();
     ConfigurableLanguage::createFromLangcode('fi')->save();
-    $this->container->get('config.factory')->getEditable('language.negotiation')
+    \Drupal::service('config.factory')->getEditable('language.negotiation')
       ->set('url.source', 'path_prefix')
       ->set('url.prefixes.fi', 'fi')
       ->save();
@@ -306,7 +306,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     $uuid = $this->mediaImage->uuid();
 
     $path = '/ckeditor5/filtered_html/media-entity-metadata';
-    $token = $this->container->get('csrf_token')->get(ltrim($path, '/'));
+    $token = \Drupal::service('csrf_token')->get(ltrim($path, '/'));
 
     // Ensure that translation is returned when language is specified.
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token], 'language' => $media_fi->language()]);

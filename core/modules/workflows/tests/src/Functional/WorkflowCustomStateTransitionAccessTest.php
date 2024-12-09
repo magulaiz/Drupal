@@ -77,7 +77,7 @@ class WorkflowCustomStateTransitionAccessTest extends BrowserTestBase {
 
     // Update the forbidden operations which deny access to the actions
     // represented by the above paths.
-    $this->container->get('state')->set('workflow_type_test_forbidden_operations', [
+    \Drupal::service('state')->set('workflow_type_test_forbidden_operations', [
       'update-state:cannot_update',
       'delete-state:cannot_delete',
       'update-transition:cannot_update',

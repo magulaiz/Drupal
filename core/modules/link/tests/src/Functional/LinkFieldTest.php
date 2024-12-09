@@ -884,7 +884,7 @@ class LinkFieldTest extends BrowserTestBase {
       ],
     ])->save();
 
-    $this->container->get('entity_type.manager')
+    \Drupal::service('entity_type.manager')
       ->getStorage('entity_form_display')
       ->load('entity_test.entity_test.default')
       ->setComponent($field_name, [
@@ -980,7 +980,7 @@ class LinkFieldTest extends BrowserTestBase {
       ],
     ])->save();
 
-    $this->container->get('entity_type.manager')
+    \Drupal::service('entity_type.manager')
       ->getStorage('entity_form_display')
       ->load('entity_test.entity_test.default')
       ->setComponent($field_name, [
@@ -1009,7 +1009,7 @@ class LinkFieldTest extends BrowserTestBase {
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $output = $this->renderTestEntity($id);
-    $expected_link = (string) $this->container->get('link_generator')->generate('Title, no link', Url::fromUri('route:<nolink>'));
+    $expected_link = (string) \Drupal::service('link_generator')->generate('Title, no link', Url::fromUri('route:<nolink>'));
     $this->assertStringContainsString($expected_link, $output);
 
     // Test a link with <none> uri.
@@ -1023,7 +1023,7 @@ class LinkFieldTest extends BrowserTestBase {
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $output = $this->renderTestEntity($id);
-    $expected_link = (string) $this->container->get('link_generator')->generate('Title, none', Url::fromUri('route:<none>'));
+    $expected_link = (string) \Drupal::service('link_generator')->generate('Title, none', Url::fromUri('route:<none>'));
     $this->assertStringContainsString($expected_link, $output);
 
     // Test a link with a <button> uri.
@@ -1037,7 +1037,7 @@ class LinkFieldTest extends BrowserTestBase {
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $output = $this->renderTestEntity($id);
-    $expected_link = (string) $this->container->get('link_generator')->generate('Title, button', Url::fromUri('route:<button>'));
+    $expected_link = (string) \Drupal::service('link_generator')->generate('Title, button', Url::fromUri('route:<button>'));
     $this->assertStringContainsString($expected_link, $output);
   }
 
@@ -1057,7 +1057,7 @@ class LinkFieldTest extends BrowserTestBase {
    */
   protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE): string {
     if ($reset) {
-      $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
+      \Drupal::service('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     }
     $entity = EntityTest::load($id);
     $display = \Drupal::service('entity_display.repository')
@@ -1089,7 +1089,7 @@ class LinkFieldTest extends BrowserTestBase {
       ],
     ])->save();
 
-    $entityTypeManager = $this->container->get('entity_type.manager');
+    $entityTypeManager = \Drupal::service('entity_type.manager');
     $entityTypeManager
       ->getStorage('entity_form_display')
       ->load('entity_test.entity_test.default')

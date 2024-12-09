@@ -120,7 +120,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     // Check if translations are available for Drupal core.
     $this->drupalGet('admin/reports/translations');
     $this->assertSession()->pageTextContains('Updates for: Drupal core');
-    $this->assertSession()->pageTextContains('Drupal core (' . $this->container->get('date.formatter')->format(\Drupal::time()->getRequestTime(), 'html_date') . ')');
+    $this->assertSession()->pageTextContains('Drupal core (' . \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime(), 'html_date') . ')');
     $this->assertSession()->buttonExists('Update translations');
   }
 

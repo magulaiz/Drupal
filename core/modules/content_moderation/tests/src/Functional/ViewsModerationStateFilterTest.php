@@ -73,7 +73,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
       'administer views',
     ]));
 
-    $this->container->get('module_installer')->install(['content_moderation_test_views']);
+    \Drupal::service('module_installer')->install(['content_moderation_test_views']);
 
     $new_workflow->getTypePlugin()->removeEntityTypeAndBundle('node', 'example_c');
     $new_workflow->save();
@@ -160,9 +160,9 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
    *   A loaded view, bypassing static caches.
    */
   public function loadViewUnchanged($view_id) {
-    $this->container->get('cache.config')->deleteAll();
-    $this->container->get('config.factory')->reset();
-    return $this->container->get('entity_type.manager')->getStorage('view')->loadUnchanged($view_id);
+    \Drupal::service('cache.config')->deleteAll();
+    \Drupal::service('config.factory')->reset();
+    return \Drupal::service('entity_type.manager')->getStorage('view')->loadUnchanged($view_id);
   }
 
   /**
@@ -252,7 +252,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
    *   (as keys) and the expected result set (as values).
    */
   protected function executeAndAssertIdenticalResultset(ViewEntityInterface $view_entity, $expected, $column_map): void {
-    $executable = $this->container->get('views.executable')->get($view_entity);
+    $executable = \Drupal::service('views.executable')->get($view_entity);
     $this->executeView($executable);
     $this->assertIdenticalResultset($executable, $expected, $column_map);
   }

@@ -159,7 +159,7 @@ class DateRangeFieldTest extends DateTestBase {
       // Verify that the plain formatter works.
       $this->displayOptions['type'] = 'daterange_plain';
       $this->displayOptions['settings'] = $this->defaultSettings;
-      $this->container->get('entity_display.repository')
+      \Drupal::service('entity_display.repository')
         ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
         ->setComponent($field_name, $this->displayOptions)
         ->save();
@@ -234,7 +234,7 @@ class DateRangeFieldTest extends DateTestBase {
 
       $this->displayOptions['type'] = 'daterange_plain';
       $this->displayOptions['settings'] = $this->defaultSettings;
-      $this->container->get('entity_display.repository')
+      \Drupal::service('entity_display.repository')
         ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
         ->setComponent($field_name, $this->displayOptions)
         ->save();
@@ -336,7 +336,7 @@ class DateRangeFieldTest extends DateTestBase {
     // Verify that the plain formatter works.
     $this->displayOptions['type'] = 'daterange_plain';
     $this->displayOptions['settings'] = $this->defaultSettings;
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
       ->setComponent($field_name, $this->displayOptions)
       ->save();
@@ -413,7 +413,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     $this->displayOptions['type'] = 'daterange_plain';
     $this->displayOptions['settings'] = $this->defaultSettings;
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
       ->setComponent($field_name, $this->displayOptions)
       ->save();
@@ -509,7 +509,7 @@ class DateRangeFieldTest extends DateTestBase {
     // Verify that the plain formatter works.
     $this->displayOptions['type'] = 'daterange_plain';
     $this->displayOptions['settings'] = $this->defaultSettings;
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
       ->setComponent($field_name, $this->displayOptions)
       ->save();
@@ -588,7 +588,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
 
     $this->displayOptions['type'] = 'daterange_plain';
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
       ->setComponent($field_name, $this->displayOptions)
       ->save();

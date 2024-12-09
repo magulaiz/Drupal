@@ -491,7 +491,7 @@ JS;
 
     $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
-    $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
+    $image_upload_field->attachFile(\Drupal::service('file_system')->realpath($image->uri));
     // Wait until preview for the image has rendered to ensure that the image
     // upload has completed and the image has been downcast.
     // @see https://www.drupal.org/project/drupal/issues/3250587
@@ -506,7 +506,7 @@ JS;
     $page->pressButton('Save');
 
     $uploaded_image = File::load(1);
-    $image_url = $this->container->get('file_url_generator')->generateString($uploaded_image->getFileUri());
+    $image_url = \Drupal::service('file_url_generator')->generateString($uploaded_image->getFileUri());
     $image_uuid = $uploaded_image->uuid();
     $assert_session->elementExists('xpath', sprintf('//img[@src="%s" and @width="40" and @height="20" and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_url, $image_uuid));
 

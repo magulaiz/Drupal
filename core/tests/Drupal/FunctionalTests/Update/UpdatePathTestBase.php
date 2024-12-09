@@ -283,7 +283,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     // Ensure that the database tasks have been run during set up. Neither MySQL
     // nor SQLite make changes that are testable.
-    $database = $this->container->get('database');
+    $database = \Drupal::service('database');
     if ($database->driver() == 'pgsql') {
       $this->assertEquals('on', $database->query("SHOW standard_conforming_strings")->fetchField());
       $this->assertEquals('escape', $database->query("SHOW bytea_output")->fetchField());

@@ -29,7 +29,7 @@ class FormObjectTest extends BrowserTestBase {
    * @see \Drupal\form_test\EventSubscriber\FormTestEventSubscriber::onKernelRequest()
    */
   public function testObjectFormCallback(): void {
-    $config_factory = $this->container->get('config.factory');
+    $config_factory = \Drupal::service('config.factory');
 
     $this->drupalGet('form-test/object-builder');
     $this->assertSession()->pageTextContains('The FormTestObject::buildForm() method was used for this form.');

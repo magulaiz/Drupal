@@ -28,7 +28,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
    * Tests image validity.
    */
   public function testValid(): void {
-    $file_system = $this->container->get('file_system');
+    $file_system = \Drupal::service('file_system');
     $image_files = $this->drupalGetTestFiles('image');
 
     $field_name = $this->randomMachineName();
@@ -132,7 +132,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     // big, so cycle through test image files until we have what we need.
     $image_that_is_too_big = FALSE;
     $image_that_is_too_small = FALSE;
-    $image_factory = $this->container->get('image.factory');
+    $image_factory = \Drupal::service('image.factory');
     foreach ($this->drupalGetTestFiles('image') as $image) {
       $image_file = $image_factory->get($image->uri);
       if ($image_file->getWidth() > $max_resolution['width']) {

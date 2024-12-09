@@ -97,7 +97,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Get the taxonomy storage.
     /** @var \Drupal\taxonomy\TermStorageInterface $taxonomy_storage */
-    $taxonomy_storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
+    $taxonomy_storage = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
 
     // Check that hierarchy is flat.
     $this->assertEquals(0, $taxonomy_storage->getVocabularyHierarchyType($this->vocabulary->id()), 'Vocabulary is flat.');
@@ -138,7 +138,7 @@ class TermTest extends TaxonomyTestBase {
     $term1 = $this->createTerm($this->vocabulary);
     $terms_array = [];
 
-    $taxonomy_storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
+    $taxonomy_storage = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
 
     // Create 40 terms. Terms 1-12 get parent of $term1. All others are
     // individual terms.
@@ -224,7 +224,7 @@ class TermTest extends TaxonomyTestBase {
     foreach ($terms as $term) {
       $this->assertSession()->pageTextContains($term);
     }
-    $tree = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadTree($this->vocabulary->id());
+    $tree = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadTree($this->vocabulary->id());
     $this->assertEmpty($tree, 'The terms are not created on preview.');
 
     // Save, creating the terms.
@@ -449,7 +449,7 @@ class TermTest extends TaxonomyTestBase {
     $this->createTerm($this->vocabulary);
     $this->createTerm($this->vocabulary);
 
-    $taxonomy_storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
+    $taxonomy_storage = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
 
     // Fetch the created terms in the default alphabetical order, i.e. term1
     // precedes term2 alphabetically, and term2 precedes term3.

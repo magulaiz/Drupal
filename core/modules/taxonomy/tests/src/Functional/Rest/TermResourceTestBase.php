@@ -333,7 +333,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedCacheContexts() {
-    return Cache::mergeContexts(['url.site'], $this->container->getParameter('renderer.config')['required_cache_contexts']);
+    return Cache::mergeContexts(['url.site'], \Drupal::serviceParameter('renderer.config')['required_cache_contexts']);
   }
 
   /**

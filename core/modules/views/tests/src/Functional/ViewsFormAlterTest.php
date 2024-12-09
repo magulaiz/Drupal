@@ -27,7 +27,7 @@ class ViewsFormAlterTest extends ViewTestBase {
   public function testViewsFormAlter(): void {
     $this->drupalLogin($this->createUser(['access media overview']));
     $this->drupalGet('admin/content/media');
-    $count = $this->container->get('state')->get('hook_form_BASE_FORM_ID_alter_count');
+    $count = \Drupal::service('state')->get('hook_form_BASE_FORM_ID_alter_count');
     $this->assertEquals(1, $count, 'hook_form_BASE_FORM_ID_alter was invoked only once');
   }
 

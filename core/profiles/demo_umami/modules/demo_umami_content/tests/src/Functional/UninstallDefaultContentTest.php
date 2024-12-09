@@ -24,14 +24,14 @@ class UninstallDefaultContentTest extends BrowserTestBase {
    * Tests uninstalling content removes created entities.
    */
   public function testReinstall() {
-    $module_installer = $this->container->get('module_installer');
+    $module_installer = \Drupal::service('module_installer');
 
     // Test imported blocks on profile install.
-    $block_storage = $this->container->get('entity_type.manager')->getStorage('block_content');
+    $block_storage = \Drupal::service('entity_type.manager')->getStorage('block_content');
     $this->assertImportedCustomBlock($block_storage);
 
     // Test imported nodes on profile install.
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $this->assertRecipesImported($node_storage);
 
     $count = $node_storage->getQuery()

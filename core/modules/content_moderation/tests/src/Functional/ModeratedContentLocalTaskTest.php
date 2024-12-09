@@ -61,7 +61,7 @@ class ModeratedContentLocalTaskTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Moderated content');
 
     // Uninstall the node module which should also remove the tab.
-    $this->container->get('module_installer')->uninstall(['node']);
+    \Drupal::service('module_installer')->uninstall(['node']);
 
     // Verify the moderated content local task does not exist without the node
     // module installed.

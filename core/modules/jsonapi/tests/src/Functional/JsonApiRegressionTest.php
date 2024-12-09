@@ -53,7 +53,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
    */
   public function testDeepNestedIncludeMultiTargetEntityTypeFieldFromIssue2973681(): void {
     // Set up data model.
-    $this->assertTrue($this->container->get('module_installer')->install(['comment'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['comment'], TRUE), 'Installed modules.');
     $this->addDefaultCommentField('node', 'article');
     $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentItemInterface::OPEN, 'test_comment_type');
     $this->drupalCreateContentType(['type' => 'page']);
@@ -117,7 +117,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
    */
   public function testGetTermWhenMultipleVocabulariesExistFromIssue2977879(): void {
     // Set up data model.
-    $this->assertTrue($this->container->get('module_installer')->install(['taxonomy'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['taxonomy'], TRUE), 'Installed modules.');
     Vocabulary::create([
       'name' => 'one',
       'vid' => 'one',
@@ -153,7 +153,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
    */
   public function testGetNodeCollectionWithHookNodeGrantsImplementationsFromIssue2984964(): void {
     // Set up data model.
-    $this->assertTrue($this->container->get('module_installer')->install(['node_access_test'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['node_access_test'], TRUE), 'Installed modules.');
     node_access_rebuild();
     $this->rebuildAll();
 
@@ -476,7 +476,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
    */
   public function testPatchingDateTimeNormalizedWrongTimeZoneIssue3021194(): void {
     // Set up data model.
-    $this->assertTrue($this->container->get('module_installer')->install(['datetime'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['datetime'], TRUE), 'Installed modules.');
     $this->drupalCreateContentType(['type' => 'page']);
     $this->rebuildAll();
     FieldStorageConfig::create([
@@ -561,7 +561,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
    * @see https://www.drupal.org/project/drupal/issues/3040590
    */
   public function testMapFieldTypeNormalizationFromIssue3040590(): void {
-    $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
 
     // Create data.
     $entity_a = EntityTestMapField::create([
@@ -689,7 +689,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
     // Set up data model.
-    $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
 
     // Create data.
     $entity = EntityTestMapField::create([
@@ -788,7 +788,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
    */
   public function testAliasedFieldsWithVirtualRelationships(): void {
     // Set up the data model.
-    $this->assertTrue($this->container->get('module_installer')->install([
+    $this->assertTrue(\Drupal::service('module_installer')->install([
       'taxonomy',
       'jsonapi_test_resource_type_building',
     ], TRUE), 'Installed modules.');
@@ -834,7 +834,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
    * @see https://www.drupal.org/project/drupal/issues/3072076
    */
   public function testNonCacheableMethods(): void {
-    $this->container->get('module_installer')->install([
+    \Drupal::service('module_installer')->install([
       'jsonapi_test_non_cacheable_methods',
     ], TRUE);
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);

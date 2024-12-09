@@ -44,7 +44,7 @@ class BlockContentWizardTest extends BlockContentTestBase {
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view, 'Save and edit');
 
-    $view_storage_controller = $this->container->get('entity_type.manager')->getStorage('view');
+    $view_storage_controller = \Drupal::service('entity_type.manager')->getStorage('view');
     /** @var \Drupal\views\Entity\View $view */
     $view = $view_storage_controller->load($view['id']);
 

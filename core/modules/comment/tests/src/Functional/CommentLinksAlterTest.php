@@ -28,7 +28,7 @@ class CommentLinksAlterTest extends CommentTestBase {
     parent::setUp();
 
     // Enable comment_test.module's hook_comment_links_alter() implementation.
-    $this->container->get('state')->set('comment_test_links_alter_enabled', TRUE);
+    \Drupal::service('state')->set('comment_test_links_alter_enabled', TRUE);
   }
 
   /**

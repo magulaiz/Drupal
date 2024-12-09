@@ -57,7 +57,7 @@ class WorkflowUiNoTypeTest extends BrowserTestBase {
     // The current user does not have the 'administer modules' permission.
     $this->assertSession()->statusCodeEquals(403);
 
-    $this->container->get('module_installer')->install(['workflow_type_test']);
+    \Drupal::service('module_installer')->install(['workflow_type_test']);
     // The render cache needs to be cleared because although the cache tags are
     // correctly set the render cache does not pick it up.
     \Drupal::cache('render')->deleteAll();

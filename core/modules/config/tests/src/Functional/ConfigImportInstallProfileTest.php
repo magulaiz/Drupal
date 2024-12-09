@@ -45,7 +45,7 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
 
     $this->webUser = $this->drupalCreateUser(['synchronize configuration']);
     $this->drupalLogin($this->webUser);
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
+    $this->copyConfig(\Drupal::service('config.storage'), \Drupal::service('config.storage.sync'));
   }
 
   /**
@@ -57,8 +57,8 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    */
   public function testInstallProfileValidation(): void {
-    $sync = $this->container->get('config.storage.sync');
-    $this->copyConfig($this->container->get('config.storage'), $sync);
+    $sync = \Drupal::service('config.storage.sync');
+    $this->copyConfig(\Drupal::service('config.storage'), $sync);
     $core = $sync->read('core.extension');
 
     // Ensure install profiles can not be uninstalled.

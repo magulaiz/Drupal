@@ -115,7 +115,7 @@ class DateTimeFieldTest extends DateTestBase {
         foreach ($values as $new_value) {
           // Update the entity display settings.
           $this->displayOptions['settings'] = [$setting => $new_value] + $this->defaultSettings;
-          $this->container->get('entity_display.repository')
+          \Drupal::service('entity_display.repository')
             ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
             ->setComponent($field_name, $this->displayOptions)
             ->save();
@@ -126,7 +126,7 @@ class DateTimeFieldTest extends DateTestBase {
               // Verify that a date is displayed. Since this is a date-only
               // field, it is expected to display the time as 00:00:00.
               /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-              $date_formatter = $this->container->get('date.formatter');
+              $date_formatter = \Drupal::service('date.formatter');
               $expected = $date_formatter->format($date->getTimestamp(), $new_value, '', DateTimeItemInterface::STORAGE_TIMEZONE);
               $expected_iso = $date_formatter->format($date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
               $output = $this->renderTestEntity($id);
@@ -278,7 +278,7 @@ class DateTimeFieldTest extends DateTestBase {
         switch ($setting) {
           case 'format_type':
             // Verify that a date is displayed.
-            $date_formatter = $this->container->get('date.formatter');
+            $date_formatter = \Drupal::service('date.formatter');
             $expected = $date_formatter->format($date->getTimestamp(), $new_value);
             $expected_iso = $date_formatter->format($date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
             $output = $this->renderTestEntity($id);

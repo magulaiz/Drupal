@@ -39,10 +39,10 @@ class FailureMarkerRequirementTest extends PackageManagerTestBase {
     $this->drupalLogin($account);
 
     $fake_project_root = $this->root . DIRECTORY_SEPARATOR . $this->publicFilesDirectory;
-    $this->container->get(PathLocator::class)
+    \Drupal::service(PathLocator::class)
       ->setPaths($fake_project_root, NULL, NULL, NULL);
 
-    $failure_marker = $this->container->get(FailureMarker::class);
+    $failure_marker = \Drupal::service(FailureMarker::class);
     $message = $this->t('Package Manager is here to wreck your day.');
     $stage = new class() extends StageBase {
 

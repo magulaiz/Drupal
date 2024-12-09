@@ -46,7 +46,7 @@ class ContactLinkTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE, $modules = ['contact_test_views']): void {
     parent::setUp($import_test_views, $modules);
 
-    $this->userData = $this->container->get('user.data');
+    $this->userData = \Drupal::service('user.data');
   }
 
   /**

@@ -90,8 +90,8 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     $this->assertEquals($value, $entity->field_tel->value);
     $this->assertEquals($value, $entity->field_tel[0]->value);
 
-    $active = $this->container->get('config.storage');
-    $sync = $this->container->get('config.storage.sync');
+    $active = \Drupal::service('config.storage');
+    $sync = \Drupal::service('config.storage.sync');
     $this->copyConfig($active, $sync);
 
     // Stage uninstall of the Telephone module.
@@ -132,8 +132,8 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
    * Tests if the synchronization form is available when the core.extension.yml is missing.
    */
   public function testSynchronizeForm(): void {
-    $sync = $this->container->get('config.storage.sync');
-    $this->copyConfig($this->container->get('config.storage'), $sync);
+    $sync = \Drupal::service('config.storage.sync');
+    $this->copyConfig(\Drupal::service('config.storage'), $sync);
 
     $sync->delete('core.extension');
     $this->drupalGet('admin/config/development/configuration');

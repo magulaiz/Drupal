@@ -114,7 +114,7 @@ class FilterDateTest extends ViewTestBase {
     $this->nodes[] = $this->drupalCreateNode();
 
     // Views needs to be aware of the new field.
-    $this->container->get('views.views_data')->clear();
+    \Drupal::service('views.views_data')->clear();
 
     // Load test views.
     ViewTestData::createTestViews(static::class, ['datetime_test']);

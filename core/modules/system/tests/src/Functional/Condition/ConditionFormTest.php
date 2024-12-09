@@ -52,7 +52,7 @@ class ConditionFormTest extends BrowserTestBase {
 
     $this->assertSession()->pageTextContains('The current theme is stark');
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
-    $theme_installer = $this->container->get('theme_installer');
+    $theme_installer = \Drupal::service('theme_installer');
     $theme_installer->install(['olivero']);
     $this->drupalGet('condition_test');
     $this->submitForm(['current_theme[theme]' => 'olivero', 'current_theme[negate]' => TRUE], 'Submit');

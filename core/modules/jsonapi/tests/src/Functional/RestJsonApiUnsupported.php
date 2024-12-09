@@ -89,7 +89,7 @@ class RestJsonApiUnsupported extends ResourceTestBase {
    * @see \Drupal\jsonapi\EventSubscriber\JsonApiRequestValidator::validateQueryParams()
    */
   public function testApiJsonNotSupportedInRest(): void {
-    $this->assertSame(['json', 'xml'], $this->container->getParameter('serializer.formats'));
+    $this->assertSame(['json', 'xml'], \Drupal::serviceParameter('serializer.formats'));
 
     $this->provisionResource(['api_json'], []);
     $this->setUpAuthorization('GET');

@@ -116,7 +116,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $this->drupalGet('/media/add/document');
     $page = $this->getSession()->getPage();
     $page->fillField('Name', 'Foobar');
-    $page->attachFileToField('File', $this->container->get('file_system')->realpath($uri));
+    $page->attachFileToField('File', \Drupal::service('file_system')->realpath($uri));
     $page->pressButton('Save');
     $assert->addressEquals('admin/content/media');
 
@@ -136,7 +136,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $this->assertRevisionCount($media, 2);
 
     // Confirm the correct revision title appears on "view revisions" page.
-    $media = $this->container->get('entity_type.manager')
+    $media = \Drupal::service('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged(1);
     $this->drupalGet("media/" . $media->id() . "/revisions/" . $media->getRevisionId() . "/view");
@@ -185,7 +185,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $this->assertRevisionCount($media, 2);
 
     // Confirm the correct revision title appears on "view revisions" page.
-    $media = $this->container->get('entity_type.manager')
+    $media = \Drupal::service('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged(1);
     $this->drupalGet("media/" . $media->id() . "/revisions/" . $media->getRevisionId() . "/view");

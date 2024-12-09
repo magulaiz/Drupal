@@ -142,7 +142,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
     $this->executeView($view);
 
     // Get the serializer service.
-    $serializer = $this->container->get('serializer');
+    $serializer = \Drupal::service('serializer');
 
     $entities = [];
     foreach ($view->result as $row) {
@@ -236,7 +236,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
 
     // Ensure that there is no corresponding render cache item yet.
     $original['#cache'] += ['contexts' => []];
-    $original['#cache']['contexts'] = Cache::mergeContexts($original['#cache']['contexts'], $this->container->getParameter('renderer.config')['required_cache_contexts']);
+    $original['#cache']['contexts'] = Cache::mergeContexts($original['#cache']['contexts'], \Drupal::serviceParameter('renderer.config')['required_cache_contexts']);
 
     $cache_tags = [
       'config:views.view.test_serializer_display_entity',
@@ -476,7 +476,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
     $view->setDisplay('rest_export_1');
     $this->executeView($view);
 
-    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
+    $storage = \Drupal::service('entity_type.manager')->getStorage('entity_test');
 
     // Update the name for each to include a script tag.
     foreach ($storage->loadMultiple() as $entity_test) {
@@ -535,7 +535,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
     $this->executeView($view);
 
     // Get the serializer service.
-    $serializer = $this->container->get('serializer');
+    $serializer = \Drupal::service('serializer');
 
     $entities = [];
     foreach ($view->result as $row) {

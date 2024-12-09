@@ -35,11 +35,11 @@ class ConfigImportUIAjaxTest extends WebDriverTestBase {
 
     $user = $this->drupalCreateUser(['synchronize configuration']);
     $this->drupalLogin($user);
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
+    $this->copyConfig(\Drupal::service('config.storage'), \Drupal::service('config.storage.sync'));
 
     // Create updated configuration object.
     $new_site_name = 'Config import test ' . $this->randomString();
-    $sync = $this->container->get('config.storage.sync');
+    $sync = \Drupal::service('config.storage.sync');
 
     // Create updated configuration object.
     $config_data = $this->config('system.site')->get();

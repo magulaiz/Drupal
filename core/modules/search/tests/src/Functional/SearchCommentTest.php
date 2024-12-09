@@ -99,7 +99,7 @@ class SearchCommentTest extends BrowserTestBase {
    * Verify that comments are rendered using proper format in search results.
    */
   public function testSearchResultsComment(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     // Create basic_html format that escapes all HTML.
     $basic_html_format = FilterFormat::create([
       'format' => 'basic_html',

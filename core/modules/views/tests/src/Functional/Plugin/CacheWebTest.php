@@ -60,12 +60,12 @@ class CacheWebTest extends ViewTestBase {
       ],
     ]);
     $view->save();
-    $this->container->get('router.builder')->rebuildIfNeeded();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
 
     /** @var \Drupal\Core\Render\RenderCacheInterface $render_cache */
     $render_cache = \Drupal::service('render_cache');
     $cache_element = DisplayPluginBase::buildBasicRenderable('test_display', 'page_1');
-    $cache_element['#cache'] += ['contexts' => $this->container->getParameter('renderer.config')['required_cache_contexts']];
+    $cache_element['#cache'] += ['contexts' => \Drupal::serviceParameter('renderer.config')['required_cache_contexts']];
     $this->assertFalse($render_cache->get($cache_element));
 
     $this->drupalGet('test-display');

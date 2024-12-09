@@ -182,8 +182,8 @@ abstract class InstallerTestBase extends BrowserTestBase {
     if ($this->isInstalled) {
       // Import new settings.php written by the installer.
       $request = Request::createFromGlobals();
-      $class_loader = require $this->container->getParameter('app.root') . '/autoload.php';
-      Settings::initialize($this->container->getParameter('app.root'), DrupalKernel::findSitePath($request), $class_loader);
+      $class_loader = require \Drupal::serviceParameter('app.root') . '/autoload.php';
+      Settings::initialize(\Drupal::serviceParameter('app.root'), DrupalKernel::findSitePath($request), $class_loader);
 
       // After writing settings.php, the installer removes write permissions
       // from the site directory. To allow drupal_generate_test_ua() to write
@@ -191,7 +191,7 @@ abstract class InstallerTestBase extends BrowserTestBase {
       // directory has to be writable.
       // BrowserTestBase::tearDown() will delete the entire test site directory.
       // Not using File API; a potential error must trigger a PHP warning.
-      chmod($this->container->getParameter('app.root') . '/' . $this->siteDirectory, 0777);
+      chmod(\Drupal::serviceParameter('app.root') . '/' . $this->siteDirectory, 0777);
       $this->kernel = DrupalKernel::createFromRequest($request, $class_loader, 'prod', FALSE);
       $this->kernel->boot();
       $this->kernel->preHandle($request);
@@ -199,7 +199,7 @@ abstract class InstallerTestBase extends BrowserTestBase {
 
       // Manually configure the test mail collector implementation to prevent
       // tests from sending out emails and collect them in state instead.
-      $this->container->get('config.factory')
+      \Drupal::service('config.factory')
         ->getEditable('system.mail')
         ->set('interface.default', 'test_mail_collector')
         ->set('mailer_dsn', [

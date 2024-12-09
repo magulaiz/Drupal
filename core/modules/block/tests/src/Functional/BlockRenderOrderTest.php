@@ -73,7 +73,7 @@ class BlockRenderOrderTest extends BrowserTestBase {
     $this->drupalGet('');
     $test_content = $this->getSession()->getPage()->getContent();
 
-    $controller = $this->container->get('entity_type.manager')->getStorage('block');
+    $controller = \Drupal::service('entity_type.manager')->getStorage('block');
     foreach ($controller->loadMultiple() as $return_block) {
       $id = $return_block->id();
       if ($return_block_weight = $return_block->getWeight()) {

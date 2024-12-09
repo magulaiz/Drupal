@@ -79,7 +79,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
     $this->type = $type->id();
 
-    $this->entityTypeManager = $this->container->get('entity_type.manager');
+    $this->entityTypeManager = \Drupal::service('entity_type.manager');
   }
 
   /**

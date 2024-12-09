@@ -82,7 +82,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $edit = [
       'title[0][value]' => $title,
       'body[0][value]' => 'Test article',
-      'files[field_image_0]' => $this->container->get('file_system')->realpath($image->getFileUri()),
+      'files[field_image_0]' => \Drupal::service('file_system')->realpath($image->getFileUri()),
     ];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
@@ -137,7 +137,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     // Submit the form but exclude the title field.
     $edit = [
       'body[0][value]' => 'Test article',
-      'files[field_image_0]' => $this->container->get('file_system')->realpath($image->getFileUri()),
+      'files[field_image_0]' => \Drupal::service('file_system')->realpath($image->getFileUri()),
     ];
     if (!$this->loggedInUser) {
       $label = 'Save';

@@ -32,7 +32,7 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
     $this->drupalLogin($this->adminUser);
 
     /** @var \Drupal\node\NodeStorage $node_storage */
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
 
     // Create an image media type for testing the formatter.
     $this->createMediaType('image', ['id' => 'image']);
@@ -62,7 +62,7 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
     ])->save();
 
     // Alter the form display.
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getFormDisplay('node', 'article')
       ->setComponent('field_media_reference', [
         'type' => 'entity_reference_autocomplete',
@@ -118,7 +118,7 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
    */
   private function changeMediaReferenceFieldLinkType(string $type): void {
     // Change the display to use the media thumbnail formatter with image link.
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getViewDisplay('node', 'article', 'default')
       ->setComponent('field_media_reference', [
         'type' => 'media_thumbnail',

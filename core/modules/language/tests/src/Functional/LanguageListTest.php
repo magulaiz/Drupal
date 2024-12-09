@@ -198,7 +198,7 @@ class LanguageListTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/language');
 
     // Delete the NL language in the background.
-    $language_storage = $this->container->get('entity_type.manager')->getStorage('configurable_language');
+    $language_storage = \Drupal::service('entity_type.manager')->getStorage('configurable_language');
     $language_storage->load('nl')->delete();
 
     $this->submitForm(['site_default_language' => 'nl'], 'Save configuration');
@@ -219,13 +219,13 @@ class LanguageListTest extends BrowserTestBase {
     $expected_all_languages = ['l4' => 'l4', 'l3' => 'l3', 'l2' => 'l2', 'l1' => 'l1', 'en' => 'en', 'und' => 'und', 'zxx' => 'zxx'];
     $expected_conf_languages = ['l3' => 'l3', 'l1' => 'l1', 'en' => 'en'];
 
-    $locked_languages = $this->container->get('language_manager')->getLanguages(LanguageInterface::STATE_LOCKED);
+    $locked_languages = \Drupal::service('language_manager')->getLanguages(LanguageInterface::STATE_LOCKED);
     $this->assertEquals([], array_diff_key($expected_locked_languages, $locked_languages), 'Locked languages loaded correctly.');
 
-    $all_languages = $this->container->get('language_manager')->getLanguages(LanguageInterface::STATE_ALL);
+    $all_languages = \Drupal::service('language_manager')->getLanguages(LanguageInterface::STATE_ALL);
     $this->assertEquals([], array_diff_key($expected_all_languages, $all_languages), 'All languages loaded correctly.');
 
-    $conf_languages = $this->container->get('language_manager')->getLanguages();
+    $conf_languages = \Drupal::service('language_manager')->getLanguages();
     $this->assertEquals([], array_diff_key($expected_conf_languages, $conf_languages), 'Configurable languages loaded correctly.');
   }
 

@@ -114,7 +114,7 @@ class CommentLanguageTest extends BrowserTestBase {
     // is the user language preference. This way we can ensure that node
     // language and interface language do not influence comment language, as
     // only content language has to.
-    foreach ($this->container->get('language_manager')->getLanguages() as $node_langcode => $node_language) {
+    foreach (\Drupal::service('language_manager')->getLanguages() as $node_langcode => $node_language) {
       // Create "Article" content.
       $title = $this->randomMachineName();
       $edit = [
@@ -128,7 +128,7 @@ class CommentLanguageTest extends BrowserTestBase {
       $node = $this->drupalGetNodeByTitle($title);
 
       $prefixes = $this->config('language.negotiation')->get('url.prefixes');
-      foreach ($this->container->get('language_manager')->getLanguages() as $langcode => $language) {
+      foreach (\Drupal::service('language_manager')->getLanguages() as $langcode => $language) {
         // Post a comment with content language $langcode.
         $prefix = empty($prefixes[$langcode]) ? '' : $prefixes[$langcode] . '/';
         $comment_values[$node_langcode][$langcode] = $this->randomMachineName();

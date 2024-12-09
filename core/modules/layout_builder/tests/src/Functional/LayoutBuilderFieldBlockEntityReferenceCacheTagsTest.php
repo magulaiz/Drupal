@@ -62,7 +62,7 @@ class LayoutBuilderFieldBlockEntityReferenceCacheTagsTest extends BrowserTestBas
 
     // Enable layout builder to the content type with the reference field, and
     // add the reference field to the layout builder display.
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getViewDisplay('node', 'bundle_with_reference_field', 'full')
       ->enableLayoutBuilder()
       ->setComponent('field_reference', ['type' => 'entity_reference_label'])

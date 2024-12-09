@@ -133,7 +133,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
       ->save();
 
     // Reset static caching.
-    $this->container->get('language_manager')->reset();
+    \Drupal::service('language_manager')->reset();
 
     // In case index.php is part of the URLs, we need to adapt the asserted
     // URLs as well.

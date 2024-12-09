@@ -83,7 +83,7 @@ class LayoutBuilderSectionStorageTest extends BrowserTestBase {
     $assert_session->pageTextNotContains('Test block title');
 
     // Enable the test section storage.
-    $this->container->get('state')->set('layout_builder_test_state', TRUE);
+    \Drupal::service('state')->set('layout_builder_test_state', TRUE);
     $this->drupalGet('node/1');
     $assert_session->pageTextNotContains('Defaults block title');
     $assert_session->pageTextContains('Test block title');
@@ -99,7 +99,7 @@ class LayoutBuilderSectionStorageTest extends BrowserTestBase {
     $assert_session->pageTextContains('Test block title');
 
     // Disabling the test storage restores the original output.
-    $this->container->get('state')->set('layout_builder_test_state', FALSE);
+    \Drupal::service('state')->set('layout_builder_test_state', FALSE);
     $this->drupalGet('node/1');
     $assert_session->pageTextNotContains('Defaults block title');
     $assert_session->pageTextNotContains('Test block title');

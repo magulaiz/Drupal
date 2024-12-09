@@ -104,7 +104,7 @@ class TwigExtensionTest extends BrowserTestBase {
     $this->assertSession()->elementsCount('css', '.sf-dump', 0);
 
     // Test Twig Debug enabled.
-    $parameters = $this->container->getParameter('twig.config');
+    $parameters = \Drupal::serviceParameter('twig.config');
     $parameters['debug'] = TRUE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->resetAll();

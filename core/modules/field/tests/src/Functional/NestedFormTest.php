@@ -101,7 +101,7 @@ class NestedFormTest extends FieldTestBase {
 
     // Create two entities.
     $entity_type = 'entity_test';
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($entity_type);
 
     $entity_1 = $storage->create(['id' => 1]);
@@ -203,7 +203,7 @@ class NestedFormTest extends FieldTestBase {
    */
   public function testNestedEntityFormEntityLevelValidation(): void {
     // Create two entities.
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage('entity_test_constraints');
 
     $entity_1 = $storage->create();

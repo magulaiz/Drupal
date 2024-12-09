@@ -160,7 +160,7 @@ class FormTest extends FieldTestBase {
     ];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
-    $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
+    \Drupal::service('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertEquals($value, $entity->{$field_name}->value, 'Field value was updated');
 
@@ -172,7 +172,7 @@ class FormTest extends FieldTestBase {
     $this->drupalGet('entity_test/manage/' . $id . '/edit');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
-    $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
+    \Drupal::service('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field was emptied');
   }
@@ -465,7 +465,7 @@ class FormTest extends FieldTestBase {
 
     // Test that the form structure includes full information for each delta
     // apart from #access.
-    $entity = $this->container->get('entity_type.manager')
+    $entity = \Drupal::service('entity_type.manager')
       ->getStorage($entity_type)
       ->create(['id' => 0, 'revision_id' => 0]);
 
@@ -490,7 +490,7 @@ class FormTest extends FieldTestBase {
     $id = $match[1];
 
     // Check that the default value was saved.
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($entity_type);
     $entity = $storage->load($id);
     $this->assertEquals(99, $entity->{$field_name_no_access}->value, 'Default value was saved for the field with no edit access.');
@@ -512,7 +512,7 @@ class FormTest extends FieldTestBase {
 
     // Check that the revision is also saved in the revisions table.
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($entity_type);
     $entity = $storage->loadRevision($entity->getRevisionId());
     $this->assertEquals(99, $entity->{$field_name_no_access}->value, 'New revision has the expected value for the field with no edit access.');
@@ -547,7 +547,7 @@ class FormTest extends FieldTestBase {
     preg_match('|' . $entity_type . '/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertSession()->pageTextContains('entity_test_rev ' . $id . ' has been created.');
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($entity_type);
 
     $entity = $storage->load($id);

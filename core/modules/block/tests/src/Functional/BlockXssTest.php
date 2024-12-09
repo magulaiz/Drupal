@@ -45,7 +45,7 @@ class BlockXssTest extends BrowserTestBase {
    * Tests XSS in title.
    */
   public function testXssInTitle(): void {
-    $this->container->get('module_installer')->install(['block_test']);
+    \Drupal::service('module_installer')->install(['block_test']);
     $this->drupalPlaceBlock('test_xss_title', ['label' => '<script>alert("XSS label");</script>']);
 
     \Drupal::state()->set('block_test.content', $this->randomMachineName());
@@ -68,7 +68,7 @@ class BlockXssTest extends BrowserTestBase {
    * Tests XSS in category.
    */
   public function testXssInCategory(): void {
-    $this->container->get('module_installer')->install(['block_test']);
+    \Drupal::service('module_installer')->install(['block_test']);
     $this->drupalPlaceBlock('test_xss_title');
     $this->drupalLogin($this->drupalCreateUser([
       'administer blocks',

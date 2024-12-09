@@ -81,10 +81,10 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
 
     // Save the entity view display so that it can be reverted to later.
     /** @var \Drupal\Core\Config\StorageInterface $active_config_storage */
-    $active_config_storage = $this->container->get('config.storage');
+    $active_config_storage = \Drupal::service('config.storage');
     $original_display_config_data = $active_config_storage->read('core.entity_view_display.node.bundle_with_section_field.default');
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $entity_view_display_storage */
-    $entity_view_display_storage = $this->container->get('entity_type.manager')->getStorage('entity_view_display');
+    $entity_view_display_storage = \Drupal::service('entity_type.manager')->getStorage('entity_view_display');
     $entity_view_display = $entity_view_display_storage->load('node.bundle_with_section_field.default');
 
     $expected_save_message = 'The layout has been saved.';

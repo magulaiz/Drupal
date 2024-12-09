@@ -40,7 +40,7 @@ class DownloadTest extends FileManagedTestBase {
       $this->markTestSkipped('Test frequently causes a locked database on SQLite');
     }
 
-    $this->fileUrlGenerator = $this->container->get('file_url_generator');
+    $this->fileUrlGenerator = \Drupal::service('file_url_generator');
     // Clear out any hook calls.
     file_test_reset();
   }

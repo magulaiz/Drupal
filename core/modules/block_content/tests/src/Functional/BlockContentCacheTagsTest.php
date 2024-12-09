@@ -77,10 +77,10 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
    */
   public function testBlock(): void {
     $block = $this->drupalPlaceBlock('block_content:' . $this->entity->uuid());
-    $build = $this->container->get('entity_type.manager')->getViewBuilder('block')->view($block, 'block');
+    $build = \Drupal::service('entity_type.manager')->getViewBuilder('block')->view($block, 'block');
 
     // Render the block.
-    $this->container->get('renderer')->renderRoot($build);
+    \Drupal::service('renderer')->renderRoot($build);
 
     // Expected keys, contexts, and tags for the block.
     // @see \Drupal\block\BlockViewBuilder::viewMultiple()

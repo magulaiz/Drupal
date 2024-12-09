@@ -70,7 +70,7 @@ abstract class BlockTestBase extends BrowserTestBase {
       'sidebar_second',
       'footer',
     ];
-    $block_storage = $this->container->get('entity_type.manager')->getStorage('block');
+    $block_storage = \Drupal::service('entity_type.manager')->getStorage('block');
     $blocks = $block_storage->loadByProperties(['theme' => $this->config('system.theme')->get('default')]);
     foreach ($blocks as $block) {
       $block->delete();

@@ -178,7 +178,7 @@ class StyleTableTest extends ViewTestBase {
       'created' => gmmktime(0, 0, 0, 2, 15, 2001),
       'status' => 1,
     ];
-    $database = $this->container->get('database');
+    $database = \Drupal::service('database');
     $database->insert('views_test_data')
       ->fields(array_keys($unsafe_markup_data))
       ->values($unsafe_markup_data)

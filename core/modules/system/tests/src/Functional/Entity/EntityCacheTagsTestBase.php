@@ -271,7 +271,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
     // Create an entity that does reference the entity being tested.
     $label_key = \Drupal::entityTypeManager()->getDefinition($entity_type)->getKey('label');
-    $referencing_entity = $this->container->get('entity_type.manager')
+    $referencing_entity = \Drupal::service('entity_type.manager')
       ->getStorage($entity_type)
       ->create([
         $label_key => 'Referencing ' . $entity_type,
@@ -282,7 +282,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $referencing_entity->save();
 
     // Create an entity that does not reference the entity being tested.
-    $non_referencing_entity = $this->container->get('entity_type.manager')
+    $non_referencing_entity = \Drupal::service('entity_type.manager')
       ->getStorage($entity_type)
       ->create([
         $label_key => 'Non-referencing ' . $entity_type,
@@ -481,7 +481,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       // Verify that after modifying the corresponding bundle entity, there is a
       // cache miss for both the referencing entity, and the listing of
       // referencing entities, but not for any other routes.
-      $bundle_entity = $this->container->get('entity_type.manager')
+      $bundle_entity = \Drupal::service('entity_type.manager')
         ->getStorage($bundle_entity_type_id)
         ->load($this->entity->bundle());
       $bundle_entity->save();

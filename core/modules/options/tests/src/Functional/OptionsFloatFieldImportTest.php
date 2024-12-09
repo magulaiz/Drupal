@@ -68,7 +68,7 @@ class OptionsFloatFieldImportTest extends FieldTestBase {
     $admin_path = 'admin/structure/types/manage/' . $type . '/fields/node.' . $type . '.' . $field_name;
 
     // Export active config to sync.
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
+    $this->copyConfig(\Drupal::service('config.storage'), \Drupal::service('config.storage.sync'));
 
     // Set the active to not use dots in the allowed values key names.
     $edit = [

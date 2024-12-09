@@ -93,7 +93,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
 
     // Make sure node edit pages are administration pages.
     $this->config('node.settings')->set('use_admin_theme', '1')->save();
-    $this->container->get('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
 
     // Place a Block with a translatable string on the page.
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);

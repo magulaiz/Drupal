@@ -47,7 +47,7 @@ class FrontPageTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE, $modules = []): void {
     parent::setUp($import_test_views, $modules);
 
-    $this->nodeStorage = $this->container->get('entity_type.manager')
+    $this->nodeStorage = \Drupal::service('entity_type.manager')
       ->getStorage('node');
   }
 

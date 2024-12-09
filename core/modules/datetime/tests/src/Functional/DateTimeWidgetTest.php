@@ -86,7 +86,7 @@ class DateTimeWidgetTest extends DateTestBase {
 
       // The time of the request is determined very early on in the request so
       // use the current time prior to making a request.
-      $request_time = $this->container->get('datetime.time')->getCurrentTime();
+      $request_time = \Drupal::service('datetime.time')->getCurrentTime();
       $this->drupalGet('node/add/date_only_content');
 
       $today = $this->dateFormatter->format($request_time, 'html_date', NULL, $timezone);

@@ -106,7 +106,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     $this->assertSame($body_value, $node->body->value);
 
     // Enable content language URL detection.
-    $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_CONTENT, [LanguageNegotiationUrl::METHOD_ID => 0]);
+    \Drupal::service('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_CONTENT, [LanguageNegotiationUrl::METHOD_ID => 0]);
 
     // Test multilingual field language fallback logic.
     $this->drupalGet("it/node/{$node->id()}");

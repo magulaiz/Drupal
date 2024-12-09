@@ -86,7 +86,7 @@ class DisplayFeedTest extends ViewTestBase {
     // Confirm that the CDATA is closed properly.
     $this->assertSession()->responseContains(']]></description>');
 
-    $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_display_feed');
+    $view = \Drupal::service('entity_type.manager')->getStorage('view')->load('test_display_feed');
     $display = &$view->getDisplay('feed_1');
     $display['display_options']['sitename_title'] = 0;
     $view->save();

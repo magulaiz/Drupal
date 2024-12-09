@@ -56,7 +56,7 @@ class ImageStyleDownloadAccessControlTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->fileSystem = $this->container->get('file_system');
+    $this->fileSystem = \Drupal::service('file_system');
 
     $this->style = ImageStyle::create([
       'name' => 'style_foo',

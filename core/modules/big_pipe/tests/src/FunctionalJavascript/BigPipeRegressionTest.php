@@ -37,8 +37,8 @@ class BigPipeRegressionTest extends WebDriverTestBase {
     parent::setUp();
 
     // Use the big_pipe_test_theme theme.
-    $this->container->get('theme_installer')->install(['big_pipe_test_theme']);
-    $this->container->get('config.factory')->getEditable('system.theme')->set('default', 'big_pipe_test_theme')->save();
+    \Drupal::service('theme_installer')->install(['big_pipe_test_theme']);
+    \Drupal::service('config.factory')->getEditable('system.theme')->set('default', 'big_pipe_test_theme')->save();
   }
 
   /**
@@ -47,7 +47,7 @@ class BigPipeRegressionTest extends WebDriverTestBase {
    * @see https://www.drupal.org/node/2678662
    */
   public function testMultipleClosingBodies_2678662(): void {
-    $this->assertTrue($this->container->get('module_installer')->install(['render_placeholder_message_test'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['render_placeholder_message_test'], TRUE), 'Installed modules.');
 
     $this->drupalLogin($this->drupalCreateUser());
     $this->drupalGet(Url::fromRoute('big_pipe_regression_test.2678662'));
@@ -80,7 +80,7 @@ JS;
    * @see https://www.drupal.org/node/2712935
    */
   public function testMessages_2712935(): void {
-    $this->assertTrue($this->container->get('module_installer')->install(['render_placeholder_message_test'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['render_placeholder_message_test'], TRUE), 'Installed modules.');
 
     $this->drupalLogin($this->drupalCreateUser());
     $messages_markup = '<div class="messages messages--status" role="status"';

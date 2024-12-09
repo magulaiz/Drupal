@@ -131,7 +131,7 @@ class ContentImportTest extends BrowserTestBase {
       $this->expectExceptionMessage('user 94503467-be7f-406c-9795-fc25baa22203 already exists.');
     }
 
-    $this->container->get(Importer::class)
+    \Drupal::service(Importer::class)
       ->importContent(new Finder($this->contentDir), $existing);
   }
 
@@ -142,7 +142,7 @@ class ContentImportTest extends BrowserTestBase {
     $logger = new TestLogger();
 
     /** @var \Drupal\Core\DefaultContent\Importer $importer */
-    $importer = $this->container->get(Importer::class);
+    $importer = \Drupal::service(Importer::class);
     $importer->setLogger($logger);
     $importer->importContent(new Finder($this->contentDir));
 
@@ -175,7 +175,7 @@ class ContentImportTest extends BrowserTestBase {
 
     $this->expectException(InvalidEntityException::class);
     $this->expectExceptionMessage("$dir/invalid.yml: sticky.0.value=This value should be of the correct primitive type.");
-    $this->container->get(Importer::class)->importContent(new Finder($dir));
+    \Drupal::service(Importer::class)->importContent(new Finder($dir));
   }
 
   /**
@@ -183,7 +183,7 @@ class ContentImportTest extends BrowserTestBase {
    */
   private function assertContentWasImported(): void {
     /** @var \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository */
-    $entity_repository = $this->container->get(EntityRepositoryInterface::class);
+    $entity_repository = \Drupal::service(EntityRepositoryInterface::class);
 
     $node = $entity_repository->loadEntityByUuid('node', 'e1714f23-70c0-4493-8e92-af1901771921');
     $this->assertInstanceOf(NodeInterface::class, $node);

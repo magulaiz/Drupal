@@ -145,7 +145,7 @@ class StyleSerializerTest extends ViewTestBase {
     $this->executeView($view);
 
     // Set the site to maintenance mode.
-    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+    \Drupal::service('state')->set('system.maintenance_mode', TRUE);
 
     $this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'json']]);
     // Verify that the endpoint is unavailable for anonymous users.
@@ -208,7 +208,7 @@ class StyleSerializerTest extends ViewTestBase {
     $view->displayHandlers->get('default')->overrideOption('fields', $fields);
     $build = $view->preview();
     // Get the serializer service.
-    $serializer = $this->container->get('serializer');
+    $serializer = \Drupal::service('serializer');
     // Check if the field_group_rows field is grouped.
     $expected = [];
     $expected[] = [$field_name => implode(', ', $grouped_field_values)];
@@ -309,7 +309,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     // Get the names of the output.
     $json = $this->drupalGet('test/serialize/translated_entity', ['query' => ['_format' => 'json']]);
-    $decoded = $this->container->get('serializer')->decode($json, 'json');
+    $decoded = \Drupal::service('serializer')->decode($json, 'json');
     $names = [];
     foreach ($decoded as $item) {
       $names[] = $item['name'][0]['value'];

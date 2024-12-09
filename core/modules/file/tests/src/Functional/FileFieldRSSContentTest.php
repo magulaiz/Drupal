@@ -27,7 +27,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
    * Tests RSS enclosure formatter display for RSS feeds.
    */
   public function testFileFieldRSSContent(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
     $type_name = 'article';
 

@@ -25,9 +25,9 @@ abstract class ConfigAfterInstallerTestBase extends InstallerTestBase {
   protected function assertInstalledConfig(array $skipped_config) {
     $this->addToAssertionCount(1);
     /** @var \Drupal\Core\Config\StorageInterface $active_config_storage */
-    $active_config_storage = $this->container->get('config.storage');
+    $active_config_storage = \Drupal::service('config.storage');
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
-    $config_manager = $this->container->get('config.manager');
+    $config_manager = \Drupal::service('config.manager');
 
     $default_install_path = 'core/profiles/' . $this->profile . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
     $profile_config_storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);

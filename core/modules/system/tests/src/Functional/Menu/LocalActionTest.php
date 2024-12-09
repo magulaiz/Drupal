@@ -56,7 +56,7 @@ class LocalActionTest extends BrowserTestBase {
     // Verify the expected cache tag in the response headers.
     $this->assertSession()->responseHeaderContains('x-drupal-cache-tags', 'config:menu_test.links.action');
     /** @var \Drupal\Core\Config\Config $config */
-    $config = $this->container->get('config.factory')->getEditable('menu_test.links.action');
+    $config = \Drupal::service('config.factory')->getEditable('menu_test.links.action');
     $config->set('title', 'New title');
     $config->save();
     $this->drupalGet(Url::fromRoute('menu_test.local_action6'));

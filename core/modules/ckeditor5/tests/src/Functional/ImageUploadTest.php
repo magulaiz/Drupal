@@ -184,7 +184,7 @@ class ImageUploadTest extends BrowserTestBase {
    *   The upload image URL for the basic_html format.
    */
   protected function getUploadUrl() {
-    $token = $this->container->get('csrf_token')->get('ckeditor5/upload-image/basic_html');
+    $token = \Drupal::service('csrf_token')->get('ckeditor5/upload-image/basic_html');
     return Url::fromRoute('ckeditor5.upload_image', ['editor' => 'basic_html'], ['query' => ['token' => $token]]);
   }
 

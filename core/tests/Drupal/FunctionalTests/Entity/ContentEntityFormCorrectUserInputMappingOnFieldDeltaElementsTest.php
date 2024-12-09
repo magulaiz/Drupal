@@ -80,7 +80,7 @@ class ContentEntityFormCorrectUserInputMappingOnFieldDeltaElementsTest extends B
    */
   public function testCorrectUserInputMappingOnComplexFields(): void {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
-    $storage = $this->container->get('entity_type.manager')->getStorage($this->entityTypeId);
+    $storage = \Drupal::service('entity_type.manager')->getStorage($this->entityTypeId);
 
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $storage->create([

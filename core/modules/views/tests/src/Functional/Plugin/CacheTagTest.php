@@ -87,9 +87,9 @@ class CacheTagTest extends ViewTestBase {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
-    $this->nodeStorage = $this->container->get('entity_type.manager')->getStorage('node');
-    $this->nodeViewBuilder = $this->container->get('entity_type.manager')->getViewBuilder('node');
-    $this->userViewBuilder = $this->container->get('entity_type.manager')->getViewBuilder('user');
+    $this->nodeStorage = \Drupal::service('entity_type.manager')->getStorage('node');
+    $this->nodeViewBuilder = \Drupal::service('entity_type.manager')->getViewBuilder('node');
+    $this->userViewBuilder = \Drupal::service('entity_type.manager')->getViewBuilder('user');
 
     for ($i = 1; $i <= 5; $i++) {
       $this->pages[] = $this->drupalCreateNode(['title' => "Test $i", 'type' => 'page']);
@@ -116,7 +116,7 @@ class CacheTagTest extends ViewTestBase {
     $render_cache = \Drupal::service('render_cache');
     $view->element = ['#cache' => []];
     $build = $view->buildRenderable();
-    $build['#cache']['contexts'] = Cache::mergeContexts($build['#cache']['contexts'], $this->container->getParameter('renderer.config')['required_cache_contexts']);
+    $build['#cache']['contexts'] = Cache::mergeContexts($build['#cache']['contexts'], \Drupal::serviceParameter('renderer.config')['required_cache_contexts']);
 
     return $render_cache->get($build);
   }
