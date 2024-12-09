@@ -208,7 +208,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // exceptions if the configuration is not valid.
     $config_installer->checkConfigurationToInstall('module', $module_list);
 
-    // Some modules require a container rebuild immediately after install.
+    // Some modules require a container rebuild before and after install.
     // Group modules such that as many are installed together as possible until
     // one needs a container rebuild.
     $module_groups = [];

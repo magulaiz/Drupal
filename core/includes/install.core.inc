@@ -1610,7 +1610,7 @@ function install_profile_modules(&$install_state) {
   $batch_builder = new BatchBuilder();
 
   // Put modules into groups of up to the maximum batch size, or until a module
-  // states that it needs a container rebuild immediately after install.
+  // states that it needs a container rebuild before and after install.
   $index = 0;
   $module_groups = [];
   foreach (array_keys($required + $non_required) as $module) {
