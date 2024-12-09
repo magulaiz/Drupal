@@ -170,14 +170,16 @@ class ModuleInstaller implements ModuleInstallerInterface {
         @trigger_error("The module '$module' is deprecated. See " . $module_data[$module]->info['lifecycle_link'], E_USER_DEPRECATED);
       }
     }
-    // Set the actual module weights.
-    $module_list = array_map(function ($module) use ($module_data) {
-      return $module_data[$module]->sort;
-    }, $module_list);
+    if ($enable_dependencies) {
+      // Set the actual module weights.
+      $module_list = array_map(function ($module) use ($module_data) {
+        return $module_data[$module]->sort;
+      }, $module_list);
 
-    // Sort the module list by their weights (reverse).
-    arsort($module_list);
-    $module_list = array_keys($module_list);
+      // Sort the module list by their weights (reverse).
+      arsort($module_list);
+      $module_list = array_keys($module_list);
+    }
 
     // Required for module installation checks.
     include_once $this->root . '/core/includes/install.inc';
