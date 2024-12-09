@@ -299,7 +299,7 @@ class BlockUiTest extends BrowserTestBase {
     // Test the block placement indicator with using the domain as URL language
     // indicator. This causes destination query parameters to be absolute URLs.
     \Drupal::service('module_installer')->install(['language', 'locale']);
-    $this->container = \Drupal::getContainer();
+    \Drupal::getContainer() = \Drupal::getContainer();
     ConfigurableLanguage::createFromLangcode('it')->save();
     $config = $this->config('language.types');
     $config->set('negotiation.language_interface.enabled', [

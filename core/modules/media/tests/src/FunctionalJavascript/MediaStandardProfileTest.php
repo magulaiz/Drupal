@@ -127,7 +127,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
-    $audio_media_id = $this->container
+    $audio_media_id = \Drupal::getContainer()
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
@@ -215,7 +215,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $this->assertNotEmpty($result);
     $page->fillField("{$source_field_id}[0][alt]", 'Image Alt Text 1');
     $page->pressButton('Save');
-    $image_media_id = $this->container
+    $image_media_id = \Drupal::getContainer()
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
@@ -318,7 +318,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
-    $file_media_id = $this->container
+    $file_media_id = \Drupal::getContainer()
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
@@ -406,7 +406,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     // Create a media item.
     $page->fillField("{$source_field_id}[0][value]", $video_url);
     $page->pressButton('Save');
-    $remote_video_media_id = $this->container
+    $remote_video_media_id = \Drupal::getContainer()
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
@@ -503,7 +503,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
-    $video_media_id = $this->container
+    $video_media_id = \Drupal::getContainer()
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()

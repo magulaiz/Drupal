@@ -89,7 +89,7 @@ class TwigSettingsTest extends BrowserTestBase {
     \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->getActiveThemeByName('test_theme'));
 
     // Reset the theme registry, so that the new theme is used.
-    $this->container->set('theme.registry', NULL);
+    \Drupal::getContainer()->set('theme.registry', NULL);
 
     // Load array of Twig templates.
     // reset() is necessary to invalidate caches.

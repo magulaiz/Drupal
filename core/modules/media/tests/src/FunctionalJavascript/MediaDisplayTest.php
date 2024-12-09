@@ -91,7 +91,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $this->assertNotEmpty($result);
     $page->fillField('field_media_image[0][alt]', 'Image Alt Text 1');
     $page->pressButton('Save');
-    $image_media_id = $this->container
+    $image_media_id = \Drupal::getContainer()
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()

@@ -91,7 +91,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
 
     // Much like FunctionalTestSetupTrait::installModulesFromClassProperty()
     // after module install the rebuilt container needs to be used.
-    $this->container = \Drupal::getContainer();
+    \Drupal::getContainer() = \Drupal::getContainer();
     $resource_url = \Drupal::service('media.oembed.url_resolver')
       ->getResourceUrl('https://vimeo.com/14782834');
 

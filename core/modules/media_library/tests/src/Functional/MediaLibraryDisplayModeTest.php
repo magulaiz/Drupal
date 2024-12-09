@@ -87,7 +87,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
     \Drupal::service('module_installer')->install(['media_library']);
     // The container was rebuilt during module installation, so ensure we have
     // an up-to-date reference to it.
-    $this->container = $this->kernel->getContainer();
+    \Drupal::getContainer() = $this->kernel->getContainer();
 
     // For a non-image media type without a mapped name field, the media_library
     // form mode should only contain the name field.

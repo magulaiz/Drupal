@@ -123,34 +123,34 @@ abstract class InstallerTestBase extends BrowserTestBase {
     // @see install_begin_request()
     $request = Request::create($GLOBALS['base_url'] . '/core/install.php', 'GET', [], $_COOKIE, [], $_SERVER);
     $request->setSession(new Session(new MockArraySessionStorage()));
-    $this->container = new ContainerBuilder();
+    \Drupal::getContainer() = new ContainerBuilder();
     $request_stack = new RequestStack();
     $request_stack->push($request);
-    $this->container
+    \Drupal::getContainer()
       ->set('request_stack', $request_stack);
-    $this->container
+    \Drupal::getContainer()
       ->setParameter('language.default_values', Language::$defaultValues);
-    $this->container
+    \Drupal::getContainer()
       ->register('language.default', 'Drupal\Core\Language\LanguageDefault')
       ->addArgument('%language.default_values%');
-    $this->container
+    \Drupal::getContainer()
       ->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
       ->addArgument(new Reference('language.default'));
-    $this->container
+    \Drupal::getContainer()
       ->register('http_client', 'GuzzleHttp\Client')
       ->setFactory('http_client_factory:fromOptions');
-    $this->container
+    \Drupal::getContainer()
       ->register('http_client_factory', 'Drupal\Core\Http\ClientFactory')
       ->setArguments([new Reference('http_handler_stack')]);
     $handler_stack = HandlerStack::create();
     $test_http_client_middleware = new TestHttpClientMiddleware();
     $handler_stack->push($test_http_client_middleware(), 'test.http_client.middleware');
-    $this->container
+    \Drupal::getContainer()
       ->set('http_handler_stack', $handler_stack);
 
-    $this->container
+    \Drupal::getContainer()
       ->setParameter('app.root', DRUPAL_ROOT);
-    \Drupal::setContainer($this->container);
+    \Drupal::setContainer(\Drupal::getContainer());
   }
 
   /**
@@ -195,7 +195,7 @@ abstract class InstallerTestBase extends BrowserTestBase {
       $this->kernel = DrupalKernel::createFromRequest($request, $class_loader, 'prod', FALSE);
       $this->kernel->boot();
       $this->kernel->preHandle($request);
-      $this->container = $this->kernel->getContainer();
+      \Drupal::getContainer() = $this->kernel->getContainer();
 
       // Manually configure the test mail collector implementation to prevent
       // tests from sending out emails and collect them in state instead.
@@ -212,7 +212,7 @@ abstract class InstallerTestBase extends BrowserTestBase {
         ])
         ->save();
 
-      $this->installDefaultThemeFromClassProperty($this->container);
+      $this->installDefaultThemeFromClassProperty(\Drupal::getContainer());
     }
   }
 

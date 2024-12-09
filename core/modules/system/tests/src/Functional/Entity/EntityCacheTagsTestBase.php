@@ -85,7 +85,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       ])->save();
 
       // Reload the entity now that a new field has been added to it.
-      $storage = $this->container
+      $storage = \Drupal::getContainer()
         ->get('entity_type.manager')
         ->getStorage($this->entity->getEntityTypeId());
       $storage->resetCache();

@@ -120,7 +120,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     // Set the container. parent::rebuildAll() would normally do this, but this
     // not safe to do here, because the database has not been updated yet.
-    $this->container = \Drupal::getContainer();
+    \Drupal::getContainer() = \Drupal::getContainer();
 
     $this->replaceUser1();
 

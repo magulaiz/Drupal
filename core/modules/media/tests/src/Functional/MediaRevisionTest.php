@@ -121,7 +121,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $assert->addressEquals('admin/content/media');
 
     // The media item was just created, so it should only have one revision.
-    $media = $this->container
+    $media = \Drupal::getContainer()
       ->get('entity_type.manager')
       ->getStorage('media')
       ->load(1);
@@ -170,7 +170,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $assert->addressEquals('admin/content/media');
 
     // The media item was just created, so it should only have one revision.
-    $media = $this->container
+    $media = \Drupal::getContainer()
       ->get('entity_type.manager')
       ->getStorage('media')
       ->load(1);
@@ -221,7 +221,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
   protected function assertRevisionCount(EntityInterface $entity, int $expected_revisions): void {
     $entity_type = $entity->getEntityType();
 
-    $count = $this->container
+    $count = \Drupal::getContainer()
       ->get('entity_type.manager')
       ->getStorage($entity_type->id())
       ->getQuery()

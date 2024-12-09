@@ -143,7 +143,7 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
     \Drupal::service('module_installer')->install($module_list);
 
     // Installing modules updates the container and needs a router rebuild.
-    $this->container = \Drupal::getContainer();
+    \Drupal::getContainer() = \Drupal::getContainer();
     \Drupal::service('router.builder')->rebuildIfNeeded();
   }
 

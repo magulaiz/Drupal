@@ -75,7 +75,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     // Run cron until the topics are fully indexed, with a limit of 100 runs
     // to avoid infinite loops.
     $num_runs = 100;
-    $plugin = HelpSearch::create($this->container, [], 'help_search', []);
+    $plugin = HelpSearch::create(\Drupal::getContainer(), [], 'help_search', []);
     do {
       $this->cronRun();
       $remaining = $plugin->indexStatus()['remaining'];

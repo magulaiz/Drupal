@@ -98,7 +98,7 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
    * @dataProvider insertionReselectionProvider
    */
   public function testInsertionAndReselection($widget): void {
-    $this->container
+    \Drupal::getContainer()
       ->get('entity_display.repository')
       ->getFormDisplay('node', 'basic_page')
       ->setComponent('media_image_field', [

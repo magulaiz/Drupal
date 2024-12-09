@@ -463,7 +463,7 @@ class BigPipeTest extends BrowserTestBase {
    * @return \Drupal\big_pipe_test\BigPipePlaceholderTestCase[]
    */
   protected function getTestCases($has_session = TRUE) {
-    return BigPipePlaceholderTestCases::cases($this->container, $this->rootUser);
+    return BigPipePlaceholderTestCases::cases(\Drupal::getContainer(), $this->rootUser);
   }
 
   /**
