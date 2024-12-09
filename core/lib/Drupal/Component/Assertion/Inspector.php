@@ -39,7 +39,7 @@ class Inspector {
    */
   public static function assertAll(callable $callable, $traversable) {
     if (is_iterable($traversable)) {
-      return array_all($traversable, fn ($value) => $callable($value));
+      return \array_all($traversable, fn ($value) => $callable($value));
     }
     return FALSE;
   }
@@ -171,7 +171,7 @@ class Inspector {
     unset($args[0]);
 
     return static::assertAll(
-      fn ($member) => array_all(
+      fn ($member) => \array_all(
         $args,
         fn ($key) => array_key_exists($key, $member),
       ),
@@ -325,7 +325,7 @@ class Inspector {
 
     return static::assertAll(function ($member) use ($args) {
       if (count($args) > 0) {
-        return array_any($args, fn($instance) => $member instanceof $instance);
+        return \array_any($args, fn($instance) => $member instanceof $instance);
       }
       return \is_object($member);
     }, $traversable);
