@@ -213,7 +213,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // of another module currently being installed, make this the last module
       // of the group so that a container rebuild happens immediately after it
       // is installed.
-      if (!empty($module_data[$module]->info['container_rebuild_required']) && isset($dependencies[$module])) {
+      if (!empty($module_data[$module]->info['container_rebuild_required']) || isset($dependencies[$module])) {
         $index++;
       }
     }
