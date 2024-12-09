@@ -3,6 +3,7 @@
 namespace Drupal\Core\Installer;
 
 use Drupal\Core\DrupalKernel;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Extend DrupalKernel to handle force some kernel behaviors.
@@ -81,6 +82,14 @@ class InstallerKernel extends DrupalKernel {
     // subsequently executed code does not involve the installer at all.
     // @see install_drupal()
     return isset($GLOBALS['install_state']) && empty($GLOBALS['install_state']['installation_finished']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function attachSynthetic(ContainerInterface $container): void {
+    parent::attachSynthetic($container);
+    $this->container?->reset();
   }
 
 }
