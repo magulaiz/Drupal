@@ -132,7 +132,6 @@ class CronRunTest extends BrowserTestBase {
     $this->drupalGet('admin/config/system/cron');
     $this->assertSession()->pageTextNotContains('Last run: never');
 
-
     $cron_last = time() - 200;
     \Drupal::state()->set('system.cron_last', $cron_last);
 
