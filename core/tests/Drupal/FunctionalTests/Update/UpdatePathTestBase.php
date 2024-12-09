@@ -118,10 +118,6 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     // temp directory may be removed during update.
     \Drupal::service('file_system')->prepareDirectory($this->tempFilesDirectory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 
-    // Set the container. parent::rebuildAll() would normally do this, but this
-    // not safe to do here, because the database has not been updated yet.
-    \Drupal::getContainer() = \Drupal::getContainer();
-
     $this->replaceUser1();
 
     require_once $this->root . '/core/includes/update.inc';
