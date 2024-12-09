@@ -26,13 +26,6 @@ trait TestSetupTrait {
   ];
 
   /**
-   * The dependency injection container used in the test.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $container;
-
-  /**
    * The site directory of this test run.
    *
    * @var string
@@ -192,6 +185,17 @@ trait TestSetupTrait {
     }
     // Filter out any duplicates.
     return array_unique(array_merge(...$exceptions));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __get(string $name) {
+    if ($name === 'container') {
+      @trigger_error('Accessing $this->container from Functional tests is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal::service() or \Drupal::getContainer() instead. See https://www.drupal.org/node/3492500', E_USER_DEPRECATED);
+      return \Drupal::getContainer();
+    }
+    return NULL;
   }
 
 }
