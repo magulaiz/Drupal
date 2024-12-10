@@ -117,10 +117,12 @@ class TranslateBlockForm extends FormBase {
     /** @var \Drupal\Core\TypedData\DataDefinitionInterface $definition */
     $definition = new $type_definition['definition_class']($type_definition);
     $definition->setClass($type_definition['class']);
+    $definition->setTypedDataManager($this->typedConfigManager);
 
     /** @var \Drupal\Core\Config\Schema\Mapping $typed_data */
     $typed_data = $type_definition['class']::createInstance($definition);
     $typed_data->setValue($configuration);
+    $definition->setTypedDataManager($this->typedConfigManager);
     $translated_config = $this->sectionStorage->getTranslatedComponentConfiguration($this->uuid);
     foreach (array_keys($configuration) as $key) {
       if (!isset($translated_config[$key])) {
