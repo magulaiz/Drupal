@@ -34,7 +34,7 @@ class RoleStorage extends ConfigEntityStorage implements RoleStorageInterface {
    */
   public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache) {
     @trigger_error(__NAMESPACE__ . '\RoleStorage is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3477235', E_USER_DEPRECATED);
-    parent::__construct($entity_type, $config_factory,  $uuid_service, $language_manager, $memory_cache);
+    parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager, $memory_cache);
   }
 
   /**

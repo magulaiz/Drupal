@@ -39,13 +39,13 @@ class PermissionInRoleTest extends KernelTestBase {
    */
   public function testDeprecatedTestIsPermissionInRoles(): void {
     $isPermission = \Drupal::service('entity_type.manager')->getStorage('user_role')->isPermissionInRoles('access content', [AccountInterface::ANONYMOUS_ROLE]);
-    $this->expectDeprecation('Drupal\user\RoleStorage::isPermissionInRoles() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3477235');
+    $this->expectDeprecation('Drupal\user\RoleStorage::isPermissionInRoles() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3477235');
     // The $isPermission will always be true, as we assigned 'access content'
     // permission to anonymous user.
     $this->assertEquals(TRUE, $isPermission);
 
     $isPermission = \Drupal::service('entity_type.manager')->getStorage('user_role')->isPermissionInRoles('view own unpublished content', [AccountInterface::ANONYMOUS_ROLE]);
-    $this->expectDeprecation('Drupal\user\RoleStorage::isPermissionInRoles() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3477235');
+    $this->expectDeprecation('Drupal\user\RoleStorage::isPermissionInRoles() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3477235');
     // The $isPermission will always be false, as anonymous user doesn't have
     // 'view own unpublished content' permission.
     $this->assertEquals(FALSE, $isPermission);
