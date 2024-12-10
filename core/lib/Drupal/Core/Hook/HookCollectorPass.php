@@ -225,9 +225,7 @@ class HookCollectorPass implements CompilerPassInterface {
               // checked as ends with, since the regular expression sometimes
               // attributes them to the wrong module, resulting in a prefix.
               $staticDenyHooks = [
-                'hook_info',
                 'install',
-                'module_implements_alter',
                 'schema',
                 'uninstall',
                 'update_last_removed',
