@@ -60,9 +60,13 @@
   {% if not label_hidden %}
     <div{{ title_attributes.addClass(title_classes) }}>{{ label }}</div>
   {% endif %}
-  <div class="field__items">
+  {% if multiple %}
+    <div class="field__items">
+  {% endif %}
     {% for item in items %}
       <div{{ item.attributes.addClass('field__item') }}>{{ item.content }}</div>
     {% endfor %}
-  </div>
+  {% if multiple %}
+    </div>
+  {% endif %}
 </div>
