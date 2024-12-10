@@ -12,7 +12,7 @@ use Drupal\views\ViewExecutable;
  */
 #[ConfigAction(
   id: 'view:addItemToDisplayOption',
-  admin_label: new TranslatableMarkup('Views add item to display option'),
+  admin_label: new TranslatableMarkup('Add an item to a Views display option'),
   entity_types: ['view'],
 )]
 class ViewsAddItemToDisplayOption extends ViewsDisplayOptionBase {
