@@ -6,7 +6,6 @@ use Drupal\Component\Plugin\Attribute\AttributeInterface;
 use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\FileCache\FileCacheInterface;
-use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\NodeFinder;
 use PhpParser\NodeTraverser;
@@ -208,32 +207,24 @@ class AttributeClassDiscovery implements DiscoveryInterface {
    *   'trait'.
    */
   protected function getClassDependencies(Class_ $static_parsed_class): array {
-    [, $class_provider] = explode('\\', (string) $static_parsed_class->namespacedName, 3);
-    if (in_array($class_provider, ['Core', 'Component'])) {
-      $class_provider = 'core';
-    }
-    // Get lists of interface, class, and trait dependencies that do not come
-    // from core or the plugin class provider (module).
+    // Get lists of interface, class, and trait dependencies. Note that this
+    // list will be filtered by providers in the Core subclass method
+    // AttributeClassDiscovery::getClassDependencies().
     $interfaces = [];
     foreach ($static_parsed_class->implements as $interface) {
-      if (!$this->isCoreOrMatchingProvider($class_provider, $interface)) {
-        $interfaces[] = (string) $interface;
-      }
+      $interfaces[] = (string) $interface;
     }
     $extends = [];
-    if ($static_parsed_class->extends && !$this->isCoreOrMatchingProvider($class_provider, $static_parsed_class->extends)) {
+    if ($static_parsed_class->extends) {
       $extends[] = (string) $static_parsed_class->extends;
     }
     $traits = [];
     foreach ($static_parsed_class->getTraitUses() as $trait_use) {
       foreach ($trait_use->traits as $trait) {
-        if (!$this->isCoreOrMatchingProvider($class_provider, $trait)) {
-          $traits[] = (string) $trait;
-        }
+        $traits[] = (string) $trait;
       }
       foreach ($trait_use->adaptations as $adaptation) {
-        if ($adaptation->trait &&
-            !$this->isCoreOrMatchingProvider($class_provider, $adaptation->trait)) {
+        if ($adaptation->trait) {
           $traits[] = (string) $adaptation->trait;
         }
       }
@@ -264,29 +255,6 @@ class AttributeClassDiscovery implements DiscoveryInterface {
     $stmts = $nodeTraverser->traverse($stmts);
     $nodeFinder = new NodeFinder();
     return $nodeFinder->findFirstInstanceOf($stmts, Class_::class);
-  }
-
-  /**
-   * Checks whether a dependency name is from core or matches plugin provider.
-   *
-   * @param string $provider
-   *   The provider of the plugin, either 'Core', 'Component', or a module.
-   * @param \PhpParser\Node\Name $name
-   *   The namespaced name of the dependency.
-   *
-   * @return bool
-   *   TRUE if the dependency name is from the core namespace or matches the
-   *   provider of the plugin class.
-   */
-  protected function isCoreOrMatchingProvider(string $provider, Name $name): bool {
-    $name_parts = $name->getParts();
-    if ($name_parts[0] !== 'Drupal') {
-      return FALSE;
-    }
-    elseif (in_array($name_parts[1], ['Component', 'Core'])) {
-      return TRUE;
-    }
-    return $name_parts[1] === $provider;
   }
 
   /**

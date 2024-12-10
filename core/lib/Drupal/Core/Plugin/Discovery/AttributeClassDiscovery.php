@@ -162,8 +162,19 @@ class AttributeClassDiscovery extends ComponentAttributeClassDiscovery {
    * {@inheritdoc}
    */
   protected function getClassDependencies(Class_ $static_parsed_class): array {
-    // Include modules identified in the Dependencies attribute as dependencies.
+    // Filter out class, interface, and trait dependencies if their provider
+    // is 'core', 'component', or matches the provider of the plugin class.
     $dependencies = parent::getClassDependencies($static_parsed_class);
+    $class_provider = $this->getProviderFromNamespace((string) $static_parsed_class->namespacedName);
+    foreach ($dependencies as $type => $typed_dependencies) {
+      $filtered = array_filter($typed_dependencies, function ($dependency) use ($class_provider) {
+        $dependency_provider = $this->getProviderFromNamespace($dependency);
+        return ($dependency_provider !== $class_provider) && !in_array($dependency_provider, ['core', 'component']);
+      });
+      $dependencies[$type] = $filtered;
+    }
+
+    // Include modules identified in the Dependencies attribute as dependencies.
     $modules = [];
     $nodeFinder = new NodeFinder();
     $attributes = $nodeFinder->findInstanceOf($static_parsed_class->attrGroups, Attribute::class);
