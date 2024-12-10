@@ -140,7 +140,7 @@ class HookCollectorPass implements CompilerPassInterface {
     $modules = array_map(fn ($x) => preg_quote($x, '/'), array_keys($module_filenames));
     // Longer modules first.
     usort($modules, fn($a, $b) => strlen($b) - strlen($a));
-    $module_preg = '/^(?<function>(?<module>' . implode('|', $modules) . ')_(?!preprocess_)(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
+    $module_preg = '/^(?<function>(?<module>' . implode('|', $modules) . ')_(?!preprocess_)(?!.+update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
     $collector = new static();
     foreach ($module_filenames as $module => $info) {
       $skip_procedural = isset($container) ? $container->hasParameter("$module.hooks_converted") : FALSE;
@@ -234,7 +234,7 @@ class HookCollectorPass implements CompilerPassInterface {
                 'install_tasks',
                 'install_tasks_alter',
               ];
-              if (in_array($matches['hook'], $staticDenyHooks) || preg_match('/update_\d+$/', $matches['hook'])) {
+              if (in_array($matches['hook'], $staticDenyHooks)) {
                 continue;
               }
               $implementations[] = ['function' => $function, 'module' => $matches['module'], 'hook' => $matches['hook']];
