@@ -49,7 +49,7 @@ use Drupal\user\EntityOwnerTrait;
     'link_target' => [
       'view' => FileLinkTarget::class,
       'download' => FileLinkTarget::class,
-    ]
+    ],
   ],
   links: [
     'delete-form' => '/file/{file}/delete',

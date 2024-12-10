@@ -12672,6 +12672,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\ckeditor5\\\\Plugin\\\\CKEditor5Plugin\\\\EntityLinkSuggestions\\:\\:setConfiguration\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/ckeditor5/src/Plugin/CKEditor5Plugin/EntityLinkSuggestions.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\ckeditor5\\\\Plugin\\\\CKEditor5Plugin\\\\Image\\:\\:setConfiguration\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/src/Plugin/CKEditor5Plugin/Image.php',
@@ -12945,6 +12951,30 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\ckeditor5\\\\FunctionalJavascript\\\\CKEditor5DialogTest\\:\\:waitForEditor\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5DialogTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\ckeditor5\\\\FunctionalJavascript\\\\EntityLinkSuggestionsTest\\:\\:assertEditorButtonDisabled\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/EntityLinkSuggestionsTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\ckeditor5\\\\FunctionalJavascript\\\\EntityLinkSuggestionsTest\\:\\:assertEditorButtonEnabled\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/EntityLinkSuggestionsTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\ckeditor5\\\\FunctionalJavascript\\\\EntityLinkSuggestionsTest\\:\\:pressEditorButton\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/EntityLinkSuggestionsTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\ckeditor5\\\\FunctionalJavascript\\\\EntityLinkSuggestionsTest\\:\\:waitForEditor\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/EntityLinkSuggestionsTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -24999,6 +25029,18 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\link_test_base_field\\\\Hook\\\\LinkTestBaseFieldHooks\\:\\:entityBaseFieldInfo\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/link/tests/modules/link_test_base_field/src/Hook/LinkTestBaseFieldHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\filter\\\\Kernel\\\\EntityLinksTest\\:\\:assertPathAliasExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/EntityLinksTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\filter\\\\Kernel\\\\EntityLinksTest\\:\\:assertPathAliasNotExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/EntityLinksTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
