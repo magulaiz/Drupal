@@ -19,8 +19,4 @@ abstract class EventDispatcherFactory {
     return self::$eventDispatcher;
   }
 
-  public static function reset(): void {
-    unset(self::$eventDispatcher);
-  }
-
 }

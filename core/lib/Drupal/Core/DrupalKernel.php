@@ -72,6 +72,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $defaultBootstrapContainerDefinition = [
     'parameters' => [],
     'services' => [
+      'event_dispatcher' => [
+        'class' => 'Symfony\Component\EventDispatcher\EventDispatcherInterface',
+        'factory' => 'Drupal\Component\EventDispatcher\EventDispatcherFactory::getInstance',
+      ],
       'database' => [
         'class' => 'Drupal\Core\Database\Connection',
         'factory' => 'Drupal\Core\Database\Database::getConnection',
@@ -1139,7 +1143,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * {@inheritdoc}
    */
   public function rebuildContainer() {
-    EventDispatcherFactory::reset();
     // Empty module properties and for them to be reloaded from scratch.
     $this->moduleList = NULL;
     $this->moduleData = [];
@@ -1195,8 +1198,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Set the class loader which was registered as a synthetic service.
     $this->container->set('class_loader', $this->classLoader);
-
-    $this->container->set('event_dispatcher', EventDispatcherFactory::getInstance());
 
     if ($reload_module_handler) {
       $this->container->get('module_handler')->reload();
@@ -1277,8 +1278,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Set the class loader which was registered as a synthetic service.
     $container->set('class_loader', $this->classLoader);
 
-    $container->set('event_dispatcher', EventDispatcherFactory::getInstance());
-
     return $container;
   }
 
@@ -1298,7 +1297,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->initializeServiceProviders();
     $container = $this->getContainerBuilder();
     $container->set('kernel', $this);
-    $container->set('event_dispatcher', EventDispatcherFactory::getInstance());
     $container->setParameter('container.modules', $this->getModulesParameter());
     $container->setParameter('install_profile', $this->getInstallProfile());
 
@@ -1343,7 +1341,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $container->register('class_loader')->setSynthetic(TRUE);
     $container->register('kernel', 'Symfony\Component\HttpKernel\KernelInterface')->setSynthetic(TRUE);
     $container->register('service_container', 'Symfony\Component\DependencyInjection\ContainerInterface')->setSynthetic(TRUE);
-    $container->register('event_dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcherInterface')->setSynthetic(TRUE);
 
     // Register aliases of synthetic services for autowiring.
     $container->setAlias(DrupalKernelInterface::class, 'kernel');
