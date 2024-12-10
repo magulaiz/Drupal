@@ -25,7 +25,11 @@ class Dependencies {
    * @param string[] $modules
    *   List of modules that the plugin class depends on. The plugin type
    *   provider, the module the plugin class is in, and modules listed in the
-   *   module's dependencies do not need to be listed here.
+   *   module's .info.yml dependencies do not need to be listed here. Note: this
+   *   attribute is parsed statically by a method other than Reflection classes.
+   *   The 'modules' argument should be set as an array of module machine names
+   *   as string literals, and not references to class constants or other
+   *   expressions.
    */
   public function __construct(
     protected readonly array $modules,
