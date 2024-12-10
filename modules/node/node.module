@@ -67,7 +67,7 @@ function node_help($path, $arg) {
   // for rebuild. We don't need to issue the message on the confirm form, or
   // while the rebuild is being processed.
   if ($path != 'admin/reports/status/rebuild' && $path != 'batch' && strpos($path, '#') === FALSE
-      && user_access('access administration pages') && node_access_needs_rebuild()) {
+      && user_access('administer nodes') && node_access_needs_rebuild()) {
     if ($path == 'admin/reports/status') {
       $message = t('The content access permissions need to be rebuilt.');
     }
@@ -1995,7 +1995,7 @@ function node_menu() {
     'page arguments' => array('node_configure_rebuild_confirm'),
     // Any user than can potentially trigger a node_access_needs_rebuild(TRUE)
     // has to be allowed access to the 'node access rebuild' confirm form.
-    'access arguments' => array('access administration pages'),
+    'access arguments' => array('administer nodes'),
     'type' => MENU_CALLBACK,
     'file' => 'node.admin.inc',
   );

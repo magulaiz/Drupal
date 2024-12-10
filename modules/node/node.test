@@ -1772,7 +1772,7 @@ class NodeAccessRebuildTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
 
-    $web_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages', 'access site reports'));
+    $web_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages', 'access site reports', 'administer nodes'));
     $this->drupalLogin($web_user);
     $this->web_user = $web_user;
   }
