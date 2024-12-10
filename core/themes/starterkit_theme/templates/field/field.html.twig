@@ -44,8 +44,8 @@
     'field--type-' ~ field_type|clean_class,
     'field--label-' ~ label_display,
     multiple ? 'field--multivalue-field' : 'field--single-value-field',
-    items|length > 1 ? 'field--has-multiple-items' : 'field--has-single-item',
-    'field--items-count-' ~ items|length,
+    multiple ? (items|length > 1 ? 'field--has-multiple-items' : 'field--has-single-item') : '',
+    multiple ? 'field--items-count-' ~ items|length,
     label_display == 'inline' ? 'clearfix',
   ]
 %}
