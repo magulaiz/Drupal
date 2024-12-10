@@ -239,8 +239,6 @@ class HookCollectorPass implements CompilerPassInterface {
       }
       if ($extension === 'php') {
         $cached = $hook_file_cache->get($filename);
-        // @todo remove this comment.
-        // $cached = FALSE;
         if ($cached) {
           $class = $cached['class'];
           $attributes = $cached['attributes'];
@@ -249,6 +247,7 @@ class HookCollectorPass implements CompilerPassInterface {
           $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
           $class = $namespace . '/' . $fileinfo->getBasename('.php');
           $class = str_replace('/', '\\', $class);
+          $attributes = [];
           if (class_exists($class)) {
             $reflectionClass = new \ReflectionClass($class);
             if ($class_attributes = $reflectionClass->getAttributes()) {
@@ -260,9 +259,6 @@ class HookCollectorPass implements CompilerPassInterface {
               }
             }
             $hook_file_cache->set($filename, ['class' => $class, 'attributes' => $attributes]);
-          }
-          else {
-            $attributes = [];
           }
         }
         $this->moduleAttributes[$module][$class] = $attributes;
@@ -351,7 +347,6 @@ class HookCollectorPass implements CompilerPassInterface {
       $this->hookInfo[] = $function;
     }
     if ($hook === 'module_implements_alter') {
-      // @todo confirm this is skipped when #[LegacyHook] should be.
       $this->moduleImplementsAlters[] = $function;
     }
     if ($fileinfo->getExtension() !== 'module') {
