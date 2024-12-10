@@ -273,10 +273,17 @@ class AttributeClassDiscovery implements DiscoveryInterface {
         continue;
       }
       foreach ($names as $name) {
-        $exists_function = "{$type}_exists";
-        // There is a risk that a class or trait uses a missing trait somewhere
-        // in its hierarchy and will cause a fatal error.
-        if (!$exists_function($name)) {
+        // Doing *_exists() checks here on the identified dependencies does run
+        // a risk that additional dependencies in the hierarchies of the
+        // dependencies are missing, resulting in an exception or fatal error.
+        // The rationale behind running these checks is that that risk is lower
+        // than the risk of the identified dependencies themselves being missing
+        // and causing a thrown exception or fatal error on reflection of the
+        // plugin class. In the case that an exception or fatal error does
+        // result here, then the Drupal\Component\Plugin\Attribute\Dependencies
+        // attribute should be added to the plugin class to explicitly define
+        // the missing providers.
+        if (!call_user_func($type . '_exists', $name)) {
           return TRUE;
         }
       }
