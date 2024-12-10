@@ -3390,3 +3390,37 @@ class HtaccessTest extends DrupalWebTestCase {
     $this->assertResponse($response_code, "Response code to $path should be $response_code");
   }
 }
+
+/**
+ * Tests watchdog() and related functions.
+ */
+class WatchdogTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Watchdog',
+      'description' => 'Tests that log messages can be processed using watchdog().',
+      'group' => 'System',
+    );
+  }
+
+  function setUp() {
+    parent::setUp(array('dblog', 'syslog'));
+  }
+
+  /**
+   * Tests that only valid placeholders are stored in the variables column.
+   */
+  public function testInvalidPlaceholders() {
+    watchdog(__FUNCTION__, 'Hello @string @array @object', array('@string' => '', '@array' => array(), '@object' => new \stdClass()));
+
+    $variables = db_select('watchdog', 'w')
+      ->fields('w', array('variables'))
+      ->orderBy('wid', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+    $this->assertEqual(serialize(array('@string' => '')), $variables);
+  }
+
+}

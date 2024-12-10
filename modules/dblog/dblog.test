@@ -71,6 +71,10 @@ class DBLogTestCase extends DrupalWebTestCase {
   private function testDBLogCorrupted() {
     global $base_root;
 
+    // Test this opt-out at the same time; otherwise the 'BAD SERIALIZED DATA'
+    // will not be written to the watchdog table.
+    variable_set('validate_watchdog_variables_opt_out', TRUE);
+
     // Prepare the fields to be logged
     $log = array(
       'type'        => 'custom',
@@ -86,6 +90,9 @@ class DBLogTestCase extends DrupalWebTestCase {
       'timestamp'   => REQUEST_TIME,
     );
     dblog_watchdog($log);
+
+    // The opt-out is not necessary for the remainder of the test.
+    variable_set('validate_watchdog_variables_opt_out', FALSE);
 
     // View the database log report page.
     $this->drupalGet('admin/reports/dblog');

@@ -2087,6 +2087,32 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
 }
 
 /**
+ * Validates variables passed to implementations of hook_watchdog.
+ *
+ * @param array $variables
+ *
+ * @return array
+ */
+function drupal_validate_watchdog_variables($variables) {
+  if (!is_array($variables)) {
+    return array();
+  }
+  $validated = array();
+  foreach ($variables as $key => $variable) {
+    // To be considered a valid placeholder, the key should be in one of the
+    // formats accepted by t() (i.e. starting with @ % or !) and the variable
+    // should be a string, number, or \Stringable object. For historical
+    // reasons, Boolean and NULL placeholders are also allowed.
+    if (!empty($key) && ($key[0] === '@' || $key[0] === '%' || $key[0] === '!')) {
+      if (is_scalar($variable) || is_null($variable) || $variable instanceof \Stringable) {
+        $validated[$key] = $variable;
+      }
+    }
+  }
+  return $validated;
+}
+
+/**
  * Sets a message to display to the user.
  *
  * Messages are stored in a session variable and displayed in page.tpl.php via

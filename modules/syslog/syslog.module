@@ -102,7 +102,9 @@ function syslog_watchdog(array $log_entry) {
     $default_facility = defined('LOG_LOCAL0') ? LOG_LOCAL0 : LOG_USER;
     openlog(variable_get('syslog_identity', 'drupal'), LOG_NDELAY, variable_get('syslog_facility', $default_facility));
   }
-
+  if (!variable_get('validate_watchdog_variables_opt_out', FALSE)) {
+    $log_entry['variables'] = drupal_validate_watchdog_variables($log_entry['variables']);
+  }
   $message = strtr(variable_get('syslog_format', '!base_url|!timestamp|!type|!ip|!request_uri|!referer|!uid|!link|!message'), array(
     '!base_url'    => $base_url,
     '!timestamp'   => $log_entry['timestamp'],
