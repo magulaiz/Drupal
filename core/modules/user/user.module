@@ -347,7 +347,6 @@ function user_cancel($edit, $uid, $method) {
     \Drupal::logger('user')->error('Attempted to cancel non-existing user account: %id.', ['%id' => $uid]);
     return;
   }
-
   // Initialize batch (to set title).
   $batch_builder = (new BatchBuilder())
     ->setTitle(t('Cancelling account'));
@@ -414,6 +413,7 @@ function _user_cancel($edit, $account, $method) {
       break;
 
     case 'user_cancel_reassign':
+    case 'user_cancel_reassign_user':
     case 'user_cancel_delete':
       // Send account canceled notification if option was checked.
       if (!empty($edit['user_cancel_notify'])) {
@@ -478,6 +478,10 @@ function user_cancel_methods() {
       'title' => t('Delete the account and its content. This action cannot be undone.'),
       'description' => t('Your account will be removed and all account information deleted. All of your content will also be deleted.'),
       'access' => \Drupal::currentUser()->hasPermission('administer users'),
+    ],
+    'user_cancel_reassign_user' => [
+      'title' => t('Delete the account and make its content belong to the selected user. This action cannot be undone.'),
+      'description' => t('Your account will be removed and all account information deleted. All of your content will be assigned to the configured user.'),
     ],
   ];
   // Allow modules to customize account cancellation methods.

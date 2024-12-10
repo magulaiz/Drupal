@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Functional;
 
+use Drupal\Tests\BrowserTestBase;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -289,7 +289,7 @@ class UserCancelTest extends BrowserTestBase {
   public function testUserBlockUnpublishNodeAccess(): void {
     \Drupal::service('module_installer')->install(['node_access_test', 'user_form_test']);
 
-    // Setup node access
+    // Setup node access.
     node_access_rebuild();
     node_access_test_add_field(NodeType::load('page'));
     \Drupal::state()->set('node_access_test.private', TRUE);
@@ -734,6 +734,139 @@ class UserCancelTest extends BrowserTestBase {
 
     // Confirm that the confirmation message made it through to the end user.
     $this->assertSession()->pageTextContains($account->getAccountName() . ' has been deleted.');
+  }
+
+  /**
+   * Delete account and reassign all content to admin.
+   */
+  public function testUserReassignUser(): void {
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign_user')->save();
+    $this->config('user.settings')->set('user_cancel_assign_user', 1)->save();
+    // Create comment field on page.
+    $this->addDefaultCommentField('node', 'page');
+    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+
+    // Create a user.
+    $account = $this->drupalCreateUser(['cancel account']);
+    $this->drupalLogin($account);
+    // Load a real user object.
+    $user_storage->resetCache([$account->id()]);
+    $account = $user_storage->load($account->id());
+
+    // Create a simple node.
+    $node = $this->drupalCreateNode(['uid' => $account->id()]);
+
+    // Add a comment to the page.
+    $comment_subject = $this->randomMachineName(8);
+    $comment_body = $this->randomMachineName(8);
+    $comment = Comment::create([
+      'subject' => $comment_subject,
+      'comment_body' => $comment_body,
+      'entity_id' => $node->id(),
+      'entity_type' => 'node',
+      'field_name' => 'comment',
+      'status' => CommentInterface::PUBLISHED,
+      'uid' => $account->id(),
+    ]);
+    $comment->save();
+
+    // Create a node with two revisions, the initial one belonging to the
+    // cancelling user.
+    $revision_node = $this->drupalCreateNode(['uid' => $account->id()]);
+    $revision = $revision_node->getRevisionId();
+    $settings = get_object_vars($revision_node);
+    $settings['revision'] = 1;
+    // Set new/current revision to someone else.
+    $settings['uid'] = 1;
+    $revision_node = $this->drupalCreateNode($settings);
+
+    // Attempt to cancel account.
+    $this->drupalGet('user/' . $account->id() . '/cancel');
+    $this->assertSession()->pageTextContains('Are you sure you want to cancel your account?');
+    $this->assertSession()->pageTextContains("Your account will be removed and all account information deleted. All of your content will be assigned to the configured user.");
+
+    // Confirm account cancellation.
+    $timestamp = time();
+    $this->submitForm([], 'Confirm');
+    $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
+
+    // Confirm account cancellation request.
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
+    $user_storage->resetCache([$account->id()]);
+    $this->assertNull($user_storage->load($account->id()), 'User is not found in the database.');
+
+    // Confirm that user's content has been attributed to configured user.
+    $admin_user = User::load(1);
+    $node_storage->resetCache([$node->id()]);
+    $test_node = $node_storage->load($node->id());
+    $this->assertEquals(1, $test_node->getOwnerId(), 'Node of the user has been attributed to configured user.');
+    $this->assertTrue($test_node->isPublished());
+    $test_node = $node_storage->loadRevision($revision);
+    $this->assertEquals(0, $test_node->getRevisionUser()->id(), 'Node revision of the user has been attributed to anonymous user.');
+    $this->assertTrue($test_node->isPublished());
+    $node_storage->resetCache([$revision_node->id()]);
+    $test_node = $node_storage->load($revision_node->id());
+    $this->assertNotEquals(0, $test_node->getOwnerId(), "Current revision of the user's node was not attributed to anonymous user.");
+    $this->assertTrue($test_node->isPublished());
+
+    $storage = \Drupal::entityTypeManager()->getStorage('comment');
+    $storage->resetCache([$comment->id()]);
+    $test_comment = $storage->load($comment->id());
+    $this->assertEquals(1, $test_comment->getOwnerId(), 'Comment of the user has been attributed to admin user.');
+    $this->assertTrue($test_comment->isPublished());
+    $this->assertEquals($admin_user->getDisplayName(), $test_comment->getAuthorName(), 'Comment of the user has been attributed to admin user name.');
+
+    // Confirm that the confirmation message made it through to the end user.
+    $this->assertSession()->pageTextContains("Account {$account->getAccountName()} has been deleted.");
+  }
+
+  /**
+   * Delete account and reassign content to admin using a batch process.
+   */
+  public function testUserReassignUserBatch(): void {
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign_user')->save();
+    $this->config('user.settings')->set('user_cancel_assign_user', 1)->save();
+    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+
+    // Create a user.
+    $account = $this->drupalCreateUser(['cancel account']);
+    $this->drupalLogin($account);
+    // Load a real user object.
+    $user_storage->resetCache([$account->id()]);
+    $account = $user_storage->load($account->id());
+
+    // Create 11 nodes in order to trigger batch processing in
+    // node_mass_update().
+    $nodes = [];
+    for ($i = 0; $i < 11; $i++) {
+      $node = $this->drupalCreateNode(['uid' => $account->id()]);
+      $nodes[$node->id()] = $node;
+    }
+
+    // Attempt to cancel account.
+    $this->drupalGet('user/' . $account->id() . '/cancel');
+    $this->assertSession()->pageTextContains('Are you sure you want to cancel your account?');
+    $this->assertSession()->pageTextContains("Your account will be removed and all account information deleted. All of your content will be assigned to the configured user.");
+
+    // Confirm account cancellation.
+    $timestamp = time();
+    $this->submitForm([], 'Confirm');
+    $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
+
+    // Confirm account cancellation request.
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
+    $user_storage->resetCache([$account->id()]);
+    $this->assertNull($user_storage->load($account->id()), 'User is not found in the database.');
+
+    // Confirm that user's content has been attributed to admin user.
+    $node_storage->resetCache(array_keys($nodes));
+    $test_nodes = $node_storage->loadMultiple(array_keys($nodes));
+    foreach ($test_nodes as $test_node) {
+      $this->assertEquals(1, $test_node->getOwnerId(), 'Node ' . $test_node->id() . ' of the user has been attributed to the configured user.');
+      $this->assertTrue($test_node->isPublished());
+    }
   }
 
 }

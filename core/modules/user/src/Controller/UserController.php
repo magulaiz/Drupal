@@ -88,6 +88,7 @@ class UserController extends ControllerBase {
     $this->userData = $user_data;
     $this->logger = $logger;
     $this->flood = $flood;
+    $this->time = $time;
   }
 
   /**
@@ -259,7 +260,8 @@ class UserController extends ControllerBase {
     $this->flood->clear('user.http_login', $identifier);
 
     user_login_finalize($user);
-    $this->logger->info('User %name used one-time login link at time %timestamp.', ['%name' => $user->getDisplayName(), '%timestamp' => $timestamp]);
+    $this->logger->info('User %name used one-time login link at time %timestamp.',
+    ['%name' => $user->getDisplayName(), '%timestamp' => $timestamp]);
     $this->messenger()->addStatus($this->t('You have used a one-time login link. You can set your new password now.'));
     // Let the user's password be changed without the current password
     // check.
@@ -340,7 +342,7 @@ class UserController extends ControllerBase {
    *   Whether the provided data are valid.
    */
   protected function validatePathParameters(UserInterface $user, int $timestamp, string $hash, int $timeout = 0): bool {
-    $current = \Drupal::time()->getRequestTime();
+    $current = $this->time->getRequestTime();
     $timeout_valid = ((!empty($timeout) && $current - $timestamp < $timeout) || empty($timeout));
     return ($timestamp >= $user->getLastLoginTime()) && $timestamp <= $current && $timeout_valid && hash_equals($hash, user_pass_rehash($user, $timestamp));
   }
@@ -424,6 +426,7 @@ class UserController extends ControllerBase {
       if ($user->id() && $this->validatePathParameters($user, $timestamp, $hashed_pass, $timeout)) {
         $edit = [
           'user_cancel_notify' => $account_data['cancel_notify'] ?? $this->config('user.settings')->get('notify.status_canceled'),
+          'user_cancel_assign_user' => $account_data['cancel_assign_user'] ?? $this->config('user.settings')->get('user_cancel_assign_user'),
         ];
         user_cancel($edit, $user->id(), $account_data['cancel_method']);
         // Since user_cancel() is not invoked via Form API, batch processing

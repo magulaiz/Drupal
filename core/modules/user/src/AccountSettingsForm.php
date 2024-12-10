@@ -2,10 +2,10 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Config\TypedConfigManagerInterface;
-use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
@@ -33,6 +33,13 @@ class AccountSettingsForm extends ConfigFormBase {
   protected $roleStorage;
 
   /**
+   * The user storage.
+   *
+   * @var \Drupal\user\UserStorageInterface
+   */
+  protected $userStorage;
+
+  /**
    * Constructs a \Drupal\user\AccountSettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -42,12 +49,15 @@ class AccountSettingsForm extends ConfigFormBase {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\user\RoleStorageInterface $role_storage
+   *   The user storage.
+   * @param \Drupal\user\UserStorageInterface $user_storage
    *   The role storage.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, ModuleHandlerInterface $module_handler, RoleStorageInterface $role_storage) {
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, ModuleHandlerInterface $module_handler, RoleStorageInterface $role_storage, UserStorageInterface $user_storage) {
     parent::__construct($config_factory, $typedConfigManager);
     $this->moduleHandler = $module_handler;
     $this->roleStorage = $role_storage;
+    $this->userStorage = $user_storage;
   }
 
   /**
@@ -58,7 +68,8 @@ class AccountSettingsForm extends ConfigFormBase {
       $container->get('config.factory'),
       $container->get('config.typed'),
       $container->get('module_handler'),
-      $container->get('entity_type.manager')->getStorage('user_role')
+      $container->get('entity_type.manager')->getStorage('user_role'),
+      $container->get('entity_type.manager')->getStorage('user')
     );
   }
 
@@ -147,9 +158,27 @@ class AccountSettingsForm extends ConfigFormBase {
       '#type' => 'radios',
       '#title' => $this->t('When cancelling a user account'),
       '#config_target' => 'user.settings:cancel_method',
-      '#description' => $this->t('Users with the %select-cancel-method or %administer-users <a href=":permissions-url">permissions</a> can override this default method.', ['%select-cancel-method' => $this->t('Select method for cancelling account'), '%administer-users' => $this->t('Administer users'), ':permissions-url' => Url::fromRoute('user.admin_permissions')->toString()]),
+      '#description' => $this->t(
+        'Users with the %select-cancel-method or %administer-users <a href=":permissions-url">permissions</a> can override this default method.',
+        [
+          '%select-cancel-method' => $this->t('Select method for cancelling account'),
+          '%administer-users' => $this->t('Administer users'),
+          ':permissions-url' => Url::fromRoute('user.admin_permissions')->toString(),
+        ]
+      ),
     ];
     $form['registration_cancellation']['user_cancel_method'] += user_cancel_methods();
+
+    $form['registration_cancellation']['user_cancel_assign_user'] = [
+      '#title' => ('User Uid'),
+      '#type' => 'textfield',
+      '#config_target' => 'user.settings:user_cancel_assign_user',
+      '#states'   => [
+        'visible' => [
+          ':input[name="user_cancel_method"]' => ['value' => 'user_cancel_reassign_user'],
+        ],
+      ],
+    ];
     foreach (Element::children($form['registration_cancellation']['user_cancel_method']) as $key) {
       // All account cancellation methods that specify #access cannot be
       // configured as default method.
@@ -416,6 +445,26 @@ class AccountSettingsForm extends ConfigFormBase {
     ];
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
+    $form_values = $form_state->getValues();
+    $method = $form_values['user_cancel_method'];
+    $user_cancel_assign_user = $form_values['user_cancel_assign_user'];
+    if ($method == 'user_cancel_reassign_user') {
+      if ($user_cancel_assign_user == "") {
+        $form_state->setErrorByName('user_cancel_assign_user',
+        $this->t('User cannot be empty'));
+      }
+      $user = $this->userStorage->load($user_cancel_assign_user);
+      if (!$user) {
+        $form_state->setErrorByName('user_cancel_assign_user',
+        $this->t('No matching user found'));
+      }
+    }
   }
 
 }
