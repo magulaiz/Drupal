@@ -7,7 +7,6 @@ use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\workspaces\Entity\Handler\BlockContentWorkspaceHandler;
 use Drupal\workspaces\Entity\Handler\DefaultWorkspaceHandler;
 use Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -54,18 +53,6 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       // Revisionable and publishable entity types are always supported.
       if ($entity_type->entityClassImplements(EntityPublishedInterface::class) && $entity_type->isRevisionable()) {
         $entity_type->setHandlerClass('workspace', DefaultWorkspaceHandler::class);
-
-        // Support for custom blocks has to be determined on a per-entity
-        // basis.
-        if ($entity_type->id() === 'block_content') {
-          $entity_type->setHandlerClass('workspace', BlockContentWorkspaceHandler::class);
-        }
-      }
-
-      // The 'file' entity type is allowed to perform CRUD operations inside a
-      // workspace without being tracked.
-      if ($entity_type->id() === 'file') {
-        $entity_type->setHandlerClass('workspace', IgnoredWorkspaceHandler::class);
       }
 
       // Internal entity types are allowed to perform CRUD operations inside a

@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces\Hook;
 
+use Drupal\workspaces\Entity\Handler\DefaultWorkspaceHandler;
 use Drupal\workspaces\ViewsQueryAlter;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
@@ -52,6 +53,10 @@ class WorkspacesHooks {
     $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
     foreach ($entity_definition_update_manager->getEntityTypes() as $entity_type) {
       if ($workspace_info->isEntityTypeSupported($entity_type)) {
+        // Set the default workspace handler for supported entity types.
+        if (!$entity_type->hasHandlerClass('workspace')) {
+          $entity_type->setHandlerClass('workspace', DefaultWorkspaceHandler::class);
+        }
         $entity_type->setRevisionMetadataKey('workspace', 'workspace');
         $entity_definition_update_manager->updateEntityType($entity_type);
       }
