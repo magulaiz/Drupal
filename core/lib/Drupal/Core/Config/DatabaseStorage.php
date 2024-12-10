@@ -3,14 +3,16 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\LazyTableCreationTrait;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
  * Defines the Database storage.
  */
 class DatabaseStorage implements StorageInterface {
+
   use DependencySerializationTrait;
+  use LazyTableCreationTrait;
 
   /**
    * The database connection.
@@ -162,37 +164,10 @@ class DatabaseStorage implements StorageInterface {
   }
 
   /**
-   * Check if the config table exists and create it if not.
-   *
-   * @return bool
-   *   TRUE if the table was created, FALSE otherwise.
-   *
-   * @throws \Drupal\Core\Config\StorageException
-   *   If a database error occurs.
+   * {@inheritdoc}
    */
-  protected function ensureTableExists() {
-    try {
-      $this->connection->schema()->createTable($this->table, static::schemaDefinition());
-    }
-    // If another process has already created the config table, attempting to
-    // recreate it will throw an exception. In this case just catch the
-    // exception and do nothing.
-    catch (DatabaseException) {
-      return TRUE;
-    }
-    catch (\Exception) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Defines the schema for the configuration table.
-   *
-   * @internal
-   */
-  protected static function schemaDefinition() {
-    $schema = [
+  public function schemaDefinition() {
+    return [
       'description' => 'The base table for configuration data.',
       'fields' => [
         'collection' => [
@@ -218,7 +193,6 @@ class DatabaseStorage implements StorageInterface {
       ],
       'primary key' => ['collection', 'name'],
     ];
-    return $schema;
   }
 
   /**

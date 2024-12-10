@@ -4,7 +4,7 @@ namespace Drupal\Core\Flood;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\LazyTableCreationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -12,10 +12,24 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
 
+  use LazyTableCreationTrait;
+
   /**
    * The database table name.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use the
+   *    class variable $this->table instead.
+   *
+   * @see https://www.drupal.org/node/3489185
    */
   const TABLE_NAME = 'flood';
+
+  /**
+   * The database table name.
+   *
+   * @var string
+   */
+  protected string $table = 'flood';
 
   /**
    * Construct the DatabaseBackend.
@@ -70,7 +84,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
    * @see \Drupal\Core\Flood\DatabaseBackend::register
    */
   protected function doInsert($name, $window, $identifier) {
-    $this->connection->insert(static::TABLE_NAME)
+    $this->connection->insert($this->table)
       ->fields([
         'event' => $name,
         'identifier' => $identifier,
@@ -88,7 +102,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
     try {
-      $this->connection->delete(static::TABLE_NAME)
+      $this->connection->delete($this->table)
         ->condition('event', $name)
         ->condition('identifier', $identifier)
         ->execute();
@@ -103,7 +117,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
    */
   public function clearByPrefix(string $name, string $prefix): void {
     try {
-      $this->connection->delete(static::TABLE_NAME)
+      $this->connection->delete($this->table)
         ->condition('event', $name)
         ->condition('identifier', $prefix . '-%', 'LIKE')
         ->execute();
@@ -121,7 +135,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
     try {
-      $number = $this->connection->select(static::TABLE_NAME, 'f')
+      $number = $this->connection->select($this->table, 'f')
         ->condition('event', $name)
         ->condition('identifier', $identifier)
         ->condition('timestamp', $this->time->getRequestTime() - $window, '>')
@@ -143,7 +157,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
    */
   public function garbageCollection() {
     try {
-      $this->connection->delete(static::TABLE_NAME)
+      $this->connection->delete($this->table)
         ->condition('expiration', $this->time->getRequestTime(), '<')
         ->execute();
     }
@@ -153,47 +167,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
   }
 
   /**
-   * Check if the flood table exists and create it if not.
-   */
-  protected function ensureTableExists() {
-    try {
-      $database_schema = $this->connection->schema();
-      $schema_definition = $this->schemaDefinition();
-      $database_schema->createTable(static::TABLE_NAME, $schema_definition);
-    }
-    // If another process has already created the table, attempting to create
-    // it will throw an exception. In this case just catch the exception and do
-    // nothing.
-    catch (DatabaseException) {
-    }
-    catch (\Exception) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Act on an exception when flood might be stale.
-   *
-   * If the table does not yet exist, that's fine, but if the table exists and
-   * yet the query failed, then the flood is stale and the exception needs to
-   * propagate.
-   *
-   * @param $e
-   *   The exception.
-   *
-   * @throws \Exception
-   */
-  protected function catchException(\Exception $e) {
-    if ($this->connection->schema()->tableExists(static::TABLE_NAME)) {
-      throw $e;
-    }
-  }
-
-  /**
-   * Defines the schema for the flood table.
-   *
-   * @internal
+   * {@inheritdoc}
    */
   public function schemaDefinition() {
     return [

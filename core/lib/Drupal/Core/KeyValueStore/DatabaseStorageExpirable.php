@@ -199,9 +199,9 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   }
 
   /**
-   * Defines the schema for the key_value_expire table.
+   * {@inheritdoc}
    */
-  public static function schemaDefinition() {
+  public function schemaDefinition() {
     return [
       'description' => 'Generic key/value storage table with an expiration.',
       'fields' => [

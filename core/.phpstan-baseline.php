@@ -1941,12 +1941,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Batch\\\\BatchStorage\\:\\:ensureTableExists\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Batch/BatchStorage.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Batch\\\\BatchStorage\\:\\:schemaDefinition\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Batch/BatchStorage.php',
@@ -2715,13 +2709,13 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\DatabaseCacheTagsChecksum\\:\\:doInvalidateTags\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\DatabaseCacheTagsChecksum\\:\\:catchException\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/DatabaseCacheTagsChecksum.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\DatabaseCacheTagsChecksum\\:\\:ensureTableExists\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\DatabaseCacheTagsChecksum\\:\\:doInvalidateTags\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/DatabaseCacheTagsChecksum.php',
 ];
@@ -3360,6 +3354,12 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Config\\\\ConfigManagerInterface\\:\\:uninstall\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Config/ConfigManagerInterface.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Config\\\\DatabaseStorage\\:\\:catchException\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Config/DatabaseStorage.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -7964,12 +7964,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Flood\\\\DatabaseBackend\\:\\:ensureTableExists\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Flood/DatabaseBackend.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Flood\\\\DatabaseBackend\\:\\:garbageCollection\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Flood/DatabaseBackend.php',
@@ -8863,14 +8857,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Layout/LayoutPluginManager.php',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Lock\\\\DatabaseLockBackend\\:\\:catchException\\(\\) has no return type specified\\.$#',
+	// identifier: property.deprecated
+	'message' => '#^Access to deprecated property \\$database of class Drupal\\\\Core\\\\Lock\\\\DatabaseLockBackend\\:
+in drupal\\:11\\.2\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use the
+  class variable \\$this\\-\\>connection instead\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Lock/DatabaseLockBackend.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Lock\\\\DatabaseLockBackend\\:\\:ensureTableExists\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\Core\\\\Lock\\\\DatabaseLockBackend\\:\\:catchException\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Lock/DatabaseLockBackend.php',
 ];
@@ -8921,6 +8917,14 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Lock\\\\NullLockBackend\\:\\:wait\\(\\) should return bool but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Lock/NullLockBackend.php',
+];
+$ignoreErrors[] = [
+	// identifier: property.deprecated
+	'message' => '#^Access to deprecated property \\$database of class Drupal\\\\Core\\\\Lock\\\\DatabaseLockBackend\\:
+in drupal\\:11\\.2\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use the
+  class variable \\$this\\-\\>connection instead\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Lock/PersistentDatabaseLockBackend.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -9175,6 +9179,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Menu\\\\MenuTreeStorage\\:\\:catchException\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuTreeStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Menu\\\\MenuTreeStorage\\:\\:delete\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuTreeStorage.php',
@@ -9218,6 +9228,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Menu\\\\MenuTreeStorage\\:\\:saveRecursive\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuTreeStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Menu\\\\MenuTreeStorage\\:\\:schemaDefinition\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuTreeStorage.php',
 ];
@@ -9768,12 +9784,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Queue\\\\DatabaseQueue\\:\\:ensureTableExists\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Queue/DatabaseQueue.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Queue\\\\DatabaseQueue\\:\\:garbageCollection\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Queue/DatabaseQueue.php',
@@ -10199,8 +10209,28 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Routing/Enhancer/ParamConversionEnhancer.php',
 ];
 $ignoreErrors[] = [
+	// identifier: property.deprecated
+	'message' => '#^Access to deprecated property \\$tableName of class Drupal\\\\Core\\\\Routing\\\\MatcherDumper\\:
+in drupal\\:11\\.2\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use the
+   class variable \\$this\\-\\>table instead\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Routing/MatcherDumper.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Routing\\\\MatcherDumper\\:\\:addRoutes\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Routing/MatcherDumper.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Routing\\\\MatcherDumper\\:\\:catchException\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Routing/MatcherDumper.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Routing\\\\MatcherDumper\\:\\:schemaDefinition\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Routing/MatcherDumper.php',
 ];
@@ -41728,6 +41758,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Plugin/migrate/source/d7/ThemeSettingsTest.php',
 ];
 $ignoreErrors[] = [
+	// identifier: classConstant.deprecated
+	'message' => '#^Fetching deprecated class constant TABLE_NAME of class Drupal\\\\Core\\\\Queue\\\\DatabaseQueue\\:
+in drupal\\:11\\.2\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use the
+   class variable \\$this\\-\\>table instead\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Kernel/System/CronQueueTest.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Unit\\\\Menu\\\\MenuLinkTreeTest\\:\\:providerTestBuildCacheability\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -44480,6 +44518,14 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Functional\\\\UserCreateTest\\:\\:assertMailString\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Functional/UserCreateTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: classConstant.deprecated
+	'message' => '#^Fetching deprecated class constant TABLE_NAME of class Drupal\\\\Core\\\\Flood\\\\DatabaseBackend\\:
+in drupal\\:11\\.2\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use the
+   class variable \\$this\\-\\>table instead\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/tests/src/Functional/UserLoginHttpTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
