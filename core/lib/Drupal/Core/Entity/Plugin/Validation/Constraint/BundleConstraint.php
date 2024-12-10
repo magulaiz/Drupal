@@ -36,11 +36,12 @@ class BundleConstraint extends SymfonyConstraint {
   /**
    * Gets the bundle option as array.
    *
-   * @return array
+   * @return string[]
    */
   public function getBundleOption() {
     // Support passing the bundle as string, but force it to be an array.
     if (!is_array($this->bundle)) {
+      @trigger_error("The Bundle's constraint's support for string values for its 'bundle' option is deprecated in drupal:11.1.0 and will trigger a PHP error from drupal:12.0.0. Pass in an array of valid string values instead. See https://www.drupal.org/node/3418350", E_USER_DEPRECATED);
       $this->bundle = [$this->bundle];
     }
     return $this->bundle;
