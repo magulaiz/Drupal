@@ -161,16 +161,16 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
     // Create a new display.
     $config_action_settings = [
       'old_display_id' => 'default',
-      'new_display_type' => 'page',
+      'new_display_type' => 'block',
     ];
     $this->container->get('plugin.manager.config_action')->applyAction('duplicateDisplayAsType', 'views.view.entity_test_fields', $config_action_settings);
     $view = Views::getView('entity_test_fields');
     $view->setDisplay();
     // Confirm that new display was created.
-    $this->assertTrue($view->displayHandlers->has('page_1'));
+    $this->assertTrue($view->displayHandlers->has('block_1'));
     // Apply config action that adds field type to page_1 display only.
     $config_action_settings = [
-      'display_id' => 'page_1',
+      'display_id' => 'block_1',
       'option' => 'fields',
       'item' => 'type',
       'override' => TRUE,
@@ -199,8 +199,8 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
     $fields = $view->displayHandlers->get('default')->getOption('fields');
     // Check that field type is not part of default display.
     $this->assertArrayNotHasKey('type', $fields);
-    $view->setDisplay('page_1');
-    $fields = $view->displayHandlers->get('page_1')->getOption('fields');
+    $view->setDisplay('block_1');
+    $fields = $view->displayHandlers->get('block_1')->getOption('fields');
     // Check that field type is not part of default display.
     $this->assertArrayHasKey('type', $fields);
   }
