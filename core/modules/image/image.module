@@ -278,8 +278,10 @@ function image_style_options($include_empty = TRUE) {
  */
 function template_preprocess_image_style(&$variables) {
   if (!isset($variables['uri'])) {
+
+    $variables_dump = array_filter($variables, 'is_scalar');
     \Drupal::logger('image')->warning('Uri missing from image. Variables: @variables', [
-      '@variables' => print_r($variables, TRUE),
+      '@variables' => print_r($variables_dump, TRUE),
     ]);
   }
 
