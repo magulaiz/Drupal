@@ -61,7 +61,7 @@ class SystemTestHooks {
    * Implements hook_system_info_alter().
    */
   #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type) {
+  public function systemInfoAlter(&$info, Extension $file, $type): void {
     // We need a static otherwise the last test will fail to alter common_test.
     static $test;
     if (($dependencies = \Drupal::state()->get('system_test.dependencies')) || $test) {
@@ -99,7 +99,7 @@ class SystemTestHooks {
    * Implements hook_page_attachments().
    */
   #[Hook('page_attachments')]
-  public function pageAttachments(array &$page) {
+  public function pageAttachments(array &$page): void {
     // Used by FrontPageTestCase to get the results of
     // \Drupal::service('path.matcher')->isFrontPage().
     $frontpage = \Drupal::state()->get('system_test.front_page_output', 0);

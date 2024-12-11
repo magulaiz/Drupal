@@ -65,7 +65,7 @@ class BlockHooks {
    * Implements hook_page_top().
    */
   #[Hook('page_top')]
-  public function pageTop(array &$page_top) {
+  public function pageTop(array &$page_top): void {
     if (\Drupal::routeMatch()->getRouteName() === 'block.admin_demo') {
       $theme = \Drupal::theme()->getActiveTheme()->getName();
       $page_top['backlink'] = [
@@ -186,7 +186,7 @@ class BlockHooks {
    * Implements hook_block_build_BASE_BLOCK_ID_alter().
    */
   #[Hook('block_build_local_actions_block_alter')]
-  public function blockBuildLocalActionsBlockAlter(array &$build, BlockPluginInterface $block) {
+  public function blockBuildLocalActionsBlockAlter(array &$build, BlockPluginInterface $block): void {
     $build['#lazy_builder_preview'] = [
       '#type' => 'container',
       '#attributes' => [

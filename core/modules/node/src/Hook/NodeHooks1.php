@@ -141,7 +141,7 @@ class NodeHooks1 {
    * Implements hook_entity_view_display_alter().
    */
   #[Hook('entity_view_display_alter')]
-  public function entityViewDisplayAlter(EntityViewDisplayInterface $display, $context) {
+  public function entityViewDisplayAlter(EntityViewDisplayInterface $display, $context): void {
     if ($context['entity_type'] == 'node') {
       // Hide field labels in search index.
       if ($context['view_mode'] == 'search_index') {
@@ -189,7 +189,7 @@ class NodeHooks1 {
    * Implements hook_cron().
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     // Calculate the oldest and newest node created times, for use in search
     // rankings. (Note that field aliases have to be variables passed by
     // reference.)
@@ -266,7 +266,7 @@ class NodeHooks1 {
    * Implements hook_page_top().
    */
   #[Hook('page_top')]
-  public function pageTop(array &$page_top) {
+  public function pageTop(array &$page_top): void {
     // Add 'Back to content editing' link on preview page.
     $route_match = \Drupal::routeMatch();
     if ($route_match->getRouteName() == 'entity.node.preview') {
@@ -402,7 +402,7 @@ class NodeHooks1 {
    * @endcode
    */
   #[Hook('query_node_access_alter')]
-  public function queryNodeAccessAlter(AlterableInterface $query) {
+  public function queryNodeAccessAlter(AlterableInterface $query): void {
     // Read meta-data from query, if provided.
     if (!($account = $query->getMetaData('account'))) {
       $account = \Drupal::currentUser();
@@ -547,7 +547,7 @@ class NodeHooks1 {
    * Implements hook_config_translation_info_alter().
    */
   #[Hook('config_translation_info_alter')]
-  public function configTranslationInfoAlter(&$info) {
+  public function configTranslationInfoAlter(&$info): void {
     $info['node_type']['class'] = 'Drupal\node\ConfigTranslation\NodeTypeMapper';
   }
 
