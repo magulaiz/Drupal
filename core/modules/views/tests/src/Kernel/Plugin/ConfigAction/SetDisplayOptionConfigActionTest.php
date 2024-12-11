@@ -165,6 +165,7 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
     ];
     $this->container->get('plugin.manager.config_action')->applyAction('duplicateDisplayAsType', 'views.view.entity_test_fields', $config_action_settings);
     $view = Views::getView('entity_test_fields');
+    $view->setDisplay();
     // Confirm that new display was created.
     $this->assertTrue($view->displayHandlers->has('page_1'));
     // Apply config action that adds field type to page_1 display only.
