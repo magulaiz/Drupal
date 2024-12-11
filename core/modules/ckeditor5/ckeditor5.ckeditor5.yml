@@ -364,7 +364,7 @@ ckeditor5_link_entity_suggestions:
     class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions
     library: ckeditor5/internal.drupal.ckeditor5.link-entity-suggestions
     elements:
-      - <a data-entity-type data-entity-uuid data-entity-metadata>
+      - <a data-entity-type data-entity-uuid>
     conditions:
       filter: entity_links
       plugins:
@@ -394,7 +394,7 @@ ckeditor5_entityLinkImage:
   drupal:
     label: Entity-Linked Image
     elements:
-      - <img data-link-entity-type data-link-entity-uuid data-link-entity-metadata>
+      - <img data-link-entity-type data-link-entity-uuid>
     conditions:
       plugins:
         - ckeditor5_link_entity_suggestions
@@ -871,7 +871,7 @@ ckeditor5_entityLinkMedia:
     elements:
       # The drupalMedia.DrupalLinkMedia CKEditor 5 plugin automatically supports the
       # Entity Link Suggestions functionality when it is enabled.
-      - <drupal-media data-link-entity-type data-link-entity-uuid data-link-entity-metadata>
+      - <drupal-media data-link-entity-type data-link-entity-uuid>
     conditions:
       plugins:
         - ckeditor5_link_entity_suggestions
