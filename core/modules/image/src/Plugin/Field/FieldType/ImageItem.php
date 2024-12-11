@@ -15,6 +15,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 
@@ -321,27 +322,70 @@ class ImageItem extends FileItem {
   }
 
   /**
+   * Ensure that the width and height are set on the image item.
+   */
+  protected function ensureImageDimensions(): void {
+    if (!($this->entity instanceof FileInterface)) {
+      return;
+    }
+
+    $width = $this->get('width')->getValue();
+    $height = $this->get('height')->getValue();
+    if (!isset($width) || !isset($height)) {
+      $image = \Drupal::service('image.factory')->get($this->entity->getFileUri());
+      if ($image->isValid()) {
+        $this->set('width', $image->getWidth());
+        $this->set('height', $image->getHeight());
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onChange($property_name, $notify = TRUE): void {
+    parent::onChange($property_name, $notify);
+
+    // Ensure that the width and height are set when changing any property
+    // other than the width and height.
+    if ($property_name !== 'width' && $property_name !== 'height') {
+      $this->ensureImageDimensions();
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function preSave() {
     parent::preSave();
 
-    $width = $this->width;
-    $height = $this->height;
-
     // Determine the dimensions if necessary.
-    if ($this->entity && $this->entity instanceof EntityInterface) {
-      if (empty($width) || empty($height)) {
-        $image = \Drupal::service('image.factory')->get($this->entity->getFileUri());
-        if ($image->isValid()) {
-          $this->width = $image->getWidth();
-          $this->height = $image->getHeight();
-        }
-      }
+    if ($this->entity instanceof EntityInterface) {
+      $this->ensureImageDimensions();
     }
     else {
       $this->getLogger('image')->warning("Missing file with ID %id.", ['%id' => $this->target_id]);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValue($values, $notify = TRUE): void {
+    // Avoid losing the width and height values when the same reference is
+    // set again and there already is a width and height.
+    if (is_array($values) && !isset($values['width']) && !isset($values['height']) && $this->target_id && $this->width && $this->height) {
+      if (isset($values['entity']) && $values['entity'] instanceof FileInterface && $values['entity']->id() == $this->target_id) {
+        $values['width'] = $this->width;
+        $values['height'] = $this->height;
+      }
+      if (isset($values['target_id']) && $values['target_id'] == $this->target_id) {
+        $values['width'] = $this->width;
+        $values['height'] = $this->height;
+      }
+    }
+
+    parent::setValue($values, $notify);
   }
 
   /**

@@ -21385,13 +21385,13 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: property.notFound
 	'message' => '#^Access to an undefined property Drupal\\\\image\\\\Plugin\\\\Field\\\\FieldType\\\\ImageItem\\:\\:\\$height\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/image/src/Plugin/Field/FieldType/ImageItem.php',
 ];
 $ignoreErrors[] = [
 	// identifier: property.notFound
 	'message' => '#^Access to an undefined property Drupal\\\\image\\\\Plugin\\\\Field\\\\FieldType\\\\ImageItem\\:\\:\\$width\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/image/src/Plugin/Field/FieldType/ImageItem.php',
 ];
 $ignoreErrors[] = [
