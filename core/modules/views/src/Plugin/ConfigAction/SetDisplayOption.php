@@ -91,12 +91,12 @@ class SetDisplayOption implements ConfigActionPluginInterface, ContainerFactoryP
       $display_id = $value['display_id'];
     }
     $override = FALSE;
-    if (!empty($value['override'])) {
-      $override = TRUE;
+    if (isset($value['override'])) {
+      $override = (bool) $value['override'];
     }
     $allow_update = TRUE;
-    if (!empty($value['allow_update'])) {
-      $allow_update = FALSE;
+    if (isset($value['allow_update'])) {
+      $allow_update = (bool) $value['allow_update'];
     }
     $view->setDisplay($display_id);
     if ($item) {

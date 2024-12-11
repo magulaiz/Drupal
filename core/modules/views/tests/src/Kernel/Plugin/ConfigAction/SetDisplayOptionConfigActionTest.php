@@ -143,7 +143,7 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
     // Check that field type now exists.
     $this->assertArrayHasKey('type', $fields);
     // Check that field user_id now exists.
-    $this->assertArrayNotHasKey('user_id', $fields);
+    $this->assertArrayHasKey('user_id', $fields);
   }
 
 }
