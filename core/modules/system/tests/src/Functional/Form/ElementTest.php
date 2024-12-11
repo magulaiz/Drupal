@@ -37,6 +37,7 @@ class ElementTest extends BrowserTestBase {
     $this->testFormAutocomplete();
     $this->testFormElementErrors();
     $this->testDetailsSummaryAttributes();
+    $this->testDetailsDescriptionAttributes();
   }
 
   /**
@@ -210,13 +211,18 @@ class ElementTest extends BrowserTestBase {
   }
 
   /**
-   * Tests attributes of details elements.
+   * Tests summary attributes of details.
    */
-  protected function testDetailsAttributes(): void {
+  protected function testDetailsSummaryAttributes(): void {
     $this->drupalGet('form-test/group-details');
-    // Test summary attributes.
     $this->assertSession()->elementExists('css', 'summary[data-summary-attribute="test"]');
-    // Test description attributes and related aria-describedby.
+  }
+
+  /**
+   * Tests description attributes of details.
+   */
+  protected function testDetailsDescriptionAttributes(): void {
+    $this->drupalGet('form-test/group-details');
     $this->assertSession()->elementExists('css', 'details[aria-describedby="edit-description-attributes--description"]');
     $this->assertSession()->elementExists('css', 'div[id="edit-description-attributes--description"]');
   }
