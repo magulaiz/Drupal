@@ -19,13 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeViewsData extends EntityViewsData {
 
   /**
-   * The module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
    * Constructs an NodeViewsData object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -43,7 +36,7 @@ class NodeViewsData extends EntityViewsData {
    * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
    *   The module extension list.
    */
-  public function __construct(EntityTypeInterface $entity_type, SqlEntityStorageInterface $storage_controller, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, TranslationInterface $translation_manager, EntityFieldManagerInterface $entity_field_manager, ?ModuleExtensionList $moduleExtensionList = NULL) {
+  public function __construct(EntityTypeInterface $entity_type, SqlEntityStorageInterface $storage_controller, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, TranslationInterface $translation_manager, EntityFieldManagerInterface $entity_field_manager, protected ?ModuleExtensionList $moduleExtensionList = NULL) {
     parent::__construct($entity_type, $storage_controller, $entity_type_manager, $module_handler, $translation_manager, $entity_field_manager);
     if ($this->moduleExtensionList === NULL) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $moduleExtensionList argument is deprecated in drupal:10.4.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3493129', E_USER_DEPRECATED);
