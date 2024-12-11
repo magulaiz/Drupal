@@ -444,7 +444,6 @@ class ModuleHandler implements ModuleHandlerInterface {
             }
             else {
               $hook_listeners[$module] = $listeners;
-              $extra_modules = TRUE;
             }
           }
         }
