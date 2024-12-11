@@ -11,7 +11,7 @@ use Drupal\Core\Entity\Schema\EntityStorageSchemaInterface;
 /**
  * Update entity definitions, necessary if notices appear on site status page.
  */
-function path_alias_update_9000() {
+function path_alias_update_9000(): void {
   $entityDefinitionUpdateManager = \Drupal::service('entity.definition_update_manager');
   $entityTypeManager = \Drupal::service('entity_type.manager');
   $entityFieldManager = \Drupal::service('entity_field.manager');

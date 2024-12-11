@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\TypedData\Plugin\DataType\Any;
 use Drupal\path_alias\PathAliasInterface;
 use Drupal\path_alias\PathAliasStorage;
 use Drupal\path_alias\PathAliasStorageSchema;
@@ -142,7 +141,7 @@ class PathAlias extends EditorialContentEntityBase implements PathAliasInterface
   /**
    * {@inheritdoc}
    */
-  public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
+  public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record): void {
     parent::preSaveRevision($storage, $record);
 
     if (!$this->isNewRevision() && isset($this->original) && (!isset($record->revision_log) || $record->revision_log === '')) {
