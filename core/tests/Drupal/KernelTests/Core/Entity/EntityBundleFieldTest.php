@@ -64,8 +64,11 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
 
     // Ensure that the field exists in the field map.
     $field_map = \Drupal::service('entity_field.manager')->getFieldMap();
-    $this->assertEquals(['type' => 'string', 'bundles' => ['custom' => 'custom']], $field_map['entity_test_update']['custom_bundle_field']);
-
+    $this->assertEquals([
+      'type' => 'string',
+      'bundles' => ['custom' => 'custom'],
+    ],
+    $field_map['entity_test_update']['custom_bundle_field']);
     $entity->custom_bundle_field->value = 'swanky';
     $entity->save();
     $storage->resetCache();
@@ -90,7 +93,10 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
 
     // Create another entity to test that values are marked as deleted when a
     // bundle is deleted.
-    $entity = $storage->create(['type' => 'custom', 'custom_bundle_field' => 'new']);
+    $entity = $storage->create([
+      'type' => 'custom',
+      'custom_bundle_field' => 'new',
+    ]);
     $entity->save();
     entity_test_delete_bundle('custom', 'entity_test_update');
 
@@ -108,7 +114,7 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
 
     // Purge field data, and check that the storage definition has been
     // completely removed once the data is purged.
-    field_purge_batch(10);
+    \Drupal::service('entity_field.purgatory')->purgeBatch(10);
     $this->assertFalse($this->database->schema()->tableExists($table), 'Custom field table was deleted');
   }
 

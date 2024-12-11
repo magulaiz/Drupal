@@ -750,6 +750,9 @@ services:
   entity_field.deleted_fields_repository:
     class: Drupal\Core\Field\DeletedFieldsRepository
     arguments: ['@state']
+  entity_field.purgatory:
+    class: Drupal\Core\Field\FieldPurgatory
+    arguments: ['@entity_type.manager', '@entity_field.deleted_fields_repository', '@module_handler', '@logger.factory']
   Drupal\Core\Field\DeletedFieldsRepositoryInterface: '@entity_field.deleted_fields_repository'
   field_storage_definition.listener:
     class: Drupal\Core\Field\FieldStorageDefinitionListener

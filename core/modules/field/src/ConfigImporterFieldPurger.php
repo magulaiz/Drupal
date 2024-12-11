@@ -39,7 +39,7 @@ class ConfigImporterFieldPurger {
         $field_storage->delete();
       }
     }
-    field_purge_batch($context['sandbox']['field']['purge_batch_size'], $field_storage->getUniqueStorageIdentifier());
+    \Drupal::service('entity_field.purgatory')->purgeBatch($context['sandbox']['field']['purge_batch_size'], $field_storage->getUniqueStorageIdentifier());
     $context['sandbox']['field']['current_progress']++;
     $fields_to_delete_count = count(static::getFieldStoragesToPurge($context['sandbox']['field']['extensions'], $config_importer->getUnprocessedConfiguration('delete')));
     if ($fields_to_delete_count == 0) {
@@ -63,7 +63,7 @@ class ConfigImporterFieldPurger {
    *   The config importer.
    */
   protected static function initializeSandbox(array &$context, ConfigImporter $config_importer) {
-    $context['sandbox']['field']['purge_batch_size'] = \Drupal::config('field.settings')->get('purge_batch_size');
+    $context['sandbox']['field']['purge_batch_size'] = \Drupal::config('system.entity_field_settings')->get('purge_batch_size');
     // Save the future list of installed extensions to limit the amount of times
     // the configuration is read from disk.
     $context['sandbox']['field']['extensions'] = $config_importer->getStorageComparer()->getSourceStorage()->read('core.extension');
@@ -81,8 +81,9 @@ class ConfigImporterFieldPurger {
         $context['sandbox']['field']['steps_to_delete'] += $how_many_steps;
       }
     }
-    // Each field possibly needs one last field_purge_batch() call to remove the
-    // last field and the field storage itself.
+    // Each field possibly needs one last
+    // \Drupal\Core\Field\FieldPurgatoryInterface::purgeBatch() call to remove
+    // the last field and the field storage itself.
     $context['sandbox']['field']['steps_to_delete'] += count($fields);
 
     $context['sandbox']['field']['current_progress'] = 0;

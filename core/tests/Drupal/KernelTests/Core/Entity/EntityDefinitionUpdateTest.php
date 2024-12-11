@@ -578,7 +578,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
 
     // Purge field data, and check that the storage definition has been
     // completely removed once the data is purged.
-    field_purge_batch(10);
+    \Drupal::service('entity_field.purgatory')->purgeBatch(10);
     $deleted_field_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldDefinitions();
     $this->assertEmpty($deleted_field_definitions, 'The bundle field has been deleted.');
     $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();

@@ -104,7 +104,7 @@ class ConfigImportAllTest extends ModuleTestBase {
     }
 
     // Purge the field data.
-    field_purge_batch(1000);
+    \Drupal::service('entity_field.purgatory')->purgeBatch(1000);
 
     $all_modules = \Drupal::service('extension.list.module')->getList();
     $database_module = \Drupal::service('database')->getProvider();

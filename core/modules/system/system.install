@@ -1759,3 +1759,21 @@ function system_update_11102(): TranslatableMarkup|null {
   }
   return NULL;
 }
+
+
+/**
+ * Move the 'field.settings' configuration object to the system module.
+ */
+function system_update_11103(): void {
+  $config_factory = \Drupal::configFactory();
+
+  // Load the original configuration object, copy its data to the new one and
+  // then delete it.
+  $old_config_object = $config_factory->getEditable('field.settings');
+
+  $new_config_object = $config_factory->getEditable('system.entity_field_settings');
+  $new_config_object->set('purge_batch_size', $old_config_object->get('purge_batch_size'));
+  $new_config_object->save(TRUE);
+
+  $old_config_object->delete();
+}

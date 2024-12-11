@@ -167,6 +167,14 @@ system.diff:
             Range:
               min: 0
 
+system.entity_field_settings:
+  type: config_object
+  label: 'Field settings'
+  mapping:
+    purge_batch_size:
+      type: integer
+      label: 'Maximum number of field data records to purge'
+
 system.logging:
   type: config_object
   label: 'Logging settings'
