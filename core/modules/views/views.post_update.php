@@ -65,7 +65,10 @@ function views_post_update_views_data_argument_plugin_id(?array &$sandbox = NULL
   });
 }
 
-function views_post_update_views_exposed_form_sort_ids(array &$sandbox = NULL): void {
+/**
+ * Post update configured views for adding the default exposed forms sort IDs.
+ */
+function views_post_update_views_exposed_form_sort_ids(?array &$sandbox = NULL): void {
   /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
   $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   $view_config_updater->setDeprecationsEnabled(FALSE);

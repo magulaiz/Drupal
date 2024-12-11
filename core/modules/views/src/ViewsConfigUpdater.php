@@ -289,6 +289,4 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     return $changed;
   }
 
-
-
 }
