@@ -77,7 +77,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   ) {
     if ($eventDispatcher === NULL) {
       @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
-      $eventDispatcher = EventDispatcherFactory::getInstance();
+      $eventDispatcher = EventDispatcherFactory::createInstance();
     }
 
     // If the SQL mode doesn't include 'ANSI_QUOTES' (explicitly or via a
