@@ -476,6 +476,12 @@ views_exposed_form:
     exposed_sorts_label:
       type: label
       label: 'Exposed sorts label'
+    expose_sort_id:
+      type: string
+      label: 'Exposed sort id'
+    expose_sort_order_id:
+      type: string
+      label: 'Exposed sort order id'
     expose_sort_order:
       type: boolean
       label: 'Expose sort order'
