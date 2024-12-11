@@ -63,11 +63,11 @@ interface FieldPurgatoryInterface {
    * storage itself will be purged.
    *
    * @param int $batch_size
-   *   The maximum number of field data records to purge before returning.
+   *   The maximum number of field data records to purge before returnings.
    * @param string $field_storage_unique_id
    *   (optional) Limit the purge to a specific field storage. Defaults to NULL.
    */
-  public function purgeBatch($batch_size, $field_storage_unique_id = NULL);
+  public function purgeBatch($batch_size, $field_storage_unique_id = NULL): void;
 
   /**
    * Purges a field definition from the database.
@@ -78,7 +78,7 @@ interface FieldPurgatoryInterface {
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field
    *   The field definition to purge.
    */
-  public function purgeFieldDefinition(FieldDefinitionInterface $field);
+  public function purgeFieldDefinition(FieldDefinitionInterface $field): void;
 
   /**
    * Purges a field storage definition from the database.
@@ -91,7 +91,7 @@ interface FieldPurgatoryInterface {
    *
    * @throws \Drupal\Core\Field\FieldException
    */
-  public function purgeFieldStorageDefinition(FieldStorageDefinitionInterface $field_storage);
+  public function purgeFieldStorageDefinition(FieldStorageDefinitionInterface $field_storage): void;
 
 }
 

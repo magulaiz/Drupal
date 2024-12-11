@@ -61,7 +61,7 @@ class FieldPurgatory implements FieldPurgatoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function purgeBatch($batch_size, $field_storage_unique_id = NULL) {
+  public function purgeBatch($batch_size, $field_storage_unique_id = NULL) : void {
     $fields = $this->deletedFieldsRepository->getFieldDefinitions($field_storage_unique_id);
 
     $info = $this->entityTypeManager->getDefinitions();
@@ -112,7 +112,7 @@ class FieldPurgatory implements FieldPurgatoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function purgeFieldDefinition(FieldDefinitionInterface $field) {
+  public function purgeFieldDefinition(FieldDefinitionInterface $field) : void {
     $this->deletedFieldsRepository->removeFieldDefinition($field);
 
     // Invoke external hooks after the cache is cleared for API consistency.
@@ -122,7 +122,7 @@ class FieldPurgatory implements FieldPurgatoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function purgeFieldStorageDefinition(FieldStorageDefinitionInterface $field_storage) {
+  public function purgeFieldStorageDefinition(FieldStorageDefinitionInterface $field_storage) : void {
     $fields = $this->deletedFieldsRepository->getFieldDefinitions($field_storage->getUniqueStorageIdentifier());
     if (count($fields) > 0) {
       throw new FieldException("Attempt to purge a field storage {$field_storage->getName()} that still has fields.");
