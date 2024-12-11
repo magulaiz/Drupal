@@ -210,11 +210,15 @@ class ElementTest extends BrowserTestBase {
   }
 
   /**
-   * Tests summary attributes of details.
+   * Tests attributes of details elements.
    */
-  protected function testDetailsSummaryAttributes(): void {
+  protected function testDetailsAttributes(): void {
     $this->drupalGet('form-test/group-details');
+    // Test summary attributes.
     $this->assertSession()->elementExists('css', 'summary[data-summary-attribute="test"]');
+    // Test description attributes and related aria-describedby.
+    $this->assertSession()->elementExists('css', 'details[aria-describedby="edit-description-attributes--description"]');
+    $this->assertSession()->elementExists('css', 'div[id="edit-description-attributes--description"]');
   }
 
 }
