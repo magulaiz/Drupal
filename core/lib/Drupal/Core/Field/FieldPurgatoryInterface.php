@@ -63,7 +63,7 @@ interface FieldPurgatoryInterface {
    * storage itself will be purged.
    *
    * @param int $batch_size
-   *   The maximum number of field data records to purge before returnings.
+   *   The maximum number of field data records to purge before returning.
    * @param string $field_storage_unique_id
    *   (optional) Limit the purge to a specific field storage. Defaults to NULL.
    */
