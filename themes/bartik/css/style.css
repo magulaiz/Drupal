@@ -607,6 +607,9 @@ h1#page-title {
   border: none;
   padding: 0;
 }
+.node-full.node-unpublished {
+  background-color: #FFF4F4;
+}
 .node-teaser .content {
   clear: none;
   line-height: 1.6;
