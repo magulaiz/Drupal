@@ -4,11 +4,8 @@ namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
-<<<<<<< ours
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
-=======
 use Drupal\Core\Config\Entity\Exception\ConfigEntityDependencyException;
->>>>>>> theirs
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\EntityBase;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
