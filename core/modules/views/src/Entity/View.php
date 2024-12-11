@@ -155,7 +155,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $plugin = Views::pluginManager('display')->getDefinition($plugin_id);
 
     if (empty($plugin)) {
-      $plugin['title'] = new TranslatableMarkup('Broken');
+      $plugin['title'] = t('Broken');
     }
 
     if (empty($id)) {
@@ -203,7 +203,6 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    *   Which plugin should be used for the new display ID.
    *
    * @return string
-   *   Generated display ID.
    */
   protected function generateDisplayId($plugin_id) {
     // 'default' is singular and is unique, so just go with 'default'
@@ -313,7 +312,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    * the view's configuration. This allows Views to determine very efficiently:
    * - the max-age
    * - the cache contexts
-   * - the cache tags.
+   * - the cache tags
    *
    * In other words: this allows us to do the (expensive) work of initializing
    * Views plugins and handlers to determine their effect on the cacheability of
