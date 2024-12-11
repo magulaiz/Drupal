@@ -7,7 +7,7 @@ namespace Drupal\theme_test\Hook;
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
- * Hook implementations for theme_test.
+ * Theme suggestions for theme_test.
  */
 class ThemeTestThemeSuggestionHook {
 

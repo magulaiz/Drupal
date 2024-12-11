@@ -6,12 +6,12 @@ use Drupal\Core\Hook\Attribute\Hook;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
- * Hook implementations for system.
+ * Theme suggestions for system.
  */
 class SystemThemeSuggestionHook {
 
   /**
-   * Implements hook_theme_suggestions_HOOK().
+   * Implements hook_theme_suggestions_HOOK() for 'html'.
    */
   #[Hook('theme_suggestions_html')]
   public function themeSuggestionsHtml(array $variables): array {

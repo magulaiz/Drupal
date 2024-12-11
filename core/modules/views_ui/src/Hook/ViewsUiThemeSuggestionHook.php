@@ -5,7 +5,7 @@ namespace Drupal\views_ui\Hook;
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
- * Hook implementations for views_ui.
+ * Theme suggestions for views_ui.
  */
 class ViewsUiThemeSuggestionHook {
 

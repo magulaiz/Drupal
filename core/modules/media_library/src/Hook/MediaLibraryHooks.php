@@ -210,6 +210,8 @@ class MediaLibraryHooks {
   /**
    * Implements hook_form_FORM_ID_alter().
    *
+   * Alter the bulk form to add a more accessible label.
+   *
    * @todo Remove in https://www.drupal.org/node/2983454
    */
   #[Hook('form_views_form_media_library_page_alter')]

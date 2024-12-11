@@ -5,7 +5,7 @@ namespace Drupal\big_pipe\Hook;
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
- * Hook implementations for big_pipe.
+ * Theme suggestions for big_pipe.
  */
 class BigPipeThemeSuggestionHook {
 

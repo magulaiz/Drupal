@@ -7,7 +7,7 @@ use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 
 /**
- * Hook implementations for media.
+ * Theme suggestions for media.
  */
 class MediaThemeSuggestionHook {
 

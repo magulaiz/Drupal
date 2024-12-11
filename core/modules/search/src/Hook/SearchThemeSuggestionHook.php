@@ -5,7 +5,7 @@ namespace Drupal\search\Hook;
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
- * Hook implementations for search.
+ * Theme suggestions for search.
  */
 class SearchThemeSuggestionHook {
 

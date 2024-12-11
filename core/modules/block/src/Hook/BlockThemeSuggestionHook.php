@@ -5,7 +5,7 @@ namespace Drupal\block\Hook;
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
- * Hook implementations for block.
+ * Theme suggestions for block.
  */
 class BlockThemeSuggestionHook {
 

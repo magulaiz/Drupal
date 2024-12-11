@@ -6,7 +6,7 @@ use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
- * Hook implementations for block.
+ * Implementations of hook_themes_installed() for block.
  */
 class BlockThemeInstalledHook {
 

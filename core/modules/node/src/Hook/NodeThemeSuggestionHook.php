@@ -5,7 +5,7 @@ namespace Drupal\node\Hook;
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
- * Hook implementations for node.
+ * Theme suggestions for node.
  */
 class NodeThemeSuggestionHook {
 

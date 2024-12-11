@@ -78,7 +78,7 @@ class BigPipeInterfacePreviewThemeSuggestionsTest extends KernelTestBase {
     $variables = [];
     // In turn this is what createBigPipeJsPlaceholder() uses to
     // build the BigPipe JS placeholder render array which is used as input
-    // for big_pipe_theme_suggestions_big_pipe_interface_preview().
+    // for themeSuggestionsBigPipeInterfacePreview().
     $variables['callback'] = $build['#lazy_builder'][0];
     $variables['arguments'] = $build['#lazy_builder'][1];
     $bigPipeThemeSuggestions = new BigPipeThemeSuggestionHook();
