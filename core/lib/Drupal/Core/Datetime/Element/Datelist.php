@@ -266,7 +266,7 @@ class Datelist extends DateElementBase {
     // Allows custom callbacks to alter the element.
     if (!empty($element['#date_date_callbacks'])) {
       foreach ($element['#date_date_callbacks'] as $callback) {
-        $message = sprintf('Datelist element #date_date_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString($callback));
+        $message = sprintf('Datelist element #date_date_callbacks callbacks must be methods with the Drupal\Core\Security\Attribute\TrustedCallback attribute, or be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface, or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString($callback));
         StaticTrustedCallbackHelper::callback($callback, [&$element, $form_state, $date], $message);
       }
     }
