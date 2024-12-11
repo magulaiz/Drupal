@@ -13,7 +13,7 @@ use Drupal\views\Views;
  * @group Recipe
  * @group views
  */
-class ViewsSetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
+class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
 
   public static $testViews = ['entity_test_fields'];
 

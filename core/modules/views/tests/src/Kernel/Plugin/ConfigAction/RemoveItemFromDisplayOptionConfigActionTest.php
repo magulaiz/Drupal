@@ -13,7 +13,7 @@ use Drupal\views\Views;
  * @group Recipe
  * @group views
  */
-class ViewsRemoveItemFromDisplayOptionConfigActionTest extends ViewsKernelTestBase {
+class RemoveItemFromDisplayOptionConfigActionTest extends ViewsKernelTestBase {
 
   public static $testViews = ['entity_test_fields'];
 
