@@ -147,7 +147,7 @@ abstract class Database {
 
     if (!isset(self::$connections[$key][$target])) {
       // If necessary, a new connection is opened.
-      self::$connections[$key][$target] = self::openConnection($key, $target, EventDispatcherFactory::getInstance());
+      self::$connections[$key][$target] = self::openConnection($key, $target, (new EventDispatcherFactory())->getInstance());
     }
     return self::$connections[$key][$target];
   }
