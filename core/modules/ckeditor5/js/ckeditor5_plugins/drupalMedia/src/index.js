@@ -15,6 +15,7 @@ import DrupalMediaCaption from './drupalmediacaption';
 import MediaImageTextAlternative from './mediaimagetextalternative';
 import MediaImageTextAlternativeEditing from './mediaimagetextalternative/mediaimagetextalternativeediting';
 import MediaImageTextAlternativeUi from './mediaimagetextalternative/mediaimagetextalternativeui';
+import DrupalMediaResize from './drupalmediaresize';
 
 /**
  * @private
@@ -27,4 +28,5 @@ export default {
   DrupalLinkMedia,
   DrupalMediaCaption,
   DrupalElementStyle,
+  DrupalMediaResize,
 };
