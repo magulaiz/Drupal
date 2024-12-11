@@ -16,7 +16,10 @@ use Drupal\views\Views;
  */
 class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
 
-  public static $testViews = ['entity_test_fields'];
+  public static $testViews = [
+    'entity_test_fields',
+    'test_disabled_display',
+  ];
 
   /**
    * Tests changing of view pager.
