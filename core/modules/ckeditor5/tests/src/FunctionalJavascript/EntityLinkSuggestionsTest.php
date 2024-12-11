@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
-// cspell:ignore Sofie
-
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
@@ -94,7 +92,7 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
       'create page content',
       'edit any page content',
       'use text format test_format',
-    ], 'Sofie');
+    ]);
 
     // Create a document media item with "f" in the name.
     $this->createMediaType('file', ['id' => 'document', 'label' => 'Document']);
@@ -157,7 +155,7 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     // Make the search term longer to narrow down the results.
     $autocomplete_field->setValue('fo');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->waitForElementRemoved('xpath', '//span[@class="entity-link-suggestions-result-line--title" and text()="Sofie"]');
+    $assert_session->waitForElementRemoved('xpath', '//span[@class="entity-link-suggestions-result-line--title" and text()="Foo"]');
 
     // Find all the autocomplete results.
     $results = $page->findAll('css', '.entity-link-suggestions-result-line.ui-menu-item');
