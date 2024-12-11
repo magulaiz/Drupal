@@ -19,22 +19,7 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $testViews = [
-    'entity_test_fields',
-    'test_disabled_display',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'node',
-    'system',
-    'views',
-    'views_test_config',
-    'views_test_data',
-    'user',
-  ];
+  public static $testViews = ['entity_test_fields'];
 
   /**
    * Tests changing of view pager.
@@ -168,23 +153,23 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
    * Tests adding field to a new display with override.
    */
   public function testAddFieldToOverriddenDisplay() : void {
-    $view = Views::getView('test_disabled_display');
+    $view = Views::getView('entity_test_fields');
     $view->setDisplay();
     $fields = $view->displayHandlers->get('default')->getOption('fields');
     // Check that field type is not part of default display.
     $this->assertArrayNotHasKey('type', $fields);
     // Create a new display.
     $config_action_settings = [
-      'old_display_id' => 'page_1',
+      'old_display_id' => 'default',
       'new_display_type' => 'page',
     ];
-    $this->container->get('plugin.manager.config_action')->applyAction('test_disabled_display', 'views.view.entity_test_fields', $config_action_settings);
-    $view = Views::getView('test_disabled_display');
+    $this->container->get('plugin.manager.config_action')->applyAction('setDisplayOption', 'views.view.entity_test_fields', $config_action_settings);
+    $view = Views::getView('entity_test_fields');
     // Confirm that new display was created.
-    $this->assertTrue($view->displayHandlers->has('page_3'));
-    // Apply config action that adds field type to page_3 display only.
+    $this->assertTrue($view->displayHandlers->has('page_1'));
+    // Apply config action that adds field type to page_1 display only.
     $config_action_settings = [
-      'display_id' => 'page_3',
+      'display_id' => 'page_1',
       'option' => 'fields',
       'item' => 'type',
       'override' => TRUE,
@@ -206,15 +191,15 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
         'hide_alter_empty' => TRUE,
       ],
     ];
-    $this->container->get('plugin.manager.config_action')->applyAction('setDisplayOption', 'views.view.test_disabled_display', $config_action_settings);
+    $this->container->get('plugin.manager.config_action')->applyAction('setDisplayOption', 'views.view.entity_test_fields', $config_action_settings);
     // Check that field was added to page_3 and not to default.
-    $view = Views::getView('test_disabled_display');
+    $view = Views::getView('entity_test_fields');
     $view->setDisplay();
     $fields = $view->displayHandlers->get('default')->getOption('fields');
     // Check that field type is not part of default display.
     $this->assertArrayNotHasKey('type', $fields);
-    $view->setDisplay('page_3');
-    $fields = $view->displayHandlers->get('page_3')->getOption('fields');
+    $view->setDisplay('page_1');
+    $fields = $view->displayHandlers->get('page_1')->getOption('fields');
     // Check that field type is not part of default display.
     $this->assertArrayHasKey('type', $fields);
 
