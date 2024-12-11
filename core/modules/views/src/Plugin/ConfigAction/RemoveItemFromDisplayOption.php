@@ -8,17 +8,17 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\ViewExecutable;
 
 /**
- * Config action for setting display option.
+ * Config action for removing item from display option.
  */
 #[ConfigAction(
-  id: 'view:setDisplayOption',
-  admin_label: new TranslatableMarkup('Views set display option'),
+  id: 'view:removeItemFromDisplayOption',
+  admin_label: new TranslatableMarkup('Views remove item from display option'),
   entity_types: ['view'],
 )]
-class ViewsSetDisplayOption extends ViewsDisplayOptionBase {
+class RemoveItemFromDisplayOption extends ConfigActionDisplayOptionBase {
 
   /**
-   * Configure view display option.
+   * Remove item from view display option.
    *
    * {@inheritdoc}
    */
@@ -30,11 +30,10 @@ class ViewsSetDisplayOption extends ViewsDisplayOptionBase {
       throw new ConfigActionException('No view display option provided');
     }
     $option = $value['option'];
-    if (empty($value['settings'])) {
-      throw new ConfigActionException('No view display option settings provided');
+    if (empty($value['item'])) {
+      throw new ConfigActionException(sprintf('No view display %s item name provided', $option));
     }
-    $settings = $value['settings'];
-
+    $item = $value['item'];
     $display_id = 'default';
     if (!empty($value['display_id'])) {
       $display_id = $value['display_id'];
@@ -44,11 +43,15 @@ class ViewsSetDisplayOption extends ViewsDisplayOptionBase {
       $override = TRUE;
     }
     $view->setDisplay($display_id);
-    if ($override) {
-      $view->displayHandlers->get($display_id)->overrideOption($option, $settings);
-    }
-    else {
-      $view->displayHandlers->get($display_id)->setOption($option, $settings);
+    $option_settings = $view->displayHandlers->get($display_id)->getOption($option);
+    if (!empty($option_settings[$item])) {
+      unset($option_settings[$item]);
+      if ($override) {
+        $view->displayHandlers->get($display_id)->overrideOption($option, $option_settings);
+      }
+      else {
+        $view->displayHandlers->get($display_id)->setOption($option, $option_settings);
+      }
     }
   }
 

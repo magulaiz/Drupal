@@ -4,20 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Plugin\ConfigAction;
 
-use Drupal\Core\Recipe\RecipeRunner;
-use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
 /**
- * @covers \Drupal\views\Plugin\ConfigAction\ViewsSetDisplayOption
+ * @covers \Drupal\views\Plugin\ConfigAction\SetDisplayOption
  *
  * @group Recipe
  * @group views
  */
 class ViewsSetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
-
-  use RecipeTestTrait;
 
   public static $testViews = ['entity_test_fields'];
 
@@ -40,27 +36,23 @@ class ViewsSetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Applies a recipe with the addItemToDisplayOption action.
+   * Applies a recipe with the setDisplayOption action.
    *
    * @param string $config_name
-   *   The name of the config object which should run the addItemToDisplayOption
+   *   The name of the config object which should run the setDisplayOption
    *   action.
    */
   private function applyAction(string $config_name): void {
-    $contents = <<<YAML
-name: Set mini pager
-config:
-  actions:
-    $config_name:
-      setDisplayOption:
-        option: pager
-        settings:
-          type: mini
-          options:
-            items_per_page: 5
-YAML;
-    $recipe = $this->createRecipe($contents);
-    RecipeRunner::processRecipe($recipe);
+    $config_action_settings = [
+      'option' => 'pager',
+      'settings' => [
+        'type' => 'mini',
+        'options' => [
+          'items_per_page' => 5,
+        ],
+      ],
+    ];
+    $this->container->get('plugin.manager.config_action')->applyAction('setDisplayOption', $config_name, $config_action_settings);
   }
 
 }

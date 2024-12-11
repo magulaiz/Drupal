@@ -15,7 +15,7 @@ use Drupal\views\ViewExecutable;
   admin_label: new TranslatableMarkup('Add an item to a Views display option'),
   entity_types: ['view'],
 )]
-class ViewsAddItemToDisplayOption extends ViewsDisplayOptionBase {
+class AddItemToDisplayOption extends ConfigActionDisplayOptionBase {
 
   /**
    * Add item to view display option.

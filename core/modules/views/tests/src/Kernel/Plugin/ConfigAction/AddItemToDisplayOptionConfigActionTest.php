@@ -5,20 +5,16 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel\Plugin\ConfigAction;
 
 use Drupal\Core\Config\Action\ConfigActionException;
-use Drupal\Core\Recipe\RecipeRunner;
-use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
 /**
- * @covers \Drupal\views\Plugin\ConfigAction\ViewsAddItemToDisplayOption
+ * @covers \Drupal\views\Plugin\ConfigAction\AddItemToDisplayOption
  *
  * @group Recipe
  * @group views
  */
-class ViewsAddItemToDisplayOptionConfigActionTest extends ViewsKernelTestBase {
-
-  use RecipeTestTrait;
+class AddItemToDisplayOptionConfigActionTest extends ViewsKernelTestBase {
 
   public static $testViews = ['entity_test_fields'];
 
@@ -54,33 +50,29 @@ class ViewsAddItemToDisplayOptionConfigActionTest extends ViewsKernelTestBase {
    *   Whether update is allowed or not.
    */
   private function applyAction(string $config_name, bool $allow_update = FALSE): void {
-    $contents = <<<YAML
-name: Add type field to view
-config:
-  actions:
-    $config_name:
-      addItemToDisplayOption:
-        allow_update: $allow_update
-        option: fields
-        item: type
-        settings:
-          id: type
-          table: entity_test
-          field: type
-          entity_type: entity_test
-          entity_field: type
-          plugin_id: field
-          exclude: false
-          alter:
-            alter_text: false
-          element_class: ''
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-YAML;
-    $recipe = $this->createRecipe($contents);
-    RecipeRunner::processRecipe($recipe);
+    $config_action_settings = [
+      'allow_update' => $allow_update,
+      'option' => 'fields',
+      'item' => 'type',
+      'settings' => [
+        'id' => 'type',
+        'table' => 'entity_test',
+        'field' => 'type',
+        'entity_type' => 'entity_test',
+        'entity_field' => 'type',
+        'plugin_id' => 'field',
+        'exclude' => FALSE,
+        'alter' => [
+          'alter_text' => FALSE,
+        ],
+        'element_class' => '',
+        'empty' => '',
+        'hide_empty' => FALSE,
+        'empty_zero' => FALSE,
+        'hide_alter_empty' => TRUE,
+      ],
+    ];
+    $this->container->get('plugin.manager.config_action')->applyAction('addItemToDisplayOption', $config_name, $config_action_settings);
   }
 
 }

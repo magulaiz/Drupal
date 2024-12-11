@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class for views display option config actions.
  */
-abstract class ViewsDisplayOptionBase implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
+abstract class ConfigActionDisplayOptionBase implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
 
   /**
    * Constructs instance of ViewsDisplayOptionBase.
