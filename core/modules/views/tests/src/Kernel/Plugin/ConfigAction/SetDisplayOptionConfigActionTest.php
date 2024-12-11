@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Plugin\ConfigAction;
 
+use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
@@ -18,31 +19,15 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
   public static $testViews = ['entity_test_fields'];
 
   /**
-   * Tests removing field from a default display.
+   * Tests changing of view pager.
    */
-  public function testSetDefaultDisplay() : void {
+  public function testSetViewsPager() : void {
     $view = Views::getView('entity_test_fields');
     $view->setDisplay();
     $pager = $view->displayHandlers->get('default')->getOption('pager');
     // Check that pager type is full.
     $this->assertSame('full', $pager['type']);
     // Apply config action that set pager to mini for default display.
-    $this->applyAction('views.view.entity_test_fields');
-    $view = Views::getView('entity_test_fields');
-    $view->setDisplay();
-    $pager = $view->displayHandlers->get('default')->getOption('pager');
-    // Check that pager type is mini.
-    $this->assertSame('mini', $pager['type']);
-  }
-
-  /**
-   * Applies a recipe with the setDisplayOption action.
-   *
-   * @param string $config_name
-   *   The name of the config object which should run the setDisplayOption
-   *   action.
-   */
-  private function applyAction(string $config_name): void {
     $config_action_settings = [
       'option' => 'pager',
       'settings' => [
@@ -52,7 +37,113 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
         ],
       ],
     ];
-    $this->container->get('plugin.manager.config_action')->applyAction('setDisplayOption', $config_name, $config_action_settings);
+    $this->container->get('plugin.manager.config_action')->applyAction('setDisplayOption', 'views.view.entity_test_fields', $config_action_settings);
+    $view = Views::getView('entity_test_fields');
+    $view->setDisplay();
+    $pager = $view->displayHandlers->get('default')->getOption('pager');
+    // Check that pager type is mini.
+    $this->assertSame('mini', $pager['type']);
+  }
+
+  /**
+   * Tests adding a field to a default display.
+   */
+  public function testAddFieldToDefaultDisplay() : void {
+    $view = Views::getView('entity_test_fields');
+    $view->setDisplay();
+    $fields = $view->displayHandlers->get('default')->getOption('fields');
+    // Check that field type is not part of default display.
+    $this->assertArrayNotHasKey('type', $fields);
+    // Apply config action that adds field type to default display.
+    $config_action_settings = [
+      'option' => 'fields',
+      'item' => 'type',
+      'settings' => [
+        'id' => 'type',
+        'table' => 'entity_test',
+        'field' => 'type',
+        'entity_type' => 'entity_test',
+        'entity_field' => 'type',
+        'plugin_id' => 'field',
+        'exclude' => FALSE,
+        'alter' => [
+          'alter_text' => FALSE,
+        ],
+        'element_class' => '',
+        'empty' => '',
+        'hide_empty' => FALSE,
+        'empty_zero' => FALSE,
+        'hide_alter_empty' => TRUE,
+      ],
+    ];
+    $this->container->get('plugin.manager.config_action')->applyAction('setDisplayOption', 'views.view.entity_test_fields', $config_action_settings);
+    $view = Views::getView('entity_test_fields');
+    $view->setDisplay();
+    $fields = $view->displayHandlers->get('default')->getOption('fields');
+    // Check that field type now exists.
+    $this->assertArrayHasKey('type', $fields);
+    // Try to apply the action again without allow_update flag.
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage('Item type already exists in default display for fields');
+    $config_action_settings['allow_update'] = FALSE;
+    $this->container->get('plugin.manager.config_action')->applyAction('setDisplayOption', 'views.view.entity_test_fields', $config_action_settings);
+  }
+
+  /**
+   * Tests adding multiple fields to a default display.
+   */
+  public function testAddMultipleFieldsToDefaultDisplay() : void {
+    $view = Views::getView('entity_test_fields');
+    $view->setDisplay();
+    $fields = $view->displayHandlers->get('default')->getOption('fields');
+    // Check that field type is not part of default display.
+    $this->assertArrayNotHasKey('type', $fields);
+    // Check that field user_id is not part of default display.
+    $this->assertArrayNotHasKey('user_id', $fields);
+    // Apply config action that adds field type to default display.
+    $config_action_settings = [
+      [
+        'option' => 'fields',
+        'item' => 'user_id',
+        'settings' => [
+          'id' => 'user_id',
+          'table' => 'entity_test',
+          'field' => 'user_id',
+          'plugin_id' => 'field',
+          'entity_type' => 'entity_test',
+          'entity_field' => 'user_id',
+        ],
+      ],
+      [
+        'option' => 'fields',
+        'item' => 'type',
+        'settings' => [
+          'id' => 'type',
+          'table' => 'entity_test',
+          'field' => 'type',
+          'entity_type' => 'entity_test',
+          'entity_field' => 'type',
+          'plugin_id' => 'field',
+          'exclude' => FALSE,
+          'alter' => [
+            'alter_text' => FALSE,
+          ],
+          'element_class' => '',
+          'empty' => '',
+          'hide_empty' => FALSE,
+          'empty_zero' => FALSE,
+          'hide_alter_empty' => TRUE,
+        ],
+      ],
+    ];
+    $this->container->get('plugin.manager.config_action')->applyAction('setDisplayOption', 'views.view.entity_test_fields', $config_action_settings);
+    $view = Views::getView('entity_test_fields');
+    $view->setDisplay();
+    $fields = $view->displayHandlers->get('default')->getOption('fields');
+    // Check that field type now exists.
+    $this->assertArrayHasKey('type', $fields);
+    // Check that field user_id now exists.
+    $this->assertArrayNotHasKey('user_id', $fields);
   }
 
 }
