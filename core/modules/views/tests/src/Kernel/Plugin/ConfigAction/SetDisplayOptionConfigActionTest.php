@@ -163,7 +163,7 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
       'old_display_id' => 'default',
       'new_display_type' => 'page',
     ];
-    $this->container->get('plugin.manager.config_action')->applyAction('setDisplayOption', 'views.view.entity_test_fields', $config_action_settings);
+    $this->container->get('plugin.manager.config_action')->applyAction('duplicateDisplayAsType', 'views.view.entity_test_fields', $config_action_settings);
     $view = Views::getView('entity_test_fields');
     // Confirm that new display was created.
     $this->assertTrue($view->displayHandlers->has('page_1'));
@@ -202,7 +202,6 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
     $fields = $view->displayHandlers->get('page_1')->getOption('fields');
     // Check that field type is not part of default display.
     $this->assertArrayHasKey('type', $fields);
-
   }
 
 }
