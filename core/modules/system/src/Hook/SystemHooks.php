@@ -336,10 +336,9 @@ class SystemHooks {
       $fetcher = \Drupal::service('system.sa_fetcher');
       $fetcher->getSecurityAdvisories();
     }
-
-  // Do a pass of purging on deleted entity field data, if any exists.
-  $limit = \Drupal::config('system.entity_field_settings')->get('purge_batch_size');
-  \Drupal::service('entity_field.purgatory')->purgeBatch($limit);
+    // Do a pass of purging on deleted entity field data, if any exists.
+    $limit = \Drupal::config('system.entity_field_settings')->get('purge_batch_size');
+    \Drupal::service('entity_field.purgatory')->purgeBatch($limit);
   }
 
   /**

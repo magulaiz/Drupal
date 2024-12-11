@@ -130,7 +130,7 @@ class FieldConfigDeleteForm extends EntityDeleteForm {
     // single call to \Drupal\Core\Field\FieldPurgatoryInterface::purgeBatch()
     // will remove it from the system. Call this with a low batch limit to
     // avoid administrators having to wait for cron runs when removing fields
-    //  that meet this criteria.
+    // that meet this criteria.
     $this->fieldPurgatory->purgeBatch(10);
   }
 

@@ -22,7 +22,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  * @param string $field_storage_unique_id
  *   (optional) Limit the purge to a specific field storage. Defaults to NULL.
  *
- * @deprecated in drupal:11.1 and is removed from drupal:12.0. Use the
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the
  * @see https://www.drupal.org/project/drupal/issues/2907780
  */
 function field_purge_batch($batch_size, $field_storage_unique_id = NULL) {
@@ -38,7 +38,7 @@ function field_purge_batch($batch_size, $field_storage_unique_id = NULL) {
  * @param \Drupal\Core\Field\FieldDefinitionInterface $field
  *   The field to purge.
  *
- * @deprecated in drupal:11.1 and is removed from drupal:12.0. Use the
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the
  * @see https://www.drupal.org/project/drupal/issues/2907780
  */
 function field_purge_field(FieldDefinitionInterface $field) {
@@ -56,7 +56,7 @@ function field_purge_field(FieldDefinitionInterface $field) {
  *
  * @throws \Drupal\Core\Field\FieldException
  *
- * @deprecated in drupal:11.1 and is removed from drupal:12.0. Use the
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the
  * @see https://www.drupal.org/project/drupal/issues/2907780
  */
 function field_purge_field_storage(FieldStorageDefinitionInterface $field_storage) {
