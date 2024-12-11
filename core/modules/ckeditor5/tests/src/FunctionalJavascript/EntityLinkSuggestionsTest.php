@@ -57,7 +57,7 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <br> <a href data-entity-type data-entity-uuid data-entity-metadata>',
+            'allowed_html' => '<p> <br> <a href data-entity-type data-entity-uuid>',
           ],
         ],
         'entity_links' => [
