@@ -21,7 +21,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['path', 'url_alter_test'];
+  protected static $modules = ['path', 'url_alter_test', 'user'];
 
   /**
    * {@inheritdoc}

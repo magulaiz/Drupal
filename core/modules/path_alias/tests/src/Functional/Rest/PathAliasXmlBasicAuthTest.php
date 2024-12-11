@@ -20,7 +20,7 @@ class PathAliasXmlBasicAuthTest extends PathAliasResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['basic_auth'];
+  protected static $modules = ['basic_auth', 'user'];
 
   /**
    * {@inheritdoc}

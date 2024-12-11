@@ -18,7 +18,7 @@ class PathAliasJsonBasicAuthTest extends PathAliasResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['basic_auth'];
+  protected static $modules = ['basic_auth', 'user'];
 
   /**
    * {@inheritdoc}
