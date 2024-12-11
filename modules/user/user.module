@@ -2324,7 +2324,7 @@ function user_authenticate($name, $password) {
  */
 function user_login_finalize(&$form_state = array()) {
   global $user;
-  watchdog('user', 'Session opened for %name.', array('%name' => $user->name));
+  watchdog('user', 'Session opened for %name.', array('%name' => format_user_name($user)));
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
   $user->login = REQUEST_TIME;
@@ -2563,8 +2563,8 @@ function _user_cancel($edit, $account, $method) {
         _user_mail_notify('status_blocked', $account);
       }
       user_save($account, array('status' => 0));
-      drupal_set_message(t('%name has been disabled.', array('%name' => $account->name)));
-      watchdog('user', 'Blocked user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
+      drupal_set_message(t('%name has been disabled.', array('%name' => format_username($account))));
+      watchdog('user', 'Blocked user: %name %email.', array('%name' => format_username($account), '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
       break;
 
     case 'user_cancel_reassign':
@@ -2573,9 +2573,14 @@ function _user_cancel($edit, $account, $method) {
       if (!empty($edit['user_cancel_notify'])) {
         _user_mail_notify('status_canceled', $account);
       }
+
+      // Store the username in a variable to use it after the account is
+      // deleted.
+      $username = format_username($account);
+
       user_delete($account->uid);
-      drupal_set_message(t('%name has been deleted.', array('%name' => $account->name)));
-      watchdog('user', 'Deleted user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
+      drupal_set_message(t('%name has been deleted.', array('%name' => $username)));
+      watchdog('user', 'Deleted user: %name %email.', array('%name' => $username, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
       break;
   }
 
@@ -3395,14 +3400,14 @@ function user_multiple_cancel_confirm($form, &$form_state) {
       '#type' => 'hidden',
       '#value' => $uid,
       '#prefix' => '<li>',
-      '#suffix' => check_plain($account->name) . "</li>\n",
+      '#suffix' => check_plain(format_username($account)) . "</li>\n",
     );
   }
 
   // Output a notice that user 1 cannot be canceled.
   if (isset($accounts[1])) {
     $redirect = (count($accounts) == 1);
-    $message = t('The user account %name cannot be cancelled.', array('%name' => $accounts[1]->name));
+    $message = t('The user account %name cannot be cancelled.', array('%name' => format_username($accounts[1])));
     drupal_set_message($message, $redirect ? 'error' : 'warning');
     // If only user 1 was selected, redirect to the overview.
     if ($redirect) {
@@ -3809,7 +3814,7 @@ function user_block_user_action(&$entity, $context = array()) {
   }
   $account = user_load($uid);
   $account = user_save($account, array('status' => 0));
-  watchdog('action', 'Blocked user %name.', array('%name' => $account->name));
+  watchdog('action', 'Blocked user %name.', array('%name' => format_username($account)));
 }
 
 /**
@@ -4020,7 +4025,7 @@ function user_register_submit($form, &$form_state) {
   // New administrative account without notification.
   $uri = entity_uri('user', $account);
   if ($admin && !$notify) {
-    drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
+    drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => format_username($account))));
   }
   // No e-mail verification required; log in user immediately.
   elseif (!$admin && !variable_get('user_email_verification', TRUE) && $account->status) {
@@ -4035,7 +4040,7 @@ function user_register_submit($form, &$form_state) {
     $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
     _user_mail_notify($op, $account);
     if ($notify) {
-      drupal_set_message(t('A welcome message with further instructions has been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
+      drupal_set_message(t('A welcome message with further instructions has been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url($uri['path'], $uri['options']), '%name' => format_username($account))));
     }
     else {
       drupal_set_message(t('A welcome message with further instructions has been sent to your e-mail address.'));
