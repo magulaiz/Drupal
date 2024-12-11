@@ -149,7 +149,7 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
   /**
    * Tests adding field to a new display with override.
    */
-  public function testAddFieldToOverridenDisplay() : void {
+  public function testAddFieldToOverriddenDisplay() : void {
     $view = Views::getView('test_disabled_display');
     $view->setDisplay();
     $fields = $view->displayHandlers->get('default')->getOption('fields');
