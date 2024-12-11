@@ -22,6 +22,7 @@ use Drupal\file\FileInterface;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\layout_builder\Section;
 use Drupal\media\MediaInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\node\NodeInterface;
@@ -259,6 +260,22 @@ class ContentImportTest extends BrowserTestBase {
     $translation = $node->getTranslation('fr');
     $this->assertSame('Perdu en traduction', $translation->label());
     $this->assertSame("Içi c'est la version français.", $translation->body->value);
+  }
+
+  /**
+   * Tests importing default content with Layout Builder data.
+   */
+  public function testDefaultContentWithLayoutData(): void {
+    $this->applyRecipe('core/tests/fixtures/recipes/default_content');
+
+    // The node's layout data should be intact.
+    $node = $this->container->get(EntityRepositoryInterface::class)
+      ->loadEntityByUuid('node', '32650de8-9edd-48dc-80b8-8bda180ebbac');
+    $this->assertInstanceOf(NodeInterface::class, $node);
+    $section = $node->layout_builder__layout[0]->section;
+    $this->assertInstanceOf(Section::class, $section);
+    $this->assertCount(2, $section->getComponents());
+    $this->assertSame('system_powered_by_block', $section->getComponent('03b45f14-cf74-469a-8398-edf3383ce7fa')->getPluginId());
   }
 
 }

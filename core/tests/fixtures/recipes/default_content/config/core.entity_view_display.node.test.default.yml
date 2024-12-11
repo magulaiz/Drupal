@@ -1,0 +1,40 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.test
+  module:
+    - layout_builder
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          199f7eea-3e6e-4a91-bf5e-7b1d6f13fecd:
+            uuid: 199f7eea-3e6e-4a91-bf5e-7b1d6f13fecd
+            region: content
+            configuration:
+              id: 'extra_field_block:node:test:links'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 0
+            additional: {  }
+        third_party_settings: {  }
+id: node.test.default
+targetEntityType: node
+bundle: test
+mode: default
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

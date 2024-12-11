@@ -1,0 +1,5 @@
+name: Default content test
+type: Test
+install:
+  - node
+  - layout_builder
