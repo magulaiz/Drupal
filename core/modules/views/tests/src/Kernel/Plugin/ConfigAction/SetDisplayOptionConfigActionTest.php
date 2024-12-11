@@ -16,9 +16,24 @@ use Drupal\views\Views;
  */
 class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public static $testViews = [
     'entity_test_fields',
     'test_disabled_display',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'node',
+    'system',
+    'views',
+    'views_test_config',
+    'views_test_data',
+    'user',
   ];
 
   /**
