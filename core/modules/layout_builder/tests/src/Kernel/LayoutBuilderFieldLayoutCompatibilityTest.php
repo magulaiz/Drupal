@@ -39,11 +39,11 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends LayoutBuilderCompatibili
     // Ensure that the configurable field is shown in the correct region and
     // that the non-configurable field is shown outside the layout.
     $expected_fields = [
-      'field field--name-name field--type-string field--label-hidden field__item',
-      'field field--name-test-field-display-configurable field--type-boolean field--label-above',
-      'clearfix text-formatted field field--name-test-display-configurable field--type-text field--label-above',
-      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above',
-      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above',
+      'field field--name-name field--type-string field--label-hidden field--single',
+      'field field--name-test-field-display-configurable field--type-boolean field--label-above field--single',
+      'clearfix text-formatted field field--name-test-display-configurable field--type-text field--label-above field--single',
+      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above field--single',
+      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above field--multiple',
     ];
     $this->assertFieldAttributes($this->entity, $expected_fields);
     $this->assertNotEmpty($this->cssSelect('.layout__region--first .field--name-test-display-configurable'));
