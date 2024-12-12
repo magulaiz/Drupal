@@ -161,7 +161,7 @@ function workspaces_update_11103(): void {
   /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
   $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
   /** @var \Drupal\workspaces\WorkspaceInformationInterface $workspace_info */
-  $workspace_info = \Drupal::service('workspaces.info');
+  $workspace_info = \Drupal::service('workspaces.information');
 
   foreach ($entity_definition_update_manager->getEntityTypes() as $entity_type_id => $entity_type) {
     if ($workspace_info->isEntityTypeSupported($entity_type) && !$entity_type->hasHandlerClass('workspace')) {
