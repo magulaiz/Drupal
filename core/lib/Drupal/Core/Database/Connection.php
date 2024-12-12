@@ -181,7 +181,7 @@ abstract class Connection {
    *   - prefix
    *   - namespace
    *   - Other driver-specific options.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherFactoryInterface|null $eventDispatcher
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherFactoryInterface|null $eventDispatcherFactory
    *   The event dispatcher.
    */
   public function __construct(
