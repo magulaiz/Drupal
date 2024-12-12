@@ -1380,14 +1380,15 @@ function hook_menu_link_insert($link) {
  *
  * @param $link
  *   Associative array defining a menu link as passed into menu_link_save().
+ * @param $original_link
+ *   Associative array defining a menu link as it was before the update.
  *
  * @see hook_menu_link_insert()
  * @see hook_menu_link_delete()
  */
-function hook_menu_link_update($link) {
+function hook_menu_link_update($link, $original_link) {
   // If the parent menu has changed, update our record.
-  $menu_name = db_query("SELECT menu_name FROM {menu_example} WHERE mlid = :mlid", array(':mlid' => $link['mlid']))->fetchField();
-  if ($menu_name != $link['menu_name']) {
+  if ($original_link['menu_name'] != $link['menu_name']) {
     db_update('menu_example')
       ->fields(array('menu_name' => $link['menu_name']))
       ->condition('mlid', $link['mlid'])

@@ -3292,11 +3292,12 @@ function menu_link_save(&$item, $existing_item = array(), $parent_candidates = a
       menu_cache_clear($existing_item['menu_name']);
     }
     // Notify modules we have acted on a menu item.
-    $hook = 'menu_link_insert';
     if ($existing_item) {
-      $hook = 'menu_link_update';
+      module_invoke_all('menu_link_update', $item, $existing_item);
     }
-    module_invoke_all($hook, $item);
+    else {
+      module_invoke_all('menu_link_insert', $item);
+    }
     // Now clear the cache.
     _menu_clear_page_cache();
   }
