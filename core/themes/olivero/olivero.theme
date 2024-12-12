@@ -57,6 +57,7 @@ function olivero_preprocess_page(&$variables): void {
     $variables['is_admin_page'] = TRUE;
   }
 }
+
 /**
  * Implements hook_preprocess_HOOK() for page title templates.
  */
