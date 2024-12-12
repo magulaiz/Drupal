@@ -82,6 +82,7 @@ function template_preprocess_image_style(&$variables): void {
     \Drupal::logger('image')->warning('Uri missing from image. Variables: @variables', [
       '@variables' => print_r($variables_dump, TRUE),
     ]);
+    return;
   }
   $style = ImageStyle::load($variables['style_name']);
 
