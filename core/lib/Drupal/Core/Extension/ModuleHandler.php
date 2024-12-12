@@ -459,7 +459,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       $modules = array_keys($hook_listeners);
       if (isset($extra_modules)) {
         $orderingDone = FALSE;
-        if (count(array_intersect($extra_types, $this->hooksOrderedByAttributes)) === count($extra_types)) {
+        if (isset($extra_types) && count(array_intersect($extra_types, $this->hooksOrderedByAttributes)) === count($extra_types)) {
           $orderingDone = TRUE;
         }
 
