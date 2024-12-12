@@ -7,10 +7,10 @@ namespace Drupal\Tests\Core\Database;
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\StatementPrefetchIterator;
+use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Tests the Connection class.
@@ -53,7 +53,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testPrefixRoundTrip($expected, $prefix_info): void {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, [], ['', ''], new EventDispatcher());
+    $connection = new StubConnection($mock_pdo, [], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class));
 
     // setPrefix() is protected, so we make it accessible with reflection.
     $reflection = new \ReflectionClass('Drupal\Tests\Core\Database\Stub\StubConnection');
@@ -113,7 +113,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testPrefixTables($expected, $prefix_info, $query, array $quote_identifier = ['"', '"']): void {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, ['prefix' => $prefix_info], $quote_identifier, new EventDispatcher());
+    $connection = new StubConnection($mock_pdo, ['prefix' => $prefix_info], $quote_identifier, $this->createMock(EventDispatcherFactoryInterface::class));
     $this->assertEquals($expected, $connection->prefixTables($query));
   }
 
@@ -327,7 +327,7 @@ class ConnectionTest extends UnitTestCase {
     $additional_class_loader->register(TRUE);
 
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, ['namespace' => $namespace], ['', ''], new EventDispatcher());
+    $connection = new StubConnection($mock_pdo, ['namespace' => $namespace], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class));
     match($class) {
       'Install\\Tasks',
       'ExceptionHandler',
@@ -372,7 +372,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testSchema($expected, $driver, $namespace): void {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, ['namespace' => $namespace], ['', ''], new EventDispatcher());
+    $connection = new StubConnection($mock_pdo, ['namespace' => $namespace], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class));
     $connection->driver = $driver;
     $this->assertInstanceOf($expected, $connection->schema());
   }
@@ -409,7 +409,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testMakeComments($expected, $comment_array): void {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, [], ['', ''], new EventDispatcher());
+    $connection = new StubConnection($mock_pdo, [], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class));
     $this->assertEquals($expected, $connection->makeComment($comment_array));
   }
 
@@ -436,7 +436,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testFilterComments($expected, $comment): void {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, [], ['', ''], new EventDispatcher());
+    $connection = new StubConnection($mock_pdo, [], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class));
 
     // filterComment() is protected, so we make it accessible with reflection.
     $reflection = new \ReflectionClass('Drupal\Tests\Core\Database\Stub\StubConnection');
@@ -478,7 +478,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testEscapeTable($expected, $name, array $identifier_quote = ['"', '"']): void {
     $mock_pdo = $this->createMock(StubPDO::class);
-    $connection = new StubConnection($mock_pdo, [], $identifier_quote, new EventDispatcher());
+    $connection = new StubConnection($mock_pdo, [], $identifier_quote, $this->createMock(EventDispatcherFactoryInterface::class));
 
     $this->assertEquals($expected, $connection->escapeTable($name));
   }
@@ -509,7 +509,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testEscapeAlias($expected, $name, array $identifier_quote = ['"', '"']): void {
     $mock_pdo = $this->createMock(StubPDO::class);
-    $connection = new StubConnection($mock_pdo, [], $identifier_quote, new EventDispatcher());
+    $connection = new StubConnection($mock_pdo, [], $identifier_quote, $this->createMock(EventDispatcherFactoryInterface::class));
 
     $this->assertEquals($expected, $connection->escapeAlias($name));
   }
@@ -543,7 +543,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testEscapeField($expected, $name, array $identifier_quote = ['"', '"']): void {
     $mock_pdo = $this->createMock(StubPDO::class);
-    $connection = new StubConnection($mock_pdo, [], $identifier_quote, new EventDispatcher());
+    $connection = new StubConnection($mock_pdo, [], $identifier_quote, $this->createMock(EventDispatcherFactoryInterface::class));
 
     $this->assertEquals($expected, $connection->escapeField($name));
   }
@@ -572,7 +572,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testEscapeDatabase($expected, $name, array $identifier_quote = ['"', '"']): void {
     $mock_pdo = $this->createMock(StubPDO::class);
-    $connection = new StubConnection($mock_pdo, [], $identifier_quote, new EventDispatcher());
+    $connection = new StubConnection($mock_pdo, [], $identifier_quote, $this->createMock(EventDispatcherFactoryInterface::class));
 
     $this->assertEquals($expected, $connection->escapeDatabase($name));
   }
@@ -584,7 +584,7 @@ class ConnectionTest extends UnitTestCase {
     $this->expectException(\AssertionError::class);
     $this->expectExceptionMessage('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
     $mock_pdo = $this->createMock(StubPDO::class);
-    new StubConnection($mock_pdo, [], ['"'], new EventDispatcher());
+    new StubConnection($mock_pdo, [], ['"'], $this->createMock(EventDispatcherFactoryInterface::class));
   }
 
   /**
@@ -594,7 +594,7 @@ class ConnectionTest extends UnitTestCase {
     $this->expectException(\AssertionError::class);
     $this->expectExceptionMessage('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
     $mock_pdo = $this->createMock(StubPDO::class);
-    new StubConnection($mock_pdo, [], [0, '1'], new EventDispatcher());
+    new StubConnection($mock_pdo, [], [0, '1'], $this->createMock(EventDispatcherFactoryInterface::class));
   }
 
   /**
@@ -602,7 +602,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testNamespaceDefault(): void {
     $mock_pdo = $this->createMock(StubPDO::class);
-    $connection = new StubConnection($mock_pdo, [], ['', ''], new EventDispatcher());
+    $connection = new StubConnection($mock_pdo, [], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class));
     $this->assertSame('Drupal\Tests\Core\Database\Stub', $connection->getConnectionOptions()['namespace']);
   }
 
@@ -613,7 +613,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testQueryTrim($expected, $query, $options): void {
     $mock_pdo = $this->getMockBuilder(StubPdo::class)->getMock();
-    $connection = new StubConnection($mock_pdo, [], ['', ''], new EventDispatcher());
+    $connection = new StubConnection($mock_pdo, [], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class));
 
     $preprocess_method = new \ReflectionMethod($connection, 'preprocessStatement');
     $this->assertSame($expected, $preprocess_method->invoke($connection, $query, $options));
@@ -675,7 +675,7 @@ class ConnectionTest extends UnitTestCase {
       'driver' => 'test',
       'namespace' => 'Drupal\Tests\Core\Database\Stub',
     ]);
-    $connection = new StubConnection($this->createMock(StubPDO::class), [], ['', ''], new EventDispatcher());
+    $connection = new StubConnection($this->createMock(StubPDO::class), [], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class));
     $result = $connection->findCallerFromDebugBacktrace();
     $this->assertSame([
       'file' => __FILE__,
@@ -708,7 +708,7 @@ class ConnectionTest extends UnitTestCase {
     $mock_builder = $this->getMockBuilder(StubConnection::class);
     $connection = $mock_builder
       ->onlyMethods(['getDebugBacktrace', 'getConnectionOptions'])
-      ->setConstructorArgs([$this->createMock(StubPDO::class), [], ['', ''], new EventDispatcher()])
+      ->setConstructorArgs([$this->createMock(StubPDO::class), [], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class)])
       ->getMock();
     $connection->expects($this->once())
       ->method('getConnectionOptions')
@@ -909,7 +909,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testSupportedFetchModes(int $mode): void {
     $mockPdo = $this->createMock(StubPDO::class);
-    $mockConnection = new StubConnection($mockPdo, [], ['', ''], new EventDispatcher());
+    $mockConnection = new StubConnection($mockPdo, [], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class));
     $statement = new StatementPrefetchIterator($mockPdo, $mockConnection, '');
     $this->assertInstanceOf(StatementPrefetchIterator::class, $statement);
     $statement->setFetchMode($mode);
@@ -946,7 +946,7 @@ class ConnectionTest extends UnitTestCase {
     $this->expectException(\AssertionError::class);
     $this->expectExceptionMessageMatches("/^Fetch mode FETCH_.* is not supported\\. Use supported modes only/");
     $mockPdo = $this->createMock(StubPDO::class);
-    $mockConnection = new StubConnection($mockPdo, [], ['', ''], new EventDispatcher());
+    $mockConnection = new StubConnection($mockPdo, [], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class));
     $statement = new StatementPrefetchIterator($mockPdo, $mockConnection, '');
     $this->assertInstanceOf(StatementPrefetchIterator::class, $statement);
     $statement->setFetchMode($mode);

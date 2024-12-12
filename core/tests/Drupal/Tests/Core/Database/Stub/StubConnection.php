@@ -8,8 +8,9 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\ExceptionHandler;
 use Drupal\Core\Database\Log;
 use Drupal\Core\Database\StatementWrapperIterator;
+use Drupal\Core\EventDispatcher\EventDispatcherFactory;
+use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\Tests\Core\Database\Stub\Driver\Schema;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * A stub of the abstract Connection class for testing purposes.
@@ -40,17 +41,17 @@ class StubConnection extends Connection {
    *   An array of options for the connection.
    * @param string[] $identifier_quotes
    *   The identifier quote characters.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher
-   *   The event dispatcher.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherFactoryInterface|null $eventDispatcherFactory
+   *   The event dispatcher factory.
    */
   public function __construct(
     \PDO $connection,
     array $connection_options,
     array $identifier_quotes,
-    EventDispatcher $eventDispatcher,
+    EventDispatcherFactoryInterface $eventDispatcherFactory,
   ) {
     $this->identifierQuotes = $identifier_quotes;
-    parent::__construct($connection, $connection_options, $eventDispatcher);
+    parent::__construct($connection, $connection_options, $eventDispatcherFactory);
   }
 
   /**

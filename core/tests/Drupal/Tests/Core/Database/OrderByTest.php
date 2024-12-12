@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\Query\Select;
+use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 // cspell:ignore tablenode
 
@@ -33,7 +33,7 @@ class OrderByTest extends UnitTestCase {
     parent::setUp();
 
     $mockPdo = $this->createMock(StubPDO::class);
-    $connection = new StubConnection($mockPdo, [], ['', ''], new EventDispatcher());
+    $connection = new StubConnection($mockPdo, [], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class));
     $this->query = new Select($connection, 'test', NULL);
   }
 
