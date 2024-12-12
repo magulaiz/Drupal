@@ -283,7 +283,15 @@ class AttributeClassDiscovery implements DiscoveryInterface {
         // result here, then the Drupal\Component\Plugin\Attribute\Dependencies
         // attribute should be added to the plugin class to explicitly define
         // the missing providers.
-        if (!call_user_func($type . '_exists', $name)) {
+        try {
+          if (!call_user_func($type . '_exists', $name)) {
+            return TRUE;
+          }
+        }
+        catch (\Error) {
+          // Error exception thrown when there if the dependency extends a
+          // missing class or implements a missing interface somewhere in its
+          // hierarchy.
           return TRUE;
         }
       }
