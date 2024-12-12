@@ -3,6 +3,7 @@
 namespace Drupal\workspaces;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -134,6 +135,41 @@ class EntityTypeInfo implements ContainerInjectionInterface {
 
       return $fields;
     }
+  }
+
+  /**
+   * Adds the entity type metadata needed for workspace support.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type
+   *   An entity type object.
+   *
+   * @return void
+   */
+  public static function addWorkspaceSupport(ContentEntityTypeInterface $entity_type): void {
+    if (!$entity_type->hasHandlerClass('workspace')) {
+      $entity_type->setHandlerClass('workspace', DefaultWorkspaceHandler::class);
+    }
+    $entity_type->setRevisionMetadataKey('workspace', 'workspace');
+  }
+
+  /**
+   * Removes the entity type metadata needed for workspace support.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type
+   *   An entity type object.
+   *
+   * @return void
+   */
+  public static function removeWorkspaceSupport(ContentEntityTypeInterface $entity_type): void {
+    // Remove the workspace handler.
+    $handlers = $entity_type->get('handlers');
+    unset($handlers['workspace']);
+    $entity_type->set('handlers', $handlers);
+
+    // Remove the workspace revision metadata key.
+    $revision_metadata_keys = $entity_type->getRevisionMetadataKeys();
+    unset($revision_metadata_keys['workspace']);
+    $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
   }
 
 }

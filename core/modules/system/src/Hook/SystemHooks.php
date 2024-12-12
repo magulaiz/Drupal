@@ -21,6 +21,7 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\workspaces\EntityTypeInfo;
 
 /**
  * Hook implementations for system.
@@ -403,16 +404,7 @@ class SystemHooks {
     $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
     foreach ($entity_definition_update_manager->getEntityTypes() as $entity_type) {
       if ($entity_type instanceof ContentEntityTypeInterface && $entity_type->hasRevisionMetadataKey('workspace')) {
-        // Remove the workspace revision metadata key.
-        $revision_metadata_keys = $entity_type->getRevisionMetadataKeys();
-        unset($revision_metadata_keys['workspace']);
-        $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
-
-        // Remove the workspace handler.
-        $handlers = $entity_type->get('handlers');
-        unset($handlers['workspace']);
-        $entity_type->set('handlers', $handlers);
-
+        EntityTypeInfo::removeWorkspaceSupport($entity_type);
         $entity_definition_update_manager->updateEntityType($entity_type);
       }
     }
