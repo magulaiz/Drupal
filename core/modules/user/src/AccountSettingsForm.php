@@ -418,4 +418,15 @@ class AccountSettingsForm extends ConfigFormBase {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
+    $account = user_load_by_name($form_state->getValue('anonymous'));
+    if ($account) {
+      $form_state->setErrorByName('anonymous', $this->t('There is already a registered user <a href=":url">%name</a>. You must choose an unused name.', [':url' => $account->toUrl()->toString(), '%name' => $account->getAccountName()]));
+    }
+  }
+
 }
