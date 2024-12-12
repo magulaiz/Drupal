@@ -285,7 +285,6 @@ class UserLoginTest extends BrowserTestBase {
     $this->submitForm($values, 'Log in');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('user/' . $account->id());
-    sleep(10);
     $this->clickLink('Log out');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('/');
