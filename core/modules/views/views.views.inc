@@ -380,15 +380,17 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
       case 'serial':
       case 'numeric':
       case 'float':
-        $filter = 'numeric';
-        $argument = 'numeric';
-        $sort = 'standard';
         if ($field_storage->getType() == 'boolean') {
           $filter = 'boolean';
         }
         elseif ($field_storage->getType() == 'timestamp') {
           $filter = 'date';
         }
+        else {
+          $filter = 'numeric';
+        }
+        $argument = 'numeric';
+        $sort = 'standard';
         break;
 
       case 'blob':
