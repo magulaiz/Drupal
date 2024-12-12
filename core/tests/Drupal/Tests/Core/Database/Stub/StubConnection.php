@@ -8,7 +8,6 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\ExceptionHandler;
 use Drupal\Core\Database\Log;
 use Drupal\Core\Database\StatementWrapperIterator;
-use Drupal\Core\EventDispatcher\EventDispatcherFactory;
 use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\Tests\Core\Database\Stub\Driver\Schema;
 

@@ -81,7 +81,7 @@ class DatabaseEventsTest extends UnitTestCase {
    */
   public function testEventDispatchingWhenNoContainerAvailable(): void {
     $this->connection->dispatchEvent($this->createMock(DatabaseEvent::class));
-    $this->assertInstanceOf(EventDispatcher::class, $this->connection->eventDispatcher);
+    $this->assertInstanceOf(EventDispatcherFactoryInterface::class, $this->connection->eventDispatcherFactory);
   }
 
 }
