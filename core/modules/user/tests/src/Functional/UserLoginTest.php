@@ -29,7 +29,7 @@ class UserLoginTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['dblog'];
+  protected static $modules = ['dblog', 'block'];
 
   /**
    * Tests login with destination.
@@ -275,6 +275,23 @@ class UserLoginTest extends BrowserTestBase {
     $this->drupalGet($response->getHeader('location')[0]);
     $this->assertSession()->statusCodeEquals(403);
     $this->assertSession()->pageTextContains('To log in to this site, your browser must accept cookies from the domain');
+
+    // Ensure error message is not displayed when clicking back button after
+    // logging out.
+    $this->placeBlock('system_menu_block:account');
+    $this->drupalGet('user/login');
+    $this->assertSession()->pageTextNotContains('To log in to this site, your browser must accept cookies from the domain');
+    $values = ['name' => $account->getAccountName(), 'pass' => $account->passRaw];
+    $this->submitForm($values, 'Log in');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('user/' . $account->id());
+    sleep(10);
+    $this->clickLink('Log out');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('/');
+    $this->getSession()->back();
+    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->pageTextNotContains('To log in to this site, your browser must accept cookies from the domain');
   }
 
   /**
