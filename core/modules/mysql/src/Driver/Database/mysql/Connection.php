@@ -2,7 +2,6 @@
 
 namespace Drupal\mysql\Driver\Database\mysql;
 
-use Drupal\Component\EventDispatcher\EventDispatcherFactory;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
@@ -11,6 +10,8 @@ use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
+use Drupal\Core\EventDispatcher\EventDispatcherFactory;
+use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -73,11 +74,11 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   public function __construct(
     \PDO $connection,
     array $connection_options,
-    ?EventDispatcherInterface $eventDispatcher = NULL,
+    ?EventDispatcherFactoryInterface $eventDispatcherFactory = NULL,
   ) {
-    if ($eventDispatcher === NULL) {
-      @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
-      $eventDispatcher = EventDispatcherFactory::createInstance();
+    if ($eventDispatcherFactory === NULL) {
+      @trigger_error('Not passing the $eventDispatcherFactory parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
+      $eventDispatcherFactory = (\Drupal::hasContainer() && \Drupal::hasService(EventDispatcherFactoryInterface::class)) ? \Drupal::service(EventDispatcherFactoryInterface::class) : new EventDispatcherFactory();
     }
 
     // If the SQL mode doesn't include 'ANSI_QUOTES' (explicitly or via a
@@ -102,7 +103,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     if ($this->identifierQuotes === ['"', '"'] && !$is_ansi_quotes_mode) {
       $this->identifierQuotes = ['`', '`'];
     }
-    parent::__construct($connection, $connection_options, $eventDispatcher);
+    parent::__construct($connection, $connection_options, $eventDispatcherFactory);
   }
 
   /**

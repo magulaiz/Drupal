@@ -3,7 +3,6 @@
 namespace Drupal\Core\Database;
 
 use Drupal\Component\Assertion\Inspector;
-use Drupal\Component\EventDispatcher\EventDispatcherFactory;
 use Drupal\Core\Database\Event\DatabaseEvent;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
@@ -13,6 +12,8 @@ use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
+use Drupal\Core\EventDispatcher\EventDispatcherFactory;
+use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -167,9 +168,9 @@ abstract class Connection {
   protected TransactionManagerInterface $transactionManager;
 
   /**
-   * The event dispatcher.
+   * The event dispatcher factory.
    */
-  public readonly EventDispatcherInterface $eventDispatcher;
+  public readonly EventDispatcherFactoryInterface $eventDispatcherFactory;
 
   /**
    * Constructs a Connection object.
@@ -187,13 +188,13 @@ abstract class Connection {
   public function __construct(
     object $connection,
     array $connection_options,
-    ?EventDispatcherInterface $eventDispatcher = NULL,
+    ?EventDispatcherFactoryInterface $eventDispatcherFactory = NULL,
   ) {
-    if ($eventDispatcher === NULL) {
-      @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
-      $eventDispatcher = EventDispatcherFactory::createInstance();
+    if ($eventDispatcherFactory === NULL) {
+      @trigger_error('Not passing the $eventDispatcherFactory parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
+      $eventDispatcherFactory = (\Drupal::hasContainer() && \Drupal::hasService(EventDispatcherFactoryInterface::class)) ? \Drupal::service(EventDispatcherFactoryInterface::class) : new EventDispatcherFactory();
     }
-    $this->eventDispatcher = $eventDispatcher;
+    $this->eventDispatcherFactory = $eventDispatcherFactory;
 
     assert(count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), '\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
 
@@ -1538,7 +1539,7 @@ abstract class Connection {
    *   The database event.
    */
   public function dispatchEvent(DatabaseEvent $event, ?string $eventName = NULL): DatabaseEvent {
-    return $this->eventDispatcher->dispatch($event, $eventName);
+    return $this->eventDispatcherFactory->getInstance()->dispatch($event, $eventName);
   }
 
   /**

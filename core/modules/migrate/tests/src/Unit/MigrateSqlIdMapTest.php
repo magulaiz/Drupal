@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
-use Drupal\Component\EventDispatcher\EventDispatcherFactory;
+use Drupal\Core\EventDispatcher\EventDispatcherFactory;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
-use Drupal\Component\EventDispatcher\EventDispatcherFactory;
 use Drupal\Core\Cache\MemoryCounterBackendFactory;
+use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;

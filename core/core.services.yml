@@ -876,12 +876,13 @@ services:
     class: Drupal\Core\Routing\CurrentRouteMatch
     arguments: ['@request_stack']
   Drupal\Core\Routing\RouteMatchInterface: '@current_route_match'
+  Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface:
+    class: Drupal\Core\EventDispatcher\EventDispatcherFactory
   event_dispatcher:
     class: Symfony\Component\EventDispatcher\EventDispatcherInterface
-    factory: Drupal\Component\EventDispatcher\EventDispatcherFactory::createInstance
+    factory: Drupal\Core\EventDispatcher\EventDispatcherFactory::createInstance
     arguments:
-      $context: full
-      $reset: true
+      - !php/enum Drupal\Core\EventDispatcher\EventDispatcherFactoryStage::FullContainer
   Psr\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   Symfony\Contracts\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   controller_resolver:
