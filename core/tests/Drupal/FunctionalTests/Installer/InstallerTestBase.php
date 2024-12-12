@@ -123,34 +123,34 @@ abstract class InstallerTestBase extends BrowserTestBase {
     // @see install_begin_request()
     $request = Request::create($GLOBALS['base_url'] . '/core/install.php', 'GET', [], $_COOKIE, [], $_SERVER);
     $request->setSession(new Session(new MockArraySessionStorage()));
-    $this->container = new ContainerBuilder();
+    $container = new ContainerBuilder();
     $request_stack = new RequestStack();
     $request_stack->push($request);
-    $this->container
+    $container
       ->set('request_stack', $request_stack);
-    $this->container
+    $container
       ->setParameter('language.default_values', Language::$defaultValues);
-    $this->container
+    $container
       ->register('language.default', 'Drupal\Core\Language\LanguageDefault')
       ->addArgument('%language.default_values%');
-    $this->container
+    $container
       ->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
       ->addArgument(new Reference('language.default'));
-    $this->container
+    $container
       ->register('http_client', 'GuzzleHttp\Client')
       ->setFactory('http_client_factory:fromOptions');
-    $this->container
+    $container
       ->register('http_client_factory', 'Drupal\Core\Http\ClientFactory')
       ->setArguments([new Reference('http_handler_stack')]);
     $handler_stack = HandlerStack::create();
     $test_http_client_middleware = new TestHttpClientMiddleware();
     $handler_stack->push($test_http_client_middleware(), 'test.http_client.middleware');
-    $this->container
+    $container
       ->set('http_handler_stack', $handler_stack);
 
-    $this->container
+    $container
       ->setParameter('app.root', DRUPAL_ROOT);
-    \Drupal::setContainer($this->container);
+    \Drupal::setContainer($container);
   }
 
   /**
@@ -182,8 +182,8 @@ abstract class InstallerTestBase extends BrowserTestBase {
     if ($this->isInstalled) {
       // Import new settings.php written by the installer.
       $request = Request::createFromGlobals();
-      $class_loader = require $this->container->getParameter('app.root') . '/autoload.php';
-      Settings::initialize($this->container->getParameter('app.root'), DrupalKernel::findSitePath($request), $class_loader);
+      $class_loader = require \Drupal::getContainer()->getParameter('app.root') . '/autoload.php';
+      Settings::initialize(\Drupal::getContainer()->getParameter('app.root'), DrupalKernel::findSitePath($request), $class_loader);
 
       // After writing settings.php, the installer removes write permissions
       // from the site directory. To allow drupal_generate_test_ua() to write
@@ -191,15 +191,14 @@ abstract class InstallerTestBase extends BrowserTestBase {
       // directory has to be writable.
       // BrowserTestBase::tearDown() will delete the entire test site directory.
       // Not using File API; a potential error must trigger a PHP warning.
-      chmod($this->container->getParameter('app.root') . '/' . $this->siteDirectory, 0777);
+      chmod(\Drupal::getContainer()->getParameter('app.root') . '/' . $this->siteDirectory, 0777);
       $this->kernel = DrupalKernel::createFromRequest($request, $class_loader, 'prod', FALSE);
       $this->kernel->boot();
       $this->kernel->preHandle($request);
-      $this->container = $this->kernel->getContainer();
 
       // Manually configure the test mail collector implementation to prevent
       // tests from sending out emails and collect them in state instead.
-      $this->container->get('config.factory')
+      \Drupal::service('config.factory')
         ->getEditable('system.mail')
         ->set('interface.default', 'test_mail_collector')
         ->set('mailer_dsn', [
@@ -212,7 +211,7 @@ abstract class InstallerTestBase extends BrowserTestBase {
         ])
         ->save();
 
-      $this->installDefaultThemeFromClassProperty($this->container);
+      $this->installDefaultThemeFromClassProperty(\Drupal::getContainer());
     }
   }
 

@@ -227,7 +227,7 @@ class BasicAuthTest extends BrowserTestBase {
     $assert_response_cacheability('HIT', 'MISS');
     // 3. Third request: after clearing Page Cache, we now see that Dynamic Page
     // Cache is a HIT too.
-    $this->container->get('cache.page')->deleteAll();
+    \Drupal::service('cache.page')->deleteAll();
     $assert_response_cacheability('MISS', 'HIT');
     // 4. Fourth request: warm caches.
     $assert_response_cacheability('HIT', 'HIT');

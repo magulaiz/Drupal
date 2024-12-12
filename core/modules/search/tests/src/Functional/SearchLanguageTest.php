@@ -101,7 +101,7 @@ class SearchLanguageTest extends BrowserTestBase {
     $this->searchableNodes[2]->save();
 
     // Update the index and then run the shutdown method.
-    $plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
+    $plugin = \Drupal::service('plugin.manager.search')->createInstance('node_search');
     $plugin->updateIndex();
   }
 

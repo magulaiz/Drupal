@@ -380,7 +380,7 @@ namespace {{ namespace }} {
         protected function lazyLoadItself()
         {
             if (!isset($this->service)) {
-                $this->service = $this->container->get($this->drupalProxyOriginalServiceId);
+                $this->service = \Drupal::service($this->drupalProxyOriginalServiceId);
             }
 
             return $this->service;

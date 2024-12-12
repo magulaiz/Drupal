@@ -92,7 +92,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
     $this->setupUsers();
     $this->setupTestFields();
 
-    $this->manager = $this->container->get('content_translation.manager');
+    $this->manager = \Drupal::service('content_translation.manager');
     $this->controller = $this->manager->getTranslationHandler($this->entityTypeId);
 
     // Rebuild the container so that the new languages are picked up by services
@@ -221,7 +221,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
     if ($bundle_key = $entity_type->getKey('bundle')) {
       $entity_values[$bundle_key] = $bundle_name ?: $this->bundle;
     }
-    $storage = $this->container->get('entity_type.manager')->getStorage($this->entityTypeId);
+    $storage = \Drupal::service('entity_type.manager')->getStorage($this->entityTypeId);
     if (!($storage instanceof SqlContentEntityStorage)) {
       foreach ($values as $property => $value) {
         if (is_array($value)) {
@@ -229,7 +229,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
         }
       }
     }
-    $entity = $this->container->get('entity_type.manager')
+    $entity = \Drupal::service('entity_type.manager')
       ->getStorage($this->entityTypeId)
       ->create($entity_values);
     $entity->save();

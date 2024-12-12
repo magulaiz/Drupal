@@ -338,7 +338,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     // Check for the source strings we are going to translate. Adding the
     // custom language should have made the process to export configuration
     // strings to interface translation executed.
-    $locale_storage = $this->container->get('locale.storage');
+    $locale_storage = \Drupal::service('locale.storage');
     foreach ($config_strings as $config_string) {
       $string = $locale_storage->findString(['source' => $config_string[0], 'context' => '', 'type' => 'configuration']);
       $this->assertNotEmpty($string, 'Configuration strings have been created upon installation.');

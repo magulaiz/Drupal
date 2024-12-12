@@ -922,6 +922,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     $this->attachSynthetic($container);
 
+    $this->container?->reset();
     $this->container = $container;
     if ($session_started) {
       $this->container->get('session')->start();

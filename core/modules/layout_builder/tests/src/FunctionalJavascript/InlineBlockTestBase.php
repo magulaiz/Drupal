@@ -74,7 +74,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
     ]);
     $this->createBlockContentType('basic', 'Basic block');
 
-    $this->blockStorage = $this->container->get('entity_type.manager')->getStorage('block_content');
+    $this->blockStorage = \Drupal::service('entity_type.manager')->getStorage('block_content');
   }
 
   /**

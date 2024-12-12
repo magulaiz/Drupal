@@ -78,9 +78,9 @@ class NodeRssCacheTest extends NodeTestBase {
     $this->drupalGet('test-node-article-feed');
 
     // Render the teaser normally.
-    $viewBuilder = $this->container->get('entity_type.manager')->getViewBuilder('node');
+    $viewBuilder = \Drupal::service('entity_type.manager')->getViewBuilder('node');
     $build = $viewBuilder->view($node, 'teaser');
-    $output = $this->container->get('renderer')->renderInIsolation($build);
+    $output = \Drupal::service('renderer')->renderInIsolation($build);
 
     // Teaser must contain an "<article" tag from the stable9 theme.
     $this->assertStringContainsString('<article', (string) $output);

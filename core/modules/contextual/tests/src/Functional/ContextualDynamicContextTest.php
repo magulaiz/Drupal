@@ -292,7 +292,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
    *   The contextual ID token.
    */
   protected function createContextualIdToken($id) {
-    return Crypt::hmacBase64($id, Settings::getHashSalt() . $this->container->get('private_key')->get());
+    return Crypt::hmacBase64($id, Settings::getHashSalt() . \Drupal::service('private_key')->get());
   }
 
 }

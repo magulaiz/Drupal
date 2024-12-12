@@ -310,7 +310,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $this->submitForm($edit, 'Add custom language');
     t($name, [], ['langcode' => $langcode]);
     // Reset locale cache.
-    $this->container->get('string_translation')->reset();
+    \Drupal::service('string_translation')->reset();
     $this->assertSession()->responseContains('"edit-languages-' . $langcode . '-weight"');
     // Verify that the test language was added.
     $this->assertSession()->pageTextContains($name);

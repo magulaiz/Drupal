@@ -55,7 +55,7 @@ class SearchPreprocessLangcodeTest extends BrowserTestBase {
     $this->node = $this->drupalCreateNode(['body' => [[]], 'langcode' => 'en']);
 
     // First update the index. This does the initial processing.
-    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
+    \Drupal::service('plugin.manager.search')->createInstance('node_search')->updateIndex();
 
     // Search for the additional text that is added by the preprocess
     // function. If you search for text that is in the node, preprocess is
@@ -80,7 +80,7 @@ class SearchPreprocessLangcodeTest extends BrowserTestBase {
     ]);
 
     // First update the index. This does the initial processing.
-    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
+    \Drupal::service('plugin.manager.search')->createInstance('node_search')->updateIndex();
 
     // Search for the title of the node with a POST query.
     $edit = ['or' => 'testing'];

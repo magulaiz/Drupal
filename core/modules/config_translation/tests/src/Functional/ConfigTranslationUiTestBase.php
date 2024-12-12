@@ -115,7 +115,7 @@ abstract class ConfigTranslationUiTestBase extends BrowserTestBase {
     foreach ($this->langcodes as $langcode) {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
-    $this->localeStorage = $this->container->get('locale.storage');
+    $this->localeStorage = \Drupal::service('locale.storage');
     $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalPlaceBlock('page_title_block');
   }
@@ -138,7 +138,7 @@ abstract class ConfigTranslationUiTestBase extends BrowserTestBase {
     $this->assertNotEmpty($settings_locations, "$config_name should have configuration locations.");
 
     if ($settings_locations) {
-      $source = $this->container->get('config.factory')->get($config_name)->get($key);
+      $source = \Drupal::service('config.factory')->get($config_name)->get($key);
       $source_string = $this->localeStorage->findString(['source' => $source, 'type' => 'configuration']);
       $this->assertNotEmpty($source_string, "$config_name.$key should have a source string.");
 

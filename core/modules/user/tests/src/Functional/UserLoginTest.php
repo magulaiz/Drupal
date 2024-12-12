@@ -143,7 +143,7 @@ class UserLoginTest extends BrowserTestBase {
    */
   public function testPasswordRehashOnLogin(): void {
     // Retrieve instance of password hashing algorithm.
-    $password_hasher = $this->container->get('password');
+    $password_hasher = \Drupal::service('password');
 
     // Create a new user and authenticate.
     $account = $this->drupalCreateUser([]);
@@ -152,7 +152,7 @@ class UserLoginTest extends BrowserTestBase {
     $this->drupalLogout();
 
     // Load the stored user. The password hash shouldn't need a rehash.
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
     $account = User::load($account->id());
 
     // Check that the stored password doesn't need rehash.
@@ -163,7 +163,7 @@ class UserLoginTest extends BrowserTestBase {
     \Drupal::service('module_installer')->install(['user_custom_pass_hash_params_test']);
     $this->resetAll();
     // Reload the hashing service after container changes.
-    $password_hasher = $this->container->get('password');
+    $password_hasher = \Drupal::service('password');
 
     // Check that the stored password does need rehash.
     $this->assertTrue($password_hasher->needsRehash($account->getPassword()));

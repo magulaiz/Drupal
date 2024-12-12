@@ -69,7 +69,7 @@ class GlossaryTest extends ViewTestBase {
 
     // Enable the glossary to be displayed.
     $view->storage->enable()->save();
-    $this->container->get('router.builder')->rebuildIfNeeded();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
     $url = Url::fromRoute('view.glossary.page_1');
 
     // Verify cache tags.

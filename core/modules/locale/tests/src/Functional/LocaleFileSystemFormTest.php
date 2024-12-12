@@ -41,7 +41,7 @@ class LocaleFileSystemFormTest extends BrowserTestBase {
     $this->assertSession()->fieldNotExists('translation_path');
 
     // With locale module installed, the setting should appear.
-    $module_installer = $this->container->get('module_installer');
+    $module_installer = \Drupal::service('module_installer');
     $module_installer->install(['locale']);
     $this->rebuildContainer();
     $this->drupalGet('admin/config/media/file-system');

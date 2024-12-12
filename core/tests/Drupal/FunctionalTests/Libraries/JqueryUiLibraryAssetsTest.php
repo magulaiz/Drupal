@@ -53,7 +53,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->libraryDiscovery = $this->container->get('library.discovery');
+    $this->libraryDiscovery = \Drupal::service('library.discovery');
     $core_libraries = $this->libraryDiscovery->getLibrariesByExtension('core');
 
     // All the core libraries that use jQuery UI assets.

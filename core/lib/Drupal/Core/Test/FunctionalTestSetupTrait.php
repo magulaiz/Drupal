@@ -232,7 +232,7 @@ trait FunctionalTestSetupTrait {
    */
   protected function rebuildContainer() {
     // Rebuild the kernel and bring it back to a fully bootstrapped state.
-    $this->container = $this->kernel->rebuildContainer();
+    $this->kernel->rebuildContainer();
   }
 
   /**
@@ -248,7 +248,7 @@ trait FunctionalTestSetupTrait {
   protected function resetAll() {
     // Clear all database and static caches and rebuild data structures.
     drupal_flush_all_caches();
-    $this->container = \Drupal::getContainer();
+    \Drupal::getContainer();
 
     // Reset static variables and reload permissions.
     $this->refreshVariables();
@@ -291,12 +291,12 @@ trait FunctionalTestSetupTrait {
     // that API calls in the test use the right timestamp.
     $request->server->set('REQUEST_TIME', \Drupal::time()->getRequestTime());
 
-    $this->container->get('request_stack')->push($request);
+    \Drupal::service('request_stack')->push($request);
     // The request context is normally set by the router_listener from within
     // its KernelEvents::REQUEST listener. In the parent site this event is not
     // fired, therefore it is necessary to update the request context manually
     // here.
-    $this->container->get('router.request_context')->fromRequest($request);
+    \Drupal::service('router.request_context')->fromRequest($request);
 
     return $request;
   }
@@ -504,8 +504,6 @@ trait FunctionalTestSetupTrait {
         // The exception message has all the details.
         $this->fail($e->getMessage());
       }
-      // The container was already rebuilt by the ModuleInstaller.
-      $this->container = \Drupal::getContainer();
     }
   }
 
@@ -525,7 +523,7 @@ trait FunctionalTestSetupTrait {
     // @todo This should already be called through
     //   DrupalKernel::prepareLegacyRequest() -> DrupalKernel::boot() but that
     //   appears to be calling a different container.
-    $this->container->get('stream_wrapper_manager')->register();
+    \Drupal::service('stream_wrapper_manager')->register();
   }
 
   /**
@@ -684,8 +682,6 @@ trait FunctionalTestSetupTrait {
 
     // Reset statics.
     drupal_static_reset();
-
-    $this->container = NULL;
 
     // Unset globals.
     unset($GLOBALS['config']);

@@ -147,7 +147,7 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The menu link has been saved.');
 
-    $storage = $this->container->get('entity_type.manager')->getStorage('menu_link_content');
+    $storage = \Drupal::service('entity_type.manager')->getStorage('menu_link_content');
     $menu_links = $storage->loadByProperties(['title' => $title]);
     $menu_link = reset($menu_links);
 

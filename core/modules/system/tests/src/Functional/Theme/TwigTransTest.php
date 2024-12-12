@@ -90,7 +90,7 @@ class TwigTransTest extends BrowserTestBase {
     $this->assertTwigTransTags();
 
     // Enable debug, rebuild the service container, and clear all caches.
-    $parameters = $this->container->getParameter('twig.config');
+    $parameters = \Drupal::getContainer()->getParameter('twig.config');
     $parameters['debug'] = TRUE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
@@ -220,7 +220,7 @@ class TwigTransTest extends BrowserTestBase {
         $file_system->unlink($filename);
       }
     }
-    $this->container->get('language_manager')->reset();
+    \Drupal::service('language_manager')->reset();
   }
 
   /**

@@ -45,9 +45,9 @@ class UserCancelTest extends BrowserTestBase {
    * Attempt to cancel account without permission.
    */
   public function testUserCancelWithoutPermission(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
 
     // Create a user.
     $account = $this->drupalCreateUser([]);
@@ -107,7 +107,7 @@ class UserCancelTest extends BrowserTestBase {
    * administer the site.
    */
   public function testUserCancelUid1(): void {
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
 
     \Drupal::service('module_installer')->install(['views']);
 
@@ -131,9 +131,9 @@ class UserCancelTest extends BrowserTestBase {
    * Attempt invalid account cancellations.
    */
   public function testUserCancelInvalid(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
 
     // Create a user.
     $account = $this->drupalCreateUser(['cancel account']);
@@ -179,7 +179,7 @@ class UserCancelTest extends BrowserTestBase {
    */
   public function testUserBlock(): void {
     $this->config('user.settings')->set('cancel_method', 'user_cancel_block')->save();
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
 
     // Create a user.
     $web_user = $this->drupalCreateUser(['cancel account']);
@@ -215,11 +215,11 @@ class UserCancelTest extends BrowserTestBase {
    * Disable account and unpublish all content.
    */
   public function testUserBlockUnpublish(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_block_unpublish')->save();
     // Create comment field on page.
     $this->addDefaultCommentField('node', 'page');
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
 
     // Create a user.
     $account = $this->drupalCreateUser(['cancel account']);
@@ -297,7 +297,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->config('user.settings')->set('cancel_method', 'user_cancel_block_unpublish')->save();
 
     // Create a user.
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
     $account = $this->drupalCreateUser(['cancel account']);
     // Load a real user object.
     $user_storage->resetCache([$account->id()]);
@@ -319,7 +319,7 @@ class UserCancelTest extends BrowserTestBase {
 
     // Confirm node has been unpublished, even though the admin user
     // does not have permission to access it.
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
     $this->assertFalse($test_node->isPublished(), 'Node of the user has been unpublished.');
@@ -329,11 +329,11 @@ class UserCancelTest extends BrowserTestBase {
    * Delete account and anonymize all content.
    */
   public function testUserAnonymize(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     // Create comment field on page.
     $this->addDefaultCommentField('node', 'page');
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
 
     // Create a user.
     $account = $this->drupalCreateUser(['cancel account']);
@@ -413,9 +413,9 @@ class UserCancelTest extends BrowserTestBase {
    * Delete account and anonymize all content using a batch process.
    */
   public function testUserAnonymizeBatch(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
 
     // Create a user.
     $account = $this->drupalCreateUser(['cancel account']);
@@ -460,12 +460,12 @@ class UserCancelTest extends BrowserTestBase {
    * Delete account and remove all content.
    */
   public function testUserDelete(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_delete')->save();
     \Drupal::service('module_installer')->install(['comment']);
     $this->resetAll();
     $this->addDefaultCommentField('node', 'page');
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
 
     // Create a user.
     $account = $this->drupalCreateUser([
@@ -594,7 +594,7 @@ class UserCancelTest extends BrowserTestBase {
   public function testMassUserCancelByAdmin(): void {
     \Drupal::service('module_installer')->install(['views']);
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
     // Enable account cancellation notification.
     $this->config('user.settings')->set('notify.status_canceled', TRUE)->save();
 
@@ -666,7 +666,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     // Create comment field on page.
     $this->addDefaultCommentField('node', 'page');
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
 
     \Drupal::service('module_installer')->install([
       'language',

@@ -228,7 +228,7 @@ class TextFieldTest extends StringFieldTest {
     $field->save();
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository */
-    $entity_display_repository = $this->container->get('entity_display.repository');
+    $entity_display_repository = \Drupal::service('entity_display.repository');
     $entity_display_repository->getFormDisplay('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, [
         'type' => 'text_textfield',
@@ -398,7 +398,7 @@ class TextFieldTest extends StringFieldTest {
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
 
     // Display the entity.
-    $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
+    \Drupal::service('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $display = $display_repository->getViewDisplay($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);

@@ -88,7 +88,7 @@ class LocaleExportTest extends BrowserTestBase {
     $file_system->unlink($name);
 
     // Create string without translation in the locales_source table.
-    $this->container
+    \Drupal::getContainer()
       ->get('locale.storage')
       ->createString()
       ->setString('February')

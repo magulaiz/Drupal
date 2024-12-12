@@ -118,10 +118,6 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     // temp directory may be removed during update.
     \Drupal::service('file_system')->prepareDirectory($this->tempFilesDirectory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 
-    // Set the container. parent::rebuildAll() would normally do this, but this
-    // not safe to do here, because the database has not been updated yet.
-    $this->container = \Drupal::getContainer();
-
     $this->replaceUser1();
 
     require_once $this->root . '/core/includes/update.inc';
@@ -283,7 +279,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     // Ensure that the database tasks have been run during set up. Neither MySQL
     // nor SQLite make changes that are testable.
-    $database = $this->container->get('database');
+    $database = \Drupal::service('database');
     if ($database->driver() == 'pgsql') {
       $this->assertEquals('on', $database->query("SHOW standard_conforming_strings")->fetchField());
       $this->assertEquals('escape', $database->query("SHOW bytea_output")->fetchField());

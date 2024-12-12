@@ -58,7 +58,7 @@ class FilterDateTest extends ViewTestBase {
    */
   protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
     parent::setUp($import_test_views, $modules);
-    $this->dateFormatter = $this->container->get('date.formatter');
+    $this->dateFormatter = \Drupal::service('date.formatter');
 
     // Add a date field so we can test datetime handling.
     NodeType::create([

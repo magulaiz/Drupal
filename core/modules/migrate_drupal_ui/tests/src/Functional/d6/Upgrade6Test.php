@@ -48,7 +48,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     // form is being moved to its own issue which will remove the deletion
     // of the created nodes.
     // See https://www.drupal.org/project/drupal/issues/3087061.
-    $this->nodeStorage = $this->container->get('entity_type.manager')
+    $this->nodeStorage = \Drupal::service('entity_type.manager')
       ->getStorage('node');
     $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
 

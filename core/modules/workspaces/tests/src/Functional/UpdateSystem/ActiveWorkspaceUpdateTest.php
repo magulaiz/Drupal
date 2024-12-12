@@ -37,7 +37,7 @@ class ActiveWorkspaceUpdateTest extends BrowserTestBase {
     parent::setUp();
 
     $this->setUpCurrentUser([], ['view any workspace']);
-    $this->container->get('module_installer')->install(['workspace_update_test']);
+    \Drupal::service('module_installer')->install(['workspace_update_test']);
     $this->rebuildContainer();
 
     // Ensure the workspace_update_test_post_update_check_active_workspace()

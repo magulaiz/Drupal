@@ -55,7 +55,7 @@ class EngineTwigTest extends BrowserTestBase {
   public function testTwigUrlGenerator(): void {
     $this->drupalGet('twig-theme-test/url-generator');
     // Find the absolute URL of the current site.
-    $url_generator = $this->container->get('url_generator');
+    $url_generator = \Drupal::service('url_generator');
     $expected = [
       'path (as route) not absolute: ' . $url_generator->generateFromRoute('user.register'),
       'url (as route) absolute: ' . $url_generator->generateFromRoute('user.register', [], ['absolute' => TRUE]),
@@ -85,7 +85,7 @@ class EngineTwigTest extends BrowserTestBase {
     $this->drupalGet('twig-theme-test/link-generator');
 
     /** @var \Drupal\Core\Utility\LinkGenerator $link_generator */
-    $link_generator = $this->container->get('link_generator');
+    $link_generator = \Drupal::service('link_generator');
 
     $generated_url = Url::fromRoute('user.register', [], ['absolute' => TRUE])->toString(TRUE)->getGeneratedUrl();
     $expected = [

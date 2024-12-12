@@ -53,9 +53,9 @@ class TermParentsTest extends BrowserTestBase {
     parent::setUp();
 
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
-    $entity_type_manager = $this->container->get('entity_type.manager');
+    $entity_type_manager = \Drupal::service('entity_type.manager');
     $this->termStorage = $entity_type_manager->getStorage('taxonomy_term');
-    $this->state = $this->container->get('state');
+    $this->state = \Drupal::service('state');
 
     Vocabulary::create(['vid' => $this->vocabularyId, 'name' => 'Test'])->save();
     $this->drupalLogin($this->drupalCreateUser(['administer taxonomy']));

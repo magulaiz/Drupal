@@ -92,7 +92,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
     $edit = ['predefined_langcode' => $langcode];
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add language');
-    $this->container->get('language_manager')->reset();
+    \Drupal::service('language_manager')->reset();
     $this->assertNotEmpty(\Drupal::languageManager()->getLanguage($langcode), "Language $langcode added.");
   }
 
@@ -225,12 +225,12 @@ EOF;
       'June' => 'Juni',
     ];
     foreach ($non_customized_translations as $source => $translation) {
-      $string = $this->container->get('locale.storage')->createString([
+      $string = \Drupal::service('locale.storage')->createString([
         'source' => $source,
         'context' => $context,
       ])
         ->save();
-      $this->container->get('locale.storage')->createTranslation([
+      \Drupal::service('locale.storage')->createTranslation([
         'lid' => $string->getId(),
         'language' => $langcode,
         'translation' => $translation,
@@ -245,12 +245,12 @@ EOF;
       'May' => 'Mai_customized',
     ];
     foreach ($customized_translations as $source => $translation) {
-      $string = $this->container->get('locale.storage')->createString([
+      $string = \Drupal::service('locale.storage')->createString([
         'source' => $source,
         'context' => $context,
       ])
         ->save();
-      $this->container->get('locale.storage')->createTranslation([
+      \Drupal::service('locale.storage')->createTranslation([
         'lid' => $string->getId(),
         'language' => $langcode,
         'translation' => $translation,

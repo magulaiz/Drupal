@@ -146,7 +146,7 @@ class MediaSourceImageTest extends MediaSourceTestBase {
 
     // The image style warning should not include an action link when the
     // Field UI module is uninstalled.
-    $this->container->get('module_installer')->uninstall(['field_ui']);
+    \Drupal::service('module_installer')->uninstall(['field_ui']);
     $this->drupalGet('/admin/reports/status');
     $assert_session->pageTextContains('The default display for the Ada Lovelace media type is not currently using an image style on the Image field. Not using an image style can lead to much larger file downloads.');
     $assert_session->linkNotExists('add an image style to the Image field');

@@ -131,7 +131,7 @@ class FieldBlockTest extends WebDriverTestBase {
       ],
       'third_party_settings' => [],
     ];
-    $config = $this->container->get('config.factory')->get('block.block.starterkit_theme_datefield');
+    $config = \Drupal::service('config.factory')->get('block.block.starterkit_theme_datefield');
     $this->assertEquals($expected, $config->get('settings.formatter'));
     $this->assertEquals(['field.field.user.user.field_date'], $config->get('dependencies.config'));
 

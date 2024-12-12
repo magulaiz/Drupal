@@ -225,7 +225,7 @@ abstract class BrowserTestBase extends TestCase {
       // test running, but it is a problem when debugging. Also, disable SSL
       // peer verification so that testing under HTTPS always works.
       /** @var \GuzzleHttp\Client $client */
-      $client = $this->container->get('http_client_factory')->fromOptions([
+      $client = \Drupal::service('http_client_factory')->fromOptions([
         'timeout' => NULL,
         'verify' => FALSE,
       ]);
@@ -438,10 +438,10 @@ abstract class BrowserTestBase extends TestCase {
     }
     parent::tearDown();
 
-    if ($this->container) {
+    if (\Drupal::getContainer()) {
       // Cleanup mock session started in DrupalKernel::preHandle().
       /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-      $session = $this->container->get('request_stack')->getSession();
+      $session = \Drupal::service('request_stack')->getSession();
       $session->clear();
       $session->save();
     }
@@ -549,20 +549,20 @@ abstract class BrowserTestBase extends TestCase {
     $this->prepareSettings();
     $this->doInstall();
     $this->initSettings();
-    $this->container = $container = $this->initKernel(\Drupal::request());
+    $container = $this->initKernel(\Drupal::request());
     $this->initConfig($container);
     $this->installDefaultThemeFromClassProperty($container);
     $this->installModulesFromClassProperty($container);
 
     // Clear the static cache so that subsequent cache invalidations will work
     // as expected.
-    $this->container->get('cache_tags.invalidator')->resetChecksums();
+    \Drupal::service('cache_tags.invalidator')->resetChecksums();
 
     // Explicitly call register() again on the container registered in \Drupal.
     // @todo This should already be called through
     //   DrupalKernel::prepareLegacyRequest() -> DrupalKernel::boot() but that
     //   appears to be calling a different container.
-    $this->container->get('stream_wrapper_manager')->register();
+    \Drupal::service('stream_wrapper_manager')->register();
   }
 
   /**
@@ -613,7 +613,7 @@ abstract class BrowserTestBase extends TestCase {
    *   The configuration object with original configuration data.
    */
   protected function config($name) {
-    return $this->container->get('config.factory')->getEditable($name);
+    return \Drupal::service('config.factory')->getEditable($name);
   }
 
   /**

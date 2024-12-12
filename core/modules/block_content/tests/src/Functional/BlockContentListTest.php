@@ -127,7 +127,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[1]/td[1]', $label);
 
     // Edit the entity using the operations link.
-    $blocks = $this->container
+    $blocks = \Drupal::getContainer()
       ->get('entity_type.manager')
       ->getStorage('block_content')
       ->loadByProperties(['info' => $label]);

@@ -78,7 +78,7 @@ trait AssertViewsCacheTagsTrait {
 
       // Check Views render cache item cache tags.
       $original['#cache'] += ['contexts' => []];
-      $original['#cache']['contexts'] = Cache::mergeContexts($original['#cache']['contexts'], $this->container->getParameter('renderer.config')['required_cache_contexts']);
+      $original['#cache']['contexts'] = Cache::mergeContexts($original['#cache']['contexts'], \Drupal::getContainer()->getParameter('renderer.config')['required_cache_contexts']);
 
       $render_cache_item = $render_cache->get($original);
       if ($views_caching_is_enabled === TRUE) {
@@ -137,7 +137,7 @@ trait AssertViewsCacheTagsTrait {
 
     // Check Views render cache item cache tags.
     $original['#cache'] += ['contexts' => []];
-    $original['#cache']['contexts'] = Cache::mergeContexts($original['#cache']['contexts'], $this->container->getParameter('renderer.config')['required_cache_contexts']);
+    $original['#cache']['contexts'] = Cache::mergeContexts($original['#cache']['contexts'], \Drupal::getContainer()->getParameter('renderer.config')['required_cache_contexts']);
 
     $render_cache_item = $render_cache->get($original);
     if ($views_caching_is_enabled) {

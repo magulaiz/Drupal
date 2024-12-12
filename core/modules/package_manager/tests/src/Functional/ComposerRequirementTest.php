@@ -28,9 +28,9 @@ class ComposerRequirementTest extends PackageManagerTestBase {
 
     // Ensure we can locate the Composer executable.
     /** @var \PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface $executable_finder */
-    $executable_finder = $this->container->get(ExecutableFinderInterface::class);
+    $executable_finder = \Drupal::service(ExecutableFinderInterface::class);
     $composer_path = $executable_finder->find('composer');
-    $composer_version = $this->container->get(ComposerInspector::class)->getVersion();
+    $composer_version = \Drupal::service(ComposerInspector::class)->getVersion();
 
     // With a valid path to Composer, ensure the status report shows its version
     // number and path.

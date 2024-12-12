@@ -182,7 +182,7 @@ trait UiHelperTrait {
     $this->assertTrue($this->drupalUserIsLoggedIn($account), "User {$account->getAccountName()} successfully logged in.");
 
     $this->loggedInUser = $account;
-    $this->container->get('current_user')->setAccount($account);
+    \Drupal::service('current_user')->setAccount($account);
   }
 
   /**

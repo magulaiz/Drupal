@@ -194,8 +194,8 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', '//tr[.//td/div[text()="Display message"] and .//td[text()="Block test"] and .//td//a[contains(@href, "admin/structure/block/add/test_block_instantiation/stark")]]');
 
     // Trigger the custom category addition in block_test_block_alter().
-    $this->container->get('state')->set('block_test_info_alter', TRUE);
-    $this->container->get('plugin.manager.block')->clearCachedDefinitions();
+    \Drupal::service('state')->set('block_test_info_alter', TRUE);
+    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
 
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Place block');
@@ -299,7 +299,6 @@ class BlockUiTest extends BrowserTestBase {
     // Test the block placement indicator with using the domain as URL language
     // indicator. This causes destination query parameters to be absolute URLs.
     \Drupal::service('module_installer')->install(['language', 'locale']);
-    $this->container = \Drupal::getContainer();
     ConfigurableLanguage::createFromLangcode('it')->save();
     $config = $this->config('language.types');
     $config->set('negotiation.language_interface.enabled', [

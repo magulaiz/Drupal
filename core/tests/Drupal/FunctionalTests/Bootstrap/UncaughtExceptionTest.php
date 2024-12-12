@@ -200,7 +200,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
    */
   public function testLostDatabaseConnection(): void {
     $incorrect_username = $this->randomMachineName(16);
-    switch ($this->container->get('database')->driver()) {
+    switch (\Drupal::service('database')->driver()) {
       case 'pgsql':
       case 'mysql':
         $this->expectedExceptionMessage = $incorrect_username;

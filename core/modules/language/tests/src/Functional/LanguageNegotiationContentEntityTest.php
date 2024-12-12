@@ -188,7 +188,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, $route_name);
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route($path));
     $request->setSession(new Session(new MockArraySessionStorage()));
-    $this->container->get('request_stack')->push($request);
+    \Drupal::service('request_stack')->push($request);
   }
 
 }

@@ -41,7 +41,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
    * Tests CRUD for fields and field storages with default images.
    */
   public function testDefaultImages(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     // Create files to use as the default images.
     $files = $this->drupalGetTestFiles('image');
     // Create 10 files so the default image fids are not a single value.

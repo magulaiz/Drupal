@@ -34,7 +34,7 @@ class MediaContextualLinksTest extends MediaFunctionalTestBase {
       ->set('standalone_url', TRUE)
       ->save(TRUE);
 
-    $this->container->get('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
 
     // Create a media type.
     $mediaType = $this->createMediaType('test');

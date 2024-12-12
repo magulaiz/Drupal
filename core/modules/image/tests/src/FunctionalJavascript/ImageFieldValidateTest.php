@@ -32,7 +32,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $text_file = reset($text_files);
 
     $field = $this->getSession()->getPage()->findField('files[' . $field_name . '_0][]');
-    $field->attachFile($this->container->get('file_system')->realpath($text_file->uri));
+    $field->attachFile(\Drupal::service('file_system')->realpath($text_file->uri));
     $this->assertSession()->waitForElement('css', '.messages--error');
 
     // Verify that Ajax validation messages are displayed only once.

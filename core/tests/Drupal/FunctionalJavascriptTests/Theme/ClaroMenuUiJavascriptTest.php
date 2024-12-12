@@ -27,7 +27,7 @@ class ClaroMenuUiJavascriptTest extends MenuUiJavascriptTest {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->container->get('theme_installer')->install(['claro']);
+    \Drupal::service('theme_installer')->install(['claro']);
     $this->config('system.theme')->set('default', 'claro')->save();
   }
 

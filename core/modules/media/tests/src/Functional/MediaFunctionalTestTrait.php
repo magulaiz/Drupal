@@ -67,7 +67,7 @@ trait MediaFunctionalTestTrait {
     // Start off logged in as admin.
     $this->drupalLogin($this->adminUser);
 
-    $this->storage = $this->container->get('entity_type.manager')->getStorage('media');
+    $this->storage = \Drupal::service('entity_type.manager')->getStorage('media');
   }
 
 }

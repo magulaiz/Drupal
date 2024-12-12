@@ -63,7 +63,7 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
     ViewTestData::createTestViews(static::class, ['block_test_views']);
     $this->enableViewsTestModule();
 
-    $this->nodeType = $this->container->get('entity_type.manager')
+    $this->nodeType = \Drupal::service('entity_type.manager')
       ->getStorage('node_type')
       ->create([
         'name' => 'Test node type',
@@ -71,12 +71,12 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
       ]);
     $this->nodeType->save();
 
-    $this->nodes[0] = $this->container->get('entity_type.manager')
+    $this->nodes[0] = \Drupal::service('entity_type.manager')
       ->getStorage('node')
       ->create(['type' => $this->nodeType->id(), 'title' => 'First test node']);
     $this->nodes[0]->save();
 
-    $this->nodes[1] = $this->container->get('entity_type.manager')
+    $this->nodes[1] = \Drupal::service('entity_type.manager')
       ->getStorage('node')
       ->create(['type' => $this->nodeType->id(), 'title' => 'Second test node']);
     $this->nodes[1]->save();
@@ -92,7 +92,7 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
     ]));
 
     // Check if context was correctly propagated to the block.
-    $definition = $this->container->get('plugin.manager.block')
+    $definition = \Drupal::service('plugin.manager.block')
       ->getDefinition('views_block:test_view_block_with_context-block_1');
     $this->assertInstanceOf(ContextDefinitionInterface::class, $definition['context_definitions']['nid']);
     /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context */
@@ -113,7 +113,7 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
 
     // Check if mapping saved correctly.
     /** @var \Drupal\block\BlockInterface $block */
-    $block = $this->container->get('entity_type.manager')
+    $block = \Drupal::service('entity_type.manager')
       ->getStorage('block')
       ->load('stark_views_block__test_view_block_with_context_block_1');
     $expected_settings = [
@@ -139,7 +139,7 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
 
     // Check the second block which should expose two integer contexts, one
     // based on the numeric plugin and the other based on numeric validation.
-    $definition = $this->container->get('plugin.manager.block')
+    $definition = \Drupal::service('plugin.manager.block')
       ->getDefinition('views_block:test_view_block_with_context-block_2');
     $this->assertInstanceOf(ContextDefinitionInterface::class, $definition['context_definitions']['created']);
     /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context */

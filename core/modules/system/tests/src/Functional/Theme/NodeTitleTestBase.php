@@ -53,7 +53,7 @@ abstract class NodeTitleTestBase extends NodeTestBase {
   public function testNodeWithTitle0(): void {
     $theme = $this->getTheme();
     if ($theme !== $this->defaultTheme) {
-      $system_theme_config = $this->container->get('config.factory')
+      $system_theme_config = \Drupal::service('config.factory')
         ->getEditable('system.theme');
       $system_theme_config
         ->set('default', $theme)

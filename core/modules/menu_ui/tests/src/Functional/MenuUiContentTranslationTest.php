@@ -86,7 +86,7 @@ class MenuUiContentTranslationTest extends BrowserTestBase {
    *   First found content entity with given title.
    */
   protected function getContentEntityByTitle($entity_type_id, $title) {
-    $entity_type_manager = $this->container->get('entity_type.manager');
+    $entity_type_manager = \Drupal::service('entity_type.manager');
     $storage = $entity_type_manager->getStorage($entity_type_id);
     $storage->resetCache();
     $entities = $storage->loadByProperties([

@@ -347,7 +347,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
     // Now that all revision translations are published, verify that the
     // moderation form is never displayed on revision pages.
     /** @var \Drupal\node\NodeStorageInterface $storage */
-    $storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $storage = \Drupal::service('entity_type.manager')->getStorage('node');
     foreach (range(11, 16) as $revision_id) {
       /** @var \Drupal\node\NodeInterface $revision */
       $revision = $storage->loadRevision($revision_id);
@@ -593,7 +593,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
    */
   protected function loadTranslation(NodeInterface $node, $langcode) {
     /** @var \Drupal\node\NodeStorageInterface $storage */
-    $storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $storage = \Drupal::service('entity_type.manager')->getStorage('node');
     // Explicitly invalidate the cache for that node, as the call below is
     // statically cached.
     $storage->resetCache([$node->id()]);

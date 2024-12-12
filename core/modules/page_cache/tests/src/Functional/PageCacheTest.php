@@ -393,7 +393,7 @@ class PageCacheTest extends BrowserTestBase {
       $this->assertSession()->statusCodeEquals($code);
       $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
       // Rebuilding the router should invalidate the 4xx cache tag.
-      $this->container->get('router.builder')->rebuild();
+      \Drupal::service('router.builder')->rebuild();
       $this->drupalGet($content_url);
       $this->assertSession()->statusCodeEquals($code);
       $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
@@ -502,7 +502,7 @@ class PageCacheTest extends BrowserTestBase {
 
     // Uninstall page cache. This should flush all caches so the next call to a
     // previously cached page should be a miss now.
-    $this->container->get('module_installer')
+    \Drupal::service('module_installer')
       ->uninstall(['page_cache']);
 
     // GET a URL that was cached by Page Cache before, it should not be now.

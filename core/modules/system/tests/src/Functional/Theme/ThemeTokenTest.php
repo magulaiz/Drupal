@@ -49,7 +49,7 @@ class ThemeTokenTest extends BrowserTestBase {
     $this->assertNull($settings['ajaxPageState']['theme_token']);
 
     // Install 'claro' and configure it as administrative theme.
-    $this->container->get('theme_installer')->install(['claro']);
+    \Drupal::service('theme_installer')->install(['claro']);
     $this->config('system.theme')->set('admin', 'claro')->save();
 
     // Revisit the page. This time the page is displayed using the 'claro' theme

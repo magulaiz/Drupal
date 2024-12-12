@@ -86,7 +86,7 @@ class RssTest extends TaxonomyTestBase {
     $term1 = $this->createTerm($this->vocabulary);
 
     // Add the RSS display.
-    $default_display = $this->container->get('entity_display.repository')->getViewDisplay('node', 'article');
+    $default_display = \Drupal::service('entity_display.repository')->getViewDisplay('node', 'article');
     $rss_display = $default_display->createCopy('rss');
     $rss_display->save();
 

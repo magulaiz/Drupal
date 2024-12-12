@@ -82,7 +82,7 @@ class TaxonomyTermPagerTest extends TaxonomyTestBase {
       ->set('terms_per_page_admin', '3')
       ->save();
 
-    $state = $this->container->get('state');
+    $state = \Drupal::service('state');
 
     // Create 5 terms.
     for ($x = 0; $x <= 10; $x++) {

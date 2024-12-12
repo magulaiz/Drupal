@@ -36,7 +36,7 @@ class EntityQueryAccessTest extends ViewTestBase {
    * Tests that the 'media_access' query tag is respected by Views.
    */
   public function testMediaEntityQueryAccess(): void {
-    $this->container->get('module_installer')->install(['media']);
+    \Drupal::service('module_installer')->install(['media']);
 
     $media_type = $this->createMediaType('test');
     $source_field = $media_type->getSource()
@@ -78,7 +78,7 @@ class EntityQueryAccessTest extends ViewTestBase {
    * Tests that the 'block_content_access' query tag is respected by Views.
    */
   public function testBlockContentEntityQueryAccess(): void {
-    $this->container->get('module_installer')->install(['block_content']);
+    \Drupal::service('module_installer')->install(['block_content']);
 
     BlockContentType::create([
       'id' => 'test',

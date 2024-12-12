@@ -29,19 +29,19 @@ class TwigDebugMarkupTest extends BrowserTestBase {
    */
   public function testTwigDebugMarkup(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
+    $renderer = \Drupal::service('renderer');
     $extension = twig_extension();
     \Drupal::service('theme_installer')->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
     $this->drupalCreateContentType(['type' => 'page']);
     // Enable debug, rebuild the service container, and clear all caches.
-    $parameters = $this->container->getParameter('twig.config');
+    $parameters = \Drupal::getContainer()->getParameter('twig.config');
     $parameters['debug'] = TRUE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
     $this->resetAll();
 
-    $cache = $this->container->get('theme.registry')->get();
+    $cache = \Drupal::service('theme.registry')->get();
     // Create array of Twig templates.
     $templates = drupal_find_theme_templates($cache, $extension, $this->getThemePath('test_theme'));
     $templates += drupal_find_theme_templates($cache, $extension, $this->getModulePath('node'));
@@ -76,7 +76,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $this->assertStringContainsString('▪️ node--foo--bar' . $extension . PHP_EOL . '   ▪️ node--foo' . $extension . PHP_EOL . '   ▪️ node--&lt;script type=&quot;text/javascript&quot;&gt;alert(&#039;yo&#039;);&lt;/script&gt;' . $extension . PHP_EOL . '   ▪️ node--3--full' . $extension . PHP_EOL . '   ▪️ node--3' . $extension . PHP_EOL . '   ▪️ node--page--full' . $extension . PHP_EOL . '   ▪️ node--page' . $extension . PHP_EOL . '   ▪️ node--full' . $extension . PHP_EOL . '   ✅ node' . $extension, $output, 'Suggested template files found in order and base template shown as current template.');
 
     // Disable debug, rebuild the service container, and clear all caches.
-    $parameters = $this->container->getParameter('twig.config');
+    $parameters = \Drupal::getContainer()->getParameter('twig.config');
     $parameters['debug'] = FALSE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();

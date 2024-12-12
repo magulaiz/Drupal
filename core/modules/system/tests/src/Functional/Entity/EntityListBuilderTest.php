@@ -64,10 +64,10 @@ class EntityListBuilderTest extends BrowserTestBase {
    */
   public function testCacheContexts(): void {
     /** @var \Drupal\Core\Entity\EntityListBuilderInterface $list_builder */
-    $list_builder = $this->container->get('entity_type.manager')->getListBuilder('entity_test');
+    $list_builder = \Drupal::service('entity_type.manager')->getListBuilder('entity_test');
 
     $build = $list_builder->render();
-    $this->container->get('renderer')->renderRoot($build);
+    \Drupal::service('renderer')->renderRoot($build);
 
     $this->assertEqualsCanonicalizing(['entity_test_view_grants', 'languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'url.query_args.pagers:0', 'user.permissions'], $build['#cache']['contexts']);
   }

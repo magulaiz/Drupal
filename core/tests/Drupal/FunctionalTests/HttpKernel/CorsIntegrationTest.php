@@ -30,7 +30,7 @@ class CorsIntegrationTest extends BrowserTestBase {
 
   public function testCrossSiteRequest(): void {
     // Test default parameters.
-    $cors_config = $this->container->getParameter('cors.config');
+    $cors_config = \Drupal::getContainer()->getParameter('cors.config');
     $this->assertFalse($cors_config['enabled']);
     $this->assertSame([], $cors_config['allowedHeaders']);
     $this->assertSame([], $cors_config['allowedMethods']);

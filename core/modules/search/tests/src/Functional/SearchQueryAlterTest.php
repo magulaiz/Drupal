@@ -50,7 +50,7 @@ class SearchQueryAlterTest extends BrowserTestBase {
     $this->drupalCreateNode($data);
 
     // Update the search index.
-    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
+    \Drupal::service('plugin.manager.search')->createInstance('node_search')->updateIndex();
 
     // Search for the body keyword 'pizza'.
     $this->drupalGet('search/node');

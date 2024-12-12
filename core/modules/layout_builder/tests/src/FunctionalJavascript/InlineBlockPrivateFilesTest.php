@@ -57,7 +57,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
       'uri_scheme' => 'private',
     ];
     $this->createFileField('field_file', 'block_content', 'basic', $field_settings);
-    $this->fileSystem = $this->container->get('file_system');
+    $this->fileSystem = \Drupal::service('file_system');
   }
 
   /**

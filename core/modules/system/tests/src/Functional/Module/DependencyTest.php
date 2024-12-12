@@ -58,7 +58,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(['content_translation', 'language'], TRUE);
 
     // Assert that the language YAML files were created.
-    $storage = $this->container->get('config.storage');
+    $storage = \Drupal::service('config.storage');
     $this->assertNotEmpty($storage->listAll('language.entity.'), 'Language config entity files exist.');
   }
 

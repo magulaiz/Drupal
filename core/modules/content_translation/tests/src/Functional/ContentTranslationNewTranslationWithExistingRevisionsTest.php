@@ -167,7 +167,7 @@ class ContentTranslationNewTranslationWithExistingRevisionsTest extends ContentT
     $this->submitForm($edit, 'Save (this translation)');
     // If the translation delete hook was incorrectly invoked, the state
     // variable would be set.
-    $this->assertNull($this->container->get('state')->get('content_translation_test.translation_deleted'));
+    $this->assertNull(\Drupal::service('state')->get('content_translation_test.translation_deleted'));
   }
 
 }

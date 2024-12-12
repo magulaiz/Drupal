@@ -62,7 +62,7 @@ class DbLogResourceTest extends ResourceTestBase {
    */
   public function testWatchdog(): void {
     // Write a log message to the DB.
-    $this->container->get('logger.channel.rest')->notice('Test message');
+    \Drupal::service('logger.channel.rest')->notice('Test message');
     // Get the ID of the written message.
     $id = Database::getConnection()->select('watchdog', 'w')
       ->fields('w', ['wid'])

@@ -47,7 +47,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
    * @return \Drupal\language\ConfigurableLanguageManager
    */
   protected function languageManager() {
-    return $this->container->get('language_manager');
+    return \Drupal::service('language_manager');
   }
 
   /**
@@ -61,12 +61,12 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
    */
   protected function stateSet(array $values): void {
     // Set the new state values.
-    $this->container->get('state')->setMultiple($values);
+    \Drupal::service('state')->setMultiple($values);
     // Refresh in-memory static state/config caches and static variables.
     $this->refreshVariables();
     // Refresh/rewrite language negotiation configuration, in order to pick up
     // the manipulations performed by language_test module's info alter hooks.
-    $this->container->get('language_negotiator')->purgeConfiguration();
+    \Drupal::service('language_negotiator')->purgeConfiguration();
   }
 
   /**
@@ -81,7 +81,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
       // Alter LanguageInterface::TYPE_CONTENT to be configurable.
       'language_test.content_language_type' => TRUE,
     ]);
-    $this->container->get('module_installer')->install(['language_test']);
+    \Drupal::service('module_installer')->install(['language_test']);
     $this->resetAll();
 
     // Check that fixed language types are properly configured without the need
@@ -143,7 +143,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
 
     // Uninstall language_test and check that everything is set back to the
     // original status.
-    $this->container->get('module_installer')->uninstall(['language_test']);
+    \Drupal::service('module_installer')->uninstall(['language_test']);
     $this->rebuildContainer();
 
     // Check that only the core language types are available.

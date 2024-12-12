@@ -54,7 +54,7 @@ class CommentStatisticsTest extends CommentTestBase {
    * Tests the node comment statistics.
    */
   public function testCommentNodeCommentStatistics(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     // Set comments to have subject and preview disabled.
     $this->setCommentPreview(DRUPAL_DISABLED);
     $this->setCommentForm(TRUE);

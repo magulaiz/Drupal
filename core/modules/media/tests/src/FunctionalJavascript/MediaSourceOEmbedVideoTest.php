@@ -209,7 +209,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
       ->range(0, 1)
       ->execute()
       ->fetchObject();
-    $message = (string) DbLogController::create($this->container)->formatMessage($row);
+    $message = (string) DbLogController::create(\Drupal::getContainer())->formatMessage($row);
     $this->assertStringContainsString('resulted in a `404 Not Found` response', $message);
 
     // Test anonymous access to media via iframe.

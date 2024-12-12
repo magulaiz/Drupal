@@ -101,9 +101,9 @@ trait StandardTestTrait {
     // Now we have all configuration imported, test all of them for schema
     // conformance. Ensures all imported default configuration is valid when
     // standard profile modules are enabled.
-    $names = $this->container->get('config.storage')->listAll();
+    $names = \Drupal::service('config.storage')->listAll();
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
-    $typed_config = $this->container->get('config.typed');
+    $typed_config = \Drupal::service('config.typed');
     foreach ($names as $name) {
       $config = $this->config($name);
       $this->assertConfigSchema($typed_config, $name, $config->get());
@@ -170,7 +170,7 @@ trait StandardTestTrait {
     $this->assertSession()->pageTextContains('No pending updates.');
 
     // Ensure that there are no pending entity updates after installation.
-    $this->assertFalse($this->container->get('entity.definition_update_manager')->needsUpdates(), 'After installation, entity schema is up to date.');
+    $this->assertFalse(\Drupal::service('entity.definition_update_manager')->needsUpdates(), 'After installation, entity schema is up to date.');
 
     // Make sure the optional image styles are not installed.
     $this->drupalGet('admin/config/media/image-styles');

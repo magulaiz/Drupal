@@ -104,7 +104,7 @@ class TermIndexTest extends TaxonomyTestBase {
    * Tests that the taxonomy index is maintained properly.
    */
   public function testTaxonomyIndex(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     // Create terms in the vocabulary.
     $term_1 = $this->createTerm($this->vocabulary);
     $term_2 = $this->createTerm($this->vocabulary);

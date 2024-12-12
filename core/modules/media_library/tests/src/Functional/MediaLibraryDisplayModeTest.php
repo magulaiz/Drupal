@@ -84,10 +84,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
     $this->assertNull(EntityViewDisplay::load('media.type_four.media_library'));
 
     // Display modes are created on install.
-    $this->container->get('module_installer')->install(['media_library']);
-    // The container was rebuilt during module installation, so ensure we have
-    // an up-to-date reference to it.
-    $this->container = $this->kernel->getContainer();
+    \Drupal::service('module_installer')->install(['media_library']);
 
     // For a non-image media type without a mapped name field, the media_library
     // form mode should only contain the name field.
@@ -190,7 +187,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
 
     // Now that all our media types have been created, ensure the bundle info
     // cache is up-to-date.
-    $this->container->get('entity_type.bundle.info')->clearCachedBundles();
+    \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
 
     // Delete a form and view display.
     EntityFormDisplay::load('media.type_one.media_library')->delete();

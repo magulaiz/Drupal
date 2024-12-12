@@ -28,7 +28,7 @@ class InstallerSkipPermissionHardeningTest extends InstallerTestBase {
    * {@inheritdoc}
    */
   protected function setUpSite(): void {
-    $site_directory = $this->container->getParameter('app.root') . '/' . $this->siteDirectory;
+    $site_directory = \Drupal::getContainer()->getParameter('app.root') . '/' . $this->siteDirectory;
     $this->assertDirectoryIsWritable($site_directory);
     $this->assertFileIsWritable($site_directory . '/settings.php');
 

@@ -145,7 +145,7 @@ class FieldLayoutTest extends WebDriverTestBase {
     $this->assertFieldInRegion('field_test_text[0][value]', 'second');
 
     // The layout is still in use without Field UI.
-    $this->container->get('module_installer')->uninstall(['field_ui']);
+    \Drupal::service('module_installer')->uninstall(['field_ui']);
     $this->drupalGet('entity_test/manage/1/edit');
     $this->assertFieldInRegion('field_test_text[0][value]', 'second');
   }
@@ -207,7 +207,7 @@ class FieldLayoutTest extends WebDriverTestBase {
     $this->assertSession()->elementTextContains('css', '.layout__region--second', 'The field test text value');
 
     // The layout is still in use without Field UI.
-    $this->container->get('module_installer')->uninstall(['field_ui']);
+    \Drupal::service('module_installer')->uninstall(['field_ui']);
     $this->drupalGet('entity_test/1');
     $this->assertSession()->elementExists('css', '.layout--twocol');
     $this->assertSession()->elementTextContains('css', '.layout__region--second', 'The field test text value');

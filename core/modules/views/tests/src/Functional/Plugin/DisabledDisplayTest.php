@@ -62,7 +62,7 @@ class DisabledDisplayTest extends ViewTestBase {
     $this->drupalCreateNode();
 
     // Load the test view and initialize its displays.
-    $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_disabled_display');
+    $view = \Drupal::service('entity_type.manager')->getStorage('view')->load('test_disabled_display');
     $view->getExecutable()->setDisplay();
 
     // Enabled page display should return content.

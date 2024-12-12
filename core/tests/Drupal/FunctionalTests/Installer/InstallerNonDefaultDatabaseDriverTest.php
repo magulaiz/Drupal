@@ -63,7 +63,7 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
 
     // Assert that in the settings.php the database connection array has the
     // correct values set.
-    $contents = file_get_contents($this->container->getParameter('app.root') . '/' . $this->siteDirectory . '/settings.php');
+    $contents = file_get_contents(\Drupal::getContainer()->getParameter('app.root') . '/' . $this->siteDirectory . '/settings.php');
     $this->assertStringContainsString("'namespace' => 'Drupal\\\\driver_test\\\\Driver\\\\Database\\\\{$this->testDriverName}',", $contents);
     $this->assertStringContainsString("'driver' => '{$this->testDriverName}',", $contents);
     $this->assertStringContainsString("'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/{$this->testDriverName}/',", $contents);
@@ -99,7 +99,7 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
     // The module "driver_test" should not be uninstallable, because it is
     // providing the database driver.
     try {
-      $this->container->get('module_installer')->uninstall(['driver_test']);
+      \Drupal::service('module_installer')->uninstall(['driver_test']);
       $this->fail('Uninstalled driver_test module.');
     }
     catch (ModuleUninstallValidatorException $e) {

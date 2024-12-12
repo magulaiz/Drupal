@@ -117,10 +117,10 @@ class LocalePathTest extends BrowserTestBase {
 
     // Check priority of language for alias by source path.
     $path_alias = $this->createPathAlias('/node/' . $node->id(), '/' . $custom_path, LanguageInterface::LANGCODE_NOT_SPECIFIED);
-    $lookup_path = $this->container->get('path_alias.manager')->getAliasByPath('/node/' . $node->id(), 'en');
+    $lookup_path = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id(), 'en');
     $this->assertEquals('/' . $english_path, $lookup_path, 'English language alias has priority.');
     // Same check for language 'xx'.
-    $lookup_path = $this->container->get('path_alias.manager')->getAliasByPath('/node/' . $node->id(), $prefix);
+    $lookup_path = \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id(), $prefix);
     $this->assertEquals('/' . $custom_language_path, $lookup_path, 'Custom language alias has priority.');
     $path_alias->delete();
 

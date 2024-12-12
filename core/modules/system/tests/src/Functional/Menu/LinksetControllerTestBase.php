@@ -175,7 +175,7 @@ abstract class LinksetControllerTestBase extends BrowserTestBase {
    */
   public function rebuildIfNeeded() {
     /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
-    $router_builder = $this->container->get('router.builder');
+    $router_builder = \Drupal::service('router.builder');
     $router_builder->rebuildIfNeeded();
   }
 

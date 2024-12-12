@@ -209,7 +209,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->createBlockContentType(['id' => 'bar']);
 
     // Get the content block storage.
-    $storage = $this->container
+    $storage = \Drupal::getContainer()
       ->get('entity_type.manager')
       ->getStorage('block_content');
 

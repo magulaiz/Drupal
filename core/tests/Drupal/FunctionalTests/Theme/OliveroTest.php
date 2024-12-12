@@ -96,7 +96,7 @@ class OliveroTest extends BrowserTestBase {
     $parent_menu_link_content->save();
 
     // Set branding color.
-    $system_theme_config = $this->container->get('config.factory')->getEditable('olivero.settings');
+    $system_theme_config = \Drupal::service('config.factory')->getEditable('olivero.settings');
     $system_theme_config
       ->set('site_branding_bg_color', 'gray')
       ->save();

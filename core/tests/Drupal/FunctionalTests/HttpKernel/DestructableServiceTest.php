@@ -28,7 +28,7 @@ class DestructableServiceTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   public function testDestructableServiceExecutionOrder(): void {
-    $file_system = $this->container->get('file_system');
+    $file_system = \Drupal::service('file_system');
     assert($file_system instanceof FileSystemInterface);
     $semaphore = $file_system
       ->tempnam($file_system->getTempDirectory(), 'destructable_semaphore');

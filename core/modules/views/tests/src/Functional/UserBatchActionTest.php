@@ -34,7 +34,7 @@ class UserBatchActionTest extends BrowserTestBase {
    */
   public function testUserAction(): void {
     $themes = ['stark', 'olivero', 'claro'];
-    $this->container->get('theme_installer')->install($themes);
+    \Drupal::service('theme_installer')->install($themes);
 
     $this->drupalLogin($this->createUser(['administer users']));
 

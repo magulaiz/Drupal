@@ -119,7 +119,7 @@ class ContentEntityFormFieldValidationFilteringTest extends BrowserTestBase {
       'translatable' => FALSE,
     ])->save();
 
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getFormDisplay($this->entityTypeId, $this->entityTypeId, 'default')
       ->setComponent($this->fieldNameSingle, ['type' => 'test_field_widget'])
       ->setComponent($this->fieldNameMultiple, ['type' => 'test_field_widget'])

@@ -120,7 +120,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
       'field_storage' => $this->fieldStorage,
       'bundle' => $this->contentType->id(),
     ])->save();
-    $display_repository = $this->container->get('entity_display.repository');
+    $display_repository = \Drupal::service('entity_display.repository');
     // Update the displays so that configuration does not change unexpectedly on
     // import.
     $display_repository->getFormDisplay('node', $this->contentType->id(), 'default')
@@ -206,10 +206,10 @@ class ConfigExportImportUITest extends BrowserTestBase {
     // Write a file to sync. The warning about differences between the active
     // and snapshot should now exist.
     /** @var \Drupal\Core\Config\StorageInterface $sync */
-    $sync = $this->container->get('config.storage.sync');
+    $sync = \Drupal::service('config.storage.sync');
     $data = $this->config('system.site')->get();
     $data['slogan'] = 'in the face';
-    $this->copyConfig($this->container->get('config.storage'), $sync);
+    $this->copyConfig(\Drupal::service('config.storage'), $sync);
     $sync->write('system.site', $data);
     $this->drupalGet('admin/config/development/configuration');
     $this->assertSession()->pageTextContains('Warning message');
