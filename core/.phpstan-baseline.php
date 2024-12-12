@@ -10764,12 +10764,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Test\\\\KernelTestFieldStorageCreateCheckSubscriber\\:\\:onFieldStorageDefinitionCreateEvent\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Test/KernelTestFieldStorageCreateCheckSubscriber.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Test\\\\PerformanceTestRecorder\\:\\:onRouteBuilderFinish\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Test/PerformanceTestRecorder.php',

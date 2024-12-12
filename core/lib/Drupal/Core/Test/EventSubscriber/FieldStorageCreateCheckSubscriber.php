@@ -1,7 +1,9 @@
 <?php
 
-namespace Drupal\Core\Test;
+namespace Drupal\Core\Test\EventSubscriber;
 
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Field\FieldStorageDefinitionEvent;
 use Drupal\Core\Field\FieldStorageDefinitionEvents;
@@ -17,7 +19,29 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @internal
  */
-class KernelTestFieldStorageCreateCheckSubscriber implements EventSubscriberInterface {
+class FieldStorageCreateCheckSubscriber implements EventSubscriberInterface {
+
+  /**
+   * The schema object for this connection.
+   *
+   * @var \Drupal\Core\Database\Schema
+   */
+  protected $schema;
+
+  /**
+   * Constructs the FieldStorageCreateCheckSubscriber object.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager service.
+   */
+  public function __construct(
+    protected Connection $connection,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
+    $this->schema = $this->connection->schema();
+  }
 
   /**
    * Gets the subscribed events.
@@ -29,7 +53,7 @@ class KernelTestFieldStorageCreateCheckSubscriber implements EventSubscriberInte
    */
   public static function getSubscribedEvents() {
     return [
-      FieldStorageDefinitionEvents::CREATE => ['onFieldStorageDefinitionCreateEvent', -9999999],
+      FieldStorageDefinitionEvents::CREATE => ['onFieldStorageDefinitionCreateEvent'],
     ];
   }
 
@@ -41,14 +65,13 @@ class KernelTestFieldStorageCreateCheckSubscriber implements EventSubscriberInte
    * @param string $event_name
    *   The event name.
    */
-  public function onFieldStorageDefinitionCreateEvent(FieldStorageDefinitionEvent $event, $event_name) {
+  public function onFieldStorageDefinitionCreateEvent(FieldStorageDefinitionEvent $event, $event_name): void {
     $entity_type_id = $event->getFieldStorageDefinition()->getTargetEntityTypeId();
     if ($entity_type_id) {
-      $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
+      $storage = $this->entityTypeManager->getStorage($entity_type_id);
       if ($storage instanceof SqlEntityStorageInterface) {
         $base_table = $storage->getTableMapping()->getBaseTable();
-        $db_schema = \Drupal::database()->schema();
-        if (!$db_schema->tableExists($base_table)) {
+        if (!$this->schema->tableExists($base_table)) {
           throw new \LogicException(sprintf('Creating the "%s" field storage definition without the entity schema "%s" being installed is not allowed.',
             $event->getFieldStorageDefinition()->id(),
             $entity_type_id,
