@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Core\EventDispatcher;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -12,7 +11,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 interface EventDispatcherFactoryInterface {
 
-  public static function createInstance(EventDispatcherFactoryStage $stage = EventDispatcherFactoryStage::PreBoot): EventDispatcherInterface;
+  public static function createInstance(EventDispatcherFactoryStage|string $stage = EventDispatcherFactoryStage::PreBootstrap): EventDispatcherInterface;
 
   public function getInstance(): EventDispatcherInterface;
 

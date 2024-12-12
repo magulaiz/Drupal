@@ -41,7 +41,7 @@ abstract class MigrateSqlSourceTestBase extends MigrateSourceTestBase {
     // closed.
     $connection_options = ['database' => ':memory:'];
     $pdo = Connection::open($connection_options);
-    $connection = new Connection($pdo, $connection_options, EventDispatcherFactory::createInstance());
+    $connection = new Connection($pdo, $connection_options, $this->container->get(EventDispatcherFactoryInterface::class));
 
     // Create the tables and fill them with data.
     foreach ($source_data as $table => $rows) {

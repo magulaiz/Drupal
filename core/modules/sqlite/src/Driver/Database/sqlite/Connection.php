@@ -11,7 +11,6 @@ use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 use Drupal\Core\EventDispatcher\EventDispatcherFactory;
 use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Connection.

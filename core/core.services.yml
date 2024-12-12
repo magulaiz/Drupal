@@ -881,8 +881,7 @@ services:
   event_dispatcher:
     class: Symfony\Component\EventDispatcher\EventDispatcherInterface
     factory: Drupal\Core\EventDispatcher\EventDispatcherFactory::createInstance
-    arguments:
-      - !php/enum Drupal\Core\EventDispatcher\EventDispatcherFactoryStage::FullContainer
+    arguments: ['FullContainer']
   Psr\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   Symfony\Contracts\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   controller_resolver:

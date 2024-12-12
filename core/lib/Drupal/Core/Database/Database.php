@@ -8,7 +8,6 @@ use Drupal\Core\Database\Event\StatementEvent;
 use Drupal\Core\EventDispatcher\EventDispatcherFactory;
 use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\Core\Extension\DatabaseDriverList;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Primary front-controller for the database system.

@@ -15,7 +15,6 @@ use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 use Drupal\Core\EventDispatcher\EventDispatcherFactory;
 use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Base Database API class.
@@ -182,7 +181,7 @@ abstract class Connection {
    *   - prefix
    *   - namespace
    *   - Other driver-specific options.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface|null $eventDispatcher
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherFactoryInterface|null $eventDispatcher
    *   The event dispatcher.
    */
   public function __construct(

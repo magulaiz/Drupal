@@ -15,8 +15,8 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
   private static EventDispatcherInterface $eventDispatcher;
   private static EventDispatcherFactoryStage $stage;
 
-  public static function createInstance(EventDispatcherFactoryStage $stage = EventDispatcherFactoryStage::PreBootstrap): EventDispatcherInterface {
-    self::$stage = $stage;
+  public static function createInstance(EventDispatcherFactoryStage|string $stage = EventDispatcherFactoryStage::PreBootstrap): EventDispatcherInterface {
+    self::$stage = is_string($stage) ? EventDispatcherFactoryStage::from($stage) : $stage;
     self::$eventDispatcher = new EventDispatcher();
     return self::$eventDispatcher;
   }

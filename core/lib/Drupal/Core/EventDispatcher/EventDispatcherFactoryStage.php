@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Core\EventDispatcher;
 
-enum EventDispatcherFactoryStage {
+enum EventDispatcherFactoryStage: string {
 
-  case PreBootstrap;
-  case BootstrapContainer;
-  case FullContainer;
+  case PreBootstrap = 'PreBootstrap';
+  case BootstrapContainer = 'BootstrapContainer';
+  case FullContainer = 'FullContainer';
 
 }
