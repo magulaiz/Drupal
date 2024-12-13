@@ -446,6 +446,8 @@ class ModuleHandler implements ModuleHandlerInterface {
             }
             else {
               $hook_listeners[$module] = $listeners;
+              // It is used below.
+              // @phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
               $extra_modules = TRUE;
             }
           }
