@@ -85,11 +85,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
           ])
           ->condition('workspace', $affected_workspaces, 'IN')
           ->condition('target_entity_type_id', $entity->getEntityTypeId())
-<<<<<<< HEAD
-          ->condition('target_entity_id', (int) $entity->id())
-=======
-          ->condition($id_field, $entity->id())
->>>>>>> 11.x
+          ->condition($id_field, (int) $entity->id())
           // Only update descendant workspaces if they have the same initial
           // revision, which means they are currently inheriting content.
           ->condition('target_entity_revision_id', (int) $tracked_revision_id)
@@ -166,14 +162,10 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $query->condition('target_entity_type_id', $entity_type_id);
 
       if ($entity_ids) {
-<<<<<<< HEAD
         foreach ($entity_ids as & $entity_id) {
           $entity_id = (int) $entity_id;
         }
-        $query->condition('target_entity_id', $entity_ids, 'IN');
-=======
         $query->condition(static::getIdField($entity_type_id), $entity_ids, 'IN');
->>>>>>> 11.x
       }
     }
 
@@ -406,39 +398,27 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     $id_field = static::getIdField($entity->getEntityTypeId());
     $query = $this->database->select(static::TABLE, 'wa')
       ->fields('wa', ['workspace'])
-<<<<<<< HEAD
-      ->condition('target_entity_type_id', $entity->getEntityTypeId())
-      ->condition('target_entity_id', (int) $entity->id());
-=======
       ->condition('[wa].[target_entity_type_id]', $entity->getEntityTypeId())
-      ->condition("[wa].[$id_field]", $entity->id());
->>>>>>> 11.x
+      ->condition("[wa].[$id_field]", (int) $entity->id());
 
     // Use a self-join to get only the workspaces in which the latest revision
     // of the entity is tracked.
     if ($latest_revision) {
-<<<<<<< HEAD
       if ($this->database->driver() == 'mongodb') {
         $inner_select = $this->database->select(static::TABLE, 'wai')
-          ->condition('target_entity_type_id', $entity->getEntityTypeId())
-          ->condition('target_entity_id', (int) $entity->id());
-        $inner_select->addExpressionMax('target_entity_revision_id', 'max_revision_id');
+          ->condition('wai.target_entity_type_id', $entity->getEntityTypeId())
+          ->condition("wai.$id_field", (int) $entity->id());
+        $inner_select->addExpressionMax('wai.target_entity_revision_id', 'max_revision_id');
         $max_revision_id = $inner_select->execute()->fetchField();
         if (!empty($max_revision_id)) {
-          $query->condition('target_entity_revision_id', $max_revision_id);
+          $query->condition('wa.target_entity_revision_id', $max_revision_id);
         }
       }
       else {
         $inner_select = $this->database->select(static::TABLE, 'wai')
           ->condition('[wai].[target_entity_type_id]', $entity->getEntityTypeId())
-          ->condition('[wai].[target_entity_id]', (int) $entity->id());
+          ->condition("[wai].[$id_field]", $entity->id());
         $inner_select->addExpression('MAX([wai].[target_entity_revision_id])', 'max_revision_id');
-=======
-      $inner_select = $this->database->select(static::TABLE, 'wai')
-        ->condition('[wai].[target_entity_type_id]', $entity->getEntityTypeId())
-        ->condition("[wai].[$id_field]", $entity->id());
-      $inner_select->addExpression('MAX([wai].[target_entity_revision_id])', 'max_revision_id');
->>>>>>> 11.x
 
         $query->join($inner_select, 'waj', '[wa].[target_entity_revision_id] = [waj].[max_revision_id]');
       }
@@ -478,12 +458,9 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $query->condition('target_entity_type_id', $entity_type_id, '=');
 
       if ($entity_ids) {
-<<<<<<< HEAD
         foreach ($entity_ids as & $entity_id) {
           $entity_id = (int) $entity_id;
         }
-        $query->condition('target_entity_id', $entity_ids, 'IN');
-=======
         try {
           $query->condition(static::getIdField($entity_type_id), $entity_ids, 'IN');
         }
@@ -496,7 +473,6 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
               ->condition('target_entity_id_string', $entity_ids, 'IN')
           );
         }
->>>>>>> 11.x
       }
 
       if ($revision_ids) {
@@ -517,12 +493,12 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    */
   public function initializeWorkspace(WorkspaceInterface $workspace) {
     if ($parent_id = $workspace->parent->target_id) {
-<<<<<<< HEAD
       if ($this->database->driver() == 'mongodb') {
         $indexed_rows = $this->database->select(static::TABLE);
         $indexed_rows->fields(static::TABLE, [
           'target_entity_type_id',
           'target_entity_id',
+          'target_entity_id_string',
           'target_entity_revision_id',
         ]);
         $indexed_rows->condition('workspace', $parent_id);
@@ -532,6 +508,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
             'workspace',
             'target_entity_type_id',
             'target_entity_id',
+            'target_entity_id_string',
             'target_entity_revision_id',
           ]);
           foreach ($result as $row) {
@@ -547,29 +524,18 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       }
       else {
         $indexed_rows = $this->database->select(static::TABLE);
-        $indexed_rows->addExpressionConstant("'" . $workspace->id() . "'", 'workspace');
+        $indexed_rows->addExpression(':new_id', 'workspace', [
+          ':new_id' => $workspace->id(),
+        ]);
         $indexed_rows->fields(static::TABLE, [
           'target_entity_type_id',
           'target_entity_id',
+          'target_entity_id_string',
           'target_entity_revision_id',
         ]);
         $indexed_rows->condition('workspace', $parent_id);
         $this->database->insert(static::TABLE)->from($indexed_rows)->execute();
       }
-=======
-      $indexed_rows = $this->database->select(static::TABLE);
-      $indexed_rows->addExpression(':new_id', 'workspace', [
-        ':new_id' => $workspace->id(),
-      ]);
-      $indexed_rows->fields(static::TABLE, [
-        'target_entity_type_id',
-        'target_entity_id',
-        'target_entity_id_string',
-        'target_entity_revision_id',
-      ]);
-      $indexed_rows->condition('workspace', $parent_id);
-      $this->database->insert(static::TABLE)->from($indexed_rows)->execute();
->>>>>>> 11.x
     }
 
     $this->associatedRevisions = $this->associatedInitialRevisions = [];
