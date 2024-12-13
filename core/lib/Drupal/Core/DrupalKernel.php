@@ -15,9 +15,6 @@ use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
-use Drupal\Core\EventDispatcher\EventDispatcherFactory;
-use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
-use Drupal\Core\EventDispatcher\EventDispatcherFactoryStage;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\File\MimeType\MimeTypeGuesser;
@@ -74,14 +71,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $defaultBootstrapContainerDefinition = [
     'parameters' => [],
     'services' => [
-      EventDispatcherFactoryInterface::class => [
-        'class' => EventDispatcherFactory::class,
-      ],
-      'event_dispatcher' => [
-        'class' => 'Symfony\Component\EventDispatcher\EventDispatcherInterface',
-        'factory' => 'Drupal\Core\EventDispatcher\EventDispatcherFactory::createInstance',
-        'arguments' => [EventDispatcherFactoryStage::BootstrapContainer],
-      ],
       'database' => [
         'class' => 'Drupal\Core\Database\Connection',
         'factory' => 'Drupal\Core\Database\Database::getConnection',
