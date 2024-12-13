@@ -10757,6 +10757,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Template/TwigTransTokenParser.php',
 ];
 $ignoreErrors[] = [
+	// identifier: class.notFound
+	'message' => '#^Property Drupal\\\\Core\\\\Test\\\\EventSubscriber\\\\FieldStorageCreateCheckSubscriber\\:\\:\\$schema has unknown class Drupal\\\\Core\\\\Test\\\\EventSubscriber\\\\Schema as its type\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Test/EventSubscriber/FieldStorageCreateCheckSubscriber.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Test\\\\HttpClientMiddleware\\\\TestHttpClientMiddleware\\:\\:__invoke\\(\\) has no return type specified\\.$#',
 	'count' => 1,
