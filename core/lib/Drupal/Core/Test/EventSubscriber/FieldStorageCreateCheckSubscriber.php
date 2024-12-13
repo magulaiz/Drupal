@@ -19,14 +19,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @internal
  */
-class FieldStorageCreateCheckSubscriber implements EventSubscriberInterface {
+final class FieldStorageCreateCheckSubscriber implements EventSubscriberInterface {
 
   /**
    * The schema object for this connection.
-   *
-   * @var \Drupal\Core\Database\Schema
    */
-  protected $schema;
+  protected Schema $schema;
 
   /**
    * Constructs the FieldStorageCreateCheckSubscriber object.
@@ -51,7 +49,7 @@ class FieldStorageCreateCheckSubscriber implements EventSubscriberInterface {
    *
    * @see \Symfony\Component\EventDispatcher\EventSubscriberInterface::getSubscribedEvents()
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       FieldStorageDefinitionEvents::CREATE => ['onFieldStorageDefinitionCreateEvent'],
     ];
