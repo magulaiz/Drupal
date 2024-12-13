@@ -196,20 +196,6 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   protected static $fieldsToSkipFromTranslationChangesCheck = [];
 
   /**
-   * The field storage type of the id field.
-   *
-   * @var string|null
-   */
-  protected $fieldStorageTypeIdField;
-
-  /**
-   * The field storage type of the revision field.
-   *
-   * @var string|null
-   */
-  protected $fieldStorageTypeRevisionField;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = []) {
@@ -337,19 +323,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * {@inheritdoc}
    */
   public function getLoadedRevisionId() {
-    // Get the field storage type fo the revision field.
-    if (!$this->fieldStorageTypeRevisionField) {
-      $revisionKey = $this->getEntityType()->getKey('revision');
-      if ($this->hasField($revisionKey)) {
-        $this->fieldStorageTypeRevisionField = $this->getFieldDefinition($revisionKey)->getType();
-      }
-    }
-
-    if (($this->fieldStorageTypeRevisionField === 'integer') && !is_null($this->loadedRevisionId)) {
-      return (int) $this->loadedRevisionId;
-    }
-
-    return $this->loadedRevisionId;
+    return !is_null($this->loadedRevisionId) ? (int) $this->loadedRevisionId : NULL;
   }
 
   /**
@@ -476,18 +450,6 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * {@inheritdoc}
    */
   public function getRevisionId() {
-    // Get the field storage type fo the revision field.
-    if (!$this->fieldStorageTypeRevisionField) {
-      $revisionKey = $this->getEntityType()->getKey('revision');
-      if ($this->hasField($revisionKey)) {
-        $this->fieldStorageTypeRevisionField = $this->getFieldDefinition($revisionKey)->getType();
-      }
-    }
-
-    if (($this->fieldStorageTypeRevisionField === 'integer') && !is_null($this->getEntityKey('revision'))) {
-      return (int) $this->getEntityKey('revision');
-    }
-
     return $this->getEntityKey('revision');
   }
 
@@ -603,18 +565,6 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * {@inheritdoc}
    */
   public function id() {
-    // Get the field storage type fo the revision field.
-    if (!$this->fieldStorageTypeIdField) {
-      $idKey = $this->getEntityType()->getKey('id');
-      if ($this->hasField($idKey)) {
-        $this->fieldStorageTypeIdField = $this->getFieldDefinition($idKey)->getType();
-      }
-    }
-
-    if (($this->fieldStorageTypeIdField === 'integer') && !is_null($this->getEntityKey('id'))) {
-      return (int) $this->getEntityKey('id');
-    }
-
     return $this->getEntityKey('id');
   }
 
