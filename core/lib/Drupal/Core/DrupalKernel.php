@@ -15,6 +15,8 @@ use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
+use Drupal\Core\EventDispatcher\EventDispatcherFactory;
+use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\Core\EventDispatcher\EventDispatcherFactoryStage;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
@@ -72,8 +74,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $defaultBootstrapContainerDefinition = [
     'parameters' => [],
     'services' => [
-      'Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface' => [
-        'class' => 'Drupal\Core\EventDispatcher\EventDispatcherFactory',
+      EventDispatcherFactoryInterface::class => [
+        'class' => EventDispatcherFactory::class,
       ],
       'event_dispatcher' => [
         'class' => 'Symfony\Component\EventDispatcher\EventDispatcherInterface',
