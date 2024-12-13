@@ -6757,7 +6757,7 @@ function element_children(&$elements, $sort = FALSE) {
   $sort = isset($elements['#sorted']) ? !$elements['#sorted'] : $sort;
 
   // Filter out properties from the element, leaving only children.
-  $count = count($elements);
+  $count = is_array($elements) ? count($elements) : 0;
   $child_weights = array();
   $i = 0;
   $sortable = FALSE;
