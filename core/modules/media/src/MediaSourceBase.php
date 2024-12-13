@@ -341,13 +341,7 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
     }
 
     $field_item = $items->first();
-
-    // @todo Remove type casting for MongoDB.
-    $value = $field_item->{$field_item->mainPropertyName()};
-    if (!empty($value)) {
-      return (int) $value;
-    }
-    return $value;
+    return $field_item->{$field_item->mainPropertyName()};
   }
 
   /**

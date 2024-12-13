@@ -89,7 +89,7 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
 
     // Verify properties on a newly created entity.
     $entity_test = EntityTestLabel::create($expected = [
-      'id' => rand(),
+      'id' => $this->randomMachineName(),
       'name' => $this->randomString(),
     ]);
     $this->assertSame($expected['id'], $entity_test->id->value);
@@ -146,7 +146,7 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
     }
 
     // Verify that renaming the ID returns correct status and properties.
-    $ids = [$expected['id'], rand(), rand()];
+    $ids = [$expected['id'], 'second_' . $this->randomMachineName(4), 'third_' . $this->randomMachineName(4)];
     for ($i = 1; $i < 3; $i++) {
       $old_id = $ids[$i - 1];
       $new_id = $ids[$i];

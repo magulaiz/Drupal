@@ -345,7 +345,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       }
     }
 
-    if (($this->fieldStorageTypeRevisionField === 'integer') && !empty($this->loadedRevisionId)) {
+    if (($this->fieldStorageTypeRevisionField === 'integer') && !is_null($this->loadedRevisionId)) {
       return (int) $this->loadedRevisionId;
     }
 
@@ -484,7 +484,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       }
     }
 
-    if (($this->fieldStorageTypeRevisionField === 'integer') && !empty($this->getEntityKey('revision'))) {
+    if (($this->fieldStorageTypeRevisionField === 'integer') && !is_null($this->getEntityKey('revision'))) {
       return (int) $this->getEntityKey('revision');
     }
 
@@ -611,7 +611,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       }
     }
 
-    if (($this->fieldStorageTypeIdField === 'integer') && !empty($this->getEntityKey('id'))) {
+    if (($this->fieldStorageTypeIdField === 'integer') && !is_null($this->getEntityKey('id'))) {
       return (int) $this->getEntityKey('id');
     }
 
