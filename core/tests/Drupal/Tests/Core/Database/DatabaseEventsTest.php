@@ -10,15 +10,22 @@ use Drupal\Core\Database\Event\StatementEvent;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
+use Drupal\Core\EventDispatcher\EventDispatcherFactory;
 use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Tests the database events.
+ *
+ * We need to run these tests in isolation since they instantiate the event
+ * dispatcher via the factory that uses a static to hold it.
+ *
  * @coversDefaultClass \Drupal\Core\Database\Connection
  *
  * @group Database
+ * @runTestsInSeparateProcesses
  */
 class DatabaseEventsTest extends UnitTestCase {
 
@@ -33,7 +40,7 @@ class DatabaseEventsTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->connection = new StubConnection($this->createMock(StubPDO::class), [], ['', ''], $this->createMock(EventDispatcherFactoryInterface::class));
+    $this->connection = new StubConnection($this->createMock(StubPDO::class), [], ['', ''], new EventDispatcherFactory());
   }
 
   /**

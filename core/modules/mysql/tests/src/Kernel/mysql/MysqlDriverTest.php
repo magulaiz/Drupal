@@ -7,18 +7,20 @@ namespace Drupal\Tests\mysql\Kernel\mysql;
 use Drupal\mysql\Driver\Database\mysql\Connection;
 use Drupal\KernelTests\Core\Database\DriverSpecificKernelTestBase;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
- * Tests the deprecations of the MySQL database driver classes in Core.
+ * Tests the deprecations of the MySQL database driver.
  *
  * @group Database
  */
 class MysqlDriverTest extends DriverSpecificKernelTestBase {
 
-  /**
-   * @covers \Drupal\mysql\Driver\Database\mysql\Connection
-   */
+  #[CoversClass(Connection::class)]
+  #[IgnoreDeprecations]
   public function testConnection(): void {
+    $this->expectDeprecation("Not passing the \$eventDispatcherFactory parameter to Drupal\\mysql\\Driver\\Database\\mysql\\Connection::__construct() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312");
     $connection = new Connection($this->createMock(StubPDO::class), []);
     $this->assertInstanceOf(Connection::class, $connection);
   }
