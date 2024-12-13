@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Ensure that login works as expected.
@@ -61,6 +62,7 @@ class UserLoginTestNoCookies extends WebDriverTestBase {
       if (!str_contains($e->getMessage(), 'Failed to read the \'sessionStorage\' property from \'Window\': Access is denied for this document')) {
         throw $e;
       }
+      BrowserTestBase::tearDown();
     }
 
   }

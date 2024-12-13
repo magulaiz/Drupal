@@ -82,7 +82,7 @@ class Cookie implements AuthenticationProviderInterface, EventSubscriberInterfac
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    * @param \Drupal\Core\EventSubscriber\RedirectResponseSubscriber $redirect_response_subscriber
-   * The redirect response subscriber.
+   *   The redirect response subscriber.
    */
   public function __construct(SessionConfigurationInterface $session_configuration, Connection $connection, MessengerInterface $messenger, RedirectResponseSubscriber $redirect_response_subscriber) {
     $this->sessionConfiguration = $session_configuration;
