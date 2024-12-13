@@ -8,7 +8,6 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
-use Drupal\Core\Field\Plugin\Field\FieldType\IntegerItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -345,7 +344,7 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
 
     // @todo Remove type casting for MongoDB.
     $value = $field_item->{$field_item->mainPropertyName()};
-    if (!empty($value) && ($field_item instanceof IntegerItem)) {
+    if (!empty($value)) {
       return (int) $value;
     }
     return $value;
