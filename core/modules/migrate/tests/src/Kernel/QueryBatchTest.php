@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
-use Drupal\Core\EventDispatcher\EventDispatcherFactory;
+use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -234,7 +234,7 @@ class QueryBatchTest extends KernelTestBase {
     // closed.
     $connection_options = ['database' => ':memory:'];
     $pdo = Connection::open($connection_options);
-    $connection = new Connection($pdo, $connection_options, EventDispatcherFactory::createInstance());
+    $connection = new Connection($pdo, $connection_options, $this->container->get(EventDispatcherFactoryInterface::class));
 
     // Create the tables and fill them with data.
     foreach ($source_data as $table => $rows) {
