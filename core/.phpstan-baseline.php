@@ -13380,6 +13380,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Function comment_views_data_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/comment/comment.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\comment\\\\CommentForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/CommentForm.php',
@@ -19530,6 +19536,18 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Function file_field_views_data\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/file/file.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function file_field_views_data_views_data_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/file/file.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\file\\\\ComputedFileUrl\\:\\:setValue\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/src/ComputedFileUrl.php',
@@ -21093,6 +21111,12 @@ $ignoreErrors[] = [
 	'message' => '#^Function history_write\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/history/history.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function history_views_data\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/history/history.views.inc',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -30549,7 +30573,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: variable.undefined
 	'message' => '#^Variable \\$relationship_specifier might not be defined\\.$#',
-	'count' => 5,
+	'count' => 3,
 	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/Condition.php',
 ];
 $ignoreErrors[] = [
@@ -30557,12 +30581,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\ConditionAggregate\\:\\:compile\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/ConditionAggregate.php',
-];
-$ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\Query\\:\\:getMongodbFieldName\\(\\) should return string but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/Query.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -39374,6 +39392,18 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Function database_test_query_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/database_test/database_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function database_test_query_database_test_alter_remove_range_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/database_test/database_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\database_test\\\\Form\\\\DatabaseTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/database_test/src/Form/DatabaseTestForm.php',
@@ -45455,6 +45485,30 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Function taxonomy_token_info\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/taxonomy.tokens.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function taxonomy_tokens\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/taxonomy.tokens.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function taxonomy_field_views_data_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/taxonomy.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function taxonomy_views_data_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/taxonomy.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\taxonomy_crud\\\\Hook\\\\TaxonomyCrudHooks\\:\\:taxonomyVocabularyPresave\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/tests/modules/taxonomy_crud/src/Hook/TaxonomyCrudHooks.php',
@@ -48140,6 +48194,12 @@ $ignoreErrors[] = [
 	'message' => '#^Function user_role_revoke_permissions\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/user.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function user_views_query_substitutions\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/user.views_execution.inc',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -55079,6 +55139,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Function views_test_entity_reference_views_data_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/modules/views_test_entity_reference/views_test_entity_reference.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\views_test_modal\\\\Controller\\\\TestController\\:\\:modal\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_modal/src/Controller/TestController.php',
@@ -55618,10 +55684,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FieldTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Entity\\\\EntityViewsWithMultivalueBasefieldTest\\:\\:testView\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Entity/EntityViewsWithMultivalueBasefieldTest.php',
+	// identifier: class.nameCase
+	'message' => '#^Class Drupal\\\\entity_test\\\\Entity\\\\EntityTestMultiValueBaseField referenced with incorrect case\\: Drupal\\\\entity_test\\\\Entity\\\\EntityTestMultiValueBasefield\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Entity/EntityViewsWithMultivalueBaseFieldTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -56347,6 +56413,66 @@ $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function views_entity_field_label\\(\\) has no return type specified\\.$#',
 	'count' => 1,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$argument might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$data_table might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$entity_revision_data_table might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$entity_revision_table might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$entity_storage might not be defined\\.$#',
+	'count' => 4,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$filter might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$sort might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$supports_revisions might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$table might not be defined\\.$#',
+	'count' => 8,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$table_alias might not be defined\\.$#',
+	'count' => 16,
 	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
 $ignoreErrors[] = [
