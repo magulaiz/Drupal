@@ -55,13 +55,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Sets the data type.
-   *
-   * @param string $type
-   *   The data type to set.
-   *
-   * @return static
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function setDataType($type) {
     $this->definition['type'] = $type;
@@ -76,13 +70,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Sets the human-readable label.
-   *
-   * @param string|\Drupal\Core\StringTranslation\TranslatableMarkup $label
-   *   The label to set.
-   *
-   * @return static
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function setLabel($label) {
     $this->definition['label'] = $label;
@@ -97,13 +85,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Sets the human-readable description.
-   *
-   * @param string|\Drupal\Core\StringTranslation\TranslatableMarkup $description
-   *   The description to set.
-   *
-   * @return static
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function setDescription($description) {
     $this->definition['description'] = $description;
@@ -129,13 +111,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Sets whether the data is read-only.
-   *
-   * @param bool $read_only
-   *   Whether the data is read-only.
-   *
-   * @return static
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function setReadOnly($read_only) {
     $this->definition['read-only'] = $read_only;
@@ -150,13 +126,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Sets whether the data is computed.
-   *
-   * @param bool $computed
-   *   Whether the data is computed.
-   *
-   * @return static
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function setComputed($computed) {
     $this->definition['computed'] = $computed;
@@ -171,13 +141,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Sets whether the data is required.
-   *
-   * @param bool $required
-   *   Whether the data is required.
-   *
-   * @return static
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function setRequired($required) {
     $this->definition['required'] = $required;
@@ -198,13 +162,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Sets the class used for creating the typed data object.
-   *
-   * @param string|null $class
-   *   The class to use.
-   *
-   * @return static
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function setClass($class) {
     $this->definition['class'] = $class;
@@ -219,13 +177,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Sets the array of settings, as required by the used class.
-   *
-   * @param array $settings
-   *   The array of settings.
-   *
-   * @return static
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function setSettings(array $settings) {
     $this->definition['settings'] = $settings;
@@ -240,15 +192,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Sets a definition setting.
-   *
-   * @param string $setting_name
-   *   The definition setting to set.
-   * @param mixed $value
-   *   The value to set.
-   *
-   * @return static
-   *   The object itself for chaining.
+   * {@inheritdoc}
    */
   public function setSetting($setting_name, $value) {
     $this->definition['settings'][$setting_name] = $value;
@@ -286,14 +230,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Sets an array of validation constraints.
-   *
-   * @param array $constraints
-   *   An array of validation constraint definitions, keyed by constraint name.
-   *   Each constraint definition can be used for instantiating
-   *   \Symfony\Component\Validator\Constraint objects.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function setConstraints(array $constraints) {
     $this->definition['constraints'] = $constraints;
@@ -312,6 +249,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    *
    * This is for BC support only.
+   *
    * @todo Remove in https://www.drupal.org/node/1928868.
    */
   public function offsetExists($offset): bool {
@@ -324,6 +262,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    *
    * This is for BC support only.
+   *
    * @todo Remove in https://www.drupal.org/node/1928868.
    */
   public function &offsetGet($offset): mixed {
@@ -337,6 +276,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    *
    * This is for BC support only.
+   *
    * @todo Remove in https://www.drupal.org/node/1928868.
    */
   public function offsetSet($offset, $value): void {
@@ -347,6 +287,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    *
    * This is for BC support only.
+   *
    * @todo Remove in https://www.drupal.org/node/1928868.
    */
   public function offsetUnset($offset): void {
@@ -357,6 +298,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * Returns all definition values as array.
    *
    * @return array
+   *   Array of definitions.
    */
   public function toArray() {
     return $this->definition;
@@ -384,14 +326,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   }
 
   /**
-   * Sets the whether the data value should be internal.
-   *
-   * @param bool $internal
-   *   Whether the data value should be internal.
-   *
-   * @return $this
-   *
-   * @see \Drupal\Core\TypedData\DataDefinitionInterface::isInternal
+   * {@inheritdoc}
    */
   public function setInternal($internal) {
     $this->definition['internal'] = $internal;

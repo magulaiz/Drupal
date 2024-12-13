@@ -3,13 +3,13 @@
 namespace Drupal\Core\Field\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
-use Drupal\Core\Field\BaseFieldOverrideAccessControlHandler;
-use Drupal\Core\Field\BaseFieldOverrideStorage;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\BaseFieldOverrideAccessControlHandler;
+use Drupal\Core\Field\BaseFieldOverrideStorage;
 use Drupal\Core\Field\FieldConfigBase;
 use Drupal\Core\Field\FieldException;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the base field override entity.
@@ -60,6 +60,13 @@ class BaseFieldOverride extends FieldConfigBase {
    * @var \Drupal\Core\Field\BaseFieldDefinition
    */
   protected $baseFieldDefinition;
+
+  /**
+   * The array holding values for all definition keys.
+   *
+   * @var array
+   */
+  protected $definition = [];
 
   /**
    * The original override.
@@ -182,6 +189,7 @@ class BaseFieldOverride extends FieldConfigBase {
    * Gets the base field definition.
    *
    * @return \Drupal\Core\Field\BaseFieldDefinition
+   *   Returns Base field definition.
    */
   protected function getBaseFieldDefinition() {
     if (!isset($this->baseFieldDefinition)) {
@@ -273,6 +281,46 @@ class BaseFieldOverride extends FieldConfigBase {
     // recalculated.
     unset($this->baseFieldDefinition);
     return parent::__sleep();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDataType($type) {
+    $this->definition['type'] = $type;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setReadOnly($read_only) {
+    $this->definition['read-only'] = $read_only;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setComputed($computed) {
+    $this->definition['computed'] = $computed;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setClass($class) {
+    $this->definition['class'] = $class;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setInternal($internal) {
+    $this->definition['internal'] = $internal;
+    return $this;
   }
 
 }

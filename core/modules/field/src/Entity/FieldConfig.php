@@ -3,15 +3,15 @@
 namespace Drupal\field\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityStorageInterface;
 use Drupal\Core\Field\FieldConfigBase;
 use Drupal\Core\Field\FieldException;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\FieldConfigAccessControlHandler;
+use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldConfigStorage;
 use Drupal\field\FieldStorageConfigInterface;
-use Drupal\field\FieldConfigInterface;
 
 /**
  * Defines the Field entity.
@@ -76,6 +76,13 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    * @var bool
    */
   protected $deleted = FALSE;
+
+  /**
+   * The array holding values for all definition keys.
+   *
+   * @var array
+   */
+  protected $definition = [];
 
   /**
    * The associated FieldStorageConfig entity.
@@ -383,6 +390,46 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    */
   public static function loadByName($entity_type_id, $bundle, $field_name) {
     return \Drupal::entityTypeManager()->getStorage('field_config')->load($entity_type_id . '.' . $bundle . '.' . $field_name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDataType($type) {
+    $this->definition['type'] = $type;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setReadOnly($read_only) {
+    $this->definition['read-only'] = $read_only;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setComputed($computed) {
+    $this->definition['computed'] = $computed;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setClass($class) {
+    $this->definition['class'] = $class;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setInternal($internal) {
+    $this->definition['internal'] = $internal;
+    return $this;
   }
 
 }
