@@ -677,12 +677,14 @@ function node_user_cancel($edit, UserInterface $account, $method) {
       break;
 
     case 'user_cancel_reassign':
-      // Anonymize all of the nodes for this old account.
+    case 'user_cancel_reassign_select':
+      // Reassigned all nodes of this old account to either preselected earlier
+      // user, or anonymous user.
       \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
       $vids = \Drupal::entityTypeManager()->getStorage('node')->userRevisionIds($account);
       node_mass_update($vids, [
-        'uid' => 0,
-        'revision_uid' => 0,
+        'uid' => $edit['user_cancel_reassign_select_user'] ?? 0,
+        'revision_uid' => $edit['user_cancel_reassign_select_user'] ?? 0,
       ], NULL, TRUE, TRUE);
       break;
   }
