@@ -20,7 +20,7 @@ class WorkspaceEntityDeleteTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'node', 'user', 'workspaces'];
+  protected static $modules = ['block', 'node', 'user', 'workspaces', 'workspaces_ui'];
 
   /**
    * {@inheritdoc}

@@ -160,7 +160,7 @@ class QuickStartTest extends TestCase {
       $this->php,
       'core/scripts/drupal',
       'install',
-      'testing',
+      'minimal',
       "--password='secret'",
       "--site-name='Test site {$this->testDb->getDatabasePrefix()}'",
     ];

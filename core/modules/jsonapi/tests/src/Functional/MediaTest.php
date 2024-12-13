@@ -336,7 +336,7 @@ class MediaTest extends ResourceTestBase {
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
     switch ($method) {
-      case 'GET';
+      case 'GET':
         return "The 'view media' permission is required when the media item is published.";
 
       case 'POST':

@@ -21,7 +21,7 @@ class WorkspaceViewsBulkFormTest extends BulkFormTest {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'workspaces', 'workspaces_test'];
+  protected static $modules = ['block', 'workspaces', 'workspaces_ui', 'workspaces_test'];
 
   /**
    * {@inheritdoc}

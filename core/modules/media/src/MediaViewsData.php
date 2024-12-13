@@ -27,6 +27,12 @@ class MediaViewsData extends EntityViewsData {
     $data[$data_table]['table']['wizard_id'] = 'media';
     $data[$revision_table]['table']['wizard_id'] = 'media_revision';
 
+    $data[$data_table]['user_name']['filter'] = $data[$data_table]['uid']['filter'];
+    $data[$data_table]['user_name']['filter']['title'] = $this->t('Authored by');
+    $data[$data_table]['user_name']['filter']['help'] = $this->t('The username of the content author.');
+    $data[$data_table]['user_name']['filter']['id'] = 'user_name';
+    $data[$data_table]['user_name']['filter']['real field'] = 'uid';
+
     $data[$data_table]['status_extra'] = [
       'title' => $this->t('Published status or admin user'),
       'help' => $this->t('Filters out unpublished media if the current user cannot view it.'),
