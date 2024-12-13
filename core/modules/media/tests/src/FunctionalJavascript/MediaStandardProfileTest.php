@@ -6,6 +6,7 @@ namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\media_test_oembed\Controller\ResourceController;
@@ -40,6 +41,8 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     parent::setUp();
     $this->lockHttpClientToFixtures();
     $this->hijackProviderEndpoints();
+    TestHttpClientMiddleware::allowHost('youtube.com');
+    TestHttpClientMiddleware::allowHost('vimeo.com');
   }
 
   /**

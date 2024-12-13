@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\update\Functional;
 
+use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
@@ -60,6 +61,16 @@ abstract class UpdateTestBase extends BrowserTestBase {
    * @var string
    */
   protected $updateProject;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    // @todo We should not be contacting updates.drupal.org during tests.
+    TestHttpClientMiddleware::allowHost('updates.drupal.org');
+
+    parent::setUp();
+  }
 
   /**
    * Refreshes the update status based on the desired available update scenario.
