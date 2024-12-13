@@ -23,8 +23,8 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
    * bootstrap, so any subscriber/listener needed in later stages have to be
    * added also in the service container definition.
    */
-  private readonly static array $preBootstrapSubscribers = [
-    new StatementExecutionSubscriber(),
+  private static array $preBootstrapSubscribers = [
+    StatementExecutionSubscriber::class,
   ];
 
   public static function createInstance(EventDispatcherFactoryStage|string $stage = EventDispatcherFactoryStage::PreBootstrap): EventDispatcherInterface {
@@ -32,7 +32,7 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
     self::$eventDispatcher = new EventDispatcher();
     if (self::$stage !== EventDispatcherFactoryStage::FullContainer) {
       foreach (self::$preBootstrapSubscribers as $subscriber) {
-        self::$eventDispatcher->addSubscriber($subscriber);
+        self::$eventDispatcher->addSubscriber(new $subscriber());
       }
     }
     return self::$eventDispatcher;
