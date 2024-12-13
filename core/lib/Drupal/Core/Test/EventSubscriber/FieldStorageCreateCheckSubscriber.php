@@ -3,6 +3,7 @@
 namespace Drupal\Core\Test\EventSubscriber;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Schema;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Field\FieldStorageDefinitionEvent;
