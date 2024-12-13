@@ -221,6 +221,12 @@ final class HtmxAttributeTest extends KernelTestBase {
     $rendered = (string) $this->htmxAttribute;
     $expected = " data-hx-vals='" . '{"myValue":"My Value"}' . "'";
     $this->assertEquals($expected, $rendered);
+    // AttributeJson is not tested in AttributeTest, verify safe strings.
+    $values = ['myValue' => '<script>alert(123)</script>'];
+    $this->htmxAttribute->vals($values);
+    $rendered = (string) $this->htmxAttribute;
+    $expected = " data-hx-vals='" . '{"myValue":"alert(123)"}' . "'";
+    $this->assertEquals($expected, $rendered);
   }
 
   /**

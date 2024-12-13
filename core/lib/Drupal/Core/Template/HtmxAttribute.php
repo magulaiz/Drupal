@@ -168,7 +168,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-post/
    */
-  public function post(Url $url) {
+  public function post(Url $url): HtmxAttribute {
     $this->createStringAttribute('post', $url->toString());
     return $this;
   }
@@ -184,7 +184,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-put/
    */
-  public function put(Url $url) {
+  public function put(Url $url): HtmxAttribute {
     $this->createStringAttribute('put', $url->toString());
     return $this;
   }
@@ -200,7 +200,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-patch/
    */
-  public function patch(Url $url) {
+  public function patch(Url $url): HtmxAttribute {
     $this->createStringAttribute('patch', $url->toString());
     return $this;
   }
@@ -216,7 +216,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-delete/
    */
-  public function delete(Url $url) {
+  public function delete(Url $url): HtmxAttribute {
     $this->createStringAttribute('delete', $url->toString());
     return $this;
   }
@@ -235,7 +235,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-on/
    */
-  public function on(string $event, string $action) {
+  public function on(string $event, string $action): HtmxAttribute {
     // Special case: the `::EventName` shorthand for `htmx:EventName`.
     // Remove one leading `:` so that our final attribute is
     // `data-hx--event-name` rather than `data-hx---event-name`.
@@ -263,7 +263,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-push-url/
    */
-  public function pushUrl(bool|Url $value) {
+  public function pushUrl(bool|Url $value): HtmxAttribute {
     if ($value instanceof Url) {
       $this->createStringAttribute('push-url', $value->toString());
     }
@@ -285,7 +285,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-select/
    */
-  public function select(string $selector) {
+  public function select(string $selector): HtmxAttribute {
     $this->createStringAttribute('select', $selector);
     return $this;
   }
@@ -304,7 +304,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-select-oob/
    */
-  public function selectOob(string $selectors) {
+  public function selectOob(string $selectors): HtmxAttribute {
     $this->createStringAttribute('select-oob', $selectors);
     return $this;
   }
@@ -322,7 +322,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-swap/
    */
-  public function swap(string $strategy, bool $ignoreTitle = TRUE) {
+  public function swap(string $strategy, bool $ignoreTitle = TRUE): HtmxAttribute {
     // HTMX defaults this behavior to FALSE, that is it replaces page title.
     // We believe our most common use case is to not change the title.
     if ($ignoreTitle) {
@@ -347,7 +347,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-swap-oob/
    */
-  public function swapOob(true|string $value) {
+  public function swapOob(true|string $value): HtmxAttribute {
     if ($value === TRUE) {
       $this->createStringAttribute('swap-oob', 'true');
     }
@@ -371,7 +371,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-target/
    */
-  public function target(string $target) {
+  public function target(string $target): HtmxAttribute {
     $this->createStringAttribute('target', $target);
     return $this;
   }
@@ -392,7 +392,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-trigger/
    */
-  public function trigger(string $triggerDefinition) {
+  public function trigger(string $triggerDefinition): HtmxAttribute {
     $this->createStringAttribute('trigger', $triggerDefinition);
     return $this;
   }
@@ -410,7 +410,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-trigger/
    */
-  public function vals(array $values) {
+  public function vals(array $values): HtmxAttribute {
     $this->createJsonAttribute('vals', $values);
     return $this;
   }
@@ -431,7 +431,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-boost/
    */
-  public function boost(bool $value) {
+  public function boost(bool $value): HtmxAttribute {
     if ($value === TRUE) {
       $this->createStringAttribute('boost', 'true');
     }
@@ -451,7 +451,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-confirm/
    */
-  public function confirm(string $message) {
+  public function confirm(string $message): HtmxAttribute {
     $this->createStringAttribute('confirm', $message);
     return $this;
   }
@@ -463,7 +463,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-disable/
    */
-  public function disable() {
+  public function disable(): HtmxAttribute {
     $this->createBooleanAttribute('disable', TRUE);
     return $this;
   }
@@ -481,7 +481,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-disabled-elt/
    */
-  public function disabledElements(string $descriptor) {
+  public function disabledElements(string $descriptor): HtmxAttribute {
     $this->createStringAttribute('disabled-elt', $descriptor);
     return $this;
   }
@@ -496,7 +496,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-disinherit/
    */
-  public function disinherit(string $names) {
+  public function disinherit(string $names): HtmxAttribute {
     $this->createStringAttribute('disinherit', $names);
     return $this;
   }
@@ -511,7 +511,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-encoding/
    */
-  public function encoding(string $method = 'multipart/form-data') {
+  public function encoding(string $method = 'multipart/form-data'): HtmxAttribute {
     $this->createStringAttribute('encoding', $method);
     return $this;
   }
@@ -526,7 +526,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-ext/
    */
-  public function ext(string $names) {
+  public function ext(string $names): HtmxAttribute {
     $this->createStringAttribute('ext', $names);
     return $this;
   }
@@ -541,7 +541,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-headers/
    */
-  public function headers(array $headerValues) {
+  public function headers(array $headerValues): HtmxAttribute {
     $this->createJsonAttribute('headers', $headerValues);
     return $this;
   }
@@ -561,7 +561,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-history/
    */
-  public function history(bool $value = FALSE) {
+  public function history(bool $value = FALSE): HtmxAttribute {
     if ($value) {
       $this->createStringAttribute('history', 'true');
     }
@@ -578,7 +578,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-history-elt/
    */
-  public function historyElement() {
+  public function historyElement(): HtmxAttribute {
     $this->createBooleanAttribute('history-elt', TRUE);
     return $this;
   }
@@ -596,7 +596,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-include/
    */
-  public function include(string $descriptors) {
+  public function include(string $descriptors): HtmxAttribute {
     $this->createStringAttribute('include', $descriptors);
     return $this;
   }
@@ -611,7 +611,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-indicator/
    */
-  public function indicator(string $selector) {
+  public function indicator(string $selector): HtmxAttribute {
     $this->createStringAttribute('indicator', $selector);
     return $this;
   }
@@ -633,7 +633,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-inherit/
    */
-  public function inherit(string $attributes) {
+  public function inherit(string $attributes): HtmxAttribute {
     $this->createStringAttribute('inherit', $attributes);
     return $this;
   }
@@ -648,7 +648,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-params/
    */
-  public function params(string $filter) {
+  public function params(string $filter): HtmxAttribute {
     $this->createStringAttribute('params', $filter);
     return $this;
   }
@@ -663,7 +663,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-preserve/
    */
-  public function preserve(string $id) {
+  public function preserve(string $id): HtmxAttribute {
     $this->createStringAttribute('preserve', $id);
     return $this;
   }
@@ -678,7 +678,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-prompt/
    */
-  public function prompt(string $message) {
+  public function prompt(string $message): HtmxAttribute {
     $this->createStringAttribute('prompt', $message);
     return $this;
   }
@@ -701,7 +701,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-replace-url/
    */
-  public function replaceUrl(bool|Url $value) {
+  public function replaceUrl(bool|Url $value): HtmxAttribute {
     if ($value instanceof Url) {
       $this->createStringAttribute('replace-url', $value->toString());
     }
@@ -730,7 +730,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-headers/
    */
-  public function request(array $configValues) {
+  public function request(array $configValues): HtmxAttribute {
     $this->createJsonAttribute('request', $configValues);
     return $this;
   }
@@ -745,7 +745,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-sync/
    */
-  public function sync(string $selector) {
+  public function sync(string $selector): HtmxAttribute {
     $this->createStringAttribute('sync', $selector);
     return $this;
   }
@@ -760,7 +760,7 @@ class HtmxAttribute implements HtmlAttributeInterface {
    *
    * @see https://htmx.org/attributes/hx-validate/
    */
-  public function validate(bool $value = TRUE) {
+  public function validate(bool $value = TRUE): HtmxAttribute {
     if ($value) {
       $this->createStringAttribute('validate', 'true');
     }
