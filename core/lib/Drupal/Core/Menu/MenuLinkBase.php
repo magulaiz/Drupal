@@ -3,7 +3,7 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Url;
 
@@ -11,6 +11,8 @@ use Drupal\Core\Url;
  * Defines a base menu link class.
  */
 abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
+
+  use RefinableCacheableDependencyTrait;
 
   /**
    * The list of definition values where an override is allowed.
@@ -207,27 +209,6 @@ abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
    */
   public function deleteLink() {
     throw new PluginException("Menu link plugin with ID '{$this->getPluginId()}' does not support deletion");
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheMaxAge() {
-    return Cache::PERMANENT;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheContexts() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheTags() {
-    return [];
   }
 
 }

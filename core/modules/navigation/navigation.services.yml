@@ -28,6 +28,7 @@ services:
         '@router.route_provider',
         '@menu.active_trail',
         '@callable_resolver',
+        '@event_dispatcher',
       ]
 
   navigation.user_lazy_builder:
