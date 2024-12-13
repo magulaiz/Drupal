@@ -62,7 +62,7 @@ class InlineBlockUsageTest extends KernelTestBase {
     $results = $this->database->select('inline_block_usage')
       ->fields('inline_block_usage')
       ->condition('block_content_id', 1)
-      ->condition('layout_entity_id', (string) $this->entity->id())
+      ->condition('layout_entity_id', $this->entity->id())
       ->condition('layout_entity_type', $this->entity->getEntityTypeId())
       ->execute()
       ->fetchAll();

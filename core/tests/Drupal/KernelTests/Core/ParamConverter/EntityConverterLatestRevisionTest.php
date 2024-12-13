@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\ParamConverter;
 
-use Drupal\Core\Database\Database;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\KernelTests\KernelTestBase;
@@ -151,10 +150,6 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
    * Tests that pending revisions are loaded only when needed.
    */
   public function testOptimizedConvert(): void {
-    if (Database::getConnection()->driver() == 'mongodb') {
-      $this->markTestSkipped('When you delete the base table all revisions are also gone for MongoDB.');
-    }
-
     $entity = EntityTestMulRev::create();
     $entity->save();
 
