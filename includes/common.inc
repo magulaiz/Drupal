@@ -1652,6 +1652,8 @@ function _filter_xss_attributes($attr) {
   $attrarr = array();
   $mode = 0;
   $attrname = '';
+  $skip = FALSE;
+  $skip_protocol_filtering = FALSE;
 
   while (strlen($attr) != 0) {
     // Was the last operation successful?
@@ -1669,6 +1671,13 @@ function _filter_xss_attributes($attr) {
             // Ignore long attributes to avoid unnecessary processing overhead.
             strlen($attrname) > 96
           );
+          // Attributes that do not require protocol filtering, especially
+          // when it may mangle valid HTML.
+          $skip_protocol_filtering = in_array($attrname, array(
+            'title',
+            'alt',
+            'class',
+          ));
           $working = $mode = 1;
           $attr = preg_replace('/^[-a-zA-Z][-a-zA-Z0-9]*/', '', $attr);
         }
@@ -1694,7 +1703,8 @@ function _filter_xss_attributes($attr) {
       case 2:
         // Attribute value, a URL after href= for instance.
         if (preg_match('/^"([^"]*)"(\s+|$)/', $attr, $match)) {
-          $thisval = filter_xss_bad_protocol($match[1]);
+          $thisval = $skip_protocol_filtering ? $match[1] :
+            filter_xss_bad_protocol($match[1]);
 
           if (!$skip) {
             $attrarr[] = "$attrname=\"$thisval\"";
@@ -1706,18 +1716,21 @@ function _filter_xss_attributes($attr) {
         }
 
         if (preg_match("/^'([^']*)'(\s+|$)/", $attr, $match)) {
-          $thisval = filter_xss_bad_protocol($match[1]);
+          $thisval = $skip_protocol_filtering ? $match[1] :
+            filter_xss_bad_protocol($match[1]);
 
           if (!$skip) {
             $attrarr[] = "$attrname='$thisval'";
           }
-          $working = 1; $mode = 0;
+          $working = 1;
+          $mode = 0;
           $attr = preg_replace("/^'[^']*'(\s+|$)/", '', $attr);
           break;
         }
 
         if (preg_match("%^([^\s\"']+)(\s+|$)%", $attr, $match)) {
-          $thisval = filter_xss_bad_protocol($match[1]);
+          $thisval = $skip_protocol_filtering ? $match[1] :
+            filter_xss_bad_protocol($match[1]);
 
           if (!$skip) {
             $attrarr[] = "$attrname=\"$thisval\"";
