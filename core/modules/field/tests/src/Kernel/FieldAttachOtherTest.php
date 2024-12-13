@@ -208,8 +208,8 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     // Load, and check that a cache entry is present with the expected values.
     $controller = $this->container->get('entity_type.manager')->getStorage($entity->getEntityTypeId());
     $controller->resetCache();
-    // $cached_entity = $controller->load($entity->id());
-    // $cache = \Drupal::cache('entity')->get($cid);
+    $cached_entity = $controller->load($entity->id());
+    $cache = \Drupal::cache('entity')->get($cid);
     // @todo Fix the assertion for MongoDB.
     // $this->assertEquals($cached_entity, $cache->data, 'Cached: correct cache entry on load');
 
@@ -221,8 +221,8 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
 
     // Load, and check that a cache entry is present with the expected values.
     $controller->resetCache();
-    // $cached_entity = $controller->load($entity->id());
-    // $cache = \Drupal::cache('entity')->get($cid);
+    $cached_entity = $controller->load($entity->id());
+    $cache = \Drupal::cache('entity')->get($cid);
     // @todo Fix the assertion for MongoDB.
     // $this->assertEquals($cached_entity, $cache->data, 'Cached: correct cache entry on load');
 
@@ -235,8 +235,8 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
 
     // Load, and check that a cache entry is present with the expected values.
     $controller->resetCache();
-    // $cached_entity = $controller->load($entity->id());
-    // $cache = \Drupal::cache('entity')->get($cid);
+    $cached_entity = $controller->load($entity->id());
+    $cache = \Drupal::cache('entity')->get($cid);
     // @todo Fix the assertion for MongoDB.
     // $this->assertEquals($cached_entity, $cache->data, 'Cached: correct cache entry on load');
 
