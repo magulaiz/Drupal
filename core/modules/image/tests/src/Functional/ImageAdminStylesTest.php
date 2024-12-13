@@ -289,6 +289,15 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     $this->assertNull(ImageStyle::load($style_name), "Image style {$style->label()} successfully deleted.");
 
+    // Test if search image style form exists.
+    $this->drupalGet($admin_path);
+    $image_styles = ImageStyle::loadMultiple();
+    $xpath = '//input[@placeholder="Filter by style name"]';
+    if (count($image_styles) > 1) {
+      $this->assertSession()
+        ->elementExists('xpath', $xpath);
+    }
+
     // Test empty text when there are no image styles.
 
     // Delete all image styles.
