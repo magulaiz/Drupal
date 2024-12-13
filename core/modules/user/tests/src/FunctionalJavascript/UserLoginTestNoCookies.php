@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\Tests\BrowserTestBase;
 
 /**
  * Ensure that login works as expected.
@@ -23,11 +22,21 @@ class UserLoginTestNoCookies extends WebDriverTestBase {
    * {@inheritdoc}
    *
    * With cookies disabled, unable to read 'sessionStorage' so we need to
-   * disabled failOnJavascriptConsoleErrors otherwise and error occurs.
+   * disabled failOnJavascriptConsoleErrors otherwise an error occurs.
    *
    * @see \Drupal\FunctionalJavascriptTests\WebDriverTestBase::failOnJavaScriptErrors()
    */
   protected $failOnJavascriptConsoleErrors = FALSE;
+
+  /**
+   * {@inheritdoc}
+   *
+   * With cookies disabled, unable to read 'sessionStorage' so we need to
+   * disabled errorOnJavascriptDeprecationWarnings otherwise an error occurs.
+   *
+   * @see \Drupal\FunctionalJavascriptTests\WebDriverTestBase::tearDown()
+   */
+  protected $errorOnJavascriptDeprecationWarnings = FALSE;
 
   /**
    * {@inheritdoc}
@@ -44,27 +53,6 @@ class UserLoginTestNoCookies extends WebDriverTestBase {
     $chrome_options_key = isset($driver_args[1]['chromeOptions']) ? 'chromeOptions' : 'goog:chromeOptions';
     $driver_args[1][$chrome_options_key]['prefs']['profile.default_content_setting_values.cookies'] = 2;
     return json_encode($driver_args);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * Override parent method to ignore exception due to being unable to read
-   * 'sessionStorage'. This is not possible with cookies disabled.
-   */
-  protected function tearDown(): void {
-    try {
-      parent::tearDown();
-    }
-    catch (\Exception $e) {
-      // Ignore exception messages related to not being able to access
-      // 'sessionStorage'.
-      if (!str_contains($e->getMessage(), 'Failed to read the \'sessionStorage\' property from \'Window\': Access is denied for this document')) {
-        throw $e;
-      }
-      BrowserTestBase::tearDown();
-    }
-
   }
 
   /**
