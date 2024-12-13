@@ -24,7 +24,7 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
    * added also in the service container definition.
    */
   private readonly static array $preBootstrapSubscribers = [
-    new StatementExecutionSubscriber();
+    new StatementExecutionSubscriber(),
   ];
 
   public static function createInstance(EventDispatcherFactoryStage|string $stage = EventDispatcherFactoryStage::PreBootstrap): EventDispatcherInterface {
