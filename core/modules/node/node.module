@@ -476,8 +476,16 @@ function node_theme_suggestions_node(array $variables) {
  */
 function template_preprocess_node(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
-  // Provide a distinct $teaser boolean.
+
+  // The teaser variable is deprecated.
+  $variables['deprecations']['teaser'] = "'teaser' is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. Use 'view_mode' instead. See https://www.drupal.org/node/3458185";
   $variables['teaser'] = $variables['view_mode'] == 'teaser';
+
+  // The 'metadata' variable was originally added to support RDF, which has now
+  // been moved to contrib. It was needed because it is not possible to
+  // extend the markup of the 'submitted' variable generically.
+  $variables['deprecations']['metadata'] = "'metadata' is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3458638";
+
   $variables['node'] = $variables['elements']['#node'];
   /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['node'];
@@ -1215,19 +1223,4 @@ function node_comment_delete($comment) {
  */
 function node_config_translation_info_alter(&$info) {
   $info['node_type']['class'] = 'Drupal\node\ConfigTranslation\NodeTypeMapper';
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave().
- */
-function node_node_type_presave(NodeTypeInterface $node_type) {
-  // Content types' `help` and `description` fields must be stored as NULL
-  // at the config level if they are empty.
-  // @see node_post_update_set_node_type_description_and_help_to_null()
-  if (trim($node_type->getDescription()) === '') {
-    $node_type->set('description', NULL);
-  }
-  if (trim($node_type->getHelp()) === '') {
-    $node_type->set('help', NULL);
-  }
 }
