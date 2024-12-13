@@ -5,6 +5,7 @@ namespace Drupal\Core\Menu;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -40,8 +41,10 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
    *   The cache backend.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
+   * @param \Drupal\Core\Path\PathMatcherService $pathMatcher
+   *   The path.matcher service.
    */
-  public function __construct(MenuLinkManagerInterface $menu_link_manager, RouteMatchInterface $route_match, CacheBackendInterface $cache, LockBackendInterface $lock) {
+  public function __construct(MenuLinkManagerInterface $menu_link_manager, RouteMatchInterface $route_match, CacheBackendInterface $cache, LockBackendInterface $lock, protected PathMatcherInterface $pathMatcher) {
     parent::__construct(NULL, $cache, $lock);
     $this->menuLinkManager = $menu_link_manager;
     $this->routeMatch = $route_match;
@@ -122,6 +125,7 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
     // The menu links coming from the storage are already sorted by depth,
     // weight and ID.
     $found = NULL;
+    $links = [];
 
     $route_name = $this->routeMatch->getRouteName();
     // On a default (not custom) 403 page the route name is NULL. On a custom
@@ -132,10 +136,15 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
 
       // Load links matching this route.
       $links = $this->menuLinkManager->loadLinksByRoute($route_name, $route_parameters, $menu_name);
-      // Select the first matching link.
-      if ($links) {
-        $found = reset($links);
-      }
+    }
+
+    if ($this->pathMatcher->isFrontPage()) {
+      $links = array_merge($links, $this->menuLinkManager->loadLinksByRoute('<front>', [], $menu_name));
+    }
+
+    // Select the first matching link.
+    if ($links) {
+      $found = reset($links);
     }
     return $found;
   }
