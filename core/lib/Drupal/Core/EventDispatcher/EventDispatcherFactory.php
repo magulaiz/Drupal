@@ -9,11 +9,20 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Provides a factory returning the event dispatcher service.
+ * Provides a factory returning the event dispatcher.
  */
 class EventDispatcherFactory implements EventDispatcherFactoryInterface {
 
+  /**
+   * The event dispatcher singleton.
+   */
   private static EventDispatcherInterface $eventDispatcher;
+
+  /**
+   * The stage of the request when the singleton was created.
+   *
+   * @see \Drupal\Core\EventDispatcher\EventDispatcherFactoryStage
+   */
   private static EventDispatcherFactoryStage $stage;
 
   /**
@@ -27,6 +36,9 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
     StatementExecutionSubscriber::class,
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   public static function createInstance(EventDispatcherFactoryStage|string $stage = EventDispatcherFactoryStage::PreBootstrap): EventDispatcherInterface {
     self::$stage = is_string($stage) ? EventDispatcherFactoryStage::from($stage) : $stage;
     self::$eventDispatcher = new EventDispatcher();
@@ -38,6 +50,9 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
     return self::$eventDispatcher;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getInstance(): EventDispatcherInterface {
     if (!isset(self::$eventDispatcher)) {
       return self::createInstance();
@@ -45,6 +60,9 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
     return self::$eventDispatcher;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getInstanceStage(): EventDispatcherFactoryStage {
     if (isset(self::$stage)) {
       return self::$stage;
