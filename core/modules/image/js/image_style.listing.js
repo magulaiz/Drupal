@@ -35,7 +35,7 @@
           row.closest('tr').style.display = ROW_DISPLAY_STYLE;
         }
 
-        if (query.length >= 2) {
+        if (query.length >= 1) {
           rows.forEach((row) => {
             showFilteredTableRow(row);
           });
@@ -49,6 +49,7 @@
       if (table) {
         rows = table.querySelectorAll('tbody tr');
         input.addEventListener('keyup', filterImageStyleList);
+        input.addEventListener('change', filterImageStyleList);
       }
     },
   };
