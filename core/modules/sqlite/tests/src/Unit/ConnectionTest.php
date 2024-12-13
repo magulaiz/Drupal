@@ -8,7 +8,6 @@ use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @coversDefaultClass \Drupal\sqlite\Driver\Database\sqlite\Connection
