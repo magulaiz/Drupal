@@ -16,7 +16,6 @@ use Drupal\Core\EventDispatcher\EventDispatcherFactoryStage;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests the database events.
@@ -25,7 +24,6 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  * dispatcher via the factory that uses a static to hold it.
  *
  * @coversDefaultClass \Drupal\Core\Database\Connection
- *
  * @group Database
  * @runTestsInSeparateProcesses
  */
