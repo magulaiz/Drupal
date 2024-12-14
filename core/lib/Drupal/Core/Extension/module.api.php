@@ -163,8 +163,6 @@ function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $
 /**
  * Perform necessary actions before a module is installed.
  *
- * Only procedural implementations are supported for this hook.
- *
  * @param string $module
  *   The name of the module about to be installed.
  * @param bool $is_syncing
@@ -181,8 +179,6 @@ function hook_module_preinstall($module, bool $is_syncing) {
 
 /**
  * Perform necessary actions after modules are installed.
- *
- * Only procedural implementations are supported for this hook.
  *
  * This function differs from hook_install() in that it gives all other modules
  * a chance to perform actions when a module is installed, whereas
@@ -267,8 +263,6 @@ function hook_install($is_syncing): void {
 /**
  * Perform necessary actions before a module is uninstalled.
  *
- * Only procedural implementations are supported for this hook.
- *
  * @param string $module
  *   The name of the module about to be uninstalled.
  * @param bool $is_syncing
@@ -284,8 +278,6 @@ function hook_module_preuninstall($module, bool $is_syncing) {
 
 /**
  * Perform necessary actions after modules are uninstalled.
- *
- * Only procedural implementations are supported for this hook.
  *
  * This function differs from hook_uninstall() in that it gives all other
  * modules a chance to perform actions when a module is uninstalled, whereas
@@ -356,6 +348,8 @@ function hook_uninstall($is_syncing): void {
 
 /**
  * Return an array of tasks to be performed by an installation profile.
+ *
+ * Only procedural implementations are supported for this hook.
  *
  * Any tasks you define here will be run, in order, after the installer has
  * finished the site configuration step but before it has moved on to the
@@ -520,6 +514,8 @@ function hook_install_tasks(&$install_state) {
 
 /**
  * Alter the full list of installation tasks.
+ *
+ * Only procedural implementations are supported for this hook.
  *
  * You can use this hook to change or replace any part of the Drupal
  * installation process that occurs after the installation profile is selected.
@@ -922,7 +918,7 @@ function hook_post_update_NAME(&$sandbox) {
  *
  * @see hook_post_update_NAME()
  */
-function hook_removed_post_updates() {
+function hook_removed_post_updates(): array {
   return [
     'my_module_post_update_foo' => '8.x-2.0',
     'my_module_post_update_bar' => '8.x-3.0',
@@ -997,7 +993,7 @@ function hook_update_dependencies() {
  *
  * @see hook_update_N()
  */
-function hook_update_last_removed() {
+function hook_update_last_removed(): int {
   // We've removed the 8.x-1.x version of my_module, including database updates.
   // The next update function is my_module_update_8200().
   return 8103;
@@ -1116,11 +1112,12 @@ function hook_updater_info_alter(&$updaters) {
  *     install phase, this should only be used for version numbers, do not set
  *     it if not applicable.
  *   - description: The description of the requirement/status.
- *   - severity: The requirement's result/severity level, one of:
+ *   - severity: (optional) The requirement's result/severity level, one of:
  *     - REQUIREMENT_INFO: For info only.
  *     - REQUIREMENT_OK: The requirement is satisfied.
  *     - REQUIREMENT_WARNING: The requirement failed with a warning.
  *     - REQUIREMENT_ERROR: The requirement failed with an error.
+ *     Defaults to REQUIREMENT_OK when installing, REQUIREMENT_INFO otherwise.
  */
 function hook_requirements($phase) {
   $requirements = [];
