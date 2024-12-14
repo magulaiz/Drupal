@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * Provides an interface for the event dispatcher factory.
  */
-interface EventDispatcherFactoryInterface {
+interface EventDispatcherFactoryInterface extends EventDispatcherInterface {
 
   /**
    * Creates the event dispatcher singleton.
@@ -28,16 +28,6 @@ interface EventDispatcherFactoryInterface {
    * @see \Drupal\Core\EventDispatcher\EventDispatcherFactoryStage
    */
   public static function createInstance(EventDispatcherFactoryStage|string $stage = EventDispatcherFactoryStage::PreBootstrap): EventDispatcherInterface;
-
-  /**
-   * Returns the event dispatcher singleton.
-   *
-   * The singleton is created if it is not yet.
-   *
-   * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
-   *   The event dispatcher.
-   */
-  public function getInstance(): EventDispatcherInterface;
 
   /**
    * Returns the stage of the event dispatcher singleton.

@@ -8,6 +8,8 @@ use Drupal\Core\Database\Event\StatementEvent;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
+use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
+use Drupal\Core\EventDispatcher\EventDispatcherFactoryStage;
 use Drupal\database_test\EventSubscriber\DatabaseEventSubscriber;
 
 /**
@@ -98,6 +100,14 @@ class DatabaseEventTest extends DatabaseTestBase {
     $this->assertEmpty($subscriber->statementIdsInExecution);
     $this->assertFalse($this->connection->isEventEnabled(StatementExecutionStartEvent::class));
     $this->assertTrue($this->connection->isEventEnabled(StatementExecutionEndEvent::class));
+  }
+
+  /**
+   * @covers ::dispatchEvent
+   */
+  public function testEventDispatcherInstantiatedInContainer(): void {
+    $this->assertInstanceOf(EventDispatcherFactoryInterface::class, $this->connection->eventDispatcherFactory);
+    $this->assertSame(EventDispatcherFactoryStage::FullContainer, $this->connection->eventDispatcherFactory->getInstanceStage());
   }
 
 }

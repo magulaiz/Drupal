@@ -876,8 +876,6 @@ services:
     class: Drupal\Core\Routing\CurrentRouteMatch
     arguments: ['@request_stack']
   Drupal\Core\Routing\RouteMatchInterface: '@current_route_match'
-  Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface:
-    class: Drupal\Core\EventDispatcher\EventDispatcherFactory
   event_dispatcher:
     class: Symfony\Component\EventDispatcher\EventDispatcherInterface
     factory: Drupal\Core\EventDispatcher\EventDispatcherFactory::createInstance

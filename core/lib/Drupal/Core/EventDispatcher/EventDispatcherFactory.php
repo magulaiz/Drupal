@@ -7,6 +7,7 @@ namespace Drupal\Core\EventDispatcher;
 use Drupal\Core\Database\EventSubscriber\StatementExecutionSubscriber;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Provides a factory returning the event dispatcher.
@@ -51,9 +52,14 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Returns the event dispatcher singleton.
+   *
+   * The singleton is created if it is not yet.
+   *
+   * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   *   The event dispatcher.
    */
-  public function getInstance(): EventDispatcherInterface {
+  private function getInstance(): EventDispatcherInterface {
     if (!isset(self::$eventDispatcher)) {
       return self::createInstance();
     }
@@ -68,6 +74,62 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
       return self::$stage;
     }
     throw new \LogicException('The event dispatcher has not been instantiated yet');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function dispatch(object $event, ?string $eventName = null): object {
+    return $this->getInstance()->dispatch($event, $eventName);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addListener(string $eventName, callable $listener, int $priority = 0): void {
+    $this->getInstance()->addListener($eventName, $listener, $priority);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addSubscriber(EventSubscriberInterface $subscriber): void {
+    $this->getInstance()->addSubscriber($subscriber);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeListener(string $eventName, callable $listener): void {
+    $this->getInstance()->removeListener($eventName, $listener);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeSubscriber(EventSubscriberInterface $subscriber): void {
+    $this->getInstance()->removeSubscriber($subscriber);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getListeners(?string $eventName = null): array {
+    return $this->getInstance()->getListeners($eventName);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getListenerPriority(string $eventName, callable $listener): ?int {
+    return $this->getInstance()->getListenerPriority($eventName, $listener);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasListeners(?string $eventName = null): bool {
+    return $this->getInstance()->hasListeners($eventName);
   }
 
 }

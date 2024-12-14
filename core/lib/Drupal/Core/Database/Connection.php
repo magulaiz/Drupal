@@ -1538,7 +1538,7 @@ abstract class Connection {
    *   The database event.
    */
   public function dispatchEvent(DatabaseEvent $event, ?string $eventName = NULL): DatabaseEvent {
-    return $this->eventDispatcherFactory->getInstance()->dispatch($event, $eventName);
+    return $this->eventDispatcherFactory->dispatch($event, $eventName);
   }
 
   /**
