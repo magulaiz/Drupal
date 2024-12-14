@@ -164,20 +164,23 @@ function workspaces_update_11103(): void {
   $workspace_info = \Drupal::service('workspaces.information');
 
   foreach ($entity_definition_update_manager->getEntityTypes() as $entity_type_id => $entity_type) {
+    $entity_type_needs_update = FALSE;
     if ($workspace_info->isEntityTypeSupported($entity_type) && !$entity_type->hasHandlerClass('workspace')) {
-      switch ($entity_type_id) {
-        case 'block_content':
-          $entity_type->setHandlerClass('workspace', BlockContentWorkspaceHandler::class);
-          break;
-
-        case 'file':
-          $entity_type->setHandlerClass('workspace', IgnoredWorkspaceHandler::class);
-          break;
-
-        default:
-          $entity_type->setHandlerClass('workspace', DefaultWorkspaceHandler::class);
-          break;
+      if ($entity_type_id === 'block_content') {
+        $entity_type->setHandlerClass('workspace', BlockContentWorkspaceHandler::class);
       }
+      else {
+        $entity_type->setHandlerClass('workspace', DefaultWorkspaceHandler::class);
+      }
+      $entity_type_needs_update = TRUE;
+    }
+
+    if ($entity_type_id === 'file') {
+      $entity_type->setHandlerClass('workspace', IgnoredWorkspaceHandler::class);
+      $entity_type_needs_update = TRUE;
+    }
+
+    if ($entity_type_needs_update) {
       $last_installed_schema_repository->setLastInstalledDefinition($entity_type);
     }
   }
