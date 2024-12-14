@@ -66,6 +66,14 @@ class MenuActiveTrailTest extends UnitTestCase {
    */
   protected $lock;
 
+
+  /**
+   * The mocked path matcher.
+   *
+   * @var \Drupal\Core\Path\PathMatcherInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $pathMatcher;
+
   /**
    * {@inheritdoc}
    */
@@ -77,8 +85,9 @@ class MenuActiveTrailTest extends UnitTestCase {
     $this->menuLinkManager = $this->createMock('Drupal\Core\Menu\MenuLinkManagerInterface');
     $this->cache = $this->createMock('\Drupal\Core\Cache\CacheBackendInterface');
     $this->lock = $this->createMock('\Drupal\Core\Lock\LockBackendInterface');
+    $this->pathMatcher = $this->createMock('\Drupal\Core\Path\PathMatcherInterface');
 
-    $this->menuActiveTrail = new MenuActiveTrail($this->menuLinkManager, $this->currentRouteMatch, $this->cache, $this->lock);
+    $this->menuActiveTrail = new MenuActiveTrail($this->menuLinkManager, $this->currentRouteMatch, $this->cache, $this->lock, $this->pathMatcher);
 
     $container = new Container();
     $container->set('cache_tags.invalidator', $this->createMock('\Drupal\Core\Cache\CacheTagsInvalidatorInterface'));
