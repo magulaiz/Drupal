@@ -13,8 +13,8 @@ use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 use Drupal\Core\EventDispatcher\EventDispatcherFactory;
-use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Base Database API class.
@@ -167,9 +167,9 @@ abstract class Connection {
   protected TransactionManagerInterface $transactionManager;
 
   /**
-   * The event dispatcher factory.
+   * The event dispatcher.
    */
-  public readonly EventDispatcherFactoryInterface $eventDispatcherFactory;
+  public readonly EventDispatcherInterface $eventDispatcher;
 
   /**
    * Constructs a Connection object.
@@ -181,19 +181,19 @@ abstract class Connection {
    *   - prefix
    *   - namespace
    *   - Other driver-specific options.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherFactoryInterface|null $eventDispatcherFactory
-   *   The event dispatcher factory.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface|null $eventDispatcher
+   *   The event dispatcher.
    */
   public function __construct(
     object $connection,
     array $connection_options,
-    ?EventDispatcherFactoryInterface $eventDispatcherFactory = NULL,
+    ?EventDispatcherInterface $eventDispatcher = NULL,
   ) {
-    if ($eventDispatcherFactory === NULL) {
-      @trigger_error('Not passing the $eventDispatcherFactory parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
-      $eventDispatcherFactory = (\Drupal::hasContainer() && \Drupal::hasService(EventDispatcherFactoryInterface::class)) ? \Drupal::service(EventDispatcherFactoryInterface::class) : new EventDispatcherFactory();
+    if ($eventDispatcher === NULL) {
+      @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
+      $eventDispatcher = (\Drupal::hasContainer() && \Drupal::hasService(EventDispatcherInterface::class)) ? \Drupal::service(EventDispatcherInterface::class) : new EventDispatcherFactory();
     }
-    $this->eventDispatcherFactory = $eventDispatcherFactory;
+    $this->eventDispatcher = $eventDispatcher;
 
     assert(count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), '\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
 
@@ -1538,7 +1538,7 @@ abstract class Connection {
    *   The database event.
    */
   public function dispatchEvent(DatabaseEvent $event, ?string $eventName = NULL): DatabaseEvent {
-    return $this->eventDispatcherFactory->dispatch($event, $eventName);
+    return $this->eventDispatcher->dispatch($event, $eventName);
   }
 
   /**

@@ -6,8 +6,8 @@ use Composer\Autoload\ClassLoader;
 use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Database\Event\StatementEvent;
 use Drupal\Core\EventDispatcher\EventDispatcherFactory;
-use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\Core\Extension\DatabaseDriverList;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Primary front-controller for the database system.
@@ -147,8 +147,8 @@ abstract class Database {
 
     // If necessary, a new connection is opened.
     if (!isset(self::$connections[$key][$target])) {
-      $eventDispatcherFactory = (\Drupal::hasContainer() && \Drupal::hasService(EventDispatcherFactoryInterface::class)) ? \Drupal::service(EventDispatcherFactoryInterface::class) : new EventDispatcherFactory();
-      self::$connections[$key][$target] = self::openConnection($key, $target, $eventDispatcherFactory);
+      $eventDispatcher = (\Drupal::hasContainer() && \Drupal::hasService(EventDispatcherInterface::class)) ? \Drupal::service(EventDispatcherInterface::class) : new EventDispatcherFactory();
+      self::$connections[$key][$target] = self::openConnection($key, $target, $eventDispatcher);
     }
     return self::$connections[$key][$target];
   }
@@ -400,13 +400,13 @@ abstract class Database {
    *   "default".
    * @param string $target
    *   The database target to open.
-   * @param \Symfony\Core\EventDispatcher\EventDispatcherFactoryInterface $eventDispatcherFactory
-   *   The event dispatcher factory.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   *   The event dispatcher.
    *
    * @throws \Drupal\Core\Database\ConnectionNotDefinedException
    * @throws \Drupal\Core\Database\DriverNotSpecifiedException
    */
-  final protected static function openConnection($key, $target, EventDispatcherFactoryInterface $eventDispatcherFactory) {
+  final protected static function openConnection($key, $target, EventDispatcherInterface $eventDispatcher) {
     // If the requested database does not exist then it is an unrecoverable
     // error.
     if (!isset(self::$databaseInfo[$key])) {
@@ -420,7 +420,7 @@ abstract class Database {
     $driver_class = self::$databaseInfo[$key][$target]['namespace'] . '\\Connection';
 
     $client_connection = $driver_class::open(self::$databaseInfo[$key][$target]);
-    $new_connection = new $driver_class($client_connection, self::$databaseInfo[$key][$target], $eventDispatcherFactory);
+    $new_connection = new $driver_class($client_connection, self::$databaseInfo[$key][$target], $eventDispatcher);
     $new_connection->setTarget($target);
     $new_connection->setKey($key);
 

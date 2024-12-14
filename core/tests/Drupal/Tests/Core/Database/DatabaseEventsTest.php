@@ -16,6 +16,7 @@ use Drupal\Core\EventDispatcher\EventDispatcherFactoryStage;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests the database events.
@@ -89,8 +90,8 @@ class DatabaseEventsTest extends UnitTestCase {
    */
   public function testEventDispatchingWhenNoContainerAvailable(): void {
     $this->connection->dispatchEvent($this->createMock(DatabaseEvent::class));
-    $this->assertInstanceOf(EventDispatcherFactoryInterface::class, $this->connection->eventDispatcherFactory);
-    $this->assertSame(EventDispatcherFactoryStage::PreBootstrap, $this->connection->eventDispatcherFactory->getInstanceStage());
+    $this->assertInstanceOf(EventDispatcherFactoryInterface::class, $this->connection->eventDispatcher);
+    $this->assertSame(EventDispatcherFactoryStage::PreBootstrap, $this->connection->eventDispatcher->getInstanceStage());
   }
 
 }
