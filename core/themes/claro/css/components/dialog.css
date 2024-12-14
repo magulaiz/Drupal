@@ -44,6 +44,7 @@
   position: relative;
   box-sizing: border-box;
   padding: var(--space-m) var(--jui-dialog-close-button-reserved-space) var(--space-m) var(--space-l); /* LTR */
+  overflow-wrap: break-word;
   color: var(--jui-dialog-title-color);
   border-top-left-radius: var(--jui-dialog-border-radius);
   border-top-right-radius: var(--jui-dialog-border-radius);
@@ -57,9 +58,14 @@
 }
 
 .ui-dialog .ui-dialog-title {
-  -webkit-font-smoothing: antialiased;
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: var(--jui-dialog-title-font-size);
   font-weight: bold;
+  -webkit-font-smoothing: antialiased;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {
