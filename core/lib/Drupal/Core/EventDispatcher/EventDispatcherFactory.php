@@ -79,7 +79,7 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function dispatch(object $event, ?string $eventName = null): object {
+  public function dispatch(object $event, ?string $eventName = NULL): object {
     return $this->getInstance()->dispatch($event, $eventName);
   }
 
@@ -114,7 +114,7 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getListeners(?string $eventName = null): array {
+  public function getListeners(?string $eventName = NULL): array {
     return $this->getInstance()->getListeners($eventName);
   }
 
@@ -128,7 +128,7 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasListeners(?string $eventName = null): bool {
+  public function hasListeners(?string $eventName = NULL): bool {
     return $this->getInstance()->hasListeners($eventName);
   }
 

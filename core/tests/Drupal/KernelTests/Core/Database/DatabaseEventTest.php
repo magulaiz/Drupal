@@ -103,7 +103,7 @@ class DatabaseEventTest extends DatabaseTestBase {
   }
 
   /**
-   * @covers ::dispatchEvent
+   * Tests that the event dispatcher was instantiated in the container.
    */
   public function testEventDispatcherInstantiatedInContainer(): void {
     $this->assertInstanceOf(EventDispatcherFactoryInterface::class, $this->connection->eventDispatcherFactory);
