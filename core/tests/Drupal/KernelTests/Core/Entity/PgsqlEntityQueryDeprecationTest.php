@@ -37,5 +37,4 @@ class PgsqlEntityQueryDeprecationTest extends EntityKernelTestBase {
     $this->assertInstanceOf(QueryFactory::class, $factory);
   }
 
-
 }
