@@ -21,7 +21,7 @@ class DateTimeFormatConstraintValidator extends ConstraintValidator {
     if (isset($item)) {
       $value = $item->getValue()['value'];
       if (!is_string($value)) {
-        $this->context->addViolation($constraint->badType);
+        $this->context->addViolation($constraint->badTypeMessage);
       }
       else {
         $datetime_type = $item->getFieldDefinition()->getSetting('datetime_type');
@@ -31,21 +31,21 @@ class DateTimeFormatConstraintValidator extends ConstraintValidator {
           $date = DateTimePlus::createFromFormat($format, $value, new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
         }
         catch (\InvalidArgumentException) {
-          $this->context->addViolation($constraint->badFormat, [
+          $this->context->addViolation($constraint->badFormatMessage, [
             '@value' => $value,
             '@format' => $format,
           ]);
           return;
         }
         catch (\UnexpectedValueException) {
-          $this->context->addViolation($constraint->badValue, [
+          $this->context->addViolation($constraint->badValueMessage, [
             '@value' => $value,
             '@format' => $format,
           ]);
           return;
         }
         if ($date === NULL || $date->hasErrors()) {
-          $this->context->addViolation($constraint->badFormat, [
+          $this->context->addViolation($constraint->badFormatMessage, [
             '@value' => $value,
             '@format' => $format,
           ]);

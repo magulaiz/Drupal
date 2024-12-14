@@ -20,10 +20,10 @@ class FileNameLengthConstraintValidator extends BaseFileConstraintValidator {
     }
 
     if (!$file->getFilename()) {
-      $this->context->addViolation($constraint->messageEmpty);
+      $this->context->addViolation($constraint->emptyMessage);
     }
     if (mb_strlen($file->getFilename()) > $constraint->maxLength) {
-      $this->context->addViolation($constraint->messageTooLong, [
+      $this->context->addViolation($constraint->tooLongMessage, [
         '%maxLength' => $constraint->maxLength,
       ]);
     }

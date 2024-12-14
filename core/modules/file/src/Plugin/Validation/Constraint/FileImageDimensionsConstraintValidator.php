@@ -92,7 +92,7 @@ class FileImageDimensionsConstraintValidator extends BaseFileConstraintValidator
           }
         }
         else {
-          $this->context->addViolation($constraint->messageResizeFailed);
+          $this->context->addViolation($constraint->resizeFailedMessage);
         }
       }
     }
@@ -103,7 +103,7 @@ class FileImageDimensionsConstraintValidator extends BaseFileConstraintValidator
       [$width, $height] = explode('x', $minDimensions);
       if ($image->getWidth() < $width || $image->getHeight() < $height) {
         if ($scaling) {
-          $this->context->addViolation($constraint->messageResizedImageTooSmall,
+          $this->context->addViolation($constraint->resizedImageTooSmallMessage,
             [
               '%dimensions' => $minDimensions,
               '%width' => $image->getWidth(),
@@ -111,7 +111,7 @@ class FileImageDimensionsConstraintValidator extends BaseFileConstraintValidator
             ]);
           return;
         }
-        $this->context->addViolation($constraint->messageImageTooSmall,
+        $this->context->addViolation($constraint->imageTooSmallMessage,
           [
             '%dimensions' => $minDimensions,
             '%width' => $image->getWidth(),

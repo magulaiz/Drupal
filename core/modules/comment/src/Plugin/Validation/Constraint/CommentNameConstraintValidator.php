@@ -50,7 +50,7 @@ class CommentNameConstraintValidator extends ConstraintValidator implements Cont
     if (isset($author_name) && $author_name !== '' && $owner_id === 0) {
       $users = $this->userStorage->loadByProperties(['name' => $author_name]);
       if (!empty($users)) {
-        $this->context->buildViolation($constraint->messageNameTaken, ['%name' => $author_name])
+        $this->context->buildViolation($constraint->nameTakenMessage, ['%name' => $author_name])
           ->atPath('name')
           ->addViolation();
       }
@@ -59,7 +59,7 @@ class CommentNameConstraintValidator extends ConstraintValidator implements Cont
     elseif (isset($author_name) && $author_name !== '' && $owner_id) {
       $owner = $this->userStorage->load($owner_id);
       if ($owner->getAccountName() != $author_name) {
-        $this->context->buildViolation($constraint->messageMatch)
+        $this->context->buildViolation($constraint->matchMessage)
           ->atPath('name')
           ->addViolation();
       }
@@ -70,7 +70,7 @@ class CommentNameConstraintValidator extends ConstraintValidator implements Cont
     // the validation elsewhere.
     if ($owner_id === 0 && empty($author_name) && $entity->getCommentedEntity() && $entity->getFieldName() &&
       $this->getAnonymousContactDetailsSetting($entity) === CommentInterface::ANONYMOUS_MUST_CONTACT) {
-      $this->context->buildViolation($constraint->messageRequired)
+      $this->context->buildViolation($constraint->requiredMessage)
         ->atPath('name')
         ->addViolation();
     }
