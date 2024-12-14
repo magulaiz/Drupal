@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Menu;
 
-use Drupal\Core\Url;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Menu\AssertMenuActiveTrailTrait;
