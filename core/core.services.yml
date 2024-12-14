@@ -751,10 +751,10 @@ services:
     class: Drupal\Core\Field\DeletedFieldsRepository
     arguments: ['@state']
   Drupal\Core\Field\DeletedFieldsRepositoryInterface: '@entity_field.deleted_fields_repository'
-  entity_field.purgatory:
-    class: Drupal\Core\Field\FieldPurgatory
+  entity_field.purger:
+    class: Drupal\Core\Field\FieldPurger
     arguments: ['@entity_type.manager', '@entity_field.deleted_fields_repository', '@module_handler', '@logger.factory']
-  Drupal\Core\Field\FieldPurgatoryInterface: '@entity_field.purgatory'
+  Drupal\Core\Field\FieldPurgerInterface: '@entity_field.purger'
   field_storage_definition.listener:
     class: Drupal\Core\Field\FieldStorageDefinitionListener
     arguments: ['@entity_type.manager', '@event_dispatcher', '@entity.last_installed_schema.repository', '@entity_field.manager', '@entity_field.deleted_fields_repository']

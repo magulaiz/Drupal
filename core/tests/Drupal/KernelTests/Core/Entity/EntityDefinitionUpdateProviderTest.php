@@ -206,7 +206,7 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
 
     // Purge field data, and check that the storage definition has been
     // completely removed once the data is purged.
-    \Drupal::service('entity_field.purgatory')->purgeBatch(10);
+    \Drupal::service('entity_field.purger')->purgeBatch(10);
     $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
     $this->assertEmpty($deleted_storage_definitions, 'The base field has been deleted.');
     $this->assertFalse($schema_handler->tableExists($dedicated_deleted_table_name), 'A dedicated field table was deleted after new_base_field was purged.');

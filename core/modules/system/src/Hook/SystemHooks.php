@@ -338,7 +338,7 @@ class SystemHooks {
     }
     // Do a pass of purging on deleted entity field data, if any exists.
     $limit = \Drupal::config('system.entity_field_settings')->get('purge_batch_size');
-    \Drupal::service('entity_field.purgatory')->purgeBatch($limit);
+    \Drupal::service('entity_field.purger')->purgeBatch($limit);
   }
 
   /**

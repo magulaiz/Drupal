@@ -39,7 +39,7 @@ class ConfigImporterFieldPurger {
         $field_storage->delete();
       }
     }
-    \Drupal::service('entity_field.purgatory')->purgeBatch($context['sandbox']['field']['purge_batch_size'], $field_storage->getUniqueStorageIdentifier());
+    \Drupal::service('entity_field.purger')->purgeBatch($context['sandbox']['field']['purge_batch_size'], $field_storage->getUniqueStorageIdentifier());
     $context['sandbox']['field']['current_progress']++;
     $fields_to_delete_count = count(static::getFieldStoragesToPurge($context['sandbox']['field']['extensions'], $config_importer->getUnprocessedConfiguration('delete')));
     if ($fields_to_delete_count == 0) {
@@ -82,7 +82,7 @@ class ConfigImporterFieldPurger {
       }
     }
     // Each field possibly needs one last
-    // \Drupal\Core\Field\FieldPurgatoryInterface::purgeBatch() call to remove
+    // \Drupal\Core\Field\FieldPurgerInterface::purgeBatch() call to remove
     // the last field and the field storage itself.
     $context['sandbox']['field']['steps_to_delete'] += count($fields);
 

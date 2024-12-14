@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Field;
 
 /**
@@ -50,7 +52,7 @@ namespace Drupal\Core\Field;
  * See @link field Field API @endlink for information about the other parts of
  * the Field API.
  */
-interface FieldPurgatoryInterface {
+interface FieldPurgerInterface {
 
   /**
    * Purges a batch of deleted entity field data, field storages, or fields.
@@ -64,10 +66,10 @@ interface FieldPurgatoryInterface {
    *
    * @param int $batch_size
    *   The maximum number of field data records to purge before returning.
-   * @param string $field_storage_unique_id
+   * @param string|null $field_storage_unique_id
    *   (optional) Limit the purge to a specific field storage. Defaults to NULL.
    */
-  public function purgeBatch($batch_size, $field_storage_unique_id = NULL): void;
+  public function purgeBatch(int $batch_size, ?string $field_storage_unique_id = NULL): void;
 
   /**
    * Purges a field definition from the database.

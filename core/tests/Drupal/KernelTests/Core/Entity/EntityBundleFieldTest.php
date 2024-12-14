@@ -114,7 +114,7 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
 
     // Purge field data, and check that the storage definition has been
     // completely removed once the data is purged.
-    \Drupal::service('entity_field.purgatory')->purgeBatch(10);
+    \Drupal::service('entity_field.purger')->purgeBatch(10);
     $this->assertFalse($this->database->schema()->tableExists($table), 'Custom field table was deleted');
   }
 

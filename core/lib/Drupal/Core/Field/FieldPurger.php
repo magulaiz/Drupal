@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Field;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -7,76 +9,38 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 
 /**
- * Defines the field purgatory.
+ * Defines the field purger.
  */
-class FieldPurgatory implements FieldPurgatoryInterface {
+class FieldPurger implements FieldPurgerInterface {
 
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The deleted fields repository.
-   *
-   * @var \Drupal\Core\Field\DeletedFieldsRepositoryInterface
-   */
-  protected $deletedFieldsRepository;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * Constructs a new field purgatory.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\Core\Field\DeletedFieldsRepositoryInterface $deleted_fields_repository
-   *   The deleted fields repository.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
-   *   The logger factory.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, DeletedFieldsRepositoryInterface $deleted_fields_repository, ModuleHandlerInterface $module_handler, LoggerChannelFactoryInterface $logger_factory) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->deletedFieldsRepository = $deleted_fields_repository;
-    $this->moduleHandler = $module_handler;
-    $this->logger = $logger_factory->get('field');
-  }
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected DeletedFieldsRepositoryInterface $deletedFieldsRepository,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected LoggerChannelFactoryInterface $loggerFactory,
+  ) {}
 
   /**
    * {@inheritdoc}
    */
-  public function purgeBatch($batch_size, $field_storage_unique_id = NULL) : void {
+  public function purgeBatch($batch_size, $field_storage_unique_id = NULL): void {
     $fields = $this->deletedFieldsRepository->getFieldDefinitions($field_storage_unique_id);
 
     $info = $this->entityTypeManager->getDefinitions();
     foreach ($fields as $field) {
-      $entity_type = $field->getTargetEntityTypeId();
+      $entity_type_id = $field->getTargetEntityTypeId();
 
       // We cannot purge anything if the entity type is unknown (e.g. the
       // providing module was uninstalled).
-      if (!isset($info[$entity_type])) {
-        $this->logger->warning("Cannot remove field @field_name because the entity type is unknown: %entity_type",
-        ['@field_name' => $field->getName(), '%entity_type' => $entity_type]);
+      if (!isset($info[$entity_type_id])) {
+        $this->loggerFactory->get('field')->warning('Cannot remove field @field_name because the entity type is unknown: %entity_type_id', [
+          '@field_name' => $field->getName(),
+          '%entity_type_id' => $entity_type_id,
+        ]);
         continue;
       }
 
-      $count_purged = $this->entityTypeManager->getStorage($entity_type)->purgeFieldData($field, $batch_size);
+      $count_purged = $this->entityTypeManager->getStorage($entity_type_id)->purgeFieldData($field, $batch_size);
       if ($count_purged < $batch_size || $count_purged == 0) {
         // No field data remains for the field, so we can remove it.
         $this->purgeFieldDefinition($field);
@@ -112,7 +76,7 @@ class FieldPurgatory implements FieldPurgatoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function purgeFieldDefinition(FieldDefinitionInterface $field) : void {
+  public function purgeFieldDefinition(FieldDefinitionInterface $field): void {
     $this->deletedFieldsRepository->removeFieldDefinition($field);
 
     // Invoke external hooks after the cache is cleared for API consistency.
@@ -122,7 +86,7 @@ class FieldPurgatory implements FieldPurgatoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function purgeFieldStorageDefinition(FieldStorageDefinitionInterface $field_storage) : void {
+  public function purgeFieldStorageDefinition(FieldStorageDefinitionInterface $field_storage): void {
     $fields = $this->deletedFieldsRepository->getFieldDefinitions($field_storage->getUniqueStorageIdentifier());
     if (count($fields) > 0) {
       throw new FieldException("Attempt to purge a field storage {$field_storage->getName()} that still has fields.");

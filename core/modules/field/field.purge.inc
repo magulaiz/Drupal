@@ -22,11 +22,14 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  * @param string $field_storage_unique_id
  *   (optional) Limit the purge to a specific field storage. Defaults to NULL.
  *
- * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the
- * @see https://www.drupal.org/project/drupal/issues/2907780
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ * \Drupal\Core\Field\FieldPurger::purgeBatch() instead.
+ *
+ * @see https://www.drupal.org/node/3494023
  */
 function field_purge_batch($batch_size, $field_storage_unique_id = NULL) {
-  \Drupal::service('entity_field.purgatory')->purgeBatch($batch_size, $field_storage_unique_id);
+  @trigger_error('field_purge_batch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Field\FieldPurger::purgeBatch() instead. See https://www.drupal.org/node/3494023', E_USER_DEPRECATED);
+  \Drupal::service('entity_field.purger')->purgeBatch($batch_size, $field_storage_unique_id);
 }
 
 /**
@@ -38,11 +41,14 @@ function field_purge_batch($batch_size, $field_storage_unique_id = NULL) {
  * @param \Drupal\Core\Field\FieldDefinitionInterface $field
  *   The field to purge.
  *
- * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the
- * @see https://www.drupal.org/project/drupal/issues/2907780
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ * \Drupal\Core\Field\FieldPurger::purgeFieldDefinition() instead.
+ *
+ * @see https://www.drupal.org/node/3494023
  */
 function field_purge_field(FieldDefinitionInterface $field) {
-  \Drupal::service('entity_field.purgatory')->purgeFieldDefinition($field);
+  @trigger_error('field_purge_batch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Field\FieldPurger::purgeFieldDefinition() instead. See https://www.drupal.org/node/3494023', E_USER_DEPRECATED);
+  \Drupal::service('entity_field.purger')->purgeFieldDefinition($field);
 }
 
 /**
@@ -56,9 +62,12 @@ function field_purge_field(FieldDefinitionInterface $field) {
  *
  * @throws \Drupal\Core\Field\FieldException
  *
- * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the
- * @see https://www.drupal.org/project/drupal/issues/2907780
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ * \Drupal\Core\Field\FieldPurger::purgeFieldStorageDefinition() instead.
+ *
+ * @see https://www.drupal.org/node/3494023
  */
 function field_purge_field_storage(FieldStorageDefinitionInterface $field_storage) {
-  \Drupal::service('entity_field.purgatory')->purgeFieldStorageDefinition($field_storage);
+  @trigger_error('field_purge_batch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Field\FieldPurger::purgeFieldStorageDefinition() instead. See https://www.drupal.org/node/3494023', E_USER_DEPRECATED);
+  \Drupal::service('entity_field.purger')->purgeFieldStorageDefinition($field_storage);
 }
