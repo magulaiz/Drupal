@@ -59,7 +59,7 @@ class MenuActiveTrailFrontTest extends BrowserTestBase {
    * Tests that <front> links are marked as being in the active trail.
    */
   public function testMenuActiveTrailFront(): void {
-    $this->drupalGet('/');
+    $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertMenuActiveTrail(['/' => 'Front link'], TRUE, 'menu__item--active-trail');
   }
