@@ -7,6 +7,8 @@ use Drupal\Component\Render\MarkupInterface;
 
 /**
  * An interface for classes that manage HTML Attributes.
+ *
+ * @extends \IteratorAggregate<string, \Drupal\Core\Template\AttributeValueBase>
  */
 interface HtmlAttributeInterface extends  \Countable, \IteratorAggregate, MarkupInterface {
 

@@ -51,8 +51,8 @@ class AttributeHelper {
    * @param HtmlAttributeInterface|array $b
    *   Second Attribute object or array to merge.
    *
-   * @return \Drupal\Core\Template\Attribute
-   *   The merged attributes, as an Attribute object.
+   * @return \Drupal\Core\Template\Attribute|array
+   *   The merged attributes in the form of the first argument.
    *
    * @throws \InvalidArgumentException
    *   If at least one collection argument is neither an Attribute object nor an

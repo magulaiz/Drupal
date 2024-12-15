@@ -3,7 +3,7 @@
 namespace Drupal\config\Form;
 
 use Drupal\Component\Serialization\Yaml;
-use Drupal\Core\Ajax\Htmx;
+use Drupal\Core\Render\Hypermedia\Htmx;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;

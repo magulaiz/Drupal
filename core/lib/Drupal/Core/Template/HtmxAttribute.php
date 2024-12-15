@@ -23,7 +23,7 @@ use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter
  * $form['export']['#prefix'] = '<div  ' . $attributes . '>';
  * @endcode
  *
- * @see \Drupal\Core\Ajax\Htmx
+ * @see \Drupal\Core\Render\Hypermedia\Htmx
  * @see https://htmx.org/reference/
  */
 class HtmxAttribute implements HtmlAttributeInterface {

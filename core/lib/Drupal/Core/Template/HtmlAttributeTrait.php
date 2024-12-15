@@ -58,9 +58,8 @@ trait HtmlAttributeTrait {
    * @return $this
    */
   public function merge(HtmlAttributeInterface $collection): self {
-    $merged_attributes = NestedArray::mergeDeep($this->toArray(), $collection->toArray());
-    foreach ($merged_attributes as $name => $value) {
-      $this->storage[$name] = $this->createAttributeValue($name, $value);
+    foreach ($collection as $name => $value) {
+      $this->storage[$name] = $value;
     }
     return $this;
   }

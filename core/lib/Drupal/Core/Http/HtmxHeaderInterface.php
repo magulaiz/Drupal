@@ -18,7 +18,7 @@ interface HtmxHeaderInterface extends \IteratorAggregate, \Countable, \Stringabl
    * @return bool
    *   Returns TRUE if the header exists, or FALSE otherwise.
    */
-  public function hasHeader($name): bool;
+  public function hasHeader(string $name): bool;
 
   /**
    * Returns all storage elements as a Drupal 'http_header' array.
@@ -27,5 +27,16 @@ interface HtmxHeaderInterface extends \IteratorAggregate, \Countable, \Stringabl
    *   An associative array of headers.
    */
   public function toArray(): array;
+
+  /**
+   * Merges an HtmxHeaderInterface object into the current storage.
+   *
+   * @param HtmlAttributeInterface $headers
+   *   The Attribute object to merge.
+   *
+   * @return HtmxHeaderInterface
+   *   A combined header collection.
+   */
+  public function merge(HtmxHeaderInterface $headers): HtmxHeaderInterface;
 
 }

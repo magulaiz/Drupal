@@ -3,12 +3,13 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Ajax\Htmx;
+use Drupal\Core\Render\Hypermedia\Htmx;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Hypermedia\HtmxInterface;
 use Drupal\Core\Template\AttributeHelper;
 use Drupal\Core\Url;
 
@@ -452,10 +453,15 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
     $element['#htmx_processed'] = FALSE;
 
     // Nothing to do if there are no HTMX settings.
-    if (empty($element['#htmx']) || !($element['#htmx'] instanceof Htmx)) {
+    if (empty($element['#htmx']) || !($element['#htmx'] instanceof HtmxInterface)) {
       return $element;
     }
     $htmx = $element['#htmx'];
+
+    // Process operations;
+    if ($htmx->hasOperations()) {
+      $htmx->processOperations();
+    }
 
     // Attach HTMX and integration javascript.
     $element['#attached']['library'][] = 'core/drupal.htmx';

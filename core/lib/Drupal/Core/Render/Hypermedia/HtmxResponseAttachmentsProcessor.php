@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Core\Ajax;
+namespace Drupal\Core\Render\Hypermedia;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;

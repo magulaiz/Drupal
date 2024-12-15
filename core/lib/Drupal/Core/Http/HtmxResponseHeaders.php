@@ -10,22 +10,19 @@ use Symfony\Component\HttpFoundation\HeaderBag;
  *
  * Principally used in the composite Htmx value object.
  *
- * @see \Drupal\Core\Ajax\Htmx
+ * @see \Drupal\Core\Render\Hypermedia\Htmx
  * @see https://htmx.org/reference/#response_headers
  */
 class HtmxResponseHeaders implements HtmxHeaderInterface {
 
   /**
-   * Storage.
-   */
-  private HeaderBag $headers;
-
-  /**
    * Initialize empty storage.
+   *
+   * Allows for passing a populated HeaderBag to support merging.
    */
-  public function __construct() {
-    $this->headers = new HeaderBag();
-  }
+  public function __construct(
+    private HeaderBag $headers = new HeaderBag(),
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -65,6 +62,16 @@ class HtmxResponseHeaders implements HtmxHeaderInterface {
       $drupalHeaders[] = [$name, $value, TRUE];
     }
     return $drupalHeaders;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function merge(HtmxHeaderInterface $headers): HtmxHeaderInterface {
+    foreach ($headers as $name => $value) {
+      $this->headers->set($name, $value);
+    }
+    return $this;
   }
 
   /**

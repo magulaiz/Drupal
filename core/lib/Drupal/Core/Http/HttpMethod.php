@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Http;
 
-enum HttpMethods {
+enum HttpMethod {
 
   case Get;
   case Post;
