@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\ServiceProvider;
 
-use Drupal\Core\Database\EventSubscriber\SchemaRequestSubscriber;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\DependencyInjection\Parameter;
@@ -36,9 +35,6 @@ class ServiceProviderTest extends KernelTestBase {
       ->addArgument(new Reference('settings'))
       ->addArgument(new Parameter('cache_default_bin_backends'))
       ->addMethodCall('setContainer', [new Reference('service_container')]);
-    $this->container
-      ->get('event_dispatcher')
-      ->addSubscriber(new SchemaRequestSubscriber($container->get('database')));
   }
 
   /**

@@ -105,6 +105,7 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
     $count = $this->connection->delete('simpletest_test_id')
       ->condition('test_id', $test_run->id())
       ->execute();
+    unset($transaction);
     return $count;
   }
 
@@ -179,6 +180,7 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
       ->delete('simpletest')
       ->executeEnsuringSchemaOnFailure($this->testingResultsSchema());
     $count = $this->connection->delete('simpletest_test_id')->execute();
+    unset($transaction);
     return $count;
   }
 

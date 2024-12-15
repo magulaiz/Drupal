@@ -1661,7 +1661,7 @@ abstract class Connection {
 
     // @todo Temporary, Drush does not add the subscriber on cache rebuild.
     if (!$dispatcher->hasListeners(ExecuteMethodEnsuringSchemaEvent::class)) {
-      $dispatcher->addSubscriber(new SchemaRequestSubscriber($this));
+      $dispatcher->addSubscriber(new SchemaRequestSubscriber());
     }
 
     $dispatcher->dispatch($event);
