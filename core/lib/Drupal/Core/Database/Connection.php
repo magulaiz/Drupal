@@ -1645,7 +1645,7 @@ abstract class Connection {
     bool $retryAfterSchemaEnsured = FALSE,
   ): ExecuteMethodEnsuringSchemaEvent {
 
-    $event = new ExecuteMethodEnsuringSchemaEvent($execute, $schema, $retryAfterSchemaEnsured);
+    $event = new ExecuteMethodEnsuringSchemaEvent($this, $execute, $schema, $retryAfterSchemaEnsured);
 
     // When rebuilding the container, or very early during a test, there's a
     // stage when the event_dispatcher service has not been activated yet. In

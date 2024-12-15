@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database\EventSubscriber;
 
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent;
 use Drupal\Core\Database\Exception\SchemaCreationFailureException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -16,11 +15,6 @@ use Drupal\Core\Database\DatabaseException;
  * @internal
  */
 class SchemaRequestSubscriber implements EventSubscriberInterface {
-
-  public function __construct(
-    protected readonly Connection $connection,
-  ) {
-  }
 
   /**
    * {@inheritdoc}
@@ -76,11 +70,11 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
     // callback.
     if (is_array($event->schema)) {
       foreach ($event->schema as $name => $definition) {
-        if ($this->connection->schema()->tableExists($name)) {
+        if ($event->connection->schema()->tableExists($name)) {
           continue;
         }
         try {
-          $this->connection->schema()->createTable($name, $definition);
+          $event->connection->schema()->createTable($name, $definition);
           $event->setSchemaCreationState(TRUE);
           $schemaChanged = TRUE;
         }
@@ -88,7 +82,7 @@ class SchemaRequestSubscriber implements EventSubscriberInterface {
         // table, attempting to create it will throw an exception. In this
         // case just assume the schema was changed here.
         catch (DatabaseException $e) {
-          if (!$this->connection->schema()->tableExists($name)) {
+          if (!$event->connection->schema()->tableExists($name)) {
             $exception = new SchemaCreationFailureException(sprintf('Failed creation of table {%s}', $name), 0, $e);
             $event->setSchemaCreationState($exception);
             return FALSE;

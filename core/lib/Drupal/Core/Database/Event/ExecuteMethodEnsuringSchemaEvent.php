@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database\Event;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\SchemaException;
 
 /**
@@ -34,6 +35,8 @@ final class ExecuteMethodEnsuringSchemaEvent extends DatabaseEvent {
   /**
    * Constructor.
    *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
    * @param \Closure $execute
    *   The callback to be executed.
    * @param array<string,array<string,mixed>>|\Closure $schema
@@ -47,6 +50,7 @@ final class ExecuteMethodEnsuringSchemaEvent extends DatabaseEvent {
    *   FALSE.
    */
   public function __construct(
+    public readonly Connection $connection,
     public readonly \Closure $execute,
     public readonly array|\Closure $schema,
     public readonly bool $retryAfterSchemaEnsured = FALSE,
