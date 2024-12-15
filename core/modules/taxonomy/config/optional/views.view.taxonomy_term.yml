@@ -61,26 +61,26 @@ display:
       empty: {  }
       sorts:
         sticky:
+          plugin_id: standard
           id: sticky
           table: taxonomy_index
           field: sticky
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: standard
           order: DESC
           expose:
             label: ''
             field_identifier: sticky
           exposed: false
         created:
+          plugin_id: date
           id: created
           table: taxonomy_index
           field: created
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: date
           order: DESC
           expose:
             label: ''
@@ -89,13 +89,13 @@ display:
           granularity: second
       arguments:
         tid:
+          plugin_id: taxonomy_index_tid
           id: tid
           table: taxonomy_index
           field: tid
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: taxonomy_index_tid
           default_action: 'not found'
           exception:
             value: ''
@@ -130,6 +130,7 @@ display:
           reduce_duplicates: false
       filters:
         langcode:
+          plugin_id: language
           id: langcode
           table: node_field_data
           field: langcode
@@ -138,7 +139,6 @@ display:
           admin_label: ''
           entity_type: node
           entity_field: langcode
-          plugin_id: language
           operator: in
           value:
             '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
@@ -172,13 +172,13 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         status:
+          plugin_id: boolean
           id: status
           table: taxonomy_index
           field: status
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: boolean
           operator: '='
           value: '1'
           group: 1
@@ -233,13 +233,13 @@ display:
       link_url: ''
       header:
         entity_taxonomy_term:
+          plugin_id: entity
           id: entity_taxonomy_term
           table: views
           field: entity_taxonomy_term
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: entity
           empty: true
           target: '{{ raw_arguments.tid }}'
           view_mode: full

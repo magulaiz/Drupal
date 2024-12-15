@@ -21,6 +21,7 @@ display:
       title: Files
       fields:
         fid:
+          plugin_id: field
           id: fid
           table: file_managed
           field: fid
@@ -29,7 +30,6 @@ display:
           admin_label: ''
           entity_type: file
           entity_field: fid
-          plugin_id: field
           label: Fid
           exclude: true
           alter:
@@ -54,6 +54,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
         filename:
+          plugin_id: field
           id: filename
           table: file_managed
           field: filename
@@ -62,7 +63,6 @@ display:
           admin_label: ''
           entity_type: file
           entity_field: filename
-          plugin_id: field
           label: Name
           exclude: false
           alter:
@@ -117,6 +117,7 @@ display:
           separator: ', '
           field_api_classes: false
         filemime:
+          plugin_id: field
           id: filemime
           table: file_managed
           field: filemime
@@ -125,7 +126,6 @@ display:
           admin_label: ''
           entity_type: file
           entity_field: filemime
-          plugin_id: field
           label: 'MIME type'
           exclude: false
           alter:
@@ -169,6 +169,7 @@ display:
           hide_alter_empty: true
           type: file_filemime
         filesize:
+          plugin_id: field
           id: filesize
           table: file_managed
           field: filesize
@@ -177,7 +178,6 @@ display:
           admin_label: ''
           entity_type: file
           entity_field: filesize
-          plugin_id: field
           label: Size
           exclude: false
           alter:
@@ -221,6 +221,7 @@ display:
           hide_alter_empty: true
           type: file_size
         status:
+          plugin_id: field
           id: status
           table: file_managed
           field: status
@@ -229,7 +230,6 @@ display:
           admin_label: ''
           entity_type: file
           entity_field: status
-          plugin_id: field
           label: Status
           exclude: false
           alter:
@@ -277,6 +277,7 @@ display:
             format_custom_false: Temporary
             format_custom_true: Permanent
         created:
+          plugin_id: field
           id: created
           table: file_managed
           field: created
@@ -285,7 +286,6 @@ display:
           admin_label: ''
           entity_type: file
           entity_field: created
-          plugin_id: field
           label: 'Upload date'
           exclude: false
           alter:
@@ -342,6 +342,7 @@ display:
               granularity: 2
               refresh: 60
         changed:
+          plugin_id: field
           id: changed
           table: file_managed
           field: changed
@@ -350,7 +351,6 @@ display:
           admin_label: ''
           entity_type: file
           entity_field: changed
-          plugin_id: field
           label: 'Changed date'
           exclude: false
           alter:
@@ -407,13 +407,13 @@ display:
               granularity: 2
               refresh: 60
         count:
+          plugin_id: numeric
           id: count
           table: file_usage
           field: count
           relationship: fid
           group_type: sum
           admin_label: ''
-          plugin_id: numeric
           label: 'Used in'
           exclude: false
           alter:
@@ -464,6 +464,7 @@ display:
           prefix: ''
           suffix: ''
         operations:
+          plugin_id: entity_operations
           id: operations
           table: file_managed
           field: operations
@@ -471,7 +472,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: file
-          plugin_id: entity_operations
           label: Operations
           exclude: false
           alter:
@@ -552,16 +552,17 @@ display:
         options: {  }
       empty:
         area_text_custom:
+          plugin_id: text_custom
           id: area_text_custom
           table: views
           field: area_text_custom
-          plugin_id: text_custom
           empty: true
           content: 'No files available.'
       sorts: {  }
       arguments: {  }
       filters:
         filename:
+          plugin_id: string
           id: filename
           table: file_managed
           field: filename
@@ -570,7 +571,6 @@ display:
           admin_label: ''
           entity_type: file
           entity_field: filename
-          plugin_id: string
           operator: word
           value: ''
           group: 1
@@ -604,6 +604,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         filemime:
+          plugin_id: string
           id: filemime
           table: file_managed
           field: filemime
@@ -612,7 +613,6 @@ display:
           admin_label: ''
           entity_type: file
           entity_field: filemime
-          plugin_id: string
           operator: word
           value: ''
           group: 1
@@ -646,6 +646,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         status:
+          plugin_id: file_status
           id: status
           table: file_managed
           field: status
@@ -654,7 +655,6 @@ display:
           admin_label: ''
           entity_type: file
           entity_field: status
-          plugin_id: file_status
           operator: in
           value: {  }
           group: 1
@@ -846,13 +846,13 @@ display:
       title: 'File usage'
       fields:
         entity_label:
+          plugin_id: entity_label
           id: entity_label
           table: file_usage
           field: entity_label
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: entity_label
           label: Entity
           exclude: false
           alter:
@@ -896,13 +896,13 @@ display:
           hide_alter_empty: true
           link_to_entity: true
         type:
+          plugin_id: standard
           id: type
           table: file_usage
           field: type
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: standard
           label: 'Entity type'
           exclude: false
           alter:
@@ -945,13 +945,13 @@ display:
           empty_zero: false
           hide_alter_empty: true
         module:
+          plugin_id: standard
           id: module
           table: file_usage
           field: module
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: standard
           label: 'Registering module'
           exclude: false
           alter:
@@ -994,13 +994,13 @@ display:
           empty_zero: false
           hide_alter_empty: true
         count:
+          plugin_id: numeric
           id: count
           table: file_usage
           field: count
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: numeric
           label: 'Use count'
           exclude: false
           alter:
@@ -1072,6 +1072,7 @@ display:
       empty: {  }
       arguments:
         fid:
+          plugin_id: file_fid
           id: fid
           table: file_managed
           field: fid
@@ -1080,7 +1081,6 @@ display:
           admin_label: ''
           entity_type: file
           entity_field: fid
-          plugin_id: file_fid
           default_action: 'not found'
           exception:
             value: all

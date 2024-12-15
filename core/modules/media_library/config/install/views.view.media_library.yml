@@ -29,6 +29,7 @@ display:
       title: Media
       fields:
         media_bulk_form:
+          plugin_id: bulk_form
           id: media_bulk_form
           table: media
           field: media_bulk_form
@@ -36,7 +37,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: bulk_form
           label: ''
           exclude: false
           alter:
@@ -82,6 +82,7 @@ display:
           include_exclude: exclude
           selected_actions: {  }
         rendered_entity:
+          plugin_id: rendered_entity
           id: rendered_entity
           table: media
           field: rendered_entity
@@ -89,7 +90,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: rendered_entity
           label: ''
           exclude: false
           alter:
@@ -170,18 +170,19 @@ display:
         options: {  }
       empty:
         area_text_custom:
+          plugin_id: text_custom
           id: area_text_custom
           table: views
           field: area_text_custom
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: text_custom
           empty: true
           content: 'No media available.'
           tokenize: false
       sorts:
         created:
+          plugin_id: date
           id: created
           table: media_field_data
           field: created
@@ -190,7 +191,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: created
-          plugin_id: date
           order: DESC
           expose:
             label: 'Newest first'
@@ -198,6 +198,7 @@ display:
           exposed: true
           granularity: second
         name:
+          plugin_id: standard
           id: name
           table: media_field_data
           field: name
@@ -206,13 +207,13 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: name
-          plugin_id: standard
           order: ASC
           expose:
             label: 'Name (A-Z)'
             field_identifier: name
           exposed: true
         name_1:
+          plugin_id: standard
           id: name_1
           table: media_field_data
           field: name
@@ -221,7 +222,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: name
-          plugin_id: standard
           order: DESC
           expose:
             label: 'Name (Z-A)'
@@ -229,6 +229,7 @@ display:
           exposed: true
       filters:
         status:
+          plugin_id: boolean
           id: status
           table: media_field_data
           field: status
@@ -237,7 +238,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: status
-          plugin_id: boolean
           operator: '='
           value: '1'
           group: 1
@@ -277,6 +277,7 @@ display:
                 operator: '='
                 value: '0'
         name:
+          plugin_id: string
           id: name
           table: media_field_data
           field: name
@@ -285,7 +286,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: name
-          plugin_id: string
           operator: contains
           value: ''
           group: 1
@@ -319,6 +319,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         bundle:
+          plugin_id: bundle
           id: bundle
           table: media_field_data
           field: bundle
@@ -327,7 +328,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: bundle
-          plugin_id: bundle
           operator: in
           value: {  }
           group: 1
@@ -365,6 +365,7 @@ display:
               2: {  }
               3: {  }
         status_extra:
+          plugin_id: media_status
           id: status_extra
           table: media_field_data
           field: status_extra
@@ -372,7 +373,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: media_status
           operator: '='
           value: ''
           group: 1
@@ -404,6 +404,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         langcode:
+          plugin_id: language
           id: langcode
           table: media_field_data
           field: langcode
@@ -412,7 +413,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: langcode
-          plugin_id: language
           operator: in
           value: {  }
           group: 1
@@ -491,6 +491,7 @@ display:
     display_options:
       fields:
         media_bulk_form:
+          plugin_id: bulk_form
           id: media_bulk_form
           table: media
           field: media_bulk_form
@@ -498,7 +499,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: bulk_form
           label: ''
           exclude: false
           alter:
@@ -544,6 +544,7 @@ display:
           include_exclude: exclude
           selected_actions: {  }
         name:
+          plugin_id: field
           id: name
           table: media_field_data
           field: name
@@ -552,7 +553,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: name
-          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -609,6 +609,7 @@ display:
           separator: ', '
           field_api_classes: false
         edit_media:
+          plugin_id: entity_link_edit
           id: edit_media
           table: media
           field: edit_media
@@ -616,7 +617,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: entity_link_edit
           label: ''
           exclude: false
           alter:
@@ -662,6 +662,7 @@ display:
           output_url_as_text: false
           absolute: false
         delete_media:
+          plugin_id: entity_link_delete
           id: delete_media
           table: media
           field: delete_media
@@ -669,7 +670,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: entity_link_delete
           label: ''
           exclude: false
           alter:
@@ -715,6 +715,7 @@ display:
           output_url_as_text: false
           absolute: false
         rendered_entity:
+          plugin_id: rendered_entity
           id: rendered_entity
           table: media
           field: rendered_entity
@@ -722,7 +723,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: rendered_entity
           label: ''
           exclude: false
           alter:
@@ -789,6 +789,7 @@ display:
     display_options:
       fields:
         media_library_select_form:
+          plugin_id: media_library_select_form
           id: media_library_select_form
           table: media
           field: media_library_select_form
@@ -796,7 +797,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: media_library_select_form
           label: ''
           exclude: false
           alter:
@@ -839,6 +839,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
         rendered_entity:
+          plugin_id: rendered_entity
           id: rendered_entity
           table: media
           field: rendered_entity
@@ -846,7 +847,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: rendered_entity
           label: ''
           exclude: false
           alter:
@@ -895,6 +895,7 @@ display:
           perm: 'view media'
       arguments:
         bundle:
+          plugin_id: string
           id: bundle
           table: media_field_data
           field: bundle
@@ -903,7 +904,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: bundle
-          plugin_id: string
           default_action: ignore
           exception:
             value: all
@@ -936,6 +936,7 @@ display:
           break_phrase: false
       filters:
         status:
+          plugin_id: boolean
           id: status
           table: media_field_data
           field: status
@@ -944,7 +945,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: status
-          plugin_id: boolean
           operator: '='
           value: '1'
           group: 1
@@ -976,6 +976,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         name:
+          plugin_id: string
           id: name
           table: media_field_data
           field: name
@@ -984,7 +985,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: name
-          plugin_id: string
           operator: contains
           value: ''
           group: 1
@@ -1018,6 +1018,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         default_langcode:
+          plugin_id: boolean
           id: default_langcode
           table: media_field_data
           field: default_langcode
@@ -1026,7 +1027,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: default_langcode
-          plugin_id: boolean
           operator: '='
           value: '1'
           group: 1
@@ -1073,18 +1073,18 @@ display:
       display_description: ''
       header:
         display_link_grid:
+          plugin_id: display_link
           id: display_link_grid
           table: views
           field: display_link
-          plugin_id: display_link
           label: Grid
           empty: true
           display_id: widget
         display_link_table:
+          plugin_id: display_link
           id: display_link_table
           table: views
           field: display_link
-          plugin_id: display_link
           label: Table
           empty: true
           display_id: widget_table
@@ -1108,23 +1108,23 @@ display:
     display_options:
       fields:
         media_library_select_form:
+          plugin_id: media_library_select_form
           id: media_library_select_form
           table: media
           field: media_library_select_form
           relationship: none
           entity_type: media
-          plugin_id: media_library_select_form
           label: ''
           element_class: ''
           element_wrapper_class: ''
         thumbnail__target_id:
+          plugin_id: field
           id: thumbnail__target_id
           table: media_field_data
           field: thumbnail__target_id
           relationship: none
           entity_type: media
           entity_field: thumbnail
-          plugin_id: field
           label: Thumbnail
           type: image
           settings:
@@ -1133,37 +1133,37 @@ display:
             image_loading:
               attribute: eager
         name:
+          plugin_id: field
           id: name
           table: media_field_data
           field: name
           relationship: none
           entity_type: media
           entity_field: name
-          plugin_id: field
           label: Name
           type: string
           settings:
             link_to_entity: false
         uid:
+          plugin_id: field
           id: uid
           table: media_field_revision
           field: uid
           relationship: none
           entity_type: media
           entity_field: uid
-          plugin_id: field
           label: Author
           type: entity_reference_label
           settings:
             link: true
         changed:
+          plugin_id: field
           id: changed
           table: media_field_data
           field: changed
           relationship: none
           entity_type: media
           entity_field: changed
-          plugin_id: field
           label: Updated
           type: timestamp
           settings:
@@ -1185,6 +1185,7 @@ display:
           perm: 'view media'
       arguments:
         bundle:
+          plugin_id: string
           id: bundle
           table: media_field_data
           field: bundle
@@ -1193,7 +1194,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: bundle
-          plugin_id: string
           default_action: ignore
           exception:
             value: all
@@ -1226,6 +1226,7 @@ display:
           break_phrase: false
       filters:
         status:
+          plugin_id: boolean
           id: status
           table: media_field_data
           field: status
@@ -1234,7 +1235,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: status
-          plugin_id: boolean
           operator: '='
           value: '1'
           group: 1
@@ -1266,6 +1266,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         name:
+          plugin_id: string
           id: name
           table: media_field_data
           field: name
@@ -1274,7 +1275,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: name
-          plugin_id: string
           operator: contains
           value: ''
           group: 1
@@ -1308,6 +1308,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         default_langcode:
+          plugin_id: boolean
           id: default_langcode
           table: media_field_data
           field: default_langcode
@@ -1316,7 +1317,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: default_langcode
-          plugin_id: boolean
           operator: '='
           value: '1'
           group: 1
@@ -1371,18 +1371,18 @@ display:
       css_class: ''
       header:
         display_link_grid:
+          plugin_id: display_link
           id: display_link_grid
           table: views
           field: display_link
-          plugin_id: display_link
           label: Grid
           empty: true
           display_id: widget
         display_link_table:
+          plugin_id: display_link
           id: display_link_table
           table: views
           field: display_link
-          plugin_id: display_link
           label: Table
           empty: true
           display_id: widget_table

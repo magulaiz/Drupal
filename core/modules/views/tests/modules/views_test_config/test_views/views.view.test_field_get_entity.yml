@@ -40,9 +40,9 @@ display:
         uid:
           field: uid
           id: uid
-          table: users
+          table: users_field_data
           relationship: uid
-          plugin_id: user
+          plugin_id: field
           entity_type: user
           entity_field: uid
       filter_groups:

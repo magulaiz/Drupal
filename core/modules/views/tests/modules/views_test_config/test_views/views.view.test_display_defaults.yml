@@ -38,6 +38,7 @@ display:
         options: {  }
       fields:
         name:
+          plugin_id: standard
           id: name
           table: views_test_data
           field: name

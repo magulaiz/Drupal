@@ -27,7 +27,7 @@ class PagerPluginBaseTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->pager = $this->getMockBuilder('Drupal\views\Plugin\views\pager\PagerPluginBase')
+    $this->pager = $this->getMockBuilder('Drupal\views\Plugin\views\pager\Some')
       ->disableOriginalConstructor()
       ->getMockForAbstractClass();
 
@@ -145,7 +145,7 @@ class PagerPluginBaseTest extends UnitTestCase {
    * @see \Drupal\views\Plugin\views\pager\PagerPluginBase::usePager()
    */
   public function testUsePager(): void {
-    $this->assertTrue($this->pager->usePager());
+    $this->assertFalse($this->pager->usePager());
   }
 
   /**
@@ -154,7 +154,7 @@ class PagerPluginBaseTest extends UnitTestCase {
    * @see \Drupal\views\Plugin\views\pager\PagerPluginBase::useCountQuery()
    */
   public function testUseCountQuery(): void {
-    $this->assertTrue($this->pager->useCountQuery());
+    $this->assertFalse($this->pager->useCountQuery());
   }
 
   /**

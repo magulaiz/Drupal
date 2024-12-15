@@ -2,7 +2,7 @@ langcode: und
 status: true
 dependencies:
   config:
-    - field.storage.node.field_views_testing_group_rows
+    - field.storage.node.field_group_rows
   module:
     - field
     - node
@@ -45,10 +45,10 @@ display:
           entity_type: node
           entity_field: title
           plugin_id: field
-        field_views_testing_group_:
-          id: field_views_testing_group_rows
-          table: node__field_views_testing_group_rows
-          field: field_views_testing_group_rows
+        field_group_rows:
+          id: field_group_rows
+          table: node__field_group_rows
+          field: field_group_rows
           relationship: none
           group_type: group
           admin_label: ''
@@ -112,7 +112,7 @@ display:
       sorts:
         delta:
           id: delta
-          table: node__field_views_testing_group_rows
+          table: node__field_group_rows
           field: delta
           relationship: none
           group_type: group

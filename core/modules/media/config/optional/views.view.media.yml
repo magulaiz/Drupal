@@ -24,6 +24,7 @@ display:
       title: Media
       fields:
         media_bulk_form:
+          plugin_id: bulk_form
           id: media_bulk_form
           table: media
           field: media_bulk_form
@@ -31,7 +32,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: bulk_form
           label: ''
           exclude: false
           alter:
@@ -77,6 +77,7 @@ display:
           include_exclude: exclude
           selected_actions: {  }
         thumbnail__target_id:
+          plugin_id: field
           id: thumbnail__target_id
           table: media_field_data
           field: thumbnail__target_id
@@ -85,7 +86,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: thumbnail
-          plugin_id: field
           label: Thumbnail
           exclude: false
           alter:
@@ -145,6 +145,7 @@ display:
           separator: ', '
           field_api_classes: false
         name:
+          plugin_id: field
           id: name
           table: media_field_data
           field: name
@@ -153,7 +154,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: media
-          plugin_id: field
           label: 'Media name'
           exclude: false
           alter:
@@ -192,6 +192,7 @@ display:
           separator: ', '
           field_api_classes: false
         bundle:
+          plugin_id: field
           id: bundle
           table: media_field_data
           field: bundle
@@ -200,7 +201,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: bundle
-          plugin_id: field
           label: Type
           exclude: false
           alter:
@@ -257,6 +257,7 @@ display:
           separator: ', '
           field_api_classes: false
         uid:
+          plugin_id: field
           id: uid
           table: media_field_data
           field: uid
@@ -265,7 +266,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: uid
-          plugin_id: field
           label: Author
           exclude: false
           alter:
@@ -322,6 +322,7 @@ display:
           separator: ', '
           field_api_classes: false
         status:
+          plugin_id: field
           id: status
           table: media_field_data
           field: status
@@ -330,7 +331,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: status
-          plugin_id: field
           label: Status
           exclude: false
           alter:
@@ -389,6 +389,7 @@ display:
           separator: ', '
           field_api_classes: false
         changed:
+          plugin_id: field
           id: changed
           table: media_field_data
           field: changed
@@ -397,7 +398,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: changed
-          plugin_id: field
           label: Updated
           exclude: false
           alter:
@@ -465,6 +465,7 @@ display:
           separator: ', '
           field_api_classes: false
         operations:
+          plugin_id: entity_operations
           id: operations
           table: media
           field: operations
@@ -472,7 +473,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: entity_operations
           label: Operations
           exclude: false
           alter:
@@ -556,18 +556,19 @@ display:
         options: {  }
       empty:
         area_text_custom:
+          plugin_id: text_custom
           id: area_text_custom
           table: views
           field: area_text_custom
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: text_custom
           empty: true
           content: 'No media available.'
           tokenize: false
       sorts:
         created:
+          plugin_id: date
           id: created
           table: media_field_data
           field: created
@@ -576,7 +577,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: created
-          plugin_id: date
           order: DESC
           expose:
             label: ''
@@ -586,6 +586,7 @@ display:
       arguments: {  }
       filters:
         name:
+          plugin_id: string
           id: name
           table: media_field_data
           field: name
@@ -594,7 +595,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: name
-          plugin_id: string
           operator: contains
           value: ''
           group: 1
@@ -628,6 +628,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         bundle:
+          plugin_id: bundle
           id: bundle
           table: media_field_data
           field: bundle
@@ -636,7 +637,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: bundle
-          plugin_id: bundle
           operator: in
           value: {  }
           group: 1
@@ -671,6 +671,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         status:
+          plugin_id: boolean
           id: status
           table: media_field_data
           field: status
@@ -679,7 +680,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: status
-          plugin_id: boolean
           operator: '='
           value: '1'
           group: 1
@@ -719,6 +719,7 @@ display:
                 operator: '='
                 value: '0'
         status_extra:
+          plugin_id: media_status
           id: status_extra
           table: media_field_data
           field: status_extra
@@ -726,7 +727,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: media
-          plugin_id: media_status
           operator: '='
           value: ''
           group: 1
@@ -758,6 +758,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         langcode:
+          plugin_id: language
           id: langcode
           table: media_field_data
           field: langcode
@@ -766,7 +767,6 @@ display:
           admin_label: ''
           entity_type: media
           entity_field: langcode
-          plugin_id: language
           operator: in
           value: {  }
           group: 1

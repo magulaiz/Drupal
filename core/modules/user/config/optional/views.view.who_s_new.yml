@@ -20,6 +20,7 @@ display:
       title: 'Who''s new'
       fields:
         name:
+          plugin_id: field
           id: name
           table: users_field_data
           field: name
@@ -28,7 +29,6 @@ display:
           admin_label: ''
           entity_type: user
           entity_field: name
-          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -78,6 +78,7 @@ display:
       empty: {  }
       sorts:
         created:
+          plugin_id: date
           id: created
           table: users_field_data
           field: created
@@ -86,7 +87,6 @@ display:
           admin_label: ''
           entity_type: user
           entity_field: created
-          plugin_id: date
           order: DESC
           expose:
             label: ''
@@ -96,12 +96,12 @@ display:
       arguments: {  }
       filters:
         status:
+          plugin_id: boolean
           id: status
           table: users_field_data
           field: status
           entity_type: user
           entity_field: status
-          plugin_id: boolean
           value: '1'
           group: 1
           expose:
@@ -109,6 +109,7 @@ display:
             operator_limit_selection: false
             operator_list: {  }
         access:
+          plugin_id: date
           id: access
           table: users_field_data
           field: access
@@ -117,7 +118,6 @@ display:
           admin_label: ''
           entity_type: user
           entity_field: access
-          plugin_id: date
           operator: '>'
           value:
             min: ''

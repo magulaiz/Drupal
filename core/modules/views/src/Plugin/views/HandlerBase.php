@@ -114,8 +114,6 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     // we have to do a lookup because the type is singular but the
     // option is stored as the plural.
 
-    $this->unpackOptions($this->options, $options);
-
     // This exist on most handlers, but not all. So they are still optional.
     if (isset($options['table'])) {
       $this->table = $options['table'];
@@ -147,6 +145,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
+    $options['plugin_id'] = ['default' => ''];
     $options['id'] = ['default' => ''];
     $options['table'] = ['default' => ''];
     $options['field'] = ['default' => ''];

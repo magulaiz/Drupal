@@ -71,7 +71,7 @@ class FieldGroupRowsWebTest extends ViewTestBase {
     $this->nodeType = $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create the unlimited text field.
-    $this->fieldName = 'field_views_testing_group_rows';
+    $this->fieldName = 'field_group_rows';
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',
@@ -99,13 +99,12 @@ class FieldGroupRowsWebTest extends ViewTestBase {
    */
   public function testGroupRows(): void {
     $this->drupalGet('test-group-rows');
-    $result = $this->cssSelect('div.views-field-field-views-testing-group- div');
+    $result = $this->cssSelect('div.views-field-field-group-rows div');
 
-    $rendered_value = [];
     foreach ($result as $row) {
-      $rendered_value[] = $row->getText();
+      $rendered_value = $row->getText();
+      $this->assertEquals('a, b, c', $rendered_value);
     }
-    $this->assertEquals(['a, b, c'], $rendered_value);
   }
 
   /**
@@ -113,7 +112,7 @@ class FieldGroupRowsWebTest extends ViewTestBase {
    */
   public function testUngroupedRows(): void {
     $this->drupalGet('test-ungroup-rows');
-    $result = $this->cssSelect('div.views-field-field-views-testing-group- div');
+    $result = $this->cssSelect('div.views-field-field-group-rows div');
     $rendered_value = [];
     foreach ($result as $row) {
       $rendered_value[] = $row->getText();

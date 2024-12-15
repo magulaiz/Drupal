@@ -67,7 +67,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     $options['items_per_page'] = ['default' => 10];
     $options['offset'] = ['default' => 0];
     $options['id'] = ['default' => 0];
-    $options['total_pages'] = ['default' => ''];
+    $options['total_pages'] = ['default' => 0];
     $options['pagination_heading_level'] = ['default' => 'h4'];
     $options['expose'] = [
       'contains' => [
@@ -132,7 +132,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
       '#type' => 'number',
       '#min' => 0,
       '#title' => $this->t('Number of pages'),
-      '#description' => $this->t('Leave empty to show all pages.'),
+      '#description' => $this->t('Leave zero to show all pages.'),
       '#default_value' => $this->options['total_pages'],
     ];
 

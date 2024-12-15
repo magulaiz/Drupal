@@ -21,6 +21,7 @@ display:
       title: 'Content blocks'
       fields:
         info:
+          plugin_id: field
           id: info
           table: block_content_field_data
           field: info
@@ -29,7 +30,6 @@ display:
           admin_label: ''
           entity_type: null
           entity_field: info
-          plugin_id: field
           label: 'Block description'
           exclude: false
           alter:
@@ -86,6 +86,7 @@ display:
           separator: ', '
           field_api_classes: false
         type:
+          plugin_id: field
           id: type
           table: block_content_field_data
           field: type
@@ -94,7 +95,6 @@ display:
           admin_label: ''
           entity_type: block_content
           entity_field: type
-          plugin_id: field
           label: 'Block type'
           exclude: false
           alter:
@@ -151,6 +151,7 @@ display:
           separator: ', '
           field_api_classes: false
         changed:
+          plugin_id: field
           id: changed
           table: block_content_field_data
           field: changed
@@ -159,7 +160,6 @@ display:
           admin_label: ''
           entity_type: block_content
           entity_field: changed
-          plugin_id: field
           label: Updated
           exclude: false
           alter:
@@ -216,6 +216,7 @@ display:
               granularity: 2
               refresh: 60
         operations:
+          plugin_id: entity_operations
           id: operations
           table: block_content
           field: operations
@@ -223,7 +224,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: block_content
-          plugin_id: entity_operations
           label: Operations
           exclude: false
           alter:
@@ -304,17 +304,18 @@ display:
         options: {  }
       empty:
         area_text_custom:
+          plugin_id: text_custom
           id: area_text_custom
           table: views
           field: area_text_custom
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: text_custom
           empty: true
           content: 'There are no content blocks available.'
           tokenize: false
         block_content_listing_empty:
+          plugin_id: block_content_listing_empty
           id: block_content_listing_empty
           table: block_content
           field: block_content_listing_empty
@@ -322,13 +323,13 @@ display:
           group_type: group
           admin_label: ''
           entity_type: block_content
-          plugin_id: block_content_listing_empty
           label: ''
           empty: true
       sorts: {  }
       arguments: {  }
       filters:
         info:
+          plugin_id: string
           id: info
           table: block_content_field_data
           field: info
@@ -337,7 +338,6 @@ display:
           admin_label: ''
           entity_type: block_content
           entity_field: info
-          plugin_id: string
           operator: contains
           value: ''
           group: 1
@@ -371,6 +371,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         type:
+          plugin_id: bundle
           id: type
           table: block_content_field_data
           field: type
@@ -379,7 +380,6 @@ display:
           admin_label: ''
           entity_type: block_content
           entity_field: type
-          plugin_id: bundle
           operator: in
           value: {  }
           group: 1
@@ -414,6 +414,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         reusable:
+          plugin_id: boolean
           id: reusable
           table: block_content_field_data
           field: reusable
@@ -422,7 +423,6 @@ display:
           admin_label: ''
           entity_type: block_content
           entity_field: reusable
-          plugin_id: boolean
           operator: '='
           value: '1'
           group: 1

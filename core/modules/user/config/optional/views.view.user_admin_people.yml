@@ -20,6 +20,7 @@ display:
       title: People
       fields:
         user_bulk_form:
+          plugin_id: user_bulk_form
           id: user_bulk_form
           table: users
           field: user_bulk_form
@@ -27,7 +28,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: user
-          plugin_id: user_bulk_form
           label: 'Bulk update'
           exclude: false
           alter:
@@ -70,6 +70,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
         name:
+          plugin_id: field
           id: name
           table: users_field_data
           field: name
@@ -78,7 +79,6 @@ display:
           admin_label: ''
           entity_type: user
           entity_field: name
-          plugin_id: field
           label: Username
           exclude: false
           alter:
@@ -122,6 +122,7 @@ display:
           hide_alter_empty: true
           type: user_name
         status:
+          plugin_id: field
           id: status
           table: users_field_data
           field: status
@@ -130,7 +131,6 @@ display:
           admin_label: ''
           entity_type: user
           entity_field: status
-          plugin_id: field
           label: Status
           exclude: false
           alter:
@@ -178,13 +178,13 @@ display:
             format_custom_false: Blocked
             format_custom_true: Active
         roles_target_id:
+          plugin_id: user_roles
           id: roles_target_id
           table: user__roles
           field: roles_target_id
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: user_roles
           label: Roles
           exclude: false
           alter:
@@ -229,6 +229,7 @@ display:
           type: ul
           separator: ', '
         created:
+          plugin_id: field
           id: created
           table: users_field_data
           field: created
@@ -237,7 +238,6 @@ display:
           admin_label: ''
           entity_type: user
           entity_field: created
-          plugin_id: field
           label: 'Member for'
           exclude: false
           alter:
@@ -285,6 +285,7 @@ display:
             past_format: '@interval'
             granularity: 2
         access:
+          plugin_id: field
           id: access
           table: users_field_data
           field: access
@@ -293,7 +294,6 @@ display:
           admin_label: ''
           entity_type: user
           entity_field: access
-          plugin_id: field
           label: 'Last access'
           exclude: false
           alter:
@@ -341,6 +341,7 @@ display:
             past_format: '@interval ago'
             granularity: 2
         operations:
+          plugin_id: entity_operations
           id: operations
           table: users
           field: operations
@@ -348,7 +349,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: user
-          plugin_id: entity_operations
           label: Operations
           exclude: false
           alter:
@@ -392,6 +392,7 @@ display:
           hide_alter_empty: true
           destination: true
         mail:
+          plugin_id: field
           id: mail
           table: users_field_data
           field: mail
@@ -400,7 +401,6 @@ display:
           admin_label: ''
           entity_type: user
           entity_field: mail
-          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -495,18 +495,19 @@ display:
         type: tag
       empty:
         area_text_custom:
+          plugin_id: text_custom
           id: area_text_custom
           table: views
           field: area_text_custom
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: text_custom
           empty: true
           content: 'No people available.'
           tokenize: false
       sorts:
         created:
+          plugin_id: date
           id: created
           table: users_field_data
           field: created
@@ -515,7 +516,6 @@ display:
           admin_label: ''
           entity_type: user
           entity_field: created
-          plugin_id: date
           order: DESC
           expose:
             label: ''
@@ -524,13 +524,13 @@ display:
           granularity: second
       filters:
         combine:
+          plugin_id: combine
           id: combine
           table: views
           field: combine
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: combine
           operator: contains
           value: ''
           group: 1
@@ -567,6 +567,7 @@ display:
             name: name
             mail: mail
         status:
+          plugin_id: boolean
           id: status
           table: users_field_data
           field: status
@@ -575,7 +576,6 @@ display:
           admin_label: ''
           entity_type: user
           entity_field: status
-          plugin_id: boolean
           operator: '='
           value: '1'
           group: 1
@@ -617,13 +617,13 @@ display:
                 operator: '='
                 value: '0'
         roles_target_id:
+          plugin_id: user_roles
           id: roles_target_id
           table: user__roles
           field: roles_target_id
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: user_roles
           operator: or
           value: {  }
           group: 1
@@ -659,13 +659,13 @@ display:
             group_items: {  }
           reduce_duplicates: false
         permission:
+          plugin_id: user_permissions
           id: permission
           table: user__roles
           field: permission
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: user_permissions
           operator: or
           value: {  }
           group: 1
@@ -701,6 +701,7 @@ display:
             group_items: {  }
           reduce_duplicates: false
         default_langcode:
+          plugin_id: boolean
           id: default_langcode
           table: users_field_data
           field: default_langcode
@@ -709,7 +710,6 @@ display:
           admin_label: ''
           entity_type: user
           entity_field: default_langcode
-          plugin_id: boolean
           operator: '='
           value: '1'
           group: 1
@@ -741,6 +741,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
         uid_raw:
+          plugin_id: numeric
           id: uid_raw
           table: users_field_data
           field: uid_raw
@@ -748,7 +749,6 @@ display:
           group_type: group
           admin_label: ''
           entity_type: user
-          plugin_id: numeric
           operator: '!='
           value:
             min: ''

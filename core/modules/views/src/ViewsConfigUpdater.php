@@ -131,6 +131,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processEntityArgumentUpdate($view)) {
         $changed = TRUE;
       }
+      if ($this->processAggregationEnabledPluginFix($view)) {
+        $changed = TRUE;
+      }
       return $changed;
     });
   }
@@ -259,6 +262,86 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     }
 
     return $changed;
+  }
+
+  /**
+   * Fixes plugin settings for aggregation enabled fields.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/2976616
+   */
+  public function processAggregationEnabledPluginFix(ViewEntityInterface $view): bool {
+    $displays = $view->get('display');
+    $to_be_updated = FALSE;
+    foreach ($displays as &$display) {
+      if (!isset($display['display_options']['group_by']) || (isset($display['display_options']['group_by']) && $display['display_options']['group_by'] != TRUE)) {
+        continue;
+      }
+      foreach ($display['display_options']['fields'] as &$options) {
+        if (isset($options['group_type']) && $options['group_type'] != 'group' && $options['plugin_id'] == 'field') {
+          $options['plugin_id'] = 'numeric';
+          $to_add_alter = [
+            'alias' => FALSE,
+            'fragment' => '',
+            'language' => '',
+            'link_attributes' => [],
+            'query' => [],
+            'url' => '',
+            'entity_type' => '',
+            'entity' => '',
+          ];
+          foreach ($to_add_alter as $option_id => $option_value) {
+            $options['alter'][$option_id] = $option_value;
+          }
+          $to_remove = [
+            'entity_type',
+            'entity_field',
+            'click_sort_column',
+            'type',
+            'settings',
+            'group_column',
+            'group_columns',
+            'group_rows',
+            'delta_limit',
+            'delta_offset',
+            'delta_reversed',
+            'delta_first_last',
+            'multi_type',
+            'field_api_classes',
+          ];
+          foreach ($to_remove as $option_id) {
+            if (isset($options[$option_id])) {
+              unset($options[$option_id]);
+            }
+          }
+          $to_be_updated = TRUE;
+        }
+      }
+    }
+    if ($to_be_updated) {
+      $view->set('display', $displays);
+    }
+    return $to_be_updated;
+  }
+
+  /**
+   * Checks if view has aggregation enabled fields, which need an update.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   TRUE if the view has any displays with fields, that needed to be updated.
+   */
+  public function needsAggregationEnabledPluginFix(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+      return $this->processAggregationEnabledPluginFix($view);
+    });
   }
 
 }

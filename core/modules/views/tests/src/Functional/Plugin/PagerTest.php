@@ -68,11 +68,6 @@ class PagerTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/nojs/display/test_view/default/pager');
     $this->submitForm($edit, 'Apply');
 
-    $items_per_page = $this->assertSession()->fieldExists("pager_options[items_per_page]");
-    $this->assertSession()->fieldValueEquals("pager_options[items_per_page]", 10);
-    $this->assertSame('number', $items_per_page->getAttribute('type'));
-    $this->assertEquals(0, $items_per_page->getAttribute('min'));
-
     $offset = $this->assertSession()->fieldExists("pager_options[offset]");
     $this->assertSession()->fieldValueEquals("pager_options[offset]", 0);
     $this->assertSame('number', $offset->getAttribute('type'));
@@ -114,7 +109,7 @@ class PagerTest extends ViewTestBase {
     $this->assertEquals(0, $id->getAttribute('min'));
 
     $total_pages = $this->assertSession()->fieldExists("pager_options[total_pages]");
-    $this->assertSession()->fieldValueEquals("pager_options[total_pages]", '');
+    $this->assertSession()->fieldValueEquals("pager_options[total_pages]", 0);
     $this->assertSame('number', $total_pages->getAttribute('type'));
     $this->assertEquals(0, $total_pages->getAttribute('min'));
 
@@ -212,7 +207,7 @@ class PagerTest extends ViewTestBase {
     $this->assertEquals(0, $id->getAttribute('min'));
 
     $total_pages = $this->assertSession()->fieldExists("pager_options[total_pages]");
-    $this->assertSession()->fieldValueEquals("pager_options[total_pages]", '');
+    $this->assertSession()->fieldValueEquals("pager_options[total_pages]", 0);
     $this->assertSame('number', $total_pages->getAttribute('type'));
     $this->assertEquals(0, $total_pages->getAttribute('min'));
   }

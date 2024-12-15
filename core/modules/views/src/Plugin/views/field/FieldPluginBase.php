@@ -515,6 +515,15 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         'trim' => ['default' => FALSE],
         'preserve_tags' => ['default' => ''],
         'html' => ['default' => FALSE],
+        // Undefined keys used in code and in tests; not in schema.yml files.
+        'alias' => ['default' => FALSE],
+        'fragment' => ['default' => ''],
+        'language' => ['default' => ''],
+        'link_attributes' => ['default' => []],
+        'query' => ['default' => []],
+        'url' => ['default' => ''],
+        'entity_type' => ['default' => ''],
+        'entity' => ['default' => ''],
       ],
     ];
     $options['element_type'] = ['default' => ''];
@@ -1585,7 +1594,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     // If the query and fragment were programmatically assigned overwrite any
     // parsed values.
-    if (isset($alter['query'])) {
+    // This code allows for possibility of extra keys in $alter not declared in
+    // defineOptions() or schema.yml.
+    if (!empty($alter['query'])) {
       // Convert the query to a string, perform token replacement, and then
       // convert back to an array form for
       // \Drupal\Core\Utility\LinkGeneratorInterface::generate().
@@ -1595,22 +1606,22 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       parse_str($options['query'], $query);
       $options['query'] = $query;
     }
-    if (isset($alter['alias'])) {
+    if (!empty($alter['alias'])) {
       // Alias is a boolean field, so no token.
       $options['alias'] = $alter['alias'];
     }
-    if (isset($alter['fragment'])) {
+    if (!empty($alter['fragment'])) {
       $options['fragment'] = $this->viewsTokenReplace($alter['fragment'], $tokens);
     }
-    if (isset($alter['language'])) {
+    if (!empty($alter['language'])) {
       $options['language'] = $alter['language'];
     }
 
     // If the URL came from entity_uri(), pass along the required options.
-    if (isset($alter['entity'])) {
+    if (!empty($alter['entity'])) {
       $options['entity'] = $alter['entity'];
     }
-    if (isset($alter['entity_type'])) {
+    if (!empty($alter['entity_type'])) {
       $options['entity_type'] = $alter['entity_type'];
     }
 
