@@ -190,7 +190,7 @@ abstract class Connection {
     ?EventDispatcherInterface $eventDispatcher = NULL,
   ) {
     if ($eventDispatcher === NULL) {
-      @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/7654312', E_USER_DEPRECATED);
+      @trigger_error('Not passing the $eventDispatcher parameter to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and is throwing an error from drupal:12.0.0. See https://www.drupal.org/node/3494044', E_USER_DEPRECATED);
       $eventDispatcher = (\Drupal::hasContainer() && \Drupal::hasService(EventDispatcherInterface::class)) ? \Drupal::service(EventDispatcherInterface::class) : new EventDispatcherFactory();
     }
     $this->eventDispatcher = $eventDispatcher;
