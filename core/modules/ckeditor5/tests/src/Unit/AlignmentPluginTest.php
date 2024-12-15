@@ -28,18 +28,22 @@ class AlignmentPluginTest extends UnitTestCase {
             'options' => [
               [
                 'name' => 'left',
+                'title' => 'Left',
                 'className' => 'text-align-left',
               ],
               [
                 'name' => 'center',
+                'title' => 'Center',
                 'className' => 'text-align-center',
               ],
               [
                 'name' => 'right',
+                'title' => 'Right',
                 'className' => 'text-align-right',
               ],
               [
                 'name' => 'justify',
+                'title' => 'Justify',
                 'className' => 'text-align-justify',
               ],
             ],
@@ -67,6 +71,7 @@ class AlignmentPluginTest extends UnitTestCase {
             'options' => [
               [
                 'name' => 'left',
+                'title' => 'Left',
                 'className' => 'text-align-left',
               ],
             ],
@@ -85,10 +90,12 @@ class AlignmentPluginTest extends UnitTestCase {
             'options' => [
               [
                 'name' => 'left',
+                'title' => 'Left',
                 'className' => 'text-align-left',
               ],
               [
                 'name' => 'justify',
+                'title' => 'Justify',
                 'className' => 'text-align-justify',
               ],
             ],
