@@ -396,7 +396,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
             'id' => $menu_link_id,
           ];
           if (!isset($tab_options['menu_name'])) {
-            [$tab_options['menu_name'], $tab_options['parent']] = explode(':', $tab_options['parent'] ?? '', 2);
+            [$tab_options['menu_name'], $tab_options['parent']] = array_pad(explode(':', $tab_options['parent'] ?? '', 2), 2, '');
           }
           $links[$menu_link_id]['title'] = $tab_options['title'] ?? '';
           $links[$menu_link_id]['description'] = $tab_options['description'] ?? '';
