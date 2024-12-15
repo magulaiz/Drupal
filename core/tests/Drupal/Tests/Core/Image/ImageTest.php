@@ -175,6 +175,15 @@ class ImageTest extends UnitTestCase {
   }
 
   /**
+   * Tests \Drupal\Core\Image\Image::getFileSize returns NULL when source is malformed.
+   */
+  public function testGetFileSizeReturnsNullForMalformedSource(): void {
+    $this->toolkit = $this->getToolkitMock();
+    $this->image = new Image($this->toolkit, 'malformed-source');
+    $this->assertNull($this->image->getFileSize());
+  }
+
+  /**
    * Tests \Drupal\Core\Image\Image::getToolkit()->getType().
    */
   public function testGetType(): void {
