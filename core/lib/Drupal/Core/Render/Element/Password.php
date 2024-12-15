@@ -5,7 +5,6 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a form element for entering a password, with hidden text.
@@ -16,12 +15,12 @@ use Drupal\Core\Render\Element\FormElement as FormElementBase;
  *
  * Usage example:
  * @code
- * $form['pass'] = array(
+ * $form['pass'] = [
  *   '#type' => 'password',
  *   '#title' => $this->t('Password'),
  *   '#size' => 25,
  *   '#pattern' => '[01]+',
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\PasswordConfirm

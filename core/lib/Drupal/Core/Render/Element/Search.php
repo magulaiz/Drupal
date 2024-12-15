@@ -4,17 +4,16 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides an HTML5 input element with type of "search".
  *
  * Usage example:
  * @code
- * $form['search'] = array(
+ * $form['search'] = [
  *   '#type' => 'search',
  *   '#title' => $this->t('Search'),
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textfield

@@ -6,7 +6,6 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a form element for input of a URL.
@@ -18,13 +17,13 @@ use Drupal\Core\Render\Element\FormElement as FormElementBase;
  *
  * Usage example:
  * @code
- * $form['homepage'] = array(
+ * $form['homepage'] = [
  *   '#type' => 'url',
  *   '#title' => $this->t('Home Page'),
  *   '#size' => 30,
  *   '#pattern' => '*.example.com',
  *   ...
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textfield

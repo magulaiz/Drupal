@@ -4,7 +4,6 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
-use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a form element for double-input of passwords.
@@ -17,11 +16,11 @@ use Drupal\Core\Render\Element\FormElement as FormElementBase;
  *
  * Usage example:
  * @code
- * $form['pass'] = array(
+ * $form['pass'] = [
  *   '#type' => 'password_confirm',
  *   '#title' => $this->t('Password'),
  *   '#size' => 25,
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Password
