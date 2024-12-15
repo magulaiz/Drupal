@@ -31,7 +31,7 @@ class Image implements ImageInterface {
   /**
    * File size in bytes.
    *
-   * @var int
+   * @var int|null
    */
   protected $fileSize;
 
