@@ -99,6 +99,8 @@ use Drupal\Core\Hook\Order;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 class Hook {
 
+  public string $class = '';
+
   /**
    * The class the hook implementation is in.
    *
@@ -150,6 +152,11 @@ class Hook {
     if (!$this->method) {
       $this->method = $method;
     }
+  }
+
+  public function setClass(string $class): static {
+    $this->class = $class;
+    return $this;
   }
 
 }
