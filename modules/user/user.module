@@ -3509,13 +3509,15 @@ function user_filters() {
     );
   }
 
+  $info = system_get_info('module');
   $options = array();
   foreach (module_implements('permission') as $module) {
     $function = $module . '_permission';
+    $module_group = t('@module module', array('@module' => $info[$module]['name']));
     if ($permissions = $function()) {
       asort($permissions);
       foreach ($permissions as $permission => $description) {
-        $options[t('@module module', array('@module' => $module))][$permission] = t($permission);
+        $options[$module_group][$permission] = $description['title'];
       }
     }
   }
