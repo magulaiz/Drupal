@@ -81,7 +81,6 @@ function contact_site_form($form, &$form_state) {
   // prevent the impersonation of other users.
   if ($user->uid) {
     $form['name']['#disabled'] = $form['mail']['#disabled'] = TRUE;
-
   }
   $form['subject'] = array(
     '#type' => 'textfield',
@@ -229,8 +228,8 @@ function contact_personal_form($form, &$form_state, $recipient) {
 
   // Do not allow authenticated users to alter the name or e-mail values to
   // prevent the impersonation of other users.
-  if (!empty($user->uid)) {
-    $form['name']['#disabled'] = $form['mail']['#disabled'] = FALSE;
+  if ($user->uid) {
+    $form['name']['#disabled'] = $form['mail']['#disabled'] = TRUE;
   }
   $form['to'] = array(
     '#type' => 'item',
