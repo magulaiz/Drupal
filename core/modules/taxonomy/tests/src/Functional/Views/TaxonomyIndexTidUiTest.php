@@ -67,29 +67,8 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     ]);
     $this->drupalLogin($this->adminUser);
 
-    Vocabulary::create([
-      'vid' => 'tags',
-      'name' => 'Tags',
-    ])->save();
-
-    // Setup a hierarchy which looks like this:
-    // term 0.0
-    // term 1.0
-    // - term 1.1
-    // term 2.0
-    // - term 2.1
-    // - term 2.2
-    for ($i = 0; $i < 3; $i++) {
-      for ($j = 0; $j <= $i; $j++) {
-        $this->terms[$i][$j] = $term = Term::create([
-          'vid' => 'tags',
-          'name' => "Term $i.$j",
-          'parent' => isset($this->terms[$i][0]) ? $this->terms[$i][0]->id() : 0,
-        ]);
-        $term->save();
-      }
-    }
-    ViewTestData::createTestViews(static::class, ['taxonomy_test_views']);
+    $this->terms = $this->createVocabularyAndTerms('tags');
+    ViewTestData::createTestViews(get_class($this), ['taxonomy_test_views']);
 
     // Extra taxonomy and terms.
     Vocabulary::create([
@@ -110,11 +89,55 @@ class TaxonomyIndexTidUiTest extends UITestBase {
   }
 
   /**
+   * Creates a vocabulary and terms for it.
+   *
+   * @param string $vocab_id
+   *   The vocabulary ID.
+   *
+   * @return \Drupal\taxonomy\TermInterface[][]
+   *   The terms.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function createVocabularyAndTerms(string $vocab_id): array {
+    $vocab = Vocabulary::load($vocab_id);
+    if (!$vocab) {
+      Vocabulary::create([
+        'vid' => $vocab_id,
+        'name' => 'Test Vocabulary ' . $vocab_id,
+      ])->save();
+    }
+    // Setup a hierarchy which looks like this:
+    // term 0.0
+    // term 1.0
+    // - term 1.1
+    // term 2.0
+    // - term 2.1
+    // - term 2.2
+    $terms = [];
+    for ($i = 0; $i < 3; $i++) {
+      for ($j = 0; $j <= $i; $j++) {
+        $term = Term::create([
+          'vid' => $vocab_id,
+          'name' => "Term $i.$j",
+          'parent' => isset($terms[$i][0]) ? $terms[$i][0]->id() : 0,
+        ]);
+        $term->save();
+        $terms[$i][$j] = $term;
+      }
+    }
+    return $terms;
+  }
+
+  /**
    * Tests the filter UI.
+   *
+   * @group legacy
    */
   public function testFilterUI(): void {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
-
+    $this->assertSession()->fieldExists("Select terms from vocabulary 'Test Vocabulary tags'");
     $result = $this->assertSession()->selectExists('edit-options-value')->findAll('css', 'option');
 
     // Ensure that the expected hierarchy is available in the UI.
@@ -157,9 +180,89 @@ class TaxonomyIndexTidUiTest extends UITestBase {
   }
 
   /**
+   * Tests the filter UI with multiple vocabularies.
+   *
+   * @group legacy
+   */
+  public function testFilterUIWithMultipleVocabularies() {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
+    $terms2 = $this->createVocabularyAndTerms('tags2');
+    $node_type = $this->drupalCreateContentType(['type' => 'page']);
+    // Create the tag field itself.
+    $field_name = 'taxonomy_tags';
+    $this->createEntityReferenceField('node', $node_type->id(), $field_name, NULL, 'taxonomy_term');
+    $node0 = $this->drupalCreateNode([
+      'type' => 'page',
+      'taxonomy_tags' => $this->terms[0][0]->id(),
+    ]);
+    $node0->save();
+    $node1 = $this->drupalCreateNode([
+      'type' => 'page',
+      'taxonomy_tags' => $terms2[0][0]->id(),
+    ]);
+    $node1->save();
+    $node2 = $this->drupalCreateNode([
+      'type' => 'page',
+      'taxonomy_tags' => [$this->terms[0][0]->id(), $terms2[0][0]->id()],
+    ]);
+    $node2->save();
+    $edit = [
+      'options[vids][tags]' => TRUE,
+      'options[vids][tags2]' => TRUE,
+      'options[type]' => 'textfield',
+    ];
+    $this->drupalGet('admin/structure/views/nojs/handler-extra/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->submitForm($edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
+    $this->submitForm([], 'Expose filter');
+    $edit = [
+      'options[operator]' => 'and',
+      'options[value]' => '',
+      'options[reduce_duplicates]' => TRUE,
+    ];
+    $this->submitForm($edit, 'Apply');
+    $this->submitForm([], 'Save');
+    $this->drupalGet('test-filter-taxonomy-index-tid', ['query' => ['tid' => '']]);
+    $xpath = $this->xpath('//div[@class="views-row"]//a');
+    $this->assertCount(3, $xpath);
+    $this->drupalGet('test-filter-taxonomy-index-tid', ['query' => ['tid' => "t1 ({$this->terms[0][0]->id()})"]]);
+    $xpath = $this->xpath('//div[@class="views-row"]//a');
+    $this->assertCount(2, $xpath);
+    $xpath = $this->xpath('//div[@class="views-row"]//a[@href=:href]', [
+      ':href' => $node0->toUrl()->toString(),
+    ]);
+    $this->assertCount(1, $xpath);
+    $xpath = $this->xpath('//div[@class="views-row"]//a[@href=:href]', [
+      ':href' => $node2->toUrl()->toString(),
+    ]);
+    $this->assertCount(1, $xpath);
+    $this->drupalGet('test-filter-taxonomy-index-tid', ['query' => ['tid' => "t2 ({$terms2[0][0]->id()})"]]);
+    $xpath = $this->xpath('//div[@class="views-row"]//a');
+    $this->assertCount(2, $xpath);
+    $xpath = $this->xpath('//div[@class="views-row"]//a[@href=:href]', [
+      ':href' => $node1->toUrl()->toString(),
+    ]);
+    $this->assertCount(1, $xpath);
+    $xpath = $this->xpath('//div[@class="views-row"]//a[@href=:href]', [
+      ':href' => $node2->toUrl()->toString(),
+    ]);
+    $this->assertCount(1, $xpath);
+    $this->drupalGet('test-filter-taxonomy-index-tid', ['query' => ['tid' => "t1 ({$this->terms[0][0]->id()}), t2 ({$terms2[0][0]->id()})"]]);
+    $xpath = $this->xpath('//div[@class="views-row"]//a');
+    $this->assertCount(1, $xpath);
+    $xpath = $this->xpath('//div[@class="views-row"]//a[@href=:href]', [
+      ':href' => $node2->toUrl()->toString(),
+    ]);
+    $this->assertCount(1, $xpath);
+  }
+
+  /**
    * Tests exposed taxonomy filters.
+   *
+   * @group legacy
    */
   public function testExposedFilter(): void {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     $node_type = $this->drupalCreateContentType(['type' => 'page']);
 
     // Create the tag field itself.
@@ -261,8 +364,12 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_taxonomy_term_name/default/filter');
     $this->submitForm($edit, 'Add and configure filter criteria');
     // Select 'Empty Vocabulary' and 'Autocomplete' from the list of options.
+    $edit = [
+      'options[vids][empty_vocabulary]' => TRUE,
+      'options[type]' => 'textfield',
+    ];
     $this->drupalGet('admin/structure/views/nojs/handler-extra/test_taxonomy_term_name/default/filter/tid');
-    $this->submitForm([], 'Apply and continue');
+    $this->submitForm($edit, 'Apply and continue');
     // Expose the filter.
     $edit = ['options[expose_button][checkbox][checkbox]' => TRUE];
     $this->drupalGet('admin/structure/views/nojs/handler/test_taxonomy_term_name/default/filter/tid');
@@ -289,8 +396,11 @@ class TaxonomyIndexTidUiTest extends UITestBase {
 
   /**
    * Tests exposed grouped taxonomy filters.
+   *
+   * @group legacy
    */
   public function testExposedGroupedFilter(): void {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     // Create a content type with a taxonomy field.
     $this->drupalCreateContentType(['type' => 'article']);
     $field_name = 'field_views_testing_tags';
@@ -333,8 +443,11 @@ class TaxonomyIndexTidUiTest extends UITestBase {
 
   /**
    * Tests that an exposed taxonomy filter doesn't show unpublished terms.
+   *
+   * @group legacy
    */
   public function testExposedUnpublishedFilterOptions(): void {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     $this->terms[1][0]->setUnpublished()->save();
     // Expose the filter.
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
