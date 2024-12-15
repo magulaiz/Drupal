@@ -1107,9 +1107,15 @@ function file_get_file_references($file, $field = NULL, $age = FIELD_LOAD_REVISI
     if ((empty($field_type) || $file_field['type'] == $field_type) && !isset($references[$field_name])) {
       // Get each time this file is used within a field.
       $query = new EntityFieldQuery();
-      $query
-        ->fieldCondition($file_field, 'fid', $file->fid)
-        ->age($age);
+      $query->fieldCondition($file_field, 'fid', $file->fid)
+        ->age($age)
+        // Limit this query to only a result. This is not ideal since the file
+        // could be referenced multiple times, but an unlimited query would
+        // result in out of memory errors. We assume a file is only referenced
+        // in the same kind of fields, so returning just a reference is fine
+        // for access checking.
+        ->range(0, 1);
+
       if (!$check_access) {
         // Neutralize the 'entity_field_access' query tag added by
         // field_sql_storage_field_storage_query().
