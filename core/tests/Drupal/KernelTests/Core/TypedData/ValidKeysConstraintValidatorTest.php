@@ -228,12 +228,13 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // Create a data definition that specifies certain allowed keys.
     $definition = MapDataDefinition::create('mapping')
       ->addConstraint('ValidKeys', ['north', 'south', 'west']);
-    $definition['mapping'] = [
+    $mapping = [
       'north' => ['type' => 'string', 'requiredKey' => FALSE],
       'east' => ['type' => 'string', 'requiredKey' => FALSE],
       'south' => ['type' => 'string', 'requiredKey' => FALSE],
       'west' => ['type' => 'string', 'requiredKey' => FALSE],
     ];
+    $definition->setRawDefinition('mapping', $mapping);
     // @todo Remove this line in https://www.drupal.org/project/drupal/issues/3403782
     $definition->setClass('Drupal\Core\Config\Schema\Mapping');
 
@@ -289,8 +290,9 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // specify otherwise.
     // First test without changing the value: no error should occur because all
     // keys passed to the ValidKeys constraint have a value.
-    unset($definition['mapping']['south']['requiredKey']);
-    unset($definition['mapping']['east']['requiredKey']);
+    unset($mapping['south']['requiredKey']);
+    unset($mapping['east']['requiredKey']);
+    $definition->setRawDefinition('mapping', $mapping);
     $violations = $typed_config->create(clone $definition, $value)->validate();
     $this->assertCount(0, $violations);
 
@@ -298,8 +300,6 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // `requiredKey: false` set, then they MUST be set.
     // First test without changing the value: no error should occur because all
     // keys passed to the ValidKeys constraint have a value.
-    unset($definition['mapping']['south']['requiredKey']);
-    unset($definition['mapping']['east']['requiredKey']);
     $violations = $typed_config->create(clone $definition, $value)->validate();
     $this->assertCount(0, $violations);
     // Then remove the required key-value pair: this must trigger an error, but
@@ -357,7 +357,7 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // Reference to the mapping in the schema, to allow adjusting it for testing
     // purposes.
     assert($this->config->getDataDefinition() instanceof MapDataDefinition);
-    $mapping = $this->config->getDataDefinition()['mapping'];
+    $mapping = $this->config->getDataDefinition()->toArray()['mapping'];
 
     // Removing a key-value pair should trigger a validation error.
     $data = $this->config->getValue();
@@ -370,7 +370,7 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
     // Unless a key is explicitly marked as optional.
     $mapping['status']['requiredKey'] = FALSE;
-    $this->config->getDataDefinition()['mapping'] = $mapping;
+    $this->config->getDataDefinition()->setRawDefinition('mapping', $mapping);
     $violations = $this->config->validate();
     $this->assertCount(0, $violations);
   }

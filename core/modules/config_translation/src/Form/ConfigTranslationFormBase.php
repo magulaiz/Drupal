@@ -237,15 +237,15 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
    */
   public static function createFormElement(TypedDataInterface $schema) {
     $definition = $schema->getDataDefinition();
+    $form_element_class = $definition->toArray()['form_element_class'] ?? NULL;
     // Form element classes can be specified even for non-translatable elements
     // such as the ListElement form element which is used for Mapping and
     // Sequence schema elements.
-    if (isset($definition['form_element_class'])) {
+    if ($form_element_class) {
       if (!$definition->getLabel()) {
         $definition->setLabel(new TranslatableMarkup('n/a'));
       }
-      $class = $definition['form_element_class'];
-      return $class::create($schema);
+      return $form_element_class::create($schema);
     }
   }
 

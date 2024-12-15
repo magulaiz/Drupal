@@ -114,11 +114,12 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     $definition += $this->getDefinitionWithReplacements($type, $replace);
 
     $data_definition = $this->createDataDefinition($definition['type']);
+    $data = $data_definition->toArray();
 
     // Pass remaining values from definition array to data definition.
     foreach ($definition as $key => $value) {
-      if (!isset($data_definition[$key])) {
-        $data_definition[$key] = $value;
+      if (!isset($data[$key])) {
+        $data_definition->setRawDefinition($key, $value);
       }
     }
 
@@ -178,7 +179,8 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
         }
       }
       if ($root_type_has_opted_in) {
-        $data_definition->setRequired(!isset($data_definition['nullable']) || $data_definition['nullable'] === FALSE);
+        $nullable = $data_definition->toArray()['nullable'] ?? NULL;
+        $data_definition->setRequired(!isset($nullable) || $nullable === FALSE);
       }
     }
 

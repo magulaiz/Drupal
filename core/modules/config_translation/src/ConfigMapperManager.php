@@ -199,7 +199,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
       return FALSE;
     }
     else {
-      $definition = $element->getDataDefinition();
+      $definition = $element->getDataDefinition()->toArray();
       return isset($definition['translatable']) && $definition['translatable'];
     }
   }

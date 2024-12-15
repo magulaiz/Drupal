@@ -27,8 +27,9 @@ class Mapping extends ArrayElement {
    */
   public function __construct(DataDefinitionInterface $definition, $name = NULL, ?TypedDataInterface $parent = NULL) {
     assert($definition instanceof MapDataDefinition);
+    $mapping = $definition->toArray()['mapping'];
     // Validate basic structure.
-    foreach ($definition['mapping'] as $key => $key_definition) {
+    foreach ($mapping as $key => $key_definition) {
       // Guide developers when a config schema definition is wrong.
       if (!is_array($key_definition)) {
         if (!$parent) {
@@ -48,7 +49,7 @@ class Mapping extends ArrayElement {
    */
   protected function getElementDefinition($key) {
     $value = $this->value[$key] ?? NULL;
-    $definition = $this->definition['mapping'][$key] ?? [];
+    $definition = $this->definition->toArray()['mapping'][$key] ?? [];
     return $this->buildDataDefinition($definition, $value, $key);
   }
 
@@ -227,7 +228,9 @@ class Mapping extends ArrayElement {
    *   Thrown when `requiredKey: true` is specified.
    */
   protected function processRequiredKeyFlags(MapDataDefinition $definition): void {
-    foreach ($definition['mapping'] as $key => $key_definition) {
+    $mapping = $definition->toArray()['mapping'];
+    $changed = FALSE;
+    foreach ($mapping as $key => $key_definition) {
       // Validates `requiredKey` flag in mapping definitions.
       if (array_key_exists('requiredKey', $key_definition) && $key_definition['requiredKey'] !== FALSE) {
         throw new \LogicException('The `requiredKey` flag must either be omitted or have `false` as the value.');
@@ -236,8 +239,12 @@ class Mapping extends ArrayElement {
       if (!array_key_exists('requiredKey', $key_definition)) {
         // Required by default, unless this key is marked as deprecated.
         // @see https://www.drupal.org/node/3129881
-        $definition['mapping'][$key]['requiredKey'] = !array_key_exists('deprecated', $key_definition);
+        $mapping[$key]['requiredKey'] = !array_key_exists('deprecated', $key_definition);
+        $changed = TRUE;
       }
+    }
+    if ($changed) {
+      $definition->setRawDefinition('mapping', $mapping);
     }
   }
 

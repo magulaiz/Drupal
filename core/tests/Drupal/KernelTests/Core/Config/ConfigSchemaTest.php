@@ -370,8 +370,8 @@ class ConfigSchemaTest extends KernelTestBase {
     $property = $meta->get('page')->get('front');
     $this->assertInstanceOf(StringInterface::class, $property);
     $this->assertEquals('/user/login', $property->getValue(), 'Got the right value for page.front data.');
-    $definition = $property->getDataDefinition();
-    $this->assertEmpty($definition['translatable'], 'Got the right translatability setting for page.front data.');
+    $translatable = $property->getDataDefinition()->toArray()['translatable'] ?? NULL;
+    $this->assertEmpty($translatable, 'Got the right translatability setting for page.front data.');
 
     // Check nested array of properties.
     $list = $meta->get('page')->getElements();
