@@ -41,66 +41,72 @@ class BatchStorage implements BatchStorageInterface {
   public function load($id) {
     // Ensure that a session is started before using the CSRF token generator.
     $this->session->start();
-    try {
-      $batch = $this->connection->select('batch', 'b')
-        ->fields('b', ['batch'])
-        ->condition('bid', $id)
-        ->condition('token', $this->csrfToken->get($id))
-        ->execute()
-        ->fetchField();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-      $batch = FALSE;
-    }
-    if ($batch) {
-      return unserialize($batch);
-    }
-    return FALSE;
+
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($id): string|FALSE {
+        return $this->connection->select('batch', 'b')
+          ->fields('b', ['batch'])
+          ->condition('bid', $id)
+          ->condition('token', $this->csrfToken->get($id))
+          ->execute()
+          ->fetchField();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
+
+    return $execution->isSuccessful() ? unserialize($execution->getResult()) : FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function delete($id) {
-    try {
-      $this->connection->delete('batch')
-        ->condition('bid', $id)
-        ->execute();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($id): void {
+        $this->connection->delete('batch')
+          ->condition('bid', $id)
+          ->execute();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function update(array $batch) {
-    try {
-      $this->connection->update('batch')
-        ->fields(['batch' => serialize($batch)])
-        ->condition('bid', $batch['id'])
-        ->execute();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($batch): void {
+        $this->connection->update('batch')
+          ->fields(['batch' => serialize($batch)])
+          ->condition('bid', $batch['id'])
+          ->execute();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function cleanup() {
-    try {
-      // Cleanup the batch table and the queue for failed batches.
-      $this->connection->delete('batch')
-        ->condition('timestamp', $this->time->getRequestTime() - 864000, '<')
-        ->execute();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): void {
+        // Cleanup the batch table and the queue for failed batches.
+        $this->connection->delete('batch')
+          ->condition('timestamp', $this->time->getRequestTime() - 864000, '<')
+          ->execute();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+    );
   }
 
   /**
@@ -126,23 +132,23 @@ class BatchStorage implements BatchStorageInterface {
    *   A batch id.
    */
   public function getId(): int {
-    $try_again = FALSE;
-    try {
-      // The batch table might not yet exist.
-      return $this->doInsertBatchRecord();
-    }
-    catch (\Exception $e) {
-      // If there was an exception, try to create the table.
-      if (!$try_again = $this->ensureTableExists()) {
-        // If the exception happened for other reason than the missing table,
-        // propagate the exception.
-        throw $e;
-      }
-    }
-    // Now that the table has been created, try again if necessary.
-    if ($try_again) {
-      return $this->doInsertBatchRecord();
-    }
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): int {
+        return $this->connection->insert('batch')
+          ->fields([
+            'timestamp' => $this->time->getRequestTime(),
+            'token' => '',
+            'batch' => NULL,
+          ])
+          ->execute();
+      },
+      schema: [
+        static::TABLE_NAME => $this->schemaDefinition(),
+      ],
+      retryAfterSchemaEnsured: TRUE,
+    );
+
+    return $execution->getResult();
   }
 
   /**
@@ -150,8 +156,15 @@ class BatchStorage implements BatchStorageInterface {
    *
    * @return int
    *   A batch id.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3489185
    */
   protected function doInsertBatchRecord(): int {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
     return $this->connection->insert('batch')
       ->fields([
         'timestamp' => $this->time->getRequestTime(),
@@ -163,8 +176,15 @@ class BatchStorage implements BatchStorageInterface {
 
   /**
    * Check if the table exists and create it if not.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3489185
    */
   protected function ensureTableExists() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
     try {
       $database_schema = $this->connection->schema();
       $schema_definition = $this->schemaDefinition();
@@ -192,8 +212,15 @@ class BatchStorage implements BatchStorageInterface {
    *   The exception.
    *
    * @throws \Exception
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3489185
    */
   protected function catchException(\Exception $e) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
     if ($this->connection->schema()->tableExists(static::TABLE_NAME)) {
       throw $e;
     }

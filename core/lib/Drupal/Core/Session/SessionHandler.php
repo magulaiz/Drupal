@@ -64,7 +64,6 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   public function write(#[\SensitiveParameter] string $sid, string $value): bool {
-    $try_again = FALSE;
     $request = $this->requestStack->getCurrentRequest();
     $fields = [
       'uid' => $request->getSession()->get('uid', 0),
@@ -72,26 +71,19 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
       'session' => $value,
       'timestamp' => $this->time->getRequestTime(),
     ];
-    $doWrite = fn() =>
-      $this->connection->merge('sessions')
-        ->keys(['sid' => Crypt::hashBase64($sid)])
-        ->fields($fields)
-        ->execute();
-    try {
-      $doWrite();
-    }
-    catch (\Exception $e) {
-      // If there was an exception, try to create the table.
-      if (!$try_again = $this->ensureTableExists()) {
-        // If the exception happened for other reason than the missing
-        // table, propagate the exception.
-        throw $e;
-      }
-    }
-    // Now that the bin has been created, try again if necessary.
-    if ($try_again) {
-      $doWrite();
-    }
+
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($sid, $fields): void {
+        $this->connection->merge('sessions')
+          ->keys(['sid' => Crypt::hashBase64($sid)])
+          ->fields($fields)
+          ->execute();
+      },
+      schema: [
+        'sessions' => $this->schemaDefinition(),
+      ],
+      retryAfterSchemaEnsured: TRUE,
+    );
 
     return TRUE;
   }
@@ -205,8 +197,15 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    *
    * @return bool
    *   TRUE if the table already exists or was created, FALSE if creation fails.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   *   \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3489185
    */
   protected function ensureTableExists(): bool {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
     try {
       $database_schema = $this->connection->schema();
       $schema_definition = $this->schemaDefinition();

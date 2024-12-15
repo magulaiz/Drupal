@@ -33,46 +33,49 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    * {@inheritdoc}
    */
   protected function doInvalidateTags(array $tags) {
-    try {
-      foreach ($tags as $tag) {
-        $this->connection->merge('cachetags')
-          ->insertFields(['invalidations' => 1])
-          ->expression('invalidations', '[invalidations] + 1')
-          ->key('tag', $tag)
-          ->execute();
-      }
-    }
-    catch (\Exception $e) {
-      // Create the cache table, which will be empty. This fixes cases during
-      // core install where cache tags are invalidated before the table is
-      // created.
-      if (!$this->ensureTableExists()) {
-        throw $e;
-      }
-    }
+    $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($tags): void {
+        foreach ($tags as $tag) {
+          $this->connection->merge('cachetags')
+            ->insertFields(['invalidations' => 1])
+            ->expression('invalidations', '[invalidations] + 1')
+            ->key('tag', $tag)
+            ->execute();
+        }
+      },
+      schema: [
+        'cachetags' => $this->schemaDefinition(),
+      ],
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getTagInvalidationCounts(array $tags) {
-    try {
-      return $this->connection->query('SELECT [tag], [invalidations] FROM {cachetags} WHERE [tag] IN ( :tags[] )', [':tags[]' => $tags])
-        ->fetchAllKeyed();
-    }
-    catch (\Exception $e) {
-      // If the table does not exist yet, create.
-      if (!$this->ensureTableExists()) {
-        throw $e;
-      }
-    }
-    return [];
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function () use ($tags): array {
+        return $this->connection->query('SELECT [tag], [invalidations] FROM {cachetags} WHERE [tag] IN ( :tags[] )', [':tags[]' => $tags])
+          ->fetchAllKeyed();
+      },
+      schema: [
+        'cachetags' => $this->schemaDefinition(),
+      ],
+    );
+    return $execution->isSuccessful() ? $execution->getResult() : [];
   }
 
   /**
    * Check if the cache tags table exists and create it if not.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure()
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3489185
    */
   protected function ensureTableExists() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Database\Connection::executeEnsuringSchemaOnFailure() instead. See https://www.drupal.org/node/3489185', E_USER_DEPRECATED);
     try {
       $database_schema = $this->connection->schema();
       $schema_definition = $this->schemaDefinition();

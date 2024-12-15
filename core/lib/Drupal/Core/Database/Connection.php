@@ -4,6 +4,8 @@ namespace Drupal\Core\Database;
 
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Database\Event\DatabaseEvent;
+use Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent;
+use Drupal\Core\Database\EventSubscriber\SchemaRequestSubscriber;
 use Drupal\Core\Database\Exception\EventException;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
@@ -1610,6 +1612,81 @@ abstract class Connection {
     // @todo Allow a backtrace including all arguments as an option.
     //   https://www.drupal.org/project/drupal/issues/3401906
     return debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+  }
+
+  /**
+   * Executes a callback, and enforces a database schema in case of failure.
+   *
+   * Any exception thrown by the callback that is not related to a missing
+   * schema object is propagated to the caller.
+   *
+   * @param \Closure $execute
+   *   The callback to be executed.
+   * @param array<string,array<string,mixed>>|\Closure $schema
+   *   A database schema specification, with table name as key and schema
+   *   array as value, or a callback to be executed. The callback must return
+   *   TRUE if the database was changed, FALSE if it was executed but did not
+   *   change the database, or throw an exception.
+   * @param bool $retryAfterSchemaEnsured
+   *   (Optional) If TRUE, the callback is executed again after the first
+   *   execution failed, and the schema enforcement was successful. Defaults to
+   *   FALSE.
+   *
+   * @return \Drupal\Core\Database\Event\ExecuteMethodEnsuringSchemaEvent
+   *   The event that has collected data about the execution.
+   *
+   * @throws \Exception
+   *   When the failure of the callback execution was not related to missing
+   *   tables in the database schema.
+   */
+  public function executeEnsuringSchemaOnFailure(
+    \Closure $execute,
+    array|\Closure $schema,
+    bool $retryAfterSchemaEnsured = FALSE,
+  ): ExecuteMethodEnsuringSchemaEvent {
+
+    $event = new ExecuteMethodEnsuringSchemaEvent($this, $execute, $schema, $retryAfterSchemaEnsured);
+
+    // When rebuilding the container, or very early during a test, there's a
+    // stage when the event_dispatcher service has not been activated yet. In
+    // that case, execute the closure, and set its returned value; if the
+    // callback throws an exception, it will just propagate to the caller.
+    if (!\Drupal::hasService('event_dispatcher')) {
+      $event->setResult($execute());
+      $event->setCallbackExecutionState(TRUE);
+      return $event;
+    }
+
+    $dispatcher = \Drupal::service('event_dispatcher');
+
+    // @todo Temporary, Drush does not add the subscriber on cache rebuild.
+    if (!$dispatcher->hasListeners(ExecuteMethodEnsuringSchemaEvent::class)) {
+      $dispatcher->addSubscriber(new SchemaRequestSubscriber());
+    }
+
+    $dispatcher->dispatch($event);
+
+    if (!$event->isSuccessful()) {
+      // Callback calls were not successful and schema creation failed, throw
+      // the schema creation failure.
+      if ($event->getSchemaCreationState() instanceof \Exception) {
+        throw $event->getSchemaCreationState();
+      }
+
+      // Otherwise throw the latest callback execution exception.
+      if ($event->getCallbackRetryExecutionState() instanceof \Exception) {
+        throw $event->getCallbackRetryExecutionState();
+      }
+      elseif ($event->getCallbackExecutionState() instanceof \Exception) {
+        // No retry requested, but a change to schema happened; do not throw.
+        if ($event->getSchemaCreationState() === TRUE && !$retryAfterSchemaEnsured) {
+          return $event;
+        }
+        throw $event->getCallbackExecutionState();
+      }
+    }
+
+    return $event;
   }
 
 }

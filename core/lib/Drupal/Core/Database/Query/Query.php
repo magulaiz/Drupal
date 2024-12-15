@@ -4,6 +4,7 @@ namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\StatementInterface;
 
 /**
  * Base class for query builders.
@@ -106,10 +107,44 @@ abstract class Query implements PlaceholderInterface {
   /**
    * Runs the query against the database.
    *
-   * @return \Drupal\Core\Database\StatementInterface|null
-   *   A prepared statement, or NULL if the query is not valid.
+   * @return \Drupal\Core\Database\StatementInterface|string|null
+   *   A prepared statement, a string or NULL if the query is not valid.
    */
   abstract protected function execute();
+
+  /**
+   * Runs the query, enforcing a database schema creation on failure.
+   *
+   * @param array<string,array<string,mixed>>|\Closure $schema
+   *   A database schema specification, with table name as key and schema
+   *   array as value, or a callback to be executed. The callback must return
+   *   TRUE if the database was changed, FALSE if it was executed but did not
+   *   change the database, or throw an exception.
+   * @param bool $retryAfterSchemaEnsured
+   *   (Optional) If TRUE, the callback is executed again after the first
+   *   execution failed, and the schema enforcement was successful. Defaults to
+   *   FALSE.
+   *
+   * @return \Drupal\Core\Database\StatementInterface|string|null
+   *   A prepared statement, a string or NULL if the query is not valid.
+   *
+   * @throws \Exception
+   *   When the execution failure is not related to missing tables in the
+   *   database schema.
+   */
+  public function executeEnsuringSchemaOnFailure(
+    array|\Closure $schema,
+    bool $retryAfterSchemaEnsured = FALSE,
+  ): StatementInterface|string|NULL {
+    $execution = $this->connection->executeEnsuringSchemaOnFailure(
+      execute: function (): StatementInterface|string|NULL {
+        return $this->execute();
+      },
+      schema: $schema,
+      retryAfterSchemaEnsured: $retryAfterSchemaEnsured,
+    );
+    return $execution->isSuccessful() ? $execution->getResult() : NULL;
+  }
 
   /**
    * Implements PHP magic __toString method to convert the query to a string.
