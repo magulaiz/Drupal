@@ -141,7 +141,6 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
       // Just save the title to the original view.
       $changed = FALSE;
       foreach ($overrides as $key => $new_definition_value) {
-        $a = 3;
         $menu_key = 'menu';
         if (isset($display['display_options']['menu']['type']) && $display['display_options']['menu']['type'] == 'default tab'
           && isset($display['display_options']['tab_options']['type']) && $display['display_options']['tab_options']['type'] == 'normal') {
