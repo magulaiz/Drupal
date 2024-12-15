@@ -380,6 +380,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         $links[$menu_link_id]['metadata'] = [
           'view_id' => $view_id,
           'display_id' => $display_id,
+          'options' => 'menu',
         ];
       }
       elseif ($menu['type'] == 'default tab') {
@@ -401,8 +402,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
           $links[$menu_link_id]['description'] = $tab_options['description'] ?? '';
           $links[$menu_link_id]['parent'] = $tab_options['parent'] ?? '';
 
-          if (isset($menu['weight'])) {
-            $links[$menu_link_id]['weight'] = intval($menu['weight']);
+          if (isset($tab_options['weight'])) {
+            $links[$menu_link_id]['weight'] = intval($tab_options['weight']);
           }
 
           // Insert item into the proper menu.
@@ -411,6 +412,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
           $links[$menu_link_id]['metadata'] = [
             'view_id' => $view_id,
             'display_id' => $display_id,
+            'options' => 'tab_options',
           ];
         }
       }
