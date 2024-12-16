@@ -13,9 +13,7 @@ use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
-use Drupal\Core\Database\Query\Upsert;
-use Drupal\Core\Database\StatementWrapper;
-use Drupal\Core\Database\Transaction;
+use Drupal\Core\Database\StatementWrapperIterator;
 
 // cspell:ignore dummydb
 
@@ -32,7 +30,7 @@ class Connection extends CoreConnection {
   /**
    * {@inheritdoc}
    */
-  protected $statementWrapperClass = StatementWrapper::class;
+  protected $statementWrapperClass = StatementWrapperIterator::class;
 
   /**
    * {@inheritdoc}
@@ -78,7 +76,7 @@ class Connection extends CoreConnection {
   /**
    * {@inheritdoc}
    */
-  public function createDatabase($database) {}
+  public function createDatabase($database): void {}
 
   /**
    * {@inheritdoc}
@@ -157,14 +155,7 @@ class Connection extends CoreConnection {
    * {@inheritdoc}
    */
   public function condition($conjunction) {
-    return new Condition($conjunction, FALSE);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function startTransaction($name = '') {
-    return new Transaction($this, $name);
+    return new Condition($conjunction);
   }
 
 }

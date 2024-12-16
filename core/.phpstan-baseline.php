@@ -36321,42 +36321,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/display_variant_test/src/EventSubscriber/TestPageDisplayVariantSubscriber.php',
 ];
 $ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Class Drupal\\\\Core\\\\Database\\\\Query\\\\Condition constructor invoked with 2 parameters, 1 required\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/dummydb/src/Driver/Database/dummydb/Connection.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Class Drupal\\\\Core\\\\Database\\\\StatementWrapper not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/dummydb/src/Driver/Database/dummydb/Connection.php',
-];
-$ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Class Drupal\\\\Core\\\\Database\\\\Transaction constructor invoked with 2 parameters, 3 required\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/dummydb/src/Driver/Database/dummydb/Connection.php',
-];
-$ignoreErrors[] = [
-	// identifier: new.abstract
-	'message' => '#^Instantiated class Drupal\\\\Core\\\\Database\\\\Query\\\\Upsert is abstract\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/dummydb/src/Driver/Database/dummydb/Connection.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Instantiated class Drupal\\\\dummydb\\\\Driver\\\\Database\\\\dummydb\\\\Schema not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/dummydb/src/Driver/Database/dummydb/Connection.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\dummydb\\\\Driver\\\\Database\\\\dummydb\\\\Connection\\:\\:createDatabase\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/dummydb/src/Driver/Database/dummydb/Connection.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\early_rendering_controller_test\\\\EarlyRenderingTestController\\:\\:ajaxResponse\\(\\) has no return type specified\\.$#',
 	'count' => 1,
