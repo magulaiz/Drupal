@@ -19,4 +19,5 @@ class Upsert extends QueryUpsert {
   public function __toString() {
     return '';
   }
+
 }
