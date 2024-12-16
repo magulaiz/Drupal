@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\driver_test\Driver\Database\DriverTestMysql\Install;
+namespace Drupal\dummydb\Driver\Database\dummydb\Install;
 
-use Drupal\mysql\Driver\Database\mysql\Install\Tasks as CoreTasks;
+use Drupal\Core\Database\Install as CoreTasks;
 
 /**
- * Specifies installation tasks for MySQL test databases.
+ * Specifies installation tasks for DummyDB test database.
  */
 class Tasks extends CoreTasks {
 
