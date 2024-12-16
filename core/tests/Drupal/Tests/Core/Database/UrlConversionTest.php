@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Database;
 
+use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\DatabaseDriverList;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // cspell:ignore dummydb
 
@@ -304,18 +307,21 @@ class UrlConversionTest extends UnitTestCase {
   }
 
   /**
-   * Tests that the exception for having no module setting is not thrown.
+   * Tests that connection URL with no module name defaults to driver name.
    */
-  public function testNoModuleIsSpecifiedExceptionIsRemoved(): void {
-    // Testing that for all database drivers, when the module setting is not
-    // set, that it defaults to the driver name is not possible. We are
-    // therefore testing that the exception is no longer being thrown. For non
-    // core database driver the next exception that will be thrown is that for
-    // the module that does not exist.
-    $this->expectException(UnknownExtensionException::class);
-    $this->expectExceptionMessage('The database_driver Drupal\dummydb\Driver\Database\dummydb does not exist.');
+  public function testNoModuleSpecifiedDefaultsToDriverName(): void {
     $url = 'dummydb://test_user:test_pass@test_host/test_database';
-    Database::convertDbUrlToConnectionInfo($url, $this->root);
+    $connection_info = Database::convertDbUrlToConnectionInfo($url, $this->root, TRUE);
+    $expected = [
+      'driver' => 'dummydb',
+      'username' => 'test_user',
+      'password' => 'test_pass',
+      'host' => 'test_host',
+      'database' => 'test_database',
+      'namespace' => 'Drupal\dummydb\Driver\Database\dummydb',
+      'autoload' => 'core/modules/system/tests/modules/dummydb/src/Driver/Database/dummydb/',
+    ];
+    $this->assertSame($expected, $connection_info);
   }
 
   /**
