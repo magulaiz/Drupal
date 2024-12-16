@@ -1241,11 +1241,28 @@ function user_validate_current_pass(&$form, &$form_state) {
     // form values like password_confirm that have their own validation
     // that prevent them from being empty if they are changed.
     if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $account->$key)) {
+      // Don't validate the password if the limit for the user has been reached.
+      // Default is to allow 5 failed passwords validations every 6 hours to
+      // prevent brute force attacks.
+      $identifier = $account->uid;
+      $user_pass_reset_user_window = variable_get('user_failed_login_user_window', 21600);
+      $user_pass_reset_user_limit = variable_get('user_failed_login_user_limit', 5);
+      if (!flood_is_allowed('failed_pass_validation_user', $user_pass_reset_user_limit, $user_pass_reset_user_window, $identifier)) {
+        form_set_error('current_pass', format_plural($user_pass_reset_user_limit, 'Sorry, you have entered incorrect password more than once. Changes to fields that require current password are temporarily blocked. Try again later.', 'Sorry, you have entered incorrect password more than @count times. Changes to fields that require current password are temporarily blocked. Try again later.'));
+        break;
+      }
+
       require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
       $current_pass_failed = strlen(trim($form_state['values']['current_pass'])) == 0 || !user_check_password($form_state['values']['current_pass'], $account);
       if ($current_pass_failed) {
         form_set_error('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
         form_set_error($key);
+
+        // Register failed password validation flood event based on the uid, if
+        // the password was entered.
+        if (strlen(trim($form_state['values']['current_pass'])) > 0) {
+          flood_register_event('failed_pass_validation_user', $user_pass_reset_user_window, $identifier);
+        }
       }
       // We only need to check the password once.
       break;
