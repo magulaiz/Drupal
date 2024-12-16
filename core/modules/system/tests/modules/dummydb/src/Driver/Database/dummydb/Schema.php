@@ -1,8 +1,8 @@
 <?php
 
-// cspell:ignore dummydb
-
 declare(strict_types=1);
+
+// cspell:ignore dummydb
 
 namespace Drupal\dummydb\Driver\Database\dummydb;
 
