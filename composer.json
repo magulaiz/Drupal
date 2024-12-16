@@ -50,7 +50,7 @@
         "symfony/polyfill-php82": "*",
         "symfony/polyfill-php83": "*"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "config": {
         "preferred-install": "dist",

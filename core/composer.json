@@ -81,7 +81,7 @@
         "drupal/core-uuid": "self.version",
         "drupal/core-version": "self.version"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
