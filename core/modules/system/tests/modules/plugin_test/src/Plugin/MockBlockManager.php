@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\plugin_test\Plugin;
 
 use Drupal\Component\Plugin\PluginManagerBase;
@@ -145,7 +147,7 @@ class MockBlockManager extends PluginManagerBase {
     // include ContextDefinition objects, and var_export() has problems
     // printing TranslatableMarkup objects.
     $class = ContextDefinition::class;
-    if (strpos($data_type, 'entity:') === 0) {
+    if (str_starts_with($data_type, 'entity:')) {
       $class = EntityContextDefinition::class;
     }
     return new $class($data_type, (string) $label, $required);

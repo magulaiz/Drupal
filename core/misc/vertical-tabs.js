@@ -118,6 +118,21 @@
           }
         },
       );
+
+      // If a validation error is within a vertical tab, open that tab.
+      context.querySelectorAll('details .form-item .error').forEach((item) => {
+        const details = item.closest('details');
+
+        if (details.style.display === 'none') {
+          const tabSelect = document.querySelector(
+            "[href='#".concat(details.id, "']"),
+          );
+
+          if (tabSelect) {
+            tabSelect.click();
+          }
+        }
+      });
     },
   };
 
@@ -181,8 +196,11 @@
         })
         .end()
         .show()
-        .siblings(':hidden.vertical-tabs__active-tab')[0].value =
-        this.details.attr('id');
+        .siblings(':hidden.vertical-tabs__active-tab')
+        .get()
+        .forEach((hidden) => {
+          hidden.value = this.details.attr('id');
+        });
       this.details.attr('open', true);
       this.item.addClass('is-selected');
       // Mark the active tab for screen readers.

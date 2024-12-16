@@ -11,6 +11,7 @@ use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
@@ -23,6 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * \Drupal\Core\Entity\RevisionLogInterface.
  */
 class VersionHistoryController extends ControllerBase {
+
+  const REVISIONS_PER_PAGE = 50;
 
   /**
    * Constructs a new VersionHistoryController.
@@ -155,10 +158,10 @@ class VersionHistoryController extends ControllerBase {
       $linkText = $revision->access('view label') ? $revision->label() : $this->t('- Restricted access -');
     }
 
-    $revisionViewLink = $revision->toLink($linkText, 'revision');
-    $context['revision'] = $revisionViewLink->getUrl()->access()
-      ? $revisionViewLink->toString()
-      : (string) $revisionViewLink->getText();
+    $url = $revision->hasLinkTemplate('revision') ? $revision->toUrl('revision') : NULL;
+    $context['revision'] = $url && $url->access()
+      ? Link::fromTextAndUrl($linkText, $url)->toString()
+      : (string) $linkText;
     $context['message'] = $revision instanceof RevisionLogInterface ? [
       '#markup' => $revision->getRevisionLogMessage(),
       '#allowed_tags' => Xss::getHtmlTagList(),
@@ -212,6 +215,7 @@ class VersionHistoryController extends ControllerBase {
       ->allRevisions()
       ->condition($entityType->getKey('id'), $entity->id())
       ->sort($entityType->getKey('revision'), 'DESC')
+      ->pager(self::REVISIONS_PER_PAGE)
       ->execute();
 
     $currentLangcode = $this->languageManager
@@ -221,7 +225,7 @@ class VersionHistoryController extends ControllerBase {
       // Only show revisions that are affected by the language that is being
       // displayed.
       if (!$translatable || ($revision->hasTranslation($currentLangcode) && $revision->getTranslation($currentLangcode)->isRevisionTranslationAffected())) {
-        yield $revision;
+        yield ($translatable ? $revision->getTranslation($currentLangcode) : $revision);
       }
     }
   }
@@ -247,6 +251,8 @@ class VersionHistoryController extends ControllerBase {
     foreach ($this->loadRevisions($entity) as $revision) {
       $build['entity_revisions_table']['#rows'][$revision->getRevisionId()] = $this->buildRow($revision);
     }
+
+    $build['pager'] = ['#type' => 'pager'];
 
     (new CacheableMetadata())
       // Only dealing with this entity and no external dependencies.

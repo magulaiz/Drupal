@@ -2,22 +2,21 @@
 
 namespace Drupal\text\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextareaWidget;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Plugin implementation of the 'text_textarea' widget.
- *
- * @FieldWidget(
- *   id = "text_textarea",
- *   label = @Translation("Text area (multiple rows)"),
- *   field_types = {
- *     "text_long"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'text_textarea',
+  label: new TranslatableMarkup('Text area (multiple rows)'),
+  field_types: ['text_long'],
+)]
 class TextareaWidget extends StringTextareaWidget {
 
   /**
@@ -25,7 +24,7 @@ class TextareaWidget extends StringTextareaWidget {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element = parent::settingsForm($form, $form_state);
-    $element['rows']['#description'] = $this->t('Text editors (like CKEditor) may override this setting.');
+    $element['rows']['#description'] = $this->t('Text editors may override this setting.');
     return $element;
   }
 

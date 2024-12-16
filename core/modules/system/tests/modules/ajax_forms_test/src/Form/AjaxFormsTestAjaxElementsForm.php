@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\ajax_forms_test\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -7,8 +9,7 @@ use Drupal\ajax_forms_test\Callbacks;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Form builder: Builds a form that has each FAPI elements triggering a simple
- * Ajax callback.
+ * Builds a form where each Form API element triggers a simple Ajax callback.
  *
  * @internal
  */

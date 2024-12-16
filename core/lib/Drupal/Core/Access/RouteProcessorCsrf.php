@@ -35,7 +35,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($route_name, Route $route, array &$parameters, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($route_name, Route $route, array &$parameters, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     if ($route->hasRequirement('_csrf_token')) {
       $path = $this->generateRoutePath($route, $parameters);
       // Adding this to the parameters means it will get merged into the query

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -43,13 +45,16 @@ class FormTestClickedButtonForm extends FormBase {
     foreach ($args as $arg) {
       $name = 'button' . ++$i;
       // 's', 'b', or 'i' in the argument define the button type wanted.
-      if (strpos($arg, 's') !== FALSE) {
+      if (!is_string($arg)) {
+        $type = NULL;
+      }
+      elseif (str_contains($arg, 's')) {
         $type = 'submit';
       }
-      elseif (strpos($arg, 'b') !== FALSE) {
+      elseif (str_contains($arg, 'b')) {
         $type = 'button';
       }
-      elseif (strpos($arg, 'i') !== FALSE) {
+      elseif (str_contains($arg, 'i')) {
         $type = 'image_button';
       }
       else {
@@ -69,7 +74,7 @@ class FormTestClickedButtonForm extends FormBase {
         }
         // 'r' for restricted, so we can test that button click detection code
         // correctly takes #access security into account.
-        if (strpos($arg, 'r') !== FALSE) {
+        if (str_contains($arg, 'r')) {
           $form[$name]['#access'] = FALSE;
         }
       }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\Core\Database\Database;
@@ -46,7 +48,7 @@ class DownloadTest extends FileManagedTestBase {
   /**
    * Tests the public file transfer system.
    */
-  public function testPublicFileTransfer() {
+  public function testPublicFileTransfer(): void {
     // Test generating a URL to a created file.
     $file = $this->createFile();
     $url = $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
@@ -70,14 +72,14 @@ class DownloadTest extends FileManagedTestBase {
   /**
    * Tests the private file transfer system.
    */
-  public function testPrivateFileTransferWithoutPageCache() {
+  public function testPrivateFileTransferWithoutPageCache(): void {
     $this->doPrivateFileTransferTest();
   }
 
   /**
    * Tests the private file transfer system.
    */
-  protected function doPrivateFileTransferTest() {
+  protected function doPrivateFileTransferTest(): void {
     // Set file downloads to private so handler functions get called.
 
     // Create a file.
@@ -135,7 +137,7 @@ class DownloadTest extends FileManagedTestBase {
     $response = $http_client->head($url, ['http_errors' => FALSE]);
     $this->assertSame(403, $response->getStatusCode(), 'Correctly denied access to a file when file_test sets the header to -1.');
 
-    // Try requesting the private file url without a file specified.
+    // Try requesting the private file URL without a file specified.
     file_test_reset();
     $this->drupalGet('/system/files');
     $this->assertSession()->statusCodeEquals(404);
@@ -146,7 +148,7 @@ class DownloadTest extends FileManagedTestBase {
   /**
    * Test FileUrlGeneratorInterface::generateString()
    */
-  public function testFileCreateUrl() {
+  public function testFileCreateUrl(): void {
     // "Special" ASCII characters.
     $basename = " -._~!$'\"()*@[]?&+%#,;=:\n\x00" .
       // Characters that look like a percent-escaped string.
@@ -194,7 +196,7 @@ class DownloadTest extends FileManagedTestBase {
    * @param string $expected_url
    *   The expected URL.
    */
-  private function checkUrl($scheme, $directory, $filename, $expected_url) {
+  private function checkUrl($scheme, $directory, $filename, $expected_url): void {
     // Convert $filename to a valid filename, i.e. strip characters not
     // supported by the filesystem, and create the file in the specified
     // directory.

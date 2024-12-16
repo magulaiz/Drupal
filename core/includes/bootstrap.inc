@@ -6,10 +6,11 @@
  */
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+// cspell:ignore htkey
 
 /**
  * Error reporting level: display no errors.
@@ -37,28 +38,16 @@ const ERROR_REPORTING_DISPLAY_VERBOSE = 'verbose';
 const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
 
 /**
- * Time of the current request in seconds elapsed since the Unix Epoch.
- *
- * This differs from $_SERVER['REQUEST_TIME'], which is stored as a float
- * since PHP 5.4.0. Float timestamps confuse most PHP functions
- * (including date_create()).
- *
- * @see http://php.net/manual/reserved.variables.server.php
- * @see http://php.net/manual/function.time.php
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:11.0.0.
- *   Use \Drupal::time()->getRequestTime();
- *
- * @see https://www.drupal.org/node/2785211
- */
-define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
-
-/**
  * Defines the root directory of the Drupal installation.
  *
  * This strips two levels of directories off the current directory.
  */
 define('DRUPAL_ROOT', dirname(__DIR__, 2));
+
+/**
+ * Keep backward compatibility for sites with references to TranslationWrapper.
+ */
+class_alias(TranslatableMarkup::class, '\Drupal\Core\StringTranslation\TranslationWrapper', TRUE);
 
 /**
  * Translates a string to the current language or to a given language.
@@ -100,45 +89,6 @@ define('DRUPAL_ROOT', dirname(__DIR__, 2));
  */
 function t($string, array $args = [], array $options = []) {
   return new TranslatableMarkup($string, $args, $options);
-}
-
-/**
- * Logs an exception.
- *
- * This is a wrapper logging function which automatically decodes an exception.
- *
- * @param $type
- *   The category to which this message belongs.
- * @param $exception
- *   The exception that is going to be logged.
- * @param $message
- *   The message to store in the log. If empty, a text that contains all useful
- *   information about the passed-in exception is used.
- * @param $variables
- *   Array of variables to replace in the message on display or
- *   NULL if message is already translated or not possible to
- *   translate.
- * @param $severity
- *   The severity of the message, as per RFC 3164.
- * @param $link
- *   A link to associate with the message.
- *
- * @see \Drupal\Core\Utility\Error::decodeException()
- */
-function watchdog_exception($type, Exception $exception, $message = NULL, $variables = [], $severity = RfcLogLevel::ERROR, $link = NULL) {
-
-  // Use a default value if $message is not set.
-  if (empty($message)) {
-    $message = Error::DEFAULT_ERROR_MESSAGE;
-  }
-
-  if ($link) {
-    $variables['link'] = $link;
-  }
-
-  $variables += Error::decodeException($exception);
-
-  \Drupal::logger($type)->log($severity, $message, $variables);
 }
 
 /**
@@ -268,6 +218,9 @@ function drupal_valid_test_ua($new_prefix = NULL) {
 
 /**
  * Generates a user agent string with a HMAC and timestamp for tests.
+ *
+ * @return string|null
+ *   The user agent, or NULL on failure.
  */
 function drupal_generate_test_ua($prefix) {
   static $key, $last_prefix;
@@ -292,7 +245,9 @@ function drupal_generate_test_ua($prefix) {
       // Generate and save a new hash salt for a test run.
       // Consumed by drupal_valid_test_ua() before settings.php is loaded.
       $private_key = Crypt::randomBytesBase64(55);
-      file_put_contents($key_file, $private_key);
+      if (!@file_put_contents($key_file, $private_key)) {
+        return NULL;
+      }
     }
     // The file properties add more entropy not easily accessible to others.
     $key = $private_key . filectime(__FILE__) . fileinode(__FILE__);
@@ -365,7 +320,7 @@ function drupal_maintenance_theme() {
  *
  * Example:
  * @code
- * function mymodule_log_stream_handle($new_handle = NULL) {
+ * function my_module_log_stream_handle($new_handle = NULL) {
  *   static $handle;
  *   if (isset($new_handle)) {
  *     $handle = $new_handle;
@@ -429,36 +384,41 @@ function drupal_maintenance_theme() {
  * @see drupal_static_reset()
  */
 function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
-  static $data = [], $default = [];
-  // First check if dealing with a previously defined static variable.
-  if (isset($data[$name]) || array_key_exists($name, $data)) {
-    // Non-NULL $name and both $data[$name] and $default[$name] statics exist.
-    if ($reset) {
-      // Reset pre-existing static variable to its default value.
-      $data[$name] = $default[$name];
-    }
-    return $data[$name];
-  }
-  // Neither $data[$name] nor $default[$name] static variables exist.
+  static $data = [], $defaults = [];
   if (isset($name)) {
-    if ($reset) {
-      // Reset was called before a default is set and yet a variable must be
-      // returned.
-      return $data;
+    // Check if we're dealing with a previously defined static variable.
+    if (\array_key_exists($name, $data)) {
+      // Both $data[$name] and (implicitly) $defaults[$name] statics exist.
+      if ($reset) {
+        // Reset pre-existing static variable to its default value.
+        $data[$name] = $defaults[$name];
+      }
     }
-    // First call with new non-NULL $name. Initialize a new static variable.
-    $default[$name] = $data[$name] = $default_value;
+    else {
+      // Neither $data[$name] nor $defaults[$name] static variables exist.
+      if ($reset) {
+        // Reset was called before any value for $name was set, so we should
+        // not set anything ($default_value is not reliable in this case). As
+        // the function returns a reference, we must still return a variable.
+        // (Code using $reset does not use the return value).
+        return $data;
+      }
+      // First call with new non-NULL $name. Initialize a new static variable.
+      $defaults[$name] = $data[$name] = $default_value;
+    }
+    // Return a reference to the named variable.
     return $data[$name];
   }
-  // Reset all: ($name == NULL). This needs to be done one at a time so that
-  // references returned by earlier invocations of drupal_static() also get
-  // reset.
-  foreach ($default as $name => $value) {
-    $data[$name] = $value;
+  else {
+    // Reset all: ($name == NULL). This needs to be done one at a time so that
+    // references returned by earlier invocations of drupal_static() also get
+    // reset.
+    foreach ($defaults as $name => $value) {
+      $data[$name] = $value;
+    }
+    // As the function returns a reference, we must still return a variable.
+    return $data;
   }
-  // As the function returns a reference, the return should always be a
-  // variable.
-  return $data;
 }
 
 /**
@@ -481,7 +441,7 @@ function drupal_static_reset($name = NULL) {
  *
  * @param callable $callback
  *   The shutdown function to register.
- * @param ...
+ * @param ...$args
  *   Additional arguments to pass to the shutdown function.
  *
  * @return array
@@ -490,7 +450,7 @@ function drupal_static_reset($name = NULL) {
  * @see register_shutdown_function()
  * @ingroup php_wrappers
  */
-function &drupal_register_shutdown_function($callback = NULL) {
+function &drupal_register_shutdown_function($callback = NULL, ...$args) {
   // We cannot use drupal_static() here because the static cache is reset during
   // batch processing, which breaks batch handling.
   static $callbacks = [];
@@ -500,9 +460,6 @@ function &drupal_register_shutdown_function($callback = NULL) {
     if (empty($callbacks)) {
       register_shutdown_function('_drupal_shutdown_function');
     }
-    $args = func_get_args();
-    // Remove $callback from the arguments.
-    unset($args[0]);
     // Save callback and arguments
     $callbacks[] = ['callback' => $callback, 'arguments' => $args];
   }
