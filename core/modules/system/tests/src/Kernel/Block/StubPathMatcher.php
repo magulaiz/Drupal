@@ -4,18 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\Block;
 
-use Drupal\Core\Path\PathMatcherInterface;
+use Drupal\Core\Path\PathMatcher;
 
 /**
- * A class implementing PatchMatcherInterface for testing purposes.
+ * A class extending PatchMatcher for testing purposes.
  */
-class StubPathMatcher implements PathMatcherInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function matchPath($path, $patterns) {
-  }
+class StubPathMatcher extends PathMatcher {
 
   /**
    * {@inheritdoc}
