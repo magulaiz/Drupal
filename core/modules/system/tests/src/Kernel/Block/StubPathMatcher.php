@@ -12,17 +12,16 @@ use Drupal\Core\Path\PathMatcherInterface;
 class StubPathMatcher implements PathMatcherInterface {
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function matchPath($path, $patterns) {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function isFrontPage() {
     return FALSE;
   }
 
 }
-
