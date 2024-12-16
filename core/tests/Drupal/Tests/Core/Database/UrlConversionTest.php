@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Database;
 
-use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Extension\DatabaseDriverList;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // cspell:ignore dummydb
 
