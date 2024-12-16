@@ -1,0 +1,4 @@
+services:
+  Drupal\twig\Hook\TwigHooks:
+    class: Drupal\twig\Hook\TwigHooks
+    autowire: true
