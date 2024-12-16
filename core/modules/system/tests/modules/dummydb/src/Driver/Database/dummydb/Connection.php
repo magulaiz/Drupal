@@ -17,6 +17,8 @@ use Drupal\Core\Database\Query\Upsert;
 use Drupal\Core\Database\StatementWrapper;
 use Drupal\Core\Database\Transaction;
 
+// cspell:ignore dummydb
+
 /**
  * DummyDB test implementation of \Drupal\Core\Database\Connection.
  */
