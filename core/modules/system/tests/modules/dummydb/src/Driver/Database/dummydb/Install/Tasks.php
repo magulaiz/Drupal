@@ -6,6 +6,8 @@ namespace Drupal\dummydb\Driver\Database\dummydb\Install;
 
 use Drupal\Core\Database\Install\Tasks as CoreTasks;
 
+// cspell:ignore dummydb
+
 /**
  * Specifies installation tasks for DummyDB test database.
  */
