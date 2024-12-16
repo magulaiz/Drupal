@@ -1,0 +1,36 @@
+diff --git a/core/modules/system/src/Access/SystemAdminMenuBlockAccessCheck.php b/core/modules/system/src/Access/SystemAdminMenuBlockAccessCheck.php
+index a527605ea7..6b76576417 100644
+--- a/core/modules/system/src/Access/SystemAdminMenuBlockAccessCheck.php
++++ b/core/modules/system/src/Access/SystemAdminMenuBlockAccessCheck.php
+@@ -22,6 +22,13 @@
+  */
+ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
+ 
++  /**
++   * Array of processed routes, used to prevent loop
++   *
++   * @var array
++   */
++  private array $routes = [];
++
+   /**
+    * Constructs a new SystemAdminMenuBlockAccessCheck.
+    *
+@@ -55,8 +62,16 @@ public function __construct(
+    */
+   public function access(RouteMatchInterface $route_match, AccountInterface $account): AccessResultInterface {
+     $parameters = $route_match->getParameters()->all();
++    $routeName = $route_match->getRouteName();
++    // Verify if rote already processed return access neutral to prevent loop
++    if (in_array($routeName, $this->routes)) {
++      return AccessResult::neutral();
++    }
++
++    $this->routes[] = $routeName;
++
+     // Load links in the 'admin' menu matching this route.
+-    $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), $parameters, 'admin');
++    $links = $this->menuLinkManager->loadLinksByRoute($routeName, $parameters, 'admin');
+     if (empty($links)) {
+       // If we did not find a link then we have no opinion on access.
+       return AccessResult::neutral();
