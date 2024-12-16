@@ -21,7 +21,7 @@ use Twig\Source;
  *
  * @see \Drupal\Core\Template\TwigEnvironment::renderInline()
  * @see \Drupal\Core\Render\Element\InlineTemplate
- * @see twig_render_template()
+ * @see \Drupal\twig\Hook\TwigHooks::renderTemplate()
  */
 class StringLoader implements LoaderInterface {
 

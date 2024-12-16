@@ -486,7 +486,7 @@ class Registry implements DestructableInterface {
    * @see \Drupal\Core\Theme\ThemeManagerInterface::render()
    * @see hook_theme()
    * @see \Drupal\Core\Extension\ThemeHandler::listInfo()
-   * @see twig_render_template()
+   * @see \Drupal\twig\Hook\TwigHooks::renderTemplate()
    *
    * @throws \BadFunctionCallException
    */

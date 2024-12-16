@@ -6,6 +6,7 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\twig\Hook\TwigHooks;
 
 /**
  * Tests for Twig debug markup.
@@ -30,7 +31,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
   public function testTwigDebugMarkup(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
-    $extension = twig_extension();
+    $extension = \Drupal::classResolver(TwigHooks::class)->extension();
     \Drupal::service('theme_installer')->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
     $this->drupalCreateContentType(['type' => 'page']);

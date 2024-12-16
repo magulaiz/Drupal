@@ -88,7 +88,7 @@ class TwigHooks {
         $variables['theme_hook_suggestions'][] = $base_hook;
       }
       if (!empty($variables['theme_hook_suggestions'])) {
-        $extension = twig_extension();
+        $extension = $this->extension();
         $current_template = basename($template_file);
         $suggestions = $variables['theme_hook_suggestions'];
         // Only add the original theme hook if it wasn't a directly called
