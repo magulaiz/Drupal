@@ -101,9 +101,9 @@ class ThemeExtensionListTest extends UnitTestCase {
     $info_subtheme->info['base theme'] = 'test_base_theme';
     $info_base_theme->sub_themes = ['test_subtheme'];
 
-    $this->assertEquals('core/themes/engines/twig/twig.engine', $info_base_theme->owner);
+    $this->assertEquals('core/themes/engines/twig/src/Hook/TwigHooks.php', $info_base_theme->owner);
     $this->assertEquals('twig', $info_base_theme->prefix);
-    $this->assertEquals('core/themes/engines/twig/twig.engine', $info_subtheme->owner);
+    $this->assertEquals('core/themes/engines/twig/src/Hook/TwigHooks.php', $info_subtheme->owner);
     $this->assertEquals('twig', $info_subtheme->prefix);
   }
 

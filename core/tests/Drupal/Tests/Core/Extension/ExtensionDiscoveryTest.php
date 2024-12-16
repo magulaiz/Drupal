@@ -174,7 +174,7 @@ class ExtensionDiscoveryTest extends UnitTestCase {
     }
 
     $content_by_file['core/modules/system/system.module'] = '<?php';
-    $content_by_file['core/themes/engines/twig/twig.engine'] = '<?php';
+    $content_by_file['core/themes/engines/twig/src/Hook/TwigHooks.php'] = '<?php';
 
     foreach ($content_by_file as $file => $content) {
       $pieces = explode('/', $file);

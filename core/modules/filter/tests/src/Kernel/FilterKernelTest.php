@@ -515,7 +515,7 @@ class FilterKernelTest extends KernelTestBase {
       'directory' => '',
       'children' => 'Test two',
     ];
-    include_once $this->root . '/core/themes/engines/twig/twig.engine';
+    include_once $this->root . '/core/themes/engines/twig/src/Hook/TwigHooks.php';
     $render = (string) twig_render_template('container.html.twig', $variables);
     $render = trim($render);
 
