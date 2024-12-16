@@ -11,4 +11,12 @@ use Drupal\Core\Database\Query\Upsert as QueryUpsert;
 /**
  * DummyDB implementation of \Drupal\Core\Database\Query\Upsert.
  */
-class Upsert extends QueryUpsert {}
+class Upsert extends QueryUpsert {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __toString() {
+    return '';
+  }
+}
