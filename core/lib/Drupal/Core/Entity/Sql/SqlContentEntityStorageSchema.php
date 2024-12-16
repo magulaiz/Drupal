@@ -1792,7 +1792,9 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           // Check if the index exists because it might already have been
           // created as part of the earlier entity type update event.
           $this->addIndex($table, $real_name, $real_columns, $actual_schema[$table]);
-          $this->addIndex($revision_table, $real_name, $real_columns, $actual_schema[$revision_table]);
+          if (isset($actual_schema[$revision_table])) {
+            $this->addIndex($revision_table, $real_name, $real_columns, $actual_schema[$revision_table]);
+          }
         }
       }
       $this->saveFieldSchemaData($storage_definition, $this->getDedicatedTableSchema($storage_definition));
