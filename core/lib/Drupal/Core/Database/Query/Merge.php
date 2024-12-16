@@ -142,14 +142,14 @@ class Merge extends Query implements ConditionInterface {
   /**
    * Sets the table or subquery to be used for the condition.
    *
-   * @param $table
+   * @param string $table
    *   The table name or the subquery to be used. Use a Select query object to
    *   pass in a subquery.
    *
    * @return $this
    *   The called object.
    */
-  protected function conditionTable($table) {
+  public function conditionTable(string $table): static {
     $this->conditionTable = $table;
     return $this;
   }
