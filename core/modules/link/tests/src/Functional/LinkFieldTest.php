@@ -187,6 +187,11 @@ class LinkFieldTest extends BrowserTestBase {
     $validation_error_1 = "The path '@link_path' is invalid.";
     $validation_error_2 = 'Manually entered paths should start with one of the following characters: / ? #';
     $validation_error_3 = "The path '@link_path' is inaccessible.";
+    $validation_error_4 = "The path '@link_path' doesn't exist.";
+    $validation_error_5 = "The path '@link_path' has an invalid parameter.";
+    $validation_error_7 = "The path '@uri' is internal, but the {$field_name} field only supports external paths.";
+    $validation_error_8 = "The path '@uri' is external, but the {$field_name} field only supports internal paths.";
+
     $invalid_external_entries = [
       // Invalid protocol
       'invalid://not-a-valid-protocol' => $validation_error_1,
@@ -195,9 +200,15 @@ class LinkFieldTest extends BrowserTestBase {
     ];
     $invalid_internal_entries = [
       'no-leading-slash' => $validation_error_2,
-      'entity:non_existing_entity_type/yar' => $validation_error_1,
+      'entity:non_existing_entity_type/yar' => $validation_error_4,
       // URI for an entity that doesn't exist, with an invalid ID.
-      'entity:user/invalid-parameter' => $validation_error_1,
+      'entity:user/invalid-parameter' => $validation_error_5,
+    ];
+    $only_external = [
+      '/entity_test/add' => $validation_error_7,
+    ];
+    $only_internal = [
+      'http://www.example.com/' => $validation_error_8,
     ];
 
     // Test external and internal URLs for 'link_type' = LinkItemInterface::LINK_GENERIC.
@@ -208,13 +219,13 @@ class LinkFieldTest extends BrowserTestBase {
     $this->field->setSetting('link_type', LinkItemInterface::LINK_EXTERNAL);
     $this->field->save();
     $this->assertValidEntries($field_name, $valid_external_entries);
-    $this->assertInvalidEntries($field_name, $valid_internal_entries + $invalid_external_entries);
+    $this->assertInvalidEntries($field_name, $valid_internal_entries + $invalid_external_entries + $only_external);
 
     // Test external URLs for 'link_type' = LinkItemInterface::LINK_INTERNAL.
     $this->field->setSetting('link_type', LinkItemInterface::LINK_INTERNAL);
     $this->field->save();
     $this->assertValidEntries($field_name, $valid_internal_entries);
-    $this->assertInvalidEntries($field_name, $valid_external_entries + $invalid_internal_entries);
+    $this->assertInvalidEntries($field_name, $valid_external_entries + $invalid_internal_entries + $only_internal);
 
     // Ensure that users with 'link to any page', don't apply access checking.
     $this->drupalLogin($this->drupalCreateUser([
