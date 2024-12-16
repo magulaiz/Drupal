@@ -3,13 +3,15 @@
 namespace Drupal\config\Form;
 
 use Drupal\Component\Serialization\Yaml;
-use Drupal\Core\Render\Hypermedia\Htmx;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Http\HttpMethod;
+use Drupal\Core\Render\Hypermedia\Htmx;
+use Drupal\Core\Render\Hypermedia\Operations\Replace;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\HtmxAttribute;
@@ -109,11 +111,14 @@ class ConfigSingleExportForm extends FormBase {
       route_name: 'config.export_single',
       route_parameters: ['config_type' => $config_type, 'config_name' => $config_name],
     );
-    $config_type_htmx->attributes
-      ->post($form_url)
-      ->select('select[data-drupal-selector="edit-config-name"]')
-      ->target('select[data-drupal-selector="edit-config-name"]')
-      ->swap('outerHTML');
+    $config_type_htmx->setRequestOperation(
+      new Replace(
+        select: 'select[data-drupal-selector="edit-config-name"]',
+        target: 'select[data-drupal-selector="edit-config-name"]',
+        url: $form_url,
+        method: HttpMethod::Post
+      )
+    );
     $form['config_type'] = [
       '#title' => $this->t('Configuration type'),
       '#type' => 'select',
@@ -133,11 +138,14 @@ class ConfigSingleExportForm extends FormBase {
     ];
 
     $default_type = $form_state->getValue('config_type', $config_type);
-    $config_name_htmx->attributes
-      ->post($form_url)
-      ->select('#edit-export-wrapper')
-      ->target('#edit-export-wrapper')
-      ->swap('outerHTML');
+    $config_name_htmx->setRequestOperation(
+      new Replace(
+        select: '#edit-export-wrapper',
+        target: '#edit-export-wrapper',
+        url: $form_url,
+        method: HttpMethod::Post
+      )
+    );
     $form['config_name'] = [
       '#title' => $this->t('Configuration name'),
       '#type' => 'select',
