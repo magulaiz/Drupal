@@ -51,6 +51,8 @@ class Image implements ImageInterface {
       $this->getToolkit()->setSource($this->source);
       // Defer image file validity check to the toolkit.
       if ($this->getToolkit()->parseFile()) {
+        // The @ operator suppresses a warning thrown when $this->source
+        // points to a file in an unsupported filesystem, such as AWS S3.
         $this->fileSize = @filesize($this->source) ?: NULL;
       }
     }
