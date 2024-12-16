@@ -31,7 +31,7 @@ class FileDownloadCspSubscriber implements EventSubscriberInterface {
 
     // If no Content-Security-Policy header has been set, add a default.
     if (!$response->headers->has('Content-Security-Policy')) {
-      if ($response->headers->get('Content-Type') == 'image/svg+xml') {
+      if ($response->headers->get('Content-Type') === 'image/svg+xml') {
         $response->headers->set('Content-Security-Policy', "default-src 'none'; img-src data:; style-src 'unsafe-inline'", FALSE);
       }
       else {
