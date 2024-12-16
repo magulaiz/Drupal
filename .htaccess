@@ -183,7 +183,7 @@ AddType image/webp .webp
   # Disable Proxy header, since it's an attack vector.
   RequestHeader unset Proxy
 
-  <FilesMatch \.svg$>
+  <FilesMatch \.(?i:svg)$>
     # Prevent script execution in SVG files.
     Header set Content-Security-Policy "default-src 'none'; img-src data:; style-src 'unsafe-inline'"
   </FilesMatch>
