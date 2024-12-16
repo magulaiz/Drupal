@@ -71,6 +71,12 @@ views.display.page:
         parent:
           type: string
           label: 'Parent'
+        expanded:
+          type: boolean
+          label: 'Expanded'
+        enabled:
+          type: boolean
+          label: 'Enabled'
     use_admin_theme:
       type: boolean
       nullable: true

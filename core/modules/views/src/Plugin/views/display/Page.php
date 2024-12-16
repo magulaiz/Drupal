@@ -475,6 +475,19 @@ class Page extends PathPluginBase {
             ],
           ],
         ];
+        $form['tab_options']['expanded'] = [
+          '#title' => $this->t('Show as expanded'),
+          '#type' => 'checkbox',
+          '#default_value' => !empty($tab_options['expanded']),
+          '#description' => $this->t('If selected and this menu link has children, the menu will always appear expanded.'),
+          '#states' => [
+            'visible' => [
+              [
+                ':input[name="tab_options[type]"]' => ['value' => 'normal'],
+              ],
+            ],
+          ],
+        ];
         if (isset($tab_options['menu_name'])) {
           $menu_parent = $tab_options['menu_name'] . ':' . $tab_options['parent'];
         }
