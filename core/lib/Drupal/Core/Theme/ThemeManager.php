@@ -291,7 +291,7 @@ class ThemeManager implements ThemeManagerInterface {
     $theme_engine = $active_theme->getEngine();
     if (isset($theme_engine)) {
       if ($info['type'] !== 'module') {
-        // @todo: Fix relation on procedural hook implementation.
+        // @todo Fix problem of relation only on procedural hook call here.
         if (function_exists($theme_engine . '_render_template')) {
           $render_function = $theme_engine . '_render_template';
         }
