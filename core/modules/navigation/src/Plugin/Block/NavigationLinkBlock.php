@@ -243,6 +243,11 @@ final class NavigationLinkBlock extends BlockBase {
   public function build(): array {
     $config = $this->configuration;
     $build = [];
+     // Ensure that the Help module is enabled and the URI corresponds to Help.
+     if (str_contains($config['uri'], 'help') && !\Drupal::moduleHandler()->moduleExists('help')) {
+      // Return an empty array, so the Help link is not displayed
+      return $build;
+    }
     // Ensure that user has access to link before rendering it.
     try {
       $url = Url::fromUri($config['uri']);
