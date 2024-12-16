@@ -45,7 +45,7 @@ class Connection extends CoreConnection {
    * @var string
    * @see driver().
    */
-  public $driver = 'fake';
+  public $driver = 'dummydb';
 
   /**
    * {@inheritdoc}
@@ -72,7 +72,7 @@ class Connection extends CoreConnection {
    * {@inheritdoc}
    */
   public function databaseType() {
-    return 'DummyDB';
+    return 'dummydb';
   }
 
   /**
