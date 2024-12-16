@@ -16,6 +16,7 @@ use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -180,6 +181,7 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
       'third_party_settings.layout_builder.enabled' => TRUE,
     ]);
     $layout_bundles = [];
+    $displays = array_merge($displays, LayoutBuilderEntityViewDisplay::getEntitiesBeingCreated());
     foreach ($displays as $display) {
       $bundle = $display->getTargetBundle();
       $layout_bundles[$display->getTargetEntityTypeId()][$bundle] = $bundle;

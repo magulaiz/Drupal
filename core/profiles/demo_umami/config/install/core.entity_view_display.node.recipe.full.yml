@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.recipe.layout_builder__layout
     - node.type.recipe
     - views.view.related_recipes
+    - workflows.workflow.editorial
   module:
     - layout_builder
     - layout_discovery

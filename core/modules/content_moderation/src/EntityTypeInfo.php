@@ -22,6 +22,7 @@ use Drupal\content_moderation\Entity\Handler\ModerationHandler;
 use Drupal\content_moderation\Entity\Handler\NodeModerationHandler;
 use Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler;
 use Drupal\content_moderation\Entity\Routing\EntityModerationRouteProvider;
+use Drupal\workflows\Entity\Workflow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -211,11 +212,17 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   public function entityExtraFieldInfo() {
     $return = [];
     foreach ($this->getModeratedBundles() as $bundle) {
+      $bundles = $this->bundleInfo->getBundleInfo($bundle['entity']);
+      $workflow = Workflow::load($bundles[$bundle['bundle']]['workflow']);
       $return[$bundle['entity']][$bundle['bundle']]['display']['content_moderation_control'] = [
         'label' => $this->t('Moderation control'),
         'description' => $this->t("Status listing and form for the entity's moderation state."),
         'weight' => -20,
         'visible' => TRUE,
+        // @todo Need to document this in hook_entity_extra_field_info().
+        'config_dependencies' => [
+          'config' => [$workflow->getConfigDependencyName()],
+        ],
       ];
     }
 

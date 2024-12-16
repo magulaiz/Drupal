@@ -12,6 +12,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 
@@ -137,6 +138,10 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
             'entity' => $context_definition,
           ];
 
+          if (isset($extra_field['config_dependencies'])) {
+            $derivative['config_dependencies'] = $extra_field['config_dependencies'];
+          }
+
           $derivative_id = $entity_type_id . PluginBase::DERIVATIVE_SEPARATOR . $bundle_id . PluginBase::DERIVATIVE_SEPARATOR . $extra_field_id;
           $this->derivatives[$derivative_id] = $derivative;
         }
@@ -156,6 +161,7 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
     $displays = $this->entityTypeManager->getStorage('entity_view_display')->loadByProperties([
       'third_party_settings.layout_builder.enabled' => TRUE,
     ]);
+    $displays = array_merge($displays, LayoutBuilderEntityViewDisplay::getEntitiesBeingCreated());
     $layout_bundles = [];
     foreach ($displays as $display) {
       $bundle = $display->getTargetBundle();

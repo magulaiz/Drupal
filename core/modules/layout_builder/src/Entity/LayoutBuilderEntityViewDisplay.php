@@ -39,6 +39,13 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   protected $entityFieldManager;
 
   /**
+   * A list of entities being created with layout builder enabled.
+   *
+   * @var static[]
+   */
+  protected static array $creatingLayoutBuilderEnabled = [];
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
@@ -141,10 +148,15 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       }
     }
 
+    // If we're saving this entity and Layout Builder is enabled store the ID.
+    $set_enabled = $this->isLayoutBuilderEnabled();
+    if ($set_enabled && $this->isNew()) {
+      static::$creatingLayoutBuilderEnabled[$this->id()] = $this;
+    }
+
     parent::preSave($storage);
 
     $already_enabled = isset($this->original) ? $this->original->isLayoutBuilderEnabled() : FALSE;
-    $set_enabled = $this->isLayoutBuilderEnabled();
     if ($already_enabled !== $set_enabled) {
       if ($set_enabled) {
         // Loop through all existing field-based components and add them as
@@ -164,6 +176,15 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   }
 
   /**
+   * Gets layout builder enabled entities currently being created.
+   *
+   * @return static[]
+   */
+  public static function getEntitiesBeingCreated(): array {
+    return static::$creatingLayoutBuilderEnabled;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function save(): int {
@@ -174,6 +195,16 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
     }
     return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE): void {
+    parent::postSave($storage, $update);
+
+    // Remove the ID from the creating list if present.
+    unset(static::$creatingLayoutBuilderEnabled[$this->id()]);
   }
 
   /**

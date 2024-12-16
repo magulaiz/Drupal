@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.article.field_tags
     - field.field.node.article.layout_builder__layout
     - node.type.article
+    - workflows.workflow.editorial
   module:
     - layout_builder
     - layout_discovery
