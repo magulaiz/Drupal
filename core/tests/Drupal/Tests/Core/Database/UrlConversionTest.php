@@ -317,6 +317,12 @@ class UrlConversionTest extends UnitTestCase {
       'database' => 'test_database',
       'namespace' => 'Drupal\dummydb\Driver\Database\dummydb',
       'autoload' => 'core/modules/system/tests/modules/dummydb/src/Driver/Database/dummydb/',
+      'dependencies' => [
+        'mysql' => [
+          'namespace' => 'Drupal\mysql',
+          'autoload' => 'core/modules/mysql/src/',
+        ],
+      ],
     ];
     $this->assertSame($expected, $connection_info);
   }

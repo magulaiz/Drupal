@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace Drupal\dummydb\Driver\Database\dummydb\Install;
 
-use Drupal\Core\Database\Install\Tasks as CoreTasks;
+use Drupal\mysql\Driver\Database\mysql\Install\Tasks as CoreTasks;
 
 /**
  * Specifies installation tasks for DummyDB test database.
