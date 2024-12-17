@@ -8,6 +8,8 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 
 /**
  * Defines an interface for comment entity storage classes.
+ *
+ * @template-extends ContentEntityStorageInterface<\Drupal\comment\CommentInterface>
  */
 interface CommentStorageInterface extends ContentEntityStorageInterface {
 

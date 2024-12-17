@@ -10,6 +10,10 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
  *
  * The default storage is overridden to handle metadata fetching outside of the
  * database transaction.
+ *
+ * @template TEntity of \Drupal\Core\Entity\EntityInterface
+ *
+ * @template-extends SqlContentEntityStorage<TEntity>
  */
 class MediaStorage extends SqlContentEntityStorage {
 

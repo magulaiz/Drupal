@@ -38,6 +38,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * customize the generated schema; e.g., to add additional indexes.
  *
  * @ingroup entity_api
+ *
+ * @template TEntity of \Drupal\Core\Entity\EntityInterface
+ *
+ * @template-extends ContentEntityStorageBase<TEntity>
  */
 class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEntityStorageInterface, DynamicallyFieldableEntityStorageSchemaInterface, EntityBundleListenerInterface {
 
