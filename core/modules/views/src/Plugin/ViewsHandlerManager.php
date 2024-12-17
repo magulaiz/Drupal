@@ -7,10 +7,10 @@ use Drupal\Component\Plugin\FallbackPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\ViewsHandlerInterface;
 use Drupal\views\ViewsData;
 use Symfony\Component\DependencyInjection\Container;
-use Drupal\views\Plugin\views\HandlerBase;
 
 /**
  * Plugin type manager for all views handlers.
