@@ -122,11 +122,11 @@ body.is-always-mobile-nav {
   opacity: 0.2;
   background: var(--color--gray-5);
 
-  @media (forced-colors: active) {
-    background: canvastext;
+  .is-overlay-active & {
+    display: block;
   }
 
-  @nest .is-overlay-active & {
-    display: block;
+  @media (forced-colors: active) {
+    background: canvastext;
   }
 }

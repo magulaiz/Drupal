@@ -129,7 +129,7 @@
   margin-inline-end: var(--space-l);
 }
 
-.ui-dialog-buttonpane .ui-dialog-buttonset > * {
+:is(.ui-dialog-buttonpane .ui-dialog-buttonset) > * {
   margin: 0;
 }
 
