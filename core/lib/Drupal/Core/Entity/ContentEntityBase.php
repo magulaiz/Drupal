@@ -659,9 +659,10 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * @param int $delta
    *   Field value offset for multiple-value fields.
    *
-   * @return mixed
+   * @return mixed|null
+   *   The value of the specified field property, or NULL if not found.
    */
-  public function getFieldValue(string $field_name, string $property, int $delta = 0) {
+  public function getFieldValue(string $field_name, string $property, int $delta = 0): mixed {
     // Attempt to get the value from the values directly if the field is not
     // initialized yet.
     if (!isset($this->fields[$field_name])) {
