@@ -196,9 +196,6 @@ class MenuLinkManager implements MenuLinkManagerInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Menu\MenuLinkInterface|null
-   *   The menu link plugin, or NULL if no id provided in $options.
    */
   public function getInstance(array $options) {
     if (isset($options['id'])) {
