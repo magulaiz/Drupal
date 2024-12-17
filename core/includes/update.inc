@@ -10,8 +10,8 @@
 
 use Drupal\Component\Graph\Graph;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
-use Drupal\Core\Utility\Error;
 use Drupal\Core\Update\EquivalentUpdate;
+use Drupal\Core\Utility\Error;
 
 /**
  * Returns whether the minimum schema requirement has been satisfied.
@@ -119,17 +119,34 @@ function _update_fix_missing_schema() {
  * Performs one update and stores the results for display on the results page.
  *
  * If an update function completes successfully, it should return a message
- * as a string indicating success, for example:
+ * as a string indicating success. For example:
  * @code
  * return t('New index added successfully.');
  * @endcode
  *
- * Alternatively, it may return nothing. In that case, no message
- * will be displayed at all.
+ * For more complicated update functions, an array of messages may be returned
+ * instead. For example:
+ * @code
+ * $messages = [];
+ * // Load a few user accounts that need to be updated.
+ * // ...
+ * foreach ($accounts as $account) {
+ *   // Perform the update.
+ *   // ...
+ *   $messages[] = t('Updated account information for user %name', ['%name' => $account->name]);
+ * }
+ * return $messages;
+ * @endcode
  *
- * If it fails for whatever reason, it should throw an instance of
- * Drupal\Core\Utility\UpdateException with an appropriate error message, for
- * example:
+ * Alternatively, the update function may return nothing. In that case, no
+ * message will be displayed at all. Module authors should use their discretion
+ * in determining when to return messages and how many to return; in general,
+ * as few messages should be returned as possible, so as not to overwhelm the
+ * user with unnecessary text.
+ *
+ * If the update function fails for whatever reason, it should throw an
+ * instance of Drupal\Core\Utility\UpdateException with an appropriate error
+ * message. For example:
  * @code
  * use Drupal\Core\Utility\UpdateException;
  * throw new UpdateException('Description of what went wrong');
@@ -143,7 +160,9 @@ function _update_fix_missing_schema() {
  * If an update function needs to be re-run as part of a batch process, it
  * should accept the $sandbox array by reference as its first parameter
  * and set the #finished property to the percentage completed that it is, as a
- * fraction of 1.
+ * fraction of 1. Each time the update function is called, any messages that it
+ * returns will be accumulated into a list, so that all messages associated
+ * with it can be displayed together at the end of the update process.
  *
  * @param $module
  *   The module whose update will be run.
@@ -167,7 +186,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     return;
   }
 
-  $ret = [];
+  $results = [];
   $equivalent_update = \Drupal::service('update.update_hook_registry')->getEquivalentUpdate($module, $number);
   if ($equivalent_update instanceof EquivalentUpdate) {
     $ret['results']['query'] = $equivalent_update->toSkipMessage();
@@ -176,8 +195,20 @@ function update_do_one($module, $number, $dependency_map, &$context) {
   }
   elseif (function_exists($function)) {
     try {
-      $ret['results']['query'] = $function($context['sandbox']);
-      $ret['results']['success'] = TRUE;
+      // Update functions can return a single message, an array of messages, or
+      // nothing at all.
+      $messages = $function($context['sandbox']);
+      if ($messages) {
+        if (!is_array($messages)) {
+          $messages = [$messages];
+        }
+        foreach ($messages as $message) {
+          $results[] = [
+            'message' => $message,
+            'success' => TRUE,
+          ];
+        }
+      }
     }
     // @todo We may want to do different error handling for different
     // exception types, but for now we'll just log the exception and
@@ -188,7 +219,11 @@ function update_do_one($module, $number, $dependency_map, &$context) {
       \Drupal::logger('update')->error(Error::DEFAULT_ERROR_MESSAGE, $variables);
 
       unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
-      $ret['#abort'] = ['success' => FALSE, 'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables)];
+      $results[] = [
+        'message' => t('%type: !message in %function (line %line of %file).', $variables),
+        'success' => FALSE,
+      ];
+      $abort = TRUE;
     }
   }
 
@@ -203,15 +238,15 @@ function update_do_one($module, $number, $dependency_map, &$context) {
   if (!isset($context['results'][$module][$number])) {
     $context['results'][$module][$number] = [];
   }
-  $context['results'][$module][$number] = array_merge($context['results'][$module][$number], $ret);
+  $context['results'][$module][$number] = array_merge($context['results'][$module][$number], $results);
 
-  if (!empty($ret['#abort'])) {
+  if (!empty($abort)) {
     // Record this function in the list of updates that were aborted.
     $context['results']['#abort'][] = $function;
   }
 
   // Record the schema update if it was completed successfully.
-  if ($context['finished'] == 1 && empty($ret['#abort'])) {
+  if ($context['finished'] == 1 && empty($abort)) {
     \Drupal::service('update.update_hook_registry')->setInstalledVersion($module, $number);
   }
 

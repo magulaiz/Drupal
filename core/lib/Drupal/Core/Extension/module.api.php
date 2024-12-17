@@ -759,9 +759,10 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  *   Stores information for batch updates. See above for more information.
  *
  * @return string|null
- *   Optionally, update hooks may return a translated string that will be
- *   displayed to the user after the update has completed. If no message is
- *   returned, no message will be presented to the user.
+ *   Optionally, update hooks may return a translated string, or an array of
+ *   translated strings, that will be displayed to the user after the update has
+ *   completed. If no message is returned, no message will be presented to the
+ *   user.
  *
  * @throws \Drupal\Core\Utility\UpdateException|PDOException
  *   In case of error, update hooks should throw an instance of
