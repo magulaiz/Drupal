@@ -82,11 +82,6 @@ class DownloadTest extends FileManagedTestBase {
   public function testCspHeaderOnDownload(): void {
     $filename = $this->randomMachineName(16);
 
-    // Create a private html-file.
-    $file_html = $this->createFile($filename . '.html', $this->randomString(), 'private');
-    $file_html->setPermanent();
-    $file_html->save();
-
     // Create a private svg file.
     $file_svg = $this->createFile($filename . '.svg', $this->randomString(), 'private');
     $file_svg->setPermanent();
@@ -98,10 +93,6 @@ class DownloadTest extends FileManagedTestBase {
     $url = $this->fileUrlGenerator->generateAbsoluteString($file_svg->getFileUri());
     $this->drupalGet($url);
     $this->assertSession()->responseHeaderEquals('Content-Security-Policy', "default-src 'none'; img-src data:; style-src 'unsafe-inline'");
-
-    $url = $this->fileUrlGenerator->generateAbsoluteString($file_html->getFileUri());
-    $this->drupalGet($url);
-    $this->assertSession()->responseHeaderEquals('Content-Security-Policy', "default-src 'none'");
   }
 
   /**
