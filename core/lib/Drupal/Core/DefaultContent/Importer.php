@@ -68,11 +68,12 @@ final class Importer implements LoggerAwareInterface {
    *     $existing is \Drupal\Core\DefaultContent\Existing::Error.
    */
   public function importContent(Finder $content, Existing $existing = Existing::Error): void {
-    $event = new DefaultContentPreImportEvent($content);
-    $this->eventDispatcher->dispatch($event);
     if (count($content->data) === 0) {
       return;
     }
+
+    $event = new DefaultContentPreImportEvent($content, $existing);
+    $skip = $this->eventDispatcher->dispatch($event)->getSkipList();
 
     $account = $this->accountSwitcher->switchToAdministrator();
 
@@ -83,6 +84,11 @@ final class Importer implements LoggerAwareInterface {
         assert(is_string($uuid));
         assert(is_string($entity_type_id));
         assert(is_string($path));
+
+        // The event subscribers asked to skip importing this entity.
+        if (in_array($uuid, $skip, TRUE)) {
+          continue;
+        }
 
         $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
         /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type */
