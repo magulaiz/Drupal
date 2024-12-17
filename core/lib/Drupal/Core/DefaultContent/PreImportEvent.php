@@ -11,7 +11,8 @@ use Symfony\Contracts\EventDispatcher\Event;
  *
  * Subscribers to this event should avoid modifying content, because it is
  * probably about to change again. This event is best used for tasks like
- * notifications, logging, or updating a value in state.
+ * notifications, logging, or updating a value in state. It can also be used
+ * to skip importing certain entities, identified by their UUID.
  */
 final class PreImportEvent extends Event {
 
@@ -23,7 +24,7 @@ final class PreImportEvent extends Event {
   private array $skip = [];
 
   /**
-   * Constructs a DefaultContentPreImportEvent object.
+   * Constructs a PreImportEvent object.
    *
    * @param \Drupal\Core\DefaultContent\Finder $finder
    *   The content finder, which has information on the entities to create
