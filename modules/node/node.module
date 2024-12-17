@@ -3353,7 +3353,7 @@ function _node_query_node_access_alter($query, $type) {
     return;
   }
 
-  $tables = $query->getTables();
+  $tables = &$query->getTables();
   $base_table = $query->getMetaData('base_table');
   // If no base table is specified explicitly, search for one.
   if (!$base_table) {
@@ -3450,13 +3450,26 @@ function _node_query_node_access_alter($query, $type) {
       }
       $subquery->where("$nalias.$field = na.nid");
 
-      // For an entity query, attach the subquery to entity conditions.
+      // For an entity query, attach the subquery to the entity conditions.
       if ($type == 'entity') {
         $node_conditions->exists($subquery);
       }
       // Otherwise attach it to the node query itself.
-      else {
+      elseif (empty($tableinfo['join type'])) {
         $query->exists($subquery);
+      }
+      else {
+        // If it's a join, add the node access check to the join condition.
+        $join_cond = db_and()->exists($subquery);
+        // Add the existing join conditions into the Condition object.
+        if ($tables[$nalias]['condition'] instanceof QueryConditionInterface) {
+          $join_cond->condition($tables[$nalias]['condition']);
+        }
+        else {
+          $join_cond->where($tables[$nalias]['condition'], $tables[$nalias]['arguments']);
+          $tables[$nalias]['arguments'] = array();
+        }
+        $tables[$nalias]['condition'] = $join_cond;
       }
     }
   }
