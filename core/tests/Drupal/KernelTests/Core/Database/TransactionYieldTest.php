@@ -37,6 +37,8 @@ use Drupal\Core\Database\TransactionOutOfOrderException;
  * and mysqli (MySql) clients do not have a solution to check if a transaction
  * is active, and mysqli does not fail when rolling back and no transaction
  * active.
+ *
+ * @group Database
  */
 class TransactionYieldTest extends DriverSpecificDatabaseTestBase {
 
