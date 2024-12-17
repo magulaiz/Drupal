@@ -43,7 +43,7 @@ class FileSecurity {
    * @return string
    *   The desired contents of the .htaccess file.
    *
-   * @see file_save_htaccess()
+   * @see \Drupal\Component\FileSecurity\FileSecurity::writeHtaccess()
    */
   public static function htaccessLines($deny_public_access = TRUE) {
     $lines = static::htaccessPreventExecution();
@@ -76,6 +76,13 @@ SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
 # If we know how to do it safely, disable the PHP engine entirely.
 <IfModule mod_php.c>
   php_flag engine off
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch \.(?i:svg)$>
+    # Prevent script execution in SVG files.
+    Header set Content-Security-Policy "default-src 'none'; img-src data:; style-src 'unsafe-inline'"
+  </FilesMatch>
 </IfModule>
 EOF;
   }
@@ -121,8 +128,11 @@ EOF;
     if (file_exists($file_path) && !$force) {
       return TRUE;
     }
-    // Try to write the file. This can fail if concurrent requests are both
-    // trying to write a the same time.
+    // Writing the file can fail if:
+    // - concurrent requests are both trying to write at the same time.
+    // - $directory does not exist or is not writable.
+    // Testing for these conditions introduces windows for concurrency issues to
+    // occur.
     if (@file_put_contents($file_path, $contents)) {
       return @chmod($file_path, 0444);
     }

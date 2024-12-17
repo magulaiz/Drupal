@@ -75,6 +75,13 @@ SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
 <IfModule mod_php.c>
   php_flag engine off
 </IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch \.(?i:svg)$>
+    # Prevent script execution in SVG files.
+    Header set Content-Security-Policy "default-src 'none'; img-src data:; style-src 'unsafe-inline'"
+  </FilesMatch>
+</IfModule>
 EOF;
   }
 
