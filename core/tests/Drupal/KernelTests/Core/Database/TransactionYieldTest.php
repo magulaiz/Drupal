@@ -138,7 +138,10 @@ class TransactionYieldTest extends DatabaseTestBase {
       // This rollback should propagate to the last savepoint.
       $txn->rollBack();
       $this->assertSame($depth, $this->connection->transactionManager()->stackDepth(), 'Transaction has rolled back to the last savepoint after calling rollBack().');
+      return;
     }
+
+    $txn->yield();
   }
 
   /**
@@ -196,7 +199,10 @@ class TransactionYieldTest extends DatabaseTestBase {
       // This rollback should propagate to the last savepoint.
       $txn->rollBack();
       $this->assertSame($depth, $this->connection->transactionManager()->stackDepth(), 'Transaction has rolled back to the last savepoint after calling rollBack().');
+      return;
     }
+
+    $txn->yield();
   }
 
   /**
@@ -435,7 +441,7 @@ class TransactionYieldTest extends DatabaseTestBase {
       $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
     }
     else {
-      // $this->assertFalse($this->connection->inTransaction());
+      $this->assertFalse($this->connection->inTransaction());
     }
 
     $savepoint->yield();
@@ -446,18 +452,13 @@ class TransactionYieldTest extends DatabaseTestBase {
       $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
     }
     else {
-      // $this->assertFalse($this->connection->inTransaction());
+      $this->assertFalse($this->connection->inTransaction());
     }
 
     $transaction->yield();
     $this->assertRowPresent('David');
     $this->assertRowPresent('Roger');
-    if ($this->connection->supportsTransactionalDDL()) {
-      $this->assertFalse($this->connection->inTransaction());
-    }
-    else {
-      // $this->assertFalse($this->connection->inTransaction());
-    }
+    $this->assertFalse($this->connection->inTransaction());
   }
 
   /**
@@ -506,11 +507,11 @@ class TransactionYieldTest extends DatabaseTestBase {
     $transaction = $this->createRootTransaction('', FALSE);
     $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
     $this->executeDDLStatement();
-    unset($transaction2);
+    $transaction2->yield();
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
     $transaction3->yield();
-    unset($transaction);
+    $transaction->yield();
     $this->assertRowPresent('row');
 
     // A transaction after a DDL statement should still work the same.
@@ -518,12 +519,11 @@ class TransactionYieldTest extends DatabaseTestBase {
     $transaction = $this->createRootTransaction('', FALSE);
     $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
     $this->executeDDLStatement();
-    unset($transaction2);
+    $transaction2->yield();
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
     $transaction3->rollBack();
-    unset($transaction3);
-    unset($transaction);
+    $transaction->yield();
     $this->assertRowAbsent('row');
 
     // The behavior of a rollback depends on the type of database server.
@@ -535,7 +535,6 @@ class TransactionYieldTest extends DatabaseTestBase {
       $this->insertRow('row');
       $this->executeDDLStatement();
       $transaction->rollBack();
-      unset($transaction);
       $this->assertRowAbsent('row');
 
       // Including with stacking.
@@ -548,16 +547,12 @@ class TransactionYieldTest extends DatabaseTestBase {
       $this->insertRow('row');
       $transaction3->yield();
       $transaction->rollBack();
-      unset($transaction);
       $this->assertRowAbsent('row');
     }
   }
 
   /**
    * Tests rollback after a DDL statement when no transactional DDL supported.
-   *
-   * @todo In drupal:12.0.0, rollBack will throw a
-   *   TransactionOutOfOrderException. Adjust the test accordingly.
    */
   public function testRollbackAfterDdlStatementForNonTransactionalDdlDatabase(): void {
     if ($this->connection->supportsTransactionalDDL()) {
@@ -589,7 +584,7 @@ class TransactionYieldTest extends DatabaseTestBase {
       restore_error_handler();
     }
 
-    unset($transaction);
+    $transaction->yield();
     $manager = $this->connection->transactionManager();
     $this->assertSame(0, $manager->stackDepth());
     $reflectedTransactionState = new \ReflectionMethod($manager, 'getConnectionTransactionState');
@@ -691,7 +686,6 @@ class TransactionYieldTest extends DatabaseTestBase {
     $this->insertRow('inner');
     // Now rollback the inner transaction.
     $transaction2->rollBack();
-    unset($transaction2);
     $this->assertTrue($this->connection->inTransaction(), 'Still in a transaction after popping the outer transaction');
     // Pop the outer transaction, it should commit.
     $this->insertRow('outer-after-inner-rollback');
@@ -880,13 +874,12 @@ class TransactionYieldTest extends DatabaseTestBase {
     $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
     $this->assertFalse($this->connection->inTransaction());
     $this->assertRowPresent('row');
-    // Unpile the inner (savepoint) Transaction object, it should be a no-op
-    // anyway given it was dropped by the database already, and removed from
+    // Trying to yield the inner (savepoint) Transaction object, throws an
+    // exception since it was dropped by the database already, and removed from
     // our transaction stack.
-    unset($savepoint2);
-    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
-    $this->assertFalse($this->connection->inTransaction());
-    $this->assertRowPresent('row');
+    $this->expectException(TransactionOutOfOrderException::class);
+    $this->expectExceptionMessageMatches("/^Error attempting commit of .*\\\\savepoint_2\\. Active stack: .* empty/");
+    $savepoint2->yield();
   }
 
   /**
@@ -921,7 +914,19 @@ class TransactionYieldTest extends DatabaseTestBase {
     $this->insertRow('row');
     $this->assertNull($this->postTransactionCallbackAction);
     $this->assertRowAbsent('rtcCommit');
+
+    // Callbacks are processed only when destructing the transaction.
+    // Executing a commit is not sufficient by itself.
+    $transaction->yield();
+    $this->assertNull($this->postTransactionCallbackAction);
+    $this->assertRowPresent('row');
+    $this->assertRowAbsent('rtcCommit');
+
+    // Destruct the transaction.
     unset($transaction);
+
+    // The post-transaction callback should now have inserted a 'rtcCommit'
+    // row.
     $this->assertSame('rtcCommit', $this->postTransactionCallbackAction);
     $this->assertRowPresent('row');
     $this->assertRowPresent('rtcCommit');
