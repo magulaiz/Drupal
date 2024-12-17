@@ -72,7 +72,7 @@ final class Importer implements LoggerAwareInterface {
       return;
     }
 
-    $event = new DefaultContentPreImportEvent($content, $existing);
+    $event = new PreImportEvent($content, $existing);
     $skip = $this->eventDispatcher->dispatch($event)->getSkipList();
 
     $account = $this->accountSwitcher->switchToAdministrator();

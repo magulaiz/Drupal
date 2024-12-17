@@ -7,13 +7,13 @@ namespace Drupal\Core\DefaultContent;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Event dispatched before default_content content import.
+ * Event dispatched before default content is imported.
  *
- * Subscribers to this event should avoid modifying content, because
- * content is probably about to change again. This event is best
- * used for tasks like notifications, logging or updating a value in state.
+ * Subscribers to this event should avoid modifying content, because it is
+ * probably about to change again. This event is best used for tasks like
+ * notifications, logging, or updating a value in state.
  */
-final class DefaultContentPreImportEvent extends Event {
+final class PreImportEvent extends Event {
 
   /**
    * Entity UUIDs that should not be imported.
@@ -41,9 +41,17 @@ final class DefaultContentPreImportEvent extends Event {
    *
    * @param string $uuid
    *   The UUID of an entity that should not be imported.
+   *
+   * @throws \InvalidArgumentException
+   *   If the given UUID is not one of the ones being imported.
    */
   public function skip(string $uuid): void {
-    $this->skip[] = $uuid;
+    if (array_key_exists($uuid, $this->finder->data)) {
+      $this->skip[] = $uuid;
+    }
+    else {
+      throw new \InvalidArgumentException("The entity '$uuid' is not being imported.");
+    }
   }
 
   /**

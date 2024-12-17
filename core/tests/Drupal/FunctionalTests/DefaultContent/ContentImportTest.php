@@ -8,7 +8,7 @@ use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Serialization\Yaml;
-use Drupal\Core\DefaultContent\DefaultContentPreImportEvent;
+use Drupal\Core\DefaultContent\PreImportEvent;
 use Drupal\Core\DefaultContent\Existing;
 use Drupal\Core\DefaultContent\Finder;
 use Drupal\Core\DefaultContent\Importer;
@@ -285,11 +285,19 @@ class ContentImportTest extends BrowserTestBase {
    * Tests that the pre-import event allows skipping certain entities.
    */
   public function testPreImportEvent(): void {
-    $listener = function (DefaultContentPreImportEvent $event): void {
+    $invalid_uuid_detected = FALSE;
+
+    $listener = function (PreImportEvent $event) use (&$invalid_uuid_detected): void {
       $event->skip('3434bd5a-d2cd-4f26-bf79-a7f6b951a21b');
+      try {
+        $event->skip('not-a-thing');
+      }
+      catch (\InvalidArgumentException) {
+        $invalid_uuid_detected = TRUE;
+      }
     };
     \Drupal::service(EventDispatcherInterface::class)
-      ->addListener(DefaultContentPreImportEvent::class, $listener);
+      ->addListener(PreImportEvent::class, $listener);
 
     $finder = new Finder($this->contentDir);
     $this->assertSame('menu_link_content', $finder->data['3434bd5a-d2cd-4f26-bf79-a7f6b951a21b']['_meta']['entity_type']);
@@ -299,6 +307,8 @@ class ContentImportTest extends BrowserTestBase {
     $menu_link = \Drupal::service(EntityRepositoryInterface::class)
       ->loadEntityByUuid('menu_link_content', '3434bd5a-d2cd-4f26-bf79-a7f6b951a21b');
     $this->assertNull($menu_link);
+    // We should have caught an exception for trying to skip an invalid UUID.
+    $this->assertTrue($invalid_uuid_detected);
   }
 
 }
