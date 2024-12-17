@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Component\Datetime\Time;
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFieldManager;
@@ -67,6 +68,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityFieldManager;
+
+  /**
+   * The mocked UUID service.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $uuidService;
 
   /**
    * The entity type ID.
@@ -137,8 +145,14 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $this->uuidService = $this->createMock(UuidInterface::class);
+    $this->uuidService->expects($this->any())
+      ->method('generate')
+      ->willReturn($this->randomMachineName(16));
+
     $this->container->set('entity_type.manager', $this->entityTypeManager->reveal());
     $this->container->set('entity_field.manager', $this->entityFieldManager->reveal());
+    $this->container->set('uuid', $this->uuidService);
   }
 
   /**
@@ -428,7 +442,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->willReturn($schema_handler);
 
     $storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal()])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal(), $this->uuidService])
       ->onlyMethods(['getStorageSchema'])
       ->getMock();
 
@@ -1177,7 +1191,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->getActiveFieldStorageDefinitions($this->entityType->id())
       ->willReturn($this->fieldDefinitions);
 
-    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal());
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $this->connection, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal(), $this->uuidService);
     $this->entityStorage->setModuleHandler($this->moduleHandler);
   }
 
@@ -1251,7 +1265,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->willReturn($this->entityType);
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal()])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal(), $this->uuidService])
       ->onlyMethods(['getFromStorage', 'invokeStorageLoadHook', 'initTableLayout'])
       ->getMock();
     $entity_storage->method('invokeStorageLoadHook')
@@ -1311,7 +1325,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->willReturn($this->entityType);
 
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
-      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal()])
+      ->setConstructorArgs([$this->entityType, $this->connection, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal(), $this->uuidService])
       ->onlyMethods(['getFromStorage', 'invokeStorageLoadHook', 'initTableLayout'])
       ->getMock();
     $entity_storage->method('invokeStorageLoadHook')
@@ -1372,7 +1386,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->getActiveFieldStorageDefinitions($this->entityType->id())
       ->willReturn($this->fieldDefinitions);
 
-    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal());
+    $this->entityStorage = new SqlContentEntityStorage($this->entityType, $database, $this->entityFieldManager->reveal(), $this->cache, $this->languageManager, new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal(), $this->uuidService);
 
     $result = $this->entityStorage->hasData();
 

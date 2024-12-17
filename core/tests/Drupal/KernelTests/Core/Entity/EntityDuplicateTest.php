@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestRev;
 
 /**
@@ -52,6 +53,23 @@ class EntityDuplicateTest extends EntityKernelTestBase {
     $this->entityTestRevStorage->resetCache();
     $duplicate_first_revision = EntityTestRev::load($duplicate_first_revision->id());
     $this->assertEquals('Updated name', $duplicate_first_revision->label());
+  }
+
+  /**
+   * Test duplicating create reference to the source entity.
+   */
+  public function testDuplicateSource() {
+    $entity = EntityTest::create([
+      'name' => 'Source entity',
+    ]);
+    $entity->save();
+
+    $duplicate_entity = $entity->createDuplicate();
+    $this->assertEquals($duplicate_entity->label(), 'Source entity');
+    $duplicate_entity->save();
+
+    $this->assertNotEmpty($duplicate_entity->getDuplicateSource());
+    $this->assertEquals($duplicate_entity->getDuplicateSource(), $entity);
   }
 
 }
