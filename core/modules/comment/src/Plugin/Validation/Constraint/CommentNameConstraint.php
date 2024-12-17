@@ -21,21 +21,21 @@ class CommentNameConstraint extends CompositeConstraintBase {
    *
    * @var string
    */
-  public $messageNameTaken = 'The name you used (%name) belongs to a registered user.';
+  public $nameTakenMessage = 'The name you used (%name) belongs to a registered user.';
 
   /**
    * Message shown when an admin changes the comment-author to an invalid user.
    *
    * @var string
    */
-  public $messageRequired = 'You have to specify a valid author.';
+  public $requiredMessage = 'You have to specify a valid author.';
 
   /**
    * Message shown when the name doesn't match the author's name.
    *
    * @var string
    */
-  public $messageMatch = 'The specified author name does not match the comment author.';
+  public $matchMessage = 'The specified author name does not match the comment author.';
 
   /**
    * {@inheritdoc}

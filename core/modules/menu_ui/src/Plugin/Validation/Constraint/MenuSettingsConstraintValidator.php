@@ -32,7 +32,7 @@ class MenuSettingsConstraintValidator extends ConstraintValidator {
 
       // Handle the case when the menu link is deleted in a pending revision.
       if (empty($values['enabled']) && $defaults['entity_id']) {
-        $this->context->buildViolation($constraint->messageRemove)
+        $this->context->buildViolation($constraint->removeMessage)
           ->atPath('menu')
           ->setInvalidValue($entity)
           ->addViolation();
@@ -41,19 +41,19 @@ class MenuSettingsConstraintValidator extends ConstraintValidator {
       // revision.
       elseif ($defaults['entity_id']) {
         if ($defaults['entity_id'] && ($values['menu_name'] != $defaults['menu_name'])) {
-          $this->context->buildViolation($constraint->messageParent)
+          $this->context->buildViolation($constraint->parentMessage)
             ->atPath('menu.menu_parent')
             ->setInvalidValue($entity)
             ->addViolation();
         }
         elseif (isset($values['parent']) && ($values['parent'] != $defaults['parent'])) {
-          $this->context->buildViolation($constraint->messageParent)
+          $this->context->buildViolation($constraint->parentMessage)
             ->atPath('menu.menu_parent')
             ->setInvalidValue($entity)
             ->addViolation();
         }
         elseif (($values['weight'] != $defaults['weight'])) {
-          $this->context->buildViolation($constraint->messageWeight)
+          $this->context->buildViolation($constraint->weightMessage)
             ->atPath('menu.weight')
             ->setInvalidValue($entity)
             ->addViolation();
