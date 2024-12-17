@@ -10,6 +10,8 @@ use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
+ * Tests config action 'setPluginConfiguration'.
+ * 
  * @covers \Drupal\ckeditor5\Plugin\ConfigAction\SetPluginConfiguration
  * @group ckeditor5
  * @group Recipe
@@ -57,6 +59,9 @@ class SetPluginConfigurationConfigActionTest extends KernelTestBase {
     $this->assertSame(['heading', 'bold', 'italic'], $settings['toolbar']['items']);
   }
 
+  /**
+   * Tests setting ckeditor5_alignment configuration with config action.
+   */
   public function testSetPluginConfiguration(): void {
     $recipe = $this->createRecipe([
       'name' => 'Sets plugin configuration',
