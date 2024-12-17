@@ -15,7 +15,6 @@ use Drupal\Core\Plugin\Discovery\AttributeClassDiscovery;
 use Drupal\Core\Plugin\Discovery\AttributeDiscoveryWithAnnotations;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -31,7 +30,7 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
  *
  * @template-extends \Drupal\Component\Plugin\PluginManagerBase<T>
  */
-class DefaultPluginManager extends PluginManagerBase implements PluginManagerInterface, CachedDiscoveryInterface, CacheableDependencyInterface {
+class DefaultPluginManager extends PluginManagerBase implements CachedDiscoveryInterface, CacheableDependencyInterface {
 
   use DiscoveryCachedTrait;
   use UseCacheBackendTrait;
