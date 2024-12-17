@@ -6,6 +6,7 @@ namespace Drupal\Tests\Core\Extension;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\Theme;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeHandler;
 use Drupal\Tests\UnitTestCase;
@@ -98,7 +99,8 @@ class ThemeHandlerTest extends UnitTestCase {
    * Tests empty libraries in theme.info.yml file.
    */
   public function testThemeLibrariesEmpty(): void {
-    $theme = new Extension($this->root, 'theme', 'core/modules/system/tests/themes/test_theme_libraries_empty', 'test_theme_libraries_empty.info.yml');
+    $theme = $this->prophesize(Theme::class)->reveal();
+    $theme->info = [];
     try {
       $this->themeHandler->addTheme($theme);
       $this->assertTrue(TRUE, 'Empty libraries key in theme.info.yml does not cause PHP warning');

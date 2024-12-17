@@ -313,9 +313,9 @@ abstract class ExtensionList {
     $extensions = $this->doScanExtensions();
 
     // Read info files for each extension.
-    foreach ($extensions as $extension) {
-      $extension->info = $this->createExtensionInfo($extension);
-
+    foreach ($extensions as $name => $extension) {
+      $extension = $this->decorateExtension($extension);
+      $extensions[$name] = $extension;
       // Invoke hook_system_info_alter() to give installed modules a chance to
       // modify the data in the .info.yml files if necessary.
       $this->moduleHandler->alter('system_info', $extension->info, $extension, $this->type);
@@ -539,17 +539,20 @@ abstract class ExtensionList {
   }
 
   /**
-   * Creates the info value for an extension object.
+   * Decorates an extension object.
+   *
+   * The default behavior is to add a public $info property containing the
+   * extensions info.yml information. This may be overridden to return an object
+   * that extends the Extension object.
    *
    * @param \Drupal\Core\Extension\Extension $extension
-   *   The extension whose info is to be altered.
+   *   The extension to be decorated.
    *
-   * @return array
-   *   The extension info array.
+   * @return \Drupal\Core\Extension\Extension
+   *   The decorated extension.
    */
-  protected function createExtensionInfo(Extension $extension) {
+  protected function createExtensionInfo(Extension $extension): Extension {
     $info = $this->infoParser->parse($extension->getPathname());
-
     // Add the info file modification time, so it becomes available for
     // contributed extensions to use for ordering extension lists.
     $info['mtime'] = $extension->getFileInfo()->getMTime();
@@ -562,7 +565,8 @@ abstract class ExtensionList {
       }
     }
 
-    return $info;
+    $extension->info = $info;
+    return $extension;
   }
 
   /**

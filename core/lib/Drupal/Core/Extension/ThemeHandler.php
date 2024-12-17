@@ -81,7 +81,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function addTheme(Extension $theme) {
+  public function addTheme(Theme $theme) {
     // Register the namespaces of installed themes.
     // @todo Implement proper theme registration
     // https://www.drupal.org/project/drupal/issues/2941757

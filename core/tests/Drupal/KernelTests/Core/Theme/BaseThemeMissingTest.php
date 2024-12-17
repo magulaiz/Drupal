@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Theme;
 
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\InfoParserException;
+use Drupal\Core\Extension\InfoParserInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeEngineExtensionList;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\State\StateInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -41,6 +47,24 @@ class BaseThemeMissingTest extends KernelTestBase {
     new Settings($settings);
 
     $this->themeInstaller = $this->container->get('theme_installer');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(
+    $root,
+    $type,
+    CacheBackendInterface $cache,
+    InfoParserInterface $info_parser,
+    ModuleHandlerInterface $module_handler,
+    StateInterface $state,
+    ConfigFactoryInterface $config_factory,
+    ThemeEngineExtensionList $engine_list,
+    $install_profile
+  ) {
+    parent::__construct($root, $type, $cache, $info_parser, $module_handler, $state, $config_factory, $engine_list, $install_profile);
+    $this->root = 'vfs://core';
   }
 
   /**

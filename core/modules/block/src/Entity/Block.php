@@ -17,6 +17,7 @@ use Drupal\block\BlockInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -361,10 +362,20 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
     // Ensure the region is valid to mirror the behavior of block_rebuild().
     // This is done primarily for backwards compatibility support of
     // \Drupal\block\BlockInterface::BLOCK_REGION_NONE.
-    $regions = system_region_list($this->theme);
+    try {
+      /** @var \Drupal\Core\Extension\Theme $theme_extension */
+      $theme_extension = \Drupal::service('theme_handler')->getTheme($this->theme);
+      $regions = $theme_extension->listAllRegions();
+      $default_region = $theme_extension->getDefaultRegion();
+    }
+    catch (UnknownExtensionException $e) {
+      $regions = [];
+      $default_region = '';
+    }
+
     if (!isset($regions[$this->region]) && $this->status()) {
       $this
-        ->setRegion(system_default_region($this->theme))
+        ->setRegion($default_region)
         ->disable();
     }
   }

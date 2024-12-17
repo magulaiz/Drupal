@@ -70,7 +70,7 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
 /**
  * Returns an array of default theme features.
  *
- * @see \Drupal\Core\Extension\ThemeExtensionList::$defaults
+ * @see \Drupal\Core\Extension\Theme::$info
  */
 function _system_default_theme_features() {
   return [
