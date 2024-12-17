@@ -40,7 +40,7 @@ use Drupal\Core\Database\TransactionOutOfOrderException;
  *
  * @group Database
  */
-class TransactionYieldTest extends DriverSpecificDatabaseTestBase {
+class TransactionYieldTest extends DatabaseTestBase {
 
   /**
    * Keeps track of the post-transaction callback action executed.
