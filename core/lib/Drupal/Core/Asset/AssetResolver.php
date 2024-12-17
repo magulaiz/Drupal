@@ -318,10 +318,18 @@ class AssetResolver implements AssetResolverInterface {
     // support translation of JavaScript files via hook_js_alter().
     $cid = 'js:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . (int) (count($assets->getSettings()) > 0) . (int) $optimize;
 
-    if ($cached = $this->cache->get($cid)) {
+    // Prepare the return value: filter JavaScript assets per scope.
+    $js_assets_header = [];
+    $js_assets_footer = [];
+    // Initialize settings to FALSE since they are not needed by default. This
+    // distinguishes between an empty array which must still allow
+    // hook_js_settings_alter() to be run.
+    $settings = FALSE;
+    $settings_in_header = NULL;
+    if ($libraries_to_load && $cached = $this->cache->get($cid)) {
       [$js_assets_header, $js_assets_footer, $settings, $settings_in_header] = $cached->data;
     }
-    else {
+    elseif ($libraries_to_load) {
       $javascript = [];
       $default_options = [
         'type' => 'file',
@@ -371,9 +379,6 @@ class AssetResolver implements AssetResolverInterface {
       // Sort JavaScript assets, so that they appear in the correct order.
       uasort($javascript, [static::class, 'sort']);
 
-      // Prepare the return value: filter JavaScript assets per scope.
-      $js_assets_header = [];
-      $js_assets_footer = [];
       foreach ($javascript as $key => $item) {
         if ($item['scope'] == 'header') {
           $js_assets_header[$key] = $item;
@@ -396,9 +401,6 @@ class AssetResolver implements AssetResolverInterface {
       $settings_required = in_array('core/drupalSettings', $libraries_to_load) || in_array('core/drupalSettings', $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()));
       $settings_have_changed = count($libraries_to_load) > 0 || count($assets->getSettings()) > 0;
 
-      // Initialize settings to FALSE since they are not needed by default. This
-      // distinguishes between an empty array which must still allow
-      // hook_js_settings_alter() to be run.
       $settings = FALSE;
       if ($settings_required && $settings_have_changed) {
         $settings = $this->getJsSettingsAssets($assets);
@@ -412,6 +414,10 @@ class AssetResolver implements AssetResolverInterface {
     }
 
     if ($settings !== FALSE) {
+      if (!$libraries_to_load) {
+        $settings_in_header = FALSE;
+      }
+
       // Attached settings override both library definitions and
       // hook_js_settings_build().
       $settings = NestedArray::mergeDeepArray([$settings, $assets->getSettings()], TRUE);
