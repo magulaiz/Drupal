@@ -749,7 +749,7 @@ drupal.vertical-tabs:
 
 htmx:
   remote: https://github.com/bigskysoftware/htmx
-  version: "2.0.1"
+  version: "2.0.4"
   license:
     name: Zero-Clause BSD
     url: https://github.com/bigskysoftware/htmx/blob/master/LICENSE
