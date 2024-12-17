@@ -8,6 +8,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\views\Plugin\views\join\JoinPluginInterface;
 use Drupal\views\Plugin\views\ViewsHandlerInterface;
 use Drupal\views\ViewsData;
 use Symfony\Component\DependencyInjection\Container;
@@ -53,9 +54,9 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
     // Special handling until all views plugins have attribute classes.
     $attribute_name_candidate = 'Drupal\views\Attribute\Views' . Container::camelize($handler_type);
     $plugin_definition_attribute_name = class_exists($attribute_name_candidate) ? $attribute_name_candidate : Plugin::class;
-    $plugin_interface = 'Drupal\views\Plugin\views\ViewsHandlerInterface';
+    $plugin_interface = ViewsHandlerInterface::class;
     if ($handler_type == 'join') {
-      $plugin_interface = 'Drupal\views\Plugin\views\join\JoinPluginInterface';
+      $plugin_interface = JoinPluginInterface::class;
     }
     parent::__construct("Plugin/views/$handler_type", $namespaces, $module_handler, $plugin_interface, $plugin_definition_attribute_name, $plugin_definition_annotation_name);
 
