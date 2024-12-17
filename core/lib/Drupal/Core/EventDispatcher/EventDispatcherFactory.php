@@ -43,7 +43,7 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
   public static function createInstance(EventDispatcherFactoryStage|string $stage = EventDispatcherFactoryStage::PreBootstrap): EventDispatcherInterface {
     self::$stage = is_string($stage) ? EventDispatcherFactoryStage::from($stage) : $stage;
     self::$eventDispatcher = new EventDispatcher();
-    if (self::$stage !== EventDispatcherFactoryStage::FullContainer) {
+    if (self::$stage === EventDispatcherFactoryStage::PreBootstrap) {
       foreach (self::$preBootstrapSubscribers as $subscriber) {
         self::$eventDispatcher->addSubscriber(new $subscriber());
       }

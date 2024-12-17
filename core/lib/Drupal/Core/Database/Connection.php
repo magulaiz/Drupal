@@ -169,7 +169,7 @@ abstract class Connection {
   /**
    * The event dispatcher.
    */
-  public readonly EventDispatcherInterface $eventDispatcher;
+  protected readonly EventDispatcherInterface $eventDispatcher;
 
   /**
    * Constructs a Connection object.
