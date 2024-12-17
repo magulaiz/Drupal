@@ -41,12 +41,6 @@ class UserTest extends UserSessionTest {
       // @todo Also test the uid = 1 handling.
       ->willReturn($authenticated ? 2 : 0);
 
-    $user->method('getRoles')
-      ->willReturnMap([
-        [FALSE, $authenticated ? [RoleInterface::AUTHENTICATED_ID] : [RoleInterface::ANONYMOUS_ID]],
-        [TRUE, []],
-      ]);
-
     return $user;
   }
 
