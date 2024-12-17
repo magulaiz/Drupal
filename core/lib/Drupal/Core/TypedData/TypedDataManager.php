@@ -18,6 +18,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Manages data type plugins.
+ *
+ * @template T of \Drupal\Core\TypedData\TypedDataInterface
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<T>
  */
 class TypedDataManager extends DefaultPluginManager implements TypedDataManagerInterface {
   use DependencySerializationTrait;

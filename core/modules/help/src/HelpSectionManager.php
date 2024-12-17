@@ -15,6 +15,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see \Drupal\help\Plugin\HelpSection\HelpSectionPluginBase
  * @see \Drupal\help\Annotation\HelpSection
  * @see hook_help_section_info_alter()
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\help\HelpSectionPluginInterface>
  */
 class HelpSectionManager extends DefaultPluginManager {
 

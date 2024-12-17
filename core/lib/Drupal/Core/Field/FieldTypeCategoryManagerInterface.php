@@ -6,6 +6,8 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * Defines an interface for field type category managers.
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<\Drupal\Core\Field\FieldTypeCategoryInterface>
  */
 interface FieldTypeCategoryManagerInterface extends PluginManagerInterface {
 

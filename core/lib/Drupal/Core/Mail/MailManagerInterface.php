@@ -6,6 +6,8 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * Provides an interface for sending mail.
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<\Drupal\Core\Mail\MailInterface>
  */
 interface MailManagerInterface extends PluginManagerInterface {
 

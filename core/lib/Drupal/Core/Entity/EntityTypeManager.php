@@ -32,6 +32,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\Core\Entity\EntityTypeInterface
  * @see hook_entity_type_alter()
  * @see hook_entity_type_build()
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Entity\EntityTypeInterface>
  */
 class EntityTypeManager extends DefaultPluginManager implements EntityTypeManagerInterface {
 

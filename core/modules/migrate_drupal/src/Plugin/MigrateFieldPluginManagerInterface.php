@@ -5,6 +5,9 @@ namespace Drupal\migrate_drupal\Plugin;
 use Drupal\migrate\Plugin\MigratePluginManagerInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 
+/**
+ * @template-extends MigratePluginManagerInterface<\Drupal\migrate_drupal\Plugin\MigrateFieldInterface>
+ */
 interface MigrateFieldPluginManagerInterface extends MigratePluginManagerInterface {
 
   /**

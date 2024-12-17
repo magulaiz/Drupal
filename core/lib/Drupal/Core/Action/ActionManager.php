@@ -16,6 +16,9 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see \Drupal\Core\Action\ActionInterface
  * @see \Drupal\Core\Action\ActionBase
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Action\ActionInterface>
+ * @template-implements \Drupal\Component\Plugin\CategorizingPluginManagerInterface<\Drupal\Core\Action\ActionInterface>
  */
 class ActionManager extends DefaultPluginManager implements CategorizingPluginManagerInterface {
 

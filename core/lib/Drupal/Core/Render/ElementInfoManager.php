@@ -20,6 +20,8 @@ use Drupal\Core\Theme\ThemeManagerInterface;
  * @see \Drupal\Core\Render\Element\ElementInterface
  * @see \Drupal\Core\Render\Element\FormElementInterface
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Render\Element\ElementInterface>
  */
 class ElementInfoManager extends DefaultPluginManager implements ElementInfoManagerInterface {
 

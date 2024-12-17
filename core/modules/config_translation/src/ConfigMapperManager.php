@@ -19,6 +19,8 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Manages plugins for configuration translation mappers.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\config_translation\ConfigMapperInterface>
  */
 class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperManagerInterface {
 

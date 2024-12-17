@@ -11,6 +11,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Defines a plugin manager used by Plugin API unit tests.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Component\Plugin\PluginInspectionInterface>
  */
 class DefaultsTestPluginManager extends DefaultPluginManager {
 

@@ -7,6 +7,8 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * Provides an interface for entity type managers.
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<\Drupal\Core\Entity\EntityTypeInterface>
  */
 interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDiscoveryInterface {
 

@@ -6,6 +6,8 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * Provides an interface for a queue worker manager.
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<\Drupal\Core\Queue\QueueWorkerInterface>
  */
 interface QueueWorkerManagerInterface extends PluginManagerInterface {
 

@@ -14,9 +14,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Manages discovery and instantiation of block plugins.
  *
- * @todo Add documentation to this class.
- *
- * @see \Drupal\Core\Block\BlockPluginInterface
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Block\BlockPluginInterface>
  */
 class BlockManager extends DefaultPluginManager implements BlockManagerInterface, FallbackPluginManagerInterface {
 

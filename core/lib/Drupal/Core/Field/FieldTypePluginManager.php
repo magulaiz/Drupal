@@ -15,6 +15,8 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
  * Plugin manager for 'field type' plugins.
  *
  * @ingroup field_types
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Field\FieldItemInterface>
  */
 class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePluginManagerInterface {
 

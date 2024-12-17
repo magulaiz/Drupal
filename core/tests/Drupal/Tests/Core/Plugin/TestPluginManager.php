@@ -11,6 +11,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * A plugin manager for condition plugins.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<object>
  */
 class TestPluginManager extends DefaultPluginManager {
 
@@ -26,7 +28,7 @@ class TestPluginManager extends DefaultPluginManager {
    *   (optional) The module handler to invoke the alter hook with.
    * @param string $alter_hook
    *   (optional) Name of the alter hook.
-   * @param string $interface
+   * @param class-string<T>|null $interface
    *   (optional) The interface required for the plugins.
    */
   public function __construct(\Traversable $namespaces, array $definitions, ?ModuleHandlerInterface $module_handler = NULL, $alter_hook = NULL, $interface = NULL) {

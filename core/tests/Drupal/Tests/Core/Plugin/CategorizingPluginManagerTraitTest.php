@@ -111,6 +111,9 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
 
 /**
  * Class that allows testing the trait.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<object>
+ * @template-implements \Drupal\Component\Plugin\CategorizingPluginManagerInterface<object>
  */
 class CategorizingPluginManager extends DefaultPluginManager implements CategorizingPluginManagerInterface {
 

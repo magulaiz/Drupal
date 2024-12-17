@@ -11,6 +11,8 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
  * @see \Drupal\Core\Config\Schema\ConfigSchemaDiscovery
  * @see hook_config_schema_info_alter()
  * @see https://www.drupal.org/node/1905070
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<\Drupal\Core\Config\Schema\TypedConfigInterface>
  */
 interface TypedConfigManagerInterface extends TypedDataManagerInterface {
 

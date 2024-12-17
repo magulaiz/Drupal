@@ -9,6 +9,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Defines an interface for typed data manager.
+ *
+ * @template T of \Drupal\Core\TypedData\TypedDataInterface
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<T>
  */
 interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscoveryInterface {
 

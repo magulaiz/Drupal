@@ -51,6 +51,8 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstrai
  *
  * @internal
  *   This API is experimental.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Config\Action\ConfigActionPluginInterface>
  */
 class ConfigActionManager extends DefaultPluginManager {
 

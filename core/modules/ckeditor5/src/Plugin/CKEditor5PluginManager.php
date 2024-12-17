@@ -31,6 +31,8 @@ use Drupal\filter\FilterPluginCollection;
  *   CKEditor 5 is currently experimental and should only be leveraged by
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\ckeditor5\Plugin\CKEditor5PluginInterface>
  */
 class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5PluginManagerInterface {
 

@@ -62,6 +62,8 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
  * @see hook_help_topics_info_alter()
  * @see plugin_api
  * @see \Drupal\Component\Plugin\Derivative\DeriverInterface
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\help\HelpTopicPluginInterface>
  */
 class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPluginManagerInterface {
 

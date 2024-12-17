@@ -6,6 +6,10 @@ use Drupal\Component\Plugin\Factory\DefaultFactory;
 
 /**
  * Plugin factory which passes a container to a create method.
+ *
+ * @template T of object
+ *
+ * @template-extends \Drupal\Component\Plugin\Factory\DefaultFactory<T>
  */
 class ContainerFactory extends DefaultFactory {
 

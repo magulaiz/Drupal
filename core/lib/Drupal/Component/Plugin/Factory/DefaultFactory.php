@@ -13,6 +13,10 @@ use Drupal\Component\Plugin\Exception\PluginException;
  * single constructor argument. Plugin types wanting to support plugin classes
  * with more flexible constructor signatures can do so by using an alternate
  * factory such as Drupal\Component\Plugin\Factory\ReflectionFactory.
+ *
+ * @template T of object
+ *
+ * @template-implements \Drupal\Component\Plugin\Factory\FactoryInterface<T>
  */
 class DefaultFactory implements FactoryInterface {
 
@@ -38,7 +42,7 @@ class DefaultFactory implements FactoryInterface {
    *
    * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $discovery
    *   The plugin discovery.
-   * @param string|null $plugin_interface
+   * @param class-string<T>|null $plugin_interface
    *   (optional) The interface each plugin should implement.
    */
   public function __construct(DiscoveryInterface $discovery, $plugin_interface = NULL) {
@@ -65,8 +69,8 @@ class DefaultFactory implements FactoryInterface {
    * @param string $required_interface
    *   (optional) The required plugin interface.
    *
-   * @return string
-   *   The appropriate class name.
+   * @return class-string<T>
+   *   The appropriate class name which implements the plugin interface.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    *   Thrown when there is no class specified, the class doesn't exist, or

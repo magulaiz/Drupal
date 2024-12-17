@@ -19,6 +19,8 @@ use Drupal\layout_builder\SectionStorageInterface;
  * via \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface.
  * While internally depending on the parent class is necessary, external code
  * should only use the methods available on that interface.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<SectionStorageInterface>
  */
 class SectionStorageManager extends DefaultPluginManager implements SectionStorageManagerInterface {
 

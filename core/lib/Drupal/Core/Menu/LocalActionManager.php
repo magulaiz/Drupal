@@ -20,6 +20,8 @@ use Drupal\Core\Session\AccountInterface;
 
 /**
  * Provides the default local action manager using YML as primary definition.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Menu\LocalActionInterface>
  */
 class LocalActionManager extends DefaultPluginManager implements LocalActionManagerInterface {
 

@@ -12,6 +12,10 @@ use Symfony\Component\DependencyInjection\Container;
  * Plugin type manager for all views plugins.
  *
  * @ingroup views_plugins
+ *
+ * @template T of \Drupal\views\Plugin\views\ViewsPluginInterface
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<T>
  */
 class ViewsPluginManager extends DefaultPluginManager {
 

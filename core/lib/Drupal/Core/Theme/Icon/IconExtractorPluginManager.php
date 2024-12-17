@@ -19,6 +19,8 @@ use Drupal\Core\Theme\Icon\Attribute\IconExtractor;
  *   Icon is currently experimental and should only be leveraged by experimental
  *   modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Theme\Icon\IconExtractorInterface>
  */
 class IconExtractorPluginManager extends DefaultPluginManager {
 

@@ -26,6 +26,8 @@ use Symfony\Component\Mime\Header\MailboxHeader;
  * @see \Drupal\Core\Annotation\Mail
  * @see \Drupal\Core\Mail\MailInterface
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Mail\MailInterface>
  */
 class MailManager extends DefaultPluginManager implements MailManagerInterface {
 

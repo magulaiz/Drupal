@@ -17,6 +17,8 @@ use Drupal\image\Attribute\ImageEffect;
  * @see \Drupal\image\ImageEffectInterface
  * @see \Drupal\image\ImageEffectBase
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\image\ImageEffectInterface>
  */
 class ImageEffectManager extends DefaultPluginManager {
 

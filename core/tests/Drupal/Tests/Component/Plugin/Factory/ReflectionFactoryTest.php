@@ -133,6 +133,10 @@ class ReflectionFactoryTest extends TestCase {
  * Override ReflectionFactory because ::createInstance() calls a static method.
  *
  * We have to override getPluginClass so that we can stub out its return value.
+ *
+ * @template T of object
+ *
+ * @template-extends \Drupal\Component\Plugin\Factory\DefaultFactory<T>
  */
 class StubReflectionFactory extends ReflectionFactory {
 

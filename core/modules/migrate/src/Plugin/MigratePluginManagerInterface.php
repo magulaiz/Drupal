@@ -4,6 +4,11 @@ namespace Drupal\migrate\Plugin;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 
+/**
+ * @template T of object
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<T>
+ */
 interface MigratePluginManagerInterface extends PluginManagerInterface {
 
   /**

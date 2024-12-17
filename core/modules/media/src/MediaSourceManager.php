@@ -9,6 +9,8 @@ use Drupal\media\Attribute\MediaSource;
 
 /**
  * Manages media source plugins.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\media\MediaSourceInterface>
  */
 class MediaSourceManager extends DefaultPluginManager {
 

@@ -22,6 +22,11 @@ use Drupal\Core\Plugin\FilteredPluginManagerTrait;
  * @see \Drupal\Core\Condition\ConditionPluginBase
  *
  * @ingroup plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Condition\ConditionInterface>
+ * @template-implements \Drupal\Core\Executable\ExecutableManagerInterface<\Drupal\Core\Condition\ConditionInterface>
+ * @template-implements \Drupal\Component\Plugin\CategorizingPluginManagerInterface<\Drupal\Core\Condition\ConditionInterface>
+ * @template-implements FilteredPluginManagerInterface<\Drupal\Core\Condition\ConditionInterface>
  */
 class ConditionManager extends DefaultPluginManager implements ExecutableManagerInterface, CategorizingPluginManagerInterface, FilteredPluginManagerInterface {
 

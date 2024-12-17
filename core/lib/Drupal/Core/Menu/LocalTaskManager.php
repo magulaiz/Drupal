@@ -23,6 +23,8 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 
 /**
  * Provides the default local task manager using YML as primary definition.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Menu\LocalTaskInterface>
  */
 class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerInterface {
 

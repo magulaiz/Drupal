@@ -18,6 +18,8 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstrai
 
 /**
  * Manages config schema type plugins.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Config\Schema\TypedConfigInterface>
  */
 class TypedConfigManager extends TypedDataManager implements TypedConfigManagerInterface {
 

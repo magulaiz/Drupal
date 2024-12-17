@@ -43,6 +43,8 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  * @see \Drupal\breakpoint\Breakpoint
  * @see \Drupal\breakpoint\BreakpointInterface
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\breakpoint\BreakpointInterface>
  */
 class BreakpointManager extends DefaultPluginManager implements BreakpointManagerInterface {
   use StringTranslationTrait;

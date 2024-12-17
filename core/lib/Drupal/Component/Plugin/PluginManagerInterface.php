@@ -24,6 +24,11 @@ use Drupal\Component\Plugin\Mapper\MapperInterface;
  * @see \Drupal\Component\Plugin\PluginManagerBase
  *
  * @ingroup plugin_api
+ *
+ * @template T of object
+ *
+ * @template-extends \Drupal\Component\Plugin\Factory\FactoryInterface<T>
+ * @template-extends \Drupal\Component\Plugin\Mapper\MapperInterface<T>
  */
 interface PluginManagerInterface extends DiscoveryInterface, FactoryInterface, MapperInterface {
 }

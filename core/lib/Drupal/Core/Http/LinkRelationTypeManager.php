@@ -12,6 +12,8 @@ use Drupal\Core\Plugin\Discovery\YamlDiscovery;
  * Provides a default plugin manager for link relation types.
  *
  * @see \Drupal\Core\Http\LinkRelationTypeInterface
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Http\LinkRelationTypeInterface>
  */
 class LinkRelationTypeManager extends DefaultPluginManager {
 

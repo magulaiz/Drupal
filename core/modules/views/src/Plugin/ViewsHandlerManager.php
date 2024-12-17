@@ -14,6 +14,10 @@ use Drupal\views\Plugin\views\HandlerBase;
 
 /**
  * Plugin type manager for all views handlers.
+ *
+ * @template T of object
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<T>
  */
 class ViewsHandlerManager extends DefaultPluginManager implements FallbackPluginManagerInterface {
 

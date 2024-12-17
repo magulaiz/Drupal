@@ -14,6 +14,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see \Drupal\Core\Display\VariantInterface
  * @see \Drupal\Core\Display\VariantBase
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Display\VariantInterface>
  */
 class VariantManager extends DefaultPluginManager {
 

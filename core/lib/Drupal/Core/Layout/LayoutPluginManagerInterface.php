@@ -7,6 +7,9 @@ use Drupal\Core\Plugin\FilteredPluginManagerInterface;
 
 /**
  * Provides the interface for a plugin manager of layouts.
+ *
+ * @template-extends \Drupal\Component\Plugin\CategorizingPluginManagerInterface<\Drupal\Core\Layout\LayoutInterface>
+ * @template-extends \Drupal\Core\Plugin\FilteredPluginManagerInterface<\Drupal\Core\Layout\LayoutInterface>
  */
 interface LayoutPluginManagerInterface extends CategorizingPluginManagerInterface, FilteredPluginManagerInterface {
 

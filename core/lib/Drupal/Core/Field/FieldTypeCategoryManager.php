@@ -35,6 +35,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see \Drupal\Core\Field\FieldTypeCategoryInterface
  * @see \Drupal\Core\Field\FieldTypeCategory
  * @see \hook_field_type_category_info_alter
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Field\FieldTypeCategoryInterface>
  */
 class FieldTypeCategoryManager extends DefaultPluginManager implements FieldTypeCategoryManagerInterface, FallbackPluginManagerInterface {
 

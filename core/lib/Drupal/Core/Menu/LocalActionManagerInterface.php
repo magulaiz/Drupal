@@ -11,6 +11,8 @@ use Drupal\Component\Plugin\PluginManagerInterface;
  * format allows them (if needed) to dynamically generate a title or the path
  * they link to. The annotation on the plugin provides the default title,
  * and the list of routes where the action should be rendered.
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<\Drupal\Core\Menu\LocalActionInterface>
  */
 interface LocalActionManagerInterface extends PluginManagerInterface {
 
