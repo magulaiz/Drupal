@@ -48,6 +48,9 @@ class ArchiverManager extends DefaultPluginManager {
 
   /**
    * {@inheritdoc}
+   *
+   * @return \Drupal\Core\Archiver\ArchiverInterface
+   *   The new plugin instance.
    */
   public function createInstance($plugin_id, array $configuration = []) {
     $plugin_definition = $this->getDefinition($plugin_id);
@@ -57,6 +60,9 @@ class ArchiverManager extends DefaultPluginManager {
 
   /**
    * {@inheritdoc}
+   *
+   * @return \Drupal\Core\Archiver\ArchiverInterface|null
+   *   The new plugin instance, or NULL if not found.
    */
   public function getInstance(array $options) {
     $filepath = $options['filepath'];
