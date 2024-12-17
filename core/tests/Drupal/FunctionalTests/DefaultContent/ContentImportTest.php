@@ -8,6 +8,7 @@ use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\DefaultContent\DefaultContentPreImportEvent;
 use Drupal\Core\DefaultContent\Existing;
 use Drupal\Core\DefaultContent\Finder;
 use Drupal\Core\DefaultContent\Importer;
@@ -72,8 +73,6 @@ class ContentImportTest extends BrowserTestBase {
   ];
 
   private readonly string $contentDir;
-
-  private readonly EventDispatcherInterface $eventDispatcher;
 
   /**
    * {@inheritdoc}
@@ -280,7 +279,26 @@ class ContentImportTest extends BrowserTestBase {
     $this->assertInstanceOf(Section::class, $section);
     $this->assertCount(2, $section->getComponents());
     $this->assertSame('system_powered_by_block', $section->getComponent('03b45f14-cf74-469a-8398-edf3383ce7fa')->getPluginId());
+  }
 
+  /**
+   * Tests that the pre-import event allows skipping certain entities.
+   */
+  public function testPreImportEvent(): void {
+    $listener = function (DefaultContentPreImportEvent $event): void {
+      $event->skip('3434bd5a-d2cd-4f26-bf79-a7f6b951a21b');
+    };
+    \Drupal::service(EventDispatcherInterface::class)
+      ->addListener(DefaultContentPreImportEvent::class, $listener);
+
+    $finder = new Finder($this->contentDir);
+    $this->assertSame('menu_link_content', $finder->data['3434bd5a-d2cd-4f26-bf79-a7f6b951a21b']['_meta']['entity_type']);
+    $this->container->get(Importer::class)->importContent($finder, Existing::Error);
+
+    // The entity we skipped should not be here.
+    $menu_link = \Drupal::service(EntityRepositoryInterface::class)
+      ->loadEntityByUuid('menu_link_content', '3434bd5a-d2cd-4f26-bf79-a7f6b951a21b');
+    $this->assertNull($menu_link);
   }
 
 }
