@@ -19,6 +19,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
  *
  * The Twig file must contain YAML front matter with a key named 'label'. It can
  * also contain keys named 'top_level' and 'related'. For example:
+ *
  * @code
  * ---
  * label: 'Configuring error responses, including 403/404 pages'

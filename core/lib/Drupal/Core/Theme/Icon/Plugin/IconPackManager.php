@@ -29,6 +29,7 @@ use JsonSchema\Validator;
  * Each icon pack must have an `extractor` and `template` property. An optional
  * `config` property can be required based on the value of the `extractor`
  * property.
+ *
  * @code
  * example_pack:
  *   extractor: (string) Plugin ID of the IconExtractor. Provided extractors are

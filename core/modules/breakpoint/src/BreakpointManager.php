@@ -20,6 +20,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  * Extension can define breakpoints in an EXTENSION_NAME.breakpoints.yml file
  * contained in the extension's base directory. Each breakpoint has the
  * following structure:
+ *
  * @code
  *   MACHINE_NAME:
  *     label: STRING

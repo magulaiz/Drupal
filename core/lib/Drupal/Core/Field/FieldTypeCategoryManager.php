@@ -14,6 +14,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * A module can define field type categories in a
  * MODULE_NAME.field_type_categories.yml file contained in the module's
  * base directory. Each plugin has the following structure:
+ *
  * @code
  *   CATEGORY_NAME:
  *     label: STRING
