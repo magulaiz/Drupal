@@ -6,6 +6,7 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\PhpStorage\PhpStorageFactory;
+use Drupal\twig\Hook\TwigHooks;
 
 /**
  * Tests overriding Twig engine settings via settings.php.
@@ -80,7 +81,7 @@ class TwigSettingsTest extends BrowserTestBase {
    * Ensures Twig template cache setting can be overridden.
    */
   public function testTwigCacheOverride(): void {
-    $extension = twig_extension();
+    $extension = \Drupal::classResolver(TwigHooks::class)->extension();
     $theme_installer = $this->container->get('theme_installer');
     $theme_installer->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();

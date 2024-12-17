@@ -7,6 +7,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\twig\Hook\TwigHooks;
 
 /**
  * Provides the default implementation of a theme manager.
@@ -282,14 +283,15 @@ class ThemeManager implements ThemeManagerInterface {
     }
 
     // Generate the output using a template.
-    $render_function = 'twig_render_template';
+    $render_function = [\Drupal::classResolver(TwigHooks::class), 'renderTemplate'];
     $extension = '.html.twig';
 
     // The theme engine may use a different extension and a different
     // renderer.
     $theme_engine = $active_theme->getEngine();
     if (isset($theme_engine)) {
-      if ($info['type'] != 'module') {
+      if ($info['type'] !== 'module') {
+        // @todo Fix problem of relation only on procedural hook call here.
         if (function_exists($theme_engine . '_render_template')) {
           $render_function = $theme_engine . '_render_template';
         }

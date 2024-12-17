@@ -12,6 +12,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\FilterPluginCollection;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\twig\Hook\TwigHooks;
 
 // cspell:ignore outro
 // cspell:ignore toolongdomainexampledomainexampledomainexampledomainexampledomain
@@ -515,8 +516,7 @@ class FilterKernelTest extends KernelTestBase {
       'directory' => '',
       'children' => 'Test two',
     ];
-    include_once $this->root . '/core/themes/engines/twig/twig.engine';
-    $render = (string) twig_render_template('container.html.twig', $variables);
+    $render = (string) \Drupal::classResolver(TwigHooks::class)->renderTemplate('container.html.twig', $variables);
     $render = trim($render);
 
     // Render text before applying the auto paragraph filter.

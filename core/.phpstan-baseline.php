@@ -62836,18 +62836,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function twig_extension\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/engines/twig/twig.engine',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function twig_render_template\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/engines/twig/twig.engine',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function olivero_element_info_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/themes/olivero/olivero.theme',
