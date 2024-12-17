@@ -252,11 +252,23 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "pgsql-16"
 
+'PHP 8.3 PostgreSQL 17':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "pgsql-17"
+
 'PHP 8.3 SQLite 3.45':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "sqlite-3"
+
+'PHP 8.4 MySQL 8.4':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.4-ubuntu"
+    _TARGET_DB: "mysql-8.4"
 
 # Jobs running on commits.
 # The value set in the "needs" property will determine the order in the sequence.
@@ -290,6 +302,11 @@ default:
 '[Daily] PHP 8.3 MySQL 8.4':
   extends: 'PHP 8.3 MySQL 8.4'
   needs: [ '[Daily] PHP 8.3 MariaDB 10.6' ]
+  <<: [ *run-daily ]
+
+'[Daily] PHP 8.3 PostgreSQL 17':
+  extends: 'PHP 8.3 PostgreSQL 17'
+  needs: [ '[Daily] PHP 8.3 MySQL 8.4' ]
   <<: [ *run-daily ]
 
 ################
@@ -443,10 +460,10 @@ default:
     - cd core
     - yarn install
     - yarn run build:css --check
-    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color  --custom-formatter=@gitlab-formatters/stylelint-formatter-gitlab --output-file=$CI_PROJECT_DIR/gl-codequality.json
   artifacts:
     reports:
-      codequality: stylelint-quality-report.json
+      codequality: gl-codequality.json
 
 '📔 Spell-checking':
   <<: [ *default-job-settings-lint ]
