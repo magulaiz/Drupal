@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Entity\Entity\Access;
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
