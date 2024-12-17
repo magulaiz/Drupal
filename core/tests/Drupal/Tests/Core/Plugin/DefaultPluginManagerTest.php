@@ -308,9 +308,9 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $this->expectedDefinitions['apple']['provider'] = 'plugin_test';
     $this->expectedDefinitions['banana']['provider'] = 'plugin_test';
 
-    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler, NULL, '\\' . FruitInterface::class);
+    $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler, NULL, FruitInterface::class);
     $this->expectException(PluginException::class);
-    $this->expectExceptionMessage('Plugin "kale" (Drupal\plugin_test\Plugin\plugin_test\fruit\Kale) must implement interface \Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
+    $this->expectExceptionMessage('Plugin "kale" (Drupal\plugin_test\Plugin\plugin_test\fruit\Kale) must implement interface Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
     $plugin_manager->createInstance('kale');
   }
 
