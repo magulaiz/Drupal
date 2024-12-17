@@ -104,14 +104,14 @@ class TransactionYieldTest extends DriverSpecificDatabaseTestBase {
    * transaction (which was already committed when the inner transaction
    * started).
    *
-   * @param $suffix
+   * @param string $suffix
    *   Suffix to add to field values to differentiate tests.
-   * @param $rollback
+   * @param bool $rollback
    *   Whether or not to try rolling back the transaction when we're done.
-   * @param $ddl_statement
+   * @param bool $ddl_statement
    *   Whether to execute a DDL statement during the inner transaction.
    */
-  protected function transactionOuterLayer($suffix, $rollback = FALSE, $ddl_statement = FALSE) {
+  protected function transactionOuterLayer(string $suffix, bool $rollback = FALSE, bool $ddl_statement = FALSE): void {
     $depth = $this->connection->transactionManager()->stackDepth();
     $txn = $this->connection->startTransaction();
 
@@ -145,14 +145,14 @@ class TransactionYieldTest extends DriverSpecificDatabaseTestBase {
    * This "inner layer" transaction is either used alone or nested inside of the
    * "outer layer" transaction.
    *
-   * @param $suffix
+   * @param string $suffix
    *   Suffix to add to field values to differentiate tests.
-   * @param $rollback
+   * @param bool $rollback
    *   Whether or not to try rolling back the transaction when we're done.
-   * @param $ddl_statement
+   * @param bool $ddl_statement
    *   Whether to execute a DDL statement during the transaction.
    */
-  protected function transactionInnerLayer($suffix, $rollback = FALSE, $ddl_statement = FALSE) {
+  protected function transactionInnerLayer(string $suffix, bool $rollback = FALSE, bool $ddl_statement = FALSE): void {
     $depth = $this->connection->transactionManager()->stackDepth();
     // Start a transaction. If we're being called from ->transactionOuterLayer,
     // then we're already in a transaction. Normally, that would make starting
@@ -598,7 +598,7 @@ class TransactionYieldTest extends DriverSpecificDatabaseTestBase {
   /**
    * Inserts a single row into the testing table.
    */
-  protected function insertRow($name) {
+  protected function insertRow(string $name): void {
     $this->connection->insert('test')
       ->fields([
         'name' => $name,
@@ -609,7 +609,7 @@ class TransactionYieldTest extends DriverSpecificDatabaseTestBase {
   /**
    * Executes a DDL statement.
    */
-  protected function executeDDLStatement() {
+  protected function executeDDLStatement(): void {
     static $count = 0;
     $table = [
       'fields' => [
@@ -627,7 +627,7 @@ class TransactionYieldTest extends DriverSpecificDatabaseTestBase {
   /**
    * Starts over for a new test.
    */
-  protected function cleanUp() {
+  protected function cleanUp(): void {
     $this->connection->truncate('test')
       ->execute();
     $this->postTransactionCallbackAction = NULL;
