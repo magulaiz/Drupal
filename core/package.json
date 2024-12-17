@@ -81,7 +81,7 @@
     "loadjs": "^4.3.0",
     "minimist": "^1.2.8",
     "mkdirp": "^3.0.1",
-    "nightwatch": "2.4.2",
+    "nightwatch": "^2.4.2",
     "normalize.css": "8.0.x",
     "postcss": "^8.4.31",
     "postcss-header": "^3.0.2",
