@@ -51,7 +51,7 @@ class TaxonomyTermViewBuilder extends EntityViewBuilder {
     $build[] = parent::view($entity, $view_mode, $langcode);
     // Get all the nodes that use this term.
     $tid = $entity->id();
-    $query = $this->database->select('taxonomy_index', 't')->fields('t', ['nid'])->condition('tid', $tid);
+    $query = $this->database->select('taxonomy_index', 't')->fields('t', ['nid'])->condition('tid', $tid)->orderBy('sticky', 'desc')->orderBy('created', 'desc');
     $nodes = $query->execute()->fetchCol();
 
     // Render all the nodes in teaser view mode.
