@@ -99,14 +99,14 @@
   font-size: small;
   line-height: 0.8em;
 }
-.touchevents .contextual-region .contextual .contextual-links a {
+.contextual-region .contextual .contextual-links a {
   font-size: large;
 }
 .contextual-region .contextual .contextual-links a,
 .contextual-region .contextual .contextual-links a:hover {
   text-decoration: none;
 }
-.no-touchevents .contextual-region .contextual .contextual-links li a:hover {
+.contextual-region .contextual .contextual-links li a:hover {
   color: #000;
   background: #f7fcff;
 }

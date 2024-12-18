@@ -97,16 +97,16 @@
   width: 0.3125rem;
 }
 
-.touchevents #drupal-off-canvas-wrapper .draggable td {
+#drupal-off-canvas-wrapper .draggable td {
   padding: 0 0.625rem;
 }
 
-.touchevents #drupal-off-canvas-wrapper .draggable .menu-item__link {
+#drupal-off-canvas-wrapper .draggable .menu-item__link {
   display: inline-block;
   padding: 0.625rem 0;
 }
 
-.touchevents #drupal-off-canvas-wrapper a.tabledrag-handle {
+#drupal-off-canvas-wrapper a.tabledrag-handle {
   width: 2.5rem;
   height: 2.75rem;
 }

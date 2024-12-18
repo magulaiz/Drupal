@@ -665,7 +665,6 @@ drupal.tabledrag:
     - core/drupal
     - core/drupalSettings
     - core/once
-    - core/drupal.touchevents-test
 
 drupal.tabledrag.ajax:
   version: VERSION
@@ -716,12 +715,6 @@ drupal.timezone:
     - core/jquery
     - core/once
     - core/drupal
-
-drupal.touchevents-test:
-  header: true
-  version: VERSION
-  js:
-    misc/touchevents-test.js: { weight: -21 }
 
 drupal.vertical-tabs:
   version: VERSION
@@ -877,7 +870,6 @@ drupal.dialog.off_canvas:
     - core/drupal.announce
     - core/drupal.dialog
     - core/drupal.dialog.ajax
-    - core/drupal.touchevents-test
 
 js-cookie:
   remote: https://github.com/js-cookie/js-cookie

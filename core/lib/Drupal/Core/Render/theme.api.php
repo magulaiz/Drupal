@@ -182,7 +182,6 @@
  *   @code
  *   function THEME_preprocess_menu_local_action(array &$variables) {
  *     // We require touch events detection for button styling.
- *     $variables['#attached']['library'][] = 'core/drupal.touchevents-test';
  *   }
  *   @endcode
  *

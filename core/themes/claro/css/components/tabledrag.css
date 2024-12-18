@@ -189,12 +189,14 @@ body.drag-y {
  * Increase handle size.
  */
 
-.touchevents .tabledrag-handle::after {
-  padding-block: var(--space-s);
-}
+@media (pointer: coarse) {
+  .tabledrag-handle::after {
+    padding-block: var(--space-s);
+  }
 
-.touchevents .draggable .menu-item__link {
-  padding-block: var(--space-xs);
+  .draggable .menu-item__link {
+    padding-block: var(--space-xs);
+  }
 }
 
 /**

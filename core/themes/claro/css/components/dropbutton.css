@@ -103,22 +103,22 @@
 
 /* First dropbutton list item variants */
 
-.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
+.dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
   white-space: nowrap;
 }
 
-[dir="rtl"] :is(.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type) {
+[dir="rtl"] :is(.dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type) {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
 
-.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
+.dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
   white-space: nowrap;
 }
 
-[dir="rtl"] :is(.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type) {
+[dir="rtl"] :is(.dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type) {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
@@ -188,18 +188,18 @@
 
 /* Toggler variants */
 
-.no-touchevents .dropbutton--small .dropbutton__toggle {
+.dropbutton--small .dropbutton__toggle {
   width: var(--dropbutton-small-toggle-size);
   height: var(--dropbutton-small-toggle-size);
 }
 
-.no-touchevents .dropbutton--extrasmall .dropbutton__toggle {
+.dropbutton--extrasmall .dropbutton__toggle {
   width: var(--dropbutton-extrasmall-toggle-size);
   height: var(--dropbutton-extrasmall-toggle-size);
 }
 
-.no-touchevents .dropbutton--small .dropbutton__toggle::before,
-.no-touchevents .dropbutton--extrasmall .dropbutton__toggle::before {
+.dropbutton--small .dropbutton__toggle::before,
+.dropbutton--extrasmall .dropbutton__toggle::before {
   width: 0.75rem; /* 12px */
 }
 
@@ -226,8 +226,8 @@
 
   /* Variants */
 
-  .no-touchevents .dropbutton--small .dropbutton__toggle::before,
-  .no-touchevents .dropbutton--extrasmall .dropbutton__toggle::before {
+  .dropbutton--small .dropbutton__toggle::before,
+  .dropbutton--extrasmall .dropbutton__toggle::before {
     width: 0.4375rem;
     height: 0.4375rem;
     margin-top: calc(0.4375rem / (2 * -1.41429));
@@ -269,13 +269,13 @@
 
 /* Variants */
 
-.no-touchevents .dropbutton--small .dropbutton__item:first-of-type > * {
+.dropbutton--small .dropbutton__item:first-of-type > * {
   padding-block: calc(var(--dropbutton-small-spacing-size) - var(--dropbutton-border-size));
   font-size: var(--dropbutton-small-font-size);
   line-height: var(--dropbutton-small-line-height);
 }
 
-.no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type > * {
+.dropbutton--extrasmall .dropbutton__item:first-of-type > * {
   padding-top: calc(var(--dropbutton-extrasmall-spacing-size) - var(--dropbutton-border-size));
   padding-bottom: calc(var(--dropbutton-extrasmall-spacing-size) - var(--dropbutton-border-size));
   font-size: var(--dropbutton-extrasmall-font-size);
@@ -400,16 +400,16 @@
 
 /* Variants. */
 
-.no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > a,
-.no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
+.dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > a,
+.dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
   padding-top: var(--dropbutton-small-spacing-size);
   padding-bottom: var(--dropbutton-small-spacing-size);
   font-size: var(--dropbutton-small-font-size);
   line-height: var(--dropbutton-small-line-height);
 }
 
-.no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type ~ .dropbutton__item > a,
-.no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
+.dropbutton--extrasmall .dropbutton__item:first-of-type ~ .dropbutton__item > a,
+.dropbutton--extrasmall .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
   padding-top: var(--dropbutton-extrasmall-spacing-size);
   padding-bottom: var(--dropbutton-extrasmall-spacing-size);
   font-size: var(--dropbutton-extrasmall-font-size);
