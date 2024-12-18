@@ -42,13 +42,15 @@ final class PreImportEvent extends Event {
    *
    * @param string $uuid
    *   The UUID of an entity that should not be imported.
+   * @param string|\Stringable|null $reason
+   *   (optional) A reason why the entity is being skipped. Defaults to NULL.
    *
    * @throws \InvalidArgumentException
    *   If the given UUID is not one of the ones being imported.
    */
-  public function skip(string $uuid): void {
+  public function skip(string $uuid, string|\Stringable|null $reason = NULL): void {
     if (array_key_exists($uuid, $this->finder->data)) {
-      $this->skip[] = $uuid;
+      $this->skip[$uuid] = $reason;
     }
     else {
       throw new \InvalidArgumentException("The entity '$uuid' is not being imported.");
@@ -58,11 +60,13 @@ final class PreImportEvent extends Event {
   /**
    * Returns the list of entity UUIDs that should not be imported.
    *
-   * @return string[]
-   *   The UUIDs of entities that should not be imported.
+   * @return string|\Stringable|null[]
+   *   An array whose keys are the UUIDs of the entities that should not be
+   *   imported, and the values are either a short explanation of why that
+   *   entity was skipped, or NULL if no explanation was given.
    */
   public function getSkipList(): array {
-    return array_unique($this->skip);
+    return $this->skip;
   }
 
 }

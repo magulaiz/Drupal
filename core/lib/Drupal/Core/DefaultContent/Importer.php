@@ -85,8 +85,16 @@ final class Importer implements LoggerAwareInterface {
         assert(is_string($entity_type_id));
         assert(is_string($path));
 
-        // The event subscribers asked to skip importing this entity.
-        if (in_array($uuid, $skip, TRUE)) {
+        // The event subscribers asked to skip importing this entity. If they
+        // explained why, log that.
+        if (array_key_exists($uuid, $skip)) {
+          if ($skip[$uuid]) {
+            $this->logger?->info('Skipped importing @entity_type @uuid because: %reason', [
+              '@entity_type' => $entity_type_id,
+              '@uuid' => $uuid,
+              '%reason' => $skip[$uuid],
+            ]);
+          }
           continue;
         }
 
