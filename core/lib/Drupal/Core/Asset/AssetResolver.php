@@ -319,14 +319,6 @@ class AssetResolver implements AssetResolverInterface {
     // support translation of JavaScript files via hook_js_alter().
     $cid = 'js:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . ':' . (int) $optimize;
 
-    // Prepare the return value: filter JavaScript assets per scope.
-    $js_assets_header = [];
-    $js_assets_footer = [];
-    // Initialize settings to FALSE since they are not needed by default. This
-    // distinguishes between an empty array which must still allow
-    // hook_js_settings_alter() to be run.
-    $settings = FALSE;
-    $settings_in_header = NULL;
     if ($cached = $this->cache->get($cid)) {
       [$js_assets_header, $js_assets_footer, $settings, $settings_in_header] = $cached->data;
     }
@@ -341,6 +333,14 @@ class AssetResolver implements AssetResolverInterface {
         'attributes' => [],
         'version' => NULL,
       ];
+      // Prepare the return value: filter JavaScript assets per scope.
+      $js_assets_header = [];
+      $js_assets_footer = [];
+      $settings_in_header = NULL;
+      // Initialize settings to FALSE since they are not needed by default. This
+      // distinguishes between an empty array which must still allow
+      // hook_js_settings_alter() to be run.
+      $settings = FALSE;
 
       // The current list of header JS libraries are only those libraries that
       // are in the header, but their dependencies must also be loaded for them
@@ -406,11 +406,14 @@ class AssetResolver implements AssetResolverInterface {
 
     // If the core/drupalSettings library is being loaded or is already
     // loaded, get the JavaScript settings assets, and convert them into a
-    // single "regular" JavaScript asset.
-    $settings_required = in_array('core/drupalSettings', $libraries_to_load) || in_array('core/drupalSettings', $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()));
-    $settings_have_changed = count($libraries_to_load) > 0 || count($asset_settings) > 0;
-
-    if ($settings_required || $settings_have_changed) {
+    // single "regular" JavaScript asset. But only if there are settings to
+    // add.
+    $process_settings = FALSE;
+    // Do the quickest checks first.
+    if (count($libraries_to_load) > 0 || count($asset_settings) > 0) {
+      $process_settings = in_array('core/drupalSettings', $libraries_to_load) ||  in_array('core/drupalSettings', $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()));
+    }
+    if ($process_settings) {
       // Attached settings override both library definitions and
       // hook_js_settings_build().
       $settings = NestedArray::mergeDeepArray([$settings, $asset_settings], TRUE);
