@@ -310,7 +310,7 @@ class AssetResolver implements AssetResolverInterface {
 
     // If all the libraries to load contained only CSS, there is nothing further
     // to do here, so return early.
-    if (!$libraries_to_load && !$asset_settings()) {
+    if (!$libraries_to_load && !$asset_settings) {
       return [[], []];
     }
 
