@@ -53,7 +53,7 @@ final class PreImportEvent extends Event {
       $this->skip[$uuid] = $reason;
     }
     else {
-      throw new \InvalidArgumentException("The entity '$uuid' is not being imported.");
+      throw new \InvalidArgumentException("Content entity '$uuid' cannot be skipped, because it is not one of the entities being imported.");
     }
   }
 
