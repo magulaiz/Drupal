@@ -13,3 +13,10 @@ function path_removed_post_updates(): array {
     'path_post_update_create_language_content_settings' => '9.0.0',
   ];
 }
+
+/**
+ * No-op update.
+ */
+function path_post_update_variant_reset_container(&$sandbox = NULL): void {
+  // No-op: force a container reset since services changed.
+}

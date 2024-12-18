@@ -2,6 +2,7 @@
 
 namespace Drupal\path\Hook;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -102,7 +103,13 @@ class PathHooks {
   #[Hook('entity_base_field_info')]
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
     if (in_array($entity_type->id(), ['taxonomy_term', 'node', 'media'], TRUE)) {
-      $fields['path'] = BaseFieldDefinition::create('path')->setLabel(t('URL alias'))->setTranslatable(TRUE)->setDisplayOptions('form', ['type' => 'path', 'weight' => 30])->setDisplayConfigurable('form', TRUE)->setComputed(TRUE);
+      $fields['path'] = BaseFieldDefinition::create('path')
+        ->setLabel(t('URL alias'))
+        ->setTranslatable(TRUE)
+        ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+        ->setDisplayOptions('form', ['type' => 'path', 'weight' => 30])
+        ->setDisplayConfigurable('form', TRUE)
+        ->setComputed(TRUE);
       return $fields;
     }
   }

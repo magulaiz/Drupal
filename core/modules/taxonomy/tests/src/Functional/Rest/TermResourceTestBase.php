@@ -217,6 +217,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
           'alias' => '/llama',
           'pid' => 1,
           'langcode' => 'en',
+          'variant' => 'default',
         ],
       ],
       'status' => [

@@ -81,6 +81,13 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
         ],
       ]);
 
+    $fields['variant'] = BaseFieldDefinition::create('string')
+      ->setLabel(new TranslatableMarkup('Variant'))
+      ->setDescription(new TranslatableMarkup('An alternative alias used with this path.'))
+      ->setRequired(FALSE)
+      ->setDefaultValue(NULL)
+      ->setRevisionable(TRUE);
+
     $fields['langcode']->setDefaultValue(LanguageInterface::LANGCODE_NOT_SPECIFIED);
 
     // Add the published field.
