@@ -587,13 +587,18 @@ class TransactionYieldTest extends DatabaseTestBase {
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
     $transaction3->yield();
-    try {
+    if ($this->connection->supportsTransactionalDDL()) {
       $transaction->yield();
-      $this->fail('TransactionOutOfOrderException was expected, but did not throw.');
     }
-    catch (TransactionOutOfOrderException) {
-      // Just continue, this is out or order since $transaction3 started a new
-      // root.
+    else {
+      try {
+        $transaction->yield();
+        $this->fail('TransactionOutOfOrderException was expected, but did not throw.');
+      }
+      catch (TransactionOutOfOrderException) {
+        // Just continue, this is out or order since $transaction3 started a
+        // new root.
+      }
     }
     $this->assertRowPresent('row');
 
@@ -622,13 +627,18 @@ class TransactionYieldTest extends DatabaseTestBase {
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
     $transaction3->rollBack();
-    try {
+    if ($this->connection->supportsTransactionalDDL()) {
       $transaction->yield();
-      $this->fail('TransactionOutOfOrderException was expected, but did not throw.');
     }
-    catch (TransactionOutOfOrderException) {
-      // Just continue, this is out or order since $transaction3 started a new
-      // root.
+    else {
+      try {
+        $transaction->yield();
+        $this->fail('TransactionOutOfOrderException was expected, but did not throw.');
+      }
+      catch (TransactionOutOfOrderException) {
+        // Just continue, this is out or order since $transaction3 started a
+        // new root.
+      }
     }
     $this->assertRowAbsent('row');
 
