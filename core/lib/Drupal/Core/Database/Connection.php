@@ -224,6 +224,7 @@ abstract class Connection {
    *   changes the order of object destruction when the develop mode is enabled.
    */
   public function commitAll() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/7654321', E_USER_DEPRECATED);
     $manager = $this->transactionManager();
     if ($manager->inTransaction() && method_exists($manager, 'commitAll')) {
       $this->transactionManager()->commitAll();
