@@ -1302,6 +1302,14 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     if ($original && !$entity->isNewRevision() && !$entity->isDefaultRevision()) {
       $original = $this->loadRevision($entity->getLoadedRevisionId());
     }
+    try {
+      $isNewDefaultRevision = $this->entityType->getRevisionTable() && $entity->isDefaultRevision() && $this->getLatestTranslationAffectedRevisionId($entity->id(), $entity->language()
+        ->getId()) !== $vid;
+    }
+    catch (\Exception $exception) {
+      // The entity type may be in the process of changing.
+      $isNewDefaultRevision = FALSE;
+    }
 
     // Determine which fields should be actually stored.
     $definitions = $this->entityFieldManager->getFieldDefinitions($entity_type, $bundle);
@@ -1317,7 +1325,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // When updating an existing revision, keep the existing records if the
       // field values did not change.
-      if (!$entity->isNewRevision() && $original && !$this->hasFieldValueChanged($field_definition, $entity, $original)) {
+      if (!$entity->isNewRevision() && !$isNewDefaultRevision && $original && !$this->hasFieldValueChanged($field_definition, $entity, $original)) {
         continue;
       }
 
