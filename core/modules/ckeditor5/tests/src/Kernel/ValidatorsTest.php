@@ -15,7 +15,6 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use Symfony\Component\Yaml\Yaml;
 
 // cspell:ignore onhover baguette
-
 /**
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator
@@ -48,6 +47,7 @@ class ValidatorsTest extends KernelTestBase {
     'filter_test',
     'media',
     'media_library',
+    'system',
     'views',
   ];
 
@@ -57,6 +57,10 @@ class ValidatorsTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->typedConfig = $this->container->get('config.typed');
+
+    $this->installConfig(['system']);
+    // Avoid needing to install the Stark theme.
+    $this->config('system.theme')->delete();
   }
 
   /**
@@ -1047,7 +1051,7 @@ class ValidatorsTest extends KernelTestBase {
               // Tag + attributes; attributes supported by disabled plugin.
               '<code class="language-*">',
               // Tag + attributes; tag already supported by enabled plugin,
-              // attributes supported by disabled plugin
+              // attributes supported by disabled plugin.
               '<h2 class="text-align-center">',
               // Tag + attributes; tag already supported by enabled plugin,
               // attribute not supported by no plugin.
@@ -1576,6 +1580,7 @@ class ValidatorsTest extends KernelTestBase {
       'expected_violations' => [],
     ];
     return $data;
+
   }
 
   /**

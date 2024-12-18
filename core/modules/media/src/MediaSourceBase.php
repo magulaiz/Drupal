@@ -3,15 +3,15 @@
 namespace Drupal\media;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\PluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -135,6 +135,15 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
       case 'thumbnail_uri':
         $default_thumbnail_filename = $this->pluginDefinition['default_thumbnail_filename'];
         return $this->configFactory->get('media.settings')->get('icon_base_uri') . '/' . $default_thumbnail_filename;
+
+      case self::METADATA_ATTRIBUTE_LINK_TARGET:
+        // @see \Drupal\media\Entity\MediaLinkTarget
+        // Media entities are only linkable if and only if standalone URLs are
+        // enabled: linking to their edit forms is meaningless.
+        if ($this->configFactory->get('media.settings')->get('standalone_url')) {
+          return $media->toUrl()->toString(TRUE);
+        }
+        return NULL;
     }
 
     return NULL;

@@ -52,6 +52,8 @@ parameters:
     - "#^Class .* extends @internal class#"
     - identifier: missingType.iterableValue
 
+  reportUnmatchedIgnoredErrors: false
+
 rules:
   - Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest
   - PHPStan\Rules\Functions\MissingFunctionReturnTypehintRule

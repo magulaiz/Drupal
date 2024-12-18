@@ -4,17 +4,17 @@ namespace Drupal\media\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityDeleteForm;
-use Drupal\Core\Entity\EntityViewBuilder;
-use Drupal\Core\Entity\Form\DeleteMultipleForm;
-use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
-use Drupal\Core\Entity\Form\RevisionRevertForm;
-use Drupal\Core\Entity\Form\RevisionDeleteForm;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\Core\Entity\Form\DeleteMultipleForm;
+use Drupal\Core\Entity\Form\RevisionDeleteForm;
+use Drupal\Core\Entity\Form\RevisionRevertForm;
+use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\media\MediaAccessControlHandler;
 use Drupal\media\MediaForm;
 use Drupal\media\MediaInterface;
@@ -65,6 +65,10 @@ use Drupal\user\EntityOwnerTrait;
     'route_provider' => [
       'html' => MediaRouteProvider::class,
       'revision' => RevisionHtmlRouteProvider::class,
+    ],
+    "link_target" => [
+      'view' => '\Drupal\media\Entity\MediaLinkTargetStandaloneWhenAvailable',
+      'download' => '\Drupal\media\Entity\MediaLinkTarget',
     ],
   ],
   links: [
@@ -428,7 +432,6 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
     // brittle and should probably be handled by a queue, to avoid doing HTTP
     // operations during entity save. See
     // https://www.drupal.org/project/drupal/issues/2976875 for more.
-
     // In order for metadata to be mapped correctly, $this->original must be
     // set. However, that is only set once parent::save() is called, so work
     // around that by setting it here.

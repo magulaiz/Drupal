@@ -40,6 +40,9 @@ use Drupal\shortcut\ShortcutInterface;
       'add' => ShortcutForm::class,
       'edit' => ShortcutForm::class,
       'delete' => ShortcutDeleteForm::class,
+      "link_target" => [
+        'view' => '\Drupal\shortcut\Entity\ShortcutLinkTarget',
+      ],
     ],
   ],
   links: [

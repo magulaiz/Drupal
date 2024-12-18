@@ -46,6 +46,10 @@ use Drupal\user\EntityOwnerTrait;
     'list_builder' => EntityListBuilder::class,
     'form' => ['delete' => ContentEntityDeleteForm::class],
     'route_provider' => ['html' => FileRouteProvider::class],
+    "link_target" => [
+      "view" => "\Drupal\file\Entity\FileLinkTarget",
+      "download" => "\Drupal\file\Entity\FileLinkTarget",
+    ],
   ],
   links: [
     'delete-form' => '/file/{file}/delete',

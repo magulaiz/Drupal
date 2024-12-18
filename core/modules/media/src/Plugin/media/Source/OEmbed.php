@@ -4,6 +4,7 @@ namespace Drupal\media\Plugin\media\Source;
 
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -33,6 +34,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Mime\MimeTypes;
+use Drupal\Core\GeneratedUrl;
 
 /**
  * Provides a media source plugin for oEmbed resources.
@@ -301,6 +303,14 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
 
       case 'html':
         return $resource->getHtml();
+
+      case self::METADATA_ATTRIBUTE_LINK_TARGET:
+        // @see \Drupal\media\Entity\MediaLinkTarget
+        return (new GeneratedUrl())
+          ->setGeneratedUrl($media_url)
+          // No processing means permanent cacheability: this only changes when
+          // the parent Media entity changes.
+          ->setCacheMaxAge(Cache::PERMANENT);
 
       default:
         break;

@@ -3,11 +3,11 @@
 namespace Drupal\menu_link_content\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\link\LinkItemInterface;
 use Drupal\menu_link_content\Form\MenuLinkContentDeleteForm;
 use Drupal\menu_link_content\Form\MenuLinkContentForm;
@@ -45,6 +45,9 @@ use Drupal\menu_link_content\MenuLinkListBuilder;
     'form' => [
       'default' => MenuLinkContentForm::class,
       'delete' => MenuLinkContentDeleteForm::class,
+    ],
+    'link_target' => [
+      "view" => "\Drupal\menu_link_content\Entity\MenuLinkContentLinkTarget",
     ],
     'list_builder' => MenuLinkListBuilder::class,
   ],

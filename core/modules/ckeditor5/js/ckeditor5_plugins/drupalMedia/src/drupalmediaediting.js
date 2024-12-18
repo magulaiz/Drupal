@@ -34,6 +34,9 @@ export default class DrupalMediaEditing extends Plugin {
       drupalMediaAlt: 'alt',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
+      drupalLinkEntityUuid: 'data-link-entity-uuid',
+      drupalLinkEntityType: 'data-link-entity-type',
+      drupalLinkEntityMetadata: 'data-link-entity-metadata',
     };
     this.converterAttributes = [
       'drupalMediaEntityUuid',
@@ -57,9 +60,9 @@ export default class DrupalMediaEditing extends Plugin {
     this.themeError =
       themeError ||
       `
-      <p>${Drupal.t(
+      < p > ${Drupal.t(
         'An error occurred while trying to preview the media. Save your work and reload this page.',
-      )}<p>
+      )} < p >
     `;
 
     this._defineSchema();
@@ -96,7 +99,7 @@ export default class DrupalMediaEditing extends Plugin {
           return;
         }
         // Enqueue a model change that is not visible to the undo/redo feature.
-        model.enqueueChange({ isUndoable: false }, (writer) => {
+        model.enqueueChange({ isUndoable: FALSE }, (writer) => {
           writer.setAttribute(
             'drupalMediaIsImage',
             !!metadata.imageSourceMetadata,
@@ -111,7 +114,7 @@ export default class DrupalMediaEditing extends Plugin {
           return;
         }
         console.warn(e.toString());
-        model.enqueueChange({ isUndoable: false }, (writer) => {
+        model.enqueueChange({ isUndoable: FALSE }, (writer) => {
           writer.setAttribute(
             'drupalMediaIsImage',
             METADATA_ERROR,
@@ -148,7 +151,7 @@ export default class DrupalMediaEditing extends Plugin {
         }
         // Enqueue a model change in `transparent` batch to make it
         // invisible to the undo/redo functionality.
-        this.editor.model.enqueueChange({ isUndoable: false }, (writer) => {
+        this.editor.model.enqueueChange({ isUndoable: FALSE }, (writer) => {
           writer.setAttribute('drupalMediaType', metadata.type, modelElement);
         });
       })
@@ -159,7 +162,7 @@ export default class DrupalMediaEditing extends Plugin {
           return;
         }
         console.warn(e.toString());
-        this.editor.model.enqueueChange({ isUndoable: false }, (writer) => {
+        this.editor.model.enqueueChange({ isUndoable: FALSE }, (writer) => {
           writer.setAttribute('drupalMediaType', METADATA_ERROR, modelElement);
         });
       });
@@ -182,7 +185,7 @@ export default class DrupalMediaEditing extends Plugin {
     };
 
     const response = await fetch(
-      `${this.previewUrl}?${new URLSearchParams(query)}`,
+      `${this.previewUrl} ? ${new URLSearchParams(query)}`,
       {
         headers: {
           'X-Drupal-MediaPreview-CSRF-Token':
@@ -251,7 +254,7 @@ export default class DrupalMediaEditing extends Plugin {
                 this.upcastDrupalMediaIsImage(modelElement);
                 // Enqueue a model change after getting modelElement.
                 this.editor.model.enqueueChange(
-                  { isUndoable: false },
+                  { isUndoable: FALSE },
                   (writer) => {
                     writer.setAttribute(
                       'drupalMediaType',
@@ -298,7 +301,7 @@ export default class DrupalMediaEditing extends Plugin {
             });
             writer.insert(writer.createPositionAt(container, 0), mediaPreview);
           }
-          writer.setCustomProperty('drupalMedia', true, container);
+          writer.setCustomProperty('drupalMedia', TRUE, container);
 
           return toWidget(container, writer, {
             label: Drupal.t('Media widget'),
@@ -477,7 +480,7 @@ export default class DrupalMediaEditing extends Plugin {
       // Create shallow clone of the model element to ensure that the original
       // model element remains untouched and that the caption is not rendered
       // into the preview.
-      const clonedModelElement = writer.cloneElement(modelElement, false);
+      const clonedModelElement = writer.cloneElement(modelElement, FALSE);
       // Remove attributes from the model element to ensure they are not
       // downcast into the preview request. For example, the `linkHref` model
       // attribute would downcast into a wrapping `<a>` element, which the
