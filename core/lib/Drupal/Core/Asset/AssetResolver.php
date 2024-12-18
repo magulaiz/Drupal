@@ -333,14 +333,6 @@ class AssetResolver implements AssetResolverInterface {
         'attributes' => [],
         'version' => NULL,
       ];
-      // Prepare the return value: filter JavaScript assets per scope.
-      $js_assets_header = [];
-      $js_assets_footer = [];
-      $settings_in_header = NULL;
-      // Initialize settings to FALSE since they are not needed by default. This
-      // distinguishes between an empty array which must still allow
-      // hook_js_settings_alter() to be run.
-      $settings = FALSE;
 
       // The current list of header JS libraries are only those libraries that
       // are in the header, but their dependencies must also be loaded for them
@@ -380,6 +372,10 @@ class AssetResolver implements AssetResolverInterface {
       // Sort JavaScript assets, so that they appear in the correct order.
       uasort($javascript, [static::class, 'sort']);
 
+      // Prepare the return value: filter JavaScript assets per scope.
+      $js_assets_header = [];
+      $js_assets_footer = [];
+
       foreach ($javascript as $key => $item) {
         if ($item['scope'] == 'header') {
           $js_assets_header[$key] = $item;
@@ -395,6 +391,9 @@ class AssetResolver implements AssetResolverInterface {
         $js_assets_footer = $collection_optimizer->optimize($js_assets_footer, $libraries_to_load);
       }
 
+      // Always build settings from js libraries. They may or may not be
+      // used later depending on whether the core/drupalSettings library is
+      // requested.
       $settings = $this->getJsSettingsAssets($assets);
       // Allow modules to add cached JavaScript settings.
       $this->moduleHandler->invokeAllWith('js_settings_build', function (callable $hook, string $module) use (&$settings, $assets) {
@@ -407,9 +406,8 @@ class AssetResolver implements AssetResolverInterface {
     // If the core/drupalSettings library is being loaded or is already
     // loaded, get the JavaScript settings assets, and convert them into a
     // single "regular" JavaScript asset. But only if there are settings to
-    // add.
+    // add. Do the quickest checks first.
     $process_settings = FALSE;
-    // Do the quickest checks first.
     if (count($libraries_to_load) > 0 || count($asset_settings) > 0) {
       $process_settings = in_array('core/drupalSettings', $libraries_to_load) ||  in_array('core/drupalSettings', $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()));
     }
