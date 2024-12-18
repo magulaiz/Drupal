@@ -428,9 +428,6 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
   /**
    * Tests rollback after a DDL statement when no transactional DDL supported.
-   *
-   * @todo In drupal:12.0.0, rollBack will throw a
-   *   TransactionOutOfOrderException. Adjust the test accordingly.
    */
   public function testRollbackAfterDdlStatementForNonTransactionalDdlDatabase(): void {
     if ($this->connection->supportsTransactionalDDL()) {

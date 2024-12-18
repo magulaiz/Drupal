@@ -307,8 +307,8 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   public function purge(string $name, string $id): void {
     // If this is a 'root' transaction, and it is voided (that is, no longer in
     // the stack), then the transaction on the database is no longer active. An
-    // action such as a rollback, or a DDL statement, was executed that
-    // terminated the database transaction. So, we can process the post
+    // action such as a yield, a rollback, or a DDL statement, was executed
+    // that terminated the database transaction. So, we can process the post
     // transaction callbacks.
     if (!isset($this->stack()[$id]) && isset($this->voidedItems[$id]) && $this->rootId === $id) {
       $this->processPostTransactionCallbacks();
@@ -326,11 +326,15 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       return;
     }
 
-    // Commit the transaction.
+    // When we get here, the transaction (or savepoint) is still active on the
+    // database. We can unpile it, and if we are left with no more items in the
+    // stack, we can also process the post transaction callbacks.
     $this->commit($name, $id);
-
-    // Remove the transaction from the stack.
     $this->removeStackItem($id);
+    if ($this->rootId === $id) {
+      $this->processPostTransactionCallbacks();
+      $this->rootId = NULL;
+    }
   }
 
   /**
@@ -386,10 +390,6 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       // If this was the root Drupal transaction, we can commit the client
       // transaction.
       $this->processRootCommit();
-      if ($this->rootId === $id) {
-        $this->processPostTransactionCallbacks();
-        $this->rootId = NULL;
-      }
     }
     else {
       // The stack got corrupted.

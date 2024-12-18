@@ -30,9 +30,9 @@ class Transaction {
   /**
    * Destructs the object.
    *
-   * Depending on the nesting level of the object, this leads to a COMMIT (for
-   * a root item) or to a RELEASE SAVEPOINT (for a savepoint item) executed on
-   * the database.
+   * If the transaction is still active at this stage, and depending on the
+   * state of the transaction stack, this leads to a COMMIT (for a root item)
+   * or to a RELEASE SAVEPOINT (for a savepoint item) executed on the database.
    */
   public function __destruct() {
     $this->connection->transactionManager()->purge($this->name, $this->id);
@@ -49,8 +49,8 @@ class Transaction {
    * Yields the transaction to the parent level.
    *
    * Depending on the state of the transaction stack, this leads to a COMMIT
-   * operation (if this transaction is a root one), or to a RELEASE SAVEPOINT
-   * operation (if this transaction is a savepoint one).
+   * operation (for a root item), or to a RELEASE SAVEPOINT operation (for a
+   * savepoint item) executed on the database.
    */
   public function yield(): void {
     $this->connection->transactionManager()->unpile($this->name, $this->id);
@@ -60,9 +60,8 @@ class Transaction {
    * Rolls back the transaction.
    *
    * Depending on the state of the transaction stack, this leads to a ROLLBACK
-   * operation (if this transaction is a root one), or to a ROLLBACK TO
-   * SAVEPOINT + a RELEASE SAVEPOINT operations (if this transaction is a
-   * savepoint one).
+   * operation (for a root item), or to a ROLLBACK TO SAVEPOINT + a RELEASE
+   * SAVEPOINT operations (for a savepoint item) executed on the database.
    */
   public function rollBack() {
     $this->connection->transactionManager()->rollback($this->name, $this->id);
