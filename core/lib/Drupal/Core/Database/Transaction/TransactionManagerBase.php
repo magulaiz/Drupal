@@ -341,6 +341,13 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * {@inheritdoc}
    */
   public function unpile(string $name, string $id): void {
+    // If the transaction was voided, we cannot unpile. Skip but trigger a user
+    // warning.
+    if ($this->getConnectionTransactionState() === ClientConnectionTransactionState::Voided) {
+      trigger_error('Transaction::yield() was not processed because a prior execution of a DDL statement already committed the transaction.', E_USER_WARNING);
+      return;
+    }
+
     // If there is no $id to commit, or if $id does not correspond to the one
     // in the stack for that $name, the commit is out of order.
     if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
