@@ -375,7 +375,6 @@ class AssetResolver implements AssetResolverInterface {
       // Prepare the return value: filter JavaScript assets per scope.
       $js_assets_header = [];
       $js_assets_footer = [];
-
       foreach ($javascript as $key => $item) {
         if ($item['scope'] == 'header') {
           $js_assets_header[$key] = $item;
