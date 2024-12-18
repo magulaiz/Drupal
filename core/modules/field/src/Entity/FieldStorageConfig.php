@@ -2,6 +2,8 @@
 
 namespace Drupal\field\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -11,49 +13,55 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
+use Drupal\field\FieldStorageConfigAccessControlHandler;
 use Drupal\field\FieldStorageConfigInterface;
+use Drupal\field\FieldStorageConfigStorage;
 
 /**
  * Defines the Field storage configuration entity.
- *
- * @ConfigEntityType(
- *   id = "field_storage_config",
- *   label = @Translation("Field storage"),
- *   label_collection = @Translation("Field storages"),
- *   label_singular = @Translation("field storage"),
- *   label_plural = @Translation("field storages"),
- *   label_count = @PluralTranslation(
- *     singular = "@count field storage",
- *     plural = "@count field storages",
- *   ),
- *   handlers = {
- *     "access" = "Drupal\field\FieldStorageConfigAccessControlHandler",
- *     "storage" = "Drupal\field\FieldStorageConfigStorage"
- *   },
- *   config_prefix = "storage",
- *   entity_keys = {
- *     "id" = "id",
- *     "label" = "id"
- *   },
- *   config_export = {
- *     "id",
- *     "field_name",
- *     "entity_type",
- *     "type",
- *     "settings",
- *     "module",
- *     "locked",
- *     "cardinality",
- *     "translatable",
- *     "indexes",
- *     "persist_with_no_fields",
- *     "custom_storage",
- *   },
- *   constraints = {
- *     "ImmutableProperties" = {"id", "entity_type", "field_name", "type"},
- *   }
- * )
  */
+#[ConfigEntityType(
+  id: 'field_storage_config',
+  label: new TranslatableMarkup('Field storage'),
+  label_collection: new TranslatableMarkup('Field storages'),
+  label_singular: new TranslatableMarkup('field storage'),
+  label_plural: new TranslatableMarkup('field storages'),
+  config_prefix: 'storage',
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'id',
+  ],
+  handlers: [
+    'access' => FieldStorageConfigAccessControlHandler::class,
+    'storage' => FieldStorageConfigStorage::class,
+  ],
+  label_count: [
+    'singular' => '@count field storage',
+    'plural' => '@count field storages',
+  ],
+  constraints: [
+    'ImmutableProperties' => [
+      'id',
+      'entity_type',
+      'field_name',
+      'type',
+    ],
+  ],
+  config_export: [
+    'id',
+    'field_name',
+    'entity_type',
+    'type',
+    'settings',
+    'module',
+    'locked',
+    'cardinality',
+    'translatable',
+    'indexes',
+    'persist_with_no_fields',
+    'custom_storage',
+  ],
+)]
 class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigInterface {
 
   /**
@@ -161,9 +169,9 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * are no remaining fields using them. If multiple modules provide bundles
    * which need to use the same field storage then setting this to TRUE will
    * preserve the field storage regardless of what happens to the bundles. The
-   * classic use case for this is node body field storage since Book, Forum, the
-   * Standard profile and bundle (node type) creation through the UI all use
-   * same field storage.
+   * classic use case for this is node body field storage, since the Standard
+   * profile and bundle (node type) creation through the UI both use same field
+   * storage.
    *
    * @var bool
    */
@@ -307,7 +315,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::preSave().
+   * Overrides \Drupal\Core\Entity\EntityBase::preSave().
    *
    * @throws \Drupal\Core\Field\FieldException
    *   If the field definition is invalid.
@@ -688,7 +696,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
       try {
         $items = $entity->get($this->getName());
       }
-      catch (\InvalidArgumentException $e) {
+      catch (\InvalidArgumentException) {
         // When a field doesn't exist, create a new field item list using a
         // temporary base field definition. This step is necessary since there
         // may not be a field configuration for the storage when creating a new
@@ -700,8 +708,8 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
       }
       return \Drupal::service('plugin.manager.field.field_type')->createFieldItem($items, 0);
     }
-    // @todo: Allow setting custom options provider, see
-    // https://www.drupal.org/node/2002138.
+    // @todo Allow setting custom options provider.
+    //   https://www.drupal.org/node/2002138.
   }
 
   /**
@@ -751,7 +759,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * breaks entity forms in PHP 5.4.
    * @todo Investigate in https://www.drupal.org/node/1977206.
    */
-  public function __sleep() {
+  public function __sleep(): array {
     // Only serialize necessary properties, excluding those that can be
     // recalculated.
     $properties = get_object_vars($this);

@@ -2,16 +2,15 @@
 
 /**
  * @file
- * Batch process to check the availability of remote or local po files.
  */
 
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\Url;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\TransferException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
@@ -345,7 +344,7 @@ function locale_translation_download_source($source_file, $directory = 'temporar
     /** @var \Drupal\Core\File\FileSystemInterface $fileSystem */
     $fileSystem = \Drupal::service('file_system');
     $filename = $fileSystem->basename($source_file->uri);
-    if ($uri = $fileSystem->saveData($data, $directory . $filename, FileSystemInterface::EXISTS_REPLACE)) {
+    if ($uri = $fileSystem->saveData($data, $directory . $filename, FileExists::Replace)) {
       $file = clone($source_file);
       $file->type = LOCALE_TRANSLATION_LOCAL;
       $file->uri = $uri;
@@ -354,7 +353,7 @@ function locale_translation_download_source($source_file, $directory = 'temporar
       return $file;
     }
   }
-  catch (TransferException $exception) {
+  catch (ClientExceptionInterface $exception) {
     \Drupal::messenger()->addError(t('Failed to fetch file due to error "%error"', ['%error' => $exception->getMessage()]));
   }
   catch (FileException | InvalidStreamWrapperException $e) {

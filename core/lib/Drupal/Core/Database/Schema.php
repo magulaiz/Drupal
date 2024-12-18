@@ -30,9 +30,9 @@ abstract class Schema implements PlaceholderInterface {
    * by defining the defaultSchema variable only MySQL has to re-write the
    * method.
    *
-   * @see DatabaseSchema::getPrefixInfo()
-   *
    * @var string
+   *
+   * @see DatabaseSchema::getPrefixInfo()
    */
   protected $defaultSchema = 'public';
 
@@ -115,6 +115,31 @@ abstract class Schema implements PlaceholderInterface {
     $info = $this->getPrefixInfo($table);
     $args[0] = $info['table'];
     return implode('_', $args);
+  }
+
+  /**
+   * Executes a data definition language (DDL) statement.
+   *
+   * This method allows to void an active transaction when the driver does
+   * not support transactional DDL.
+   *
+   * @param string $sql
+   *   The DDL statement to execute. This is a SQL string that may contain
+   *   placeholders.
+   * @param array $arguments
+   *   (Optional) The associative array of arguments for the prepared
+   *   statement.
+   * @param array $options
+   *   (Optional) An associative array of options to control how the query is
+   *   run. The given options will be merged with self::defaultOptions().
+   */
+  protected function executeDdlStatement(string $sql, array $arguments = [], array $options = []): void {
+    $this->connection->query($sql, $arguments, $options);
+    // DDL statements when in a transaction force a commit in some databases.
+    // Void the transaction in that case.
+    if (!$this->connection->supportsTransactionalDDL() && $this->connection->transactionManager()->inTransaction()) {
+      $this->connection->transactionManager()->voidClientTransaction();
+    }
   }
 
   /**
@@ -543,20 +568,20 @@ abstract class Schema implements PlaceholderInterface {
    *
    * For example, suppose you have:
    * @code
-   * $schema['foo'] = array(
-   *   'fields' => array(
-   *     'bar' => array('type' => 'int', 'not null' => TRUE)
-   *   ),
-   *   'primary key' => array('bar')
-   * );
+   * $schema['foo'] = [
+   *   'fields' => [
+   *     'bar' => ['type' => 'int', 'not null' => TRUE]
+   *   ],
+   *   'primary key' => ['bar']
+   * ];
    * @endcode
    * and you want to change foo.bar to be type serial, leaving it as the
    * primary key. The correct sequence is:
    * @code
    * $injected_database->schema()->dropPrimaryKey('foo');
    * $injected_database->schema()->changeField('foo', 'bar', 'bar',
-   *   array('type' => 'serial', 'not null' => TRUE),
-   *   array('primary key' => array('bar')));
+   *   ['type' => 'serial', 'not null' => TRUE],
+   *   ['primary key' => ['bar'])];
    * @endcode
    *
    * The reasons for this are due to the different database engines:
@@ -616,7 +641,7 @@ abstract class Schema implements PlaceholderInterface {
     }
     $statements = $this->createTableSql($name, $table);
     foreach ($statements as $statement) {
-      $this->connection->query($statement);
+      $this->executeDdlStatement($statement);
     }
   }
 
