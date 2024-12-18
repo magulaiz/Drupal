@@ -153,7 +153,7 @@ class Select extends QuerySelect {
       throw $e;
     }
     if (isset($savepoint)) {
-      $savepoint->commit();
+      $savepoint->yield();
     }
 
     return $result;

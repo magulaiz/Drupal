@@ -189,7 +189,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *     my_other_function($id);
  *
  *     // The transaction has completed, commit it here.
- *     $transaction->commit();
+ *     $transaction->yield();
  *
  *     return $id;
  *   }

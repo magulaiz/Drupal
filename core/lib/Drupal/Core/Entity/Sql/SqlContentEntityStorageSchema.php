@@ -789,7 +789,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         }
 
         if (isset($transaction)) {
-          $transaction->commit();
+          $transaction->yield();
         }
       }
       catch (\Exception $e) {
@@ -1737,7 +1737,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         $this->performFieldSchemaOperation('create', $storage_definition);
 
         if (isset($transaction)) {
-          $transaction->commit();
+          $transaction->yield();
         }
       }
       catch (\Exception $e) {
@@ -1834,7 +1834,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         $this->performFieldSchemaOperation('create', $storage_definition);
 
         if (isset($transaction)) {
-          $transaction->commit();
+          $transaction->yield();
         }
       }
       catch (\Exception $e) {

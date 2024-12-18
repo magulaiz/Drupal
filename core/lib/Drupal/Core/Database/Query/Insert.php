@@ -84,7 +84,7 @@ class Insert extends Query implements \Countable {
         $stmt->execute($insert_values, $this->queryOptions);
         $last_insert_id = $this->connection->lastInsertId();
       }
-      $transaction->commit();
+      $transaction->yield();
     }
     catch (\Exception $e) {
       if (isset($transaction)) {

@@ -92,7 +92,7 @@ class Insert extends QueryInsert {
         $last_insert_id = $stmt->fetchField();
       }
       if (isset($savepoint)) {
-        $savepoint->commit();
+        $savepoint->yield();
       }
     }
     catch (\Exception $e) {

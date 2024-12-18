@@ -26,7 +26,7 @@ class Truncate extends QueryTruncate {
       throw $e;
     }
     if (isset($savepoint)) {
-      $savepoint->commit();
+      $savepoint->yield();
     }
 
     return $result;

@@ -84,7 +84,7 @@ class Upsert extends QueryUpsert {
     try {
       $stmt->execute(NULL, $options);
       if (isset($savepoint)) {
-        $savepoint->commit();
+        $savepoint->yield();
       }
       return $stmt->rowCount();
     }

@@ -303,7 +303,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         $this->updateParentalStatus($original);
       }
       $this->updateParentalStatus($link);
-      $transaction->commit();
+      $transaction->yield();
     }
     catch (\Exception $e) {
       if (isset($transaction)) {

@@ -98,7 +98,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
 
     // Commit the transaction, and check that there are still no records in the
     // table.
-    $transaction->commit();
+    $transaction->yield();
     $this->assertFalse($this->connection->inTransaction());
     $num_records_after = $this->connection->select('test')->countQuery()->execute()->fetchField();
     $this->assertEquals(0, $num_records_after);

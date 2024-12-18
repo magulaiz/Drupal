@@ -61,7 +61,7 @@ class MenuRouterRebuildSubscriber implements EventSubscriberInterface {
         $transaction = $this->connection->startTransaction();
         $this->menuLinkManager->rebuild();
         if ($this->connection->inTransaction()) {
-          $transaction->commit();
+          $transaction->yield();
         }
         // Ignore any database replicas temporarily.
         $this->replicaKillSwitch->trigger();

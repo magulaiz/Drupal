@@ -232,7 +232,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       try {
         $return = parent::query($query, $args, $options);
         if (isset($savepoint)) {
-          $savepoint->commit();
+          $savepoint->yield();
         }
       }
       catch (\Exception $e) {
