@@ -286,7 +286,8 @@ class AssetResolver implements AssetResolverInterface {
    * {@inheritdoc}
    */
   public function getJsAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL) {
-    if (!$assets->getLibraries() && !$assets->getSettings()) {
+    $asset_settings = $assets->getSettings();
+    if (!$assets->getLibraries() && !$asset_settings) {
       return [[], []];
     }
     if (!isset($language)) {
@@ -309,14 +310,14 @@ class AssetResolver implements AssetResolverInterface {
 
     // If all the libraries to load contained only CSS, there is nothing further
     // to do here, so return early.
-    if (!$libraries_to_load && !$assets->getSettings()) {
+    if (!$libraries_to_load && !$asset_settings()) {
       return [[], []];
     }
 
     // Add the theme name to the cache key since themes may implement
     // hook_library_info_alter(). Additionally add the current language to
     // support translation of JavaScript files via hook_js_alter().
-    $cid = 'js:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . (int) (count($assets->getSettings()) > 0) . (int) $optimize;
+    $cid = 'js:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . ':' . (int) $optimize;
 
     // Prepare the return value: filter JavaScript assets per scope.
     $js_assets_header = [];
@@ -326,10 +327,10 @@ class AssetResolver implements AssetResolverInterface {
     // hook_js_settings_alter() to be run.
     $settings = FALSE;
     $settings_in_header = NULL;
-    if ($libraries_to_load && $cached = $this->cache->get($cid)) {
+    if ($cached = $this->cache->get($cid)) {
       [$js_assets_header, $js_assets_footer, $settings, $settings_in_header] = $cached->data;
     }
-    elseif ($libraries_to_load) {
+    else {
       $javascript = [];
       $default_options = [
         'type' => 'file',
@@ -394,33 +395,25 @@ class AssetResolver implements AssetResolverInterface {
         $js_assets_footer = $collection_optimizer->optimize($js_assets_footer, $libraries_to_load);
       }
 
-      // If the core/drupalSettings library is being loaded or is already
-      // loaded, get the JavaScript settings assets, and convert them into a
-      // single "regular" JavaScript asset.
-      $libraries_to_load = $this->getLibrariesToLoad($assets);
-      $settings_required = in_array('core/drupalSettings', $libraries_to_load) || in_array('core/drupalSettings', $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()));
-      $settings_have_changed = count($libraries_to_load) > 0 || count($assets->getSettings()) > 0;
-
-      $settings = FALSE;
-      if ($settings_required && $settings_have_changed) {
-        $settings = $this->getJsSettingsAssets($assets);
-        // Allow modules to add cached JavaScript settings.
-        $this->moduleHandler->invokeAllWith('js_settings_build', function (callable $hook, string $module) use (&$settings, $assets) {
-          $hook($settings, $assets);
-        });
-      }
+      $settings = $this->getJsSettingsAssets($assets);
+      // Allow modules to add cached JavaScript settings.
+      $this->moduleHandler->invokeAllWith('js_settings_build', function (callable $hook, string $module) use (&$settings, $assets) {
+        $hook($settings, $assets);
+      });
       $settings_in_header = in_array('core/drupalSettings', $header_js_libraries);
       $this->cache->set($cid, [$js_assets_header, $js_assets_footer, $settings, $settings_in_header], CacheBackendInterface::CACHE_PERMANENT, ['library_info']);
     }
 
-    if ($settings !== FALSE) {
-      if (!$libraries_to_load) {
-        $settings_in_header = FALSE;
-      }
+    // If the core/drupalSettings library is being loaded or is already
+    // loaded, get the JavaScript settings assets, and convert them into a
+    // single "regular" JavaScript asset.
+    $settings_required = in_array('core/drupalSettings', $libraries_to_load) || in_array('core/drupalSettings', $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()));
+    $settings_have_changed = count($libraries_to_load) > 0 || count($asset_settings) > 0;
 
+    if ($settings_required || $settings_have_changed) {
       // Attached settings override both library definitions and
       // hook_js_settings_build().
-      $settings = NestedArray::mergeDeepArray([$settings, $assets->getSettings()], TRUE);
+      $settings = NestedArray::mergeDeepArray([$settings, $asset_settings], TRUE);
       // Allow modules and themes to alter the JavaScript settings.
       $this->moduleHandler->alter('js_settings', $settings, $assets);
       $this->themeManager->alter('js_settings', $settings, $assets);
