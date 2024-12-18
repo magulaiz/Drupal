@@ -404,7 +404,7 @@ class FileHooks {
    * Implements hook_user_cancel().
    */
   #[Hook('user_cancel')]
-  public function userCancel($edit, UserInterface $account, $method): void {
+  public function userCancel(array $edit, UserInterface $account, string $method): void {
     // Update files for cancelled user to belong to anonymous.
     if ($method !== 'user_cancel_reassign') {
       return;
