@@ -1538,6 +1538,7 @@ abstract class Connection {
    * Set the event dispatcher.
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   *   Event dispatcher.
    *
    * @return void
    */
