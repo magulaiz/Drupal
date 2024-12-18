@@ -252,6 +252,13 @@ final class NavigationLinkBlock extends BlockBase {
     try {
       $url = Url::fromUri($config['uri']);
       $access = $url->access(NULL, TRUE);
+    try {
+      $url = Url::fromUri($config['uri']);
+      // Internal routes must exist.
+      if (!$url->isExternal() && !$url->isRouted()) {
+        return $build;
+      }
+      $access = $url->access(NULL, TRUE);
       if (!$access->isAllowed()) {
         // Cacheable dependency is explicitly added when access is not granted.
         // It is bubbled when the link is rendered.
