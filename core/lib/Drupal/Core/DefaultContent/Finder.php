@@ -57,7 +57,7 @@ final class Finder {
         ],
       ];
 
-      @trigger_error('The ["depends"] key is deprecated in Drupal:10.3.0 and will be removed in Drupal:12.0.0. Use the ["dependencies"] key instead. See https://www.drupal.org/node/3494759', E_USER_DEPRECATED);
+      @trigger_error('The ["depends"] key is deprecated in drupal:10.3.0 and will be removed in drupal:12.0.0. Use the ["dependencies"] key instead. See https://www.drupal.org/node/3494759', E_USER_DEPRECATED);
 
       // Check for whether the 'depends' or 'dependencies' key is used.
       $test_dependencies = $decoded['_meta']['depends'] ?? $decoded['_meta']['dependencies'];
