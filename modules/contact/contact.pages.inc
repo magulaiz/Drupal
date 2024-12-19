@@ -76,6 +76,12 @@ function contact_site_form($form, &$form_state) {
     '#default_value' => $user->uid ? $user->mail : '',
     '#required' => TRUE,
   );
+
+  // Do not allow authenticated users to alter the name or e-mail values to
+  // prevent the impersonation of other users.
+  if ($user->uid) {
+    $form['name']['#disabled'] = $form['mail']['#disabled'] = TRUE;
+  }
   $form['subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
@@ -95,8 +101,8 @@ function contact_site_form($form, &$form_state) {
     '#title' => t('Message'),
     '#required' => TRUE,
   );
-  // We do not allow anonymous users to send themselves a copy
-  // because it can be abused to spam people.
+  // Do not allow anonymous users to send themselves a copy because it can be
+  // abused to spam people.
   $form['copy'] = array(
     '#type' => 'checkbox',
     '#title' => t('Send yourself a copy.'),
@@ -139,8 +145,9 @@ function contact_site_form_submit($form, &$form_state) {
   $values['sender']->mail = $values['mail'];
   $values['category'] = contact_load($values['cid']);
 
-  // Save the anonymous user information to a cookie for reuse.
   if (!$user->uid) {
+    $values['sender']->name .= ' (' . t('not verified') . ')';
+    // Save the anonymous user information to a cookie for reuse.
     user_cookie_save(array_intersect_key($values, array_flip(array('name', 'mail'))));
   }
 
@@ -218,6 +225,12 @@ function contact_personal_form($form, &$form_state, $recipient) {
     '#default_value' => $user->uid ? $user->mail : '',
     '#required' => TRUE,
   );
+
+  // Do not allow authenticated users to alter the name or e-mail values to
+  // prevent the impersonation of other users.
+  if ($user->uid) {
+    $form['name']['#disabled'] = $form['mail']['#disabled'] = TRUE;
+  }
   $form['to'] = array(
     '#type' => 'item',
     '#title' => t('To'),
@@ -235,7 +248,7 @@ function contact_personal_form($form, &$form_state, $recipient) {
     '#rows' => 15,
     '#required' => TRUE,
   );
-  // We do not allow anonymous users to send themselves a copy
+  // Do not allow anonymous users to send themselves a copy
   // because it can be abused to spam people.
   $form['copy'] = array(
     '#type' => 'checkbox',
@@ -274,8 +287,9 @@ function contact_personal_form_submit($form, &$form_state) {
   $values['sender']->name = $values['name'];
   $values['sender']->mail = $values['mail'];
 
-  // Save the anonymous user information to a cookie for reuse.
   if (!$user->uid) {
+    $values['sender']->name .= ' (' . t('not verified') . ')';
+    // Save the anonymous user information to a cookie for reuse.
     user_cookie_save(array_intersect_key($values, array_flip(array('name', 'mail'))));
   }
 

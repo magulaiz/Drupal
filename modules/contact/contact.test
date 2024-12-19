@@ -161,6 +161,20 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests that name and email fields are disabled for authenticated users.
+   */
+  function testContactSiteWideTextfieldsLoggedInTestCase() {
+    $this->drupalLogin($this->drupalCreateUser(array('access site-wide contact form')));
+    $this->drupalGet('contact');
+
+    // Ensure that the name textfield is disabled.
+    $this->assertTrue($this->xpath('//input[@name=:name][@disabled="disabled"]', array(':name' => 'name')));
+
+    // Ensure that the email textfield is disabled.
+    $this->assertTrue($this->xpath('//input[@name=:name][@disabled="disabled"]', array(':name' => 'mail')));
+  }
+
+  /**
   * Tests auto-reply on the site-wide contact form.
   */
   function testAutoReply() {
@@ -174,6 +188,10 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->addCategory('foo', 'foo@example.com', $foo_autoreply, FALSE);
     $this->addCategory('bar', 'bar@example.com', $bar_autoreply, FALSE);
     $this->addCategory('no_autoreply', 'bar@example.com', '', FALSE);
+
+    // Log the current user out in order to test the name and e-mail fields.
+    $this->drupalLogout();
+    user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
 
     // Test the auto-reply for category 'foo'.
     $email = $this->randomName(32) . '@example.com';
@@ -436,6 +454,20 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     // the flood limit was reached.
     $this->drupalLogin($this->admin_user);
     $this->assertNoText('Try again later.', 'Admin user not denied access to flooded contact form.');
+  }
+
+  /**
+   * Tests that name and email fields are disabled for authenticated users.
+   */
+  function testContactSiteWideTextfieldsLoggedInTestCase() {
+    $this->drupalLogin($this->drupalCreateUser(array('access site-wide contact form')));
+    $this->drupalGet('contact');
+
+    // Ensure that the name textfield is disabled.
+    $this->assertTrue($this->xpath('//input[@name=:name][@disabled="disabled"]', array(':name' => 'name')));
+
+    // Ensure that the email textfield is disabled.
+    $this->assertTrue($this->xpath('//input[@name=:name][@disabled="disabled"]', array(':name' => 'mail')));
   }
 
   /**
