@@ -70,7 +70,17 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    *   Optional translated string message.
    */
   public function assertFileHookCalled($hook, $expected_count = 1, $message = NULL) {
-    $this->assertCount($expected_count, file_test_get_calls($hook), $message ?? "hook_file_$hook was not called as much times as expected.");
+    $actual_count = count(file_test_get_calls($hook));
+
+    if (!isset($message) && $actual_count == $expected_count) {
+      if ($expected_count == 0) {
+        $message = "hook_file_$hook was not expected to be called but was actually called $actual_count time(s).";
+      }
+      else {
+        $message = "hook_file_$hook was expected to be called $expected_count time(s) but was called $actual_count time(s).";
+      }
+    }
+    $this->assertEquals($expected_count, $actual_count, $message);
   }
 
   /**
