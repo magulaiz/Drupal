@@ -144,7 +144,7 @@ class User extends ContentEntityBase implements UserInterface {
       }
 
       // If the user was blocked, delete the user's sessions to force a logout.
-      if ($this->getOriginal()->get('status')->value != $this->get('status^')->value && $this->get('status')->value == 0) {
+      if ($this->getOriginal()->get('status')->value != $this->get('status')->value && $this->get('status')->value == 0) {
         $session_manager->delete($this->id());
       }
 
