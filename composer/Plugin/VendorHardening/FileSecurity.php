@@ -14,6 +14,11 @@ namespace Drupal\Composer\Plugin\VendorHardening;
 class FileSecurity {
 
   /**
+   * CSP-header value for image/svg+xml files.
+   */
+  public const CSP_SVG_HEADER = "default-src 'none'; img-src data:; style-src 'unsafe-inline'";
+
+  /**
    * Writes an .htaccess file in the given directory, if it doesn't exist.
    *
    * @param string $directory
@@ -62,6 +67,7 @@ class FileSecurity {
    *   Apache htaccess directives to prevent execution of files in a location.
    */
   protected static function htaccessPreventExecution() {
+    $header = self::CSP_SVG_HEADER;
     return <<<EOF
 # Turn off all options we don't need.
 Options -Indexes -ExecCGI -Includes -MultiViews
@@ -81,7 +87,7 @@ SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
 <IfModule mod_headers.c>
   <FilesMatch \.(?i:svg)$>
     # Prevent script execution in SVG files.
-    Header set Content-Security-Policy "default-src 'none'; img-src data:; style-src 'unsafe-inline'"
+    Header set Content-Security-Policy "{$header}"
   </FilesMatch>
 </IfModule>
 EOF;
