@@ -187,9 +187,15 @@ final class Importer implements LoggerAwareInterface {
 
     $is_root = FALSE;
     // @see ::loadEntityDependency()
-    if ($this->dependencies === NULL && !empty($data['_meta']['depends'])) {
+    
+    @trigger_error("Using the ['depends'] key is deprecated in favor of ['dependencies'] for consistency across APIs.", E_USER_DEPRECATED);
+
+    // Check if the 'depends' or 'dependencies' key is used.
+    $test_dependencies = $data['_meta']['depends'] ?? $data['_meta']['dependencies'];
+
+    if ($this->dependencies === NULL && !empty($test_dependencies)) {
       $is_root = TRUE;
-      foreach ($data['_meta']['depends'] as $uuid => $entity_type) {
+      foreach ($test_dependencies as $uuid => $entity_type) {
         assert(is_string($uuid));
         assert(is_string($entity_type));
         $this->dependencies[$uuid] = [$entity_type, $uuid];

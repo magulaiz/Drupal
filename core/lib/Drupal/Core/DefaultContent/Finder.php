@@ -57,7 +57,12 @@ final class Finder {
         ],
       ];
 
-      foreach ($decoded['_meta']['depends'] ?? [] as $dependency_uuid => $entity_type) {
+      @trigger_error("Using the ['depends'] key is deprecated in favor of ['dependencies'] for consistency across APIs.", E_USER_DEPRECATED);
+
+      // Check for whether the 'depends' or 'dependencies' key is used.
+      $test_dependencies = $decoded['_meta']['depends'] ?? $decoded['_meta']['dependencies'];
+
+      foreach ($test_dependencies ?? [] as $dependency_uuid => $entity_type) {
         $graph[$dependency_uuid]['edges'][$uuid] = TRUE;
         $graph[$dependency_uuid]['uuid'] = $dependency_uuid;
       }
