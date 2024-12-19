@@ -9,6 +9,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Response subscriber to add Content-Security-Policy header to file downloads.
+ *
+ * Adds a CSP-header when downloading SVG-files, to prevent embedded scripts
+ * from running in the browser.
  */
 class FileDownloadCspSubscriber implements EventSubscriberInterface {
 
