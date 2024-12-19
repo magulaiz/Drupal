@@ -257,6 +257,7 @@ class TransactionYieldTest extends DatabaseTestBase {
    */
   public function testRollbackRootWithActiveSavepoint(): void {
     $transaction = $this->createRootTransaction();
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $savepoint = $this->createFirstSavepointTransaction();
 
     // Try to rollback root. Since a savepoint is active, this should fail.
@@ -380,6 +381,7 @@ class TransactionYieldTest extends DatabaseTestBase {
    * Tests savepoint transaction duplicated rollback.
    */
   public function testRollbackTwiceSameSavepoint(): void {
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $transaction = $this->createRootTransaction();
     $savepoint = $this->createFirstSavepointTransaction();
 
@@ -414,11 +416,13 @@ class TransactionYieldTest extends DatabaseTestBase {
    * Tests savepoint transaction rollback failure when later savepoints exist.
    */
   public function testRollbackSavepointWithLaterSavepoint(): void {
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $transaction = $this->createRootTransaction();
     $savepoint1 = $this->createFirstSavepointTransaction();
 
     // Starts another savepoint transaction. Corresponds to 'SAVEPOINT
     // savepoint_2' on the database.
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $savepoint2 = $this->connection->startTransaction();
     $this->assertTrue($this->connection->inTransaction());
     $this->assertSame(3, $this->connection->transactionManager()->stackDepth());
@@ -977,10 +981,12 @@ class TransactionYieldTest extends DatabaseTestBase {
     $this->assertSame(3, $this->connection->transactionManager()->stackDepth());
     // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_3'
     // on the database.
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $savepoint3 = $this->connection->startTransaction();
     $this->assertSame(4, $this->connection->transactionManager()->stackDepth());
     // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_4'
     // on the database.
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $savepoint4 = $this->connection->startTransaction();
     $this->assertSame(5, $this->connection->transactionManager()->stackDepth());
 
@@ -1007,6 +1013,7 @@ class TransactionYieldTest extends DatabaseTestBase {
    */
   public function testCommitWithActiveSavepoint(): void {
     $transaction = $this->createRootTransaction();
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $savepoint1 = $this->createFirstSavepointTransaction('', FALSE);
 
     // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_2'
@@ -1044,7 +1051,7 @@ class TransactionYieldTest extends DatabaseTestBase {
 
     $this->expectException(TransactionNameNonUniqueException::class);
     $this->expectExceptionMessage("savepoint_1 is already in use.");
-    $savepointFailure = $this->connection->startTransaction('savepoint_1');
+    $this->connection->startTransaction('savepoint_1');
   }
 
   /**
