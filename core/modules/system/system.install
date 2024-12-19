@@ -717,6 +717,32 @@ function system_requirements($phase) {
     }
   }
 
+  // Check presence of a CSP-header on SVG-files.
+  if ($phase == 'runtime') {
+    // Verify the CSP-header on svg-files.
+    $fileSystem = Drupal::service('file_system');
+    $fileUrlGenerator = \Drupal::service("file_url_generator");
+
+    // Create a temporary svg-file.
+    $filename = 'public://' . uniqid('svg-csp-test-') . '.svg';
+    $fileSystem->saveData('', $filename, FileSystemInterface::EXISTS_REPLACE);
+    $url = $fileUrlGenerator->generateAbsoluteString($filename);
+
+    // Try to fetch the svg-file, so we can verify the presence of csp-header.
+    $response = \Drupal::httpClient()->head($url, ['headers' => ['Accept' => 'text/plain']]);
+    if (!$response->hasHeader('Content-Security-Policy')) {
+      $requirements['svg_csp_protection'] = [
+        'title' => new TranslatableMarkup('SVG Content-Security-Policy'),
+        'value' => t('Header missing'),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => t('SVG-files can contain embedded scripts, which can pose a security risk. To avoid this, SVG-files should be served with a Content-Security-Policy header that blocks execution of inline scripts. See <a href=":url">:url</a> for more information.', [':url' => 'https://www.drupal.org/node/3493998']),
+      ];
+    }
+
+    // Remove the temporary svg-file.
+    $fileSystem->delete($filename);
+  }
+
   // Report cron status.
   if ($phase == 'runtime') {
     $cron_config = \Drupal::config('system.cron');
