@@ -18534,12 +18534,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\field_layout\\\\Form\\\\FieldLayoutEntityFormDisplayEditForm\\:\\:form\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_layout/src/Form/FieldLayoutEntityFormDisplayEditForm.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\field_layout\\\\Form\\\\FieldLayoutEntityFormDisplayEditForm\\:\\:settingsAjax\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_layout/src/Form/FieldLayoutEntityFormDisplayEditForm.php',
@@ -18565,12 +18559,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\field_layout\\\\Form\\\\FieldLayoutEntityViewDisplayEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_layout/src/Form/FieldLayoutEntityViewDisplayEditForm.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\field_layout\\\\Form\\\\FieldLayoutEntityViewDisplayEditForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_layout/src/Form/FieldLayoutEntityViewDisplayEditForm.php',
 ];
@@ -18713,12 +18701,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityDisplayModeFormBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityDisplayModeFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityDisplayModeFormBase.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityFormDisplayEditForm\\:\\:alterSettingsSummary\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -18745,6 +18727,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityViewDisplayEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityViewDisplayEditForm.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityViewDisplayEditForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityViewDisplayEditForm.php',
 ];
@@ -23499,12 +23487,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\LayoutBuilderDisableForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/LayoutBuilderDisableForm.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\LayoutBuilderEntityViewDisplayForm\\:\\:copyFormValuesToEntity\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/LayoutBuilderEntityViewDisplayForm.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -29714,12 +29696,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node\\\\Controller\\\\NodeViewController\\:\\:create\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Controller/NodeViewController.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\node\\\\Entity\\\\Node\\:\\:postDelete\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/Entity/Node.php',
@@ -30053,12 +30029,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\NodeTranslationHandler\\:\\:entityFormEntityBuild\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/NodeTranslationHandler.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node\\\\NodeTypeForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/NodeTypeForm.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -31289,24 +31259,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathFieldItemList\\:\\:setValue\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/path/src/Plugin/Field/FieldType/PathFieldItemList.php',
-];
-$ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathItem\\:\\:\\$alias\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/path/src/Plugin/Field/FieldType/PathItem.php',
-];
-$ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathItem\\:\\:\\$langcode\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/path/src/Plugin/Field/FieldType/PathItem.php',
-];
-$ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathItem\\:\\:\\$pid\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/path/src/Plugin/Field/FieldType/PathItem.php',
 ];
 $ignoreErrors[] = [
 	// identifier: return.missing

@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    autoconfigure: true
+    autowire: true
+
+  Drupal\path\PathVariant\PathVariantRepositoryInterface:
+    class: Drupal\path\PathVariant\PathVariantRepository
+  Drupal\path\EventSubscriber\EntityPathsEventSubscriber: ~
+  Drupal\path\EventSubscriber\PathVariantEventSubscriber: ~

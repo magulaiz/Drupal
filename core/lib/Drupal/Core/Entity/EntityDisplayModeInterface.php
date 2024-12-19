@@ -35,4 +35,9 @@ interface EntityDisplayModeInterface extends ConfigEntityInterface {
    */
   public function getDescription(): string;
 
+  /**
+   * Get the display mode.
+   */
+  public function getMode(): string;
+
 }

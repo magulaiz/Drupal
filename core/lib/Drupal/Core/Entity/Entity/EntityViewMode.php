@@ -46,8 +46,32 @@ use Drupal\Core\Entity\EntityViewModeInterface;
     'description',
     'targetEntityType',
     'cache',
+    'path',
   ],
-  )]
+)]
 class EntityViewMode extends EntityDisplayModeBase implements EntityViewModeInterface {
+
+  /**
+   * The path for this view mode.
+   */
+  protected ?string $path = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPath(): ?string {
+    if ($this->path === '') {
+      return NULL;
+    }
+    return $this->path;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPath(?string $path): static {
+    $this->path = $path;
+    return $this;
+  }
 
 }

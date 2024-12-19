@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\path\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Random;
@@ -9,9 +11,17 @@ use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\path\PathVariant\CorePathVariants;
+use Drupal\path\PathVariant\PathVariantRepositoryInterface;
+use Drupal\path_alias\PathAliasStorage;
 
 /**
- * Defines the 'path' entity field type.
+ * Defines the 'path' field type.
+ *
+ * @property string|null $alias
+ * @property int|null $pid
+ * @property string|null $langcode
+ * @property \Drupal\path\PathVariant\PathVariant|null $variant
  */
 #[FieldType(
   id: "path",
@@ -34,6 +44,8 @@ class PathItem extends FieldItemBase {
       ->setLabel(t('Path id'));
     $properties['langcode'] = DataDefinition::create('string')
       ->setLabel(t('Language Code'));
+    $properties['variant'] = DataDefinition::create('any')
+      ->setLabel(t('Path variant'));
     return $properties;
   }
 
@@ -64,43 +76,39 @@ class PathItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function postSave($update) {
-    $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
-    $entity = $this->getEntity();
+    // If we have an alias, create or update a path alias entity.
+    if (is_string($this->alias) && strlen($this->alias) > 0) {
+      // When this is an entity insert or there is no existing path alias ID:
+      if (!$update || $this->pid === NULL) {
+        $variant = $this->variant ?? static::pathVariantRepository()->getDefaultPathVariant($this->getEntity());
 
-    // If specified, rely on the langcode property for the language, so that the
-    // existing language of an alias can be kept. That could for example be
-    // unspecified even if the field/entity has a specific langcode.
-    $alias_langcode = ($this->langcode && $this->pid) ? $this->langcode : $this->getLangcode();
-
-    // If we have an alias, we need to create or update a path alias entity.
-    if ($this->alias) {
-      if (!$update || !$this->pid) {
-        $path_alias = $path_alias_storage->create([
-          'path' => '/' . $entity->toUrl()->getInternalPath(),
+        $path_alias = static::pathAliasStorage()->create([
+          'path' => static::pathVariantRepository()->getInternalPathByPathVariant($this->getEntity(), $variant),
           'alias' => $this->alias,
-          'langcode' => $alias_langcode,
+          'variant' => $variant->getVariant() === CorePathVariants::Default ? NULL : (string) $variant,
+          // If specified, rely on the langcode property for the language, so that the
+          // existing language of an alias can be kept. That could for example be
+          // unspecified even if the field/entity has a specific langcode.
+          'langcode' => ($this->langcode && $this->pid) ? $this->langcode : $this->getLangcode(),
         ]);
         $path_alias->save();
-        $this->pid = $path_alias->id();
+        $this->pid = (int) $path_alias->id();
       }
-      elseif ($this->pid) {
-        $path_alias = $path_alias_storage->load($this->pid);
+      // When this is an entity update and there is an existing path alias ID:
+      elseif ($this->pid !== NULL) {
+        $path_alias = static::pathAliasStorage()->load($this->pid);
 
-        if ($this->alias != $path_alias->getAlias()) {
-          $path_alias->setAlias($this->alias);
-          $path_alias->save();
+        if ($this->alias !== $path_alias->getAlias()) {
+          $path_alias->setAlias($this->alias)->save();
         }
       }
     }
-    elseif ($this->pid && !$this->alias) {
+    elseif ($this->pid !== NULL) {
       // Otherwise, delete the old alias if the user erased it.
-      $path_alias = $path_alias_storage->load($this->pid);
-      if ($entity->isDefaultRevision()) {
-        $path_alias_storage->delete([$path_alias]);
-      }
-      else {
-        $path_alias_storage->deleteRevision($path_alias->getRevisionID());
-      }
+      $path_alias = static::pathAliasStorage()->load($this->pid);
+      $this->getEntity()->isDefaultRevision()
+        ? static::pathAliasStorage()->delete([$path_alias])
+        : static::pathAliasStorage()->deleteRevision($path_alias->getRevisionId());
     }
   }
 
@@ -118,6 +126,22 @@ class PathItem extends FieldItemBase {
    */
   public static function mainPropertyName() {
     return 'alias';
+  }
+
+  /**
+   * Path alias storage.
+   */
+  private static function pathAliasStorage(): PathAliasStorage {
+    /** @var \Drupal\path_alias\PathAliasStorage */
+    return \Drupal::entityTypeManager()->getStorage('path_alias');
+  }
+
+  /**
+   * Get path variant repository service.
+   */
+  private static function pathVariantRepository(): PathVariantRepositoryInterface {
+    /** @var \Drupal\path\PathVariant\PathVariantRepositoryInterface */
+    return \Drupal::service(PathVariantRepositoryInterface::class);
   }
 
 }

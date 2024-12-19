@@ -45,14 +45,22 @@ use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
     'mode',
     'content',
     'hidden',
+    'pageDisplay',
   ],
-  )]
+)]
 class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayInterface {
 
   /**
    * {@inheritdoc}
    */
   protected $displayContext = 'view';
+
+  /**
+   * TRUE if this view display has an associated page display.
+   *
+   * @var bool
+   */
+  protected bool $pageDisplay = FALSE;
 
   /**
    * Returns the display objects used to render a set of entities.
@@ -185,6 +193,9 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
   public function __construct(array $values, $entity_type) {
     $this->pluginManager = \Drupal::service('plugin.manager.field.formatter');
 
+    if (!\array_key_exists('pageDisplay', $values)) {
+      $values['pageDisplay'] = ($values['mode'] ?? 'default') === 'full';
+    }
     parent::__construct($values, $entity_type);
   }
 
@@ -316,6 +327,21 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
     return [
       'formatters' => new EntityDisplayPluginCollection($this->pluginManager, $configurations),
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasPageDisplay(): bool {
+    return $this->pageDisplay;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPageDisplay(bool $hasPageDisplay = TRUE): static {
+    $this->pageDisplay = $hasPageDisplay;
+    return $this;
   }
 
 }

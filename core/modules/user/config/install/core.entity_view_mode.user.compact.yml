@@ -8,3 +8,4 @@ label: Compact
 description: ''
 targetEntityType: user
 cache: true
+path: null

@@ -274,9 +274,12 @@ class TermTest extends ResourceTestBase {
           'langcode' => 'en',
           'name' => 'Llama',
           'path' => [
-            'alias' => '/llama',
-            'pid' => 1,
-            'langcode' => 'en',
+            [
+              'alias' => '/llama',
+              'pid' => 1,
+              'langcode' => 'en',
+              'variant' => 'default',
+            ],
           ],
           'weight' => 0,
           'drupal_internal__tid' => 1,
@@ -418,7 +421,7 @@ class TermTest extends ResourceTestBase {
     $normalization = $this->getDocumentFromResponse($response);
 
     // Change term's path alias.
-    $normalization['data']['attributes']['path']['alias'] .= 's-rule-the-world';
+    $normalization['data']['attributes']['path'][0]['alias'] .= 's-rule-the-world';
 
     // Create term PATCH request.
     $request_options[RequestOptions::BODY] = Json::encode($normalization);

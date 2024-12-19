@@ -130,4 +130,8 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
     return $this->description ?? '';
   }
 
+  public function getMode(): string {
+    return \explode('.', $this->id())[1];
+  }
+
 }
