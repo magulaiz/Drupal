@@ -71,7 +71,8 @@ class AjaxResponse extends JsonResponse implements AttachmentsInterface {
    * Empty anything already in the output buffer. Then, use the parent method
    * to send headers and content.
    *
-   * @param bool $flush Whether output buffers should be flushed
+   * @param bool $flush
+   *   Whether output buffers should be flushed.
    *
    * @return $this
    */
