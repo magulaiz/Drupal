@@ -102,6 +102,16 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   private ClientConnectionTransactionState $connectionTransactionState;
 
   /**
+   * Whether to trigger warnings when yielding a void transaction.
+   *
+   * Normally FALSE, is set to TRUE by specific tests checking the internal
+   * state of the transaction stack.
+   *
+   * @internal
+   */
+  public bool $triggerWarningWhenYieldingOnVoidTransaction = FALSE;
+
+  /**
    * Constructor.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -346,9 +356,11 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    */
   public function unpile(string $name, string $id): void {
     // If the transaction was voided, we cannot unpile. Skip but trigger a user
-    // warning.
+    // warning if requested.
     if ($this->getConnectionTransactionState() === ClientConnectionTransactionState::Voided) {
-      trigger_error('Transaction::yield() was not processed because a prior execution of a DDL statement already committed the transaction.', E_USER_WARNING);
+      if ($this->triggerWarningWhenYieldingOnVoidTransaction) {
+        trigger_error('Transaction::yield() was not processed because a prior execution of a DDL statement already committed the transaction.', E_USER_WARNING);
+      }
       return;
     }
 
