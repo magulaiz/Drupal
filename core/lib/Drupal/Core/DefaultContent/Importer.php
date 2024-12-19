@@ -190,12 +190,10 @@ final class Importer implements LoggerAwareInterface {
 
     @trigger_error('The ["depends"] key is deprecated in drupal:10.3.0 and will be removed in drupal:12.0.0. Use the ["dependencies"] key instead. See https://www.drupal.org/node/3494759', E_USER_DEPRECATED);
 
-    // Check if the 'depends' or 'dependencies' key is used.
-    $test_dependencies = $data['_meta']['depends'] ?? $data['_meta']['dependencies'];
-
-    if ($this->dependencies === NULL && !empty($test_dependencies)) {
+    // Add an empty check for 'depends' and 'dependencies' to avoid PHP notices.
+    if (($this->dependencies === NULL && !empty($data['_meta']['depends'])) || ($this->dependencies === NULL && !empty($data['_meta']['dependencies']))) {
       $is_root = TRUE;
-      foreach ($test_dependencies as $uuid => $entity_type) {
+      foreach ($data['_meta']['depends'] ?? $data['_meta']['dependencies'] as $uuid => $entity_type) {
         assert(is_string($uuid));
         assert(is_string($entity_type));
         $this->dependencies[$uuid] = [$entity_type, $uuid];
