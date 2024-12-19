@@ -1051,11 +1051,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // stored serialized.
         // @todo Give field types more control over this behavior in
         //   https://www.drupal.org/node/2232427.
+        $value = NULL;
         if (!$definition->getMainPropertyName() && count($columns) == 1) {
           $value = ($item = $entity->get($field_name)->first()) ? $item->getValue() : [];
         }
         elseif ($entity->hasField($field_name)) {
-          $value = $entity->get($field_name)->$column_name ?? NULL;
+          $value = $entity->get($field_name)->$column_name;
         }
         if (!empty($definition->getSchema()['columns'][$column_name]['serialize'])) {
           $value = serialize($value);
