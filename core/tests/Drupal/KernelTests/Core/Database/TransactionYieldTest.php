@@ -48,6 +48,16 @@ class TransactionYieldTest extends DatabaseTestBase {
   protected ?string $postTransactionCallbackAction = NULL;
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    // Set the transaction manager to trigger warnings when appropriate.
+    $this->connection->transactionManager()->triggerWarningWhenYieldingOnVoidTransaction = TRUE;
+  }
+
+  /**
    * Create a root Drupal transaction.
    */
   protected function createRootTransaction(string $name = '', bool $insertRow = TRUE): Transaction {
