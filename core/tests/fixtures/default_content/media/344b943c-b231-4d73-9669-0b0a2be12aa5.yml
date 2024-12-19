@@ -4,7 +4,7 @@ _meta:
   uuid: 344b943c-b231-4d73-9669-0b0a2be12aa5
   bundle: image
   default_langcode: en
-  depends:
+  dependencies:
     d8404562-efcc-40e3-869e-40132d53fe0b: file
 default:
   revision_user:
