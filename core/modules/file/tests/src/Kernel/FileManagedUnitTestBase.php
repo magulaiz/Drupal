@@ -69,7 +69,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    *   Optional translated string message.
    */
   public function assertFileHookCalled($hook, $expected_count = 1, $message = NULL) {
-    $this->assertCount($expected_count, file_test_get_calls($hook), $message ?? "hook_file_$hook was called correctly.");
+    $this->assertCount($expected_count, file_test_get_calls($hook), $message ?? "hook_file_$hook was not called as much times as expected.");
   }
 
   /**
