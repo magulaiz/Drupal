@@ -327,6 +327,39 @@ class BootstrapVariableTestCase extends DrupalWebTestCase {
     $this->assertIdentical(5, variable_get('simpletest_bootstrap_variable_test', 5), 'The default variable parameter is passed through correctly.');
   }
 
+  /**
+   * Tests a corrupted variable.
+   */
+  function testFaultyVariable() {
+    $name = 'simpletest_bootstrap_wrong_variable_test';
+    $test_value = 'unserialized_value';
+
+    // We write a value directly to the database bypassing the serialization
+    // because drupal_write_record() serializes the value and we need a wrongly
+    // serialized value.
+    db_merge('variable')->key(array('name' => $name))->fields(array('value' => $test_value))->execute();
+
+    $pass = FALSE;
+
+    try {
+      cache_clear_all('variables', 'cache_bootstrap');
+      variable_initialize();
+    }
+    catch (Exception $exception) {
+      $pass = TRUE;
+    }
+
+    $this->assertTrue($pass, 'Caught invalid variable setting.');
+
+    // Verify what happens when a variable is correctly serialized.
+    variable_set($name, $test_value);
+    cache_clear_all('variables', 'cache_bootstrap');
+    variable_initialize();
+
+    $value = variable_get($name, 'default_value');
+    $this->assertEqual($value, $test_value, 'Correctly set variable returns the correct data.');
+  }
+
 }
 
 /**
