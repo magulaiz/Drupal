@@ -10,35 +10,13 @@ namespace Drupal\update;
 class UpdateServerProjectInfo {
 
   /**
-   * The project status.
-   */
-  private string|null $status;
-
-  /**
-   * The supported branches.
-   */
-  private array $supportedBranches;
-
-  /**
-   * The project releases.
-   */
-  private array $releases;
-
-  /**
    * Constructs a UpdateServerProjectInfo object.
-   *
-   * @param string|null $status
-   *   The project status.
-   * @param array $supported_branches
-   *   The supported branches.
-   * @param array $releases
-   *   The project releases.
    */
-  private function __construct(?string $status = NULL, array $supported_branches = [], array $releases = []) {
-    $this->status = $status;
-    $this->supportedBranches = $supported_branches;
-    $this->releases = $releases;
-  }
+  private function __construct(
+    private readonly ?string $status = NULL,
+    private readonly array $supportedBranches = [],
+    private readonly array $releases = [],
+  ) {}
 
   /**
    * Creates a UpdateServerProjectInfo object.

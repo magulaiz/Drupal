@@ -15,32 +15,17 @@ use Drupal\Core\Utility\Error;
 final class Project {
 
   /**
-   * The existing version of project on the site.
-   */
-  protected string $existingVersion;
-
-  /**
    * The releases of this project that can be installed safely.
    */
   private array $installableReleases;
 
   /**
-   * The update server project information.
-   */
-  private UpdateServerProjectInfo $updateServerProjectInfo;
-
-  /**
    * Constructs a ProjectStatusCalculator object.
-   *
-   * @param \Drupal\update\UpdateServerProjectInfo $project_info
-   *   The update server project information.
-   * @param string|null $existing_version
-   *   The existing version of project on the site, if any.
    */
-  private function __construct(UpdateServerProjectInfo $project_info, ?string $existing_version = NULL) {
-    $this->existingVersion = $existing_version;
-    $this->updateServerProjectInfo = $project_info;
-  }
+  private function __construct(
+    private readonly UpdateServerProjectInfo $updateServerProjectInfo,
+    protected ?string $existingVersion,
+  ) {}
 
   /**
    * Creates a ProjectStatusCalculator object.
