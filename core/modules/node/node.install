@@ -7,6 +7,7 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\user\RoleInterface;
 
 /**
@@ -40,6 +41,7 @@ function node_requirements($phase) {
 /**
  * Implements hook_schema().
  */
+#[StopProceduralHookScan]
 function node_schema(): array {
   $schema['node_access'] = [
     'description' => 'Identifies which realm/grant pairs a user must possess in order to view, update, or delete specific nodes.',

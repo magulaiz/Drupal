@@ -47,7 +47,7 @@ function test_theme_theme_test_alter_alter(&$data) {
 /**
  * Implements hook_theme_suggestions_alter().
  */
-function test_theme_theme_suggestions_alter(array &$suggestions, array &$variables, $hook) {
+function test_theme_theme_suggestions_alter(array &$suggestions, array &$variables, $hook): void {
   \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
   // Theme alter hooks run after module alter hooks, so add this theme
   // suggestion to the beginning of the array so that the suggestion added by
@@ -62,7 +62,7 @@ function test_theme_theme_suggestions_alter(array &$suggestions, array &$variabl
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
-function test_theme_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables) {
+function test_theme_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables): void {
   \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
   // Theme alter hooks run after module alter hooks, so add this theme
   // suggestion to the beginning of the array so that the suggestion added by
@@ -74,7 +74,7 @@ function test_theme_theme_suggestions_theme_test_suggestions_alter(array &$sugge
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
-function test_theme_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+function test_theme_theme_suggestions_node_alter(array &$suggestions, array $variables): void {
   // Add an invalid suggestion to be tested.
   $suggestions[] = 'invalid_theme_suggestions';
   \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');

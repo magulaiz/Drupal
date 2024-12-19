@@ -6,6 +6,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
@@ -25,6 +26,7 @@ use Drupal\Core\Url;
  *     - description: Description of the administrative menu item.
  *     - options: URL options. See \Drupal\Core\Url::fromUri() for details.
  */
+#[StopProceduralHookScan]
 function template_preprocess_admin_block_content(&$variables): void {
   if (!empty($variables['content'])) {
     $variables['compact'] = system_admin_compact_mode();

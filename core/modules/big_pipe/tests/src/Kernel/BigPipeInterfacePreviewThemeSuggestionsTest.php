@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\big_pipe\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\big_pipe\Hook\BigPipeThemeSuggestionHook;
 use Drupal\block\Entity\Block;
 
 /**
@@ -77,10 +78,11 @@ class BigPipeInterfacePreviewThemeSuggestionsTest extends KernelTestBase {
     $variables = [];
     // In turn this is what createBigPipeJsPlaceholder() uses to
     // build the BigPipe JS placeholder render array which is used as input
-    // for big_pipe_theme_suggestions_big_pipe_interface_preview().
+    // for themeSuggestionsBigPipeInterfacePreview().
     $variables['callback'] = $build['#lazy_builder'][0];
     $variables['arguments'] = $build['#lazy_builder'][1];
-    $suggestions = big_pipe_theme_suggestions_big_pipe_interface_preview($variables);
+    $bigPipeThemeSuggestions = new BigPipeThemeSuggestionHook();
+    $suggestions = $bigPipeThemeSuggestions->themeSuggestionsBigPipeInterfacePreview($variables);
     $suggested_id = preg_replace('/[^a-zA-Z0-9]/', '_', $block->id());
     $this->assertSame([
       'big_pipe_interface_preview__block',
