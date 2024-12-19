@@ -130,6 +130,38 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $this->drupalGet($path);
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextNotContains('There are no users matching "' . implode(', ', $users) . '".');
+
+    // Click the Grouped Filters button.
+    $filter_settings_path = 'admin/structure/views/nojs/handler/test_user_name/default/filter/uid';
+    $this->drupalGet($filter_settings_path);
+    $this->submitForm([], 'Grouped filters');
+
+    // Create a grouped filter.
+    $this->drupalGet($filter_settings_path);
+    $edit = [];
+    $edit['options[group_info][group_items][1][title]'] = 'User 0';
+    $edit['options[group_info][group_items][1][operator]'] = 'in';
+    $edit['options[group_info][group_items][1][value]'] = "{$this->accounts[0]->label()} ({$this->accounts[0]->id()})";
+
+    $edit['options[group_info][group_items][2][title]'] = 'User 0 or 1';
+    $edit['options[group_info][group_items][2][operator]'] = 'in';
+    $edit['options[group_info][group_items][2][value]'] = "{$this->accounts[0]->label()} ({$this->accounts[0]->id()}), {$this->accounts[1]->label()} ({$this->accounts[1]->id()})";
+
+    $edit['options[group_info][group_items][3][title]'] = 'User 1 or 2';
+    $edit['options[group_info][group_items][3][operator]'] = 'in';
+    $edit['options[group_info][group_items][3][value]'] = "{$this->accounts[1]->label()} ({$this->accounts[1]->id()}), {$this->accounts[2]->label()} ({$this->accounts[2]->id()})";
+
+    // Default to the 2nd group.
+    $edit['options[group_info][default_group]'] = '3';
+    $this->submitForm($edit, 'Apply');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->submitForm([], 'Update preview');
+    $this->assertIds([$this->accounts[1]->id(), $this->accounts[2]->id()]);
+
+    // Check default value formatting.
+    $this->drupalGet($filter_settings_path);
+    $this->assertSession()->fieldValueEquals('options[group_info][group_items][1][value]', "{$this->accounts[0]->label()} ({$this->accounts[0]->id()})");
+    $this->assertSession()->fieldValueEquals('options[group_info][group_items][2][value]', "{$this->accounts[0]->label()} ({$this->accounts[0]->id()}), {$this->accounts[1]->label()} ({$this->accounts[1]->id()})");
   }
 
   /**
@@ -139,6 +171,10 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $path = 'test_user_name';
 
     $options = [];
+
+    $uids = array_map(function ($account) {
+      return $account->id();
+    }, $this->accounts);
 
     // Pass in an invalid username, the validation should catch it.
     $users = [$this->randomMachineName()];
@@ -153,10 +189,9 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     // be empty.
     $options['query']['uid'] = [['target_id' => 9999]];
     $this->drupalGet($path, $options);
-    // The actual result should contain all of the user ids.
-    foreach ($this->accounts as $account) {
-      $this->assertSession()->pageTextContains($account->id());
-    }
+    // The actual result should contain all user ids, including admin and
+    // anonymous users.
+    $this->assertIds(array_merge([0, 1], $uids));
 
     // Pass in an invalid username and a valid username.
     $users = [$this->randomMachineName(), $this->names[0]];
@@ -174,9 +209,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $this->drupalGet($path, $options);
     $this->assertSession()->pageTextNotContains('Unable to find user');
     // The actual result should contain all of the user ids.
-    foreach ($this->accounts as $account) {
-      $this->assertSession()->pageTextContains($account->id());
-    }
+    $this->assertIds($uids);
 
     // Pass in just valid user IDs in the entity_autocomplete target_id format.
     $options['query']['uid'] = array_map(function ($account) {
@@ -186,9 +219,25 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $this->drupalGet($path, $options);
     $this->assertSession()->pageTextNotContains('Unable to find user');
     // The actual result should contain all of the user ids.
-    foreach ($this->accounts as $account) {
-      $this->assertSession()->pageTextContains($account->id());
+    $this->assertIds($uids);
+  }
+
+  /**
+   * Ensures that a given list of items appear on the view result.
+   *
+   * @param array $expected_ids
+   *   An array of IDs.
+   */
+  protected function assertIds(array $expected_ids = []): void {
+    // First verify the count.
+    $elements = $this->cssSelect('.views-row span.field-content');
+    $this->assertCount(count($expected_ids), $elements);
+
+    $actual_ids = [];
+    foreach ($elements as $element) {
+      $actual_ids[] = (int) $element->getText();
     }
+    $this->assertEquals($expected_ids, $actual_ids);
   }
 
 }
