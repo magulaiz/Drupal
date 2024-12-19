@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the system module.
  */
 
+use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\FileSystem\FileSystem as FileSystemComponent;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
@@ -1757,6 +1758,17 @@ function system_update_11102(): TranslatableMarkup|null {
     ->getEquivalentUpdate();
   if ($equivalent_update instanceof EquivalentUpdate) {
     return $equivalent_update->toSkipMessage();
+  }
+  return NULL;
+}
+
+/**
+ * Update .htaccess-files to add a CSP-header for image/svg+xml.
+ */
+function system_update_11103(): TranslatableMarkup|null {
+  $htaccessWriter = \Drupal::service('file.htaccess_writer');
+  foreach ($htaccessWriter->defaultProtectedDirs() as $dir) {
+    FileSecurity::writeHtaccess($dir->getPath(), $dir->isPrivate(), TRUE);
   }
   return NULL;
 }
