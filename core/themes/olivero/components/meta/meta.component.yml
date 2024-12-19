@@ -33,4 +33,3 @@ slots:
   metadata:
     title: Metadata
     description: Additional metadata
-    type: object

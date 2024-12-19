@@ -8,14 +8,14 @@
       </div>
     {% endif %}
     <span class="meta__text">
-      {% apply spaceless %}
-        {% if author %}
-          <span>
-            {{ 'By'|t }} <span{{author_attributes.addClass('meta__author')}}>{{ author }}</span>{% if date %}, {{ date }}{% endif %}
-          </span>
-        {% endif %}
-      {% endapply %}
-      {% block metadata %}{% endblock %}
+      {% if author %}
+        <span>
+          {{ 'By'|t }} <span{{author_attributes.addClass('meta__author')}}>{{ author }}</span>{% if date %}, {{ date }}{% endif %}
+        </span>
+      {% endif %}
+      {% block metadata %}
+        {{ metadata }}
+      {% endblock %}
     </span>
   </div>
 </div>
