@@ -4,6 +4,7 @@ namespace Drupal\Core\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Attribute\AttributeInterface;
 use Drupal\Component\Plugin\Discovery\AttributeClassDiscovery as ComponentAttributeClassDiscovery;
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
@@ -158,13 +159,30 @@ class AttributeClassDiscovery extends ComponentAttributeClassDiscovery {
     foreach ($third_party_attributes as $third_party_attribute) {
       // Check that the property attribute's module dependencies are installed.
       $installed_modules = array_keys($this->getModuleHandler()->getModuleList());
-      if (array_diff($third_party_attribute->getModuleDependencies(), $installed_modules)) {
+      if (array_diff($third_party_attribute->getThirdPartyDependencies(), $installed_modules)) {
         continue;
       }
 
       $definition = $third_party_attribute->addToDefinition($definition);
     }
     return $definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function parseAdditionalProperty(\ReflectionAttribute $property_reflector, AttributeInterface $plugin_attribute, array|object &$content, array &$third_party_attributes): void {
+    $property_class = $property_reflector->getName();
+    $id = $plugin_attribute->getId();
+    $plugin_class = $plugin_attribute->getClass();
+    $property_provider = $this->getProviderFromNamespace($property_class);
+    $plugin_provider = $this->getProviderFromNamespace($plugin_class);
+    $allowed_providers = ['component', 'core', $plugin_provider];
+    if (!in_array($property_provider, $allowed_providers)) {
+      throw new InvalidPluginDefinitionException($id, sprintf('Invalid plugin property class: %s used in plugin class %s. Plugin property classes can be implemented only in core or the module providing the plugin type.', $property_class, $plugin_class));
+    }
+
+    parent::parseAdditionalProperty($property_reflector, $plugin_attribute, $content, $third_party_attributes);
   }
 
 }

@@ -218,8 +218,8 @@ EOS;
 <?php
 declare(strict_types=1);
 namespace Drupal\plugin_test\Plugin\plugin_test\plugin_property;
-use Drupal\plugin_test\Plugin\Attribute\InvalidPluginProperty;
 use Drupal\plugin_test\Plugin\Attribute\PluginExample;
+use Drupal\plugin_test_extended\Plugin\Attribute\InvalidPluginProperty;
 #[PluginExample(
   id: 'invalid_module_plugin_property',
   custom: 'Invalid example with plugin property in module',
@@ -228,9 +228,9 @@ use Drupal\plugin_test\Plugin\Attribute\PluginExample;
   key: 1,
   value: 0,
 )]
-class InvalidModulePluginProperty {}
+class InvalidModulePropertyExamplePlugin {}
 EOS;
-    $file = vfsStream::newFile('InvalidModulePluginProperty.php')->withContent($invalid_callback);
+    $file = vfsStream::newFile('InvalidModulePropertyExamplePlugin.php')->withContent($invalid_callback);
     $plugin_directory->addChild($file);
     $manager = new DefaultPluginManager($subdir, $namespaces, $this->container->get('module_handler'), NULL, AttributePluginExample::class, AnnotationPluginExample::class);
     $manager->clearCachedDefinitions();
@@ -241,7 +241,7 @@ EOS;
     catch (InvalidPluginDefinitionException $e) {
     }
     $this->assertInstanceOf(InvalidPluginDefinitionException::class, $e);
-    $this->assertSame('Invalid plugin property class: Drupal\plugin_test\Plugin\Attribute\InvalidPluginProperty used in plugin class Drupal\plugin_test\Plugin\plugin_test\plugin_property\InvalidModulePluginProperty. Plugin property classes can be implemented only in core.', $e->getMessage());
+    $this->assertSame('Invalid plugin property class: Drupal\plugin_test_extended\Plugin\Attribute\InvalidPluginProperty used in plugin class Drupal\plugin_test\Plugin\plugin_test\plugin_property\InvalidModulePropertyExamplePlugin. Plugin property classes can be implemented only in core or the module providing the plugin type.', $e->getMessage());
     $this->assertArrayNotHasKey('invalid_module_plugin_property', $definitions);
   }
 

@@ -55,6 +55,6 @@ interface PluginPropertyInterface extends AttributeInterface {
    * @return string[]
    *   The list of modules.
    */
-  public function getModuleDependencies(): array;
+  public function getThirdPartyDependencies(): array;
 
 }

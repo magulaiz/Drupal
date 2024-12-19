@@ -122,7 +122,7 @@ class PluginProperty extends AttributeBase implements PluginPropertyInterface {
   /**
    * {@inheritdoc}
    */
-  public function getModuleDependencies(): array {
+  public function getThirdPartyDependencies(): array {
     return $this->moduleDependencies;
   }
 

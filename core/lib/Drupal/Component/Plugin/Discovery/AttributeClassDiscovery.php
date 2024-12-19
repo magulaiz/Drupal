@@ -159,32 +159,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
 
       if ($property_reflectors = $reflection_class->getAttributes(PluginPropertyInterface::class, \ReflectionAttribute::IS_INSTANCEOF)) {
         foreach ($property_reflectors as $property_reflector) {
-          $property_class = $property_reflector->getName();
-          if (!str_starts_with($property_class, 'Drupal\\Component\\') &&
-              !str_starts_with($property_class, 'Drupal\\Core\\')) {
-            throw new InvalidPluginDefinitionException($id, sprintf('Invalid plugin property class: %s used in plugin class %s. Plugin property classes can be implemented only in core.', $property_class, $class));
-          }
-
-          /** @var \Drupal\Component\Plugin\Attribute\PluginPropertyInterface $property_attribute */
-          $property_attribute = $property_reflector->newInstance();
-          $this->prepareAttributeDefinition($property_attribute, $class);
-          // Check that the property attribute is allowed to work with the plugin
-          // attribute.
-          if (!$property_attribute->isValidPluginClass($attribute::class)) {
-            throw new InvalidPluginDefinitionException($id, sprintf('May not use plugin property class %s with main plugin attribute class "%s for plugin class %s".', $property_class, $attribute::class, $class));
-          }
-          if (empty($property_attribute->getModuleDependencies())) {
-            // Add properties from attributes if they do not have module
-            // dependencies, since they are not dependent on modules being
-            // installed.
-            $content = $property_attribute->addToDefinition($content);
-            continue;
-          }
-
-          // Attributes with a provider other than core are saved separately.
-          // They will be added to the definition after being retrieved from
-          // file cache, if the module that is the provider is installed.
-          $third_party_attributes[] = $property_attribute;
+          $this->parseAdditionalProperty($property_reflector, $attribute, $content, $third_party_attributes);
         }
       }
     }
@@ -219,8 +194,8 @@ class AttributeClassDiscovery implements DiscoveryInterface {
    *   The plugin ID.
    * @param array|object $definition
    *   The definition parsed from the plugin class attribute.
-   * @param \Drupal\Component\Plugin\Attribute\PluginProperty[] $third_party_attributes
-   *   Third-party attributes from modules that provide additional properties to'
+   * @param \Drupal\Component\Plugin\Attribute\PluginPropertyInterface[] $third_party_attributes
+   *   Third-party attributes from modules that provide additional properties to
    *   the definition.
    *
    * @return array|object
@@ -233,6 +208,52 @@ class AttributeClassDiscovery implements DiscoveryInterface {
     // happen in subclass method.
     // @see \Drupal\Core\Plugin\Discovery\AttributeClassDiscovery::addThirdPartyPropertiesToDefinition()
     return $definition;
+  }
+
+  /**
+   * Parses the plugin property attribute and adds to definition.
+   *
+   * @param \ReflectionAttribute $property_reflector
+   *   Reflection object for the plugin property attribute.
+   * @param \Drupal\Component\Plugin\Attribute\AttributeInterface $plugin_attribute
+   *   The plugin attribute object.
+   * @param array|object $content
+   *   The plugin definition content retrieved from the plugin attribute. Plugin
+   *   property attributes that do not have third-party dependencies will add
+   *   property value to the definition content, which is passed by reference.
+   * @param \Drupal\Component\Plugin\Attribute\PluginPropertyInterface[] $third_party_attributes
+   *   List of plugin property attributes defined in the plugin class that have
+   *   third-party dependencies. If the plugin attribute from the reflection
+   *   object has a third-party dependency, it will be added to this list, which
+   *   is passed by reference.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   */
+  protected function parseAdditionalProperty(\ReflectionAttribute $property_reflector, AttributeInterface $plugin_attribute, array|object &$content, array &$third_party_attributes): void {
+    $property_class = $property_reflector->getName();
+    $id = $plugin_attribute->getId();
+    $plugin_class = $plugin_attribute->getClass();
+
+    /** @var \Drupal\Component\Plugin\Attribute\PluginPropertyInterface $property_attribute */
+    $property_attribute = $property_reflector->newInstance();
+    $this->prepareAttributeDefinition($property_attribute, $plugin_attribute->getClass());
+    // Check that the property attribute is allowed to work with the plugin
+    // attribute.
+    if (!$property_attribute->isValidPluginClass($plugin_attribute::class)) {
+      throw new InvalidPluginDefinitionException($id, sprintf('May not use plugin property class %s with main plugin attribute class "%s for plugin class %s".', $property_class, $plugin_attribute::class, $plugin_class));
+    }
+    if (empty($property_attribute->getThirdPartyDependencies())) {
+      // Add properties from attributes if they do not have module
+      // dependencies, since they are not dependent on modules being
+      // installed.
+      $content = $property_attribute->addToDefinition($content);
+      return;
+    }
+
+    // Attributes with a provider other than core are saved separately.
+    // They will be added to the definition after being retrieved from
+    // file cache, if the module that is the provider is installed.
+    $third_party_attributes[] = $property_attribute;
   }
 
 }

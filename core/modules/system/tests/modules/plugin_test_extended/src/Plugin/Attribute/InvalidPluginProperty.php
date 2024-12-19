@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\plugin_test\Plugin\Attribute;
+namespace Drupal\plugin_test_extended\Plugin\Attribute;
 
 use Drupal\Component\Plugin\Attribute\PluginProperty;
 
