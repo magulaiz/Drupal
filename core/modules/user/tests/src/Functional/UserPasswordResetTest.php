@@ -168,6 +168,9 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->assertValidPasswordReset($edit['name']);
     $this->assertCount($before + 1, $this->drupalGetMails(['id' => 'user_password_reset']), 'Email sent when requesting password reset using email address.');
 
+    // Check that the email message body does not contain HTML entities
+    $this->assertTrue($this->checkBodyText(), 'The body text of the email contains no HTML entities');
+
     // Visit the user edit page without pass-reset-token and make sure it does
     // not cause an error.
     $resetURL = $this->getResetURL();
@@ -334,9 +337,9 @@ class UserPasswordResetTest extends BrowserTestBase {
     $_emails = $this->drupalGetMails();
     $email = end($_emails);
     if(strip_tags($email['body']) === $email['body']) {
-      return FALSE;
+      return TRUE;
     } ;
-    return TRUE;
+    return FALSE;
   }
 
   /**
