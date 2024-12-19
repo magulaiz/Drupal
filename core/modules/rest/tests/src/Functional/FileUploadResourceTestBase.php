@@ -829,4 +829,15 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     return new CacheableMetadata();
   }
 
+  /**
+   * Empty function.
+   *
+   * Needed by PHPStan for unused function
+   * BasicAuthResourceTestTrait::assertResponseWhenMissingAuthentication().
+   * CookieResourceTestTrait::assertResponseWhenMissingAuthentication().
+   */
+  protected function getExpectedUnauthorizedEntityAccessCacheability(bool $is_authenticated): CacheableMetadata {
+    return new CacheableMetadata();
+  }
+
 }

@@ -270,4 +270,14 @@ class UserRegistrationRestTest extends ResourceTestBase {
     return new CacheableMetadata();
   }
 
+  /**
+   * Empty function.
+   *
+   * Needed by PHPStan for unused function
+   * CookieResourceTestTrait::assertResponseWhenMissingAuthentication().
+   */
+  protected function getExpectedUnauthorizedEntityAccessCacheability(bool $is_authenticated): CacheableMetadata {
+    return new CacheableMetadata();
+  }
+
 }
