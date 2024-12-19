@@ -6,6 +6,7 @@
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Render\Markup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldConfigInterface;
@@ -20,6 +21,7 @@ use Drupal\field\FieldStorageConfigInterface;
  * @return \Drupal\Core\Entity\Sql\SqlContentEntityStorage
  *   Returns the entity type storage if supported.
  */
+#[StopProceduralHookScan]
 function _views_field_get_entity_type_storage(FieldStorageConfigInterface $field_storage) {
   $result = FALSE;
   $entity_type_manager = \Drupal::entityTypeManager();

@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Url;
 
 /**
@@ -14,6 +15,7 @@ use Drupal\Core\Url;
  * @param array $variables
  *   An associative array of template variables.
  */
+#[StopProceduralHookScan]
 function template_preprocess_system_security_advisories_fetch_error_message(array &$variables): void {
   $variables['error_message'] = [
     'message' => [

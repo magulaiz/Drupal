@@ -7,12 +7,14 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Section;
 
 /**
  * Implements hook_install().
  */
+#[StopProceduralHookScan]
 function layout_builder_install(): void {
   $display_changed = FALSE;
 

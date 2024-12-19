@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Render\Element;
 
 /**
@@ -15,6 +16,7 @@ use Drupal\Core\Render\Element;
  *   An associative array containing:
  *   - element: A render element representing the image field widget.
  */
+#[StopProceduralHookScan]
 function template_preprocess_image_widget(&$variables): void {
   $element = $variables['element'];
 

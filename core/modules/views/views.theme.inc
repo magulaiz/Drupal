@@ -6,6 +6,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\TableSort;
@@ -19,6 +20,7 @@ use Drupal\Core\Utility\TableSort;
  *   An associative array containing:
  *   - view: The ViewExecutable object.
  */
+#[StopProceduralHookScan]
 function template_preprocess_views_view(&$variables): void {
   $view = $variables['view'];
   $id = $view->storage->id();

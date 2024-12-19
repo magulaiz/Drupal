@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\workspaces\Entity\Workspace;
 
 /**
@@ -30,6 +31,7 @@ function workspaces_requirements($phase) {
 /**
  * Implements hook_install().
  */
+#[StopProceduralHookScan]
 function workspaces_install(): void {
   // Set the owner of these default workspaces to be first user which has the
   // 'administrator' role. This way we avoid hard coding user ID 1 for sites

@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -26,6 +27,7 @@ use Drupal\user\UserInterface;
  * add/edit/delete forms and populate the 'picture' variable during the
  * preprocess stage.
  */
+#[StopProceduralHookScan]
 function user_picture_enabled() {
   $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('user', 'user');
   return isset($field_definitions['user_picture']);
