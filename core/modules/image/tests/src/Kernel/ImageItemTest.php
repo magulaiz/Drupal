@@ -134,7 +134,7 @@ class ImageItemTest extends FieldKernelTestBase {
     $this->assertEquals($image2->getFileUri(), $entity->get('image_test')->entity->getFileUri());
     $image = $this->imageFactory->get('public://example-2.jpg');
     $this->assertEquals($image->getWidth(), $entity->get('image_test')->width);
-    $this->assertEquals($image->getHeight(), $entity->get('image_test?->height);
+    $this->assertEquals($image->getHeight(), $entity->get('image_test')->height);
     $this->assertEquals($new_alt, $entity->get('image_test')->alt);
 
     // Check that the image item can be set to the referenced file directly.
