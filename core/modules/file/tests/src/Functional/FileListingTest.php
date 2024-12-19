@@ -288,18 +288,12 @@ class FileListingTest extends FileFieldTestBase {
       'uid' => 1,
       'name' => $entity_name,
       'type' => $bundle,
-      'field_test_file' => [
-        'target_id' => $file->id(),
-      ],
+      'field_test_file' => [$file],
     ]);
     $entity->save();
 
-    // Create node entity and attach the created file.
-    $node = $this->drupalCreateNode(['type' => 'article', 'file' => $file]);
-    $node->save();
-
     $this->drupalLogin($admin_user);
-    $this->drupalGet('user/' . $base_user_id . '/cancel');
+    $this->drupalGet($base_user->toUrl('cancel-form'));
     $edit['user_cancel_method'] = 'user_cancel_reassign';
     $this->submitForm($edit, 'Confirm');
     $result = \Drupal::database()->query("SELECT fid FROM {file_managed} WHERE  uid = :uid", [':uid' => $base_user_id])->fetchField();
