@@ -1159,7 +1159,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     // "Official" Field API fields are always set. For non-field properties,
     // check the internal values.
     if ($this->hasField($name)) {
-      @trigger_error('Checking for a field (' . $name . ') with isset() on content entities is deprecated in drupal:10.0.0 and will be removed before drupal:11.0.0. Instead, use ::set(). See https://www.drupal.org/node/XX', E_USER_DEPRECATED);
+      @trigger_error('Checking for a field (' . $name . ') with isset() on content entities is deprecated in drupal:10.0.0 and will be removed before drupal:11.0.0. Instead, use ::set(). See https://www.drupal.org/node/1', E_USER_DEPRECATED);
       return TRUE;
     }
     if (!in_array($name, ['pass_raw', 'passRaw', 'sessionId', '_referringItem', '_skipProtectedUserFieldConstraint', 'view', '_restSubmittedFields', 'book', 'depth', 'rdf_data', '_serviceId', 'preview_view_mode', 'homepage', '_initialPublished', 'in_preview', 'preview'])) {
