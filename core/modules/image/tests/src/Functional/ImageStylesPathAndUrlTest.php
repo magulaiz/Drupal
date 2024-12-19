@@ -231,7 +231,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
 
     // Fetch the URL that generates the file.
     $this->drupalGet($generate_url);
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertStatusOk();
     $this->assertFileExists($generated_uri);
     // assertRaw can't be used with string containing non UTF-8 chars.
     $this->assertNotEmpty(file_get_contents($generated_uri), 'URL returns expected file.');
@@ -253,7 +253,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       // Make sure that a second request to the already existing derivative
       // works too.
       $this->drupalGet($generate_url);
-      $this->assertSession()->statusCodeEquals(200);
+      $this->assertStatusOk();
 
       // Check that the second request also returned the generated image.
       $this->assertSession()->responseHeaderEquals('Content-Length', (string) $image->getFileSize());
@@ -297,7 +297,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       if ($clean_url) {
         // Add some extra chars to the token.
         $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
-        $this->assertSession()->statusCodeEquals(200);
+        $this->assertStatusOk();
       }
     }
 
@@ -324,7 +324,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $generate_url = $this->style->buildUrl($original_uri, $clean_url);
     $this->assertStringNotContainsString(IMAGE_DERIVATIVE_TOKEN . '=', $generate_url, 'The security token does not appear in the image style URL.');
     $this->drupalGet($generate_url);
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertStatusOk();
 
     // Stop suppressing the security token in the URL.
     $this->config('image.settings')->set('suppress_itok_output', FALSE)->save();
@@ -346,13 +346,29 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(404);
     // Make sure the image can still be generated if a correct token is used.
     $this->drupalGet($nested_url);
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertStatusOk();
 
     // Check that requesting a nonexistent image does not create any new
     // directories in the file system.
     $directory = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $this->randomMachineName();
     $this->drupalGet(\Drupal::service('file_url_generator')->generateAbsoluteString($directory . '/' . $this->randomString()));
     $this->assertDirectoryDoesNotExist($directory);
+  }
+
+  /**
+   * Asserts that the status code is ok.
+   */
+  protected function assertStatusOk(): void {
+    $code = $this->getSession()->getStatusCode();
+    if ((string) $code === '200') {
+      $this->addToAssertionCount(1);
+      return;
+    }
+    $this->fail(sprintf(
+      "Found status code %s instead of 200.\n----\n%s\n----\n",
+      $code,
+      $this->getSession()->getPage()->getContent(),
+    ));
   }
 
 }
