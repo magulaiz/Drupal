@@ -629,7 +629,6 @@ abstract class Database {
       foreach (self::$connections as $targets) {
         foreach ($targets as $connection) {
           if ($connection instanceof Connection) {
-            // @phpstan-ignore method.deprecated
             $connection->commitAll();
           }
         }
