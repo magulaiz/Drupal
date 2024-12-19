@@ -11,6 +11,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests the functions for generating paths and URLs for image styles.
@@ -81,8 +82,19 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
   /**
    * Tests an image style URL using the "private://" scheme.
    */
-  public function testImageStyleUrlAndPathPrivate(): void {
+  #[DataProvider('provideIndex')]
+  public function testImageStyleUrlAndPathPrivate(int $index): void {
     $this->doImageStyleUrlAndPathTests('private');
+  }
+
+  /**
+   * Data provider.
+   *
+   * @return list<array{int}>
+   *   List of parameter tuples.
+   */
+  public static function provideIndex(): array {
+    return array_map(fn (int $index) => [$index], range(0, 30));
   }
 
   /**
