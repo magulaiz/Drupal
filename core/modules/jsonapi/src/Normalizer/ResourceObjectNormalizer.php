@@ -2,11 +2,14 @@
 
 namespace Drupal\jsonapi\Normalizer;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Field\EmptyFieldItemListCacheabilityInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher;
 use Drupal\jsonapi\JsonApiResource\Relationship;
+use Drupal\jsonapi\JsonApiResource\ResourceIdentifier;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi\Normalizer\Value\CacheableOmission;
@@ -169,6 +172,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
       if (!$field_access_result->isAllowed()) {
         return new CacheableOmission(CacheableMetadata::createFromObject($field_access_result));
       }
+      $cacheable_metadata = CacheableMetadata::createFromObject($field_access_result);
       if ($field instanceof EntityReferenceFieldItemListInterface) {
         // Build the relationship object based on the entity reference and
         // normalize that object instead.
@@ -176,12 +180,22 @@ class ResourceObjectNormalizer extends NormalizerBase {
         $resource_object = $context['resource_object'];
         $relationship = Relationship::createFromEntityReferenceField($resource_object, $field);
         $normalized_field = $this->serializer->normalize($relationship, $format, $context);
+        $field_items = $field->filterEmptyItems();
+        if (!$field_items->count() && $field instanceof EmptyFieldItemListCacheabilityInterface) {
+          $cacheable_metadata->addCacheableDependency($field->getEmptyListCacheability());
+        }
+        foreach ($field_items as $item) {
+          $primary_property = $item->get(ResourceIdentifier::getDataReferencePropertyName($item));
+          if ($primary_property instanceof CacheableDependencyInterface) {
+            $cacheable_metadata->addCacheableDependency($primary_property);
+          }
+        }
       }
       else {
         $normalized_field = $this->serializer->normalize($field, $format, $context);
       }
       assert($normalized_field instanceof CacheableNormalization);
-      return $normalized_field->withCacheableDependency(CacheableMetadata::createFromObject($field_access_result));
+      return $normalized_field->withCacheableDependency($cacheable_metadata);
     }
     else {
       // @todo Replace this workaround after https://www.drupal.org/node/3043245
