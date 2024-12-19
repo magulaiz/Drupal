@@ -85,7 +85,7 @@ class UserPasswordResetTest extends WebDriverTestBase {
     $this->submitForm($edit, 'Submit');
 
     // Check that the email message body does not contain HTML entities
-    $this->assertTrue($this->checkBodyText(), 'The body text of the email contains no HTML entities');
+    $this->assertTrue($this->checkBodyText(), 'The body text of the email contains HTML entities');
 
     $resetURL = $this->getResetURL();
     $this->drupalGet($resetURL);
