@@ -332,7 +332,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Checks the email body text for the presence of HTML entities.
    */
-  public function checkBodyText() {
+  public function checkBodyText(): bool {
     // Assume the most recent email.
     $_emails = $this->drupalGetMails();
     $email = end($_emails);
