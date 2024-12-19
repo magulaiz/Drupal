@@ -76,7 +76,7 @@ class AjaxResponse extends JsonResponse implements AttachmentsInterface {
    *
    * @return $this
    */
-  public function send(bool $flush = true): static {
+  public function send(bool $flush = TRUE): static {
     if ($flush) {
       ob_clean();
     }
