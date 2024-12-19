@@ -251,7 +251,7 @@ abstract class Connection {
     $newConnection = Database::getConnection();
 
     // All the other references to this service instance will be retained, so
-    // hotswap the new connection into this instance.
+    // hot-swap the new connection into this instance.
     // The protected property since this is the same class.
     $this->connection = $newConnection->connection;
   }
@@ -288,7 +288,8 @@ abstract class Connection {
     $dummySql = $this->getDummySelectSQL();
     try {
       $this->connection->query($dummySql);
-    } catch (\PDOException) {
+    }
+    catch (\PDOException) {
       $this->close();
       $this->reconnect();
 
@@ -297,7 +298,6 @@ abstract class Connection {
       $this->connection->query($dummySql);
     }
   }
-
 
   /**
    * Returns the default query options for any given query.
