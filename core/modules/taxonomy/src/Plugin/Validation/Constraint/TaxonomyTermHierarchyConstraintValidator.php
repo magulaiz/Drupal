@@ -57,7 +57,7 @@ class TaxonomyTermHierarchyConstraintValidator extends ConstraintValidator imple
     $ancestors = $term_storage->loadAllParents($entity->id());
     $ancestor_is_pending_revision = (bool) array_intersect_key($ancestors, array_flip($pending_term_ids));
 
-    $new_parents = array_column($entity->parent->getValue(), 'target_id');
+    $new_parents = array_column($entity->get('parent')->getValue(), 'target_id');
     $original_parents = array_keys($term_storage->loadParents($entity->id())) ?: [0];
     if (($is_pending_revision || $ancestor_is_pending_revision) && $new_parents != $original_parents) {
       $this->context->buildViolation($constraint->message)
@@ -66,7 +66,7 @@ class TaxonomyTermHierarchyConstraintValidator extends ConstraintValidator imple
     }
 
     $original = $term_storage->loadUnchanged($entity->id());
-    if (($is_pending_revision || $ancestor_is_pending_revision) && !$entity->weight->equals($original->weight)) {
+    if (($is_pending_revision || $ancestor_is_pending_revision) && !$entity->weight->equals($original->get('weight'))) {
       $this->context->buildViolation($constraint->message)
         ->atPath('weight')
         ->addViolation();

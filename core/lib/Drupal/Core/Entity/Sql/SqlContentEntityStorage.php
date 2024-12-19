@@ -914,7 +914,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
         if ($this->revisionTable) {
           if ($full_save) {
-            $entity->{$this->revisionKey} = $this->saveRevision($entity);
+            $entity->set($this->revisionKey, $this->saveRevision($entity));
           }
           else {
             $record = $this->mapToStorageRecord($entity->getUntranslated(), $this->revisionTable);
@@ -949,7 +949,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         if (!isset($record->{$this->idKey})) {
           $record->{$this->idKey} = $insert_id;
         }
-        $entity->{$this->idKey} = (string) $record->{$this->idKey};
+        $entity->set($this->idKey, (string) $record->{$this->idKey});
         if ($this->revisionTable) {
           $record->{$this->revisionKey} = $this->saveRevision($entity);
         }
@@ -1052,10 +1052,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // @todo Give field types more control over this behavior in
         //   https://www.drupal.org/node/2232427.
         if (!$definition->getMainPropertyName() && count($columns) == 1) {
-          $value = ($item = $entity->$field_name->first()) ? $item->getValue() : [];
+          $value = ($item = $entity->get($field_name)->first()) ? $item->getValue() : [];
         }
         else {
-          $value = $entity->$field_name->$column_name ?? NULL;
+          $value = $entity->get($field_name)->$column_name ?? NULL;
         }
         if (!empty($definition->getSchema()['columns'][$column_name]['serialize'])) {
           $value = serialize($value);
@@ -1158,7 +1158,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           ->execute();
       }
       // Make sure to update the new revision key for the entity.
-      $entity->{$this->revisionKey}->value = $record->{$this->revisionKey};
+      $entity->get($this->revisionKey)->value = $record->{$this->revisionKey};
     }
     else {
       // Remove the revision ID from the record to enable updates on SQL

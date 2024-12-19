@@ -36,7 +36,7 @@ class BlockUser extends ActionBase {
    */
   public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\user\UserInterface $object */
-    $access = $object->status->access('edit', $account, TRUE)
+    $access = $object->get('status')->access('edit', $account, TRUE)
       ->andIf($object->access('update', $account, TRUE));
 
     return $return_as_object ? $access : $access->isAllowed();

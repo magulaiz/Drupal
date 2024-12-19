@@ -105,7 +105,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
     ]);
     $node->save();
     $node->setNewRevision();
-    $node->moderation_state = 'draft';
+    $node->get('moderation_state')->value = 'draft';
     $node->save();
 
     // Create a draft default revision.
@@ -135,7 +135,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
     $translated_forward_revision = $third_node->addTranslation('fr');
     $translated_forward_revision->title = 'Translated Node';
     $translated_forward_revision->setNewRevision(TRUE);
-    $translated_forward_revision->moderation_state = 'translated_draft';
+    $translated_forward_revision->get('moderation_state')->value = 'translated_draft';
     $translated_forward_revision->save();
 
     // Test the filter within an AND filter group (the default) and an OR filter

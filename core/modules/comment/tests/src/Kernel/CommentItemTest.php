@@ -43,7 +43,7 @@ class CommentItemTest extends FieldKernelTestBase {
 
     // Verify entity creation.
     $entity = EntityTest::create();
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     // Verify entity has been created properly.
@@ -51,13 +51,13 @@ class CommentItemTest extends FieldKernelTestBase {
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
-    $this->assertInstanceOf(FieldItemListInterface::class, $entity->comment);
-    $this->assertInstanceOf(CommentItemInterface::class, $entity->comment[0]);
+    $this->assertInstanceOf(FieldItemListInterface::class, $entity->get('comment'));
+    $this->assertInstanceOf(CommentItemInterface::class, $entity->get('comment')[0]);
 
     // Test sample item generation.
     /** @var \Drupal\entity_test\Entity\EntityTest $entity */
     $entity = EntityTest::create();
-    $entity->comment->generateSampleItems();
+    $entity->get('comment')->generateSampleItems();
     $this->entityValidateAndSave($entity);
     $this->assertContains($entity->get('comment')->status, [
       CommentItemInterface::HIDDEN,
@@ -65,7 +65,7 @@ class CommentItemTest extends FieldKernelTestBase {
       CommentItemInterface::OPEN,
     ], 'Comment status value in defined range');
 
-    $mainProperty = $entity->comment[0]->mainPropertyName();
+    $mainProperty = $entity->get('comment')[0]->mainPropertyName();
     $this->assertEquals('status', $mainProperty);
   }
 
@@ -95,8 +95,8 @@ class CommentItemTest extends FieldKernelTestBase {
 
     // The entity fields for name and mail have no meaning if the user is not
     // Anonymous.
-    $this->assertNull($comment->name->value);
-    $this->assertNull($comment->mail->value);
+    $this->assertNull($comment->get('name')->value);
+    $this->assertNull($comment->get('mail')->value);
 
     $comment_anonymous = Comment::create([
       'subject' => 'Anonymous comment title',
@@ -114,15 +114,15 @@ class CommentItemTest extends FieldKernelTestBase {
 
     // The entity fields for name and mail have retained their values when
     // comment belongs to an anonymous user.
-    $this->assertNotNull($comment_anonymous->name->value);
-    $this->assertNotNull($comment_anonymous->mail->value);
+    $this->assertNotNull($comment_anonymous->get('name')->value);
+    $this->assertNotNull($comment_anonymous->get('mail')->value);
 
     $comment_anonymous->setOwnerId(1)
       ->save();
     // The entity fields for name and mail have no meaning if the user is not
     // Anonymous.
-    $this->assertNull($comment_anonymous->name->value);
-    $this->assertNull($comment_anonymous->mail->value);
+    $this->assertNull($comment_anonymous->get('name')->value);
+    $this->assertNull($comment_anonymous->get('mail')->value);
   }
 
 }

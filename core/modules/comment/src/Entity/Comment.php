@@ -525,7 +525,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
     $user = $this->get('uid')->entity;
     if (!$user || $user->isAnonymous()) {
       $user = User::getAnonymousUser();
-      $user->name = $this->getAuthorName();
+      $user->set('name', $this->getAuthorName());
       $user->homepage = $this->getHomepage();
     }
     return $user;

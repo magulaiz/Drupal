@@ -364,7 +364,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       // If the publishing status exists in the meta region, replace it with
       // the current state instead.
       if (isset($form['meta']['published'])) {
-        $form['meta']['published']['#markup'] = $this->moderationInfo->getWorkflowForEntity($entity)->getTypePlugin()->getState($entity->moderation_state->value)->label();
+        $form['meta']['published']['#markup'] = $this->moderationInfo->getWorkflowForEntity($entity)->getTypePlugin()->getState($entity->get('moderation_state')->value)->label();
       }
     }
   }

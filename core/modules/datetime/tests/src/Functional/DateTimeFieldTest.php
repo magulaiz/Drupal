@@ -87,7 +87,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Verify the date doesn't change if using a timezone that is UTC+12 when
       // the entity is edited through the form.
       $entity = EntityTest::load($id);
-      $this->assertEquals('2012-12-31', $entity->{$field_name}->value);
+      $this->assertEquals('2012-12-31', $entity->get($field_name)->value);
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
       $this->submitForm([], 'Save');
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
@@ -95,7 +95,7 @@ class DateTimeFieldTest extends DateTestBase {
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
       $this->submitForm([], 'Save');
       $entity = EntityTest::load($id);
-      $this->assertEquals('2012-12-31', $entity->{$field_name}->value);
+      $this->assertEquals('2012-12-31', $entity->get($field_name)->value);
 
       // Reset display options since these get changed below.
       $this->displayOptions = [
@@ -178,7 +178,7 @@ class DateTimeFieldTest extends DateTestBase {
       $entity = EntityTest::load($id);
       $field_name = $this->fieldStorage->getName();
       $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
-      $entity->{$field_name}->value = $date->format($date_format);
+      $entity->get($field_name)->value = $date->format($date_format);
       $entity->save();
 
       $this->displayOptions['type'] = 'datetime_time_ago';
@@ -205,7 +205,7 @@ class DateTimeFieldTest extends DateTestBase {
       $entity = EntityTest::load($id);
       $field_name = $this->fieldStorage->getName();
       $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
-      $entity->{$field_name}->value = $date->format($date_format);
+      $entity->get($field_name)->value = $date->format($date_format);
       $entity->save();
 
       $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
@@ -329,7 +329,7 @@ class DateTimeFieldTest extends DateTestBase {
     $entity = EntityTest::load($id);
     $field_name = $this->fieldStorage->getName();
     $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
-    $entity->{$field_name}->value = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+    $entity->get($field_name)->value = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
     $entity->save();
 
     $this->displayOptions['type'] = 'datetime_time_ago';
@@ -356,7 +356,7 @@ class DateTimeFieldTest extends DateTestBase {
     $entity = EntityTest::load($id);
     $field_name = $this->fieldStorage->getName();
     $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
-    $entity->{$field_name}->value = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+    $entity->get($field_name)->value = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
     $entity->save();
 
     $display_repository

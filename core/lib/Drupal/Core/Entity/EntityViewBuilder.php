@@ -479,7 +479,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
 
     // Push the item as the single value for the field, and defer to viewField()
     // to build the render array for the whole list.
-    $clone->{$field_name}->setValue([$item->getValue()]);
+    $clone->get($field_name)->setValue([$item->getValue()]);
     $elements = $this->viewField($clone->{$field_name}, $display);
 
     // Extract the part of the render array we need.

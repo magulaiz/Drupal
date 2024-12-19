@@ -99,16 +99,16 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
    * @covers ::getValue
    */
   public function testGetValue(): void {
-    $this->assertEquals([['value' => 'draft']], $this->testNode->moderation_state->getValue());
+    $this->assertEquals([['value' => 'draft']], $this->testNode->get('moderation_state')->getValue());
   }
 
   /**
    * @covers ::get
    */
   public function testGet(): void {
-    $this->assertEquals('draft', $this->testNode->moderation_state->get(0)->value);
+    $this->assertEquals('draft', $this->testNode->get('moderation_state')->get(0)->value);
     $this->expectException(\InvalidArgumentException::class);
-    $this->testNode->moderation_state->get(2);
+    $this->testNode->get('moderation_state')->get(2);
   }
 
   /**
@@ -117,13 +117,13 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   public function testEmptyStateAndAppend(): void {
     // This test case mimics the lifecycle of an entity that is being patched in
     // a rest resource.
-    $this->testNode->moderation_state->setValue([]);
-    $this->assertTrue($this->testNode->moderation_state->isEmpty());
+    $this->testNode->get('moderation_state')->setValue([]);
+    $this->assertTrue($this->testNode->get('moderation_state')->isEmpty());
     $this->assertEmptiedModerationFieldItemList();
 
-    $this->testNode->moderation_state->appendItem();
-    $this->assertEquals(1, $this->testNode->moderation_state->count());
-    $this->assertEquals(NULL, $this->testNode->moderation_state->value);
+    $this->testNode->get('moderation_state')->appendItem();
+    $this->assertEquals(1, $this->testNode->get('moderation_state')->count());
+    $this->assertEquals(NULL, $this->testNode->get('moderation_state')->value);
     $this->assertEmptiedModerationFieldItemList();
   }
 
@@ -131,8 +131,8 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
    * Tests an empty value assigned to the field item.
    */
   public function testEmptyFieldItem(): void {
-    $this->testNode->moderation_state->value = '';
-    $this->assertEquals('', $this->testNode->moderation_state->value);
+    $this->testNode->get('moderation_state')->value = '';
+    $this->assertEquals('', $this->testNode->get('moderation_state')->value);
     $this->assertEmptiedModerationFieldItemList();
   }
 
@@ -141,7 +141,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
    */
   public function testEmptyFieldItemList(): void {
     $this->testNode->moderation_state = '';
-    $this->assertEquals('', $this->testNode->moderation_state->value);
+    $this->assertEquals('', $this->testNode->get('moderation_state')->value);
     $this->assertEmptiedModerationFieldItemList();
   }
 
@@ -150,7 +150,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
    */
   public function testUnsetItemList(): void {
     unset($this->testNode->moderation_state);
-    $this->assertEquals(NULL, $this->testNode->moderation_state->value);
+    $this->assertEquals(NULL, $this->testNode->get('moderation_state')->value);
     $this->assertEmptiedModerationFieldItemList();
   }
 
@@ -159,7 +159,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
    */
   public function testAssignNullItemList(): void {
     $this->testNode->moderation_state = NULL;
-    $this->assertEquals(NULL, $this->testNode->moderation_state->value);
+    $this->assertEquals(NULL, $this->testNode->get('moderation_state')->value);
     $this->assertEmptiedModerationFieldItemList();
   }
 
@@ -169,7 +169,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
    * @internal
    */
   protected function assertEmptiedModerationFieldItemList(): void {
-    $this->assertTrue($this->testNode->moderation_state->isEmpty());
+    $this->assertTrue($this->testNode->get('moderation_state')->isEmpty());
     // Test the empty value causes a violation in the entity.
     $violations = $this->testNode->validate();
     $this->assertCount(1, $violations);
@@ -177,7 +177,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     // Test that incorrectly saving the entity regardless will not produce a
     // change in the moderation state.
     $this->testNode->save();
-    $this->assertEquals('draft', Node::load($this->testNode->id())->moderation_state->value);
+    $this->assertEquals('draft', Node::load($this->testNode->id())->get('moderation_state')->value);
   }
 
   /**
@@ -189,10 +189,10 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
       'title' => 'Test title',
     ]);
     $unmoderated_node->save();
-    $this->assertEquals(0, $unmoderated_node->moderation_state->count());
+    $this->assertEquals(0, $unmoderated_node->get('moderation_state')->count());
 
-    $unmoderated_node->moderation_state = NULL;
-    $this->assertEquals(0, $unmoderated_node->moderation_state->count());
+    $unmoderated_node->set('moderation_state', NULL);
+    $this->assertEquals(0, $unmoderated_node->get('moderation_state')->count());
     $this->assertCount(0, $unmoderated_node->validate());
   }
 
@@ -202,12 +202,12 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
    * @dataProvider moderationStateChangesTestCases
    */
   public function testModerationStateChanges($initial_state, $final_state, $first_published, $first_is_default, $second_published, $second_is_default): void {
-    $this->testNode->moderation_state->value = $initial_state;
+    $this->testNode->get('moderation_state')->value = $initial_state;
     $this->assertEquals($first_published, $this->testNode->isPublished());
     $this->assertEquals($first_is_default, $this->testNode->isDefaultRevision());
     $this->testNode->save();
 
-    $this->testNode->moderation_state->value = $final_state;
+    $this->testNode->get('moderation_state')->value = $final_state;
     $this->assertEquals($second_published, $this->testNode->isPublished());
     $this->assertEquals($second_is_default, $this->testNode->isDefaultRevision());
   }
@@ -273,7 +273,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $this->assertNull($workflow);
 
     $this->assertTrue($test_node->isPublished());
-    $test_node->moderation_state->setValue('draft');
+    $test_node->get('moderation_state')->setValue('draft');
     // The entity is still published because there is not a workflow.
     $this->assertTrue($test_node->isPublished());
   }
@@ -284,15 +284,15 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
    * @dataProvider entityUnserializeTestCases
    */
   public function testEntityUnserialize($state, $default, $published): void {
-    $this->testNode->moderation_state->value = $state;
+    $this->testNode->get('moderation_state')->value = $state;
 
-    $this->assertEquals($state, $this->testNode->moderation_state->value);
+    $this->assertEquals($state, $this->testNode->get('moderation_state')->value);
     $this->assertEquals($default, $this->testNode->isDefaultRevision());
     $this->assertEquals($published, $this->testNode->isPublished());
 
     $unserialized = unserialize(serialize($this->testNode));
 
-    $this->assertEquals($state, $unserialized->moderation_state->value);
+    $this->assertEquals($state, $unserialized->get('moderation_state')->value);
     $this->assertEquals($default, $unserialized->isDefaultRevision());
     $this->assertEquals($published, $unserialized->isPublished());
   }
@@ -328,7 +328,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
       'moderation_state' => $state,
     ]);
     $node->save();
-    $this->assertEquals($state, $node->moderation_state->value);
+    $this->assertEquals($state, $node->get('moderation_state')->value);
   }
 
   /**
@@ -360,9 +360,9 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
       'title' => 'Test title',
       'type' => 'example',
     ]);
-    $this->assertEquals('draft', $legacy_configuration_node->moderation_state->value);
+    $this->assertEquals('draft', $legacy_configuration_node->get('moderation_state')->value);
     $legacy_configuration_node->save();
-    $this->assertEquals('draft', $legacy_configuration_node->moderation_state->value);
+    $this->assertEquals('draft', $legacy_configuration_node->get('moderation_state')->value);
 
     $configuration['default_moderation_state'] = 'published';
     $workflow->getTypePlugin()->setConfiguration($configuration);
@@ -372,9 +372,9 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
       'title' => 'Test title',
       'type' => 'example',
     ]);
-    $this->assertEquals('published', $updated_default_node->moderation_state->value);
+    $this->assertEquals('published', $updated_default_node->get('moderation_state')->value);
     $legacy_configuration_node->save();
-    $this->assertEquals('published', $updated_default_node->moderation_state->value);
+    $this->assertEquals('published', $updated_default_node->get('moderation_state')->value);
   }
 
   /**
@@ -398,16 +398,16 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     // have a published moderation state.
     $node = Node::load($node->id());
     $translation = $node->getTranslation('de');
-    $this->assertEquals('published', $node->moderation_state->value);
-    $this->assertEquals('published', $translation->moderation_state->value);
+    $this->assertEquals('published', $node->get('moderation_state')->value);
+    $this->assertEquals('published', $translation->get('moderation_state')->value);
 
     // After the node has been updated, both the original node and translation
     // should still have a value.
     $node->title = 'Updated title';
     $node->save();
     $translation = $node->getTranslation('de');
-    $this->assertEquals('published', $node->moderation_state->value);
-    $this->assertEquals('published', $translation->moderation_state->value);
+    $this->assertEquals('published', $node->get('moderation_state')->value);
+    $this->assertEquals('published', $translation->get('moderation_state')->value);
   }
 
   /**
@@ -424,7 +424,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
       ->getStorage('node')
       ->createWithSampleValues('example');
     $this->assertCount(0, $sample->validate());
-    $this->assertEquals('draft', $sample->moderation_state->value);
+    $this->assertEquals('draft', $sample->get('moderation_state')->value);
   }
 
   /**
@@ -444,14 +444,14 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $workflow->save();
 
     $translation = $node->addTranslation('de');
-    $translation->moderation_state = 'draft';
+    $translation->get('moderation_state')->value = 'draft';
     $translation->save();
 
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $node = $node_storage->loadRevision($node_storage->getLatestRevisionId($node->id()));
 
-    $this->assertEquals('published', $node->moderation_state->value);
-    $this->assertEquals('draft', $translation->moderation_state->value);
+    $this->assertEquals('published', $node->get('moderation_state')->value);
+    $this->assertEquals('draft', $translation->get('moderation_state')->value);
     $this->assertTrue($node->isPublished());
     $this->assertFalse($translation->isPublished());
   }

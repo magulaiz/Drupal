@@ -141,8 +141,8 @@ class ModerationInformation implements ModerationInformationInterface {
     $workflow = $this->getWorkflowForEntity($entity);
     return $entity->isLatestRevision()
       && $entity->isDefaultRevision()
-      && $entity->moderation_state->value
-      && $workflow->getTypePlugin()->getState($entity->moderation_state->value)->isPublishedState();
+      && $entity->get('moderation_state')->value
+      && $workflow->getTypePlugin()->getState($entity->get('moderation_state')->value)->isPublishedState();
   }
 
   /**
@@ -164,7 +164,7 @@ class ModerationInformation implements ModerationInformationInterface {
         $translation = $default_revision->getTranslation($language->getId());
         // If the moderation state is empty, it was not stored yet so no point
         // in doing further work.
-        $moderation_state = $translation->moderation_state->value;
+        $moderation_state = $translation->get('moderation_state')->value;
         if (!$moderation_state) {
           continue;
         }
@@ -175,7 +175,7 @@ class ModerationInformation implements ModerationInformationInterface {
       }
     }
 
-    return $workflow->getTypePlugin()->getState($default_revision->moderation_state->value)->isPublishedState();
+    return $workflow->getTypePlugin()->getState($default_revision->get('moderation_state')->value)->isPublishedState();
   }
 
   /**
@@ -222,8 +222,8 @@ class ModerationInformation implements ModerationInformationInterface {
       if (!$entity->isDefaultTranslation() && $original_entity->hasTranslation($entity->language()->getId())) {
         $original_entity = $original_entity->getTranslation($entity->language()->getId());
       }
-      if ($workflow_type->hasState($original_entity->moderation_state->value)) {
-        $state = $workflow_type->getState($original_entity->moderation_state->value);
+      if ($workflow_type->hasState($original_entity->get('moderation_state')->value)) {
+        $state = $workflow_type->getState($original_entity->get('moderation_state')->value);
       }
     }
     return $state ?: $workflow_type->getInitialState($entity);
@@ -247,10 +247,10 @@ class ModerationInformation implements ModerationInformationInterface {
     $original_entity = $storage->loadRevision($storage->getLatestRevisionId($entity->id()));
 
     if ($original_entity) {
-      $original_id = $original_entity->moderation_state;
+      $original_id = $original_entity->get('moderation_state')->value;
     }
 
-    return !($entity->moderation_state && $original_entity && $original_id);
+    return !($entity->get('moderation_state')->value && $original_entity && $original_id);
   }
 
 }

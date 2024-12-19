@@ -76,7 +76,7 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
 
     // Create translations for non default languages.
     foreach ($this->langcodes as $langcode) {
-      $entity->addTranslation($langcode, ['label' => $this->randomString()]);
+      $entity->addTranslation($langcode, ['name' => $this->randomString()]);
     }
     $entity->save();
 

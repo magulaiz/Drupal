@@ -44,7 +44,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     $entity = EntityTestMulRev::create([
       'name' => $this->randomString(),
       'user_id' => $user->id(),
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $entity->save();
     $old_rev_id = $entity->getRevisionId();
@@ -72,7 +72,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     $entity = EntityTestMulRev::create([
       'name' => $this->randomString(),
       'user_id' => $user->id(),
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $entity->save();
     $old_rev_id = $entity->getRevisionId();
@@ -108,7 +108,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     $entity = EntityTestMulRev::create([
       'name' => 'default revision - en',
       'user_id' => $user->id(),
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $entity->addTranslation('de', ['name' => 'default revision - de']);
     $entity->save();
@@ -151,7 +151,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     // the entity properties.
     $entity = EntityTestMulRev::create([
       'name' => 'original',
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $translation = $entity->addTranslation('de');
     $entity->save();

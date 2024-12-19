@@ -1079,6 +1079,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     // If this is an entity field, handle it accordingly. We first check whether
     // a field object has been already created. If not, we create one.
     if (isset($this->fields[$name][$this->activeLangcode])) {
+      @trigger_error('Accessing fields (' . $name . ') as properties on content entities is deprecated in drupal:10.0.0 and will be removed before drupal:11.0.0. Instead, use ::get(). See https://www.drupal.org/node/XX', E_USER_DEPRECATED);
       return $this->fields[$name][$this->activeLangcode];
     }
     // Inline getFieldDefinition() to speed things up.
@@ -1086,6 +1087,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       $this->getFieldDefinitions();
     }
     if (isset($this->fieldDefinitions[$name])) {
+      @trigger_error('Accessing fields (' . $name . ') on content entities is deprecated in drupal:10.0.0 and will be removed before drupal:11.0.0. Instead, use ::get(). See https://www.drupal.org/node/XX', E_USER_DEPRECATED);
       $return = $this->getTranslatedField($name, $this->activeLangcode);
       return $return;
     }
@@ -1094,6 +1096,11 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       $original = parent::__get('original');
       return $original;
     }
+
+    if (!in_array($name, ['pass_raw', 'passRaw', 'sessionId', '_referringItem', '_skipProtectedUserFieldConstraint', 'view', '_restSubmittedFields', 'book', 'depth', 'rdf_data', '_serviceId', 'preview_view_mode', 'homepage', '_initialPublished', 'in_preview', 'preview'])) {
+      @trigger_error('Accessing arbitrary properties (' . $name . ') on content entities is deprecated in drupal:10.0.0 and will be removed before drupal:11.0.0. Instead, use X. See https://www.drupal.org/node/XX', E_USER_DEPRECATED);
+    }
+
     // Else directly read/write plain values. That way, non-field entity
     // properties can always be accessed directly.
     if (!isset($this->values[$name])) {
@@ -1114,6 +1121,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     }
     // Handle Field API fields.
     if (isset($this->fieldDefinitions[$name])) {
+      @trigger_error('Setting a field value as a property (' . $name . ') on content entities is deprecated in drupal:10.0.0 and will be removed before drupal:11.0.0. Instead, use ::set(). See https://www.drupal.org/node/XX', E_USER_DEPRECATED);
       // Support setting values via property objects.
       if ($value instanceof TypedDataInterface) {
         $value = $value->getValue();
@@ -1137,6 +1145,9 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     }
     // Directly write non-field values.
     else {
+      if (!in_array($name, ['pass_raw', 'passRaw', 'sessionId', '_referringItem', '_skipProtectedUserFieldConstraint', 'view', '_restSubmittedFields', 'book', 'depth', 'rdf_data', '_serviceId', 'preview_view_mode', 'homepage', '_initialPublished', 'in_preview', 'preview'])) {
+        @trigger_error('Setting arbitrary properties (' . $name . ') on content entities is deprecated in drupal:10.0.0 and will be removed before drupal:11.0.0. Instead, use X. See https://www.drupal.org/node/XX', E_USER_DEPRECATED);
+      }
       $this->values[$name] = $value;
     }
   }
@@ -1147,7 +1158,14 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   public function __isset($name) {
     // "Official" Field API fields are always set. For non-field properties,
     // check the internal values.
-    return $this->hasField($name) ? TRUE : isset($this->values[$name]);
+    if ($this->hasField($name)) {
+      @trigger_error('Checking for a field (' . $name . ') with isset() on content entities is deprecated in drupal:10.0.0 and will be removed before drupal:11.0.0. Instead, use ::set(). See https://www.drupal.org/node/XX', E_USER_DEPRECATED);
+      return TRUE;
+    }
+    if (!in_array($name, ['pass_raw', 'passRaw', 'sessionId', '_referringItem', '_skipProtectedUserFieldConstraint', 'view', '_restSubmittedFields', 'book', 'depth', 'rdf_data', '_serviceId', 'preview_view_mode', 'homepage', '_initialPublished', 'in_preview', 'preview'])) {
+      @trigger_error('Checking for an undefined property (' . $name . ') with isset() on content entities is deprecated in drupal:10.0.0 and will be removed before drupal:11.0.0. Instead, use ::set(). See https://www.drupal.org/node/XX', E_USER_DEPRECATED);
+    }
+    return isset($this->values[$name]);
   }
 
   /**
@@ -1156,10 +1174,14 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   public function __unset($name) {
     // Unsetting a field means emptying it.
     if ($this->hasField($name)) {
+      @trigger_error('Unsetting a field (' . $name . ') on content entities is deprecated in drupal:10.0.0 and will be removed before drupal:11.0.0. Instead, use ::set(). See https://www.drupal.org/node/XX', E_USER_DEPRECATED);
       $this->get($name)->setValue([]);
     }
     // For non-field properties, unset the internal value.
     else {
+      if (!in_array($name, ['pass_raw', 'passRaw', 'sessionId', '_referringItem', '_skipProtectedUserFieldConstraint', 'view', '_restSubmittedFields', 'book', 'depth', 'rdf_data', '_serviceId', 'preview_view_mode', 'homepage', '_initialPublished', 'in_preview', 'preview'])) {
+        @trigger_error('Unsetting an undefined property (' . $name . ') on content entities is deprecated in drupal:10.0.0 and will be removed before drupal:11.0.0. Instead, use ::set(). See https://www.drupal.org/node/XX', E_USER_DEPRECATED);
+      }
       unset($this->values[$name]);
     }
   }
@@ -1192,18 +1214,18 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     $duplicate = clone $this;
     $entity_type = $this->getEntityType();
     if ($entity_type->hasKey('id')) {
-      $duplicate->{$entity_type->getKey('id')}->value = NULL;
+      $duplicate->get($entity_type->getKey('id'))->value = NULL;
     }
     $duplicate->enforceIsNew();
 
     // Check if the entity type supports UUIDs and generate a new one if so.
     if ($entity_type->hasKey('uuid')) {
-      $duplicate->{$entity_type->getKey('uuid')}->value = $this->uuidGenerator()->generate();
+      $duplicate->get($entity_type->getKey('uuid'))->value = $this->uuidGenerator()->generate();
     }
 
     // Check whether the entity type supports revisions and initialize it if so.
     if ($entity_type->isRevisionable()) {
-      $duplicate->{$entity_type->getKey('revision')}->value = NULL;
+      $duplicate->get($entity_type->getKey('revision'))->value = NULL;
       $duplicate->loadedRevisionId = NULL;
     }
 

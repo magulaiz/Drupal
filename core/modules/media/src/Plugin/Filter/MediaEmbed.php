@@ -473,7 +473,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
         // its `alt` too. Because its `alt` already is inherited from the image
         // field's `alt` at entity save time.
         // @see \Drupal\media\Plugin\media\Source\Image::getMetadata()
-        $media->thumbnail->alt = $node->getAttribute('alt');
+        $media->get('thumbnail')->alt = $node->getAttribute('alt');
         // Delete the consumed attribute.
         $node->removeAttribute('alt');
       }
@@ -481,7 +481,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       if (!empty($settings['title_field']) && $node->hasAttribute('title')) {
         // See above, the explanations for `alt` also apply to `title`.
         $media->{$image_field}->title = $node->getAttribute('title');
-        $media->thumbnail->title = $node->getAttribute('title');
+        $media->get('thumbnail')->title = $node->getAttribute('title');
         // Delete the consumed attribute.
         $node->removeAttribute('title');
       }
@@ -499,7 +499,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    */
   protected function getMediaImageSourceField(MediaInterface $media) {
     $field_definition = $media->getSource()
-      ->getSourceFieldDefinition($media->bundle->entity);
+      ->getSourceFieldDefinition($media->get('bundle')->entity);
     $item_class = $field_definition->getItemDefinition()->getClass();
     if ($item_class == ImageItem::class || is_subclass_of($item_class, ImageItem::class)) {
       return $field_definition->getName();

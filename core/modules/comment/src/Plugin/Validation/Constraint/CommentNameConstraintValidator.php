@@ -42,8 +42,9 @@ class CommentNameConstraintValidator extends ConstraintValidator implements Cont
    * {@inheritdoc}
    */
   public function validate($entity, Constraint $constraint): void {
-    $author_name = $entity->name->value;
-    $owner_id = (int) $entity->uid->target_id;
+    assert($entity instanceof CommentInterface);
+    $author_name = $entity->get('name')->value;
+    $owner_id = (int) $entity->getOwnerId();
 
     // Do not allow unauthenticated comment authors to use a name that is
     // taken by a registered user.

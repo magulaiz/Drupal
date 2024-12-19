@@ -262,7 +262,7 @@ class FileUploadForm extends AddFormBase {
    */
   protected function buildEntityFormElement(MediaInterface $media, array $form, FormStateInterface $form_state, $delta) {
     $element = parent::buildEntityFormElement($media, $form, $form_state, $delta);
-    $source_field = $this->getSourceFieldName($media->bundle->entity);
+    $source_field = $this->getSourceFieldName($media->get('bundle')->entity);
     if (isset($element['fields'][$source_field])) {
       $element['fields'][$source_field]['widget'][0]['#process'][] = [static::class, 'hideExtraSourceFieldComponents'];
     }
@@ -360,7 +360,7 @@ class FileUploadForm extends AddFormBase {
    */
   protected function prepareMediaEntityForSave(MediaInterface $media) {
     /** @var \Drupal\file\FileInterface $file */
-    $file = $media->get($this->getSourceFieldName($media->bundle->entity))->entity;
+    $file = $media->get($this->getSourceFieldName($media->get('bundle')->entity))->entity;
     $file->setPermanent();
     $file->save();
   }
@@ -382,7 +382,7 @@ class FileUploadForm extends AddFormBase {
     /** @var \Drupal\media\MediaInterface $removed_media */
     $removed_media = $form_state->get(['media', $delta]);
 
-    $file = $removed_media->get($this->getSourceFieldName($removed_media->bundle->entity))->entity;
+    $file = $removed_media->get($this->getSourceFieldName($removed_media->get('bundle')->entity))->entity;
     if ($file instanceof FileInterface && empty($this->fileUsage->listUsage($file))) {
       $file->delete();
     }

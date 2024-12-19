@@ -625,7 +625,7 @@ class EntityResource {
     // According to the specification, you are only allowed to POST to a
     // relationship if it is a to-many relationship.
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
-    $field_list = $entity->{$internal_relationship_field_name};
+    $field_list = $entity->get($internal_relationship_field_name);
     /** @var \Drupal\field\Entity\FieldConfig $field_definition */
     $field_definition = $field_list->getFieldDefinition();
     $is_multiple = $field_definition->getFieldStorageDefinition()->isMultiple();
@@ -690,7 +690,7 @@ class EntityResource {
     // According to the specification, PATCH works a little bit different if the
     // relationship is to-one or to-many.
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
-    $field_list = $entity->{$internal_relationship_field_name};
+    $field_list = $entity->get($internal_relationship_field_name);
     $field_definition = $field_list->getFieldDefinition();
     $is_multiple = $field_definition->getFieldStorageDefinition()->isMultiple();
     $method = $is_multiple ? 'doPatchMultipleRelationship' : 'doPatchIndividualRelationship';
@@ -735,13 +735,13 @@ class EntityResource {
    */
   protected function doPatchMultipleRelationship(EntityInterface $entity, array $resource_identifiers, FieldDefinitionInterface $field_definition) {
     $main_property_name = $field_definition->getItemDefinition()->getMainPropertyName();
-    $entity->{$field_definition->getName()} = array_map(function (ResourceIdentifier $resource_identifier) use ($main_property_name) {
+    $entity->set($field_definition->getName(), array_map(function (ResourceIdentifier $resource_identifier) use ($main_property_name) {
       $field_properties = [$main_property_name => $this->getEntityFromResourceIdentifier($resource_identifier)->id()];
       // Remove `arity` from the received extra properties, otherwise this
       // will fail field validation.
       $field_properties += array_diff_key($resource_identifier->getMeta(), array_flip([ResourceIdentifier::ARITY_KEY]));
       return $field_properties;
-    }, $resource_identifiers);
+    }, $resource_identifiers));
   }
 
   /**
@@ -770,7 +770,7 @@ class EntityResource {
     $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
     $internal_relationship_field_name = $resource_type->getInternalName($related);
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
-    $field_list = $entity->{$internal_relationship_field_name};
+    $field_list = $entity->get($internal_relationship_field_name);
     $is_multiple = $field_list->getFieldDefinition()
       ->getFieldStorageDefinition()
       ->isMultiple();

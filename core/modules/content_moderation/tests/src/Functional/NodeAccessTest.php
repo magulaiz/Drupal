@@ -189,7 +189,7 @@ class NodeAccessTest extends ModerationStateTestBase {
     // Verify the moderation form is in place by publishing the node.
     $this->submitForm([], 'Apply');
     $node = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($node->id());
-    $this->assertEquals('published', $node->moderation_state->value);
+    $this->assertEquals('published', $node->get('moderation_state')->value);
   }
 
 }

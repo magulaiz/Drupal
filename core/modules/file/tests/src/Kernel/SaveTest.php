@@ -46,7 +46,7 @@ class SaveTest extends FileManagedUnitTestBase {
 
     // Resave the file, updating the existing record.
     file_test_reset();
-    $file->status->value = 7;
+    $file->get('status')->value = 7;
     $file->save();
 
     // Check that the correct hooks were called.

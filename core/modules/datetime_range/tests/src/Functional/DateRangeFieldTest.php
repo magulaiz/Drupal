@@ -104,8 +104,8 @@ class DateRangeFieldTest extends DateTestBase {
 
       // Verify the date doesn't change when entity is edited through the form.
       $entity = EntityTest::load($id);
-      $this->assertEquals('2012-12-31', $entity->{$field_name}->value);
-      $this->assertEquals('2013-06-06', $entity->{$field_name}->end_value);
+      $this->assertEquals('2012-12-31', $entity->get($field_name)->value);
+      $this->assertEquals('2013-06-06', $entity->get($field_name)->end_value);
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
       $this->submitForm([], 'Save');
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
@@ -113,8 +113,8 @@ class DateRangeFieldTest extends DateTestBase {
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
       $this->submitForm([], 'Save');
       $entity = EntityTest::load($id);
-      $this->assertEquals('2012-12-31', $entity->{$field_name}->value);
-      $this->assertEquals('2013-06-06', $entity->{$field_name}->end_value);
+      $this->assertEquals('2012-12-31', $entity->get($field_name)->value);
+      $this->assertEquals('2013-06-06', $entity->get($field_name)->end_value);
 
       // Formats that display a time component for date-only fields will display
       // the default time, so that is applied before calculating the expected

@@ -124,13 +124,13 @@ class ContentModerationStateTest extends KernelTestBase {
   protected function doTestBasicModeration($entity_type_id): void {
     $entity = $this->createEntity($entity_type_id, 'draft');
     $entity = $this->reloadEntity($entity);
-    $this->assertEquals('draft', $entity->moderation_state->value);
+    $this->assertEquals('draft', $entity->get('moderation_state')->value);
 
-    $entity->moderation_state->value = 'published';
+    $entity->get('moderation_state')->value = 'published';
     $entity->save();
 
     $entity = $this->reloadEntity($entity);
-    $this->assertEquals('published', $entity->moderation_state->value);
+    $this->assertEquals('published', $entity->get('moderation_state')->value);
 
     // Change the state without saving the node.
     $content_moderation_state = ContentModerationState::load(1);
@@ -139,7 +139,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $content_moderation_state->save();
 
     $entity = $this->reloadEntity($entity, 3);
-    $this->assertEquals('draft', $entity->moderation_state->value);
+    $this->assertEquals('draft', $entity->get('moderation_state')->value);
     if ($entity instanceof EntityPublishedInterface) {
       $this->assertFalse($entity->isPublished());
     }
@@ -147,17 +147,17 @@ class ContentModerationStateTest extends KernelTestBase {
     // Check the default revision.
     $this->assertDefaultRevision($entity, 2);
 
-    $entity->moderation_state->value = 'published';
+    $entity->get('moderation_state')->value = 'published';
     $entity->save();
 
     $entity = $this->reloadEntity($entity, 4);
-    $this->assertEquals('published', $entity->moderation_state->value);
+    $this->assertEquals('published', $entity->get('moderation_state')->value);
 
     // Check the default revision.
     $this->assertDefaultRevision($entity, 4);
 
     // Update the node to archived which will then be the default revision.
-    $entity->moderation_state->value = 'archived';
+    $entity->get('moderation_state')->value = 'archived';
     $entity->save();
 
     // Revert to the previous (published) revision.
@@ -173,7 +173,7 @@ class ContentModerationStateTest extends KernelTestBase {
 
     // Set an invalid moderation state.
     $this->expectException(EntityStorageException::class);
-    $entity->moderation_state->value = 'foobar';
+    $entity->get('moderation_state')->value = 'foobar';
     $entity->save();
   }
 
@@ -287,7 +287,7 @@ class ContentModerationStateTest extends KernelTestBase {
   public function doTestContentModerationStatePendingRevisionDataRemoval($entity_type_id): void {
     $entity = $this->createEntity($entity_type_id, 'published');
     $entity->setNewRevision(TRUE);
-    $entity->moderation_state = 'draft';
+    $entity->get('moderation_state')->value = 'draft';
     $entity->save();
 
     $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
@@ -315,13 +315,13 @@ class ContentModerationStateTest extends KernelTestBase {
     $this->addEntityTypeAndBundleToWorkflow($workflow, $entity->getEntityTypeId(), $entity->bundle());
 
     $entity = $this->reloadEntity($entity);
-    $entity->moderation_state = 'draft';
+    $entity->get('moderation_state')->value = 'draft';
     $entity->save();
 
     $storage->deleteRevision($entity->getRevisionId());
 
     $entity = $this->reloadEntity($entity);
-    $this->assertEquals('published', $entity->moderation_state->value);
+    $this->assertEquals('published', $entity->get('moderation_state')->value);
     $this->assertEquals($original_revision_id, $storage->getLatestRevisionId($entity->id()));
   }
 
@@ -378,7 +378,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $english_node
       ->setUnpublished()
       ->save();
-    $this->assertEquals('draft', $english_node->moderation_state->value);
+    $this->assertEquals('draft', $english_node->get('moderation_state')->value);
     $this->assertFalse($english_node->isPublished());
 
     // Create a French translation.
@@ -387,7 +387,7 @@ class ContentModerationStateTest extends KernelTestBase {
     // Revision 2 (fr).
     $french_node->save();
     $french_node = $this->reloadEntity($english_node)->getTranslation('fr');
-    $this->assertEquals('draft', $french_node->moderation_state->value);
+    $this->assertEquals('draft', $french_node->get('moderation_state')->value);
     $this->assertFalse($french_node->isPublished());
 
     // Move English node to create another draft.
@@ -493,7 +493,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $this->assertFalse($node->isPublished());
     $this->assertEquals('draft', $node->moderation_state->value);
 
-    $node->moderation_state = 'published';
+    $node->get('moderation_state')->value = 'published';
     $node->save();
     $this->assertTrue($node->isPublished());
     $this->assertEquals('published', $node->moderation_state->value);

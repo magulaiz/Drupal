@@ -231,7 +231,7 @@ class StringFormatterTest extends KernelTestBase {
 
     $value = $this->randomMachineName();
     $entity = EntityTestLabel::create(['name' => 'test']);
-    $entity->{$field_name}->value = $value;
+    $entity->get($field_name)->value = $value;
     $entity->save();
 
     $this->renderEntityFields($entity, $display);

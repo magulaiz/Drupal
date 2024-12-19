@@ -62,7 +62,7 @@ class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
     $this->assertFieldAccess('node', 'nid', $node->id());
     $this->assertFieldAccess('node', 'uuid', $node->uuid());
     $this->assertFieldAccess('node', 'vid', $node->id());
-    $this->assertFieldAccess('node', 'type', $node->type->entity->label());
+    $this->assertFieldAccess('node', 'type', $node->get('type')->entity->label());
     $this->assertFieldAccess('node', 'langcode', $node->language()->getName());
     $this->assertFieldAccess('node', 'title', 'Test title');
     $this->assertFieldAccess('node', 'uid', $user->getAccountName());

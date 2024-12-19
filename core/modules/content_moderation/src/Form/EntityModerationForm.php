@@ -78,7 +78,7 @@ class EntityModerationForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, ?ContentEntityInterface $entity = NULL) {
-    $current_state = $entity->moderation_state->value;
+    $current_state = $entity->get('moderation_state')->value;
     $workflow = $this->moderationInfo->getWorkflowForEntity($entity);
 
     /** @var \Drupal\workflows\Transition[] $transitions */

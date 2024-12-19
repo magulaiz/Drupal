@@ -69,7 +69,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
 
     // Create 1 entity without the field.
     $entity = EntityTest::create();
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     $this->assertFalse($field_storage->hasData(), 'There are no entities with field data.');

@@ -98,7 +98,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     ])->save();
     // Create a commented entity.
     $entity = EntityTest::create();
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     // Create some comments.

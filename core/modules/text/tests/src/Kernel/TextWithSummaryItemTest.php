@@ -68,7 +68,7 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
     $entity->summary_field->value = $value = $this->randomMachineName();
     $entity->summary_field->summary = $summary = $this->randomMachineName();
     $entity->summary_field->format = NULL;
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     $entity = $storage->load($entity->id());

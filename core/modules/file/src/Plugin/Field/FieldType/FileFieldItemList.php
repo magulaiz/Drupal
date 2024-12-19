@@ -52,7 +52,7 @@ class FileFieldItemList extends EntityReferenceFieldItemList {
       $langcode = $this->getLangcode();
       $original = $entity->getOriginal();
       if ($original->hasTranslation($langcode)) {
-        foreach ($original->getTranslation($langcode)->{$field_name} as $item) {
+        foreach ($original->getTranslation($langcode)->get($field_name) as $item) {
           $original_ids[] = $item->target_id;
         }
       }

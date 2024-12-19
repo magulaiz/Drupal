@@ -185,7 +185,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->getField($i, $field_name);
       $items = [];
-      $pure_items = $this->nodes[$i]->{$field_name}->getValue();
+      $pure_items = $this->nodes[$i]->get($field_name)->getValue();
       $pure_items = array_splice($pure_items, 0, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
@@ -209,7 +209,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->getField($i, $field_name);
       $items = [];
-      $pure_items = $this->nodes[$i]->{$field_name}->getValue();
+      $pure_items = $this->nodes[$i]->get($field_name)->getValue();
       $pure_items = array_splice($pure_items, 1, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
@@ -231,7 +231,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->getField($i, $field_name);
       $items = [];
-      $pure_items = $this->nodes[$i]->{$field_name}->getValue();
+      $pure_items = $this->nodes[$i]->get($field_name)->getValue();
       array_splice($pure_items, 0, -3);
       $pure_items = array_reverse($pure_items);
       foreach ($pure_items as $j => $item) {
@@ -254,7 +254,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->getField($i, $field_name);
       $items = [];
-      $pure_items = $this->nodes[$i]->{$field_name}->getValue();
+      $pure_items = $this->nodes[$i]->get($field_name)->getValue();
       $items[] = $pure_items[0]['value'];
       $items[] = $pure_items[4]['value'];
 
@@ -274,7 +274,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->getField($i, $field_name);
       $items = [];
-      $pure_items = $this->nodes[$i]->{$field_name}->getValue();
+      $pure_items = $this->nodes[$i]->get($field_name)->getValue();
       $pure_items = array_splice($pure_items, 0, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];
@@ -296,7 +296,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
     for ($i = 0; $i < 3; $i++) {
       $rendered_field = $view->style_plugin->getField($i, $field_name);
       $items = [];
-      $pure_items = $this->nodes[$i]->{$field_name}->getValue();
+      $pure_items = $this->nodes[$i]->get($field_name)->getValue();
       $pure_items = array_splice($pure_items, 0, 3);
       foreach ($pure_items as $j => $item) {
         $items[] = $pure_items[$j]['value'];

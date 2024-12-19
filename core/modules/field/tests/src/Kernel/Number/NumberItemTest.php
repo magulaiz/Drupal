@@ -61,7 +61,7 @@ class NumberItemTest extends FieldKernelTestBase {
     $this->assertCount(1, $violations, 'Wrong decimal value causes validation error');
     $decimal = '31.3';
     $entity->field_decimal = $decimal;
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     // Verify entity has been created properly.

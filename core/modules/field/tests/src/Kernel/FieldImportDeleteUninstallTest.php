@@ -67,7 +67,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     $value = '+0123456789';
     $entity->field_test = $value;
     $entity->field_int = '99';
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     // Verify entity has been created properly.
@@ -130,7 +130,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
       $entity = EntityTest::create();
       $value = '+0123456789';
       $entity->field_test = $value;
-      $entity->name->value = $this->randomMachineName();
+      $entity->get('name')->value = $this->randomMachineName();
       $entity->save();
 
       // Verify entity has been created properly.

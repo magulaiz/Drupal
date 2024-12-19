@@ -141,7 +141,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
           continue;
         }
         // The field value loaded matches the one inserted.
-        $this->assertEquals($values[$index][$field_name], $entity->{$field_name}->value, "Entity $index: expected value was found.");
+        $this->assertEquals($values[$index][$field_name], $entity->get($field_name)->value, "Entity $index: expected value was found.");
       }
     }
   }

@@ -41,7 +41,7 @@ class DefaultModerationStateTest extends ModerationStateTestBase {
     ], 'Save');
 
     $node = $this->getNodeByTitle('moderated content');
-    $this->assertEquals('published', $node->moderation_state->value);
+    $this->assertEquals('published', $node->get('moderation_state')->value);
   }
 
   /**

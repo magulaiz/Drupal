@@ -19,11 +19,11 @@ class EntityTestForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   protected function prepareEntity() {
-    if (empty($this->entity->name->value)) {
+    if (empty($this->entity->get('name')->value)) {
       // Assign a random name to new EntityTest entities, to avoid repetition in
       // tests.
       $random = new Random();
-      $this->entity->name->value = $random->name();
+      $this->entity->get('name')->value = $random->name();
     }
   }
 

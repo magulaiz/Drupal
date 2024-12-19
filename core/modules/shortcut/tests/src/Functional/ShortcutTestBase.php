@@ -139,10 +139,10 @@ abstract class ShortcutTestBase extends BrowserTestBase {
     \Drupal::entityTypeManager()->getStorage('shortcut')->resetCache();
     foreach ($set->getShortcuts() as $shortcut) {
       if ($key == 'link') {
-        $info[] = $shortcut->link->uri;
+        $info[] = $shortcut->get('link')->uri;
       }
       else {
-        $info[] = $shortcut->{$key}->value;
+        $info[] = $shortcut->get($key)->value;
       }
     }
     return $info;

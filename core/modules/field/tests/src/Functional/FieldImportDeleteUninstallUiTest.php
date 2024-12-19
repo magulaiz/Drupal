@@ -76,7 +76,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     $value = '+0123456789';
     $entity->field_tel = $value;
     $entity->field_date = time();
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     // Delete the text field before exporting configuration so that we can test

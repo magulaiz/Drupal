@@ -77,7 +77,7 @@ class ModerationStateWidgetTest extends KernelTestBase {
     // The moderation_state field should have no values for an entity that isn't
     // being moderated.
     $entity_form_display->extractFormValues($entity, $form, $form_state);
-    $this->assertEquals(0, $entity->moderation_state->count());
+    $this->assertEquals(0, $entity->get('moderation_state')->count());
   }
 
   /**

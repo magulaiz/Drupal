@@ -42,7 +42,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     if (!$node) {
       $this->fail('Test node was not saved correctly.');
     }
-    $this->assertEquals('draft', $node->moderation_state->value);
+    $this->assertEquals('draft', $node->get('moderation_state')->value);
 
     $path = 'node/' . $node->id() . '/edit';
     // Set up published revision.
@@ -52,7 +52,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     /** @var \Drupal\node\NodeInterface $node */
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
     $this->assertTrue($node->isPublished());
-    $this->assertEquals('published', $node->moderation_state->value);
+    $this->assertEquals('published', $node->get('moderation_state')->value);
 
     // Verify that the state field is not shown.
     $this->assertSession()->pageTextNotContains('Published');

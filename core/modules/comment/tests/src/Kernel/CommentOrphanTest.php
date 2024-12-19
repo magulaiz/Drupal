@@ -80,7 +80,6 @@ class CommentOrphanTest extends EntityKernelTestBase {
     // Make two comments
     $comment1 = $comment_storage->create([
       'field_name' => 'comment',
-      'comment_body' => 'test',
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'comment_type' => 'default',
@@ -88,7 +87,6 @@ class CommentOrphanTest extends EntityKernelTestBase {
 
     $comment_storage->create([
       'field_name' => 'comment',
-      'comment_body' => 'test',
       'entity_id' => $node->id(),
       'entity_type' => 'node',
       'comment_type' => 'default',

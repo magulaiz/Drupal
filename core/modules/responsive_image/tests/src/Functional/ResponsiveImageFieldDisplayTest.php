@@ -203,7 +203,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $node = $node_storage->load($nid);
 
     // Test that the default formatter is being used.
-    $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
+    $image_uri = File::load($node->get($field_name)->target_id)->getFileUri();
     $image = [
       '#theme' => 'image',
       '#uri' => $image_uri,
@@ -414,7 +414,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // Assert the media attribute is present if it has a value.
     $thumbnail_style = ImageStyle::load('thumbnail');
     $node = $node_storage->load($nid);
-    $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
+    $image_uri = File::load($node->get($field_name)->target_id)->getFileUri();
     $this->assertSession()->responseMatches('/srcset="' . preg_quote($this->fileUrlGenerator->transformRelative($thumbnail_style->buildUrl($image_uri)), '/') . ' 1x".+?media="\(min-width: 0px\)"/');
   }
 
@@ -492,7 +492,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // Assert the img tag has medium and large images and fallback dimensions
     // from the large image style are used.
     $node = $node_storage->load($nid);
-    $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
+    $image_uri = File::load($node->get($field_name)->target_id)->getFileUri();
     $medium_transform_url = $this->fileUrlGenerator->transformRelative($medium_style->buildUrl($image_uri));
     $large_transform_url = $this->fileUrlGenerator->transformRelative($large_style->buildUrl($image_uri));
     $this->assertSession()->responseMatches('/<img loading="eager" srcset="' . \preg_quote($medium_transform_url, '/') . ' 1x, ' . \preg_quote($large_transform_url, '/') . ' 1.5x, ' . \preg_quote($large_transform_url, '/') . ' 2x" width="480" height="480" src="' . \preg_quote($large_transform_url, '/') . '" alt="\w+" \/>/');
@@ -561,7 +561,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Create a derivative so at least one MIME type will be known.
     $large_style = ImageStyle::load('large');
-    $image_uri = File::load($node->{$field_name}->target_id)->getFileUri();
+    $image_uri = File::load($node->get($field_name)->target_id)->getFileUri();
     $large_style->createDerivative($image_uri, $large_style->buildUri($image_uri));
 
     // Output should contain all image styles and all breakpoints.

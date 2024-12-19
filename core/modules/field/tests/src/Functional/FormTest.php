@@ -144,7 +144,7 @@ class FormTest extends FieldTestBase {
     $id = $match[1];
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
-    $this->assertEquals($value, $entity->{$field_name}->value, 'Field value was saved');
+    $this->assertEquals($value, $entity->get($field_name)->value, 'Field value was saved');
 
     // Display edit form.
     $this->drupalGet('entity_test/manage/' . $id . '/edit');
@@ -162,7 +162,7 @@ class FormTest extends FieldTestBase {
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
-    $this->assertEquals($value, $entity->{$field_name}->value, 'Field value was updated');
+    $this->assertEquals($value, $entity->get($field_name)->value, 'Field value was updated');
 
     // Empty the field.
     $value = '';
@@ -174,7 +174,7 @@ class FormTest extends FieldTestBase {
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
-    $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field was emptied');
+    $this->assertTrue($entity->get($field_name)->isEmpty(), 'Field was emptied');
   }
 
   /**
@@ -207,7 +207,7 @@ class FormTest extends FieldTestBase {
     $id = $match[1];
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
-    $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field is now empty.');
+    $this->assertTrue($entity->get($field_name)->isEmpty(), 'Field is now empty.');
   }
 
   public function testFieldFormSingleRequired(): void {
@@ -238,7 +238,7 @@ class FormTest extends FieldTestBase {
     $id = $match[1];
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
-    $this->assertEquals($value, $entity->{$field_name}->value, 'Field value was saved');
+    $this->assertEquals($value, $entity->get($field_name)->value, 'Field value was saved');
 
     // Edit with missing required value.
     $value = '';
@@ -331,7 +331,7 @@ class FormTest extends FieldTestBase {
     $entity = EntityTest::load($id);
     ksort($field_values);
     $field_values = array_values($field_values);
-    $this->assertSame($field_values, $entity->{$field_name}->getValue(), 'Field values were saved in the correct order');
+    $this->assertSame($field_values, $entity->get($field_name)->getValue(), 'Field values were saved in the correct order');
 
     // Display edit form: check that the expected number of widgets is
     // displayed, with correct values change values, reorder, leave an empty
@@ -494,7 +494,7 @@ class FormTest extends FieldTestBase {
       ->getStorage($entity_type);
     $entity = $storage->load($id);
     $this->assertEquals(99, $entity->{$field_name_no_access}->value, 'Default value was saved for the field with no edit access.');
-    $this->assertEquals(1, $entity->{$field_name}->value, 'Entered value vas saved for the field with edit access.');
+    $this->assertEquals(1, $entity->get($field_name)->value, 'Entered value vas saved for the field with edit access.');
 
     // Create a new revision.
     $edit = [
@@ -508,7 +508,7 @@ class FormTest extends FieldTestBase {
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
     $this->assertEquals(99, $entity->{$field_name_no_access}->value, 'New revision has the expected value for the field with no edit access.');
-    $this->assertEquals(2, $entity->{$field_name}->value, 'New revision has the expected value for the field with edit access.');
+    $this->assertEquals(2, $entity->get($field_name)->value, 'New revision has the expected value for the field with edit access.');
 
     // Check that the revision is also saved in the revisions table.
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
@@ -516,7 +516,7 @@ class FormTest extends FieldTestBase {
       ->getStorage($entity_type);
     $entity = $storage->loadRevision($entity->getRevisionId());
     $this->assertEquals(99, $entity->{$field_name_no_access}->value, 'New revision has the expected value for the field with no edit access.');
-    $this->assertEquals(2, $entity->{$field_name}->value, 'New revision has the expected value for the field with edit access.');
+    $this->assertEquals(2, $entity->get($field_name)->value, 'New revision has the expected value for the field with edit access.');
   }
 
   /**
@@ -551,7 +551,7 @@ class FormTest extends FieldTestBase {
       ->getStorage($entity_type);
 
     $entity = $storage->load($id);
-    $this->assertEquals(99, $entity->{$field_name}->value, 'Default value was saved');
+    $this->assertEquals(99, $entity->get($field_name)->value, 'Default value was saved');
 
     // Update the field to remove the default value, and switch to the default
     // widget.
@@ -575,7 +575,7 @@ class FormTest extends FieldTestBase {
     $this->assertSession()->pageTextContains('entity_test_rev ' . $id . ' has been updated.');
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
-    $this->assertEquals($value, $entity->{$field_name}->value, 'Field value was updated');
+    $this->assertEquals($value, $entity->get($field_name)->value, 'Field value was updated');
 
     // Set the field back to hidden.
     \Drupal::service('entity_display.repository')
@@ -591,7 +591,7 @@ class FormTest extends FieldTestBase {
     // Check that the expected value has been carried over to the new revision.
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
-    $this->assertEquals($value, $entity->{$field_name}->value, 'New revision has the expected value for the field with the Hidden widget');
+    $this->assertEquals($value, $entity->get($field_name)->value, 'New revision has the expected value for the field with the Hidden widget');
   }
 
   /**

@@ -143,7 +143,7 @@ trait ResourceResponseTestTrait {
           $collected_responses[] = static::getAccessDeniedResponse($entity, $field_access, $via_link, $field_name, 'The current user is not allowed to view this relationship.', $field_name);
           break;
         }
-        if ($target_entity = $entity->{$field_name}->entity) {
+        if ($target_entity = $entity->get($field_name)->entity) {
           $target_access = static::entityAccess($target_entity, 'view', $this->account);
           if (!$target_access->isAllowed()) {
             $target_access = static::entityAccess($target_entity, 'view label', $this->account)->addCacheableDependency($target_access);
@@ -163,7 +163,7 @@ trait ResourceResponseTestTrait {
         }
         $psr_responses = $this->getResponses([static::getRelatedLink(static::toResourceIdentifier($entity), $public_field_name)], $request_options);
         $collected_responses[] = static::toCollectionResourceResponse(static::toResourceResponses($psr_responses), NULL, TRUE);
-        $entity = $entity->{$field_name}->entity;
+        $entity = $entity->get($field_name)->entity;
       }
       if (!empty($collected_responses)) {
         $data['responses'][$path] = static::toCollectionResourceResponse($collected_responses, NULL, TRUE);

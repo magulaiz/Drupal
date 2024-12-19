@@ -50,7 +50,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
 
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, 'File entry exists after uploading to the required field.');
 
@@ -69,7 +69,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, 'File entry exists after uploading to the required multiple value field.');
   }
@@ -103,7 +103,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
       $nid = $this->uploadNodeFile($small_file, $field_name, $type_name);
       $node_storage->resetCache([$nid]);
       $node = $node_storage->load($nid);
-      $node_file = File::load($node->{$field_name}->target_id);
+      $node_file = File::load($node->get($field_name)->target_id);
       $this->assertFileExists($node_file->getFileUri());
       $this->assertFileEntryExists($node_file, sprintf('File entry exists after uploading a file (%s) under the max limit (%s).', ByteSizeMarkup::create($small_file->getSize()), $max_filesize));
 
@@ -121,7 +121,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($large_file, $field_name, $type_name);
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, sprintf('File entry exists after uploading a file (%s) with no max limit.', ByteSizeMarkup::create($large_file->getSize())));
   }
@@ -145,7 +145,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, 'File entry exists after uploading a file with no extension checking.');
 
@@ -163,7 +163,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, 'File entry exists after uploading a file with extension checking.');
   }
@@ -186,7 +186,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     $this->assertFileExists($node_file->getFileUri());
     $this->assertFileEntryExists($node_file, 'File entry exists after uploading a file with no extension checking.');
 

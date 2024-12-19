@@ -1753,7 +1753,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $entity = $entity ?: $this->entity;
     $internal_field_name = $this->resourceType->getInternalName($relationship_field_name);
     /** @var \Drupal\Core\Field\FieldItemListInterface $field */
-    $field = $entity->{$internal_field_name};
+    $field = $entity->get($internal_field_name);
     $is_multiple = $field->getFieldDefinition()->getFieldStorageDefinition()->getCardinality() !== 1;
     if ($field->isEmpty()) {
       return $is_multiple ? [] : NULL;
@@ -2580,7 +2580,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected function getAuthenticationRequestOptions() {
     return [
       'headers' => [
-        'Authorization' => 'Basic ' . base64_encode($this->account->name->value . ':' . $this->account->passRaw),
+        'Authorization' => 'Basic ' . base64_encode($this->account->getAccountName() . ':' . $this->account->passRaw),
       ],
     ];
   }
@@ -3435,7 +3435,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    */
   protected static function entityFieldAccess(EntityInterface $entity, $field_name, $operation, AccountInterface $account) {
     $entity_access = static::entityAccess($entity, $operation === 'edit' ? 'update' : 'view', $account);
-    $field_access = $entity->{$field_name}->access($operation, $account, TRUE);
+    $field_access = $entity->get($field_name)->access($operation, $account, TRUE);
     return $entity_access->andIf($field_access);
   }
 
@@ -3456,7 +3456,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
         foreach ($relationship_field_names as $field_name) {
           $next = ($path) ? "$path.$field_name" : $field_name;
           $internal_field_name = $this->resourceType->getInternalName($field_name);
-          if ($target_entity = $entity->{$internal_field_name}->entity) {
+          if ($target_entity = $entity->get($internal_field_name)->entity) {
             $deep = $get_nested_relationship_field_names($target_entity, $depth - 1, $next);
             $paths = array_merge($paths, $deep);
           }

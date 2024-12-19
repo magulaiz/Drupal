@@ -117,68 +117,68 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
 
       // Checks on view operations.
       foreach ($test_users as $account) {
-        $may_view = $node1->{$field}->access('view', $account);
+        $may_view = $node1->get($field)->access('view', $account);
         $this->assertTrue($may_view, "Any user may view the field $field.");
       }
 
       // Checks on edit operations.
-      $may_update = $node1->{$field}->access('edit', $page_creator_user);
+      $may_update = $node1->get($field)->access('edit', $page_creator_user);
       $this->assertFalse($may_update, 'Users with permission "edit own page content" is not allowed to the field ' . $field . '.');
-      $may_update = $node2->{$field}->access('edit', $page_creator_user);
+      $may_update = $node2->get($field)->access('edit', $page_creator_user);
       $this->assertFalse($may_update, 'Users with permission "edit own page content" is not allowed to the field ' . $field . '.');
-      $may_update = $node2->{$field}->access('edit', $page_manager_user);
+      $may_update = $node2->get($field)->access('edit', $page_manager_user);
       $this->assertFalse($may_update, 'Users with permission "edit any page content" is not allowed to the field ' . $field . '.');
-      $may_update = $node1->{$field}->access('edit', $page_manager_user);
+      $may_update = $node1->get($field)->access('edit', $page_manager_user);
       $this->assertFalse($may_update, 'Users with permission "edit any page content" is not allowed to the field ' . $field . '.');
-      $may_update = $node2->{$field}->access('edit', $page_unrelated_user);
+      $may_update = $node2->get($field)->access('edit', $page_unrelated_user);
       $this->assertFalse($may_update, 'Users not having permission "edit any page content" is not allowed to the field ' . $field . '.');
-      $may_update = $node1->{$field}->access('edit', $content_admin_user) && $node3->status->access('edit', $content_admin_user);
+      $may_update = $node1->get($field)->access('edit', $content_admin_user) && $node3->get('status')->access('edit', $content_admin_user);
       $this->assertTrue($may_update, 'Users with permission "administer nodes" may edit ' . $field . ' fields on all nodes.');
     }
 
     foreach ($this->readOnlyFields as $field) {
       // Check view operation.
       foreach ($test_users as $account) {
-        $may_view = $node1->{$field}->access('view', $account);
+        $may_view = $node1->get($field)->access('view', $account);
         $this->assertTrue($may_view, "Any user may view the field $field.");
       }
 
       // Check edit operation.
       foreach ($test_users as $account) {
-        $may_view = $node1->{$field}->access('edit', $account);
+        $may_view = $node1->get($field)->access('edit', $account);
         $this->assertFalse($may_view, "No user is not allowed to edit the field $field.");
       }
     }
 
     // Check the revision_log field on node 1 which has revisions disabled.
-    $may_update = $node1->revision_log->access('edit', $content_admin_user);
+    $may_update = $node1->get('revision_log')->access('edit', $content_admin_user);
     $this->assertTrue($may_update, 'A user with permission "administer nodes" can edit the revision_log field when revisions are disabled.');
-    $may_update = $node1->revision_log->access('edit', $page_creator_user);
+    $may_update = $node1->get('revision_log')->access('edit', $page_creator_user);
     $this->assertFalse($may_update, 'A user without permission "administer nodes" can not edit the revision_log field when revisions are disabled.');
 
     // Check the revision_log field on node 2 which has revisions enabled.
-    $may_update = $node2->revision_log->access('edit', $content_admin_user);
+    $may_update = $node2->get('revision_log')->access('edit', $content_admin_user);
     $this->assertTrue($may_update, 'A user with permission "administer nodes" can edit the revision_log field when revisions are enabled.');
 
-    $may_update = $node2->revision_log->access('edit', $page_creator_user);
+    $may_update = $node2->get('revision_log')->access('edit', $page_creator_user);
     $this->assertTrue($may_update, 'A user without permission "administer nodes" can edit the revision_log field when revisions are enabled.');
 
-    $may_view = $node2->revision_log->access('view', $content_admin_user);
+    $may_view = $node2->get('revision_log')->access('view', $content_admin_user);
     $this->assertTrue($may_view, 'A user without permission "administer nodes" cannot view the revision_log field when revisions are enabled.');
 
     // Page manager only has permissions to 'page', not 'article' content type.
-    $may_view = $node2->revision_log->access('view', $page_manager_user);
+    $may_view = $node2->get('revision_log')->access('view', $page_manager_user);
     $this->assertFalse($may_view, 'A user without permission to the content type cannot view the revision_log field when revisions are enabled.');
 
     $article_revision_manager_user = $this->createUser(['access content', 'view article revisions']);
-    $may_view = $node2->revision_log->access('view', $article_revision_manager_user);
+    $may_view = $node2->get('revision_log')->access('view', $article_revision_manager_user);
     $this->assertTrue($may_view, 'A user without permission "view article revisions" cannot view the revision_log field when revisions are enabled on article.');
 
     $revision_manager_user = $this->createUser(['access content', 'view all revisions']);
-    $may_view = $node2->revision_log->access('view', $revision_manager_user);
+    $may_view = $node2->get('revision_log')->access('view', $revision_manager_user);
     $this->assertTrue($may_view, 'A user without permission "view all revisions" cannot view the revision_log field when revisions are enabled.');
 
-    $may_view = $node2->revision_log->access('view', $page_unrelated_user);
+    $may_view = $node2->get('revision_log')->access('view', $page_unrelated_user);
     $this->assertFalse($may_view, 'A user with only permission "access content" cannot view the revision_log field when revisions are enabled.');
   }
 

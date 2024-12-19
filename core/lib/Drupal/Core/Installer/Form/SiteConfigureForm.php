@@ -265,12 +265,13 @@ class SiteConfigureForm extends ConfigFormBase {
     // We created user 1 with placeholder values. Let's save the real values.
     /** @var \Drupal\user\UserInterface $account */
     $account = $this->entityTypeManager->getStorage('user')->load(1);
-    $account->init = $account->mail = $account_values['mail'];
-    $account->roles = $account->getRoles();
+    $account->set('init', $account_values['mail']);
+    $account->set('mail', $account_values['mail']);
+    $account->set('roles', $account->getRoles());
     $account->activate();
-    $account->timezone = $form_state->getValue('date_default_timezone');
-    $account->pass = $account_values['pass'];
-    $account->name = $account_values['name'];
+    $account->set('timezone', $form_state->getValue('date_default_timezone'));
+    $account->set('pass', $account_values['pass']);
+    $account->set('name', $account_values['name']);
 
     // Ensure user 1 has an administrator role if one exists.
     /** @var \Drupal\user\RoleInterface[] $admin_roles */

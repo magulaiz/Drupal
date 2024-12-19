@@ -109,7 +109,7 @@ class BulkFormAccessTest extends NodeTestBase {
 
     // Ensure that the private node can not be edited.
     $this->assertFalse($node->access('update', $account), 'The node may not be edited.');
-    $this->assertTrue($node->status->access('edit', $account), 'The node status can be edited.');
+    $this->assertTrue($node->get('status')->access('edit', $account), 'The node status can be edited.');
 
     // Test editing the node using the bulk form.
     $edit = [

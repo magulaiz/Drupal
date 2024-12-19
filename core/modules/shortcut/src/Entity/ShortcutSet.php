@@ -85,7 +85,7 @@ class ShortcutSet extends ConfigEntityBundleBase implements ShortcutSetInterface
         foreach ($default_set->getShortcuts() as $shortcut) {
           $shortcut = $shortcut->createDuplicate();
           $shortcut->enforceIsNew();
-          $shortcut->shortcut_set->target_id = $this->id();
+          $shortcut->get('shortcut_set')->target_id = $this->id();
           $shortcut->save();
         }
       }

@@ -213,7 +213,7 @@ class ContentModerationHooks {
       $access_result = $entity instanceof EntityPublishedInterface && !$entity->isPublished() ? AccessResult::allowedIfHasPermission($account, 'view any unpublished content') : AccessResult::neutral();
       $access_result->addCacheableDependency($entity);
     }
-    elseif ($operation === 'update' && $moderation_info->isModeratedEntity($entity) && $entity->moderation_state) {
+    elseif ($operation === 'update' && $moderation_info->isModeratedEntity($entity) && $entity->hasField('moderation_state')) {
       /** @var \Drupal\content_moderation\StateTransitionValidation $transition_validation */
       $transition_validation = \Drupal::service('content_moderation.state_transition_validation');
       $valid_transition_targets = $transition_validation->getValidTransitions($entity, $account);

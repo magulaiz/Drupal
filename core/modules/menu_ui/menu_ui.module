@@ -64,7 +64,7 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
 function menu_ui_get_menu_link_defaults(NodeInterface $node) {
   // Prepare the definition for the edit form.
   /** @var \Drupal\node\NodeTypeInterface $node_type */
-  $node_type = $node->type->entity;
+  $node_type = $node->get('type')->entity;
   $menu_name = strtok($node_type->getThirdPartySetting('menu_ui', 'parent', 'main:'), ':');
   $defaults = FALSE;
   if ($node->id()) {

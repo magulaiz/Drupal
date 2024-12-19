@@ -71,7 +71,7 @@ class ModerationInformationTest extends KernelTestBase {
     $entity_test_rev->save();
 
     $entity_test_rev->name = 'Pending revision';
-    $entity_test_rev->moderation_state = 'draft';
+    $entity_test_rev->get('moderation_state')->value = 'draft';
     $entity_test_rev->save();
 
     // Check that moderation information service returns the correct default
@@ -91,7 +91,7 @@ class ModerationInformationTest extends KernelTestBase {
     $entity->save();
     $this->assertEquals($initial_is_default_published, $this->moderationInformation->isDefaultRevisionPublished($entity));
 
-    $entity->moderation_state = $final_state;
+    $entity->get('moderation_state')->value = $final_state;
     $entity->save();
     $this->assertEquals($final_is_default_published, $this->moderationInformation->isDefaultRevisionPublished($entity));
   }
@@ -136,12 +136,12 @@ class ModerationInformationTest extends KernelTestBase {
       'moderation_state' => 'draft',
     ]);
     $entity->save();
-    $this->assertEquals('draft', $entity->moderation_state->value);
+    $this->assertEquals('draft', $entity->get('moderation_state')->value);
 
     $translated = $entity->addTranslation('de');
-    $translated->moderation_state = 'published';
+    $translated->get('moderation_state')->value = 'published';
     $translated->save();
-    $this->assertEquals('published', $translated->moderation_state->value);
+    $this->assertEquals('published', $translated->get('moderation_state')->value);
 
     // Test a scenario where the default revision exists with the default
     // language in a draft state and a non-default language in a published
@@ -161,7 +161,7 @@ class ModerationInformationTest extends KernelTestBase {
 
     // Add a translation as a new revision.
     $translated = $entity->addTranslation('de');
-    $translated->moderation_state = 'published';
+    $translated->get('moderation_state')->value = 'published';
     $translated->setNewRevision(TRUE);
 
     // Test a scenario where the default revision exists with the default
@@ -175,7 +175,7 @@ class ModerationInformationTest extends KernelTestBase {
 
     // Create a new draft for the translation and assert there is a pending
     // revision.
-    $translated->moderation_state = 'draft';
+    $translated->get('moderation_state')->value = 'draft';
     $translated->setNewRevision(TRUE);
     $translated->save();
     $this->assertTrue($this->moderationInformation->hasPendingRevision($translated));
@@ -189,7 +189,7 @@ class ModerationInformationTest extends KernelTestBase {
       'moderation_state' => 'published',
     ]);
     $entity->save();
-    $entity->moderation_state = 'foo';
+    $entity->get('moderation_state')->value = 'foo';
     $this->assertEquals('published', $this->moderationInformation->getOriginalState($entity)->id());
   }
 
@@ -203,10 +203,10 @@ class ModerationInformationTest extends KernelTestBase {
     $entity->save();
 
     $translated = $entity->addTranslation('de', $entity->toArray());
-    $translated->moderation_state = 'published';
+    $translated->get('moderation_state')->value = 'published';
     $translated->save();
 
-    $translated->moderation_state = 'foo';
+    $translated->get('moderation_state')->value = 'foo';
     $this->assertEquals('published', $this->moderationInformation->getOriginalState($translated)->id());
   }
 

@@ -91,7 +91,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // successfully.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = $node_storage->loadUnchanged($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     $this->assertFileExists($node_file->getFileUri());
 
     // Ensure the file can be downloaded.
@@ -114,7 +114,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Save the node and ensure it does not have the file.
     $this->submitForm([], 'Save');
     $node = $node_storage->loadUnchanged($nid);
-    $this->assertEmpty($node->{$field_name}->target_id, 'File was successfully removed from the node.');
+    $this->assertEmpty($node->get($field_name)->target_id, 'File was successfully removed from the node.');
   }
 
   /**
@@ -205,7 +205,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     preg_match('/node\/([0-9])/', $this->getUrl(), $matches);
     $nid = $matches[1];
     $node = $node_storage->loadUnchanged($nid);
-    $this->assertEmpty($node->{$field_name}->target_id, 'Node was successfully saved without any files.');
+    $this->assertEmpty($node->get($field_name)->target_id, 'Node was successfully saved without any files.');
 
     // Try to upload more files than allowed on revision.
     $upload_files_node_revision = [$test_file, $test_file, $test_file, $test_file];
@@ -264,7 +264,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->submitForm($edit, 'Save');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = $node_storage->loadUnchanged($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     $this->assertFileExists($node_file->getFileUri());
 
     // Ensure the private file is available to the user who uploaded it.
@@ -588,7 +588,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     /** @var \Drupal\file\FileInterface $node_file */
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     $this->assertFileExists($node_file->getFileUri());
     $this->assertEquals($attacker_user->id(), $node_file->getOwnerId(), 'New file belongs to the attacker.');
 

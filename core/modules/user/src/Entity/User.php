@@ -112,13 +112,6 @@ class User extends ContentEntityBase implements UserInterface {
         $this->get('roles')->offsetUnset($index);
       }
     }
-
-    // Store account cancellation information.
-    foreach (['user_cancel_method', 'user_cancel_notify'] as $key) {
-      if (isset($this->{$key})) {
-        \Drupal::service('user.data')->set('user', $this->id(), substr($key, 5), $this->{$key});
-      }
-    }
   }
 
   /**
@@ -131,7 +124,7 @@ class User extends ContentEntityBase implements UserInterface {
       $session_manager = \Drupal::service('session_manager');
       // If the password has been changed, delete all open sessions for the
       // user and recreate the current one.
-      if ($this->pass->value != $this->getOriginal()->pass->value) {
+      if ($this->get('pass')->value != $this->getOriginal()->get('pass')->value) {
         $session_manager->delete($this->id());
         if ($this->id() == \Drupal::currentUser()->id()) {
           \Drupal::service('session')->migrate();
@@ -151,14 +144,14 @@ class User extends ContentEntityBase implements UserInterface {
       }
 
       // If the user was blocked, delete the user's sessions to force a logout.
-      if ($this->getOriginal()->status->value != $this->status->value && $this->status->value == 0) {
+      if ($this->getOriginal()->get('status')->value != $this->get('status^')->value && $this->get('status')->value == 0) {
         $session_manager->delete($this->id());
       }
 
       // Send emails after we have the new user object.
-      if ($this->status->value != $this->getOriginal()->status->value) {
+      if ($this->get('status')->value != $this->getOriginal()->get('status')->value) {
         // The user's status is changing; conditionally send notification email.
-        $op = $this->status->value == 1 ? 'status_activated' : 'status_blocked';
+        $op = $this->isActive() ? 'status_activated' : 'status_blocked';
         _user_mail_notify($op, $this);
       }
     }

@@ -59,7 +59,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
     // Get the uploaded file from the node.
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
 
     // Check that the RSS enclosure appears in the RSS feed.
     $this->drupalGet('rss.xml');

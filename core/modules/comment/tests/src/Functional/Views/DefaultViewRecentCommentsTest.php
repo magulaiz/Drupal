@@ -95,8 +95,8 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
       ]);
       $comment->setOwnerId(0);
       $comment->setSubject('Test comment ' . $i);
-      $comment->comment_body->value = 'Test body ' . $i;
-      $comment->comment_body->format = 'full_html';
+      $comment->get('comment_body')->value = 'Test body ' . $i;
+      $comment->get('comment_body')->format = 'full_html';
 
       // Ensure comments are sorted in ascending order.
       $time = \Drupal::time()->getRequestTime() + ($this->defaultDisplayResults - $i);

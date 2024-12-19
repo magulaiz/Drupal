@@ -55,7 +55,7 @@ class CommentTitleTest extends CommentTestBase {
 
     // Confirm that the comment was created.
     $regex = '/<article(.*?)id="comment-' . $comment->id() . '"(.*?)';
-    $regex .= $comment->comment_body->value . '(.*?)';
+    $regex .= $comment->get('comment_body')->value . '(.*?)';
     $regex .= '/s';
     // Verify that the comment is created successfully.
     $this->assertSession()->responseMatches($regex);

@@ -86,7 +86,7 @@ class UserEntityTest extends KernelTestBase {
     $user = User::create([]);
     foreach ($user as $field_name => $field) {
       if (!in_array($field_name, ['uid'])) {
-        $user->$field_name->generateSampleItems();
+        $user->get($field_name)->generateSampleItems();
       }
     }
     $violations = $user->validate();

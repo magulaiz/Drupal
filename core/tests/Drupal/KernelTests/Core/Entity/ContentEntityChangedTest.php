@@ -72,7 +72,7 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
       'name' => $this->randomString(),
       'not_translatable' => $this->randomString(),
       'user_id' => $user1->id(),
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $entity->save();
 
@@ -248,7 +248,7 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
     $entity = EntityTestMulRevChanged::create([
       'name' => $this->randomString(),
       'user_id' => $user1->id(),
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $entity->save();
 

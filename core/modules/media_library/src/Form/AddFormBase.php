@@ -328,7 +328,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
 
     // Add source field name so that it can be identified in form alter and
     // widget alter hooks.
-    $element['fields']['#source_field_name'] = $this->getSourceFieldName($media->bundle->entity);
+    $element['fields']['#source_field_name'] = $this->getSourceFieldName($media->get('bundle')->entity);
 
     // The revision log field is currently not configurable from the form
     // display, so hide it by changing the access.

@@ -230,8 +230,8 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     // Check access to administrative fields.
     foreach ($this->administrativeFields as $field) {
       foreach ($permutations as $set) {
-        $may_view = $set['comment']->{$field}->access('view', $set['user']);
-        $may_update = $set['comment']->{$field}->access('edit', $set['user']);
+        $may_view = $set['comment']->get($field)->access('view', $set['user']);
+        $may_update = $set['comment']->get($field)->access('edit', $set['user']);
         $account_name = $set['user']->getAccountName();
         $comment_subject = $set['comment']->getSubject();
         $this->assertTrue($may_view, "User $account_name can view field $field on comment $comment_subject");
@@ -245,7 +245,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
 
     // Check access to normal field.
     foreach ($permutations as $set) {
-      $may_update = $set['comment']->access('update', $set['user']) && $set['comment']->subject->access('edit', $set['user']);
+      $may_update = $set['comment']->access('update', $set['user']) && $set['comment']->get('subject')->access('edit', $set['user']);
       $this->assertEquals(
         $may_update,
         $set['user']->hasPermission('administer comments') || ($set['user']->hasPermission('edit own comments') && $set['user']->id() == $set['comment']->getOwnerId()),
@@ -261,8 +261,8 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     foreach ($this->readOnlyFields as $field) {
       // Check view operation.
       foreach ($permutations as $set) {
-        $may_view = $set['comment']->{$field}->access('view', $set['user']);
-        $may_update = $set['comment']->{$field}->access('edit', $set['user']);
+        $may_view = $set['comment']->get($field)->access('view', $set['user']);
+        $may_update = $set['comment']->get($field)->access('edit', $set['user']);
         // Nobody has access to view the hostname field.
         if ($field === 'hostname') {
           $view_access = FALSE;
@@ -326,7 +326,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     foreach ($this->contactFields as $field) {
       // Check view operation.
       foreach ($permutations as $set) {
-        $may_update = $set['comment']->{$field}->access('edit', $set['user']);
+        $may_update = $set['comment']->get($field)->access('edit', $set['user']);
         // To edit the 'mail' or 'name' field, either the user has the
         // "administer comments" permissions or the user is anonymous and
         // adding a new comment using a field that allows contact details.
@@ -347,7 +347,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     }
     foreach ($permutations as $set) {
       // Check no view-access to mail field for other than admin.
-      $may_view = $set['comment']->mail->access('view', $set['user']);
+      $may_view = $set['comment']->get('mail')->access('view', $set['user']);
       $this->assertEquals($may_view, $set['user']->hasPermission('administer comments'));
     }
   }

@@ -71,12 +71,12 @@ class CommentFieldFilterTest extends CommentTestBase {
 
     // Add field values and translate the comment.
     $this->comment->subject->value = $this->commentTitles['en'];
-    $this->comment->comment_body->value = $this->commentTitles['en'];
+    $this->comment->get('comment_body')->value = $this->commentTitles['en'];
     $this->comment->langcode = 'en';
     $this->comment->save();
     foreach (['es', 'fr'] as $langcode) {
       $translation = $this->comment->addTranslation($langcode, []);
-      $translation->comment_body->value = $this->commentTitles[$langcode];
+      $translation->get('comment_body')->value = $this->commentTitles[$langcode];
       $translation->subject->value = $this->commentTitles[$langcode];
     }
     $this->comment->save();

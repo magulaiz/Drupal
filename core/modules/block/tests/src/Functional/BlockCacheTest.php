@@ -70,7 +70,7 @@ class BlockCacheTest extends BrowserTestBase {
     $this->normalUserAlt = $this->drupalCreateUser();
     // Sync the roles, since drupalCreateUser() creates separate roles for
     // the same permission sets.
-    $this->normalUserAlt->roles = $this->normalUser->getRoles();
+    $this->normalUserAlt->set('roles', $this->normalUser->getRoles());
     $this->normalUserAlt->save();
 
     // Enable our test block.

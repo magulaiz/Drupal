@@ -10,7 +10,6 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\migrate\Audit\HighestIdInterface;
 use Drupal\migrate\Exception\EntityValidationException;
 use Drupal\migrate\Plugin\MigrateValidatableEntityInterface;
@@ -307,13 +306,14 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
     }
 
     foreach ($row->getDestination() as $field_name => $values) {
-      $field = $entity->$field_name;
-      if ($field instanceof TypedDataInterface) {
-        $field->setValue($values);
+      if ($entity->hasField($field_name)) {
+        $entity->set($field_name, $values);
       }
     }
     foreach ($empty_destinations as $field_name) {
-      $entity->$field_name = NULL;
+      if ($entity->hasField($field_name)) {
+        $entity->set($field_name, NULL);
+      }
     }
 
     $this->setRollbackAction($row->getIdMap(), $rollback_action);

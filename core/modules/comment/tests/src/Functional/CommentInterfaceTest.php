@@ -98,20 +98,20 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertSession()->titleEquals('Edit comment ' . $comment->getSubject() . ' | Drupal');
 
     // Test changing the comment author to "Anonymous".
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => '']);
+    $comment = $this->postComment(NULL, $comment->get('comment_body')->value, $comment->getSubject(), ['uid' => '']);
     $this->assertSame('Anonymous', $comment->getAuthorName());
     $this->assertEquals(0, $comment->getOwnerId());
 
     // Test changing the comment author to an unverified user.
     $random_name = $this->randomMachineName();
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['name' => $random_name]);
+    $comment = $this->postComment(NULL, $comment->get('comment_body')->value, $comment->getSubject(), ['name' => $random_name]);
     $this->drupalGet('node/' . $this->node->id());
     $this->assertSession()->pageTextContains($random_name . ' (not verified)');
 
     // Test changing the comment author to a verified user.
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => $this->webUser->getAccountName() . ' (' . $this->webUser->id() . ')']);
+    $comment = $this->postComment(NULL, $comment->get('comment_body')->value, $comment->getSubject(), ['uid' => $this->webUser->getAccountName() . ' (' . $this->webUser->id() . ')']);
     $this->assertSame($this->webUser->getAccountName(), $comment->getAuthorName());
     $this->assertSame($this->webUser->id(), $comment->getOwnerId());
 
@@ -138,7 +138,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // Second reply to comment #2 creating comment #4.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment->id());
     $this->assertSession()->pageTextContains($comment->getSubject());
-    $this->assertSession()->pageTextContains($comment->comment_body->value);
+    $this->assertSession()->pageTextContains($comment->get('comment_body')->value);
     $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
@@ -148,7 +148,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // Reply to comment #4 creating comment #5.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $reply_loaded->id());
     $this->assertSession()->pageTextContains($reply_loaded->getSubject());
-    $this->assertSession()->pageTextContains($reply_loaded->comment_body->value);
+    $this->assertSession()->pageTextContains($reply_loaded->get('comment_body')->value);
     $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');

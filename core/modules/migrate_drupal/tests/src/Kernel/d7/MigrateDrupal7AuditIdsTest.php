@@ -57,7 +57,7 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
   public function testMultipleMigrationWithoutIdConflicts(): void {
     // Create a node of type page.
     $node = Node::create(['type' => 'page', 'title' => 'foo']);
-    $node->moderation_state->value = 'published';
+    $node->get('moderation_state')->value = 'published';
     $node->save();
 
     // Insert data in the d7_node:page migration mapping table to simulate a
@@ -149,11 +149,11 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
   public function testDraftRevisionIdConflicts(): void {
     // Create a published node of type page.
     $node = Node::create(['type' => 'page', 'title' => 'foo']);
-    $node->moderation_state->value = 'published';
+    $node->get('moderation_state')->value = 'published';
     $node->save();
 
     // Create a draft revision.
-    $node->moderation_state->value = 'draft';
+    $node->get('moderation_state')->value = 'draft';
     $node->setNewRevision(TRUE);
     $node->save();
 
@@ -186,7 +186,7 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
 
     // Create a published node of type page.
     $node = Node::create(['type' => 'page', 'title' => 'foo']);
-    $node->moderation_state->value = 'published';
+    $node->get('moderation_state')->value = 'published';
     $node->save();
 
     // Audit the IDs of the d7_node migration. There should be conflicts

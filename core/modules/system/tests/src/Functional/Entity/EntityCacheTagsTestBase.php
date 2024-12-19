@@ -8,6 +8,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -275,10 +276,12 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       ->getStorage($entity_type)
       ->create([
         $label_key => 'Referencing ' . $entity_type,
-        'status' => 1,
         'type' => $bundle,
         $field_name => ['target_id' => $referenced_entity->id()],
       ]);
+    if ($referenced_entity instanceof EntityPublishedInterface) {
+      $referenced_entity->setPublished();
+    }
     $referencing_entity->save();
 
     // Create an entity that does not reference the entity being tested.
@@ -286,9 +289,11 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       ->getStorage($entity_type)
       ->create([
         $label_key => 'Non-referencing ' . $entity_type,
-        'status' => 1,
         'type' => $bundle,
       ]);
+    if ($non_referencing_entity instanceof EntityPublishedInterface) {
+      $non_referencing_entity->setPublished();
+    }
     $non_referencing_entity->save();
 
     return [

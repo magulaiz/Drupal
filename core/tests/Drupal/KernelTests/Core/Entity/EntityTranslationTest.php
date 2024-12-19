@@ -74,8 +74,8 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // Now, make the entity language-specific by assigning a language and test
     // translating it.
     $default_langcode = $this->langcodes[0];
-    $entity->{$langcode_key}->value = $default_langcode;
-    $entity->{$this->fieldName} = [];
+    $entity->get($langcode_key)->value = $default_langcode;
+    $entity->set($this->fieldName, []);
     $this->assertEquals(\Drupal::languageManager()->getLanguage($this->langcodes[0]), $entity->language(), "$entity_type: Entity language retrieved.");
     $this->assertEmpty($entity->getTranslationLanguages(FALSE), "$entity_type: No translations are available");
 
@@ -88,7 +88,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Set a translation.
     $entity->addTranslation($this->langcodes[1])->set($this->fieldName, [0 => ['value' => 'translation 1']]);
-    $field = $entity->getTranslation($this->langcodes[1])->{$this->fieldName};
+    $field = $entity->getTranslation($this->langcodes[1])->get($this->fieldName);
     $this->assertEquals('translation 1', $field->value, "$entity_type: Translated value set.");
     $this->assertEquals($this->langcodes[1], $field->getLangcode(), "$entity_type: Field object has the expected langcode.");
 
@@ -338,7 +338,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $translation = $entity->getTranslation(LanguageInterface::LANGCODE_NOT_SPECIFIED);
     $this->assertFalse($translation->isNewTranslation(), 'Existing translations are not marked as new.');
     $this->assertSame($entity, $translation, 'The translation object corresponding to a non-default language is the entity object itself when the entity is language-neutral.');
-    $entity->{$langcode_key}->value = $default_langcode;
+    $entity->get($langcode_key)->value = $default_langcode;
     $translation = $entity->getTranslation($default_langcode);
     $this->assertSame($entity, $translation, 'The translation object corresponding to the default language (explicit) is the entity object itself.');
     $translation = $entity->getTranslation(LanguageInterface::LANGCODE_DEFAULT);
@@ -365,7 +365,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $this->assertNotSame($entity, $translation, 'The entity and the translation object differ from one another.');
     $this->assertTrue($entity->hasTranslation($langcode), 'The new translation exists.');
     $this->assertEquals($langcode, $translation->language()->getId(), 'The translation language matches the specified one.');
-    $this->assertEquals($langcode, $translation->{$langcode_key}->value, 'The translation field language value matches the specified one.');
+    $this->assertEquals($langcode, $translation->get($langcode_key)->value, 'The translation field language value matches the specified one.');
     $this->assertFalse($translation->{$default_langcode_key}->value, 'The translation object is not the default one.');
     $this->assertEquals($default_langcode, $translation->getUntranslated()->language()->getId(), 'The original language can still be retrieved.');
     $translation->name->value = $name_translated;
@@ -386,7 +386,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // Verify that changing translation language causes an exception to be
     // thrown.
     try {
-      $translation->{$langcode_key}->value = $this->langcodes[2];
+      $translation->get($langcode_key)->value = $this->langcodes[2];
       $this->fail('The translation language cannot be changed.');
     }
     catch (\LogicException) {
@@ -395,7 +395,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Verify that reassigning the same translation language is allowed.
     try {
-      $translation->{$langcode_key}->value = $langcode;
+      $translation->get($langcode_key)->value = $langcode;
     }
     catch (\LogicException) {
       $this->fail('The translation language can be reassigned the same value.');
@@ -514,7 +514,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $entity = $this->reloadEntity($entity);
     $translation = $entity->getTranslation($langcode);
     $entity = unserialize(serialize($entity));
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $name = $default_langcode . '_' . $this->randomMachineName();
     $entity->getTranslation($default_langcode)->name->value = $name;
     $this->assertEquals($name, $entity->name->value, 'No stale reference for the translation object corresponding to the original language.');
@@ -747,7 +747,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // Check that field languages keep matching entity language even after
     // changing it.
     $langcode = $this->langcodes[1];
-    $entity->{$langcode_key}->value = $langcode;
+    $entity->get($langcode_key)->value = $langcode;
     foreach ([$this->fieldName, $this->untranslatableFieldName] as $field_name) {
       $this->assertEquals($langcode, $entity->get($field_name)->getLangcode(), 'Field language works as expected after changing entity language.');
     }
@@ -756,7 +756,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // field values and untranslatable ones.
     $langcode = $this->langcodes[0];
     $entity->addTranslation($this->langcodes[2], [$this->fieldName => $this->randomMachineName()]);
-    $entity->{$langcode_key}->value = $langcode;
+    $entity->get($langcode_key)->value = $langcode;
     foreach ([$this->fieldName, $this->untranslatableFieldName] as $field_name) {
       $this->assertEquals($langcode, $entity->get($field_name)->getLangcode(), 'Field language works as expected after translating the entity and changing language.');
     }
@@ -764,7 +764,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // Check that setting the default language to an existing translation
     // language causes an exception to be thrown.
     try {
-      $entity->{$langcode_key}->value = $this->langcodes[2];
+      $entity->get($langcode_key)->value = $this->langcodes[2];
       $this->fail('An exception is thrown when setting the default language to an existing translation language');
     }
     catch (\InvalidArgumentException) {

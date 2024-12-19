@@ -62,7 +62,7 @@ class ActionTest extends KernelTestBase {
     // Create a new unsaved user.
     $name = $this->randomMachineName();
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
-    $account = $user_storage->create(['name' => $name, 'bundle' => 'user']);
+    $account = $user_storage->create(['name' => $name]);
     $loaded_accounts = $user_storage->loadMultiple();
     $this->assertCount(0, $loaded_accounts);
 

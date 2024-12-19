@@ -64,7 +64,7 @@ class ViewsDataIntegrationTest extends ViewsKernelTestBase {
       'type' => 'page',
       'title' => 'Test title',
     ]);
-    $node->moderation_state->value = 'published';
+    $node->get('moderation_state')->value = 'published';
     $node->save();
 
     $view = Views::getView('test_content_moderation_field_state_test');

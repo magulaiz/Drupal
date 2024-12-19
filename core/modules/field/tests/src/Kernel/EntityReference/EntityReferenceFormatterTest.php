@@ -142,7 +142,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
       ->getStorage($this->entityType)
       ->create(['name' => $this->randomMachineName()]);
     $referencing_entity->save();
-    $referencing_entity->{$field_name}->entity = $this->referencedEntity;
+    $referencing_entity->get($field_name)->entity = $this->referencedEntity;
 
     // Assert user doesn't have access to the entity.
     $this->assertFalse($this->referencedEntity->access('view'), 'Current user does not have access to view the referenced entity.');
@@ -165,7 +165,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
         ->view($referencing_entity, 'default');
 
       // Verify the un-accessible item still exists.
-      $this->assertEquals($this->referencedEntity->id(), $referencing_entity->{$field_name}->target_id, "The un-accessible item still exists after $name formatter was executed.");
+      $this->assertEquals($this->referencedEntity->id(), $referencing_entity->get($field_name)->target_id, "The un-accessible item still exists after $name formatter was executed.");
     }
   }
 
