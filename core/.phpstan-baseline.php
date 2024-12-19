@@ -20057,6 +20057,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileManagedTestBase.php',
 ];
 $ignoreErrors[] = [
+	// identifier: empty.variable
+	'message' => '#^Variable \\$unexpected in empty\\(\\) always exists and is not falsy\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileManagedTestBase.php',
+];
+$ignoreErrors[] = [
 	// identifier: method.notFound
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonBasicAuthTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#',
 	'count' => 1,
@@ -20287,6 +20293,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Kernel\\\\FileManagedUnitTestBase\\:\\:assertSameFile\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/file/tests/src/Kernel/FileManagedUnitTestBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: empty.variable
+	'message' => '#^Variable \\$unexpected in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/src/Kernel/FileManagedUnitTestBase.php',
 ];
