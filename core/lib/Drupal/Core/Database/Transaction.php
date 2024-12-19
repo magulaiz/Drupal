@@ -21,10 +21,6 @@ class Transaction {
     protected readonly string $name,
     protected readonly string $id,
   ) {
-    // Transactions rely on objects being destroyed in order to be committed.
-    // PHP makes no guarantee about the order in which objects are destroyed so
-    // ensure all transactions are committed on shutdown.
-    Database::commitAllOnShutdown();
   }
 
   /**
