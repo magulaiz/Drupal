@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Component\FileSecurity\FileSecurity;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -36,7 +37,7 @@ class FileDownloadCspSubscriber implements EventSubscriberInterface {
       $response->headers->get('Content-Type') === 'image/svg+xml' &&
       !$response->headers->has('Content-Security-Policy')
     ) {
-      $response->headers->set('Content-Security-Policy', "default-src 'none'; img-src data:; style-src 'unsafe-inline'", FALSE);
+      $response->headers->set('Content-Security-Policy', FileSecurity::CSP_SVG_HEADER, FALSE);
     }
   }
 
