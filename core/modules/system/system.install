@@ -15,6 +15,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionLifecycle;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Utility\PhpRequirements;
@@ -725,7 +726,7 @@ function system_requirements($phase) {
 
     // Create a temporary svg-file.
     $filename = 'public://' . uniqid('svg-csp-test-') . '.svg';
-    $fileSystem->saveData('', $filename, FileSystemInterface::EXISTS_REPLACE);
+    $fileSystem->saveData('', $filename, FileExists::Replace);
     $url = $fileUrlGenerator->generateAbsoluteString($filename);
 
     // Try to fetch the svg-file, so we can verify the presence of csp-header.
