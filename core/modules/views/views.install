@@ -5,9 +5,12 @@
  * Contains install and update functions for Views.
  */
 
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+
 /**
  * Implements hook_install().
  */
+#[StopProceduralHookScan]
 function views_install(): void {
   module_set_weight('views', 10);
 }
