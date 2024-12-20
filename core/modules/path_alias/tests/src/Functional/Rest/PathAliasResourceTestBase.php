@@ -7,7 +7,6 @@ namespace Drupal\Tests\path_alias\Functional\Rest;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\path_alias\Entity\PathAlias;
-use Drupal\user\Entity\User;
 
 /**
  * Base class for path_alias EntityResource tests.
@@ -62,7 +61,7 @@ abstract class PathAliasResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedNormalizedEntity() {
-    $author = User::load($this->entity->getOwnerId());
+
     return [
       'id' => [
         [
@@ -99,22 +98,7 @@ abstract class PathAliasResourceTestBase extends EntityResourceTestBase {
           'value' => $this->entity->uuid(),
         ],
       ],
-      'uid' => [
-        [
-          'target_id' => (int) $author->id(),
-          'target_type' => 'user',
-          'target_uuid' => $author->uuid(),
-          'url' => base_path() . 'user/' . $author->id(),
-        ],
-      ],
-      'revision_uid' => [
-        [
-          'target_id' => (int) $author->id(),
-          'target_type' => 'user',
-          'target_uuid' => $author->uuid(),
-          'url' => base_path() . 'user/' . $author->id(),
-        ],
-      ],
+      'revision_uid' => [],
       'changed' => [
         [
           'value' => (new \DateTime())->setTimestamp($this->entity->getChangedTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
