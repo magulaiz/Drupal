@@ -52,12 +52,14 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
 
   /**
    * Contains the current active sort column.
+   *
    * @var string
    */
   public $active;
 
   /**
    * Contains the current active sort order, either desc or asc.
+   *
    * @var string
    */
   public $order;
@@ -105,7 +107,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
     $query = $this->view->getRequest()->query;
     $order = $query->get('order');
     if (!isset($order)) {
-      // check for a 'default' clickSort. If there isn't one, exit gracefully.
+      // Check for a 'default' clickSort. If there isn't one, exit gracefully.
       if (empty($this->options['default'])) {
         return;
       }
@@ -327,7 +329,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
           '#return_value' => $field,
           '#parents' => ['style_options', 'default'],
           '#id' => $radio_id,
-          // because 'radio' doesn't fully support '#id' =(
+          // Because 'radio' doesn't fully support '#id' =(
           '#attributes' => ['id' => $radio_id],
           '#default_value' => $default,
           '#states' => [
@@ -390,7 +392,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
         ],
       ];
 
-      // markup for the field name
+      // Markup for the field name
       $form['info'][$field]['name'] = [
         '#markup' => $field_names[$field],
       ];
