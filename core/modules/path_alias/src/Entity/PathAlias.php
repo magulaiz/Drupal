@@ -32,8 +32,6 @@ use Drupal\user\EntityOwnerTrait;
     'uuid' => 'uuid',
     'status' => 'status',
     'published' => 'status',
-    'uid' => 'uid',
-    'owner' => 'uid',
   ],
   handlers: [
     'storage' => PathAliasStorage::class,
@@ -68,7 +66,6 @@ class PathAlias extends EditorialContentEntityBase implements PathAliasInterface
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
-    $fields += static::ownerBaseFieldDefinitions($entity_type);
 
     $fields['path'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('System path'))
@@ -123,13 +120,14 @@ class PathAlias extends EditorialContentEntityBase implements PathAliasInterface
     rtrim(trim($this->original->getAlias()), "\\/") : $alias;
     // If alias is changed create a new revision.
     $route_content_entity = $this->getRouteEntity();
+    $time = \Drupal::service('datetime.time')->getRequestTime();
     if ($route_content_entity && $original_alias !== $alias) {
       $this->setNewRevision(TRUE);
       $current_user = \Drupal::currentUser();
       $this->setRevisionUserId($current_user->id());
-      $time = \Drupal::service('datetime.time')->getRequestTime();
       $this->setRevisionCreationTime($time);
     }
+    $this->setChangedTime($time);
     $this->setAlias($alias);
     // If no revision author has been set explicitly, make the node owner the
     // revision author.
