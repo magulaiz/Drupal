@@ -193,7 +193,7 @@ final class Importer implements LoggerAwareInterface {
       if (isset($data['_meta']['depends'])) {
         @trigger_error('The "depends" key is deprecated in drupal:10.3.0 and will be removed in drupal:12.0.0. Use the "dependencies" key instead. See https://www.drupal.org/node/3494759', E_USER_DEPRECATED);
         $dependency_key = $data['_meta']['depends'];
-      } 
+      }
       else {
         $dependency_key = $data['_meta']['dependencies'];
       }
