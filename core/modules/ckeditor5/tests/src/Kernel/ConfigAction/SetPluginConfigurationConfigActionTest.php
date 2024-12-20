@@ -11,7 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests config action 'setPluginConfiguration'.
- * 
+ *
  * @covers \Drupal\ckeditor5\Plugin\ConfigAction\SetPluginConfiguration
  * @group ckeditor5
  * @group Recipe
