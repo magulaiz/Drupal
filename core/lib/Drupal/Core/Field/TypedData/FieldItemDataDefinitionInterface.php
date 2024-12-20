@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Field\TypedData;
 
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;

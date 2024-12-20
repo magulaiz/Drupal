@@ -5,6 +5,9 @@
  * Post update functions for Views.
  */
 
+declare(strict_types=1);
+
+
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewsConfigUpdater;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jsonapi;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

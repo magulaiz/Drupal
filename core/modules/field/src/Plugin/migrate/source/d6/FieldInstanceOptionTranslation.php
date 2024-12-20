@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\field\Plugin\migrate\source\d6;
 
 // cspell:ignore cnfi

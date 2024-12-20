@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\update;
 
 use Symfony\Component\Validator\Constraints\Choice;

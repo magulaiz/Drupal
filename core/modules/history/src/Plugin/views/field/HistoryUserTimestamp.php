@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\history\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;

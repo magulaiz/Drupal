@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\dblog\Plugin\views\field;
 
 use Drupal\Component\Render\FormattableMarkup;

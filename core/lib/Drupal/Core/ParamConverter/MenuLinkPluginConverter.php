@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\ParamConverter;
 
 use Drupal\Core\Menu\MenuLinkManagerInterface;

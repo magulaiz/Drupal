@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\language\Plugin\LanguageNegotiation;
 
 use Drupal\Core\Entity\ContentEntityInterface;

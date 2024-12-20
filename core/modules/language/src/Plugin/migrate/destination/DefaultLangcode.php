@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\language\Plugin\migrate\destination;
 
 use Drupal\language\Entity\ConfigurableLanguage;

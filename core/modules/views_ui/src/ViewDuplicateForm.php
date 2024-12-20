@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views_ui;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;

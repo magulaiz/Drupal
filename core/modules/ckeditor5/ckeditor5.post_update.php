@@ -5,6 +5,8 @@
  * Post update functions for CKEditor 5.
  */
 
+declare(strict_types=1);
+
 // cspell:ignore multiblock
 
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\image\Plugin\migrate\process\d6;
 
 use Drupal\migrate\Attribute\MigrateProcess;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core;
 
 use Drupal\Core\Cache\Context\CacheContextsPass;

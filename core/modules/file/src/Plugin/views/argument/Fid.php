@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\file\Plugin\views\argument;
 
 use Drupal\views\Attribute\ViewsArgument;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\user\Plugin\migrate\destination;
 
 use Drupal\migrate\Attribute\MigrateDestination;

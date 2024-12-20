@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Site;
 
 use Drupal\Component\Utility\OpCodeCache;
@@ -64,7 +66,9 @@ final class SettingsEditor {
     if ($contents !== FALSE) {
       // Initialize the contents for the settings.php file if it is empty.
       if (trim($contents) === '') {
-        $contents = "<?php\n";
+        $contents = "<?php
+
+declare(strict_types=1);\n";
       }
       // Step through each token in settings.php and replace any variables that
       // are in the passed-in array.

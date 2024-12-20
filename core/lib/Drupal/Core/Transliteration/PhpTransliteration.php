@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Transliteration;
 
 use Drupal\Component\Transliteration\PhpTransliteration as BaseTransliteration;

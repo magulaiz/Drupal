@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\block\Entity;
 
 use Drupal\block\BlockAccessControlHandler;

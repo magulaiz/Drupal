@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\filter\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;

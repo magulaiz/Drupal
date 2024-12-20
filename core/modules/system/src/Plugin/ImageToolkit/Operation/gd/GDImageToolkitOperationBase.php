@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
 use Drupal\Core\ImageToolkit\ImageToolkitOperationBase;

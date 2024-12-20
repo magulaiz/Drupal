@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\workspaces\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Component\Plugin\Context;
 
 use Drupal\Component\Plugin\Exception\ContextException;

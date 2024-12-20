@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\syslog\Logger;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

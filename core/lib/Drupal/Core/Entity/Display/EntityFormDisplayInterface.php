@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Entity\Display;
 
 use Drupal\Core\Entity\EntityConstraintViolationListInterface;

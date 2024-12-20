@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\telephone\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\Attribute\FieldType;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jsonapi\Exception;
 
 use Drupal\Core\Access\AccessResultInterface;

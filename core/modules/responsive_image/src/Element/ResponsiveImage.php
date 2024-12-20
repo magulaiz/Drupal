@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\responsive_image\Element;
 
 use Drupal\Core\Render\Attribute\RenderElement;

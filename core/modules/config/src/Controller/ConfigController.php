@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config\Controller;
 
 use Drupal\Core\Archiver\ArchiveTar;

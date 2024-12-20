@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Entity\Event;
 
 use Drupal\Core\Config\ConfigImporterEvent;

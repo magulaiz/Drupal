@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Field\Plugin\DataType;
 
 use Drupal\Core\Field\FieldItemList;

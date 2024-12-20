@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\file\Plugin\migrate\field\d7;
 
 use Drupal\file\Plugin\migrate\field\d6\FileField as D6FileField;

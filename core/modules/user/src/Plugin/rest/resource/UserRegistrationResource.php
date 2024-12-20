@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\user\Plugin\rest\resource;
 
 use Drupal\Core\Config\ImmutableConfig;

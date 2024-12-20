@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\help;
 
 use Drupal\Component\Discovery\DiscoveryException;

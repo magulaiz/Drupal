@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\rest\Plugin\Deriver;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;

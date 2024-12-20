@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\content_translation\Controller;
 
 use Drupal\Component\Datetime\TimeInterface;

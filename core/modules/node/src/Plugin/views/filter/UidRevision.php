@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\node\Plugin\views\filter;
 
 use Drupal\user\Plugin\views\filter\Name;

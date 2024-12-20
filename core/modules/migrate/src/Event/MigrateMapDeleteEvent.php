@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migrate\Event;
 
 use Drupal\migrate\Plugin\MigrateIdMapInterface;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Entity\Query\Sql\pgsql;
 
 use Drupal\Core\Database\Query\SelectInterface;

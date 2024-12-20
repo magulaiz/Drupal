@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\contact\Plugin\migrate\source;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\Variable;

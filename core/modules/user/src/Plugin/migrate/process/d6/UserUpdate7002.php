@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\user\Plugin\migrate\process\d6;
 
 use Drupal\Core\Datetime\TimeZoneFormHelper;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\ProxyBuilder;
 
 use Drupal\Component\ProxyBuilder\ProxyBuilder as BaseProxyBuilder;

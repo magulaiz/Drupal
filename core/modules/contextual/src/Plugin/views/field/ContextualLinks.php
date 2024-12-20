@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\contextual\Plugin\views\field;
 
 use Drupal\Component\Serialization\Json;

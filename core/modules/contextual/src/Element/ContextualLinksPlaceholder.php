@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\contextual\Element;
 
 use Drupal\Component\Utility\Crypt;

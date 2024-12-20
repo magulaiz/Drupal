@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\user\Plugin\LanguageNegotiation;
 
 use Drupal\Core\Language\LanguageInterface;

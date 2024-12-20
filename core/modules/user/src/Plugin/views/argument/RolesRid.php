@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\user\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;

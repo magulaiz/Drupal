@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\layout_builder\Routing;
 
 use Drupal\Core\Routing\EnhancerInterface;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\field_ui\Plugin\Derivative;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;

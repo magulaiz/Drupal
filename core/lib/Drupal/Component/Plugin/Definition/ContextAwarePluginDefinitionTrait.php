@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Component\Plugin\Definition;
 
 use Drupal\Component\Plugin\Context\ContextDefinitionInterface;

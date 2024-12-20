@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\TempStore\Element;
 
 use Drupal\Core\Datetime\DateFormatterInterface;

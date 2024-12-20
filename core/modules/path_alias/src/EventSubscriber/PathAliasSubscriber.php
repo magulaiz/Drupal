@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\path_alias\EventSubscriber;
 
 use Drupal\Core\Path\CurrentPathStack;

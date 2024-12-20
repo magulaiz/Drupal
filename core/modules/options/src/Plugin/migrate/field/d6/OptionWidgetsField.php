@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\options\Plugin\migrate\field\d6;
 
 use Drupal\migrate_drupal\Attribute\MigrateField;

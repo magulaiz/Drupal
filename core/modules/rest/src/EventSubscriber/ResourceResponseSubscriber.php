@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\rest\EventSubscriber;
 
 use Drupal\Core\Cache\CacheableMetadata;

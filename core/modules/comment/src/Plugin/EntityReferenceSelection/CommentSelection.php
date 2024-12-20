@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\comment\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;

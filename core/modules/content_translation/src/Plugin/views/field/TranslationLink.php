@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\content_translation\Plugin\views\field;
 
 use Drupal\views\Attribute\ViewsField;

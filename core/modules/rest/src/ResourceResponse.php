@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\rest;
 
 use Drupal\Core\Cache\CacheableResponseInterface;

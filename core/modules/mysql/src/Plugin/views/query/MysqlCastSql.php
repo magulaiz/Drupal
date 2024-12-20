@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\mysql\Plugin\views\query;
 
 use Drupal\views\Plugin\views\query\CastSqlInterface;

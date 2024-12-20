@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migrate\Plugin\migrate\id_map;
 
 use Drupal\Component\Plugin\Attribute\PluginID;

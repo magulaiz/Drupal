@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views\Entity\Render;
 
 use Drupal\views\ResultRow;

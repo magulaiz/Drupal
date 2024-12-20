@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\link\Plugin\migrate\field\d7;
 
 use Drupal\link\Plugin\migrate\field\d6\LinkField as D6LinkField;

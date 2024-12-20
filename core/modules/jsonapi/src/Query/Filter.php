@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jsonapi\Query;
 
 use Drupal\Core\Entity\Query\QueryInterface;

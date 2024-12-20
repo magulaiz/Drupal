@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\navigation\Plugin\SectionStorage;
 
 use Drupal\Core\Access\AccessResult;

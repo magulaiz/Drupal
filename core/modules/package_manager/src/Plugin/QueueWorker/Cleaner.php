@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\package_manager\Plugin\QueueWorker;
 
 use Drupal\Core\File\FileSystemInterface;

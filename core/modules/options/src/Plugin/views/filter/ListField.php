@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\options\Plugin\views\filter;
 
 use Drupal\views\Attribute\ViewsFilter;

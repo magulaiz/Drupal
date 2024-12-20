@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jsonapi\Normalizer;
 
 use Drupal\jsonapi\JsonApiResource\Data;

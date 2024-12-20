@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migrate_drupal\Plugin\migrate\field;
 
 use Drupal\Core\Plugin\PluginBase;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\media\Controller;
 
 use Drupal\Component\Utility\Crypt;

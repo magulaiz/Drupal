@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Entity\Plugin\Condition\Deriver;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;

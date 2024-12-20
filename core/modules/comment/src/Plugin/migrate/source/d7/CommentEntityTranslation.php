@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\comment\Plugin\migrate\source\d7;
 
 use Drupal\migrate\Exception\RequirementsException;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Access;
 
 use Drupal\Component\Utility\ArgumentsResolver;

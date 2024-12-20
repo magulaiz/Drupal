@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\content_moderation\Plugin\views\sort;
 
 use Drupal\content_moderation\Plugin\views\ModerationStateJoinViewsHandlerTrait;

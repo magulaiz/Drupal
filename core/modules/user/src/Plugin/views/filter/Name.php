@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\user\Plugin\views\filter;
 
 use Drupal\Core\Entity\Element\EntityAutocomplete;

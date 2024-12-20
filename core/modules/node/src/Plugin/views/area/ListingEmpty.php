@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\node\Plugin\views\area;
 
 use Drupal\Core\Access\AccessManagerInterface;

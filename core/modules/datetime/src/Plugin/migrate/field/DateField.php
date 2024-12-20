@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\datetime\Plugin\migrate\field;
 
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;

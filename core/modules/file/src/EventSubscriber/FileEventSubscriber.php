@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\file\EventSubscriber;
 
 use Drupal\Component\Transliteration\TransliterationInterface;

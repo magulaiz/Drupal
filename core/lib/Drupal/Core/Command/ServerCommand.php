@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Command;
 
 use Drupal\Core\Database\ConnectionNotDefinedException;
@@ -173,7 +175,9 @@ class ServerCommand extends Command {
     // to start up the PHP built-in webserver in the meantime. We use a
     // PhpProcess so that Windows powershell users also get a browser opened
     // for them.
-    $php = "<?php sleep(2); passthru(\"$cmd\"); ?>";
+    $php = "<?php
+
+declare(strict_types=1); sleep(2); passthru(\"$cmd\"); ?>";
     $process = new PhpProcess($php);
     $process->start();
   }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\media_library\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Render\FormattableMarkup;

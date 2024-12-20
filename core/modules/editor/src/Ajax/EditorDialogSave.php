@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\editor\Ajax;
 
 use Drupal\Core\Ajax\CommandInterface;

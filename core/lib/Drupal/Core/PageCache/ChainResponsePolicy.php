@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\PageCache;
 
 use Symfony\Component\HttpFoundation\Request;

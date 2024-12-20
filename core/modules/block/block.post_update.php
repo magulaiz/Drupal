@@ -5,6 +5,8 @@
  * Post update functions for Block.
  */
 
+declare(strict_types=1);
+
 use Drupal\block\BlockInterface;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 

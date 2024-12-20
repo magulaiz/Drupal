@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Component\FrontMatter\Exception;
 
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;

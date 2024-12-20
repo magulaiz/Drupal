@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config\Form;
 
 use Drupal\Core\Archiver\ArchiveTar;

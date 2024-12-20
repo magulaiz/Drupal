@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\path;
 
 use Drupal\Core\Entity\EntityInterface;

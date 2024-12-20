@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\layout_builder\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\Attribute\FieldType;

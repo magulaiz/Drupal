@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views\Plugin\views\sort;
 
 use Drupal\views\Attribute\ViewsSort;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Layout;
 
 use Drupal\Component\Plugin\Definition\ContextAwarePluginDefinitionInterface;

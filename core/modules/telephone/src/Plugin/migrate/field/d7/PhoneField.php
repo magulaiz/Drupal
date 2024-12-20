@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\telephone\Plugin\migrate\field\d7;
 
 use Drupal\migrate_drupal\Attribute\MigrateField;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Discovery;
 
 use Drupal\Component\Discovery\YamlDiscovery as ComponentYamlDiscovery;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\comment\Form;
 
 use Drupal\comment\CommentInterface;

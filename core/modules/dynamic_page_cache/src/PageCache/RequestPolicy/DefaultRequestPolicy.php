@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\dynamic_page_cache\PageCache\RequestPolicy;
 
 use Drupal\Core\PageCache\ChainRequestPolicy;

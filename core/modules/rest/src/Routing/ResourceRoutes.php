@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\rest\Routing;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;

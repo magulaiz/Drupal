@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\content_translation\Routing;
 
 use Drupal\content_translation\ContentTranslationManager;
