@@ -120,8 +120,6 @@ trait ContextAwarePluginTrait {
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface[]
    */
   public function getContextDefinitions() {
     $definition = $this->getPluginDefinition();
@@ -134,8 +132,6 @@ trait ContextAwarePluginTrait {
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface
    */
   public function getContextDefinition($name) {
     $definition = $this->getPluginDefinition();

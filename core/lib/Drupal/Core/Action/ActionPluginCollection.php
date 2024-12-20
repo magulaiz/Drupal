@@ -11,8 +11,6 @@ class ActionPluginCollection extends DefaultSingleLazyPluginCollection {
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Action\ActionInterface
    */
   // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function &get($instance_id) {

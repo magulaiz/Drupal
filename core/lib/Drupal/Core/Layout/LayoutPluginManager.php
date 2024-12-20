@@ -194,8 +194,6 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Layout\LayoutDefinition[]
    */
   public function getSortedDefinitions(?array $definitions = NULL, $label_key = 'label') {
     // Sort the plugins first by category, then by label.
@@ -211,8 +209,6 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Layout\LayoutDefinition[][]
    */
   public function getGroupedDefinitions(?array $definitions = NULL, $label_key = 'label') {
     $definitions = $this->getSortedDefinitions($definitions ?? $this->getDefinitions(), $label_key);

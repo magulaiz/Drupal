@@ -1317,12 +1317,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Component\\\\Plugin\\\\LazyPluginCollection\\:\\:get\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Component/Plugin/LazyPluginCollection.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Component\\\\Plugin\\\\LazyPluginCollection\\:\\:initializePlugin\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Component/Plugin/LazyPluginCollection.php',

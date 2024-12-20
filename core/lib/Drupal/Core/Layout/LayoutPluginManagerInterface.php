@@ -22,36 +22,26 @@ interface LayoutPluginManagerInterface extends CategorizingPluginManagerInterfac
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Layout\LayoutInterface
    */
   public function createInstance($plugin_id, array $configuration = []);
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Layout\LayoutDefinition|null
    */
   public function getDefinition($plugin_id, $exception_on_invalid = TRUE);
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Layout\LayoutDefinition[]
    */
   public function getDefinitions();
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Layout\LayoutDefinition[]
    */
   public function getSortedDefinitions(?array $definitions = NULL);
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Layout\LayoutDefinition[][]
    */
   public function getGroupedDefinitions(?array $definitions = NULL);
 
