@@ -25,7 +25,7 @@ class ViewsAddDefaultTableCssClassUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-10.3.0.filled.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/test_table_css_class.php',
