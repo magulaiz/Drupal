@@ -21,11 +21,7 @@ use Drupal\Core\Installer\Form\SelectProfileForm;
 abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
 
   /**
-   * This is set by the profile in the core.extension extracted.
-   *
-   * If set to FALSE, then the install will proceed without an install profile.
-   *
-   * @var string|null
+   * {@inheritdoc}
    */
   protected $profile = NULL;
 

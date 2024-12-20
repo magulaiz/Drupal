@@ -27,7 +27,7 @@ class MTimeProtectedFileStorageTest extends MTimeProtectedFileStorageBase {
   /**
    * The PHP storage class to test.
    *
-   * @var string
+   * @var \Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage
    */
   protected $storageClass = 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage';
 
