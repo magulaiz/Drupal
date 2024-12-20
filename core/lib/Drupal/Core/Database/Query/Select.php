@@ -71,6 +71,13 @@ class Select extends Query implements SelectInterface {
   protected $group = [];
 
   /**
+   * The expressions by which to group.
+   *
+   * @var array
+   */
+  protected array $groupExpression = [];
+
+  /**
    * The conditional object for the HAVING clause.
    *
    * @var \Drupal\Core\Database\Query\Condition
@@ -713,8 +720,12 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function groupBy($field) {
+  public function groupBy($field, bool $isExpression = FALSE) {
     $this->group[$field] = $field;
+    if ($isExpression) {
+      $this->groupExpression[$field] = $field;
+    }
+
     return $this;
   }
 
@@ -875,7 +886,7 @@ class Select extends Query implements SelectInterface {
     // GROUP BY
     if ($this->group) {
       $group_by_fields = array_map(function (string $field): string {
-        return $this->connection->escapeField($field);
+        return $this->groupExpression[$field] ?? $this->connection->escapeField($field);
       }, $this->group);
       $query .= "\nGROUP BY " . implode(', ', $group_by_fields);
     }

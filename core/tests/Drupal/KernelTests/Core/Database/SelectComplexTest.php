@@ -113,6 +113,16 @@ class SelectComplexTest extends DatabaseTestBase {
     $this->assertEquals(6, $num_records, 'Returned the correct number of total rows.');
   }
 
+  public function testGroupByWithExpression(): void {
+    // There is no expression which works across all supported databases so
+    // check only the correctness of the generated query string.
+    $query = $this->connection->select('test_task', 't');
+    $field1 = $this->randomMachineName();
+    $field2 = $this->randomMachineName();
+    $query->groupBy('ROLLUP ("' . $field1 . '", "' . $field2 . '")', TRUE);
+    $this->assertStringEndsWith(sprintf('ROLLUP ("%s", "%s")', $field1, $field2), (string) $query);
+  }
+
   /**
    * Tests GROUP BY and HAVING clauses together.
    */

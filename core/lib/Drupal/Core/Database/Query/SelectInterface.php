@@ -460,13 +460,21 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Groups the result set by the specified field.
    *
+   * phpcs:disable Drupal.Commenting
+   * @todo Uncomment the method parameters before drupal:11.0.0.
+   * @see https://www.drupal.org/project/drupal/issues/3354672
+   *
    * @param $field
    *   The field on which to group. This should be the field as aliased.
+   * @param bool $isExpression
+   *   (optional) Defaults to FALSE. When TRUE, $field is an expression and is
+   *   not escaped.
+   * phpcs:enable
    *
    * @return $this
    *   The called object.
    */
-  public function groupBy($field);
+  public function groupBy($field /* , bool $isExpression = FALSE */);
 
   /**
    * Get the equivalent COUNT query of this query as a new query object.

@@ -422,8 +422,8 @@ class SelectExtender implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function groupBy($field) {
-    $this->query->groupBy($field);
+  public function groupBy($field, bool $isExpression = FALSE) {
+    $this->query->groupBy($field, $isExpression);
     return $this;
   }
 
