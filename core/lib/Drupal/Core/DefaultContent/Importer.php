@@ -188,8 +188,6 @@ final class Importer implements LoggerAwareInterface {
     $is_root = FALSE;
     // @see ::loadEntityDependency()
 
-    @trigger_error('The ["depends"] key is deprecated in drupal:10.3.0 and will be removed in drupal:12.0.0. Use the ["dependencies"] key instead. See https://www.drupal.org/node/3494759', E_USER_DEPRECATED);
-
     // Add an empty check for 'depends' and 'dependencies' to avoid PHP notices.
     if (($this->dependencies === NULL && !empty($data['_meta']['depends'])) || ($this->dependencies === NULL && !empty($data['_meta']['dependencies']))) {
       $is_root = TRUE;
