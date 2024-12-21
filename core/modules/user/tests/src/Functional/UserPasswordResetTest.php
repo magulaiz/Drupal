@@ -170,8 +170,9 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     // Change the site name.
     // The site name token in the email will be replaced by this one.
+    // cspell:ignore L\'equipe de l\'Agriculture
     \Drupal::configFactory()->getEditable('system.site')->set('name', 'L\'equipe de l\'Agriculture')->save();
-    // Request a new password again using the email address.
+    // Request a new password using the email address.
     $this->drupalGet('user/password');
     $edit = ['name' => $this->account->getEmail()];
     $this->submitForm($edit, 'Submit');
