@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Component\Render\PlainTextOutput;
@@ -13,11 +15,12 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\jsonapi\Traits\GetDocumentFromResponseTrait;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
-// cspell:ignore èxample
+// cspell:ignore èxample msword
 
 /**
  * Tests binary data file upload route.
@@ -27,19 +30,12 @@ use Psr\Http\Message\ResponseInterface;
  */
 class FileUploadBehaviorTest extends BrowserTestBase {
   use ResourceTestTrait;
+  use GetDocumentFromResponseTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
-    'entity_test',
-    'file',
-    'jsonapi',
-    'basic_auth',
-    'rest_test',
-    'jsonapi_test_field_access',
-    'text',
-  ];
+  protected static $modules = ['entity_test', 'file'];
 
   /**
    * {@inheritdoc}
@@ -166,7 +162,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * Tests using the file upload POST route; needs second request to "use" file.
    */
-  public function testPostFileUpload() {
+  public function testPostFileUpload(): void {
     \Drupal::service('router.builder')->rebuild();
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -202,7 +198,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
     // header with no 'file' prefix.
     $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename="example.txt"']);
     $this->assertSame(201, $response->getStatusCode());
-    $expected = $this->getExpectedDocument(2, 'example_0.txt');
+    $expected = $this->getExpectedDocument(2, 'example_0.txt', TRUE);
     $this->assertResponseData($expected, $response);
 
     // Check the actual file data.
@@ -231,7 +227,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * Tests using the 'file upload and "use" file in single request" POST route.
    */
-  public function testPostFileUploadAndUseInSingleRequest() {
+  public function testPostFileUploadAndUseInSingleRequest(): void {
     \Drupal::service('router.builder')->rebuild();
     // Update the test entity so it already has a file. This allows verifying
     // that this route appends files, and does not replace them.
@@ -270,7 +266,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
     // This request fails despite the upload succeeding, because we're not
     // allowed to view the entity we're uploading to.
     $response = $this->fileRequest($uri, $this->testFileData);
-    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $uri, $response, FALSE, ['4xx-response', 'http_response'], ['url.site', 'user.permissions']);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $uri, $response, FALSE, ['4xx-response', 'http_response'], ['url.query_args', 'url.site', 'user.permissions']);
 
     $this->setUpAuthorization('GET');
 
@@ -293,7 +289,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
       'data' => [
         0 => $this->getExpectedDocument(1, 'existing.txt', TRUE, TRUE)['data'],
         1 => $this->getExpectedDocument(2, 'example.txt', TRUE, TRUE)['data'],
-        2 => $this->getExpectedDocument(3, 'example_0.txt', FALSE, TRUE)['data'],
+        2 => $this->getExpectedDocument(3, 'example_0.txt', TRUE, TRUE)['data'],
       ],
     ];
     $this->assertResponseData($expected, $response);
@@ -321,7 +317,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
    * @see ::testPostFileUpload()
    * @see \Drupal\Tests\jsonapi\Functional\EntityTestTest::getPostDocument()
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     return [
       'data' => [
         'type' => 'entity_test--entity_test',
@@ -346,7 +342,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * Tests using the file upload POST route with invalid headers.
    */
-  protected function testPostFileUploadInvalidHeaders() {
+  protected function testPostFileUploadInvalidHeaders(): void {
     $uri = Url::fromUri('base:' . static::$postUri);
 
     // The wrong content type header should return a 415 code.
@@ -382,7 +378,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
    *
    * A new file should be created with a suffixed name.
    */
-  public function testPostFileUploadDuplicateFile() {
+  public function testPostFileUploadDuplicateFile(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -401,7 +397,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
     $this->assertSame(201, $response->getStatusCode());
 
     // Loading expected normalized data for file 2, the duplicate file.
-    $expected = $this->getExpectedDocument(2, 'example_0.txt');
+    $expected = $this->getExpectedDocument(2, 'example_0.txt', TRUE);
     $this->assertResponseData($expected, $response);
 
     // Check the actual file data.
@@ -423,7 +419,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition#Directives
    */
-  public function testFileUploadStrippedFilePath() {
+  public function testFileUploadStrippedFilePath(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -470,7 +466,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * Tests invalid file uploads.
    */
-  public function testInvalidFileUploads() {
+  public function testInvalidFileUploads(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -483,7 +479,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * Tests using the file upload route with a unicode file name.
    */
-  public function testFileUploadUnicodeFilename() {
+  public function testFileUploadUnicodeFilename(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -502,7 +498,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * Tests using the file upload route with a zero byte file.
    */
-  public function testFileUploadZeroByteFile() {
+  public function testFileUploadZeroByteFile(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -524,7 +520,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * Tests using the file upload route with an invalid file type.
    */
-  protected function testFileUploadInvalidFileType() {
+  protected function testFileUploadInvalidFileType(): void {
     $uri = Url::fromUri('base:' . static::$postUri);
 
     // Test with a JSON file.
@@ -539,7 +535,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * Tests using the file upload route with a file size larger than allowed.
    */
-  protected function testFileUploadLargerFileSize() {
+  protected function testFileUploadLargerFileSize(): void {
     // Set a limit of 50 bytes.
     $this->field->setSetting('max_filesize', 50)
       ->save();
@@ -558,7 +554,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * Tests using the file upload POST route with malicious extensions.
    */
-  protected function testFileUploadMaliciousExtension() {
+  protected function testFileUploadMaliciousExtension(): void {
     // Allow all file uploads but system.file::allow_insecure_uploads is set to
     // FALSE.
     $this->field->setSetting('file_extensions', '')->save();
@@ -674,7 +670,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * Tests using the file upload POST route no configuration.
    */
-  public function testFileUploadNoConfiguration() {
+  public function testFileUploadNoConfiguration(): void {
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -704,7 +700,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessMessage($method) {
+  protected function getExpectedUnauthorizedAccessMessage($method): string {
     switch ($method) {
       case 'GET':
         return "The current user is not allowed to view this relationship. The 'view test entity' permission is required.";
@@ -733,9 +729,10 @@ class FileUploadBehaviorTest extends BrowserTestBase {
    * @return array
    *   A JSON:API response document.
    */
-  protected function getExpectedDocument($fid = 1, $expected_filename = 'example.txt', $expected_as_filename = FALSE, $expected_status = FALSE) {
+  protected function getExpectedDocument($fid = 1, $expected_filename = 'example.txt', $expected_as_filename = FALSE, $expected_status = FALSE): array {
     $author = User::load($this->account->id());
     $file = File::load($fid);
+    $this->assertInstanceOf(File::class, $file);
     $self_url = Url::fromUri('base:/jsonapi/file/file/' . $file->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
 
     return [
@@ -806,7 +803,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function fileRequest(Url $url, $file_contents, array $headers = []) {
+  protected function fileRequest(Url $url, $file_contents, array $headers = []): ResponseInterface {
     $request_options = [];
     $headers = $headers + [
       // Set the required (and only accepted) content type for the request.
@@ -828,7 +825,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['view test entity']);
@@ -856,7 +853,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
    */
   protected function assertResponseData(array $expected, ResponseInterface $response): void {
     static::recursiveKSort($expected);
-    $actual = Json::decode((string) $response->getBody());
+    $actual = $this->getDocumentFromResponse($response);
     static::recursiveKSort($actual);
 
     $this->assertSame($expected, $actual);

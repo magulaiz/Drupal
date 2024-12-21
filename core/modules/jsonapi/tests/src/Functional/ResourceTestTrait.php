@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Component\Serialization\Json;
@@ -231,7 +233,7 @@ trait ResourceTestTrait {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function setUpFields(EntityInterface $entity, UserInterface $account) {
+  protected function setUpFields(EntityInterface $entity, UserInterface $account): EntityInterface {
     if (!$entity instanceof FieldableEntityInterface) {
       return $entity;
     }
@@ -295,12 +297,15 @@ trait ResourceTestTrait {
 
     \Drupal::service('router.builder')->rebuildIfNeeded();
 
+    return $this->resaveEntity($entity, $account);
+  }
+
+  protected function resaveEntity(EntityInterface $entity, AccountInterface $account): EntityInterface {
     // Reload entity so that it has the new field.
     $reloaded_entity = $this->entityLoadUnchanged($entity->id());
     // Some entity types are not stored, hence they cannot be reloaded.
     if ($reloaded_entity !== NULL) {
       $entity = $reloaded_entity;
-
       // Set a default value on the fields.
       $entity->set('field_rest_test', ['value' => 'All the faith he had had had had no effect on the outcome of his life.']);
       $entity->set('field_jsonapi_test_entity_ref', ['user' => $account->id()]);
@@ -391,9 +396,19 @@ trait ResourceTestTrait {
     if ($label_key = $original->getEntityType()->getKey('label')) {
       $duplicate->set($label_key, $original->label() . '_' . $key);
     }
-    if ($duplicate instanceof ConfigEntityInterface && $id_key = $duplicate->getEntityType()->getKey('id')) {
-      $id = $original->id();
-      $duplicate->set($id_key, $id . '_' . $key);
+
+    $id_key = $duplicate->getEntityType()->getKey('id');
+    $needs_manual_id = $duplicate instanceof ConfigEntityInterface && $id_key;
+
+    if ($duplicate instanceof FieldableEntityInterface && $id_key) {
+      $id_field = $duplicate->getFieldDefinition($id_key);
+      if ($id_field->getType() !== 'integer') {
+        $needs_manual_id = TRUE;
+      }
+    }
+
+    if ($needs_manual_id) {
+      $duplicate->set($id_key, $original->id() . '_' . $key);
     }
     return $duplicate;
   }
@@ -442,7 +457,7 @@ trait ResourceTestTrait {
   protected function getExpectedUnauthorizedAccessCacheability() {
     return (new CacheableMetadata())
       ->setCacheTags(['4xx-response', 'http_response'])
-      ->setCacheContexts(['url.site', 'user.permissions'])
+      ->setCacheContexts(['url.query_args', 'url.site', 'user.permissions'])
       ->addCacheContexts($this->entity->getEntityType()->isRevisionable()
         ? ['url.query_args:resourceVersion']
         : []
@@ -461,7 +476,7 @@ trait ResourceTestTrait {
    *
    * @see ::testGetIndividual()
    */
-  protected function getExpectedCacheTags(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheTags(?array $sparse_fieldset = NULL) {
     $expected_cache_tags = [
       'http_response',
     ];
@@ -490,11 +505,10 @@ trait ResourceTestTrait {
    *
    * @see ::testGetIndividual()
    */
-  protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
     $cache_contexts = [
       // Cache contexts for JSON:API URL query parameters.
-      'url.query_args:fields',
-      'url.query_args:include',
+      'url.query_args',
       // Drupal defaults.
       'url.site',
       'user.permissions',
@@ -521,7 +535,7 @@ trait ResourceTestTrait {
    * @return \Drupal\Core\Cache\CacheableMetadata
    *   The expected cacheability for the given entity collection.
    */
-  protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, array $sparse_fieldset = NULL, $filtered = FALSE) {
+  protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, ?array $sparse_fieldset = NULL, $filtered = FALSE) {
     $cacheability = array_reduce($collection, function (CacheableMetadata $cacheability, EntityInterface $entity) use ($sparse_fieldset, $account) {
       $access_result = static::entityAccess($entity, 'view', $account);
       if (!$access_result->isAllowed()) {
@@ -555,11 +569,7 @@ trait ResourceTestTrait {
     $cacheability->addCacheTags($entity_type->getListCacheTags());
     $cache_contexts = [
       // Cache contexts for JSON:API URL query parameters.
-      'url.query_args:fields',
-      'url.query_args:filter',
-      'url.query_args:include',
-      'url.query_args:page',
-      'url.query_args:sort',
+      'url.query_args',
       // Drupal defaults.
       'url.site',
     ];
@@ -641,6 +651,8 @@ trait ResourceTestTrait {
   /**
    * Asserts that a resource response has the given status code and body.
    *
+   * Cache max-age is not yet considered when expected header is calculated.
+   *
    * @param int $expected_status_code
    *   The expected response status.
    * @param array|null|false $expected_document
@@ -655,16 +667,17 @@ trait ResourceTestTrait {
    *   (optional) The expected cache contexts in the X-Drupal-Cache-Contexts
    *   response header, or FALSE if that header should be absent. Defaults to
    *   FALSE.
-   * @param string|false $expected_page_cache_header_value
-   *   (optional) The expected X-Drupal-Cache response header value, or FALSE if
-   *   that header should be absent. Possible strings: 'MISS', 'HIT'. Defaults
-   *   to FALSE.
-   * @param string|false $expected_dynamic_page_cache_header_value
-   *   (optional) The expected X-Drupal-Dynamic-Cache response header value, or
-   *   FALSE if that header should be absent. Possible strings: 'MISS', 'HIT'.
-   *   Defaults to FALSE.
+   * @param 'MISS','HIT','UNCACHEABLE (request policy)','UNCACHEABLE (response policy)'|NULL $expected_page_cache_header_value
+   *   (optional) The expected X-Drupal-Cache response header value, or NULL
+   *   in case of no opinion on that. For possible string values, see the
+   *   parameter type hint. Defaults to NULL.
+   * @param 'HIT','MISS','UNCACHEABLE (poor cacheability)','UNCACHEABLE (no cacheability)','UNCACHEABLE (request policy)','UNCACHEABLE (response policy)'|bool $expected_dynamic_page_cache_header_value
+   *   (optional) The expected X-Drupal-Dynamic-Cache response header value
+   *   - for possible string values, see the parameter type hint - or TRUE when
+   *   the value should be autogenerated from expected cache contexts, or FALSE
+   *   if that header should be absent. Defaults to FALSE.
    */
-  protected function assertResourceResponse($expected_status_code, $expected_document, ResponseInterface $response, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
+  protected function assertResourceResponse($expected_status_code, $expected_document, ResponseInterface $response, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = NULL, $expected_dynamic_page_cache_header_value = FALSE) {
     $this->assertSame($expected_status_code, $response->getStatusCode(), var_export(Json::decode((string) $response->getBody()), TRUE));
     if ($expected_status_code === 204) {
       // DELETE responses should not include a Content-Type header. But Apache
@@ -677,7 +690,7 @@ trait ResourceTestTrait {
     else {
       $this->assertSame(['application/vnd.api+json'], $response->getHeader('Content-Type'));
       if ($expected_document !== FALSE) {
-        $response_document = Json::decode((string) $response->getBody());
+        $response_document = $this->getDocumentFromResponse($response, FALSE);
         if ($expected_document === NULL) {
           $this->assertNull($response_document);
         }
@@ -708,21 +721,18 @@ trait ResourceTestTrait {
     }
 
     // Expected Page Cache header value: X-Drupal-Cache header.
-    if ($expected_page_cache_header_value !== FALSE) {
+    if ($expected_page_cache_header_value !== NULL) {
       $this->assertTrue($response->hasHeader('X-Drupal-Cache'));
       $this->assertSame($expected_page_cache_header_value, $response->getHeader('X-Drupal-Cache')[0]);
     }
-    else {
-      $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
-    }
 
     // Expected Dynamic Page Cache header value: X-Drupal-Dynamic-Cache header.
-    if ($expected_dynamic_page_cache_header_value !== FALSE) {
-      $this->assertTrue($response->hasHeader('X-Drupal-Dynamic-Cache'));
-      $this->assertSame($expected_dynamic_page_cache_header_value, $response->getHeader('X-Drupal-Dynamic-Cache')[0]);
+    if ($expected_dynamic_page_cache_header_value === FALSE) {
+      $this->assertFalse($response->hasHeader('X-Drupal-Dynamic-Cache'));
     }
     else {
-      $this->assertFalse($response->hasHeader('X-Drupal-Dynamic-Cache'));
+      $this->assertTrue($response->hasHeader('X-Drupal-Dynamic-Cache'));
+      $this->assertSame($expected_dynamic_page_cache_header_value === TRUE ? $this->generateDynamicPageCacheExpectedHeaderValue($expected_cache_contexts) : $expected_dynamic_page_cache_header_value, $response->getHeader('X-Drupal-Dynamic-Cache')[0]);
     }
   }
 
@@ -770,6 +780,8 @@ trait ResourceTestTrait {
   /**
    * Asserts that a resource error response has the given message.
    *
+   * Cache max-age is not yet considered when expected header is calculated.
+   *
    * @param int $expected_status_code
    *   The expected response status.
    * @param string $expected_message
@@ -789,16 +801,17 @@ trait ResourceTestTrait {
    *   (optional) The expected cache contexts in the X-Drupal-Cache-Contexts
    *   response header, or FALSE if that header should be absent. Defaults to
    *   FALSE.
-   * @param string|false $expected_page_cache_header_value
-   *   (optional) The expected X-Drupal-Cache response header value, or FALSE if
-   *   that header should be absent. Possible strings: 'MISS', 'HIT'. Defaults
-   *   to FALSE.
-   * @param string|false $expected_dynamic_page_cache_header_value
-   *   (optional) The expected X-Drupal-Dynamic-Cache response header value, or
-   *   FALSE if that header should be absent. Possible strings: 'MISS', 'HIT'.
-   *   Defaults to FALSE.
+   * @param 'MISS','HIT','UNCACHEABLE (request policy)','UNCACHEABLE (response policy)'|NULL $expected_page_cache_header_value
+   *   (optional) The expected X-Drupal-Cache response header value, or NULL
+   *   in case of no opinion on that. For possible string values, see the
+   *   parameter type hint. Defaults to NULL.
+   * @param 'HIT','MISS','UNCACHEABLE (poor cacheability)','UNCACHEABLE (no cacheability)','UNCACHEABLE (request policy)','UNCACHEABLE (response policy)'|bool $expected_dynamic_page_cache_header_value
+   *   (optional) The expected X-Drupal-Dynamic-Cache response header value
+   *   - for possible string values, see the parameter type hint - or TRUE when
+   *   the value should be autogenerated from expected cache contexts, or FALSE
+   *   if that header should be absent. Defaults to FALSE.
    */
-  protected function assertResourceErrorResponse($expected_status_code, $expected_message, $via_link, ResponseInterface $response, $pointer = FALSE, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
+  protected function assertResourceErrorResponse($expected_status_code, $expected_message, $via_link, ResponseInterface $response, $pointer = FALSE, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = NULL, $expected_dynamic_page_cache_header_value = FALSE) {
     assert(is_null($via_link) || $via_link instanceof Url);
     $expected_error = [];
     if (!empty(Response::$statusTexts[$expected_status_code])) {
@@ -894,7 +907,7 @@ trait ResourceTestTrait {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function getExpectedCollectionResponse(array $collection, $self_link, array $request_options, array $included_paths = NULL, $filtered = FALSE) {
+  protected function getExpectedCollectionResponse(array $collection, $self_link, array $request_options, ?array $included_paths = NULL, $filtered = FALSE) {
     $resource_identifiers = array_map([static::class, 'toResourceIdentifier'], $collection);
     $individual_responses = static::toResourceResponses($this->getResponses(static::getResourceLinks($resource_identifiers), $request_options));
     $merged_response = static::toCollectionResourceResponse($individual_responses, $self_link, TRUE);
@@ -962,16 +975,17 @@ trait ResourceTestTrait {
       // Dynamic Page Cache miss because cache should vary based on the
       // 'include' query param.
       $expected_cacheability = $expected_resource_response->getCacheableMetadata();
+      $expected_dynamic_page_cache_header_value = $this->generateDynamicPageCacheExpectedHeaderValue($expected_cacheability->getCacheContexts(), $expected_cacheability->getCacheMaxAge());
       $this->assertResourceResponse(
         $expected_resource_response->getStatusCode(),
         $expected_resource_response->getResponseData(),
         $actual_response,
         $expected_cacheability->getCacheTags(),
         $expected_cacheability->getCacheContexts(),
-        FALSE,
+        NULL,
         $actual_response->getStatusCode() === 200
-          ? ($expected_cacheability->getCacheMaxAge() === 0 ? 'UNCACHEABLE' : 'MISS')
-          : FALSE
+          ? $expected_dynamic_page_cache_header_value
+          : ($expected_dynamic_page_cache_header_value === 'MISS' ? FALSE : $expected_dynamic_page_cache_header_value)
       );
     }
   }
@@ -999,14 +1013,15 @@ trait ResourceTestTrait {
       $expected_document = $expected_resource_response->getResponseData();
       $expected_cacheability = $expected_resource_response->getCacheableMetadata();
       $actual_response = $related_responses[$relationship_field_name];
+      $expected_dynamic_page_cache_header_value = $this->generateDynamicPageCacheExpectedHeaderValue($expected_cacheability->getCacheContexts(), $expected_cacheability->getCacheMaxAge());
       $this->assertResourceResponse(
         $expected_resource_response->getStatusCode(),
         $expected_document,
         $actual_response,
         $expected_cacheability->getCacheTags(),
         $expected_cacheability->getCacheContexts(),
-        FALSE,
-        $expected_resource_response->isSuccessful() ? 'MISS' : FALSE
+        NULL,
+        $expected_dynamic_page_cache_header_value === 'MISS' && !$expected_resource_response->isSuccessful() ? FALSE : $expected_dynamic_page_cache_header_value
       );
     }
   }
@@ -1193,7 +1208,8 @@ trait ResourceTestTrait {
       $resource->set($relationship_field_name, [$target_resource]);
       $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $resource);
       $response = $this->request('GET', $url, $request_options);
-      $this->assertSameDocument($expected_document, Json::decode((string) $response->getBody()));
+      $document = $this->getDocumentFromResponse($response);
+      $this->assertSameDocument($expected_document, $document);
 
       // Test DELETE: one existing relationship, removed.
       $request_options[RequestOptions::BODY] = Json::encode(['data' => [$target_identifier]]);
@@ -1202,7 +1218,8 @@ trait ResourceTestTrait {
       $this->assertResourceResponse(204, NULL, $response);
       $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $resource);
       $response = $this->request('GET', $url, $request_options);
-      $this->assertSameDocument($expected_document, Json::decode((string) $response->getBody()));
+      $document = $this->getDocumentFromResponse($response);
+      $this->assertSameDocument($expected_document, $document);
 
       // Test DELETE: no existing relationships, no op, success.
       $request_options[RequestOptions::BODY] = Json::encode(['data' => [$target_identifier]]);
@@ -1210,7 +1227,8 @@ trait ResourceTestTrait {
       $this->assertResourceResponse(204, NULL, $response);
       $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $resource);
       $response = $this->request('GET', $url, $request_options);
-      $this->assertSameDocument($expected_document, Json::decode((string) $response->getBody()));
+      $document = $this->getDocumentFromResponse($response);
+      $this->assertSameDocument($expected_document, $document);
 
       // Test PATCH: success, new value is different than existing value.
       $request_options[RequestOptions::BODY] = Json::encode([
@@ -1238,7 +1256,8 @@ trait ResourceTestTrait {
       $resource->set($relationship_field_name, []);
       $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $resource);
       $response = $this->request('GET', $url, $request_options);
-      $this->assertSameDocument($expected_document, Json::decode((string) $response->getBody()));
+      $document = $this->getDocumentFromResponse($response);
+      $this->assertSameDocument($expected_document, $document);
     }
     else {
       $request_options[RequestOptions::BODY] = Json::encode(['data' => [$target_identifier]]);
@@ -1268,9 +1287,9 @@ trait ResourceTestTrait {
    * @return \Drupal\jsonapi\CacheableResourceResponse
    *   The expected ResourceResponse.
    */
-  protected function getExpectedGetRelationshipResponse($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipResponse($relationship_field_name, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
-    $access = AccessResult::neutral()->addCacheContexts($entity->getEntityType()->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
+    $access = AccessResult::neutral()->addCacheContexts($entity->getEntityType()->isRevisionable() ? ['url.query_args'] : []);
     $access = $access->orIf(static::entityFieldAccess($entity, $this->resourceType->getInternalName($relationship_field_name), 'view', $this->account));
     if (!$access->isAllowed()) {
       $via_link = Url::fromRoute(
@@ -1284,8 +1303,7 @@ trait ResourceTestTrait {
       ->addCacheTags(['http_response'])
       ->addCacheContexts([
         'url.site',
-        'url.query_args:include',
-        'url.query_args:fields',
+        'url.query_args',
       ])
       ->addCacheableDependency($entity)
       ->addCacheableDependency($access);
@@ -1306,7 +1324,7 @@ trait ResourceTestTrait {
    * @return array
    *   The expected document array.
    */
-  protected function getExpectedGetRelationshipDocument($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipDocument($relationship_field_name, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $entity_type_id = $entity->getEntityTypeId();
     $bundle = $entity->bundle();
@@ -1340,7 +1358,7 @@ trait ResourceTestTrait {
    * @return mixed
    *   The expected document data.
    */
-  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $internal_field_name = $this->resourceType->getInternalName($relationship_field_name);
     /** @var \Drupal\Core\Field\FieldItemListInterface $field */
@@ -1454,7 +1472,7 @@ trait ResourceTestTrait {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function getExpectedRelatedResponses(array $relationship_field_names, array $request_options, EntityInterface $entity = NULL) {
+  protected function getExpectedRelatedResponses(array $relationship_field_names, array $request_options, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     return array_map(function ($relationship_field_name) use ($entity, $request_options) {
       return $this->getExpectedRelatedResponse($relationship_field_name, $request_options, $entity);
@@ -1482,7 +1500,7 @@ trait ResourceTestTrait {
     // every related resource.
     $base_resource_identifier = static::toResourceIdentifier($entity);
     $internal_name = $this->resourceType->getInternalName($relationship_field_name);
-    $access = AccessResult::neutral()->addCacheContexts($entity->getEntityType()->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
+    $access = AccessResult::neutral()->addCacheContexts($entity->getEntityType()->isRevisionable() ? ['url.query_args'] : []);
     $access = $access->orIf(static::entityFieldAccess($entity, $internal_name, 'view', $this->account));
     if (!$access->isAllowed()) {
       $detail = 'The current user is not allowed to view this relationship.';
@@ -1504,8 +1522,7 @@ trait ResourceTestTrait {
       if (empty($relationship_document['data'])) {
         $cache_contexts = Cache::mergeContexts([
           // Cache contexts for JSON:API URL query parameters.
-          'url.query_args:fields',
-          'url.query_args:include',
+          'url.query_args',
           // Drupal defaults.
           'url.site',
         ], $this->entity->getEntityType()->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
@@ -1700,24 +1717,20 @@ trait ResourceTestTrait {
       $expected_document['links']['self']['href'] = $url->setAbsolute()->toString();
 
       $response = $this->request('GET', $url, $request_options);
-      // Dynamic Page Cache MISS because cache should vary based on the 'field'
-      // query param. (Or uncacheable if expensive cache context.)
-      $dynamic_cache = !empty(array_intersect(['user', 'session'], $expected_cacheability->getCacheContexts())) ? 'UNCACHEABLE' : 'MISS';
       $this->assertResourceResponse(
         200,
         $expected_document,
         $response,
         $expected_cacheability->getCacheTags(),
         $expected_cacheability->getCacheContexts(),
-        FALSE,
-        $dynamic_cache
+        'UNCACHEABLE (request policy)',
+       TRUE,
       );
     }
     // Test Dynamic Page Cache HIT for a query with the same field set (unless
     // expensive cache context is present).
     $response = $this->request('GET', $url, $request_options);
-    $dynamic_cache = !empty(array_intersect(['user', 'session'], $expected_cacheability->getCacheContexts())) ? 'UNCACHEABLE' : 'MISS';
-    $this->assertResourceResponse(200, FALSE, $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, $dynamic_cache === 'MISS' ? 'HIT' : 'UNCACHEABLE');
+    $this->assertResourceResponse(200, FALSE, $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'UNCACHEABLE (request policy)', $this->generateDynamicPageCacheExpectedHeaderValue($expected_cacheability->getCacheContexts()) === 'MISS' ? 'HIT' : 'UNCACHEABLE (poor cacheability)');
   }
 
   /**
@@ -1742,7 +1755,7 @@ trait ResourceTestTrait {
       'all' => $relationship_field_names,
     ];
     if (count($relationship_field_names) > 1) {
-      $about_half_the_fields = floor(count($relationship_field_names) / 2);
+      $about_half_the_fields = (int) floor(count($relationship_field_names) / 2);
       $field_sets['some'] = array_slice($relationship_field_names, $about_half_the_fields);
 
       $nested_includes = $this->getNestedIncludePaths();
@@ -1761,16 +1774,14 @@ trait ResourceTestTrait {
       // Dynamic Page Cache miss because cache should vary based on the
       // 'include' query param.
       $expected_cacheability = $expected_response->getCacheableMetadata();
-      // MISS or UNCACHEABLE depends on data. It must not be HIT.
-      $dynamic_cache = ($expected_cacheability->getCacheMaxAge() === 0 || !empty(array_intersect(['user', 'session'], $this->getExpectedCacheContexts()))) ? 'UNCACHEABLE' : 'MISS';
       $this->assertResourceResponse(
         200,
         $expected_document,
         $actual_response,
         $expected_cacheability->getCacheTags(),
         $expected_cacheability->getCacheContexts(),
-        FALSE,
-        $dynamic_cache
+        NULL,
+        $this->generateDynamicPageCacheExpectedHeaderValue($this->getExpectedCacheContexts(), $expected_cacheability->getCacheMaxAge())
       );
     }
   }
@@ -1845,7 +1856,7 @@ trait ResourceTestTrait {
     $field_names = array_keys($this->entity->toArray());
     $field_sets = [
       'empty' => [],
-      'some' => array_slice($field_names, floor(count($field_names) / 2)),
+      'some' => array_slice($field_names, (int) floor(count($field_names) / 2)),
       'all' => $field_names,
     ];
     if ($this->entity instanceof EntityOwnerInterface) {
@@ -1864,7 +1875,7 @@ trait ResourceTestTrait {
    * @return array
    *   An array of relationship field names.
    */
-  protected function getRelationshipFieldNames(EntityInterface $entity = NULL) {
+  protected function getRelationshipFieldNames(?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     // Only content entity types can have relationships.
     $fields = $entity instanceof ContentEntityInterface
@@ -1988,7 +1999,7 @@ trait ResourceTestTrait {
    *   TRUE if the field definition is found to be a reference field. FALSE
    *   otherwise.
    */
-  protected static function isReferenceFieldDefinition(FieldDefinitionInterface $field_definition) {
+  protected static function isReferenceFieldDefinition(FieldDefinitionInterface $field_definition): bool {
     /** @var \Drupal\Core\Field\TypedData\FieldItemDataDefinition $item_definition */
     $item_definition = $field_definition->getItemDefinition();
     $main_property = $item_definition->getMainPropertyName();
