@@ -320,7 +320,7 @@ class TermTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, ?EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, ?EntityInterface $entity = NULL): ?array {
     $data = parent::getExpectedGetRelationshipDocumentData($relationship_field_name, $entity);
     if ($relationship_field_name === 'parent') {
       $data = [
