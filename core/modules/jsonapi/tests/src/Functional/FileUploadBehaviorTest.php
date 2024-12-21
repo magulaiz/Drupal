@@ -35,7 +35,15 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'file'];
+  protected static $modules = [
+    'entity_test',
+    'file',
+    'jsonapi',
+    'basic_auth',
+    'rest_test',
+    'jsonapi_test_field_access',
+    'text',
+  ];
 
   /**
    * {@inheritdoc}
