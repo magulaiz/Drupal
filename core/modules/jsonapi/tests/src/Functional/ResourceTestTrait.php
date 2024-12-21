@@ -1054,7 +1054,7 @@ trait ResourceTestTrait {
    * @see \GuzzleHttp\ClientInterface::request()
    * @see ::testRelationships
    */
-  protected function doTestRelationshipMutation(array $request_options) {
+  protected function doTestRelationshipMutation(array $request_options): void {
     /** @var \Drupal\Core\Entity\FieldableEntityInterface $resource */
     $resource = $this->createAnotherEntity('dupe');
     $resource->set('field_jsonapi_test_entity_ref', NULL);
@@ -1306,7 +1306,7 @@ trait ResourceTestTrait {
    * @return \Drupal\jsonapi\CacheableResourceResponse
    *   The expected ResourceResponse.
    */
-  protected function getExpectedGetRelationshipResponse($relationship_field_name, ?EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipResponse($relationship_field_name, ?EntityInterface $entity = NULL): CacheableResourceResponse {
     $entity = $entity ?: $this->entity;
     $access = AccessResult::neutral()->addCacheContexts($entity->getEntityType()->isRevisionable() ? ['url.query_args'] : []);
     $access = $access->orIf(static::entityFieldAccess($entity, $this->resourceType->getInternalName($relationship_field_name), 'view', $this->account));
@@ -1374,10 +1374,10 @@ trait ResourceTestTrait {
    * @param \Drupal\Core\Entity\EntityInterface|null $entity
    *   (optional) The entity for which to get expected relationship data.
    *
-   * @return mixed
+   * @return ?array
    *   The expected document data.
    */
-  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, ?EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, ?EntityInterface $entity = NULL): ?array {
     $entity = $entity ?: $this->entity;
     $internal_field_name = $this->resourceType->getInternalName($relationship_field_name);
     /** @var \Drupal\Core\Field\FieldItemListInterface $field */
@@ -1583,7 +1583,7 @@ trait ResourceTestTrait {
    * @param array $array
    *   An array to sort.
    */
-  protected static function recursiveKsort(array &$array) {
+  protected static function recursiveKsort(array &$array): void {
     // First, sort the main array.
     ksort($array);
 
@@ -1689,7 +1689,7 @@ trait ResourceTestTrait {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function doTestSparseFieldSets(Url $url, array $request_options) {
+  protected function doTestSparseFieldSets(Url $url, array $request_options): void {
     $field_sets = $this->getSparseFieldSets();
     $expected_cacheability = new CacheableMetadata();
     foreach ($field_sets as $type => $field_set) {
@@ -1762,7 +1762,7 @@ trait ResourceTestTrait {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function doTestIncluded(Url $url, array $request_options) {
+  protected function doTestIncluded(Url $url, array $request_options): void {
     $relationship_field_names = $this->getRelationshipFieldNames($this->entity);
     // If there are no relationship fields, we can't include anything.
     if (empty($relationship_field_names)) {
@@ -2032,7 +2032,7 @@ trait ResourceTestTrait {
    * @param string[] $include_paths
    *   An array of include paths for which to grant access.
    */
-  protected function grantIncludedPermissions(array $include_paths = []) {
+  protected function grantIncludedPermissions(array $include_paths = []): void {
     $applicable_permissions = array_intersect_key(static::getIncludePermissions(), array_flip($include_paths));
     $flattened_permissions = array_unique(array_reduce($applicable_permissions, 'array_merge', []));
     // Always grant access to 'view' the test entity reference field.
@@ -2091,6 +2091,23 @@ trait ResourceTestTrait {
       unset($expected_document['data']['attributes'][$field_name]);
     }
     return $expected_document;
+  }
+
+  /**
+   * Generates an X-Drupal-Dynamic-Cache header value based on cacheability.
+   *
+   * @param array $cache_context
+   *   Cache context.
+   * @param int|null $cache_max_age
+   *   (optional) Cache max age.
+   *
+   * @return 'UNCACHEABLE (poor cacheability)'|'MISS'
+   *   The X-Drupal-Dynamic-Cache header value.
+   */
+  protected function generateDynamicPageCacheExpectedHeaderValue(array $cache_context, ?int $cache_max_age = NULL): string {
+    // MISS or UNCACHEABLE (poor cacheability) depends on data.
+    // It must not be HIT.
+    return $cache_max_age === 0 || !empty(array_intersect(['user', 'session'], $cache_context)) ? 'UNCACHEABLE (poor cacheability)' : 'MISS';
   }
 
 }

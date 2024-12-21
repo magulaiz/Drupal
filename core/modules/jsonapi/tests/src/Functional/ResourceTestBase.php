@@ -1520,21 +1520,4 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
   }
 
-  /**
-   * Generates an X-Drupal-Dynamic-Cache header value based on cacheability.
-   *
-   * @param array $cache_context
-   *   Cache context.
-   * @param int|null $cache_max_age
-   *   (optional) Cache max age.
-   *
-   * @return 'UNCACHEABLE (poor cacheability)'|'MISS'
-   *   The X-Drupal-Dynamic-Cache header value.
-   */
-  protected function generateDynamicPageCacheExpectedHeaderValue(array $cache_context, ?int $cache_max_age = NULL): string {
-    // MISS or UNCACHEABLE (poor cacheability) depends on data.
-    // It must not be HIT.
-    return $cache_max_age === 0 || !empty(array_intersect(['user', 'session'], $cache_context)) ? 'UNCACHEABLE (poor cacheability)' : 'MISS';
-  }
-
 }
