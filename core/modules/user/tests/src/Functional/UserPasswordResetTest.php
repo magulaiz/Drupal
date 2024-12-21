@@ -168,6 +168,13 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->assertValidPasswordReset($edit['name']);
     $this->assertCount($before + 1, $this->drupalGetMails(['id' => 'user_password_reset']), 'Email sent when requesting password reset using email address.');
 
+    // Change the site name.
+    // The site name token in the email will be replaced by this one.
+    \Drupal::configFactory()->getEditable('system.site')->set('name', 'L\'equipe de l\'Agriculture')->save();
+    // Request a new password again using the email address.
+    $this->drupalGet('user/password');
+    $edit = ['name' => $this->account->getEmail()];
+    $this->submitForm($edit, 'Submit');
     // Check that the email message body does not contain HTML entities
     $this->assertTrue($this->checkBodyText(), 'Email body contains HTML entities');
 
