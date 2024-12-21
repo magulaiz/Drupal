@@ -35,7 +35,6 @@ class BlockAddTest extends WebDriverTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'administer blocks',
     ]));
-    $xpath_tab_titles = '//strong[@class="vertical-tabs__menu-item-title"]';
     $this->drupalGet('admin/structure/block/add/system_powered_by_block');
     $assert_session = $this->assertSession();
     // Pick a theme with a region that does not exist in another theme.
@@ -47,12 +46,17 @@ class BlockAddTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('The submitted value Pre-content in the Region element is not allowed.');
     $assert_session->optionExists('Region', '- Select -');
+
+    // Get all block rows, for assertions later.
+    $page = $this->getSession()->getPage();
+    $tabs = $page->findAll('css', '.vertical-tabs__menu-item');
+    // There is only one tab
+    $this->assertCount(1, $tabs);
     // Check whether the text "Response status" or "Not restricted" is present in the tab titles.
-    $assert_session->elementTextNotContains('xpath', $xpath_tab_titles, 'Response statusNotRestricted');
     $assert_session->elementTextNotContains('css', '.vertical-tabs__menu-item-title', 'Not restricted');
 
     // Search for the "Pages" tab link and click it
-    $tab = $this->getSession()->getPage()->find('css', 'a[href="#edit-visibility-request-path"]')->click();
+    $this->getSession()->getPage()->find('css', 'a[href="#edit-visibility-request-path"]')->click();
     // Check that the corresponding form section is open and visible.
     $form_section = $this->getSession()->getPage()->find('css', '#edit-visibility-request-path');
     $this->assertNotEmpty($form_section, 'The "Pages" form section exists.');
