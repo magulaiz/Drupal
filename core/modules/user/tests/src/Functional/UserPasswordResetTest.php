@@ -172,7 +172,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     // The site name token in the email will be replaced by this one.
     // cspell:ignore L'Equipe de l'Agriculture
     $config = $this->config('system.site');
-    $config->set('name', "L'Equipe de l'Agriculture" )->save();
+    $config->set('name', "L'Equipe de l'Agriculture")->save();
     $this->rebuildContainer();
     // Request a new password using the email address.
     $this->drupalGet('user/password');
@@ -181,7 +181,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Check that the email message body does not contain HTML entities
     $this->assertTrue($this->checkBodyText(), 'Email body contains HTML entities');
     // Change site name to 'Drupal'
-    $config->set('name', "Drupal" )->save();
+    $config->set('name', "Drupal")->save();
     $this->rebuildContainer();
     // Visit the user edit page without pass-reset-token and make sure it does
     // not cause an error.
