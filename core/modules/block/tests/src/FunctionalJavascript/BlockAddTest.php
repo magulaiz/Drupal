@@ -35,7 +35,7 @@ class BlockAddTest extends WebDriverTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'administer blocks',
     ]));
-    $xpath_tab_titles = "//strong[@class='vertical-tabs__menu-item-title']";
+    $xpath_tab_titles = '//strong[@class="vertical-tabs__menu-item-title"]';
     $this->drupalGet('admin/structure/block/add/system_powered_by_block');
     $assert_session = $this->assertSession();
     // Pick a theme with a region that does not exist in another theme.
