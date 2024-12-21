@@ -862,7 +862,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessCacheability() {
+  protected function getExpectedUnauthorizedAccessCacheability(): CacheableMetadata {
     // There is cacheability metadata to check as file uploads only allows POST
     // requests, which will not return cacheable responses.
     return new CacheableMetadata();
@@ -871,7 +871,7 @@ class FileUploadBehaviorTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function createEntity() {
+  protected function createEntity(): EntityTest {
     // Create an entity that a file can be attached to.
     $entity_test = EntityTest::create([
       'name' => 'Llama',

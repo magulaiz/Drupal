@@ -289,7 +289,7 @@ trait ResourceResponseTestTrait {
    * @param array $resources
    *   The resource or resource identifier.
    */
-  protected static function sortResourceCollection(array &$resources) {
+  protected static function sortResourceCollection(array &$resources): void {
     usort($resources, function ($a, $b) {
       return strcmp("{$a['type']}:{$a['id']}", "{$b['type']}:{$b['id']}");
     });
@@ -567,7 +567,7 @@ trait ResourceResponseTestTrait {
    * @param array $omitted
    *   The omitted object.
    */
-  protected static function addOmittedObject(array &$document, array $omitted) {
+  protected static function addOmittedObject(array &$document, array $omitted): void {
     if (isset($document['meta']['omitted'])) {
       $document['meta']['omitted'] = static::mergeOmittedObjects($document['meta']['omitted'], $omitted);
     }
@@ -635,7 +635,7 @@ trait ResourceResponseTestTrait {
    * @param array $omitted
    *   An array of JSON:API omitted link objects.
    */
-  protected static function sortOmittedLinks(array &$omitted) {
+  protected static function sortOmittedLinks(array &$omitted): void {
     $help = $omitted['links']['help'];
     $links = array_diff_key($omitted['links'], array_flip(['help']));
     uasort($links, function ($a, $b) {
@@ -654,7 +654,7 @@ trait ResourceResponseTestTrait {
    * @param array $omitted
    *   An array of JSON:API omitted link objects.
    */
-  protected static function resetOmittedLinkKeys(array &$omitted) {
+  protected static function resetOmittedLinkKeys(array &$omitted): void {
     $help = $omitted['links']['help'];
     $reindexed = [];
     $links = array_diff_key($omitted['links'], array_flip(['help']));
