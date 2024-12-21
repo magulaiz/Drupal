@@ -47,19 +47,17 @@ class BlockAddTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('The submitted value Pre-content in the Region element is not allowed.');
     $assert_session->optionExists('Region', '- Select -');
 
-    // Get all block rows, for assertions later.
-    $page = $this->getSession()->getPage();
-    $tabs = $page->findAll('css', '.vertical-tabs__menu-item');
-    // There is only one tab
-    $this->assertCount(1, $tabs);
-    // Check whether the text "Response status" or "Not restricted" is present in the tab titles.
+    $tabs = $this->getSession()->getPage()->findAll('css', '.vertical-tabs__menu-item');
+    // Check if there is only one tab
+    $this->assertCount(1, $tabs, 'the number of elements found was not 1');
+    // Check whether the text "Not restricted" is present in the tab titles.
     $assert_session->elementTextNotContains('css', '.vertical-tabs__menu-item-title', 'Not restricted');
 
     // Search for the "Pages" tab link and click it
     $this->getSession()->getPage()->find('css', 'a[href="#edit-visibility-request-path"]')->click();
     // Check that the corresponding form section is open and visible.
     $form_section = $this->getSession()->getPage()->find('css', '#edit-visibility-request-path');
-    $this->assertNotEmpty($form_section, 'The "Pages" form section exists.');
+    $this->assertEmpty($form_section, 'The "Pages" form section exists.');
     $this->assertTrue($form_section->isVisible(), 'The "Pages" form section is visible after clicking the tab.');
   }
 
