@@ -178,7 +178,8 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     // Check that the email message body does not contain HTML entities
     $this->assertTrue($this->checkBodyText(), 'Email body contains HTML entities');
-
+    // Change site name to 'Drupal'
+    \Drupal::configFactory()->getEditable('system.site')->set('name', 'Drupal')->save();
     // Visit the user edit page without pass-reset-token and make sure it does
     // not cause an error.
     $resetURL = $this->getResetURL();
