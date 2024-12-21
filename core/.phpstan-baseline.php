@@ -15846,48 +15846,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\LayoutBuilderContentModerationIntegrationTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/LayoutBuilderContentModerationIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ModeratedContentViewTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModeratedContentViewTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ModerationActionsTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationActionsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ModerationContentTranslationTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationContentTranslationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ModerationRevisionRevertTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationRevisionRevertTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ModerationStateAccessTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationStateAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ModerationStateTestBase\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationStateTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ModerationStateTestBase\\:\\:createContentTypeFromUi\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationStateTestBase.php',
@@ -15903,12 +15861,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ModerationStateTestBase\\:\\:grantUserPermissionToCreateContentOfType\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationStateTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ViewsModerationStateFilterTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ViewsModerationStateFilterTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -15936,24 +15888,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ContentModerationAccessTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ContentModerationAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ContentModerationResaveTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ContentModerationResaveTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ContentModerationStateStorageSchemaTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ContentModerationStateStorageSchemaTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ContentModerationStateTest\\:\\:addBaseField\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ContentModerationStateTest.php',
@@ -15973,12 +15907,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ContentModerationStateTest\\:\\:addEntityIndex\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ContentModerationStateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ContentModerationStateTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ContentModerationStateTest.php',
 ];
@@ -16140,69 +16068,15 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ContentModerationSyncingTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ContentModerationSyncingTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ContentModerationWorkflowConfigTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ContentModerationWorkflowConfigTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\DefaultRevisionStateTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/DefaultRevisionStateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\EntityOperationsTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/EntityOperationsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\EntityStateChangeValidationTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/EntityStateChangeValidationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\EntityStateChangeValidationTest\\:\\:transitionAccessValidationTestCases\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/EntityStateChangeValidationTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\EntityTypeInfoTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/EntityTypeInfoTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\InitialStateTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/InitialStateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ModerationInformationTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ModerationInformationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ModerationInformationTest\\:\\:isDefaultRevisionPublishedTestCases\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ModerationInformationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ModerationStateFieldItemListTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ModerationStateFieldItemListTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -16224,45 +16098,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ModerationStateWidgetTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ModerationStateWidgetTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\NodeAccessTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/NodeAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\StateFormatterTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/StateFormatterTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\StateFormatterTest\\:\\:formatterTestCases\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/StateFormatterTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ViewsDataIntegrationTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ViewsDataIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ViewsModerationStateFilterTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ViewsModerationStateFilterTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ViewsModerationStateSortTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ViewsModerationStateSortTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -16291,12 +16129,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\WorkspacesContentModerationStateTest\\:\\:switchToWorkspace\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\WorkspacesContentModerationStateTest\\:\\:traitAddEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php',
 ];
@@ -16593,12 +16425,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationLanguageChangeTest\\:\\:createImageField\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationLanguageChangeTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationPendingRevisionTestBase\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationPendingRevisionTestBase.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -22014,121 +21840,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:addOmittedObject\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:assertResourceErrorResponse\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:assertResourceResponse\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:assertSameDocument\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:doTestIncluded\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:doTestRelated\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:doTestRelationshipGet\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:doTestRelationshipMutation\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:doTestSparseFieldSets\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:getEntityDuplicate\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:grantIncludedPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:grantPermissionsToTestedRole\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:recursiveKsort\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:resetOmittedLinkKeys\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:revokePermissionsFromTestedRole\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:setUpAuthorization\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:setUpRevisionAuthorization\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:sortOmittedLinks\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:sortResourceCollection\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
 ];
@@ -26646,12 +26358,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media_library\\\\FunctionalJavascript\\\\ContentModerationTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/ContentModerationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\media_library\\\\FunctionalJavascript\\\\ContentModerationTest\\:\\:createEntityReferenceField\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/ContentModerationTest.php',
@@ -27189,12 +26895,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\menu_ui\\\\MenuForm\\:\\:submitOverviewForm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_ui/src/MenuForm.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_ui\\\\Functional\\\\MenuUiContentModerationTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/tests/src/Functional/MenuUiContentModerationTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -28629,12 +28329,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal\\\\Kernel\\\\d6\\\\MigrateDrupal6AuditIdsTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Kernel/d6/MigrateDrupal6AuditIdsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal\\\\Kernel\\\\d6\\\\MigrateDrupal6AuditIdsTest\\:\\:createContent\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Kernel/d6/MigrateDrupal6AuditIdsTest.php',
@@ -28752,12 +28446,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal\\\\Kernel\\\\d7\\\\FollowUpMigrationsTest\\:\\:providerTestEntityReferenceTranslations\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Kernel/d7/FollowUpMigrationsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal\\\\Kernel\\\\d7\\\\MigrateDrupal7AuditIdsTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Kernel/d7/MigrateDrupal7AuditIdsTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -31274,12 +30962,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Functional\\\\PathContentModerationTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathContentModerationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Functional\\\\PathTestBase\\:\\:assertPathAliasExists\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathTestBase.php',
@@ -31289,12 +30971,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Functional\\\\PathTestBase\\:\\:assertPathAliasNotExists\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Functional\\\\PathWithNodeAccessGrantsTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathWithNodeAccessGrantsTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -32219,12 +31895,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\EntityResource\\\\ModeratedNode\\\\ModeratedNodeJsonCookieTest\\:\\:initAuthentication\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/rest/tests/src/Functional/EntityResource/ModeratedNode/ModeratedNodeJsonCookieTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\EntityResource\\\\ModeratedNode\\\\ModeratedNodeResourceTestBase\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/EntityResource/ModeratedNode/ModeratedNodeResourceTestBase.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -41516,12 +41186,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Functional\\\\Rest\\\\VocabularyXmlCookieTest\\:\\:initAuthentication\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/Rest/VocabularyXmlCookieTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Functional\\\\TaxonomyTermContentModerationTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/TaxonomyTermContentModerationTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
