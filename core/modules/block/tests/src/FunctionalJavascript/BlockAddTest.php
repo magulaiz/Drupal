@@ -35,6 +35,7 @@ class BlockAddTest extends WebDriverTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'administer blocks',
     ]));
+
     $this->drupalGet('admin/structure/block/add/system_powered_by_block');
     $assert_session = $this->assertSession();
     // Pick a theme with a region that does not exist in another theme.
@@ -46,18 +47,16 @@ class BlockAddTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('The submitted value Pre-content in the Region element is not allowed.');
     $assert_session->optionExists('Region', '- Select -');
-
-    $tabs = $this->getSession()->getPage()->findAll('css', '.vertical-tabs__menu-item');
-    // Check if there is only one tab
-    $this->assertCount(1, $tabs, 'the number of elements found was not 1');
-    // Check whether the text "Not restricted" is present in the tab titles.
-    $assert_session->elementTextNotContains('css', '.vertical-tabs__menu-item-title', 'Not restricted');
+    // Check that the summary line is not present in the title.
+    $summary_text = $this->getSession()->getPage()->find('css', 'li.vertical-tabs__menu-item:nth-child(1) > a:nth-child(1) > span:nth-child(2)')->getText();
+    $assert_session->elementTextContains('css', '.vertical-tabs__menu-item-title', 'Response status');
+    $assert_session->elementTextNotContains('css', '.vertical-tabs__menu-item-title', $summary_text);
 
     // Search for the "Pages" tab link and click it
-    $this->getSession()->getPage()->find('css', 'a[href="#edit-visibility-request-path"]')->click();
+    $tab = $this->getSession()->getPage()->find('css', 'a[href="#edit-visibility-request-path"]')->click();
     // Check that the corresponding form section is open and visible.
     $form_section = $this->getSession()->getPage()->find('css', '#edit-visibility-request-path');
-    $this->assertEmpty($form_section, 'The "Pages" form section exists.');
+    $this->assertNotEmpty($form_section, 'The "Pages" form section exists.');
     $this->assertTrue($form_section->isVisible(), 'The "Pages" form section is visible after clicking the tab.');
   }
 
