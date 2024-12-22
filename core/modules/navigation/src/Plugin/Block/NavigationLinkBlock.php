@@ -282,7 +282,7 @@ final class NavigationLinkBlock extends BlockBase {
           'class' => $config['icon_class'],
           'url' => $url,
         ],
-      ],
+        ],
       ];
     }
   }
