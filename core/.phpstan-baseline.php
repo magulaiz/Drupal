@@ -25792,7 +25792,16 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 =======
 	// identifier: missingType.return
+<<<<<<< HEAD
 >>>>>>> 2dd2296caf5 (Stan)
+=======
+	'message' => '#^Function media_theme_suggestions_media\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/media/media.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+>>>>>>> 5440b370044 (baseline)
 	'message' => '#^Method Drupal\\\\media\\\\Controller\\\\MediaFilterController\\:\\:checkCsrf\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -35206,7 +35215,40 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 =======
 	// identifier: missingType.return
+<<<<<<< HEAD
 >>>>>>> 2dd2296caf5 (Stan)
+=======
+	'message' => '#^Function system_theme_suggestions_field\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/system.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function system_theme_suggestions_html\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/system.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function system_theme_suggestions_maintenance_page\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/system.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function system_theme_suggestions_page\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/system.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function system_theme_suggestions_region\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/system.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+>>>>>>> 5440b370044 (baseline)
 	'message' => '#^Function system_post_update_sdc_uninstall\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -39178,7 +39220,28 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 =======
 	// identifier: missingType.return
+<<<<<<< HEAD
 >>>>>>> 2dd2296caf5 (Stan)
+=======
+	'message' => '#^Function theme_test_theme_suggestions_node\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/theme_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function theme_test_theme_suggestions_theme_test_preprocess_suggestions\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/theme_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function theme_test_theme_suggestions_theme_test_suggestion_provided\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/theme_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+>>>>>>> 5440b370044 (baseline)
 	'message' => '#^Method Drupal\\\\trusted_hosts_test\\\\Controller\\\\TrustedHostsTestController\\:\\:bagType\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
