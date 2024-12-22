@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the regression of issue #3440848.
+ *
+ * @group Database
  */
 class TransactionManagerRegressionTest extends KernelTestBase {
 
