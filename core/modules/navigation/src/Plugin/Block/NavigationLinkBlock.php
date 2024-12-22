@@ -247,7 +247,7 @@ final class NavigationLinkBlock extends BlockBase {
     if (str_contains($config['uri'], 'help') && !\Drupal::moduleHandler()->moduleExists('help')) {
       // Return an empty array, so the Help link is not displayed
       return $build;
-     }
+    }
     // Ensure that user has access to link before rendering it.
     try {
       $url = Url::fromUri($config['uri']);
@@ -273,17 +273,17 @@ final class NavigationLinkBlock extends BlockBase {
       }
 
       return $build + [
-      '#title' => $config['label'],
-      '#theme' => 'navigation_menu',
-      '#menu_name' => 'link',
-      '#items' => [
+        '#title' => $config['label'],
+        '#theme' => 'navigation_menu',
+        '#menu_name' => 'link',
+        '#items' => [
         [
           'title' => $config['title'],
           'class' => $config['icon_class'],
           'url' => $url,
         ],
       ],
-    ];
+      ];
     }
   }
 
