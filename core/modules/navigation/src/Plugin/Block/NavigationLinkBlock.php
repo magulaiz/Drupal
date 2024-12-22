@@ -243,36 +243,36 @@ final class NavigationLinkBlock extends BlockBase {
   public function build(): array {
     $config = $this->configuration;
     $build = [];
-     // Ensure that the Help module is enabled and the URI corresponds to Help.
-     if (str_contains($config['uri'], 'help') && !\Drupal::moduleHandler()->moduleExists('help')) {
+    // Ensure that the Help module is enabled and the URI corresponds to Help.
+    if (str_contains($config['uri'], 'help') && !\Drupal::moduleHandler()->moduleExists('help')) {
       // Return an empty array, so the Help link is not displayed
       return $build;
-    }
+     }
     // Ensure that user has access to link before rendering it.
     try {
       $url = Url::fromUri($config['uri']);
       $access = $url->access(NULL, TRUE);
-    try {
-      $url = Url::fromUri($config['uri']);
-      // Internal routes must exist.
-      if (!$url->isExternal() && !$url->isRouted()) {
+      try {
+        $url = Url::fromUri($config['uri']);
+        // Internal routes must exist.
+        if (!$url->isExternal() && !$url->isRouted()) {
+          return $build;
+        }
+        $access = $url->access(NULL, TRUE);
+        if (!$access->isAllowed()) {
+          // Cacheable dependency is explicitly added when access is not granted.
+          // It is bubbled when the link is rendered.
+          $cacheable_metadata = new CacheableMetadata();
+          $cacheable_metadata->addCacheableDependency($access);
+          $cacheable_metadata->applyTo($build);
+          return $build;
+        }
+      }
+      catch (\InvalidArgumentException) {
         return $build;
       }
-      $access = $url->access(NULL, TRUE);
-      if (!$access->isAllowed()) {
-        // Cacheable dependency is explicitly added when access is not granted.
-        // It is bubbled when the link is rendered.
-        $cacheable_metadata = new CacheableMetadata();
-        $cacheable_metadata->addCacheableDependency($access);
-        $cacheable_metadata->applyTo($build);
-        return $build;
-      }
-    }
-    catch (\InvalidArgumentException) {
-      return $build;
-    }
 
-    return $build + [
+      return $build + [
       '#title' => $config['label'],
       '#theme' => 'navigation_menu',
       '#menu_name' => 'link',
@@ -286,5 +286,5 @@ final class NavigationLinkBlock extends BlockBase {
     ];
     }
   }
-  
+
 }
