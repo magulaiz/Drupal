@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\big_pipe\Hook;
+namespace Drupal\standard\Hook;
 
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Form\FormStateInterface;
