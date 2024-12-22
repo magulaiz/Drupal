@@ -9,7 +9,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 /**
  * Theme suggestions for theme_test.
  */
-class ThemeTestThemeSuggestionHook {
+class ThemeTestThemeSuggestionsHooks {
 
   /**
    * Implements hook_theme_suggestions_HOOK().

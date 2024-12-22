@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 /**
  * Theme suggestions for system.
  */
-class SystemThemeSuggestionHook {
+class SystemThemeSuggestionsHooks {
 
   /**
    * Implements hook_theme_suggestions_HOOK() for 'html'.
