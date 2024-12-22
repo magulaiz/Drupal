@@ -64,7 +64,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
    */
   protected function getDiscovery() {
     if (!$this->discovery) {
-      $discovery = new AttributeDiscoveryWithAnnotations($this->subdir, $this->namespaces, $this->pluginDefinitionAttributeName, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces, $this->moduleHandler);
+      $discovery = new AttributeDiscoveryWithAnnotations($this->subdir, $this->namespaces, $this->pluginDefinitionAttributeName, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces);
       $discovery = new YamlDiscoveryDecorator($discovery, 'ckeditor5', $this->moduleHandler->getModuleDirectories());
       // Note: adding translatable properties here is impossible because it only
       // supports top-level properties.

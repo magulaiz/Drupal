@@ -2,10 +2,10 @@
 
 namespace Drupal\Core\Entity\Attribute;
 
-use Drupal\Component\Plugin\Attribute\PluginProperty;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Plugin\Attribute\PluginProperty;
 
 /**
  * Attribute class to add form handler properties to entity type definition.

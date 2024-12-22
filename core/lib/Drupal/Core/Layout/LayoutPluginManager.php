@@ -70,7 +70,7 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
    */
   protected function getDiscovery() {
     if (!$this->discovery) {
-      $discovery = new AttributeDiscoveryWithAnnotations($this->subdir, $this->namespaces, $this->pluginDefinitionAttributeName, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces, $this->moduleHandler);
+      $discovery = new AttributeDiscoveryWithAnnotations($this->subdir, $this->namespaces, $this->pluginDefinitionAttributeName, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces);
       $discovery = new YamlDiscoveryDecorator($discovery, 'layouts', $this->moduleHandler->getModuleDirectories() + $this->themeHandler->getThemeDirectories());
       $discovery
         ->addTranslatableProperty('label')

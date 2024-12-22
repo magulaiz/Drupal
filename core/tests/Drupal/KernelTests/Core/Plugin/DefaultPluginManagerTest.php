@@ -152,7 +152,6 @@ class DefaultPluginManagerTest extends KernelTestBase {
 <?php
 declare(strict_types=1);
 namespace Drupal\plugin_test\Plugin\plugin_test\plugin_property;
-use Drupal\Component\Plugin\Attribute\PluginProperty;
 use Drupal\Core\Entity\Attribute\EntityTypeProperty;
 use Drupal\plugin_test\Plugin\Attribute\PluginExample;
 #[PluginExample(
@@ -184,8 +183,7 @@ EOS;
 <?php
 declare(strict_types=1);
 namespace Drupal\plugin_test\Plugin\plugin_test\plugin_property;
-use Drupal\Component\Plugin\Attribute\PluginProperty;
-use Drupal\Component\Plugin\Attribute\PluginPropertyInterface;
+use Drupal\Core\Plugin\Attribute\PluginProperty;
 use Drupal\plugin_test\Plugin\Attribute\PluginExample;
 #[PluginExample(
   id: 'invalid_callback',

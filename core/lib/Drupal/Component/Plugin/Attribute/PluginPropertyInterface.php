@@ -50,11 +50,17 @@ interface PluginPropertyInterface extends AttributeInterface {
   public function addToDefinition(array|object $definition): array|object;
 
   /**
-   * Gets the list of modules that need to be installed for property to be set.
+   * Whether the attribute has any dependencies.
    *
-   * @return string[]
-   *   The list of modules.
+   * @return bool
    */
-  public function getThirdPartyDependencies(): array;
+  public function hasDependencies(): bool;
+
+  /**
+   * Whether the attribute has any missing dependencies.
+   *
+   * @return bool
+   */
+  public function hasMissingDependencies(): bool;
 
 }

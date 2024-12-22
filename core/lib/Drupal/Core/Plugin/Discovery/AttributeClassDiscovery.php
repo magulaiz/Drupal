@@ -5,7 +5,6 @@ namespace Drupal\Core\Plugin\Discovery;
 use Drupal\Component\Plugin\Attribute\AttributeInterface;
 use Drupal\Component\Plugin\Discovery\AttributeClassDiscovery as ComponentAttributeClassDiscovery;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Defines a discovery mechanism to find plugins using attributes.
@@ -43,14 +42,11 @@ class AttributeClassDiscovery extends ComponentAttributeClassDiscovery {
    * @param string $pluginDefinitionAttributeName
    *   (optional) The name of the attribute that contains the plugin definition.
    *   Defaults to 'Drupal\Component\Plugin\Attribute\Plugin'.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $moduleHandler
-   *   The module handler.
    */
   public function __construct(
     string $subdir,
     protected \Traversable $rootNamespacesIterator,
     string $pluginDefinitionAttributeName = 'Drupal\Component\Plugin\Attribute\Plugin',
-    protected ?ModuleHandlerInterface $moduleHandler = NULL,
   ) {
     if ($subdir) {
       // Prepend a directory separator to $subdir,
@@ -124,48 +120,6 @@ class AttributeClassDiscovery extends ComponentAttributeClassDiscovery {
     }
 
     return $plugin_namespaces;
-  }
-
-  /**
-   * Getter for module handler.
-   *
-   * @return \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler.
-   */
-  protected function getModuleHandler(): ModuleHandlerInterface {
-    if (!isset($this->moduleHandler)) {
-      $this->moduleHandler = \Drupal::moduleHandler();
-    }
-    return $this->moduleHandler;
-  }
-
-  /**
-   * Injection setter for module handler.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler.
-   *
-   * @return $this
-   */
-  public function setModuleHandler(ModuleHandlerInterface $moduleHandler): static {
-    $this->moduleHandler = $moduleHandler;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function addThirdPartyPropertiesToDefinition(string $id, array|object $definition, array $third_party_attributes = []): array|object {
-    foreach ($third_party_attributes as $third_party_attribute) {
-      // Check that the property attribute's module dependencies are installed.
-      $installed_modules = array_keys($this->getModuleHandler()->getModuleList());
-      if (array_diff($third_party_attribute->getThirdPartyDependencies(), $installed_modules)) {
-        continue;
-      }
-
-      $definition = $third_party_attribute->addToDefinition($definition);
-    }
-    return $definition;
   }
 
   /**

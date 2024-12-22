@@ -204,9 +204,11 @@ class AttributeClassDiscovery implements DiscoveryInterface {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   protected function addThirdPartyPropertiesToDefinition(string $id, array|object $definition, array $third_party_attributes = []): array|object {
-    // Need to filter third party attributes by installed modules, which will
-    // happen in subclass method.
-    // @see \Drupal\Core\Plugin\Discovery\AttributeClassDiscovery::addThirdPartyPropertiesToDefinition()
+    foreach ($third_party_attributes as $attribute) {
+      if (!$attribute->hasMissingDependencies()) {
+        $definition = $attribute->addToDefinition($definition);
+      }
+    }
     return $definition;
   }
 
@@ -242,17 +244,16 @@ class AttributeClassDiscovery implements DiscoveryInterface {
     if (!$property_attribute->isValidPluginClass($plugin_attribute::class)) {
       throw new InvalidPluginDefinitionException($id, sprintf('May not use plugin property class %s with main plugin attribute class "%s for plugin class %s".', $property_class, $plugin_attribute::class, $plugin_class));
     }
-    if (empty($property_attribute->getThirdPartyDependencies())) {
-      // Add properties from attributes if they do not have module
-      // dependencies, since they are not dependent on modules being
-      // installed.
+    if (!$property_attribute->hasDependencies()) {
+      // Add properties from attributes if they do not dependencies, because
+      // they are not conditional.
       $content = $property_attribute->addToDefinition($content);
       return;
     }
 
-    // Attributes with a provider other than core are saved separately.
-    // They will be added to the definition after being retrieved from
-    // file cache, if the module that is the provider is installed.
+    // Attributes with dependencies are saved separately. They will be added to
+    // the definition after being retrieved from file cache, if the dependencies
+    // are met.
     $third_party_attributes[] = $property_attribute;
   }
 

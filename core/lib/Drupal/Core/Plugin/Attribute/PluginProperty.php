@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Component\Plugin\Attribute;
+namespace Drupal\Core\Plugin\Attribute;
 
+use Drupal\Component\Plugin\Attribute\AttributeBase;
+use Drupal\Component\Plugin\Attribute\PluginPropertyInterface;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Attribute class for adding optional property values to plugin definitions.
@@ -17,6 +21,15 @@ use Drupal\Component\Utility\NestedArray;
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class PluginProperty extends AttributeBase implements PluginPropertyInterface {
+
+  use DependencySerializationTrait;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|null
+   */
+  protected ?ModuleHandlerInterface $moduleHandler;
 
   /**
    * Constructs a plugin property object.
@@ -120,10 +133,48 @@ class PluginProperty extends AttributeBase implements PluginPropertyInterface {
   }
 
   /**
+   * Getter for module handler.
+   *
+   * @return \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler.
+   */
+  protected function getModuleHandler(): ModuleHandlerInterface {
+    if (!isset($this->moduleHandler)) {
+      $this->moduleHandler = \Drupal::moduleHandler();
+    }
+    return $this->moduleHandler;
+  }
+
+  /**
+   * Injection setter for module handler.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
+   *
+   * @return $this
+   */
+  public function setModuleHandler(ModuleHandlerInterface $moduleHandler): static {
+    $this->moduleHandler = $moduleHandler;
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function getThirdPartyDependencies(): array {
-    return $this->moduleDependencies;
+  public function hasDependencies(): bool {
+    return !empty($this->moduleDependencies);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasMissingDependencies(): bool {
+    if (!$this->hasDependencies()) {
+      return FALSE;
+    }
+    // Check that the property attribute's module dependencies are installed.
+    $installed_modules = array_keys($this->getModuleHandler()->getModuleList());
+    return !empty(array_diff($this->moduleDependencies, $installed_modules));
   }
 
 }
