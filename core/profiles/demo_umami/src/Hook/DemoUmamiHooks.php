@@ -102,7 +102,7 @@ class DemoUmamiHooks {
   /**
    * Sets the password of admin to be the password for all users.
    */
-  public function setUserPasswords(#[\SensitiveParameter] $admin_password) {
+  public function setUserPasswords(#[\SensitiveParameter] $admin_password): void {
     // Collect the IDs of all users with roles editor or author.
     $ids = \Drupal::entityQuery('user')
       ->accessCheck(FALSE)
