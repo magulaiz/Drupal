@@ -132,7 +132,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    * @param bool $translatable
    *   Whether the entity type is translatable or not.
    */
-  protected function insertData($revisionable, $translatable) {
+  protected function insertData($revisionable, $translatable): void {
     // Add three test entities in order to make the "data copy" step run at
     // least three times.
     /** @var \Drupal\Core\Entity\TranslatableRevisionableStorageInterface|\Drupal\Core\Entity\EntityStorageInterface $storage */
@@ -229,7 +229,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   protected function assertEntityData(bool $revisionable, bool $translatable): void {
     $entities = $this->entityTypeManager->getStorage($this->entityTypeId)->loadMultiple();
     $this->assertCount(3, $entities);
-    foreach ($entities as $entity_id => $entity) {
+    foreach ($entities as $entity) {
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
       $this->assertEquals("test entity - {$entity->id()} - en", $entity->label());
       $this->assertEquals("bundle field - {$entity->id()} - en", $entity->new_bundle_field->value);
