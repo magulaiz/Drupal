@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Defines a contextual link plugin manager to deal with contextual links.
  *
  * @see \Drupal\Core\Menu\ContextualLinkInterface
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Menu\ContextualLinkInterface>
  */
 class ContextualLinkManager extends DefaultPluginManager implements ContextualLinkManagerInterface {
 

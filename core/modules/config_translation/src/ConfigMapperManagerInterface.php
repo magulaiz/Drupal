@@ -7,6 +7,8 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Provides a common interface for config mapper managers.
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<\Drupal\config_translation\ConfigMapperInterface>
  */
 interface ConfigMapperManagerInterface extends PluginManagerInterface {
 

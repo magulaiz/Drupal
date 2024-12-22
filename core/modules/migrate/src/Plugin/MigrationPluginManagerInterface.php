@@ -6,6 +6,8 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * Migration plugin manager interface.
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<\Drupal\migrate\Plugin\MigrationInterface>
  */
 interface MigrationPluginManagerInterface extends PluginManagerInterface {
 

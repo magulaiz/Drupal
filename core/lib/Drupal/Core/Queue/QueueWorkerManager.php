@@ -14,6 +14,8 @@ use Drupal\Core\Queue\Attribute\QueueWorker;
  * @see \Drupal\Core\Queue\QueueWorkerBase
  * @see \Drupal\Core\Annotation\QueueWorker
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Queue\QueueWorkerInterface>
  */
 class QueueWorkerManager extends DefaultPluginManager implements QueueWorkerManagerInterface {
 

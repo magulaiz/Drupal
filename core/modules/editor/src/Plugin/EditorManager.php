@@ -14,6 +14,8 @@ use Drupal\editor\Attribute\Editor;
  * @see \Drupal\editor\Plugin\EditorPluginInterface
  * @see \Drupal\editor\Plugin\EditorBase
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\editor\Plugin\EditorPluginInterface>
  */
 class EditorManager extends DefaultPluginManager {
 

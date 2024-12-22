@@ -15,7 +15,6 @@ use Drupal\Core\Plugin\Discovery\AttributeClassDiscovery;
 use Drupal\Core\Plugin\Discovery\AttributeDiscoveryWithAnnotations;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -26,8 +25,12 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
  * Base class for plugin managers.
  *
  * @ingroup plugin_api
+ *
+ * @template T of object
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerBase<T>
  */
-class DefaultPluginManager extends PluginManagerBase implements PluginManagerInterface, CachedDiscoveryInterface, CacheableDependencyInterface {
+class DefaultPluginManager extends PluginManagerBase implements CachedDiscoveryInterface, CacheableDependencyInterface {
 
   use DiscoveryCachedTrait;
   use UseCacheBackendTrait;
@@ -137,7 +140,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param string|null $plugin_interface
+   * @param class-string<T>|null $plugin_interface
    *   (optional) The interface each plugin should implement.
    * @param string|null $plugin_definition_attribute_name
    *   (optional) The name of the attribute that contains the plugin definition.

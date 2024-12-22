@@ -20,6 +20,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  * Extension can define breakpoints in an EXTENSION_NAME.breakpoints.yml file
  * contained in the extension's base directory. Each breakpoint has the
  * following structure:
+ *
  * @code
  *   MACHINE_NAME:
  *     label: STRING
@@ -43,6 +44,8 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  * @see \Drupal\breakpoint\Breakpoint
  * @see \Drupal\breakpoint\BreakpointInterface
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\breakpoint\BreakpointInterface>
  */
 class BreakpointManager extends DefaultPluginManager implements BreakpointManagerInterface {
   use StringTranslationTrait;

@@ -9,6 +9,8 @@ use Drupal\Core\State\StateInterface;
 
 /**
  * Helps test module uninstall.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<object>
  */
 class PluginManagerCacheClearer extends DefaultPluginManager {
 

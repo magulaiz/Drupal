@@ -17,6 +17,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a plugin manager for layouts.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Layout\LayoutInterface>
  */
 class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginManagerInterface {
 

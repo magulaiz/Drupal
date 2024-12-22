@@ -11,6 +11,8 @@ use Drupal\navigation\Attribute\TopBarItem;
 
 /**
  * Top bar item plugin manager.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\navigation\TopBarItemPluginInterface>
  */
 final class TopBarItemManager extends DefaultPluginManager implements TopBarItemManagerInterface {
 

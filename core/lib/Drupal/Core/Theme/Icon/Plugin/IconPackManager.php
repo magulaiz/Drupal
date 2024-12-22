@@ -29,6 +29,7 @@ use JsonSchema\Validator;
  * Each icon pack must have an `extractor` and `template` property. An optional
  * `config` property can be required based on the value of the `extractor`
  * property.
+ *
  * @code
  * example_pack:
  *   extractor: (string) Plugin ID of the IconExtractor. Provided extractors are
@@ -142,6 +143,8 @@ use JsonSchema\Validator;
  * @internal
  *   The icon API is experimental and is not meant for production use.
  *   See https://www.drupal.org/core/experimental for more information.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<object>
  */
 class IconPackManager extends DefaultPluginManager implements IconPackManagerInterface {
 

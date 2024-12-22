@@ -9,6 +9,8 @@ use Drupal\search\Attribute\Search;
 
 /**
  * SearchExecute plugin manager.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\search\Plugin\SearchInterface>
  */
 class SearchPluginManager extends DefaultPluginManager {
 

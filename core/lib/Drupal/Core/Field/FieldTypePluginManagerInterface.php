@@ -10,6 +10,8 @@ use Drupal\Core\Entity\FieldableEntityInterface;
  * Defines an interface for the field type plugin manager.
  *
  * @ingroup field_types
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<\Drupal\Core\Field\FieldItemInterface>
  */
 interface FieldTypePluginManagerInterface extends PluginManagerInterface, CategorizingPluginManagerInterface {
 

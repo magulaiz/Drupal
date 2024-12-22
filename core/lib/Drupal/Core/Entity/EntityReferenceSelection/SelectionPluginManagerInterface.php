@@ -8,6 +8,8 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Defines an interface for the entity reference selection plugin manager.
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<\Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface>
  */
 interface SelectionPluginManagerInterface extends PluginManagerInterface {
 

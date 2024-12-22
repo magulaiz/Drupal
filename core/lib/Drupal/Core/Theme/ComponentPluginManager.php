@@ -29,6 +29,8 @@ use Drupal\Core\Plugin\Discovery\DirectoryWithMetadataPluginDiscovery;
  * MODULENAME/components/my-component/my-component.component.yml.
  *
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Plugin\Component>
  */
 class ComponentPluginManager extends DefaultPluginManager implements CategorizingPluginManagerInterface {
 

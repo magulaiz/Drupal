@@ -11,6 +11,10 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
  *
  * Symfony Constraint plugins are created as Drupal plugins, but the default
  * plugin constructor is not compatible.
+ *
+ * @template T of object
+ *
+ * @template-extends \Drupal\Component\Plugin\Factory\DefaultFactory<T>
  */
 class ConstraintFactory extends ContainerFactory {
 

@@ -15,6 +15,8 @@ use Drupal\rest\Plugin\ResourceInterface;
  * @see \Drupal\rest\Plugin\ResourceBase
  * @see \Drupal\rest\Plugin\ResourceInterface
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\rest\Plugin\ResourceInterface>
  */
 class ResourcePluginManager extends DefaultPluginManager {
 

@@ -13,8 +13,9 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * Provides an Archiver plugin manager.
  *
  * @see \Drupal\Core\Archiver\Attribute\Archiver
- * @see \Drupal\Core\Archiver\ArchiverInterface
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Archiver\ArchiverInterface>
  */
 class ArchiverManager extends DefaultPluginManager {
 

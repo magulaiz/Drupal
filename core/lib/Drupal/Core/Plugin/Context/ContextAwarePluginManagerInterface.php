@@ -6,6 +6,10 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * Provides an interface for plugin managers that support context-aware plugins.
+ *
+ * @template T of object
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<T>
  */
 interface ContextAwarePluginManagerInterface extends PluginManagerInterface {
 

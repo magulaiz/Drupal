@@ -16,6 +16,8 @@ use Drupal\migrate\Attribute\MigrateDestination;
  * @see plugin_api
  *
  * @ingroup migration
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\migrate\Plugin\MigrateDestinationInterface>
  */
 class MigrateDestinationPluginManager extends MigratePluginManager {
 

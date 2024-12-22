@@ -16,6 +16,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see \Drupal\Core\Entity\Annotation\EntityReferenceSelection
  * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface>
  */
 class SelectionPluginManager extends DefaultPluginManager implements SelectionPluginManagerInterface, FallbackPluginManagerInterface {
 

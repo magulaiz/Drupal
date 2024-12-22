@@ -13,6 +13,8 @@ use Drupal\Core\Theme\Icon\IconDefinitionInterface;
  *
  * @internal
  *   This API is experimental.
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<object>
  */
 interface IconPackManagerInterface extends PluginManagerInterface {
 

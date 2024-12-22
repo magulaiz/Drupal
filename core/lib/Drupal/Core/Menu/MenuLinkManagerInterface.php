@@ -19,6 +19,8 @@ use Drupal\Component\Plugin\PluginManagerInterface;
  * MenuLinkManagerInterface::removeDefinition() when they add or remove links,
  * and MenuLinkManagerInterface::updateDefinition() to update links they have
  * already defined.
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<\Drupal\Core\Menu\MenuLinkInterface>
  */
 interface MenuLinkManagerInterface extends PluginManagerInterface {
 

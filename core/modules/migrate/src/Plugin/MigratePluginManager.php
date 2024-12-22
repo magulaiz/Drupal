@@ -22,6 +22,10 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see plugin_api
  *
  * @ingroup migration
+ *
+ * @template T of object
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<T>
  */
 class MigratePluginManager extends DefaultPluginManager implements MigratePluginManagerInterface {
 

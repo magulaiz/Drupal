@@ -14,6 +14,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * A module can define field type categories in a
  * MODULE_NAME.field_type_categories.yml file contained in the module's
  * base directory. Each plugin has the following structure:
+ *
  * @code
  *   CATEGORY_NAME:
  *     label: STRING
@@ -35,6 +36,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see \Drupal\Core\Field\FieldTypeCategoryInterface
  * @see \Drupal\Core\Field\FieldTypeCategory
  * @see \hook_field_type_category_info_alter
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Field\FieldTypeCategoryInterface>
  */
 class FieldTypeCategoryManager extends DefaultPluginManager implements FieldTypeCategoryManagerInterface, FallbackPluginManagerInterface {
 

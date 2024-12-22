@@ -32,6 +32,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  * \Drupal\Core\Validation\Attribute\Constraint for details.
  *
  * @see \Drupal\Core\Validation\Attribute\Constraint
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Symfony\Component\Validator\Constraint>
  */
 class ConstraintManager extends DefaultPluginManager {
 

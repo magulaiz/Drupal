@@ -9,6 +9,8 @@ use Drupal\language\Attribute\LanguageNegotiation;
 
 /**
  * Manages language negotiation methods.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\language\LanguageNegotiationMethodInterface>
  */
 class LanguageNegotiationMethodManager extends DefaultPluginManager {
 

@@ -4,6 +4,10 @@ namespace Drupal\Component\Plugin;
 
 /**
  * Defines an interface for plugin managers that categorize plugin definitions.
+ *
+ * @template T of object
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<T>
  */
 interface CategorizingPluginManagerInterface extends PluginManagerInterface {
 

@@ -15,6 +15,8 @@ use Drupal\migrate\Plugin\MigrationInterface;
  * @see plugin_api
  *
  * @ingroup migration
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\migrate_drupal\Plugin\MigrateFieldInterface>
  */
 class MigrateFieldPluginManager extends MigratePluginManager implements MigrateFieldPluginManagerInterface {
 

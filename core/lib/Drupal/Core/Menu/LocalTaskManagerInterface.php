@@ -11,6 +11,8 @@ use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
  * This manager finds plugins that are rendered as local tasks (usually tabs).
  * Derivatives are supported for modules that wish to generate multiple tabs on
  * behalf of something else.
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<\Drupal\Core\Menu\LocalTaskInterface>
  */
 interface LocalTaskManagerInterface extends PluginManagerInterface {
 

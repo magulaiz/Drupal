@@ -7,6 +7,10 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 
 /**
  * Base class for plugin managers.
+ *
+ * @template T of object
+ *
+ * @template-implements \Drupal\Component\Plugin\PluginManagerInterface<T>
  */
 abstract class PluginManagerBase implements PluginManagerInterface {
 

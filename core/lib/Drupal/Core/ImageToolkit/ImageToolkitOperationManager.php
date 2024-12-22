@@ -18,6 +18,8 @@ use Psr\Log\LoggerInterface;
  * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationBase
  * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationInterface
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\ImageToolkit\ImageToolkitOperationInterface>
  */
 class ImageToolkitOperationManager extends DefaultPluginManager implements ImageToolkitOperationManagerInterface {
 

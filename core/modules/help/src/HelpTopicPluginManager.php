@@ -19,6 +19,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
  *
  * The Twig file must contain YAML front matter with a key named 'label'. It can
  * also contain keys named 'top_level' and 'related'. For example:
+ *
  * @code
  * ---
  * label: 'Configuring error responses, including 403/404 pages'
@@ -62,6 +63,8 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
  * @see hook_help_topics_info_alter()
  * @see plugin_api
  * @see \Drupal\Component\Plugin\Derivative\DeriverInterface
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\help\HelpTopicPluginInterface>
  */
 class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPluginManagerInterface {
 

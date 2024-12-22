@@ -12,6 +12,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * Plugin type manager for field widgets.
  *
  * @ingroup field_widget
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\Field\WidgetInterface>
  */
 class WidgetPluginManager extends DefaultPluginManager {
 

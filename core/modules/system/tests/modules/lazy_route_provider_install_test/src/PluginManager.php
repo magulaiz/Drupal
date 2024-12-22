@@ -11,6 +11,9 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
 
+/**
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<object>
+ */
 class PluginManager extends DefaultPluginManager {
 
   /**

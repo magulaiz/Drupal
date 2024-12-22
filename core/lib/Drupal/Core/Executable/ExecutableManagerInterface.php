@@ -6,6 +6,10 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * An interface for managers of executable plugins.
+ *
+ * @template T of \Drupal\Core\Executable\ExecutableInterface
+ *
+ * @template-extends \Drupal\Component\Plugin\PluginManagerInterface<T>
  */
 interface ExecutableManagerInterface extends PluginManagerInterface {
 

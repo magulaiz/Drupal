@@ -16,6 +16,8 @@ use Drupal\filter\Attribute\Filter;
  * @see \Drupal\filter\Plugin\FilterInterface
  * @see \Drupal\filter\Plugin\FilterBase
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\filter\Plugin\FilterInterface>
  */
 class FilterPluginManager extends DefaultPluginManager implements FallbackPluginManagerInterface {
 

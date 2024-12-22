@@ -17,6 +17,8 @@ use Drupal\migrate\Plugin\Discovery\ProviderFilterDecorator;
  * @see plugin_api
  *
  * @ingroup migration
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\migrate\Plugin\MigrateSourceInterface>
  */
 class MigrateSourcePluginManager extends MigratePluginManager {
 

@@ -16,6 +16,8 @@ use Drupal\migrate\MigrateBuildDependencyInterface;
 
 /**
  * Plugin manager for migration plugins.
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\migrate\Plugin\MigrationInterface>
  */
 class MigrationPluginManager extends DefaultPluginManager implements MigrationPluginManagerInterface, MigrateBuildDependencyInterface {
 

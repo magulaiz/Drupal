@@ -7,6 +7,10 @@ namespace Drupal\Component\Plugin\Factory;
  *
  * Provides logic for any basic plugin type that needs to provide individual
  * plugins based upon some basic logic.
+ *
+ * @template T of object
+ *
+ * @template-extends \Drupal\Component\Plugin\Factory\DefaultFactory<T>
  */
 class ReflectionFactory extends DefaultFactory {
 

@@ -4,6 +4,8 @@ namespace Drupal\Component\Plugin\Factory;
 
 /**
  * Factory interface implemented by all plugin factories.
+ *
+ * @template T of object
  */
 interface FactoryInterface {
 
@@ -15,7 +17,7 @@ interface FactoryInterface {
    * @param array $configuration
    *   An array of configuration relevant to the plugin instance.
    *
-   * @return object
+   * @return T&object
    *   A fully configured plugin instance.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException

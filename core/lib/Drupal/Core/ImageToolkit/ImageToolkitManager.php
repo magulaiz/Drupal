@@ -15,6 +15,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface
  * @see \Drupal\Core\ImageToolkit\ImageToolkitBase
  * @see plugin_api
+ *
+ * @template-extends \Drupal\Core\Plugin\DefaultPluginManager<\Drupal\Core\ImageToolkit\ImageToolkitInterface>
  */
 class ImageToolkitManager extends DefaultPluginManager {
 

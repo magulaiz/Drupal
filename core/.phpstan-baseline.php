@@ -1820,12 +1820,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Archiver/ArchiveTar.php',
 ];
 $ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\Core\\\\Archiver\\\\ArchiverManager\\:\\:getInstance\\(\\) should return object\\|false but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Archiver/ArchiverManager.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Asset\\\\AssetCollectionOptimizerInterface\\:\\:deleteAll\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -9063,12 +9057,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Menu\\\\MenuLinkManager\\:\\:deleteLinksInMenu\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuLinkManager.php',
-];
-$ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\Core\\\\Menu\\\\MenuLinkManager\\:\\:getInstance\\(\\) should return object\\|false but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuLinkManager.php',
 ];
