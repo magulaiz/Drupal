@@ -62,7 +62,6 @@ sections:
           icon_class: help
         weight: -2
         additional: { }
-        dependencies:
-          module:
-            - help
+        module:
+          - help
     third_party_settings: { }
