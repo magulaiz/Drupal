@@ -54922,12 +54922,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/profiles/minimal/tests/src/Functional/MinimalTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function standard_form_install_configure_submit\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/standard/standard.profile',
-];
-$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\standard\\\\Functional\\\\StandardTest\\:\\:assertConfigSchema\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
