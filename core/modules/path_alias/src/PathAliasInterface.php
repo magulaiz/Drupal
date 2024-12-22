@@ -6,12 +6,11 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
-use Drupal\user\EntityOwnerInterface;
 
 /**
  * Provides an interface defining a path_alias entity.
  */
-interface PathAliasInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface, RevisionLogInterface, EntityPublishedInterface {
+interface PathAliasInterface extends ContentEntityInterface, EntityChangedInterface, RevisionLogInterface, EntityPublishedInterface {
 
   /**
    * Gets the source path of the alias.

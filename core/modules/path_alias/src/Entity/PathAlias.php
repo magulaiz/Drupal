@@ -14,7 +14,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\path_alias\PathAliasInterface;
 use Drupal\path_alias\PathAliasStorage;
 use Drupal\path_alias\PathAliasStorageSchema;
-use Drupal\user\EntityOwnerTrait;
 
 /**
  * Defines the path_alias entity class.
@@ -59,7 +58,6 @@ use Drupal\user\EntityOwnerTrait;
 class PathAlias extends EditorialContentEntityBase implements PathAliasInterface {
 
   use EntityPublishedTrait;
-  use EntityOwnerTrait;
 
   /**
    * {@inheritdoc}
@@ -129,11 +127,6 @@ class PathAlias extends EditorialContentEntityBase implements PathAliasInterface
     }
     $this->setChangedTime($time);
     $this->setAlias($alias);
-    // If no revision author has been set explicitly, make the node owner the
-    // revision author.
-    if (!$this->getRevisionUser()) {
-      $this->setRevisionUserId($this->getOwnerId());
-    }
   }
 
   /**
