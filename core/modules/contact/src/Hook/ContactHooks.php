@@ -89,7 +89,7 @@ class ContactHooks {
    * email address configured.
    */
   #[Hook('local_tasks_render_alter')]
-  public function menuLocalTasksRenderAlter(&$data, $route_name): void {
+  public function localTasksRenderAlter(&$data, $route_name): void {
     if ($route_name == 'entity.user.canonical' && isset($data['tabs'][0])) {
       foreach ($data['tabs'][0] as $href => $tab_data) {
         if ($href == 'entity.user.contact_form') {
