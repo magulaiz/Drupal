@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
-use Drupal\block\Hook\BlockThemeSuggestionHook;
+use Drupal\block\Hook\BlockThemeSuggestionsHooks;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -45,7 +45,7 @@ class BlockTemplateSuggestionsTest extends KernelTestBase {
     $variables['elements']['#base_plugin_id'] = $plugin->getBaseId();
     $variables['elements']['#derivative_plugin_id'] = $plugin->getDerivativeId();
     $variables['elements']['content'] = [];
-    $blockThemeSuggestions = new BlockThemeSuggestionHook();
+    $blockThemeSuggestions = new BlockThemeSuggestionsHooks();
     $suggestions = $blockThemeSuggestions->themeSuggestionsBlock($variables);
     $this->assertSame([
       'block__system',
