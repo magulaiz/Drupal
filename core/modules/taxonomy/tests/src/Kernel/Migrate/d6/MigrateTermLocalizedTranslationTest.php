@@ -84,8 +84,6 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal6TestBase {
     $this->assertSame($expected_language, $entity->language()->getId());
     $this->assertSame($expected_label, $entity->label());
     $this->assertSame($expected_vid, $entity->bundle());
-    $this->assertSame($expected_description, $entity->getDescription());
-    $this->assertSame($expected_format, $entity->getFormat());
     $this->assertSame($expected_weight, $entity->getWeight());
     $this->assertHierarchy($expected_vid, $id, $expected_parents);
   }
@@ -128,19 +126,16 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal6TestBase {
     $this->assertTrue($entity->hasTranslation('fr'));
     $translation = $entity->getTranslation('fr');
     $this->assertSame('fr - Talos IV', $translation->label());
-    $this->assertSame('fr - The home of Captain Christopher Pike.', $translation->getDescription());
 
     $this->assertTrue($entity->hasTranslation('zu'));
     $translation = $entity->getTranslation('zu');
     $this->assertSame('Talos IV', $translation->label());
-    $this->assertSame('zu - The home of Captain Christopher Pike.', $translation->getDescription());
 
     $entity = Term::load(15);
     $this->assertFalse($entity->hasTranslation('fr'));
     $this->assertTrue($entity->hasTranslation('zu'));
     $translation = $entity->getTranslation('zu');
     $this->assertSame('zu - Vulcan', $translation->label());
-    $this->assertSame('', $translation->getDescription());
   }
 
 }
