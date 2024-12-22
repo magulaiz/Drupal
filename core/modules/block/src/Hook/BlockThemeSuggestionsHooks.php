@@ -7,7 +7,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 /**
  * Theme suggestions for block.
  */
-class BlockThemeSuggestionHook {
+class BlockThemeSuggestionsHooks {
 
   /**
    * Implements hook_theme_suggestions_HOOK().

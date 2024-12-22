@@ -7,7 +7,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 /**
  * Theme suggestions for big_pipe.
  */
-class BigPipeThemeSuggestionHook {
+class BigPipeThemeSuggestionsHooks {
 
   /**
    * Implements hook_theme_suggestions_HOOK().

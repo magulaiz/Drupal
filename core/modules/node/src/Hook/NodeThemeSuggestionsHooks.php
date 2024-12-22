@@ -7,7 +7,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 /**
  * Theme suggestions for node.
  */
-class NodeThemeSuggestionHook {
+class NodeThemeSuggestionsHooks {
 
   /**
    * Implements hook_theme_suggestions_HOOK().

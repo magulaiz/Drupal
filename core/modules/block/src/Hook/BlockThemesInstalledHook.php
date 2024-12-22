@@ -8,7 +8,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 /**
  * Implementations of hook_themes_installed() for block.
  */
-class BlockThemeInstalledHook {
+class BlockThemesInstalledHook {
 
   /**
    * Implements hook_themes_installed().

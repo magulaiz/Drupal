@@ -7,7 +7,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 /**
  * Theme suggestions for taxonomy.
  */
-class TaxonomyThemeSuggestionHook {
+class TaxonomyThemeSuggestionsHooks {
 
   /**
    * Implements hook_theme_suggestions_HOOK().

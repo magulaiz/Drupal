@@ -7,7 +7,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 /**
  * Theme suggestions for search.
  */
-class SearchThemeSuggestionHook {
+class SearchThemeSuggestionsHooks {
 
   /**
    * Implements hook_theme_suggestions_HOOK().

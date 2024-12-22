@@ -7,7 +7,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 /**
  * Theme suggestions for views_ui.
  */
-class ViewsUiThemeSuggestionHook {
+class ViewsUiThemeSuggestionsHooks {
 
   /**
    * Implements hook_theme_suggestions_HOOK().
