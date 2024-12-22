@@ -35162,36 +35162,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/system.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function system_theme_suggestions_field\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function system_theme_suggestions_html\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function system_theme_suggestions_maintenance_page\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function system_theme_suggestions_page\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function system_theme_suggestions_region\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Function system_post_update_sdc_uninstall\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -35792,12 +35762,26 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/cache_test/src/Controller/CacheTestController.php',
 ];
 $ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function common_test_module_implements_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/common_test/common_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Function common_test_preprocess\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/common_test/common_test.module',
 ];
 $ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function olivero_drupal_alter_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/common_test/common_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\common_test\\\\Controller\\\\CommonTestController\\:\\:typeLinkActiveClass\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -35906,6 +35890,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/delay_cache_tags_invalidation/src/Hook/DelayCacheTagsInvalidationHooks.php',
 ];
 $ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function deprecation_test_deprecated_alter_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/deprecation_test/deprecation_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Function deprecation_test_deprecated_hook\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -38338,6 +38329,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/module_test/module_test.module',
 ];
 $ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function module_test_module_implements_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/module_test/module_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Function module_test_modules_installed\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -38350,6 +38348,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/module_test/module_test.module',
 ];
 $ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function module_test_system_info_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/module_test/module_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Function module_test_post_update_test\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -39142,24 +39147,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/src/ThemeTestPreprocess.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function theme_test_theme_suggestions_node\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/theme_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function theme_test_theme_suggestions_theme_test_preprocess_suggestions\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/theme_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function theme_test_theme_suggestions_theme_test_suggestion_provided\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/theme_test.module',
-];
-$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\trusted_hosts_test\\\\Controller\\\\TrustedHostsTestController\\:\\:bagType\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -39262,6 +39250,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/twig_theme_test/twig_theme_test.module',
 ];
 $ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function unversioned_assets_test_library_info_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/unversioned_assets_test/unversioned_assets_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\update_script_test\\\\Controller\\\\UpdateScriptTestController\\:\\:databaseUpdatesMenuItem\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -41164,6 +41159,31 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/themes/test_subtheme/test_subtheme.theme',
 ];
 $ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function test_theme_element_info_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/themes/test_theme/test_theme.theme',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function test_theme_library_info_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/themes/test_theme/test_theme.theme',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function test_theme_theme_registry_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/themes/test_theme/test_theme.theme',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function test_theme_theme_test_alter_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/themes/test_theme/test_theme.theme',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Function test_theme_depending_on_modules_post_update_module_install\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
