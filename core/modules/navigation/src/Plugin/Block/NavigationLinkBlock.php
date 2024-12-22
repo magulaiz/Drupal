@@ -284,4 +284,7 @@ final class NavigationLinkBlock extends BlockBase {
         ],
       ],
     ];
+    }
   }
+  
+}
