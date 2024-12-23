@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Logger\RfcLoggerTrait;
 use Psr\Log\LoggerInterface;
 
@@ -138,16 +137,16 @@ class AssertableLogger implements LoggerInterface {
    *   The log context array.
    */
   protected function handleLog(int $level, string $channel, string $message, array $context): void {
+    // Fill in any placeholders with values from the log context.
+    $placeholders = preg_grep('/^[@%:]/', array_keys($context));
+    $message = strtr($message, array_intersect_key($context, array_flip($placeholders)));
+
     $is_expected = $this->handleLogExpectations($level, $channel, $message);
     if ($is_expected) {
       return;
     }
     $is_disallowed = !$this->isLogAllowed($level, $channel, $message) && $this->isLogDisallowed($level, $channel, $message);
     if ($is_disallowed) {
-      // Fill in any placeholders with values from the log context.
-      $placeholders = preg_grep('/^[@%:]/', array_keys($context));
-      $message = new FormattableMarkup($message, array_intersect_key($context, array_flip($placeholders)));
-
       $e = new \Exception();
       $trace = explode("\n", $e->getTraceAsString());
       $this->disallowedLogs[] = [

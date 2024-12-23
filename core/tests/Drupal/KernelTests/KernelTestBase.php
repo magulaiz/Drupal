@@ -237,6 +237,11 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected bool $usesSuperUserAccessPolicy;
 
   /**
+   * @var \Drupal\KernelTests\AssertableLogger
+   */
+  protected AssertableLogger $assertableLogger;
+
+  /**
    * {@inheritdoc}
    */
   public static function setUpBeforeClass(): void {
@@ -625,7 +630,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     $container
       ->register('kernel_test.assertable_logger', AssertableLogger::class)
+      ->setSynthetic(TRUE)
       ->addTag('logger');
+    $container->set('kernel_test.assertable_logger', $this->getAssertableLogger());
 
     // Remove the stored configuration importer so if used again it will be
     // built with up-to-date services.
@@ -1044,12 +1051,16 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   }
 
   /**
-   * Get the AssertableLogger.
+   * Get or create an assertable logger.
    *
-   * @return \Drupal\KernelTests\AssertableLogger|null
+   * @return \Drupal\KernelTests\AssertableLogger
+   *   An assertable logger.
    */
-  protected function getAssertableLogger(): ?AssertableLogger {
-    return $this->container ? $this->container->get('kernel_test.assertable_logger') : NULL;
+  protected function getAssertableLogger(): AssertableLogger {
+    if (!isset($this->assertableLogger)) {
+      $this->assertableLogger = new AssertableLogger();
+    }
+    return $this->assertableLogger;
   }
 
 }
