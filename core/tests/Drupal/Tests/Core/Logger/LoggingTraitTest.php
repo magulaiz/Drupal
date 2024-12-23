@@ -24,10 +24,7 @@ class LoggingTraitTest extends UnitTestCase {
   protected AssertableLogger $assertableLogger;
 
   /**
-   * Get or create an assertable logger.
-   *
-   * @return \Drupal\KernelTests\AssertableLogger
-   *   An assertable logger.
+   * {@inheritdoc}
    */
   protected function getAssertableLogger(): AssertableLogger {
     if (!isset($this->assertableLogger)) {

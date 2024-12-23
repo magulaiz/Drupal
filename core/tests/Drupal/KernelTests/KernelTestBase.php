@@ -1051,10 +1051,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   }
 
   /**
-   * Get or create an assertable logger.
-   *
-   * @return \Drupal\KernelTests\AssertableLogger
-   *   An assertable logger.
+   * {@inheritdoc}
    */
   protected function getAssertableLogger(): AssertableLogger {
     if (!isset($this->assertableLogger)) {
