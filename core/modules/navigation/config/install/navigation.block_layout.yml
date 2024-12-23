@@ -62,6 +62,4 @@ sections:
           icon_class: help
         weight: -2
         additional: { }
-        module:
-          - help
     third_party_settings: { }
