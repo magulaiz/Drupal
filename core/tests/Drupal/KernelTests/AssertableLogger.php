@@ -130,7 +130,27 @@ class AssertableLogger implements LoggerInterface {
    *   Counts of unmet log expectations keyed by level, channel and message.
    */
   public function getUnmetExpectations(): array {
-    return $this->expectedLogCriteria;
+    $unmetExpectations = [];
+    foreach ($this->expectedLogCriteria as $level => $channels) {
+      foreach ($channels as $channel => $criteria) {
+        foreach ($criteria as $message => $count) {
+          if ($count > 0) {
+            $unmetExpectations[$level][$channel][$message] = $count;
+          }
+        }
+      }
+    }
+    return $unmetExpectations;
+  }
+
+  /**
+   * Determines if expectations for logs have been set.
+   *
+   * @return bool
+   *   TRUE if expectations for logs have been set, FALSE if not.
+   */
+  public function hasExpectations(): bool {
+    return !empty($this->expectedLogCriteria) || !empty($this->allowedLogCriteria) || !empty($this->disallowedLogCriteria);
   }
 
   /**
@@ -174,7 +194,7 @@ class AssertableLogger implements LoggerInterface {
       $this->disallowedLogs[] = [
         'level' => $level,
         'channel' => $channel,
-        'message' => (string) $message,
+        'message' => $message,
         'trace' => $trace,
       ];
     }
@@ -202,22 +222,7 @@ class AssertableLogger implements LoggerInterface {
     if (isset($this->expectedLogCriteria[$level][$channel])) {
       foreach ($this->expectedLogCriteria[$level][$channel] as $expected_message => $count) {
         if ($expected_message === '' || strpos($message, $expected_message) !== FALSE) {
-          // If the count was 1, then the expectation is now fully met.
-          if ($count === 1) {
-            unset($this->expectedLogCriteria[$level][$channel][$expected_message]);
-            // Clear out empty expectation arrays to facilitate asserting that there are
-            // no unmet expectations at the end of the test.
-            if (empty($this->expectedLogCriteria[$level][$channel])) {
-              unset($this->expectedLogCriteria[$level][$channel]);
-            }
-            if (empty($this->expectedLogCriteria[$level])) {
-              unset($this->expectedLogCriteria[$level]);
-            }
-          }
-          // If the count was more than 1, decrement the expectation.
-          else {
-            $this->expectedLogCriteria[$level][$channel][$expected_message] = $count - 1;
-          }
+          $this->expectedLogCriteria[$level][$channel][$expected_message] = $count - 1;
           return TRUE;
         }
       }

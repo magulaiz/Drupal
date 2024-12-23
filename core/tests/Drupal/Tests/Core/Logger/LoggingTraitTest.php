@@ -8,7 +8,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\AssertableLogger;
 use Drupal\Tests\Traits\Core\LoggingTrait;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * @coversDefaultClass \Drupal\Tests\Traits\Core\LoggingTrait
@@ -117,7 +117,7 @@ class LoggingTraitTest extends UnitTestCase {
     $this->allowLogsAsSevereAs(RfcLogLevel::WARNING, 'channel_b');
     $this->allowLogsAsSevereAs(RfcLogLevel::WARNING, 'channel_b', 'some message');
     $this->emitLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
-    $this->expectException(ExpectationFailedException::class);
+    $this->expectException(AssertionFailedError::class);
     $this->expectExceptionMessageMatches('/^Logs were generated during the test that were explicitly expected not to be generated/');
     $this->assertLogExpectationsMet();
   }
@@ -178,6 +178,17 @@ class LoggingTraitTest extends UnitTestCase {
     $this->expectNoLogsAsSevereAs(RfcLogLevel::WARNING);
     $this->emitLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     $this->expectNotToPerformAssertions();
+  }
+
+  /**
+   * Checks that tests with no logs do not perform assertions.
+   *
+   * @doesNotPerformAssertions
+   *
+   * @covers ::assertLogExpectationsMet
+   */
+  public function testDoesNotPerformAssertions(): void {
+    $this->assertLogExpectationsMet();
   }
 
   protected function emitLog(int $level, string $channel, string $message): void {
