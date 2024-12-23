@@ -36,6 +36,8 @@ class AssertableLogger implements LoggerInterface {
   protected array $disallowedLogs = [];
 
   /**
+   * The message's placeholders parser.
+   *
    * @var \Drupal\Core\Logger\LogMessageParser
    */
   private LogMessageParser $logMessageParser;
@@ -61,7 +63,30 @@ class AssertableLogger implements LoggerInterface {
    * {@inheritdoc}
    */
   public function log($level, $message, array $context = []): void {
-    $this->handleLog($level, $context['channel'] ?? '', $message, $context);
+    assert(is_int($level));
+    assert(is_string($message) || $message instanceof \Stringable);
+    assert(array_key_exists('channel', $context) && is_string($context['channel']));
+
+    $channel = $context['channel'];
+    $placeholders = $this->logMessageParser->parseMessagePlaceholders($message, $context);
+    $message = strtr((string) $message, $placeholders);
+
+    if ($this->handleLogExpectations($level, $channel, $message)) {
+      return;
+    }
+
+    if (
+      !$this->isLogAllowed($level, $channel, $message) &&
+      $this->isLogDisallowed($level, $channel, $message)
+    ) {
+      $trace = explode("\n", (new \Exception())->getTraceAsString());
+      $this->disallowedLogs[] = [
+        'level' => $level,
+        'channel' => $channel,
+        'message' => $message,
+        'trace' => $trace,
+      ];
+    }
   }
 
   /**
@@ -161,43 +186,6 @@ class AssertableLogger implements LoggerInterface {
    */
   public function getDisallowedLogs(): array {
     return $this->disallowedLogs;
-  }
-
-  /**
-   * Process a generated log message.
-   *
-   * If the log message is expected, it is removed from the outstanding
-   * expectations. If the log message is disallowed, it is stored so it
-   * can be reported later.
-   *
-   * @param int $level
-   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
-   * @param string $channel
-   *   The logger channel.
-   * @param string|\Stringable $message
-   *   The log message.
-   * @param array $context
-   *   The log context array.
-   */
-  protected function handleLog(int $level, string $channel, string|\Stringable $message, array $context): void {
-    $placeholders = $this->logMessageParser->parseMessagePlaceholders($message, $context);
-    $message = strtr((string) $message, $placeholders);
-
-    $is_expected = $this->handleLogExpectations($level, $channel, $message);
-    if ($is_expected) {
-      return;
-    }
-    $is_disallowed = !$this->isLogAllowed($level, $channel, $message) && $this->isLogDisallowed($level, $channel, $message);
-    if ($is_disallowed) {
-      $e = new \Exception();
-      $trace = explode("\n", $e->getTraceAsString());
-      $this->disallowedLogs[] = [
-        'level' => $level,
-        'channel' => $channel,
-        'message' => $message,
-        'trace' => $trace,
-      ];
-    }
   }
 
   /**
