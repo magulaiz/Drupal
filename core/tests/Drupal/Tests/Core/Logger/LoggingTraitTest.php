@@ -120,12 +120,9 @@ class LoggingTraitTest extends UnitTestCase {
     $this->allowLogsAsSevereAs(RfcLogLevel::WARNING, 'channel_b');
     $this->allowLogsAsSevereAs(RfcLogLevel::WARNING, 'channel_b', 'some message');
     $this->emitLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
-    try {
-      $this->assertLogExpectationsMet();
-    }
-    catch (ExpectationFailedException) {
-      $this->expectNotToPerformAssertions();
-    }
+    $this->expectException(ExpectationFailedException::class);
+    $this->expectExceptionMessageMatches('/^Logs were generated during the test that were explicitly expected not to be generated/');
+    $this->assertLogExpectationsMet();
   }
 
   public static function expectNoLogUnmetProvider(): array {
