@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Logger;
 
 use Drupal\Core\Logger\RfcLogLevel;
@@ -19,7 +21,7 @@ class LoggingTraitTest extends UnitTestCase {
   /**
    * @var \Drupal\KernelTests\AssertableLogger
    */
-  protected $assertableLogger;
+  protected AssertableLogger $assertableLogger;
 
   /**
    * Get or create an assertable logger.
@@ -27,8 +29,8 @@ class LoggingTraitTest extends UnitTestCase {
    * @return \Drupal\KernelTests\AssertableLogger
    *   An assertable logger.
    */
-  protected function getAssertableLogger() {
-    if (!$this->assertableLogger) {
+  protected function getAssertableLogger(): AssertableLogger {
+    if (!isset($this->assertableLogger)) {
       $this->assertableLogger = new AssertableLogger();
     }
     return $this->assertableLogger;
@@ -37,13 +39,13 @@ class LoggingTraitTest extends UnitTestCase {
   /**
    * @dataProvider expectLogMetProvider
    */
-  public function testExpectLogMet(array $expectation) {
+  public function testExpectLogMet(array $expectation): void {
     $this->expectLog(...$expectation);
     $this->emitLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     $this->assertLogExpectationsMet();
   }
 
-  public function expectLogMetProvider() {
+  public static function expectLogMetProvider(): array {
     return [
       [[RfcLogLevel::WARNING, 'channel_a']],
       [[RfcLogLevel::WARNING, 'channel_a', 'some message']],
@@ -55,13 +57,13 @@ class LoggingTraitTest extends UnitTestCase {
   /**
    * @dataProvider expectLogUnmetProvider
    */
-  public function testExpectLogUnmet(array $expectation) {
+  public function testExpectLogUnmet(array $expectation): void {
     $this->expectLog(...$expectation);
     $this->emitLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     $this->assertNotEmpty($this->getAssertableLogger()->getUnmetExpectations());
   }
 
-  public function expectLogUnmetProvider() {
+  public static function expectLogUnmetProvider(): array {
     return [
       [[RfcLogLevel::WARNING, 'channel_b']],
       [[RfcLogLevel::WARNING, 'channel_a', 'some other message']],
@@ -79,13 +81,13 @@ class LoggingTraitTest extends UnitTestCase {
   /**
    * @dataProvider expectNoLogMetProvider
    */
-  public function testExpectNoLogMet(array $expectation) {
+  public function testExpectNoLogMet(array $expectation): void {
     $this->expectNoLogsAsSevereAs(...$expectation);
     $this->emitLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     $this->expectNotToPerformAssertions();
   }
 
-  public function expectNoLogMetProvider() {
+  public static function expectNoLogMetProvider(): array {
     return [
       [[RfcLogLevel::NOTICE, 'channel_a', 'some other message']],
       [[RfcLogLevel::NOTICE, 'channel_b']],
@@ -111,7 +113,7 @@ class LoggingTraitTest extends UnitTestCase {
   /**
    * @dataProvider expectNoLogUnmetProvider
    */
-  public function testExpectNoLogUnmet(array $expectation) {
+  public function testExpectNoLogUnmet(array $expectation): void {
     $this->expectNoLogsAsSevereAs(...$expectation);
     // These calls to allowLogsAsSevereAs() should have no consequences
     // because the actual log will use a different channel.
@@ -121,12 +123,12 @@ class LoggingTraitTest extends UnitTestCase {
     try {
       $this->assertLogExpectationsMet();
     }
-    catch (ExpectationFailedException $e) {
+    catch (ExpectationFailedException) {
       $this->expectNotToPerformAssertions();
     }
   }
 
-  public function expectNoLogUnmetProvider() {
+  public static function expectNoLogUnmetProvider(): array {
     return [
       [[RfcLogLevel::NOTICE]],
       [[RfcLogLevel::NOTICE, 'channel_a']],
@@ -144,7 +146,7 @@ class LoggingTraitTest extends UnitTestCase {
   /**
    * @dataProvider allowLogProvider
    */
-  public function testAllowLogLevel(array $expectation) {
+  public function testAllowLogLevel(array $expectation): void {
     $this->allowLogsAsSevereAs(...$expectation);
     $this->expectNoLogsAsSevereAs(RfcLogLevel::WARNING);
     $this->emitLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
@@ -154,14 +156,14 @@ class LoggingTraitTest extends UnitTestCase {
   /**
    * @dataProvider allowLogProvider
    */
-  public function testAllowLogLevelChannel(array $expectation) {
+  public function testAllowLogLevelChannel(array $expectation): void {
     $this->allowLogsAsSevereAs(...$expectation);
     $this->expectNoLogsAsSevereAs(RfcLogLevel::WARNING, 'channel_a');
     $this->emitLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     $this->expectNotToPerformAssertions();
   }
 
-  public function allowLogProvider() {
+  public static function allowLogProvider(): array {
     return [
       [[RfcLogLevel::WARNING, 'channel_a']],
       [[RfcLogLevel::WARNING, 'channel_a', 'some']],
@@ -177,14 +179,14 @@ class LoggingTraitTest extends UnitTestCase {
   /**
    * @dataProvider expectLogMetProvider
    */
-  public function testExpectLogBeforeExpectNoLog(array $expectation) {
+  public function testExpectLogBeforeExpectNoLog(array $expectation): void {
     $this->expectLog(...$expectation);
     $this->expectNoLogsAsSevereAs(RfcLogLevel::WARNING);
     $this->emitLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     $this->expectNotToPerformAssertions();
   }
 
-  protected function emitLog($level, $channel, $message) {
+  protected function emitLog(int $level, string $channel, string $message): void {
     $this->getAssertableLogger()->log($level, $message, ['channel' => $channel]);
   }
 

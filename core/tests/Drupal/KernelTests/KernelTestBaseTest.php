@@ -14,7 +14,6 @@ use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use Psr\Http\Client\ClientExceptionInterface;
 use PHPUnit\Framework\ExpectationFailedException;
-use PHPUnit\Framework\SkippedTestError;
 
 /**
  * @coversDefaultClass \Drupal\KernelTests\KernelTestBase
@@ -337,7 +336,7 @@ class KernelTestBaseTest extends KernelTestBase {
   /**
    * Test that tests pass when an error log is generated, but is explicitly expected.
    */
-  public function testExpectedLoggingPresent() {
+  public function testExpectedLoggingPresent(): void {
     $this->expectNoLogsAsSevereAs(RfcLogLevel::ERROR);
     $this->expectLog(RfcLogLevel::ERROR, 'test');
     \Drupal::logger('test')->error('a test error');
@@ -346,13 +345,13 @@ class KernelTestBaseTest extends KernelTestBase {
   /**
    * Test that tests pass when an error log is not generated, but is explicitly expected.
    */
-  public function testExpectedLoggingAbsent() {
+  public function testExpectedLoggingAbsent(): void {
     $this->expectNoLogsAsSevereAs(RfcLogLevel::ERROR);
     $this->expectLog(RfcLogLevel::ERROR, 'test');
     try {
       $this->assertLogExpectationsMet();
     }
-    catch (ExpectationFailedException $e) {
+    catch (ExpectationFailedException) {
       // ::assertLogExpectations correctly failed. An error log was expected
       // on the 'test' channel but was not generated.
       // Unset the disallowed logs so that assertPostConditions does not fail the test.
@@ -363,7 +362,7 @@ class KernelTestBaseTest extends KernelTestBase {
   /**
    * Test that tests fails when an error log is generated, but is explicitly expected to be not generated.
    */
-  public function testDisallowedLogging() {
+  public function testDisallowedLogging(): void {
     $this->expectNoLogsAsSevereAs(RfcLogLevel::ERROR);
     \Drupal::logger('test')->error('A test error with parameters @foo and %bar.', [
       '@foo' => 'value foo',
