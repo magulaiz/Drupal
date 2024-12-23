@@ -459,7 +459,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
   }
 
   public function __destruct() {
-    if ($this->needsCleanup) {
+    if (get_object_vars($this->connection) && ($this->needsCleanup)) {
       $this->nextIdDelete();
     }
   }
