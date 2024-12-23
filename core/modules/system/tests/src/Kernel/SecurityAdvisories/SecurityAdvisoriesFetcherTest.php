@@ -24,20 +24,6 @@ use Psr\Http\Client\ClientExceptionInterface;
 class SecurityAdvisoriesFetcherTest extends KernelTestBase {
 
   /**
-   * The error messages.
-   *
-   * @var string[]
-   */
-  protected $errorMessages = [];
-
-  /**
-   * The log error log messages.
-   *
-   * @var string[]
-   */
-  protected $logErrorMessages = [];
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = [
@@ -636,6 +622,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
       new Response(500, [], 'HTTPS failed'),
       new Response(200, [], json_encode([$feed_item])),
     ]);
+    $this->expectLog(RfcLogLevel::ERROR, 'system', "Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n");
     $advisories = $this->getAdvisories();
 
     // There should be two request / response pairs.
@@ -657,7 +644,6 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase {
     $this->assertCount(1, $advisories);
     $this->assertSame('http://example.com', $advisories[0]->getUrl());
     $this->assertSame('SA title', $advisories[0]->getTitle());
-    $this->assertSame(["Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n"], $this->errorMessages);
   }
 
   /**
