@@ -397,6 +397,32 @@ class VariationCacheTest extends UnitTestCase {
   }
 
   /**
+   * Tests exception for a cache item that has incomplete variations.
+   *
+   * @covers ::get
+   * @covers ::set
+   */
+  public function testIncompleteVariationsException(): void {
+    // This should never happen. When someone first stores something in the
+    // cache using context A and then tries to store something using context B,
+    // something is wrong. There should always be at least one shared context at
+    // the top level or else the cache cannot do its job.
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage("The complete set of cache contexts for a variation cache item must contain all of the initial cache contexts, missing: garden.type.");
+
+    $this->housingType = 'house';
+    $house_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type']);
+
+    $this->gardenType = 'garden';
+    $garden_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['garden.type']);
+
+    $this->setVariationCacheItem('You have a nice garden!', $garden_cacheability, $garden_cacheability);
+    $this->setVariationCacheItem('You have a nice house!', $house_cacheability, $garden_cacheability);
+  }
+
+  /**
    * Tests exception for a cache item that has an incomplete redirect.
    *
    * @covers ::get

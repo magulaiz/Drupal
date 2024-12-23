@@ -43,6 +43,13 @@ class VariationCache implements VariationCacheInterface {
     $initial_contexts = $initial_cacheability->getCacheContexts();
     $contexts = $cacheability->getCacheContexts();
 
+    if ($missing_contexts = array_diff($initial_contexts, $contexts)) {
+      throw new \LogicException(sprintf(
+        'The complete set of cache contexts for a variation cache item must contain all of the initial cache contexts, missing: %s.',
+        implode(', ', $missing_contexts)
+      ));
+    }
+
     // Don't store uncacheable items.
     if ($cacheability->getCacheMaxAge() === 0) {
       return;
