@@ -476,15 +476,15 @@ views_exposed_form:
     exposed_sorts_label:
       type: label
       label: 'Exposed sorts label'
-    expose_sort_id:
+    expose_sort_key:
       type: string
-      label: 'Exposed sort id'
-    expose_sort_order_id:
-      type: string
-      label: 'Exposed sort order id'
+      label: 'Exposed sort key'
     expose_sort_order:
       type: boolean
       label: 'Expose sort order'
+    sort_order_key:
+      type: string
+      label: 'Sort order key'
     sort_asc_label:
       type: label
       label: 'Ascending'
