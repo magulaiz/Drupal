@@ -11,9 +11,9 @@ use Drupal\Tests\StreamCapturer;
 use Drupal\user\Entity\Role;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use Psr\Http\Client\ClientExceptionInterface;
-use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * @coversDefaultClass \Drupal\KernelTests\KernelTestBase
@@ -348,14 +348,14 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testExpectedLoggingAbsent(): void {
     $this->expectNoLogsAsSevereAs(RfcLogLevel::ERROR);
     $this->expectLog(RfcLogLevel::ERROR, 'test');
+    $this->expectException(AssertionFailedError::class);
+    $this->expectExceptionMessageMatches('/^Logs were expected to be generated during the test, but were not./');
     try {
       $this->assertLogExpectationsMet();
     }
-    catch (ExpectationFailedException) {
-      // ::assertLogExpectations correctly failed. An error log was expected
-      // on the 'test' channel but was not generated.
+    finally {
       // Unset the disallowed logs so that assertPostConditions does not fail the test.
-      $this->container->set('kernel_test.assertable_logger', new AssertableLogger());
+      $this->getAssertableLogger()->reset();
     }
   }
 
@@ -369,18 +369,29 @@ class KernelTestBaseTest extends KernelTestBase {
       '%bar' => 'value bar',
       'not a placeholder' => 'other value',
     ]);
+    $this->expectException(AssertionFailedError::class);
+    $this->expectExceptionMessageMatches('/\[message\] => A test error with parameters value foo and value bar/');
     try {
       $this->assertLogExpectationsMet();
     }
-    catch (ExpectationFailedException $e) {
-      $this->assertStringContainsString('[message] => A test error with parameters value foo and <em class="placeholder">value bar</em>.', $e->getMessage());
-      $this->assertStringContainsString('Drupal\KernelTests\KernelTestBaseTest->testDisallowedLogging()', $e->getMessage());
-
-      // ::assertLogExpectations correctly failed. An error log was generated,
-      // but it was expected that no error logs would be generated.
+    finally {
       // Unset the disallowed logs so that assertPostConditions does not fail the test.
-      $this->container->set('kernel_test.assertable_logger', new AssertableLogger());
+      $this->getAssertableLogger()->reset();
     }
+  }
+
+  /**
+   * Test that tests fails when an error log is generated, but is explicitly expected to be not generated.
+   */
+  public function testLogExpectationsSurviveContainerRebuild(): void {
+    $this->expectLog(RfcLogLevel::ERROR, 'test');
+    // Trigger a container rebuild.
+    $this->enableModules(['system']);
+    \Drupal::logger('test')->error('A test error with parameters @foo and %bar.', [
+      '@foo' => 'value foo',
+      '%bar' => 'value bar',
+      'not a placeholder' => 'other value',
+    ]);
   }
 
 }
