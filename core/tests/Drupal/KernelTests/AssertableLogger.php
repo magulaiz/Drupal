@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests;
 
+use Drupal\Core\Logger\LogMessageParser;
 use Drupal\Core\Logger\RfcLoggerTrait;
 use Psr\Log\LoggerInterface;
 
@@ -33,6 +34,15 @@ class AssertableLogger implements LoggerInterface {
    * Logs that are disallowed and have been generated.
    */
   protected array $disallowedLogs = [];
+
+  /**
+   * @var \Drupal\Core\Logger\LogMessageParser
+   */
+  private LogMessageParser $logMessageParser;
+
+  public function __construct() {
+    $this->logMessageParser = new LogMessageParser();
+  }
 
   /**
    * Resets all the expectations.
@@ -150,9 +160,8 @@ class AssertableLogger implements LoggerInterface {
    *   The log context array.
    */
   protected function handleLog(int $level, string $channel, string|\Stringable $message, array $context): void {
-    // Fill in any placeholders with values from the log context.
-    $placeholders = preg_grep('/^[@%:]/', array_keys($context));
-    $message = strtr((string) $message, array_intersect_key($context, array_flip($placeholders)));
+    $placeholders = $this->logMessageParser->parseMessagePlaceholders($message, $context);
+    $message = strtr((string) $message, $placeholders);
 
     $is_expected = $this->handleLogExpectations($level, $channel, $message);
     if ($is_expected) {
