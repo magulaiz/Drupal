@@ -241,8 +241,6 @@ abstract class Connection {
    *   The client-level database connection, for example \PDO.
    */
   public function getClientConnection(): object {
-    $this->ping();
-
     return $this->connection;
   }
 
