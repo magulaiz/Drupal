@@ -459,6 +459,9 @@ EOD;
 
       'numeric:normal' => 'numeric',
 
+      'blob:tiny' => 'bytea',
+      'blob:small' => 'bytea',
+      'blob:medium' => 'bytea',
       'blob:big' => 'bytea',
       'blob:normal' => 'bytea',
 

@@ -265,6 +265,9 @@ class Schema extends DatabaseSchema {
 
       'numeric:normal'  => 'DECIMAL',
 
+      'blob:tiny'       => 'TINYBLOB',
+      'blob:small'      => 'TINYBLOB',
+      'blob:medium'     => 'MEDIUMBLOB',
       'blob:big'        => 'LONGBLOB',
       'blob:normal'     => 'BLOB',
     ];
