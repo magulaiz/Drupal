@@ -144,15 +144,15 @@ class AssertableLogger implements LoggerInterface {
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
    * @param string $channel
    *   The logger channel.
-   * @param string $message
+   * @param string|\Stringable $message
    *   The log message.
    * @param array $context
    *   The log context array.
    */
-  protected function handleLog(int $level, string $channel, string $message, array $context): void {
+  protected function handleLog(int $level, string $channel, string|\Stringable $message, array $context): void {
     // Fill in any placeholders with values from the log context.
     $placeholders = preg_grep('/^[@%:]/', array_keys($context));
-    $message = strtr($message, array_intersect_key($context, array_flip($placeholders)));
+    $message = strtr((string) $message, array_intersect_key($context, array_flip($placeholders)));
 
     $is_expected = $this->handleLogExpectations($level, $channel, $message);
     if ($is_expected) {
