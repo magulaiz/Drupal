@@ -135,7 +135,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     // Just being able to create the entity like this verifies a lot of code.
     $entity = EntityTest::create();
     $entity->field_test_taxonomy_term->target_id = $tid;
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     $entity = EntityTest::load($entity->id());
@@ -271,7 +271,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     // Just being able to create the entity like this verifies a lot of code.
     $entity = EntityTest::create();
     $entity->field_test_taxonomy_vocabulary->target_id = $referenced_entity_id;
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     $entity = EntityTest::load($entity->id());
@@ -322,7 +322,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $entity = EntityTest::create();
     // Now assign the unsaved term to the field.
     $entity->field_test_taxonomy_term->entity = $term;
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     // This is equal to storing an entity to tempstore or cache and retrieving
     // it back. An example for this is node preview.
     $entity = serialize($entity);
@@ -346,7 +346,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $entity = EntityTest::create();
     // Now assign the unsaved term to the field.
     $entity->field_test_taxonomy_term->entity = $term;
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     // Now get the field value.
     $value = $entity->get('field_test_taxonomy_term');
     $this->assertArrayNotHasKey('target_id', $value);

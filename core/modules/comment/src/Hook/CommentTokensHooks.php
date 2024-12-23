@@ -157,7 +157,7 @@ class CommentTokensHooks {
           case 'body':
             // "processed" returns a \Drupal\Component\Render\MarkupInterface via
             // check_markup().
-            $replacements[$original] = $comment->comment_body->processed;
+            $replacements[$original] = $comment->get('comment_body')->processed;
             break;
 
           case 'langcode':

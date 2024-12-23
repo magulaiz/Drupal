@@ -79,7 +79,7 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
     $entity = EntityTestMulRev::create([
       'name' => $this->randomString(),
       'user_id' => $user1->id(),
-      'language' => 'en',
+      'langcode' => 'en',
       'non_rev_field' => 'Huron',
     ]);
     $entity->save();
@@ -88,7 +88,7 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
     $entity2 = EntityTestMulRev::create([
       'name' => $this->randomString(),
       'user_id' => $user1->id(),
-      'language' => 'en',
+      'langcode' => 'en',
       'non_rev_field' => 'Michigan',
     ]);
     $entity2->save();
@@ -211,7 +211,7 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
     $entity = EntityTestMulRev::create([
       'name' => $this->randomString(),
       'user_id' => $user1->id(),
-      'language' => 'en',
+      'langcode' => 'en',
       'non_rev_field' => 'Huron',
       'description' => [
         'shape' => 'shape',

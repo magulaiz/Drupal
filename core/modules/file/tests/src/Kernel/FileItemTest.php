@@ -92,7 +92,7 @@ class FileItemTest extends FieldKernelTestBase {
     $entity->file_test->target_id = $this->file->id();
     $entity->file_test->display = 1;
     $entity->file_test->description = $description = $this->randomMachineName();
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     $entity = EntityTest::load($entity->id());

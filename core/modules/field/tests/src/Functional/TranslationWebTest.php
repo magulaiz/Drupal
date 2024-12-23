@@ -113,13 +113,13 @@ class TranslationWebTest extends FieldTestBase {
     $entity->langcode->value = key($available_langcodes);
     foreach ($available_langcodes as $langcode => $value) {
       $translation = $entity->hasTranslation($langcode) ? $entity->getTranslation($langcode) : $entity->addTranslation($langcode);
-      $translation->{$field_name}->value = $value + 1;
+      $translation->get($field_name)->value = $value + 1;
     }
     $entity->save();
 
     // Create a new revision.
     $edit = [
-      "{$field_name}[0][value]" => $entity->{$field_name}->value,
+      "{$field_name}[0][value]" => $entity->get($field_name)->value,
       'revision' => TRUE,
     ];
     $this->drupalGet($this->entityTypeId . '/manage/' . $entity->id() . '/edit');
@@ -143,7 +143,7 @@ class TranslationWebTest extends FieldTestBase {
       ->getStorage($this->entityTypeId);
     $entity = $storage->loadRevision($revision_id);
     foreach ($available_langcodes as $langcode => $value) {
-      $passed = $entity->getTranslation($langcode)->{$field_name}->value == $value + 1;
+      $passed = $entity->getTranslation($langcode)->get($field_name)->value == $value + 1;
       $this->assertTrue($passed, "The $langcode translation for revision {$entity->getRevisionId()} was correctly stored");
     }
   }

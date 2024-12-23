@@ -18,7 +18,7 @@ class MediaForm extends ContentEntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
     /** @var \Drupal\media\MediaTypeInterface $media_type */
-    $media_type = $this->entity->bundle->entity;
+    $media_type = $this->entity->get('bundle')->entity;
 
     if ($this->operation === 'edit') {
       $form['#title'] = $this->t('Edit %type_label @label', [
@@ -61,7 +61,7 @@ class MediaForm extends ContentEntityForm {
     $saved = parent::save($form, $form_state);
     $context = ['@type' => $this->entity->bundle(), '%label' => $this->entity->label(), 'link' => $this->entity->toLink($this->t('View'))->toString()];
     $logger = $this->logger('media');
-    $t_args = ['@type' => $this->entity->bundle->entity->label(), '%label' => $this->entity->toLink($this->entity->label())->toString()];
+    $t_args = ['@type' => $this->entity->get('bundle')->entity->label(), '%label' => $this->entity->toLink($this->entity->label())->toString()];
 
     if ($saved === SAVED_NEW) {
       $logger->info('@type: added %label.', $context);

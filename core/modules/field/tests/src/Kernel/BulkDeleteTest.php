@@ -199,7 +199,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       ->fields('t')
       ->execute();
     foreach ($result as $row) {
-      $this->assertEquals($row->{$column}, $this->entities[$row->entity_id]->{$field_name}->value);
+      $this->assertEquals($row->{$column}, $this->entities[$row->entity_id]->get($field_name)->value);
     }
 
     // There are 0 entities of this bundle with non-deleted data.
@@ -248,7 +248,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       $entity = $this->container->get('entity_type.manager')
         ->getStorage($this->entityTypeId)
         ->create(['type' => $bundle]);
-      $entity->{$field_name}->setValue($this->_generateTestFieldValues(1));
+      $entity->get($field_name)->setValue($this->_generateTestFieldValues(1));
       $entity->save();
     }
 
@@ -284,7 +284,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       $entity = $this->container->get('entity_type.manager')
         ->getStorage($this->entityTypeId)
         ->create(['type' => $bundle]);
-      $entity->{$field_name}->setValue($this->_generateTestFieldValues(1));
+      $entity->get($field_name)->setValue($this->_generateTestFieldValues(1));
       $entity->save();
     }
 

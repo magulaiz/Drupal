@@ -257,7 +257,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_insert')]
   public function entityTestInsert($entity) {
-    if ($entity->name->value == 'fail_insert') {
+    if ($entity->label() == 'fail_insert') {
       throw new \Exception("Test exception rollback.");
     }
   }

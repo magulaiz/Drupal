@@ -105,7 +105,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Test that the default formatter is being used.
     /** @var \Drupal\file\FileInterface $file */
-    $file = $node->{$field_name}->entity;
+    $file = $node->get($field_name)->entity;
     $image_uri = $file->getFileUri();
     $image = [
       '#theme' => 'image',
@@ -217,12 +217,12 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings' => ['image_style' => ''],
     ];
     $expected_url = $file->createFileUrl();
-    $this->assertEquals($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
+    $this->assertEquals($expected_url, $node->get($field_name)->view($display_options)[0]['#markup']);
 
     // Test the image URL formatter with an image style.
     $display_options['settings']['image_style'] = 'thumbnail';
     $expected_url = \Drupal::service('file_url_generator')->transformRelative(ImageStyle::load('thumbnail')->buildUrl($image_uri));
-    $this->assertEquals($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
+    $this->assertEquals($expected_url, $node->get($field_name)->view($display_options)[0]['#markup']);
 
     // Test the settings summary.
     $display_options = [
@@ -290,7 +290,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // style.
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
-    $file = $node->{$field_name}->entity;
+    $file = $node->get($field_name)->entity;
 
     $file_url_generator = \Drupal::service('file_url_generator');
     $url = $file_url_generator->transformRelative(ImageStyle::load('medium')->buildUrl($file->getFileUri()));
@@ -410,7 +410,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Test that the default image loading attribute is being used.
     /** @var \Drupal\file\FileInterface $file */
-    $file = $node->{$field_name}->entity;
+    $file = $node->get($field_name)->entity;
     $image_uri = $file->getFileUri();
     $image = [
       '#theme' => 'image',
@@ -537,7 +537,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $nid = $this->uploadNodeImage($images[2], $field_name, 'article', $alt);
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
-    $file = $node->{$field_name}->entity;
+    $file = $node->get($field_name)->entity;
     $image = [
       '#theme' => 'image',
       '#uri' => $file->getFileUri(),

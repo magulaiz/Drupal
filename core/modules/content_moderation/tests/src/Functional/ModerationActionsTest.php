@@ -69,7 +69,7 @@ class ModerationActionsTest extends BrowserTestBase {
       'status' => $starting_status,
     ]);
     if ($bundle == 'moderated_bundle') {
-      $node->moderation_state->value = $starting_status ? 'published' : 'draft';
+      $node->get('moderation_state')->value = $starting_status ? 'published' : 'draft';
     }
     $node->save();
 

@@ -256,9 +256,9 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
 
     /** @var \Drupal\migrate_entity_test\Entity\StringIdEntityTest $entity */
     $entity = StringIdEntityTest::load('123');
-    $this->assertSame('foo', $entity->version->value);
+    $this->assertSame('foo', $entity->get('version')->value);
     $entity = StringIdEntityTest::load('123456789012');
-    $this->assertSame('bar', $entity->version->value);
+    $this->assertSame('bar', $entity->get('version')->value);
 
     // Rerun the migration forcing the version to NULL.
     $definition['process'] = [
@@ -273,9 +273,9 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
 
     /** @var \Drupal\migrate_entity_test\Entity\StringIdEntityTest $entity */
     $entity = StringIdEntityTest::load('123');
-    $this->assertNull($entity->version->value);
+    $this->assertNull($entity->get('version')->value);
     $entity = StringIdEntityTest::load('123456789012');
-    $this->assertNull($entity->version->value);
+    $this->assertNull($entity->get('version')->value);
   }
 
   /**

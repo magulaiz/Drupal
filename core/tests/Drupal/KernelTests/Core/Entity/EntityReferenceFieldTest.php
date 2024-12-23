@@ -97,13 +97,13 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($this->entityType)
       ->create(['type' => $this->bundle]);
-    $entity->{$this->fieldName}->target_id = $referenced_entity->id();
-    $violations = $entity->{$this->fieldName}->validate();
+    $entity->get($this->fieldName)->target_id = $referenced_entity->id();
+    $violations = $entity->get($this->fieldName)->validate();
     $this->assertEquals(0, $violations->count(), 'Validation passes.');
 
     // Test an invalid reference.
-    $entity->{$this->fieldName}->target_id = 9999;
-    $violations = $entity->{$this->fieldName}->validate();
+    $entity->get($this->fieldName)->target_id = 9999;
+    $violations = $entity->get($this->fieldName)->validate();
     $this->assertEquals(1, $violations->count(), 'Validation throws a violation.');
     $this->assertEquals(sprintf('The referenced entity (%s: 9999) does not exist.', $this->referencedEntityType), $violations[0]->getMessage());
 
@@ -113,8 +113,8 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
       ->getStorage($this->referencedEntityType)
       ->create(['type' => 'non_referenceable']);
     $referenced_entity->save();
-    $entity->{$this->fieldName}->target_id = $referenced_entity->id();
-    $violations = $entity->{$this->fieldName}->validate();
+    $entity->get($this->fieldName)->target_id = $referenced_entity->id();
+    $violations = $entity->get($this->fieldName)->validate();
     $this->assertEquals(1, $violations->count(), 'Validation throws a violation.');
     $this->assertEquals(sprintf('This entity (%s: %s) cannot be referenced.', $this->referencedEntityType, $referenced_entity->id()), $violations[0]->getMessage());
   }
@@ -162,10 +162,10 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $target_entities[6] = $target_entity_unsaved;
 
     // Set the field value.
-    $entity->{$this->fieldName}->setValue($reference_field);
+    $entity->get($this->fieldName)->setValue($reference_field);
 
     // Load the target entities using EntityReferenceField::referencedEntities().
-    $entities = $entity->{$this->fieldName}->referencedEntities();
+    $entities = $entity->get($this->fieldName)->referencedEntities();
 
     // Test returned entities:
     // - Deltas must be preserved.
@@ -220,10 +220,10 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $target_entity->save();
 
     // Set the field value.
-    $entity->{$field_name}->setValue([['target_id' => $target_entity->id()]]);
+    $entity->get($field_name)->setValue([['target_id' => $target_entity->id()]]);
 
     // Load the target entities using EntityReferenceField::referencedEntities().
-    $entities = $entity->{$field_name}->referencedEntities();
+    $entities = $entity->get($field_name)->referencedEntities();
     $this->assertEquals($target_entity->id(), $entities[0]->id());
 
     // Test that a string ID works as a default value and the field's config
@@ -237,7 +237,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($this->entityType)
       ->create(['type' => $this->bundle]);
-    $entities = $entity->{$field_name}->referencedEntities();
+    $entities = $entity->get($field_name)->referencedEntities();
     $this->assertEquals($target_entity->id(), $entities[0]->id());
   }
 

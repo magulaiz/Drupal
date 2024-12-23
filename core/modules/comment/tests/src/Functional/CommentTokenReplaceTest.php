@@ -84,7 +84,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:mail]'] = $this->adminUser->getEmail();
     $tests['[comment:homepage]'] = UrlHelper::filterBadProtocol($comment->getHomepage());
     $tests['[comment:title]'] = Html::escape($comment->getSubject());
-    $tests['[comment:body]'] = $comment->comment_body->processed;
+    $tests['[comment:body]'] = $comment->get('comment_body')->processed;
     $tests['[comment:langcode]'] = $comment->language()->getId();
     $tests['[comment:url]'] = $comment->toUrl('canonical', $url_options + ['fragment' => 'comment-' . $comment->id()])->toString();
     $tests['[comment:edit-url]'] = $comment->toUrl('edit-form', $url_options)->toString();

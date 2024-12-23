@@ -37,7 +37,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     /** @var \Drupal\file\FileInterface $node_file */
-    $node_file = $node->{$field_name}->entity;
+    $node_file = $node->get($field_name)->entity;
     $date_formatter = $this->container->get('date.formatter');
     $expected_filename =
       'public://' .
@@ -55,7 +55,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     // Check that the file was uploaded into the subdirectory.
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     $this->assertPathMatch('public://foo/bar/baz/' . $test_file->getFilename(), $node_file->getFileUri(), "The file {$node_file->getFileUri()} was uploaded to the correct path.");
 
     // Check the path when used with tokens.
@@ -68,7 +68,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     // Check that the file was uploaded into the subdirectory.
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     // Do token replacement using the same user which uploaded the file, not
     // the user running the test case.
     $data = ['user' => $this->adminUser];

@@ -66,7 +66,7 @@ class ModerationStateAccessTest extends BrowserTestBase {
       'title' => 'Draft node',
       'uid' => $editor1->id(),
     ]);
-    $node_1->moderation_state->value = 'draft';
+    $node_1->get('moderation_state')->value = 'draft';
     $node_1->save();
 
     $node_2 = Node::create([
@@ -74,12 +74,12 @@ class ModerationStateAccessTest extends BrowserTestBase {
       'title' => 'Published node',
       'uid' => $editor1->id(),
     ]);
-    $node_2->moderation_state->value = 'published';
+    $node_2->get('moderation_state')->value = 'published';
     $node_2->save();
 
     // Resave the node with a new state.
     $node_2->setTitle('Archived node');
-    $node_2->moderation_state->value = 'archived';
+    $node_2->get('moderation_state')->value = 'archived';
     $node_2->save();
 
     // Now show the View, and confirm that the state labels are showing.

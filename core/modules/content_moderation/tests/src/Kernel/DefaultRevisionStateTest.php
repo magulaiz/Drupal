@@ -85,14 +85,14 @@ class DefaultRevisionStateTest extends KernelTestBase {
     $english_node
       ->setUnpublished()
       ->save();
-    $this->assertEquals('draft', $english_node->moderation_state->value);
+    $this->assertEquals('draft', $english_node->get('moderation_state')->value);
     $this->assertFalse($english_node->isPublished());
     $this->assertTrue($english_node->isDefaultRevision());
     $this->assertModerationState($english_node->getRevisionId(), $english_node->language()->getId(), 'draft');
 
     // Revision 2 (fr)
     $french_node = $english_node->addTranslation('fr', ['title' => 'French title']);
-    $french_node->moderation_state->value = 'published';
+    $french_node->get('moderation_state')->value = 'published';
     $french_node->save();
     $this->assertTrue($french_node->isPublished());
     $this->assertTrue($french_node->isDefaultRevision());
@@ -100,7 +100,7 @@ class DefaultRevisionStateTest extends KernelTestBase {
 
     // Revision 3 (fr)
     $node = Node::load($english_node->id())->getTranslation('fr');
-    $node->moderation_state->value = 'draft';
+    $node->get('moderation_state')->value = 'draft';
     $node->save();
     $this->assertFalse($node->isPublished());
     $this->assertFalse($node->isDefaultRevision());
@@ -108,7 +108,7 @@ class DefaultRevisionStateTest extends KernelTestBase {
 
     // Revision 4 (en)
     $latest_revision = $this->entityTypeManager->getStorage('node')->loadRevision(3);
-    $latest_revision->moderation_state->value = 'draft';
+    $latest_revision->get('moderation_state')->value = 'draft';
     $latest_revision->save();
     $this->assertFalse($latest_revision->isPublished());
     $this->assertFalse($latest_revision->isDefaultRevision());

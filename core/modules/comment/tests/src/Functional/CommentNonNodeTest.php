@@ -203,7 +203,7 @@ class CommentNonNodeTest extends BrowserTestBase {
       $regex = '/' . ($reply ? '<div class="indented">(.*?)' : '');
       $regex .= '<article(.*?)id="comment-' . $comment->id() . '"(.*?)';
       $regex .= $comment->getSubject() . '(.*?)';
-      $regex .= $comment->comment_body->value . '(.*?)';
+      $regex .= $comment->get('comment_body')->value . '(.*?)';
       $regex .= '/s';
 
       return (boolean) preg_match($regex, $this->getSession()->getPage()->getContent());

@@ -69,7 +69,7 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface {
 
       $tree_children = [];
       foreach ($workspaces as $workspace_id => $workspace) {
-        $tree_children[$workspace->parent->target_id][] = $workspace_id;
+        $tree_children[$workspace->get('parent')->target_id][] = $workspace_id;
       }
 
       // Keeps track of the parents we have to process, the last entry is used
@@ -110,8 +110,8 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface {
       $graph = [];
       foreach ($workspaces as $workspace_id => $workspace) {
         $graph[$workspace_id]['edges'] = [];
-        if (!$workspace->parent->isEmpty()) {
-          $graph[$workspace_id]['edges'][$workspace->parent->target_id] = TRUE;
+        if (!$workspace->get('parent')->isEmpty()) {
+          $graph[$workspace_id]['edges'][$workspace->get('parent')->target_id] = TRUE;
         }
       }
       $graph = (new Graph($graph))->searchAndSort();

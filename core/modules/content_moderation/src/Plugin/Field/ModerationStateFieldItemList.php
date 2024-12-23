@@ -51,7 +51,7 @@ class ModerationStateFieldItemList extends FieldItemList {
     // Existing entities will have a corresponding content_moderation_state
     // entity associated with them.
     if (!$entity->isNew() && $content_moderation_state = $this->loadContentModerationStateRevision($entity)) {
-      return $content_moderation_state->moderation_state->value;
+      return $content_moderation_state->get('moderation_state')->value;
     }
 
     // It is possible that the bundle does not exist at this point. For example,

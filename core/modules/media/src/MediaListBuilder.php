@@ -130,7 +130,7 @@ class MediaListBuilder extends EntityListBuilder {
       '#title' => $entity->label(),
       '#url' => $entity->toUrl(),
     ];
-    $row['type'] = $entity->bundle->entity->label();
+    $row['type'] = $entity->get('bundle')->entity->label();
     $row['author']['data'] = [
       '#theme' => 'username',
       '#account' => $entity->getOwner(),

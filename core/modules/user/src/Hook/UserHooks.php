@@ -160,7 +160,7 @@ class UserHooks {
   public function userPresave(UserInterface $account) {
     $config = \Drupal::config('system.date');
     if ($config->get('timezone.user.configurable') && !$account->getTimeZone() && !$config->get('timezone.user.default')) {
-      $account->timezone = $config->get('timezone.default');
+      $account->set('timezone', $config->get('timezone.default'));
     }
   }
 

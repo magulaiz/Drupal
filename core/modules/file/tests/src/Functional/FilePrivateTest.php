@@ -55,7 +55,7 @@ class FilePrivateTest extends FileFieldTestBase {
     \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     // Ensure the file can be viewed.
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseContains($node_file->getFilename());
@@ -174,7 +174,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $edit['files[' . $field_name . '_0]'] = $file_system->realpath($test_file->getFileUri());
     $this->submitForm($edit, 'Save');
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $file_id = $new_node->{$field_name}->target_id;
+    $file_id = $new_node->get($field_name)->target_id;
     $file = File::load($file_id);
     $this->assertTrue($file->isPermanent(), 'File is permanent.');
     // Remove the reference to this file.
@@ -203,7 +203,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $edit['files[' . $field_name . '_0]'] = $file_system->realpath($test_file->getFileUri());
     $this->submitForm($edit, 'Save');
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $file = File::load($new_node->{$field_name}->target_id);
+    $file = File::load($new_node->get($field_name)->target_id);
     $this->assertTrue($file->isPermanent(), 'File is permanent.');
     $usage = $this->container->get('file.usage')->listUsage($file);
     $this->assertCount(1, $usage, 'File usage found.');
@@ -230,7 +230,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $new_node->setUnpublished();
     $new_node->save();
-    $file = File::load($new_node->{$field_name}->target_id);
+    $file = File::load($new_node->get($field_name)->target_id);
     $this->assertTrue($file->isPermanent(), 'File is permanent.');
     $usage = $this->container->get('file.usage')->listUsage($file);
     $this->assertCount(1, $usage, 'File usage found.');

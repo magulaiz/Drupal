@@ -107,11 +107,11 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
-    if ($entity->moderation_state->value) {
+    if ($entity->get('moderation_state')->value) {
       $workflow = $this->moderationInfo->getWorkflowForEntity($entity);
       /** @var \Drupal\content_moderation\ContentModerationState $current_state */
       $current_state = $workflow->getTypePlugin()
-        ->getState($entity->moderation_state->value);
+        ->getState($entity->get('moderation_state')->value);
 
       // This entity is default if it is new, the default revision, or the
       // default revision is not published.
@@ -178,14 +178,14 @@ class EntityOperations implements ContainerInjectionInterface {
         // as the moderated entity.
         'langcode' => $entity->language()->getId(),
       ]);
-      $content_moderation_state->workflow->target_id = $workflow->id();
+      $content_moderation_state->get('workflow')->target_id = $workflow->id();
     }
 
     // Sync translations.
     if ($entity->getEntityType()->hasKey('langcode')) {
       $entity_langcode = $entity->language()->getId();
       if ($entity->isDefaultTranslation()) {
-        $content_moderation_state->langcode = $entity_langcode;
+        $content_moderation_state->set('langcode', $entity_langcode);
       }
       else {
         if (!$content_moderation_state->hasTranslation($entity_langcode)) {
@@ -199,12 +199,12 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // If a new revision of the content has been created, add a new content
     // moderation state revision.
-    if (!$content_moderation_state->isNew() && $content_moderation_state->content_entity_revision_id->value != $entity_revision_id) {
+    if (!$content_moderation_state->isNew() && $content_moderation_state->get('content_entity_revision_id')->value != $entity_revision_id) {
       $content_moderation_state = $storage->createRevision($content_moderation_state, $entity->isDefaultRevision());
     }
 
     // Create the ContentModerationState entity for the inserted entity.
-    $moderation_state = $entity->moderation_state->value;
+    $moderation_state = $entity->get('moderation_state')->value;
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     if (!$moderation_state) {
       $moderation_state = $workflow->getTypePlugin()->getInitialState($entity)->id();

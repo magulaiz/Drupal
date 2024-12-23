@@ -226,7 +226,7 @@ class NodeForm extends ContentEntityForm {
   protected function actions(array $form, FormStateInterface $form_state) {
     $element = parent::actions($form, $form_state);
     $node = $this->entity;
-    $preview_mode = $node->type->entity->getPreviewMode();
+    $preview_mode = $node->get('type')->entity->getPreviewMode();
 
     $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || $form_state->get('has_been_previewed');
 

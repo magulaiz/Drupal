@@ -129,7 +129,6 @@ class NodeCreationTest extends NodeTestBase {
     // Create a node.
     $edit = [
       'uid'      => $this->loggedInUser->id(),
-      'name'     => $this->loggedInUser->name,
       'type'     => 'page',
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'title'    => 'testing_transaction_exception',

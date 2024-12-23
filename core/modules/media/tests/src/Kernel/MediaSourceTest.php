@@ -70,8 +70,8 @@ class MediaSourceTest extends MediaKernelTestBase {
     ]);
 
     // Set a random source value on both items.
-    $a->set($a->getSource()->getSourceFieldDefinition($a->bundle->entity)->getName(), $this->randomString());
-    $b->set($b->getSource()->getSourceFieldDefinition($b->bundle->entity)->getName(), $this->randomString());
+    $a->set($a->getSource()->getSourceFieldDefinition($a->get('bundle')->entity)->getName(), $this->randomString());
+    $b->set($b->getSource()->getSourceFieldDefinition($b->get('bundle')->entity)->getName(), $this->randomString());
 
     $a->save();
     $storage->save($b);
@@ -86,8 +86,8 @@ class MediaSourceTest extends MediaKernelTestBase {
     $this->assertFalse($b->get('field_to_map_to')->isEmpty());
 
     // Assert that the thumbnail was mapped correctly from the source.
-    $this->assertSame('public://TheSisko.png', $a->thumbnail->entity->getFileUri());
-    $this->assertSame('public://TheSisko.png', $b->thumbnail->entity->getFileUri());
+    $this->assertSame('public://TheSisko.png', $a->get('thumbnail')->entity->getFileUri());
+    $this->assertSame('public://TheSisko.png', $b->get('thumbnail')->entity->getFileUri());
   }
 
   /**
@@ -209,7 +209,7 @@ class MediaSourceTest extends MediaKernelTestBase {
     \Drupal::state()->set('media_source_test_attributes', [
       $attribute_name => ['title' => 'Attribute to map', 'value' => 'Snowball'],
     ]);
-    $media->{$field_name}->value = NULL;
+    $media->get($field_name)->value = NULL;
     $this->assertSame('Snowball', $media_source->getMetadata($media, $attribute_name), 'Value of the metadata attribute is not correct.');
     $media->save();
     $this->assertSame('Snowball', $media->get($field_name)->value, 'Metadata attribute was not mapped to the field.');
@@ -253,10 +253,10 @@ class MediaSourceTest extends MediaKernelTestBase {
     $media_source = $media->getSource();
     $this->assertSame('public://thumbnail1.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertSame('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'Thumbnail was not added to the media item.');
+    $this->assertSame('public://thumbnail1.jpg', $media->get('thumbnail')->entity->getFileUri(), 'Thumbnail was not added to the media item.');
     // We expect the title not to be present on the Thumbnail.
-    $this->assertEmpty($media->thumbnail->title);
-    $this->assertSame('', $media->thumbnail->alt);
+    $this->assertEmpty($media->get('thumbnail')->title);
+    $this->assertSame('', $media->get('thumbnail')->alt);
 
     // Now change the metadata attribute and make sure that the thumbnail stays
     // the same.
@@ -265,17 +265,17 @@ class MediaSourceTest extends MediaKernelTestBase {
     ]);
     $this->assertSame('public://thumbnail2.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertSame('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'Thumbnail was not preserved.');
-    $this->assertEmpty($media->thumbnail->title);
-    $this->assertSame('', $media->thumbnail->alt);
+    $this->assertSame('public://thumbnail1.jpg', $media->get('thumbnail')->entity->getFileUri(), 'Thumbnail was not preserved.');
+    $this->assertEmpty($media->get('thumbnail')->title);
+    $this->assertSame('', $media->get('thumbnail')->alt);
 
     // Remove the thumbnail and make sure that it is auto-updated on save.
-    $media->thumbnail->target_id = NULL;
+    $media->get('thumbnail')->target_id = NULL;
     $this->assertSame('public://thumbnail2.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertSame('public://thumbnail2.jpg', $media->thumbnail->entity->getFileUri(), 'New thumbnail was not added to the media item.');
-    $this->assertEmpty($media->thumbnail->title);
-    $this->assertSame('', $media->thumbnail->alt);
+    $this->assertSame('public://thumbnail2.jpg', $media->get('thumbnail')->entity->getFileUri(), 'New thumbnail was not added to the media item.');
+    $this->assertEmpty($media->get('thumbnail')->title);
+    $this->assertSame('', $media->get('thumbnail')->alt);
 
     // Change the metadata attribute again, change the source field value too
     // and make sure that the thumbnail updates.
@@ -285,9 +285,9 @@ class MediaSourceTest extends MediaKernelTestBase {
     $media->field_media_test->value = 'some_new_value';
     $this->assertSame('public://thumbnail1.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertSame('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'New thumbnail was not added to the media item.');
-    $this->assertEmpty($media->thumbnail->title);
-    $this->assertSame('', $media->thumbnail->alt);
+    $this->assertSame('public://thumbnail1.jpg', $media->get('thumbnail')->entity->getFileUri(), 'New thumbnail was not added to the media item.');
+    $this->assertEmpty($media->get('thumbnail')->title);
+    $this->assertSame('', $media->get('thumbnail')->alt);
 
     // Change the thumbnail metadata attribute and make sure that the thumbnail
     // is set correctly.
@@ -305,9 +305,9 @@ class MediaSourceTest extends MediaKernelTestBase {
     $this->assertSame('public://thumbnail1.jpg', $media_source->getMetadata($media, 'thumbnail_uri'), 'Value of the metadata attribute is not correct.');
     $this->assertSame('public://thumbnail2.jpg', $media_source->getMetadata($media, 'alternative_thumbnail_uri'), 'Value of the thumbnail metadata attribute is not correct.');
     $media->save();
-    $this->assertSame('public://thumbnail2.jpg', $media->thumbnail->entity->getFileUri(), 'Correct metadata attribute was not used for the thumbnail.');
-    $this->assertEmpty($media->thumbnail->title);
-    $this->assertSame('', $media->thumbnail->alt);
+    $this->assertSame('public://thumbnail2.jpg', $media->get('thumbnail')->entity->getFileUri(), 'Correct metadata attribute was not used for the thumbnail.');
+    $this->assertEmpty($media->get('thumbnail')->title);
+    $this->assertSame('', $media->get('thumbnail')->alt);
 
     // Set the width and height metadata attributes and make sure they're used
     // for the thumbnail.
@@ -342,9 +342,9 @@ class MediaSourceTest extends MediaKernelTestBase {
     ]);
     $this->assertSame('public://thumbnail1.jpg', $media->getSource()->getMetadata($media, 'thumbnail_uri'), 'Value of the metadata attribute is not correct.');
     $media->save();
-    $this->assertSame('public://media-icons/generic/generic.png', $media->thumbnail->entity->getFileUri(), 'Default thumbnail was not set initially.');
-    $this->assertEmpty($media->thumbnail->title);
-    $this->assertSame('', $media->thumbnail->alt);
+    $this->assertSame('public://media-icons/generic/generic.png', $media->get('thumbnail')->entity->getFileUri(), 'Default thumbnail was not set initially.');
+    $this->assertEmpty($media->get('thumbnail')->title);
+    $this->assertSame('', $media->get('thumbnail')->alt);
 
     // Process the queue item and make sure that the thumbnail was updated too.
     $queue_name = 'media_entity_thumbnail';
@@ -361,9 +361,9 @@ class MediaSourceTest extends MediaKernelTestBase {
     $this->assertSame(0, $queue->numberOfItems(), 'Item was not removed from the queue.');
 
     $media = Media::load($media->id());
-    $this->assertSame('public://thumbnail1.jpg', $media->thumbnail->entity->getFileUri(), 'Thumbnail was not updated by the queue.');
-    $this->assertEmpty($media->thumbnail->title);
-    $this->assertSame('', $media->thumbnail->alt);
+    $this->assertSame('public://thumbnail1.jpg', $media->get('thumbnail')->entity->getFileUri(), 'Thumbnail was not updated by the queue.');
+    $this->assertEmpty($media->get('thumbnail')->title);
+    $this->assertSame('', $media->get('thumbnail')->alt);
 
     // Set the alt metadata attribute and make sure it's used for the thumbnail.
     \Drupal::state()->set('media_source_test_definition', [
@@ -379,8 +379,8 @@ class MediaSourceTest extends MediaKernelTestBase {
     ]);
     $media->save();
     $this->assertSame('Boxer', $media->getName(), 'Correct name was not set on the media item.');
-    $this->assertEmpty($media->thumbnail->title);
-    $this->assertSame('This will be alt.', $media->thumbnail->alt);
+    $this->assertEmpty($media->get('thumbnail')->title);
+    $this->assertSame('This will be alt.', $media->get('thumbnail')->alt);
   }
 
   /**

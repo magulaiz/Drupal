@@ -119,7 +119,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
         'spellcheck' => 'false',
       ],
       '#default_value' => (!$register ? $account->getAccountName() : ''),
-      '#access' => $account->name->access('edit'),
+      '#access' => $account->get('name')->access('edit'),
     ];
 
     // Display password field only for existing users or when user is allowed to
@@ -200,7 +200,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       '#title' => $this->t('Status'),
       '#default_value' => $status,
       '#options' => [$this->t('Blocked'), $this->t('Active')],
-      '#access' => $account->status->access('edit'),
+      '#access' => $account->get('status')->access('edit'),
     ];
 
     $roles = Role::loadMultiple();

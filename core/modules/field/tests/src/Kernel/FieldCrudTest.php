@@ -229,12 +229,12 @@ class FieldCrudTest extends FieldKernelTestBase {
     // Save an entity with a value in the custom storage field and verify no
     // data is retrieved on load.
     $entity = EntityTest::create(['name' => $this->randomString(), $field_name => 'Test value']);
-    $this->assertSame('Test value', $entity->{$field_name}->value, 'The test value is set on the field.');
+    $this->assertSame('Test value', $entity->get($field_name)->value, 'The test value is set on the field.');
 
     $entity->save();
     $entity = EntityTest::load($entity->id());
 
-    $this->assertNull($entity->{$field_name}->value, 'The loaded entity field value is NULL.');
+    $this->assertNull($entity->get($field_name)->value, 'The loaded entity field value is NULL.');
   }
 
   /**

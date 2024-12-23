@@ -390,7 +390,6 @@ class ContentEntityTest extends KernelTestBase {
     $term2 = Term::create([
       'vid' => $this->vocabulary,
       'name' => 'Granny Smith',
-      'uid' => $this->user->id(),
       'parent' => 1,
     ]);
     $term2->save();

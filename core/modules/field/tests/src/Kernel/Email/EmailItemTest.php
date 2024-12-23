@@ -53,7 +53,7 @@ class EmailItemTest extends FieldKernelTestBase {
     $entity = EntityTest::create();
     $value = 'test@example.com';
     $entity->field_email = $value;
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     // Verify entity has been created properly.

@@ -96,7 +96,7 @@ class MenuUiHooks {
     $node = $form_state->getFormObject()->getEntity();
     $defaults = menu_ui_get_menu_link_defaults($node);
     /** @var \Drupal\node\NodeTypeInterface $node_type */
-    $node_type = $node->type->entity;
+    $node_type = $node->get('type')->entity;
     /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
     $menu_parent_selector = \Drupal::service('menu.parent_form_selector');
     $type_menus_ids = $node_type->getThirdPartySetting('menu_ui', 'available_menus', ['main']);

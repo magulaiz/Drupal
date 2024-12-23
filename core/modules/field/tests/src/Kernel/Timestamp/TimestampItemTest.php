@@ -60,7 +60,7 @@ class TimestampItemTest extends FieldKernelTestBase {
     $entity = EntityTest::create();
     $value = 1488914208;
     $entity->field_timestamp = $value;
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $this->entityValidateAndSave($entity);
 
     // Verify entity has been created properly.

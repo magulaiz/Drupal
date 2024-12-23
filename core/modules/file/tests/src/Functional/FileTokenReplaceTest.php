@@ -48,7 +48,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     // Load the node and the file.
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
-    $file = File::load($node->{$field_name}->target_id);
+    $file = File::load($node->get($field_name)->target_id);
 
     // Generate and test sanitized tokens.
     $tests = [];

@@ -53,7 +53,7 @@ class BooleanItemTest extends FieldKernelTestBase {
     $entity = EntityTest::create();
     $value = '1';
     $entity->field_boolean = $value;
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     // Verify entity has been created properly.

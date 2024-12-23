@@ -273,7 +273,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $node = $this->createNode(['type' => 'moderated_content', 'moderation_state' => 'published']);
     // Make a pending revision.
     $node->title = $this->randomMachineName();
-    $node->moderation_state->value = 'draft';
+    $node->get('moderation_state')->value = 'draft';
     $node->setRevisionCreationTime(12345);
     $node->save();
 

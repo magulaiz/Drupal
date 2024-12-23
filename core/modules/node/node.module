@@ -374,7 +374,7 @@ function template_preprocess_node(&$variables): void {
     // @todo https://www.drupal.org/project/drupal/issues/3015623
     //   Eventually delete this code and matching template lines. Using a field
     //   formatter is more flexible and consistent.
-    $node_type = $node->type->entity;
+    $node_type = $node->get('type')->entity;
     $variables['author_attributes'] = new Attribute();
     $variables['display_submitted'] = $node_type->displaySubmitted();
     if ($variables['display_submitted']) {

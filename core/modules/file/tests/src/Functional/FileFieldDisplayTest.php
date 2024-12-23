@@ -79,7 +79,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
-    $node_file = File::load($node->{$field_name}->target_id);
+    $node_file = File::load($node->get($field_name)->target_id);
     $file_link = [
       '#theme' => 'file_link',
       '#file' => $node_file,
@@ -223,7 +223,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     // Test default formatter.
     $this->drupalGet('node/' . $nid);
-    $this->assertSession()->elementTextContains('xpath', '//a[@href="' . $node->{$field_name}->entity->createFileUrl() . '"]', $description);
+    $this->assertSession()->elementTextContains('xpath', '//a[@href="' . $node->get($field_name)->entity->createFileUrl() . '"]', $description);
 
     // Change formatter to "Table of files".
     $display = \Drupal::entityTypeManager()->getStorage('entity_view_display')->load('node.' . $type_name . '.default');
@@ -233,7 +233,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     ])->save();
 
     $this->drupalGet('node/' . $nid);
-    $this->assertSession()->elementTextContains('xpath', '//a[@href="' . $node->{$field_name}->entity->createFileUrl() . '"]', $description);
+    $this->assertSession()->elementTextContains('xpath', '//a[@href="' . $node->get($field_name)->entity->createFileUrl() . '"]', $description);
 
     // Test that null file size is rendered as "Unknown".
     $nonexistent_file = File::create([
@@ -243,7 +243,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $node->set($field_name, $nonexistent_file->id());
     $node->save();
     $this->drupalGet('node/' . $nid);
-    $this->assertSession()->elementTextEquals('xpath', '//a[@href="' . $node->{$field_name}->entity->createFileUrl() . '"]/../../../td[2]', 'Unknown');
+    $this->assertSession()->elementTextEquals('xpath', '//a[@href="' . $node->get($field_name)->entity->createFileUrl() . '"]/../../../td[2]', 'Unknown');
   }
 
 }

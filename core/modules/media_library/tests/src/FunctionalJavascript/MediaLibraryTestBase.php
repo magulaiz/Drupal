@@ -43,7 +43,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
           'bundle' => $type,
         ]);
         $source_field = $media->getSource()
-          ->getSourceFieldDefinition($media->bundle->entity)
+          ->getSourceFieldDefinition($media->get('bundle')->entity)
           ->getName();
         $media->set($source_field, $name)->setCreatedTime(++$time)->save();
         $created_items[$name] = $media;

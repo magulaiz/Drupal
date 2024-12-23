@@ -153,7 +153,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ]);
       // Make sure the name is set for every language that we might create.
       foreach (['tr', 'pl'] as $langcode) {
-        $entity->addTranslation($langcode)->name = $this->randomMachineName();
+        $entity->addTranslation($langcode)->set('name', $this->randomMachineName());
       }
       foreach (array_reverse(str_split(decbin($i))) as $key => $bit) {
         if ($bit) {
@@ -161,7 +161,7 @@ class EntityQueryTest extends EntityKernelTestBase {
           //   [$field_name, $langcode, $values] = $units[$key]; causes
           //   problems in PHP 7.3. Revert to better variable names once
           //   https://bugs.php.net/bug.php?id=76937 is fixed.
-          $entity->getTranslation($units[$key][1])->{$units[$key][0]}[] = $units[$key][2];
+          $entity->getTranslation($units[$key][1])->get($units[$key][0])[] = $units[$key][2];
         }
       }
       $entity->save();
@@ -293,11 +293,11 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     $entities = EntityTestMulRev::loadMultiple($ids);
     $first_entity = reset($entities);
-    $old_name = $first_entity->name->value;
+    $old_name = $first_entity->get('name')->value;
     foreach ($entities as $entity) {
       $entity->setNewRevision();
-      $entity->getTranslation('tr')->$greetings->value = 'xsiemax';
-      $entity->name->value .= 'x';
+      $entity->getTranslation('tr')->get($greetings)->value = 'xsiemax';
+      $entity->get('name')->value .= 'x';
       $entity->save();
     }
     // Test querying all revisions with a condition on the revision ID field.

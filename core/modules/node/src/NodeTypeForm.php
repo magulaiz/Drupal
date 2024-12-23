@@ -136,9 +136,9 @@ class NodeTypeForm extends BundleEntityFormBase {
       '#group' => 'additional_settings',
     ];
     $workflow_options = [
-      'status' => $node->status->value,
-      'promote' => $node->promote->value,
-      'sticky' => $node->sticky->value,
+      'status' => $node->get('status')->value,
+      'promote' => $node->get('promote')->value,
+      'sticky' => $node->get('sticky')->value,
       'revision' => $type->shouldCreateNewRevision(),
     ];
     // Prepare workflow options to be used for 'checkboxes' form element.
@@ -256,7 +256,7 @@ class NodeTypeForm extends BundleEntityFormBase {
     $node = $this->entityTypeManager->getStorage('node')->create(['type' => $type->id()]);
     foreach (['status', 'promote', 'sticky'] as $field_name) {
       $value = (bool) $form_state->getValue(['options', $field_name]);
-      if ($node->$field_name->value != $value) {
+      if ($node->get($field_name)->value != $value) {
         $fields[$field_name]->getConfig($type->id())->setDefaultValue($value)->save();
       }
     }

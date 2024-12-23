@@ -77,7 +77,7 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
       'moderation_state' => 'aa_draft',
     ]);
     $first_node->save();
-    $first_node->moderation_state = 'zz_draft';
+    $first_node->get('moderation_state')->value = 'zz_draft';
     $first_node->save();
 
     // Create a second published node, which falls between aa_draft and zz_draft
@@ -118,16 +118,16 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
     $node->save();
     $published_revision_id = $node->getRevisionId();
 
-    $node->moderation_state = 'draft';
+    $node->get('moderation_state')->value = 'draft';
     $node->save();
     $draft_revision_id = $node->getRevisionId();
 
-    $node->moderation_state = 'aa_draft';
+    $node->get('moderation_state')->value = 'aa_draft';
     $node->save();
     $aa_draft_revision_id = $node->getRevisionId();
 
     $translated = $node->addTranslation('fr');
-    $translated->moderation_state = 'zz_draft';
+    $translated->get('moderation_state')->value = 'zz_draft';
     $translated->title = 'Translated';
     $translated->save();
     $zz_draft_revision_id = $translated->getRevisionId();

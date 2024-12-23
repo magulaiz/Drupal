@@ -75,7 +75,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
     $entity = EntityTest::create();
     $value = '2014-01-01T20:00:00';
     $entity->field_datetime = $value;
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $this->entityValidateAndSave($entity);
 
     // Verify entity has been created properly.
@@ -119,7 +119,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
     $entity = EntityTest::create();
     $value = '2014-01-01';
     $entity->field_datetime = $value;
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $this->entityValidateAndSave($entity);
 
     // Verify entity has been created properly.

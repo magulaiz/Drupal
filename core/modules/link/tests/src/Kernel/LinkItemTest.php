@@ -89,7 +89,7 @@ class LinkItemTest extends FieldKernelTestBase {
       ],
       'external' => TRUE,
     ], $entity->field_test->first()->getUrl()->getOptions());
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     // Verify that the field value is changed.
@@ -107,7 +107,7 @@ class LinkItemTest extends FieldKernelTestBase {
 
     // Update only the entity name property to check if the link field data will
     // remain intact.
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
     $id = $entity->id();
     $entity = EntityTest::load($id);

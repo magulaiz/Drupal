@@ -65,7 +65,7 @@
 {%
   set classes = [
     'node',
-    'node--type-' ~ node.bundle|clean_class,
+    'node--type-' ~ node.bundle()|clean_class,
     layout ? 'grid-full',
     node.isPromoted() ? 'node--promoted',
     node.isSticky() ? 'node--sticky',

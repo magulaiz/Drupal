@@ -43,7 +43,7 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     $entity = EntityTestMul::create([
       'name' => $this->randomString(),
       'user_id' => $user->id(),
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $translation = $entity->addTranslation('de');
 
@@ -80,7 +80,7 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     // Create a test entity.
     $entity = EntityTestMul::create([
       'name' => $this->randomString(),
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $entity->save();
     $entity_translation = $entity->addTranslation('de');
@@ -110,7 +110,7 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     $entity = EntityTestMul::create([
       'name' => $this->randomString(),
       'user_id' => $user->id(),
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
 
     $entity->addTranslation('de');
@@ -152,7 +152,7 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     // Create a test entity.
     $entity = EntityTestMulRev::create([
       'name' => $this->randomString(),
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $entity->save();
     $entity->addTranslation('de');
@@ -187,7 +187,7 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     $entity = EntityTestMulRev::create([
       'name' => 'original-name',
       'uuid' => 'original-uuid',
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $entity->addTranslation('de');
     $entity->save();
@@ -226,7 +226,7 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     // the entity properties.
     $entity = EntityTestMulRev::create([
       'name' => 'original',
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $entity->addTranslation('de');
     $entity->save();
@@ -258,7 +258,7 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     // the entity properties.
     $entity = EntityTestMulRev::create([
       'name' => 'original',
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $entity->addTranslation('de');
     $entity->save();
@@ -285,7 +285,7 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     // the entity properties.
     $entity = EntityTestMulRev::create([
       'name' => 'original',
-      'language' => 'en',
+      'langcode' => 'en',
     ]);
     $translation = $entity->addTranslation('de');
     $entity->save();

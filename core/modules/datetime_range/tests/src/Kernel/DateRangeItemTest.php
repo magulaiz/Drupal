@@ -97,9 +97,9 @@ class DateRangeItemTest extends FieldKernelTestBase {
     // Dates are saved without a time value. When they are converted back into
     // a \Drupal\datetime\DateTimeComputed object they should all have the same
     // time.
-    $start_date = $entity->{$field_name}->start_date;
+    $start_date = $entity->get($field_name)->start_date;
     sleep(1);
-    $end_date = $entity->{$field_name}->end_date;
+    $end_date = $entity->get($field_name)->end_date;
     $this->assertEquals($start_date->getTimestamp(), $end_date->getTimestamp());
     $this->assertEquals('12:00:00', $start_date->format('H:i:s'));
     $this->assertEquals('12:00:00', $end_date->format('H:i:s'));

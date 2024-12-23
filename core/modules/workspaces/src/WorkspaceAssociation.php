@@ -384,7 +384,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    * {@inheritdoc}
    */
   public function initializeWorkspace(WorkspaceInterface $workspace) {
-    if ($parent_id = $workspace->parent->target_id) {
+    if ($parent_id = $workspace->get('parent')->target_id) {
       $indexed_rows = $this->database->select(static::TABLE);
       $indexed_rows->addExpression(':new_id', 'workspace', [
         ':new_id' => $workspace->id(),

@@ -57,7 +57,7 @@ class TestItemTest extends FieldKernelTestBase {
     $entity = EntityTest::create();
     $value = rand(1, 10);
     $entity->field_test = $value;
-    $entity->name->value = $this->randomMachineName();
+    $entity->get('name')->value = $this->randomMachineName();
     $entity->save();
 
     // Verify entity has been created properly.

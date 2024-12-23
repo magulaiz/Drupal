@@ -49,19 +49,19 @@ class MigrateNodeBundleSettingsTest extends MigrateDrupal6TestBase {
   public function testNodeBundleSettings(): void {
     // Test settings on test_page bundle.
     $node = Node::create(['type' => 'test_page']);
-    $this->assertSame(1, $node->status->value);
+    $this->assertSame(1, $node->get('status')->value);
     $this->assertSame(1, $node->promote->value);
     $this->assertSame(1, $node->sticky->value);
 
     // Test settings for test_story bundle.
     $node = Node::create(['type' => 'test_story']);
-    $this->assertSame(1, $node->status->value);
+    $this->assertSame(1, $node->get('status')->value);
     $this->assertSame(1, $node->promote->value);
     $this->assertSame(0, $node->sticky->value);
 
     // Test settings for the test_event bundle.
     $node = Node::create(['type' => 'test_event']);
-    $this->assertSame(0, $node->status->value);
+    $this->assertSame(0, $node->get('status')->value);
     $this->assertSame(0, $node->promote->value);
     $this->assertSame(1, $node->sticky->value);
   }

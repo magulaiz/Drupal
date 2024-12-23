@@ -75,15 +75,15 @@ class EntityStateChangeValidationTest extends KernelTestBase {
       'type' => 'example',
       'title' => 'Test title',
     ]);
-    $node->moderation_state->value = 'draft';
+    $node->get('moderation_state')->value = 'draft';
     $node->save();
 
     $this->setCurrentUser($this->createUser(['use editorial transition publish']));
-    $node->moderation_state->value = 'published';
+    $node->get('moderation_state')->value = 'published';
     $this->assertCount(0, $node->validate());
     $node->save();
 
-    $this->assertEquals('published', $node->moderation_state->value);
+    $this->assertEquals('published', $node->get('moderation_state')->value);
   }
 
   /**
@@ -107,10 +107,10 @@ class EntityStateChangeValidationTest extends KernelTestBase {
       'type' => 'example',
       'title' => 'Test title',
     ]);
-    $node->moderation_state->value = 'draft';
+    $node->get('moderation_state')->value = 'draft';
     $node->save();
 
-    $node->moderation_state->value = 'archived';
+    $node->get('moderation_state')->value = 'archived';
     $violations = $node->validate();
     $this->assertCount(1, $violations);
 
@@ -134,7 +134,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
       'type' => 'example',
       'title' => 'Test title',
     ]);
-    $node->moderation_state->value = 'invalid_state';
+    $node->get('moderation_state')->value = 'invalid_state';
     $violations = $node->validate();
 
     $this->assertCount(1, $violations);
@@ -167,12 +167,12 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $this->setCurrentUser($this->createUser(['use editorial transition create_new_draft']));
     // Validate the invalid state.
     $node = Node::load($node->id());
-    $node->moderation_state->value = 'invalid_state';
+    $node->get('moderation_state')->value = 'invalid_state';
     $violations = $node->validate();
     $this->assertCount(1, $violations);
 
     // Assign the node to a state we're going to delete.
-    $node->moderation_state->value = 'deleted_state';
+    $node->get('moderation_state')->value = 'deleted_state';
     $node->save();
 
     // Delete the state so the original entity contains an invalid state when
@@ -182,11 +182,11 @@ class EntityStateChangeValidationTest extends KernelTestBase {
 
     // When there is an invalid state, the content will revert to "draft". This
     // will allow a draft to draft transition.
-    $node->moderation_state->value = 'draft';
+    $node->get('moderation_state')->value = 'draft';
     $violations = $node->validate();
     $this->assertCount(0, $violations);
     // This will disallow a draft to archived transition.
-    $node->moderation_state->value = 'archived';
+    $node->get('moderation_state')->value = 'archived';
     $violations = $node->validate();
     $this->assertCount(1, $violations);
   }
@@ -219,32 +219,32 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $node_fr = $node->addTranslation('fr', $node->toArray());
     $node_fr->setTitle('French Published Node');
     $node_fr->save();
-    $this->assertEquals('published', $node_fr->moderation_state->value);
+    $this->assertEquals('published', $node_fr->get('moderation_state')->value);
 
     // Create a pending revision of the original node.
-    $node->moderation_state = 'draft';
+    $node->get('moderation_state')->value = 'draft';
     $node->setNewRevision(TRUE);
     $node->isDefaultRevision(FALSE);
     $node->save();
 
     // For the pending english revision, there should be a violation from draft
     // to archived.
-    $node->moderation_state = 'archived';
+    $node->get('moderation_state')->value = 'archived';
     $violations = $node->validate();
     $this->assertCount(1, $violations);
     $this->assertEquals('Invalid state transition from Draft to Archived', $violations->get(0)->getMessage());
 
     // From the default french published revision, there should be none.
     $node_fr = Node::load($node->id())->getTranslation('fr');
-    $this->assertEquals('published', $node_fr->moderation_state->value);
-    $node_fr->moderation_state = 'archived';
+    $this->assertEquals('published', $node_fr->get('moderation_state')->value);
+    $node_fr->get('moderation_state')->value = 'archived';
     $violations = $node_fr->validate();
     $this->assertCount(0, $violations);
 
     // From the latest french revision, there should also be no violation.
     $node_fr = Node::load($node->id())->getTranslation('fr');
-    $this->assertEquals('published', $node_fr->moderation_state->value);
-    $node_fr->moderation_state = 'archived';
+    $this->assertEquals('published', $node_fr->get('moderation_state')->value);
+    $node_fr->get('moderation_state')->value = 'archived';
     $violations = $node_fr->validate();
     $this->assertCount(0, $violations);
   }

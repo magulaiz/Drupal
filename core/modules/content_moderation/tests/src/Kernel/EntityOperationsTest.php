@@ -66,7 +66,7 @@ class EntityOperationsTest extends KernelTestBase {
       'type' => 'page',
       'title' => 'A',
     ]);
-    $page->moderation_state->value = 'draft';
+    $page->get('moderation_state')->value = 'draft';
     $page->save();
 
     $id = $page->id();
@@ -81,7 +81,7 @@ class EntityOperationsTest extends KernelTestBase {
 
     // Moderate the entity to published.
     $page->setTitle('B');
-    $page->moderation_state->value = 'published';
+    $page->get('moderation_state')->value = 'published';
     $page->save();
 
     // Verify the entity is now published and public.
@@ -92,7 +92,7 @@ class EntityOperationsTest extends KernelTestBase {
 
     // Make a new pending revision in Draft.
     $page->setTitle('C');
-    $page->moderation_state->value = 'draft';
+    $page->get('moderation_state')->value = 'draft';
     $page->save();
 
     // Verify normal loads return the still-default previous version.
@@ -111,7 +111,7 @@ class EntityOperationsTest extends KernelTestBase {
     $this->assertEquals('C', $page->getTitle());
 
     $page->setTitle('D');
-    $page->moderation_state->value = 'published';
+    $page->get('moderation_state')->value = 'published';
     $page->save();
 
     // Verify normal loads return the still-default previous version.
@@ -122,7 +122,7 @@ class EntityOperationsTest extends KernelTestBase {
 
     // Now check that we can immediately add a new published revision over it.
     $page->setTitle('E');
-    $page->moderation_state->value = 'published';
+    $page->get('moderation_state')->value = 'published';
     $page->save();
 
     $page = Node::load($id);
@@ -140,7 +140,7 @@ class EntityOperationsTest extends KernelTestBase {
       'type' => 'page',
       'title' => 'A',
     ]);
-    $page->moderation_state->value = 'published';
+    $page->get('moderation_state')->value = 'published';
     $page->save();
 
     $id = $page->id();
@@ -162,7 +162,7 @@ class EntityOperationsTest extends KernelTestBase {
       'title' => $this->randomString(),
     ]);
 
-    $page->moderation_state->value = 'published';
+    $page->get('moderation_state')->value = 'published';
     $page->save();
 
     $id = $page->id();
@@ -173,7 +173,7 @@ class EntityOperationsTest extends KernelTestBase {
 
     // When the page is moderated to the archived state, then the latest
     // revision should be the default revision, and it should be unpublished.
-    $page->moderation_state->value = 'archived';
+    $page->get('moderation_state')->value = 'archived';
     $page->save();
     $new_revision_id = $page->getRevisionId();
 

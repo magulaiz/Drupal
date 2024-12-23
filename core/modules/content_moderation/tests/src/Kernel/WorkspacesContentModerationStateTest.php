@@ -143,7 +143,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     }
 
     // Get the $page_draft node to a publishable state and try again.
-    $page_draft->moderation_state->value = 'published';
+    $page_draft->get('moderation_state')->value = 'published';
     $page_draft->save();
     try {
       $access_handler->resetCache();
@@ -155,7 +155,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     }
 
     // Get the $article_archived node to a publishable state and try again.
-    $article_archived->moderation_state->value = 'published';
+    $article_archived->get('moderation_state')->value = 'published';
     $article_archived->save();
     try {
       $access_handler->resetCache();
@@ -167,7 +167,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     }
 
     // Get the $article_draft node to a publishable state and try again.
-    $article_draft->moderation_state->value = 'published';
+    $article_draft->get('moderation_state')->value = 'published';
     $article_draft->save();
     $access_handler->resetCache();
     $this->workspaces['stage']->publish();
@@ -225,14 +225,14 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     $entity_with_revision->save();
     $entity_with_revision = $this->reloadEntity($entity_with_revision);
     // Confirm unpublished earlier revision.
-    $this->assertEquals('draft', $entity_with_revision->moderation_state->value);
+    $this->assertEquals('draft', $entity_with_revision->get('moderation_state')->value);
     $earlier_revision_id = $entity_with_revision->getRevisionId();
     // Publish.
-    $entity_with_revision->moderation_state->value = 'published';
+    $entity_with_revision->get('moderation_state')->value = 'published';
     $entity_with_revision->save();
     $entity_with_revision = $this->reloadEntity($entity_with_revision);
     // Confirm publish revision.
-    $this->assertEquals('published', $entity_with_revision->moderation_state->value);
+    $this->assertEquals('published', $entity_with_revision->get('moderation_state')->value);
     $published_revision_id = $entity_with_revision->getRevisionId();
     $this->assertNotEquals($earlier_revision_id, $published_revision_id);
 
@@ -245,7 +245,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     ]);
     $entity_without_revision->save();
     $entity_without_revision = $this->reloadEntity($entity_without_revision);
-    $this->assertEquals('published', $entity_without_revision->moderation_state->value);
+    $this->assertEquals('published', $entity_without_revision->get('moderation_state')->value);
 
     // Current published revisions of second entity has the same revision as
     // earlier unpublished revision of first entity.

@@ -202,7 +202,7 @@ class CommentPreviewTest extends CommentTestBase {
     /** @var \Drupal\comment\CommentInterface $comment_loaded */
     $comment_loaded = Comment::load($comment->id());
     $this->assertEquals($edit['subject[0][value]'], $comment_loaded->getSubject(), 'Subject loaded.');
-    $this->assertEquals($edit['comment_body[0][value]'], $comment_loaded->comment_body->value, 'Comment body loaded.');
+    $this->assertEquals($edit['comment_body[0][value]'], $comment_loaded->get('comment_body')->value, 'Comment body loaded.');
     $this->assertEquals($web_user->id(), $comment_loaded->getOwner()->id(), 'Name loaded.');
     $this->assertEquals($raw_date, $comment_loaded->getCreatedTime(), 'Date loaded.');
     $this->drupalLogout();

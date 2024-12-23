@@ -67,14 +67,14 @@ trait RevisionLogEntityTrait {
    * Implements \Drupal\Core\Entity\RevisionLogInterface::getRevisionCreationTime().
    */
   public function getRevisionCreationTime() {
-    return $this->{$this->getEntityType()->getRevisionMetadataKey('revision_created')}->value;
+    return $this->get($this->getEntityType()->getRevisionMetadataKey('revision_created'))->value;
   }
 
   /**
    * Implements \Drupal\Core\Entity\RevisionLogInterface::setRevisionCreationTime().
    */
   public function setRevisionCreationTime($timestamp) {
-    $this->{$this->getEntityType()->getRevisionMetadataKey('revision_created')}->value = $timestamp;
+    $this->get($this->getEntityType()->getRevisionMetadataKey('revision_created'))->value = $timestamp;
     return $this;
   }
 
@@ -82,14 +82,14 @@ trait RevisionLogEntityTrait {
    * Implements \Drupal\Core\Entity\RevisionLogInterface::getRevisionUser().
    */
   public function getRevisionUser() {
-    return $this->{$this->getEntityType()->getRevisionMetadataKey('revision_user')}->entity;
+    return $this->get($this->getEntityType()->getRevisionMetadataKey('revision_user'))->entity;
   }
 
   /**
    * Implements \Drupal\Core\Entity\RevisionLogInterface::setRevisionUser().
    */
   public function setRevisionUser(UserInterface $account) {
-    $this->{$this->getEntityType()->getRevisionMetadataKey('revision_user')}->entity = $account;
+    $this->get($this->getEntityType()->getRevisionMetadataKey('revision_user'))->entity = $account;
     return $this;
   }
 
@@ -97,14 +97,14 @@ trait RevisionLogEntityTrait {
    * Implements \Drupal\Core\Entity\RevisionLogInterface::getRevisionUserId().
    */
   public function getRevisionUserId() {
-    return $this->{$this->getEntityType()->getRevisionMetadataKey('revision_user')}->target_id;
+    return $this->get($this->getEntityType()->getRevisionMetadataKey('revision_user'))->target_id;
   }
 
   /**
    * Implements \Drupal\Core\Entity\RevisionLogInterface::setRevisionUserId().
    */
   public function setRevisionUserId($user_id) {
-    $this->{$this->getEntityType()->getRevisionMetadataKey('revision_user')}->target_id = $user_id;
+    $this->get($this->getEntityType()->getRevisionMetadataKey('revision_user'))->target_id = $user_id;
     return $this;
   }
 
@@ -112,14 +112,14 @@ trait RevisionLogEntityTrait {
    * Implements \Drupal\Core\Entity\RevisionLogInterface::getRevisionLogMessage().
    */
   public function getRevisionLogMessage() {
-    return $this->{$this->getEntityType()->getRevisionMetadataKey('revision_log_message')}->value;
+    return $this->get($this->getEntityType()->getRevisionMetadataKey('revision_log_message'))->value;
   }
 
   /**
    * Implements \Drupal\Core\Entity\RevisionLogInterface::setRevisionLogMessage().
    */
   public function setRevisionLogMessage($revision_log_message) {
-    $this->{$this->getEntityType()->getRevisionMetadataKey('revision_log_message')}->value = $revision_log_message;
+    $this->get($this->getEntityType()->getRevisionMetadataKey('revision_log_message'))->value = $revision_log_message;
     return $this;
   }
 

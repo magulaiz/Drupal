@@ -111,7 +111,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
     $old_revision_id = $node->getRevisionId();
     $node->setNewRevision(TRUE);
     $node->title = 'Updated title';
-    $node->moderation_state = 'published';
+    $node->get('moderation_state')->value = 'published';
     $node->save();
     $this->assertStorageException([
       'content_entity_type_id' => $node->getEntityTypeId(),

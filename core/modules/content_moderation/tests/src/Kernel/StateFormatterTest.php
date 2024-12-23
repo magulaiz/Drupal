@@ -55,7 +55,7 @@ class StateFormatterTest extends KernelTestBase {
     $entity->save();
 
     $field_output = $this->container->get('renderer')->executeInRenderContext(new RenderContext(), function () use ($entity, $formatter_settings) {
-      return $entity->moderation_state->view($formatter_settings);
+      return $entity->get('moderation_state')->view($formatter_settings);
     });
 
     $this->assertEquals($expected_output, $field_output[0]);

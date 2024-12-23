@@ -231,7 +231,7 @@ class CommentController extends ControllerBase {
         // We make sure the field value isn't set so we don't end up with a
         // redirect loop.
         $entity = clone $entity;
-        $entity->{$field_name}->status = CommentItemInterface::HIDDEN;
+        $entity->get($field_name)->status = CommentItemInterface::HIDDEN;
         // Render array of the entity full view mode.
         $build['commented_entity'] = $this->entityTypeManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, 'full');
         unset($build['commented_entity']['#cache']);
@@ -282,7 +282,7 @@ class CommentController extends ControllerBase {
     $access = AccessResult::allowedIfHasPermission($account, 'post comments');
 
     // If commenting is open on the entity.
-    $status = $entity->{$field_name}->status;
+    $status = $entity->get($field_name)->status;
     $access = $access->andIf(AccessResult::allowedIf($status == CommentItemInterface::OPEN)
       ->addCacheableDependency($entity))
       // And if user has access to the host entity.
@@ -335,7 +335,7 @@ class CommentController extends ControllerBase {
       $node = $this->entityTypeManager()->getStorage('node')->load($nid);
       $new = $this->commentManager->getCountNewComments($node);
       $page_number = $this->entityTypeManager()->getStorage('comment')
-        ->getNewCommentPageNumber($node->{$field_name}->comment_count, $new, $node, $field_name);
+        ->getNewCommentPageNumber($node->get($field_name)->comment_count, $new, $node, $field_name);
       $query = $page_number ? ['page' => $page_number] : NULL;
       $links[$nid] = [
         'new_comment_count' => (int) $new,

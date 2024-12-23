@@ -67,7 +67,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
 
             // The default revision is not workspace-specific anymore.
             $field_name = $entity->getEntityType()->getRevisionMetadataKey('workspace');
-            $entity->{$field_name}->target_id = NULL;
+            $entity->get($field_name)->target_id = NULL;
 
             $entity->setOriginal($default_revisions[$entity->id()]);
             $entity->save();

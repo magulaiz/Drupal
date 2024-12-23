@@ -167,13 +167,13 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
   public function save() {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()
-      ->getStorage($this->content_entity_type_id->value);
+      ->getStorage($this->get('content_entity_type_id')->value);
     $related_entity = $storage
-      ->loadRevision($this->content_entity_revision_id->value);
+      ->loadRevision($this->get('content_entity_revision_id')->value);
     if ($related_entity instanceof TranslatableInterface) {
       $related_entity = $related_entity->getTranslation($this->activeLangcode);
     }
-    $related_entity->moderation_state = $this->moderation_state;
+    $related_entity->set('moderation_state', $this->get('moderation_state')->value);
     return $related_entity->save();
   }
 

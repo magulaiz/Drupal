@@ -99,7 +99,7 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
    * {@inheritdoc}
    */
   public function getUrlObject() {
-    return $this->link->first()->getUrl();
+    return $this->get('link')->first()->getUrl();
   }
 
   /**
@@ -203,7 +203,7 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    if (parse_url($this->link->uri, PHP_URL_SCHEME) === 'internal') {
+    if (parse_url($this->get('link')->uri, PHP_URL_SCHEME) === 'internal') {
       $this->setRequiresRediscovery(TRUE);
     }
     else {

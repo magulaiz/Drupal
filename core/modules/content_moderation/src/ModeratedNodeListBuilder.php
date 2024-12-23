@@ -112,7 +112,7 @@ class ModeratedNodeListBuilder extends NodeListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row = parent::buildRow($entity);
-    $row['status'] = $entity->moderation_state->value;
+    $row['status'] = $entity->get('moderation_state')->value;
 
     return $row;
   }

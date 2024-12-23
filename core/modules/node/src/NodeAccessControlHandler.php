@@ -261,7 +261,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
       if ($account->hasPermission('administer nodes')) {
         return AccessResult::allowed()->cachePerPermissions();
       }
-      return AccessResult::allowedIf($items->getEntity()->type->entity->shouldCreateNewRevision())->cachePerPermissions();
+      return AccessResult::allowedIf($items->getEntity()->get('type')->entity->shouldCreateNewRevision())->cachePerPermissions();
     }
     return parent::checkFieldAccess($operation, $field_definition, $account, $items);
   }

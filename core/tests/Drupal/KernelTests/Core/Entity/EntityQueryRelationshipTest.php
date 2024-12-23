@@ -101,7 +101,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
     // 1st account and 1st term.
     for ($i = 0; $i <= 2; $i++) {
       $entity = EntityTest::create(['type' => 'test_bundle']);
-      $entity->name->value = $this->randomMachineName();
+      $entity->get('name')->value = $this->randomMachineName();
       $index = $i ? 1 : 0;
       $entity->user_id->target_id = $this->accounts[$index]->id();
       $entity->{$this->fieldName}->target_id = $this->terms[$index]->id();

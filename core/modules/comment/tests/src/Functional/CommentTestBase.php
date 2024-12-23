@@ -212,7 +212,7 @@ abstract class CommentTestBase extends BrowserTestBase {
       }
 
       $comment_body = $comment_element[0]->find('xpath', 'div/div/p');
-      if (empty($comment_body) || $comment_body->getText() !== $comment->comment_body->value) {
+      if (empty($comment_body) || $comment_body->getText() !== $comment->get('comment_body')->value) {
         return FALSE;
       }
 

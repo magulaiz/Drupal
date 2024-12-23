@@ -265,7 +265,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     foreach ($entity as $name => $field) {
       if (!$field_names || isset($field_names[$name])) {
         if (isset($values[$name])) {
-          $entity->$name = $values[$name];
+          $entity->set($name, $values[$name]);
         }
         elseif (!array_key_exists($name, $values)) {
           $entity->get($name)->applyDefaultValue();

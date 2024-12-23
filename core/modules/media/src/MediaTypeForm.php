@@ -395,7 +395,7 @@ class MediaTypeForm extends EntityForm {
     /** @var \Drupal\media\MediaInterface $media */
     $media = $this->entityTypeManager->getStorage('media')->create(['bundle' => $media_type->id()]);
     $value = (bool) $form_state->getValue(['options', 'status']);
-    if ($media->status->value != $value) {
+    if ($media->get('status')->value != $value) {
       $fields['status']->getConfig($media_type->id())->setDefaultValue($value)->save();
     }
 

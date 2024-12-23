@@ -70,8 +70,8 @@ class EntityApiTest extends EntityKernelTestBase {
       ->getStorage($entity_type);
 
     $entities = array_values($storage->loadByProperties(['name' => 'test']));
-    $this->assertEquals('test', $entities[0]->name->value, "$entity_type: Created and loaded entity");
-    $this->assertEquals('test', $entities[1]->name->value, "$entity_type: Created and loaded entity");
+    $this->assertEquals('test', $entities[0]->get('name')->value, "$entity_type: Created and loaded entity");
+    $this->assertEquals('test', $entities[1]->get('name')->value, "$entity_type: Created and loaded entity");
 
     // Test loading a single entity.
     $loaded_entity = $storage->load($entity->id());
@@ -85,10 +85,10 @@ class EntityApiTest extends EntityKernelTestBase {
 
     // Test updating an entity.
     $entities = array_values($storage->loadByProperties(['name' => 'test']));
-    $entities[0]->name->value = 'test3';
+    $entities[0]->get('name')->value = 'test3';
     $entities[0]->save();
     $entity = $storage->load($entities[0]->id());
-    $this->assertEquals('test3', $entity->name->value, "$entity_type: Entity updated.");
+    $this->assertEquals('test3', $entity->get('name')->value, "$entity_type: Entity updated.");
 
     // Try deleting multiple test entities by deleting all.
     $entities = $storage->loadMultiple();
@@ -260,7 +260,7 @@ class EntityApiTest extends EntityKernelTestBase {
     $this->expectException(EntityStorageException::class);
     $this->expectExceptionMessage("Update existing 'entity_test_mulrev' entity revision while changing the revision ID is not supported.");
 
-    $entity->revision_id = 60;
+    $entity->set('revision_id', 60);
     $entity->save();
   }
 
@@ -278,7 +278,7 @@ class EntityApiTest extends EntityKernelTestBase {
     $this->expectException(EntityStorageException::class);
     $this->expectExceptionMessage("Update existing 'entity_test_mulrev' entity while changing the ID is not supported.");
 
-    $entity->id = 60;
+    $entity->set('id', 60);
     $entity->save();
   }
 

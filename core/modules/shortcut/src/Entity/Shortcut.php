@@ -96,7 +96,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
    * {@inheritdoc}
    */
   public function getUrl() {
-    return $this->link->first()->getUrl();
+    return $this->get('link')->first()->getUrl();
   }
 
   /**
@@ -169,7 +169,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
    * {@inheritdoc}
    */
   public function getCacheTagsToInvalidate() {
-    return $this->shortcut_set->entity->getCacheTags();
+    return $this->get('shortcut_set')->entity->getCacheTags();
   }
 
   /**

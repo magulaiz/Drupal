@@ -160,7 +160,7 @@ class EntityOperations implements ContainerInjectionInterface {
     // Track the workspaces in which the new revision was saved.
     if (!$entity->isSyncing()) {
       $field_name = $entity->getEntityType()->getRevisionMetadataKey('workspace');
-      $entity->{$field_name}->target_id = $this->workspaceManager->getActiveWorkspace()->id();
+      $entity->get($field_name)->target_id = $this->workspaceManager->getActiveWorkspace()->id();
     }
 
     // When a new published entity is inserted in a non-default workspace, we

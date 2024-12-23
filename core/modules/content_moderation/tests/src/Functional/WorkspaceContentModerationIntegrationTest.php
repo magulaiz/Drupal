@@ -72,11 +72,11 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
     ], 'Save');
 
     $first_article = $this->drupalGetNodeByTitle('First article - published', TRUE);
-    $this->assertEquals('published', $first_article->moderation_state->value);
+    $this->assertEquals('published', $first_article->get('moderation_state')->value);
     $this->assertTrue($first_article->isPublished());
 
     $second_article = $this->drupalGetNodeByTitle('Second article - draft', TRUE);
-    $this->assertEquals('draft', $second_article->moderation_state->value);
+    $this->assertEquals('draft', $second_article->get('moderation_state')->value);
     $this->assertFalse($second_article->isPublished());
 
     // Check that neither of them are published in Live.

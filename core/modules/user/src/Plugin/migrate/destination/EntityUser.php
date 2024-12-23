@@ -144,9 +144,9 @@ class EntityUser extends EntityContentBase {
       // already hashed passwords. If the md5_passwords configuration option is
       // set we need to rehash the password and prefix with a U.
       // @see \Drupal\Core\Field\Plugin\Field\FieldType\PasswordItem::preSave()
-      $entity->pass->pre_hashed = TRUE;
+      $entity->get('pass')->pre_hashed = TRUE;
       if (isset($this->configuration['md5_passwords'])) {
-        $entity->pass->value = 'U' . $this->password->hash($entity->pass->value);
+        $entity->get('pass')->value = 'U' . $this->password->hash($entity->get('pass')->value);
       }
     }
     return parent::save($entity, $old_destination_id_values);

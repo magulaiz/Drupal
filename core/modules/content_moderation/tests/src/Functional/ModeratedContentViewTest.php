@@ -89,13 +89,13 @@ class ModeratedContentViewTest extends BrowserTestBase {
     $nodes['published_then_draft_article'] = $this->drupalCreateNode(['type' => 'article', 'changed' => $time--, 'moderation_state' => 'published', 'title' => 'first article - published']);
     $nodes['published_then_draft_article']->setNewRevision(TRUE);
     $nodes['published_then_draft_article']->setTitle('first article - draft');
-    $nodes['published_then_draft_article']->moderation_state->value = 'draft';
+    $nodes['published_then_draft_article']->get('moderation_state')->value = 'draft';
     $nodes['published_then_draft_article']->changed->value = $time--;
     $nodes['published_then_draft_article']->save();
 
     $nodes['published_then_archived_article'] = $this->drupalCreateNode(['type' => 'article', 'changed' => $time--, 'moderation_state' => 'published']);
     $nodes['published_then_archived_article']->setNewRevision(TRUE);
-    $nodes['published_then_archived_article']->moderation_state->value = 'archived';
+    $nodes['published_then_archived_article']->get('moderation_state')->value = 'archived';
     $nodes['published_then_archived_article']->changed->value = $time--;
     $nodes['published_then_archived_article']->save();
 
@@ -161,12 +161,12 @@ class ModeratedContentViewTest extends BrowserTestBase {
     ]);
 
     $node->title = 'en draft revision';
-    $node->moderation_state = 'draft';
+    $node->get('moderation_state')->value = 'draft';
     $node->save();
 
     $translation = Node::load($node->id())->addTranslation('fr');
     $translation->title = 'fr draft revision';
-    $translation->moderation_state = 'draft';
+    $translation->get('moderation_state')->value = 'draft';
     $translation->save();
 
     $this->drupalLogin($this->adminUser);

@@ -153,7 +153,7 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
    * {@inheritdoc}
    */
   public function getSource() {
-    return $this->bundle->entity->getSource();
+    return $this->get('bundle')->entity->getSource();
   }
 
   /**
@@ -172,17 +172,17 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
    *   https://www.drupal.org/node/2878119
    */
   protected function updateThumbnail($from_queue = FALSE) {
-    $this->thumbnail->target_id = $this->loadThumbnail($this->getThumbnailUri($from_queue))->id();
-    $this->thumbnail->width = $this->getThumbnailWidth($from_queue);
-    $this->thumbnail->height = $this->getThumbnailHeight($from_queue);
+    $this->get('thumbnail')->target_id = $this->loadThumbnail($this->getThumbnailUri($from_queue))->id();
+    $this->get('thumbnail')->width = $this->getThumbnailWidth($from_queue);
+    $this->get('thumbnail')->height = $this->getThumbnailHeight($from_queue);
 
     // Set the thumbnail alt.
     $media_source = $this->getSource();
     $plugin_definition = $media_source->getPluginDefinition();
 
-    $this->thumbnail->alt = '';
+    $this->get('thumbnail')->alt = '';
     if (!empty($plugin_definition['thumbnail_alt_metadata_attribute'])) {
-      $this->thumbnail->alt = $media_source->getMetadata($this, $plugin_definition['thumbnail_alt_metadata_attribute']);
+      $this->get('thumbnail')->alt = $media_source->getMetadata($this, $plugin_definition['thumbnail_alt_metadata_attribute']);
     }
 
     return $this;
@@ -267,7 +267,7 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
    * @internal
    */
   protected function getThumbnailUri($from_queue) {
-    $thumbnails_queued = $this->bundle->entity->thumbnailDownloadsAreQueued();
+    $thumbnails_queued = $this->get('bundle')->entity->thumbnailDownloadsAreQueued();
     if ($thumbnails_queued && $this->isNew()) {
       return $this->getDefaultThumbnailUri();
     }
@@ -374,7 +374,7 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
 
     // If no thumbnail has been explicitly set, use the default thumbnail.
     if ($this->get('thumbnail')->isEmpty()) {
-      $this->thumbnail->target_id = $this->loadThumbnail()->id();
+      $this->get('thumbnail')->target_id = $this->loadThumbnail()->id();
     }
   }
 
@@ -387,7 +387,7 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
     foreach ($this->translations as $langcode => $data) {
       if ($this->hasTranslation($langcode)) {
         $translation = $this->getTranslation($langcode);
-        if ($translation->bundle->entity->thumbnailDownloadsAreQueued() && $translation->shouldUpdateThumbnail($is_new)) {
+        if ($translation->get('bundle')->entity->thumbnailDownloadsAreQueued() && $translation->shouldUpdateThumbnail($is_new)) {
           \Drupal::queue('media_entity_thumbnail')->createItem(['id' => $translation->id()]);
         }
       }
@@ -445,7 +445,7 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
         $translation = $this->getTranslation($langcode);
         // Try to set fields provided by the media source and mapped in
         // media type config.
-        foreach ($translation->bundle->entity->getFieldMap() as $metadata_attribute_name => $entity_field_name) {
+        foreach ($translation->get('bundle')->entity->getFieldMap() as $metadata_attribute_name => $entity_field_name) {
           // Only save value in the entity if the field is empty or if the
           // source field changed.
           if ($translation->hasField($entity_field_name) && ($translation->get($entity_field_name)->isEmpty() || $translation->hasSourceFieldChanged())) {
