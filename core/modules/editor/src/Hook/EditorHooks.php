@@ -244,13 +244,14 @@ class EditorHooks {
     if (!$entity instanceof FieldableEntityInterface) {
       return;
     }
-    // Before delete entity usage, delete its translation usage.
+    // Before delete entity usages, delete its translation usages.
     if (count($entity->getTranslationLanguages()) > 1) {
       $languages = $entity->getTranslationLanguages();
       $default_langcode = $entity->language()->getId();
       foreach ($languages as $langcode => $languages) {
         if ($langcode != $default_langcode) {
           $translation = $entity->getTranslation($langcode);
+          // Delete translation paragraphs usages.
           $reference_revisions_entities = _editor_get_entity_reference_revisions($translation);
           foreach ($reference_revisions_entities as $reference_revisions_entity) {
             if ($reference_revisions_entity instanceof EntityInterface) {
@@ -260,6 +261,7 @@ class EditorHooks {
               }
             }
           }
+          // Delete translation usages.
           if ($translation instanceof EntityInterface) {
             $referenced_files_by_field = _editor_get_file_uuids_by_field($translation);
             foreach ($referenced_files_by_field as $uuids) {
@@ -269,6 +271,7 @@ class EditorHooks {
         }
       }
     }
+    // Delete entity paragraphs usages.
     $reference_revisions_entities = _editor_get_entity_reference_revisions($entity);
     foreach ($reference_revisions_entities as $reference_revisions_entity) {
       if ($reference_revisions_entity instanceof EntityInterface) {
@@ -278,7 +281,7 @@ class EditorHooks {
         }
       }
     }
-    // Delete entity usage.
+    // Delete entity usages.
     $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
     foreach ($referenced_files_by_field as $uuids) {
       _editor_delete_file_usage($uuids, $entity, 0);
