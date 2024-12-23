@@ -61,3 +61,21 @@ function form_test_user_register_form_rebuild($form, FormStateInterface $form_st
 function form_test_tableselect_ajax_callback($form, FormStateInterface $form_state) {
   return $form['tableselect'];
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function form_test_form_form_after_build_test_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#after_build'][] = '_form_test_after_build';
+}
+
+/**
+ * After build callback to prove !empty check on #parents is necessary.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3027240
+ */
+function _form_test_after_build($element, FormStateInterface $form_state) {
+  // Add a new element to the form that doesn't have #parents set.
+  $element['after_build_item'] = ['#markup' => 'after_build_item'];
+  return $element;
+}
