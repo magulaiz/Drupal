@@ -35,6 +35,19 @@ class AssertableLogger implements LoggerInterface {
   protected array $disallowedLogs = [];
 
   /**
+   * Resets all the expectations.
+   *
+   * @return $this
+   */
+  public function reset(): static {
+    $this->expectedLogCriteria = [];
+    $this->allowedLogCriteria = [];
+    $this->disallowedLogCriteria = [];
+    $this->disallowedLogs = [];
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function log($level, $message, array $context = []): void {

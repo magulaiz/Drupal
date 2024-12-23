@@ -104,10 +104,10 @@ trait LoggingTrait {
    * Assert that no logs were expected that have not been received.
    */
   protected function assertLogExpectationsMet(): void {
-    if ($this->getAssertableLogger()) {
-      $this->assertEmpty($this->getAssertableLogger()->getDisallowedLogs(), "Logs were generated during the test that were explicitly expected not to be generated. " . print_r($this->getAssertableLogger()->getDisallowedLogs(), TRUE));
-      $this->assertEmpty($this->getAssertableLogger()->getUnmetExpectations(), "Logs were expected to be generated during the test, but were not. " . print_r($this->getAssertableLogger()->getUnmetExpectations(), TRUE));
-    }
+    $logger = $this->getAssertableLogger();
+    $this->assertEmpty($logger->getDisallowedLogs(), "Logs were generated during the test that were explicitly expected not to be generated. " . print_r($logger->getDisallowedLogs(), TRUE));
+    $this->assertEmpty($logger->getUnmetExpectations(), "Logs were expected to be generated during the test, but were not. " . print_r($logger->getUnmetExpectations(), TRUE));
+    $logger->reset();
   }
 
 }
