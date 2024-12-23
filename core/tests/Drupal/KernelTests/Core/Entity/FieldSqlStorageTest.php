@@ -140,9 +140,11 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       }
       $query->execute();
     }
+
+    $last_revision_id = end($revision_ids);
     $query = $connection->insert($this->table)->fields($columns);
-    foreach ($values[$revision_id] as $delta => $value) {
-      $query->values([$bundle, 0, $entity->id(), $revision_id, $delta, $entity->language()->getId(), $value]);
+    foreach ($values[$last_revision_id] as $delta => $value) {
+      $query->values([$bundle, 0, $entity->id(), $last_revision_id, $delta, $entity->language()->getId(), $value]);
     }
     $query->execute();
 
@@ -159,9 +161,11 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       }
     }
 
+    $last_revision_id = end($revision_ids);
+
     // Load the "current revision" and check the values.
     $entity = $storage->load($entity->id());
-    foreach ($values[$revision_id] as $delta => $value) {
+    foreach ($values[$last_revision_id] as $delta => $value) {
       if ($delta < $this->fieldCardinality) {
         $this->assertEquals($value, $entity->{$this->fieldName}[$delta]->value);
       }

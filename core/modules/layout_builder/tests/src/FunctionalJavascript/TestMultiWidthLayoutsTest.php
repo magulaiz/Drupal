@@ -79,6 +79,7 @@ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
         'class' => 'layout--threecol-section--',
       ],
     ];
+    $width_class = NULL;
     foreach ($width_options as $width_option) {
       $width = $width_option['default_width'];
       $assert_session->linkExists('Add section');
@@ -101,6 +102,7 @@ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
       $this->clickLink('Remove Section 1');
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas input[type="submit"][value="Remove"]'));
       $page->pressButton('Remove');
+      $this->assertNotNull($width_class);
       $assert_session->assertNoElementAfterWait('css', ".$width_class");
     }
   }

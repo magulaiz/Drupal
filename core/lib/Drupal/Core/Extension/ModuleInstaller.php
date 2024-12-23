@@ -529,6 +529,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
     // Use the validators and throw an exception with the reasons.
     if ($reasons = $this->validateUninstall($module_list)) {
+      $reason_message = [];
       foreach ($reasons as $reason) {
         $reason_message[] = implode(', ', $reason);
       }

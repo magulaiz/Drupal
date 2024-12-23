@@ -209,6 +209,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Try to upload more files than allowed on revision.
     $upload_files_node_revision = [$test_file, $test_file, $test_file, $test_file];
+    $edit = [];
     foreach ($upload_files_node_revision as $i => $file) {
       $edit['files[test_file_field_1_0][' . $i . ']'] = \Drupal::service('file_system')->realpath($test_file->getFileUri());
     }

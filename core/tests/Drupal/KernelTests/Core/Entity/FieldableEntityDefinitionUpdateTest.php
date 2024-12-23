@@ -276,9 +276,10 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         $this->assertEquals("dedicated table - {$revision->id()} - delta 1 - value 2 - en{$revision_label}", $revision->test_multiple_properties_multiple_values[1]->value2);
 
         if ($translatable) {
+          $lastEntity = end($entities);
           $translation = $revision->getTranslation('ro');
           $this->assertEquals("test entity - {$translation->id()} - ro{$revision_label}", $translation->label());
-          $this->assertEquals("bundle field - {$entity->id()} - ro{$revision_label}", $translation->new_bundle_field->value);
+          $this->assertEquals("bundle field - {$lastEntity->id()} - ro{$revision_label}", $translation->new_bundle_field->value);
           $this->assertEquals("shared table - {$revision->id()} - value 1 - ro{$revision_label}", $translation->test_multiple_properties->value1);
           $this->assertEquals("shared table - {$revision->id()} - value 2 - ro{$revision_label}", $translation->test_multiple_properties->value2);
           $this->assertEquals("dedicated table - {$translation->id()} - delta 0 - value 1 - ro{$revision_label}", $translation->test_multiple_properties_multiple_values[0]->value1);

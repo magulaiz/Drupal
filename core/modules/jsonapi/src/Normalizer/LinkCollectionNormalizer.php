@@ -135,6 +135,7 @@ class LinkCollectionNormalizer extends NormalizerBase {
       'href' => $link->getHref(),
     ] + $link->getTargetAttributes();
     // Serialize the dictionary into a string.
+    $serialized_parameters = [];
     foreach ($link_parameters as $name => $value) {
       $serialized_parameters[] = sprintf('%s="%s"', $name, implode(' ', (array) $value));
     }

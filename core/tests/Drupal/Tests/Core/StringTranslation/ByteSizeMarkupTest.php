@@ -51,6 +51,8 @@ class ByteSizeMarkupTest extends UnitTestCase {
       ['1 ZB', pow($kb, 7)],
       ['1 YB', pow($kb, 8)],
       ['1024 YB', pow($kb, 9)],
+      // Larger than YB still works:
+      ['1048576 YB', pow($kb, 10)],
       // Rounded to 1 MB - not 1000 or 1024 kilobytes
       ['1 MB', ($kb * $kb) - 1],
       ['-1 MB', -(($kb * $kb) - 1)],

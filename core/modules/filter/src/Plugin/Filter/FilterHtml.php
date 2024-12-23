@@ -422,6 +422,7 @@ class FilterHtml extends FilterBase {
     ];
     $header = [$this->t('Tag Description'), $this->t('You Type'), $this->t('You Get')];
     preg_match_all('/<([a-z0-9]+)[^a-z0-9]/i', $allowed_html, $out);
+    $rows = [];
     foreach ($out[1] as $tag) {
       if (!empty($tips[$tag])) {
         $rows[] = [
@@ -464,7 +465,7 @@ class FilterHtml extends FilterBase {
       [$this->t('Quotation mark'), '&quot;'],
     ];
     $header = [$this->t('Character Description'), $this->t('You Type'), $this->t('You Get')];
-    unset($rows);
+    $rows = [];
     foreach ($entities as $entity) {
       $rows[] = [
         ['data' => $entity[0], 'class' => ['description']],

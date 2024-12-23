@@ -120,6 +120,7 @@ class TermKernelTest extends KernelTestBase {
     $this->assertCount(8, $tree, 'We have all vocabulary tree elements.');
 
     // Count elements in every tree depth.
+    $depth_count = [];
     foreach ($tree as $element) {
       if (!isset($depth_count[$element->depth])) {
         $depth_count[$element->depth] = 0;

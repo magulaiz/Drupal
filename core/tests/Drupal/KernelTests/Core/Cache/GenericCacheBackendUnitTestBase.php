@@ -629,9 +629,9 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
       $this->assertFalse($this->getCacheBackend($bin)->get('test'), 'Tag invalidation affected item in bin.');
     }
     // Test that the cache entry with a matching tag has been invalidated.
-    $this->assertFalse($this->getCacheBackend($bin)->get('test_cid_invalidate2'), 'Cache items matching tag were invalidated.');
+    $this->assertFalse($this->getCacheBackend($bins[2])->get('test_cid_invalidate2'), 'Cache items matching tag were invalidated.');
     // Test that the cache entry with without a matching tag still exists.
-    $this->assertNotEmpty($this->getCacheBackend($bin)->get('test_cid_invalidate1'), 'Cache items not matching tag were not invalidated.');
+    $this->assertNotEmpty($this->getCacheBackend($bins[2])->get('test_cid_invalidate1'), 'Cache items not matching tag were not invalidated.');
   }
 
   /**

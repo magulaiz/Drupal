@@ -45,6 +45,7 @@ class Condition extends ConditionBase {
     }
     $return = [];
     if ($single_conditions) {
+      $match = FALSE;
       foreach ($configs as $config_name => $config) {
         foreach ($single_conditions as $condition) {
           $match = $this->matchArray($condition, $config, explode('.', $condition['field']));
@@ -56,7 +57,7 @@ class Condition extends ConditionBase {
             break;
           }
         }
-        if ($match) {
+        if ($match === TRUE) {
           $return[$config_name] = $config;
         }
       }

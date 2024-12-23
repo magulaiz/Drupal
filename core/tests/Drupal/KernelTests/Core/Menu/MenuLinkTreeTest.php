@@ -127,7 +127,7 @@ class MenuLinkTreeTest extends KernelTestBase {
     $this->assertEquals(8, $count($tree));
     $parameters = new MenuTreeParameters();
     $parameters->setRoot('test.example2');
-    $tree = $this->linkTree->load($instance->getMenuName(), $parameters);
+    $tree = $this->linkTree->load($links[8]->getMenuName(), $parameters);
     $top_link = reset($tree);
     $this->assertCount(1, $top_link->subtree);
     $child = reset($top_link->subtree);

@@ -128,13 +128,13 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     ];
 
     $image_entities = [];
+    $file_usage = \Drupal::service('file.usage');
     foreach ($image_paths as $key => $image_path) {
       $image = File::create();
       $image->setFileUri($image_path);
       $image->setFilename(\Drupal::service('file_system')->basename($image->getFileUri()));
       $image->save();
 
-      $file_usage = $this->container->get('file.usage');
       $this->assertSame([], $file_usage->listUsage($image), 'The image ' . $image_paths[$key] . ' has zero usages.');
 
       $image_entities[] = $image;

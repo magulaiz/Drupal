@@ -349,7 +349,7 @@ class EntityAutocomplete extends Textfield {
       foreach ($entities as $id => $name) {
         $multiples[] = $name . ' (' . $id . ')';
       }
-      $params['@id'] = $id;
+      $params['@id'] = array_key_last($entities);
       $form_state->setError($element, t('Multiple @entity_type_plural match this reference; "%multiple". Specify the one you want by appending the id in parentheses, like "@value (@id)".', ['%multiple' => strip_tags(implode('", "', $multiples))] + $params));
     }
     else {

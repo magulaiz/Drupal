@@ -102,8 +102,9 @@ trait InsertTrait {
     if (is_numeric(key($values))) {
       $this->insertValues[] = $values;
     }
-    elseif ($this->insertFields) {
+    elseif ($this->insertFields !== []) {
       // Reorder the submitted values to match the fields array.
+      $insert_values = [];
       foreach ($this->insertFields as $key) {
         $insert_values[$key] = $values[$key];
       }
