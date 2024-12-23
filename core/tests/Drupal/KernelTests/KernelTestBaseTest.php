@@ -386,7 +386,7 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testLogExpectationsSurviveContainerRebuild(): void {
     $this->expectLog(RfcLogLevel::ERROR, 'test');
     // Trigger a container rebuild.
-    $this->enableModules(['system']);
+    $this->container->get('kernel')->rebuildContainer();
     \Drupal::logger('test')->error('A test error with parameters @foo and %bar.', [
       '@foo' => 'value foo',
       '%bar' => 'value bar',
