@@ -10,7 +10,7 @@ use Psr\Container\ContainerInterface;
  *
  * @see \Drupal\Core\StreamWrapper\StreamWrapperInterface
  */
-class StreamWrapperManager implements StreamWrapperManagerInterface {
+class StreamWrapperManager implements StreamWrapperManagerInterface, CoreStreamWrapperManagerInterface {
 
   /**
    * Constructs a StreamWrapperManager object.
@@ -145,16 +145,7 @@ class StreamWrapperManager implements StreamWrapperManagerInterface {
   }
 
   /**
-   * Adds a stream wrapper.
-   *
-   * Internal use only.
-   *
-   * @param string $service_id
-   *   The service id.
-   * @param string $class
-   *   The stream wrapper class.
-   * @param string $scheme
-   *   The scheme for which the wrapper should be registered.
+   * {@inheritdoc}
    */
   public function addStreamWrapper($service_id, $class, $scheme) {
     $this->info[$scheme] = [
@@ -165,9 +156,7 @@ class StreamWrapperManager implements StreamWrapperManagerInterface {
   }
 
   /**
-   * Registers the tagged stream wrappers.
-   *
-   * Internal use only.
+   * {@inheritdoc}
    */
   public function register() {
     foreach ($this->info as $scheme => $info) {
@@ -176,9 +165,7 @@ class StreamWrapperManager implements StreamWrapperManagerInterface {
   }
 
   /**
-   * Deregisters the tagged stream wrappers.
-   *
-   * Internal use only.
+   * {@inheritdoc}
    */
   public function unregister() {
     // Normally, there are definitely wrappers set for the ALL filter. However,
