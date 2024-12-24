@@ -11,7 +11,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * Use this for services where the event subscriber is not yet available.
  * Use
  * @code
- * parent: fixed_event_dispatcher
+ * properties:
+ *   eventDispatcherCallable: !service_closure '@event_dispatcher'
  * @endcode
  * for the service definitions using this trait.
  */

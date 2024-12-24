@@ -454,22 +454,19 @@ services:
     class: Drupal\Core\Diff\DiffFormatter
     arguments: ['@config.factory']
   Drupal\Core\Diff\DiffFormatter: '@diff.formatter'
-  fixed_event_dispatcher:
-    public: false
-    abstract: true
-    properties:
-      eventDispatcherCallable: !service_closure '@event_dispatcher'
   database:
     class: Drupal\Core\Database\Connection
     factory: Drupal\Core\Database\Database::getConnection
     arguments: [default]
-    parent: fixed_event_dispatcher
+    properties:
+      eventDispatcherCallable: !service_closure '@event_dispatcher'
   Drupal\Core\Database\Connection: '@database'
   database.replica:
     class: Drupal\Core\Database\Connection
     factory: Drupal\Core\Database\Database::getConnection
     arguments: [replica]
-    parent: fixed_event_dispatcher
+    properties:
+      eventDispatcherCallable: !service_closure '@event_dispatcher'
   database.replica_kill_switch:
     class: Drupal\Core\Database\ReplicaKillSwitch
     arguments: ['@settings', '@datetime.time', '@session']
