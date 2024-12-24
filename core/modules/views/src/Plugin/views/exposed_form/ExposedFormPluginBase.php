@@ -161,7 +161,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
    * @param string $value
    *   The value to validate.
    * @param string|\Drupal\Core\StringTranslation\TranslatableMarkup $label
-   * *   The label to use in the error message.
+   *   The label to use in the error message.
    * @param ?\Drupal\Core\Form\FormStateInterface $form_state
    *   (optional) The form state to set any errors on.
    *
