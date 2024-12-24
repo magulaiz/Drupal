@@ -11,11 +11,11 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\user\UserInterface;
 
 /**
- * Performs kernel tests on comment_uri method.
+ * Performs kernel tests on the deprecation of the comment_uri method.
  *
  * @group comment
  */
-class CommentUriTest extends EntityKernelTestBase {
+class CommentUriDeprecationTest extends EntityKernelTestBase {
   use CommentTestTrait;
   use EntityReferenceFieldCreationTrait;
 
