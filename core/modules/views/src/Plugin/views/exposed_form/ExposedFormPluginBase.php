@@ -80,6 +80,8 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     $form['expose_sort_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Exposed sort key'),
+      '#description' => $this->t('This will appear in the URL after the ? to identify this sorting. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed. @reserved_identifiers are reserved words and cannot be used.',
+        ['@reserved_identifiers' => '"' . implode('", "', FilterPluginBase::RESTRICTED_IDENTIFIERS) . '"']),
       '#default_value' => $this->options['expose_sort_key'],
       '#required' => TRUE,
     ];
@@ -94,7 +96,8 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     $form['sort_order_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Sort order key'),
-      '#description' => $this->t('If sort order is exposed, the sort order key to be used.'),
+      '#description' => $this->t('This will appear in the URL after the ? to identify this sorting order. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed. @reserved_identifiers are reserved words and cannot be used.',
+        ['@reserved_identifiers' => '"' . implode('", "', FilterPluginBase::RESTRICTED_IDENTIFIERS) . '"']),
       '#default_value' => $this->options['sort_order_key'],
       '#required' => TRUE,
       '#states' => [
