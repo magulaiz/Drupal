@@ -25,6 +25,11 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
    */
   private static EventDispatcherFactoryStage $stage;
 
+  /**
+   * Keeps track of early subscriber groups registered.
+   *
+   * @var array<string,bool>
+   */
   private static array $earlySubscriberGroups = [];
 
   /**
