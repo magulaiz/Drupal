@@ -70,7 +70,6 @@ function system_token_info() {
     'name' => t("Login page"),
     'description' => t("The URL of the site's login page."),
   ];
-
   // The [site:logo] token renders the active theme logo. Chained tokens can be
   // used for rendering specific theme logos or logo properties (URLs) instead.
   $site['logo'] = [
@@ -144,9 +143,9 @@ function system_token_info() {
     'types' => $types,
     'tokens' => [
       'site' => $site,
+      'date' => $date,
       'site-logo' => $site_logo,
       'site-logo-properties' => $site_logo_properties,
-      'date' => $date,
     ],
   ];
 }
@@ -228,10 +227,9 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
         case 'logo':
           $replacements[$original] = _system_tokens_get_logo_rendered('active-theme', $bubbleable_metadata);
           break;
+
       }
     }
-
-    // Detect chained tokens ([site:logo:?]).
     if ($logo_tokens = $token_service->findWithPrefix($tokens, 'logo')) {
       $replacements += $token_service->generate('site-logo', $logo_tokens, [], $options, $bubbleable_metadata);
     }
@@ -363,7 +361,6 @@ function _system_tokens_get_logo_path(string $theme, BubbleableMetadata &$bubble
 
 /**
  * Returns an <img> tag for the logo of the given theme.
- *
  *
  * @param string $theme
  *   The theme to get the logo path for.

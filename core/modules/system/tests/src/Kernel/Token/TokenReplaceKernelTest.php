@@ -156,7 +156,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
   /**
    * Tests the logo tokens for the active and default theme.
    */
-  public function testSystemSiteLogoTokenReplacement() {
+  public function testSystemSiteLogoTokenReplacement(): void {
     // Install Olivero and Claro.
     \Drupal::service('theme_installer')->install(['olivero', 'claro']);
 
@@ -241,7 +241,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
   /**
    * Tests the logo tokens for a specific theme.
    */
-  public function testSystemSiteLogoThemeTokenReplacement() {
+  public function testSystemSiteLogoThemeTokenReplacement(): void {
     // Install Olivero and Claro.
     \Drupal::service('theme_installer')->install(['olivero', 'claro']);
 
