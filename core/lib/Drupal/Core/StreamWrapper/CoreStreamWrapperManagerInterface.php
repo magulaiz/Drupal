@@ -24,16 +24,16 @@ interface CoreStreamWrapperManagerInterface {
    * @param string $scheme
    *   The scheme for which the wrapper should be registered.
    */
-  public function addStreamWrapper($service_id, $class, $scheme);
+  public function addStreamWrapper($service_id, $class, $scheme): void;
 
   /**
    * Registers the tagged stream wrappers.
    */
-  public function register();
+  public function register(): void;
 
   /**
    * Unregisters the tagged stream wrappers.
    */
-  public function unregister();
+  public function unregister(): void;
 
 }
