@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Core\EventDispatcher;
 
-use Drupal\Core\Database\EventSubscriber\StatementExecutionSubscriber;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -26,28 +25,15 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
    */
   private static EventDispatcherFactoryStage $stage;
 
-  /**
-   * Subscribers to be registered for early event dispatcher.
-   *
-   * Note that the early event dispatcher will be purged during container
-   * bootstrap, so any subscriber/listener needed in later stages have to be
-   * added also in the service container definition.
-   */
-  private static array $preBootstrapSubscribers = [
-    StatementExecutionSubscriber::class,
-  ];
+  private static array $earlySubscriberGroups = [];
 
   /**
    * {@inheritdoc}
    */
   public static function createInstance(EventDispatcherFactoryStage|string $stage = EventDispatcherFactoryStage::PreBootstrap): EventDispatcherInterface {
     self::$stage = is_string($stage) ? EventDispatcherFactoryStage::from($stage) : $stage;
+    self::$earlySubscriberGroups = [];
     self::$eventDispatcher = new EventDispatcher();
-    if (self::$stage === EventDispatcherFactoryStage::PreBootstrap) {
-      foreach (self::$preBootstrapSubscribers as $subscriber) {
-        self::$eventDispatcher->addSubscriber(new $subscriber());
-      }
-    }
     return self::$eventDispatcher;
   }
 
@@ -64,6 +50,21 @@ class EventDispatcherFactory implements EventDispatcherFactoryInterface {
       return self::createInstance();
     }
     return self::$eventDispatcher;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function registerEarlySubscribers(string $group, callable $callback): static {
+    $this->getInstance();
+    if (self::$stage === EventDispatcherFactoryStage::PreBootstrap) {
+      // Prevent duplicate addition of subscribers.
+      if (!isset(self::$earlySubscriberGroups[$group])) {
+        $callback($this);
+        self::$earlySubscriberGroups[$group] = TRUE;
+      }
+    }
+    return $this;
   }
 
   /**

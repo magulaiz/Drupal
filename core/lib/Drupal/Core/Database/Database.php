@@ -5,7 +5,9 @@ namespace Drupal\Core\Database;
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Database\Event\StatementEvent;
+use Drupal\Core\Database\EventSubscriber\StatementExecutionSubscriber;
 use Drupal\Core\EventDispatcher\EventDispatcherFactory;
+use Drupal\Core\EventDispatcher\EventDispatcherFactoryInterface;
 use Drupal\Core\Extension\DatabaseDriverList;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -147,7 +149,18 @@ abstract class Database {
 
     // If necessary, a new connection is opened.
     if (!isset(self::$connections[$key][$target])) {
-      $eventDispatcher = (\Drupal::hasContainer() && \Drupal::hasService(EventDispatcherInterface::class)) ? \Drupal::service(EventDispatcherInterface::class) : new EventDispatcherFactory();
+      if (\Drupal::hasContainer() && \Drupal::hasService(EventDispatcherInterface::class)) {
+        $eventDispatcher = \Drupal::service(EventDispatcherInterface::class);
+      }
+      else {
+        $eventDispatcher = new EventDispatcherFactory();
+        $eventDispatcher->registerEarlySubscribers(
+          __CLASS__,
+          function (EventDispatcherFactoryInterface $eventDispatcherFactory): void {
+            $eventDispatcherFactory->addSubscriber(new StatementExecutionSubscriber());
+          },
+        );
+      }
       self::$connections[$key][$target] = self::openConnection($key, $target, $eventDispatcher);
     }
     return self::$connections[$key][$target];
