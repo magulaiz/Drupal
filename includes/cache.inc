@@ -502,19 +502,31 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
         elseif (REQUEST_TIME > ($cache_flush + variable_get('cache_lifetime', 0))) {
           // Clear the cache for everyone, cache_lifetime seconds have
           // passed since the first request to clear the cache.
-          db_delete($this->bin)
+          // Delete in chunks to avoid database timeouts.
+          $result = db_select($this->bin, 'b')
+            ->fields('b', array('cid'))
             ->condition('expire', CACHE_PERMANENT, '<>')
             ->condition('expire', REQUEST_TIME, '<')
             ->execute();
+          $cids = array_unique(array_column($result->fetchAll(), 'cid'));
+          if (!empty($cids)) {
+            $this->clear($cids);
+          }
           variable_set('cache_flush_' . $this->bin, 0);
         }
       }
       else {
         // No minimum cache lifetime, flush all temporary cache entries now.
-        db_delete($this->bin)
+        // Delete in chunks to avoid database timeouts.
+        $result = db_select($this->bin, 'b')
+          ->fields('b', array('cid'))
           ->condition('expire', CACHE_PERMANENT, '<>')
           ->condition('expire', REQUEST_TIME, '<')
           ->execute();
+        $cids = array_unique(array_column($result->fetchAll(), 'cid'));
+        if (!empty($cids)) {
+          $this->clear($cids);
+        }
       }
     }
     else {
