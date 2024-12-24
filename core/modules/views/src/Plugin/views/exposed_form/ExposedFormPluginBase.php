@@ -155,14 +155,17 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
    *
    * @param string $key
    *   The key to check.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   (optional) The current state of the form.
-   * @param array $form_group
-   *   (optional) The form element to set any errors on.
+   * @param string $value
+   *   The value to validate.
+   * @param string|\Drupal\Core\StringTranslation\TranslatableMarkup $label
+   * *   The label to use in the error message.
+   * @param ?\Drupal\Core\Form\FormStateInterface $form_state
+   *   (optional) The form state to set any errors on.
    *
-   * @return string
+   * @return string|TranslatableMarkup
+   *   The error message if any, or an empty string.
    */
-  protected function validateKey(string $key, string $value, string|TranslatableMarkup $label, ?FormStateInterface $form_state = NULL) {
+  protected function validateKey(string $key, string $value, string|TranslatableMarkup $label, ?FormStateInterface $form_state = NULL): string|TranslatableMarkup {
     $error = '';
     $form_key = 'exposed_form_options][' . $key;
     if (in_array($value, FilterPluginBase::RESTRICTED_IDENTIFIERS)) {

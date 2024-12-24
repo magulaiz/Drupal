@@ -523,7 +523,8 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @param int[] $ids
    *   The ids to check.
-   *
+   * @param string $view_id
+   *   The view id to use in the div selector for finding the ids.
    * @internal
    */
   protected function assertIds(array $ids, string $view_id = 'view-test-exposed-form-sort-items-per-page'): void {
