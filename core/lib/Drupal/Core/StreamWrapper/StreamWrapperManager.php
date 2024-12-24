@@ -147,7 +147,7 @@ class StreamWrapperManager implements StreamWrapperManagerInterface, CoreStreamW
   /**
    * {@inheritdoc}
    */
-  public function addStreamWrapper($service_id, $class, $scheme) {
+  public function addStreamWrapper($service_id, $class, $scheme): void {
     $this->info[$scheme] = [
       'class' => $class,
       'type' => $class::getType(),
@@ -158,7 +158,7 @@ class StreamWrapperManager implements StreamWrapperManagerInterface, CoreStreamW
   /**
    * {@inheritdoc}
    */
-  public function register() {
+  public function register(): void {
     foreach ($this->info as $scheme => $info) {
       $this->registerWrapper($scheme, $info['class'], $info['type']);
     }
@@ -167,7 +167,7 @@ class StreamWrapperManager implements StreamWrapperManagerInterface, CoreStreamW
   /**
    * {@inheritdoc}
    */
-  public function unregister() {
+  public function unregister(): void {
     // Normally, there are definitely wrappers set for the ALL filter. However,
     // in some cases involving many container rebuilds (e.g. BrowserTestBase),
     // $this->wrappers may be empty although wrappers are still registered
