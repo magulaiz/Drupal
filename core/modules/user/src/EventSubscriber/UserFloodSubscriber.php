@@ -65,7 +65,13 @@ class UserFloodSubscriber implements EventSubscriberInterface {
    */
   public function blockedIp(UserFloodEvent $floodEvent) {
     if (Settings::get('log_user_flood', TRUE)) {
-      $this->logger->notice('Flood control blocked login attempt from %ip', ['%ip' => $floodEvent->getIp()]);
+      $ip = $floodEvent->getIp();
+      if ($floodEvent->hasUid()) {
+        $uid = $floodEvent->getUid();
+        $this->logger->notice('Flood control blocked login attempt for uid %uid from %ip', ['%uid' => $uid, '%ip' => $ip]);
+        return;
+      }
+      $this->logger->notice('Flood control blocked login attempt from %ip', ['%ip' => $ip]);
     }
   }
 

@@ -177,16 +177,11 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
     $password = trim($form_state->getValue('pass'));
     $flood_config = $this->config('user.flood');
     $account = FALSE;
+    // Only when the user has filled in their credentials, should we validate
+    // anything.
     if (!$form_state->isValueEmpty('name') && strlen($password) > 0) {
-      // Do not allow any login from the current user's IP if the limit has been
-      // reached. Default is 50 failed attempts allowed in one hour. This is
-      // independent of the per-user limit to catch attempts from one IP to log
-      // in to many different user accounts.  We have a reasonably high limit
-      // since there may be only one apparent IP for all users at an institution.
-      if (!$this->userFloodControl->isAllowed('user.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
-        $form_state->set('flood_control_triggered', 'ip');
-        return;
-      }
+
+      // Lookup / load the account from the given name.
       if ($this->userAuth instanceof UserAuthenticationInterface) {
         $account = $this->userAuth->lookupAccount($form_state->getValue('name'));
       }
@@ -210,7 +205,15 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
           $identifier = $account->id() . '-' . $this->getRequest()->getClientIP();
         }
         $form_state->set('flood_control_user_identifier', $identifier);
-
+        // Do not allow any login from the current user's IP if the limit has been
+        // reached. Default is 50 failed attempts allowed in one hour. This is
+        // independent of the per-user limit to catch attempts from one IP to log
+        // in to many different user accounts.  We have a reasonably high limit
+        // since there may be only one apparent IP for all users at an institution.
+        if (!$this->userFloodControl->isAllowed('user.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'), $identifier)) {
+          $form_state->set('flood_control_triggered', 'ip');
+          return;
+        }
         // If there are zero flood records for this user, then we don't need to
         // clear any failed login attempts after a successful login, so check
         // for this case first before checking the actual flood limit and store
