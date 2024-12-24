@@ -6,6 +6,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Drupal\views\Plugin\views\PluginBase;
 
 /**
@@ -125,6 +127,54 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
         ],
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateOptionsForm(&$form, FormStateInterface $form_state): void {
+    parent::validateOptionsForm($form, $form_state);
+    $this->validateKey('expose_sort_key', $form_state->getValue(['exposed_form_options', 'expose_sort_key']), $this->t('Exposed sort key'), $form_state);
+    $this->validateKey('sort_order_key', $form_state->getValue(['exposed_form_options', 'sort_order_key']), $this->t('Sort order key'), $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validate() {
+    $errors = parent::validate();
+    $errors[] = $this->validateKey('expose_sort_key', $this->options['expose_sort_key'], $this->t('Exposed sort key'));
+    $errors[] = $this->validateKey('sort_order_key', $this->options['sort_order_key'], $this->t('Sort order key'));
+    return $errors;
+  }
+
+  /**
+   * Validates a key.
+   *
+   * Sets the form error if $form_state is passed and returns the error string.
+   *
+   * @param string $key
+   *   The key to check.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   (optional) The current state of the form.
+   * @param array $form_group
+   *   (optional) The form element to set any errors on.
+   *
+   * @return string
+   */
+  protected function validateKey(string $key, string $value, string|TranslatableMarkup $label, ?FormStateInterface $form_state = NULL) {
+    $error = '';
+    $form_key = 'exposed_form_options][' . $key;
+    if (in_array($value, FilterPluginBase::RESTRICTED_IDENTIFIERS)) {
+      $error = $this->t('This value is not allowed for the key %key', ['%key' => $label]);
+    }
+    elseif (preg_match('/[^a-zA-Z0-9_~\.\-]+/', $value)) {
+      $error = $this->t('The key %key has illegal characters.', ['%key' => $label]);
+    }
+    if (!empty($form_state) && !empty($error)) {
+      $form_state->setErrorByName($form_key, $error);
+    }
+    return $error;
   }
 
   /**

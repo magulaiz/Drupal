@@ -455,7 +455,7 @@ class ExposedFormTest extends ViewTestBase {
   }
 
   /**
-   * Tests exposed forms with exposed sort and items per page.
+   * Tests exposed forms with exposed sort and custom keys.
    */
   public function testExposedSortKeys(): void {
     for ($i = 0; $i < 50; $i++) {
@@ -487,40 +487,35 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertCacheContexts($contexts);
     $this->assertIds(range(40, 16, 1), $view_id);
 
-    $view = Views::getView('test_exposed_form_sort_keys');
-    $view->setDisplay();
-    $sorts = $view->display_handler->getOption('sorts');
-    // Change the label to something with special characters.
-    $sorts['id']['expose']['label'] = $expected_label = "<script>alert('unsafe&dangerous');</script>";
-    // Use a custom sort field identifier.
-    $sorts['id']['expose']['field_identifier'] = $field_identifier = $this->randomMachineName() . '-_.~';
-    $view->display_handler->setOption('sorts', $sorts);
-    $view->save();
-
-    // Test label escaping.
-    $this->drupalGet('test_exposed_form_sort_keys');
-    $options = $this->assertSession()->selectExists('edit-custom-sort-key')->findAll('css', 'option');
-    $this->assertCount(1, $options);
-    // Check option existence by option label.
-    $this->assertSession()->optionExists('Sort by', $expected_label);
-    // Check option existence by option value.
-    $this->assertSession()->optionExists('Sort by', $field_identifier);
-    $escape_1 = Html::escape($expected_label);
-    $escape_2 = Html::escape($escape_1);
-    // Make sure we see the single-escaped string in the raw output.
-    $this->assertSession()->responseContains($escape_1);
-    // But no double-escaped string.
-    $this->assertSession()->responseNotContains($escape_2);
-    // And not the raw label, either.
-    $this->assertSession()->responseNotContains($expected_label);
-
     // Check that the custom field identifier is used in the URL query string.
-    $this->submitForm(['custom_sort_order' => 'DESC'], 'Apply');
+    $this->drupalGet('test_exposed_form_sort_keys');
+    $this->submitForm(['custom_sort_key' => 'id', 'custom_sort_order' => 'DESC'], 'Apply');
     $this->assertCacheContexts($contexts);
     $this->assertIds(range(50, 41), $view_id);
     $url = $this->getSession()->getCurrentUrl();
-    $this->assertStringContainsString('custom_sort_key=' . urlencode($field_identifier), $url);
+    $this->assertStringContainsString('custom_sort_key=id', $url);
     $this->assertStringContainsString('custom_sort_order=DESC', $url);
+  }
+
+  /**
+   * Tests exposed form settings with exposed sort and custom keys.
+   */
+  public function testExposedSortKeysForm(): void {
+    $admin_user = $this->drupalCreateUser([
+      'administer views',
+    ]);
+    $this->drupalLogin($admin_user);
+
+    $this->drupalGet('admin/structure/views/nojs/display/test_exposed_form_sort_keys/page_1/exposed_form_options');
+    foreach (FilterPluginBase::RESTRICTED_IDENTIFIERS as $restricted_identifier) {
+      $edit = [];
+      foreach (['expose_sort_key', 'sort_order_key'] as $key) {
+        $edit["exposed_form_options[$key]"] = $restricted_identifier;
+      }
+      $this->submitForm($edit, 'Apply');
+      $this->assertSession()->pageTextContains('This value is not allowed for the key Exposed sort key');
+      $this->assertSession()->pageTextContains('This value is not allowed for the key Sort order key');
+    }
   }
 
   /**
