@@ -1525,7 +1525,7 @@ abstract class Connection {
    */
   protected function getSubscribers(): array {
     return [
-      new StatementExecutionSubscriber()::class,
+      new StatementExecutionSubscriber(),
     ];
   }
 
