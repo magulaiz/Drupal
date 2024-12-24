@@ -981,7 +981,7 @@ class WebAssert extends MinkWebAssert {
    */
   public function fieldValueEquals(string $field, $value, ?TraversableElement $container = NULL) {
     if (!is_string($value)) {
-      @trigger_error('Passing a non-string into $value for ' . __METHOD__ . 'is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3495920', E_USER_DEPRECATED);
+      @trigger_error('Passing a non-string into $value for ' . __METHOD__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3495920', E_USER_DEPRECATED);
       $value = (string) $value;
     }
     parent::fieldValueEquals($field, $value, $container);
