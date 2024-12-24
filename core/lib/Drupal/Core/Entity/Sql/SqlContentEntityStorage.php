@@ -1066,7 +1066,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $record = new \stdClass();
     $table_mapping = $this->getTableMapping();
     foreach ($table_mapping->getFieldNames($table_name) as $field_name) {
-
       if (empty($this->fieldStorageDefinitions[$field_name])) {
         throw new EntityStorageException("Table mapping contains invalid field $field_name.");
       }
@@ -1078,7 +1077,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $record
       );
     }
-
     return $record;
   }
 
@@ -1107,7 +1105,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $item_value = $entity->hasField($field_name) && !$entity->get($field_name)->isEmpty() && ($item = $entity->$field_name->first())
         ? $item->getValue()
         : [];
-      $maybe_mapped_columns = $this->mapColumnsOnSave(
+      $maybe_mapped_columns = $this->mapTableColumnsOnSave(
         $field_name,
         $definition->mapColumnsOnSave($item_value),
         $definition->getColumns()
@@ -1116,15 +1114,16 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     if (isset($maybe_mapped_columns)) {
       return (object) ($maybe_mapped_columns + (array) $record);
     }
-    // Use fallback mapping.
+    // Use fallback mapping. (Maintaining Drupal's default behavior.)
     $columns = $table_mapping->getColumnNames($field_name);
     foreach ($columns as $column_name => $schema_name) {
       $value = $this->toStoredValue(
-        // If there is no main property and only a single column, get all
-        // properties from the first field item and assume that they will be
-        // stored serialized.
         (!$definition->getMainPropertyName() && count($columns) == 1)
+          // If there is no main property and only a single column, get all
+          // properties from the first field item and assume that they will be
+          // stored serialized.
           ? ($item = $entity->$field_name->first()) ? $item->getValue() : []
+          // Else, directly fetch the column value.
           : $entity->$field_name->$column_name ?? NULL,
         $definition->getSchema()['columns'][$column_name]
       );
@@ -1440,7 +1439,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           // Try field item mapping. Storage definitions
           if ($storage_definition instanceof StorageMapperInterface) {
             $item_value = $item ? $item->getValue() : [];
-            $maybe_mapped_columns = $this->mapColumnsOnSave(
+            $maybe_mapped_columns = $this->mapTableColumnsOnSave(
               $field_name,
               $storage_definition->mapColumnsOnSave($item_value),
               $storage_definition->getColumns()
@@ -1940,13 +1939,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    */
   protected function mapFromTableColumns(string $field_name, array $column_values, array $column_attributes): array {
     $columns_to_properties = array_flip($this->getTableMapping()->getColumnNames($field_name));
-    $propertyValues = [];
+    $property_values = [];
     foreach ($column_values as $column => $value) {
       if ($property = $columns_to_properties[$column] ?? NULL) {
-        $propertyValues[$property] = $this->fromStoredValue($value, $column_attributes[$property]);
+        $property_values[$property] = $this->fromStoredValue($value, $column_attributes[$property]);
       }
     }
-    return $propertyValues;
+    return $property_values;
   }
 
   /**
@@ -1962,7 +1961,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @return array|null
    *   Values keyed by column, or NULL if nothing to save.
    */
-  protected function mapColumnsOnSave(string $field_name, ?array $property_values, array $column_attributes): ?array {
+  protected function mapTableColumnsOnSave(string $field_name, ?array $property_values, array $column_attributes): ?array {
     if (!isset($property_values)) {
       return NULL;
     }
