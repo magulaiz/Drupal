@@ -54,15 +54,6 @@ class CommentUriTest extends EntityKernelTestBase {
 
     // Add comment and entity reference comment fields.
     $this->addDefaultCommentField('node', 'page', 'comment');
-    $this->createEntityReferenceField(
-      'node',
-      'page',
-      'entity_reference_comment',
-      'Entity Reference Comment',
-      'comment',
-      'default',
-      ['target_bundles' => ['comment']]
-    );
     // Create user to add comments.
     $this->commentUser = $this->drupalCreateUser([
       'access comments',
@@ -100,7 +91,7 @@ class CommentUriTest extends EntityKernelTestBase {
     $comment->save();
 
     $comment_uri = comment_uri($comment);
-    $this->expectDeprecation('comment_uri() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\comment\Entity\Comment::permalink() instead. See https://www.drupal.org/node/3384294');
+    $this->expectDeprecation('comment_uri() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\comment\Entity\Comment::permalink() instead. See https://www.drupal.org/node/3384294');
 
     $this->assertEquals('/comment/1#comment-1', $comment_uri->toString());
 
