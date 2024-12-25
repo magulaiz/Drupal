@@ -186,7 +186,7 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
     $this->submitForm($edit, 'Update settings');
     $this->submitForm([], 'Save settings');
     $this->drupalGet($field_edit_path);
-    $this->assertSession()->fieldValueEquals('field_storage[subform][cardinality]', FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->assertSession()->fieldValueEquals('field_storage[subform][cardinality]', (string) FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
     $this->assertSession()->fieldValueEquals('field_storage[subform][cardinality_number]', '1');
 
     // Assert that you can't set the cardinality to a lower number then the
