@@ -31,7 +31,7 @@ class ContainerRebuildWebTest extends BrowserTestBase {
 
     // Ensure the parameter is not set.
     $this->drupalGet('<front>');
-    $assert->responseHeaderDoesNotExist('container_rebuild_test_parameter');
+    $assert->responseHeaderDoesNotExist('container_rebuild_indicator');
 
     $this->writeSettings(['settings' => ['deployment_identifier' => (object) ['value' => 'new-identifier', 'required' => TRUE]]]);
 
