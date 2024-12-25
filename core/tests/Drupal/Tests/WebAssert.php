@@ -950,16 +950,16 @@ class WebAssert extends MinkWebAssert {
    */
   public function responseHeaderEquals($name, $value) {
     if (!is_string($name)) {
-      @trigger_error('Passing a non-string into $name for ' . __METHOD__ . 'is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3495920', E_USER_DEPRECATED);
+      @trigger_error('Passing a non-string into $name for ' . __METHOD__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3495920', E_USER_DEPRECATED);
       $name = (string) $name;
     }
     if ($value === NULL) {
-      @trigger_error('Passing NULL into $value for ' . __METHOD__ . 'is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3495920', E_USER_DEPRECATED);
+      @trigger_error('Passing NULL into $value for ' . __METHOD__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ::responseHeaderDoesNotExist() instead. See https://www.drupal.org/node/3495920', E_USER_DEPRECATED);
       $this->responseHeaderDoesNotExist($name);
       return;
     }
     if (!is_string($value)) {
-      @trigger_error('Passing a non-string into $value for ' . __METHOD__ . 'is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3495920', E_USER_DEPRECATED);
+      @trigger_error('Passing a non-string into $value for ' . __METHOD__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3495920', E_USER_DEPRECATED);
       $value = (string) $value;
     }
     parent::responseHeaderEquals($name, $value);
