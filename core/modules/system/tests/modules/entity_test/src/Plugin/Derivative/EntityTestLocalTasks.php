@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\entity_test\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\entity_test\EntityTestTypesFilter;
 
 /**
@@ -17,7 +18,7 @@ class EntityTestLocalTasks extends DeriverBase {
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     $this->derivatives = [];
-    $types = entity_test_entity_types(EntityTestTypesFilter::Routing);
+    $types = EntityTestHelper::getEntityTypes(EntityTestTypesFilter::Routing);
 
     foreach ($types as $entity_type) {
       $this->derivatives[$entity_type . '.canonical'] = [];

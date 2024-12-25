@@ -7,6 +7,7 @@ namespace Drupal\Tests\system\Functional\Entity;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\entity_test\EntityTestTypesFilter;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
@@ -55,7 +56,7 @@ class EntityFormTest extends BrowserTestBase {
    */
   public function testFormCRUD(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
       $this->doTestFormCRUD($entity_type);
     }
   }
@@ -65,7 +66,7 @@ class EntityFormTest extends BrowserTestBase {
    */
   public function testMultilingualFormCRUD(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types(EntityTestTypesFilter::Multilingual) as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes(EntityTestTypesFilter::Multilingual) as $entity_type) {
       $this->doTestMultilingualFormCRUD($entity_type);
     }
   }
