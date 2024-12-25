@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Core\Cache\Cache;
@@ -12,6 +14,8 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\WaitTerminateTestTrait;
+
+// cspell:ignore funciona
 
 /**
  * Tests Language Negotiation.
@@ -48,6 +52,9 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // The \Drupal\locale\LocaleTranslation service clears caches after the
+    // response is flushed to the client. We use WaitTerminateTestTrait to wait
+    // for Drupal to perform its termination work before continuing.
     $this->setWaitForTerminate();
 
     /** @var \Drupal\user\UserInterface $user */
@@ -113,7 +120,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
    * The interface language uses the preferred language for admin pages of the
    * user and after that the URL. The Content uses just the URL.
    */
-  public function testUrlContentTranslationWithPreferredAdminLanguage() {
+  public function testUrlContentTranslationWithPreferredAdminLanguage(): void {
     $assert_session = $this->assertSession();
     // Set the interface language to use the preferred administration language
     // and then the URL.
@@ -154,7 +161,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
   /**
    * Tests translation with URL and Session Language Negotiators.
    */
-  public function testUrlContentTranslationWithSessionLanguage() {
+  public function testUrlContentTranslationWithSessionLanguage(): void {
     $assert_session = $this->assertSession();
     /** @var \Drupal\language\LanguageNegotiatorInterface $language_negotiator */
     $language_negotiator = \Drupal::getContainer()->get('language_negotiator');
@@ -206,7 +213,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
    * admin language negotiator because of the recursive way that the negotiator
    * is called.
    */
-  public function testUserProfileTranslationWithPreferredAdminLanguage() {
+  public function testUserProfileTranslationWithPreferredAdminLanguage(): void {
     $assert_session = $this->assertSession();
     // Set the interface language to use the preferred administration language.
     /** @var \Drupal\language\LanguageNegotiatorInterface $language_negotiator */

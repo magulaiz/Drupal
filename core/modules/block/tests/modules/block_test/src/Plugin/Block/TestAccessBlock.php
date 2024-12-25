@@ -1,23 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\block_test\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a block to test access.
- *
- * @Block(
- *   id = "test_access",
- *   admin_label = @Translation("Test block access")
- * )
  */
+#[Block(
+  id: "test_access",
+  admin_label: new TranslatableMarkup("Test block access"),
+)]
 class TestAccessBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -28,14 +31,13 @@ class TestAccessBlock extends BlockBase implements ContainerFactoryPluginInterfa
   /**
    * Tests the test access block.
    *
-   *
    * @param array $configuration
    *   The plugin configuration, i.e. an array with configuration values keyed
    *   by configuration option name. The special key 'context' may be used to
    *   initialize the defined contexts by setting it to an array of context
    *   values keyed by context names.
    * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
+   *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\State\StateInterface $state

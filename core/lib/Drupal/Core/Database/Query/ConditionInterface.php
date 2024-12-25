@@ -56,7 +56,7 @@ interface ConditionInterface {
    *   The operator to use. Supported for all supported databases are at least:
    *   - The comparison operators =, <>, <, <=, >, >=.
    *   - The operators (NOT) BETWEEN, (NOT) IN, (NOT) EXISTS, (NOT) LIKE.
-   *   Other operators (e.g. LIKE, BINARY) may or may not work. Defaults to =.
+   *   Other operators (e.g. LIKE BINARY) may or may not work. Defaults to =.
    *
    * @return $this
    *   The called object.
@@ -148,11 +148,11 @@ interface ConditionInterface {
    * The data structure that is returned is an indexed array of entries, where
    * each entry looks like the following:
    * @code
-   * array(
+   * [
    *   'field' => $field,
    *   'value' => $value,
    *   'operator' => $operator,
-   * );
+   * ];
    * @endcode
    *
    * In the special case that $operator is NULL, the $field is taken as a raw
@@ -215,6 +215,7 @@ interface ConditionInterface {
    * Creates a new group of conditions ANDed together.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
+   *   An object holding a group of conditions.
    */
   public function andConditionGroup();
 
@@ -222,6 +223,7 @@ interface ConditionInterface {
    * Creates a new group of conditions ORed together.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
+   *   An object holding a group of conditions.
    */
   public function orConditionGroup();
 
