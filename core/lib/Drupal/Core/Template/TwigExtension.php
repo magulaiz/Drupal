@@ -23,6 +23,7 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * A class providing Drupal Twig extensions.
@@ -140,6 +141,7 @@ class TwigExtension extends AbstractExtension {
       // CSS class and ID filters.
       new TwigFilter('clean_class', '\Drupal\Component\Utility\Html::getClass'),
       new TwigFilter('clean_id', '\Drupal\Component\Utility\Html::getId'),
+      new TwigFilter('clean_unique_id', '\Drupal\Component\Utility\Html::getUniqueId'),
       new TwigFilter('add_class', [$this, 'addClass']),
       new TwigFilter('set_attribute', [$this, 'setAttribute']),
       // This filter will render a renderable array to use the string results.
@@ -156,9 +158,18 @@ class TwigExtension extends AbstractExtension {
   public function getNodeVisitors() {
     // The node visitor is needed to wrap all variables with
     // render_var -> TwigExtension->renderVar() function.
-    return [
+    $visitors = [
       new TwigNodeVisitor(),
+      new TwigNodeVisitorCheckDeprecations(),
     ];
+    if (\in_array('__toString', TwigSandboxPolicy::getMethodsAllowedOnAllObjects(), TRUE)) {
+      // When __toString is an allowed method, there is no point in running
+      // \Twig\Extension\SandboxExtension::ensureToStringAllowed, so we add a
+      // node visitor to remove any CheckToStringNode nodes added by the
+      // sandbox extension.
+      $visitors[] = new RemoveCheckToStringNodeVisitor();
+    }
+    return $visitors;
   }
 
   /**
@@ -459,7 +470,7 @@ class TwigExtension extends AbstractExtension {
       if ($strategy == 'html') {
         return Html::escape($return);
       }
-      return twig_escape_filter($env, $return, $strategy, $charset, $autoescape);
+      return $env->getRuntime(EscaperRuntime::class)->escape($arg, $strategy, $charset, $autoescape);
     }
 
     // This is a normal render array, which is safe by definition, with
@@ -604,15 +615,18 @@ class TwigExtension extends AbstractExtension {
   /**
    * Creates an Attribute object.
    *
-   * @param array $attributes
-   *   (optional) An associative array of key-value pairs to be converted to
-   *   HTML attributes.
+   * @param Attribute|array $attributes
+   *   (optional) An existing attribute object or an associative array of
+   *   key-value pairs to be converted to HTML attributes.
    *
    * @return \Drupal\Core\Template\Attribute
    *   An attributes object that has the given attributes.
    */
-  public function createAttribute(array $attributes = []) {
-    return new Attribute($attributes);
+  public function createAttribute(Attribute|array $attributes = []) {
+    if (\is_array($attributes)) {
+      return new Attribute($attributes);
+    }
+    return $attributes;
   }
 
   /**
@@ -625,22 +639,20 @@ class TwigExtension extends AbstractExtension {
    *
    * @param array|object $element
    *   The parent renderable array to exclude the child items.
-   * @param string[]|string ...
+   * @param string[]|string ...$args
    *   The string keys of $element to prevent printing. Arguments can include
    *   string keys directly, or arrays of string keys to hide.
    *
    * @return array
    *   The filtered renderable array.
    */
-  public function withoutFilter($element) {
+  public function withoutFilter($element, ...$args) {
     if ($element instanceof \ArrayAccess) {
       $filtered_element = clone $element;
     }
     else {
       $filtered_element = $element;
     }
-    $args = func_get_args();
-    unset($args[0]);
     // Since the remaining arguments can be a mix of arrays and strings, we use
     // some native PHP iterator classes to allow us to recursively iterate over
     // everything in a single pass.
@@ -706,6 +718,28 @@ class TwigExtension extends AbstractExtension {
     }
 
     return $element;
+  }
+
+  /**
+   * Triggers a deprecation error if a variable is deprecated.
+   *
+   * @param array $context
+   *   A Twig context array.
+   * @param array $used_variables
+   *   The names of the variables used in a template.
+   *
+   * @see \Drupal\Core\Template\TwigNodeCheckDeprecations
+   */
+  public function checkDeprecations(array $context, array $used_variables): void {
+    if (!isset($context['deprecations'])) {
+      return;
+    }
+
+    foreach ($used_variables as $name) {
+      if (isset($context['deprecations'][$name]) && \array_key_exists($name, $context)) {
+        @trigger_error($context['deprecations'][$name], E_USER_DEPRECATED);
+      }
+    }
   }
 
   /**

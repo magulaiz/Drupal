@@ -87,6 +87,10 @@
   padding-left: 4em;
 }
 
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-icon.is-active::before {
+  filter: invert(100%);
+}
+
 /**
  * Top level icons.
  */
@@ -240,6 +244,7 @@
  */
 
 .toolbar-tab a:focus {
+  -webkit-text-decoration: underline;
   text-decoration: underline;
   outline: none;
 }
@@ -255,6 +260,7 @@
 }
 
 .toolbar-box a:hover:focus {
+  -webkit-text-decoration: underline;
   text-decoration: underline;
 }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\PathProcessor;
 
 use Drupal\Core\Language\Language;
@@ -49,14 +51,6 @@ class PathProcessorTest extends UnitTestCase {
     }
     $this->languages = $languages;
 
-    // Create a stub configuration.
-    $language_prefixes = array_keys($this->languages);
-    $config = [
-      'url' => [
-        'prefixes' => array_combine($language_prefixes, $language_prefixes),
-      ],
-    ];
-
     // Create a language manager stub.
     $language_manager = $this->getMockBuilder('Drupal\language\ConfigurableLanguageManagerInterface')
       ->getMock();
@@ -76,7 +70,7 @@ class PathProcessorTest extends UnitTestCase {
   /**
    * Tests resolving the inbound path to the system path.
    */
-  public function testProcessInbound() {
+  public function testProcessInbound(): void {
 
     // Create an alias manager stub.
     $alias_manager = $this->getMockBuilder(AliasManager::class)

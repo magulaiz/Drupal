@@ -34,10 +34,10 @@
  * Remove margin from ajax throbbers following buttons because buttons already
  * have a large margin set.
  */
-.js .button:not(.js-hide) + .ajax-progress--throbber {
+.js .action-link:not(.js-hide, .button--action) + .ajax-progress--throbber,
+.js .button:not(.js-hide, .button--action) + .ajax-progress--throbber {
   margin-inline-start: 0;
 }
-
 /**
  * Restore start margin for ajax throbbers inside a managed file widget.
  */
@@ -68,7 +68,7 @@
 .ajax-progress--fullscreen,
 .ui-dialog .ajax-progress--throbber {
   position: fixed;
-  z-index: 1000;
+  z-index: 1261;
   inset-block-start: 50%;
   inset-inline-start: 50%;
   box-sizing: border-box;

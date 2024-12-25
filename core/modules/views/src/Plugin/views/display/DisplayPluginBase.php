@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin\views\display;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -116,22 +117,24 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * The display information coming directly from the view entity.
    *
+   * @var array
+   *
    * @see \Drupal\views\Entity\View::getDisplay()
    *
    * @todo \Drupal\views\Entity\View::duplicateDisplayAsType directly access it.
-   *
-   * @var array
    */
   public $display;
 
   /**
    * Keeps track whether the display uses exposed filters.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public bool $has_exposed;
 
   /**
    * The default display.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public DisplayPluginInterface $default_display;
 
   /**
@@ -148,7 +151,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
+   *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    */
@@ -159,7 +162,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL) {
+  public function initDisplay(ViewExecutable $view, array &$display, ?array &$options = NULL) {
     $this->view = $view;
 
     // Load extenders as soon as possible.
@@ -171,7 +174,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       foreach ($extenders as $extender) {
         /** @var \Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase $plugin */
         if ($plugin = $manager->createInstance($extender)) {
-          $extender_options = isset($display_extender_options[$plugin->getPluginId()]) ? $display_extender_options[$plugin->getPluginId()] : [];
+          $extender_options = $display_extender_options[$plugin->getPluginId()] ?? [];
           $plugin->init($this->view, $this, $extender_options);
           $this->extenders[$extender] = $plugin;
         }
@@ -192,27 +195,20 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       unset($options['defaults']);
     }
 
-    $skip_cache = \Drupal::config('views.settings')->get('skip_cache');
-
-    if (!$skip_cache) {
-      $cid = 'views:unpack_options:' . hash('sha256', serialize([$this->options, $options])) . ':' . \Drupal::languageManager()->getCurrentLanguage()->getId();
-      if (empty(static::$unpackOptions[$cid])) {
-        $cache = \Drupal::cache('data')->get($cid);
-        if (!empty($cache->data)) {
-          $this->options = $cache->data;
-        }
-        else {
-          $this->unpackOptions($this->options, $options);
-          \Drupal::cache('data')->set($cid, $this->options, Cache::PERMANENT, $this->view->storage->getCacheTags());
-        }
-        static::$unpackOptions[$cid] = $this->options;
+    $cid = 'views:unpack_options:' . hash('sha256', serialize([$this->options, $options])) . ':' . \Drupal::languageManager()->getCurrentLanguage()->getId();
+    if (empty(static::$unpackOptions[$cid])) {
+      $cache = \Drupal::cache('data')->get($cid);
+      if (!empty($cache->data)) {
+        $this->options = $cache->data;
       }
       else {
-        $this->options = static::$unpackOptions[$cid];
+        $this->unpackOptions($this->options, $options);
+        \Drupal::cache('data')->set($cid, $this->options, Cache::PERMANENT, $this->view->storage->getCacheTags());
       }
+      static::$unpackOptions[$cid] = $this->options;
     }
     else {
-      $this->unpackOptions($this->options, $options);
+      $this->options = static::$unpackOptions[$cid];
     }
 
     // Mark the view as changed so the user has a chance to save it.
@@ -1126,7 +1122,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       ];
     }
 
-    $display_comment = views_ui_truncate($this->getOption('display_comment'), 80);
+    $display_comment = Unicode::truncate($this->getOption('display_comment'), 80, TRUE, TRUE);
     $options['display_comment'] = [
       'category' => 'other',
       'title' => $this->t('Administrative comment'),
@@ -1142,7 +1138,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $options['title'] = [
       'category' => 'title',
       'title' => $this->t('Title'),
-      'value' => views_ui_truncate($title, 32),
+      'value' => Unicode::truncate($title, 32, FALSE, TRUE),
       'desc' => $this->t('Change the title that this display will use.'),
     ];
 
@@ -2152,10 +2148,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $parts['fragment'] = $this->viewsTokenReplace($parts['fragment'], $tokens);
 
       // Handle query parameters where the key is part of an array.
-      // For example, f[0] for facets.
-      array_walk_recursive($parts['query'], function (&$value) use ($tokens) {
-        $value = $this->viewsTokenReplace($value, $tokens);
-      });
+      // For example, f[0] for facets or field_name[id]=id for exposed filters.
+      $parts['query'] = $this->recursiveReplaceTokens($parts['query'], $tokens);
       $options = $parts;
     }
 
@@ -2175,10 +2169,38 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   }
 
   /**
+   * Replace the query parameters recursively, both key and value.
+   *
+   * @param array $parts
+   *   Query parts of the request.
+   * @param array $tokens
+   *   Tokens for replacement.
+   *
+   * @return array
+   *   The parameters with replacements done.
+   */
+  protected function recursiveReplaceTokens(array $parts, array $tokens): array {
+    foreach ($parts as $key => $value) {
+      if (is_array($value)) {
+        $value = $this->recursiveReplaceTokens($value, $tokens);
+      }
+      else {
+        $value = $this->viewsTokenReplace($value, $tokens);
+      }
+      if (!is_int($key)) {
+        unset($parts[$key]);
+        $key = $this->viewsTokenReplace($key, $tokens);
+      }
+      $parts[$key] = $value;
+    }
+    return $parts;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function render() {
-    $rows = (!empty($this->view->result) || $this->view->style_plugin->evenEmpty()) ? $this->view->style_plugin->render($this->view->result) : [];
+    $rows = (!empty($this->view->result) || $this->view->style_plugin->evenEmpty()) ? $this->view->style_plugin->render() : [];
 
     $element = [
       '#theme' => $this->themeFunctions(),
@@ -2304,7 +2326,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account = NULL) {
+  public function access(?AccountInterface $account = NULL) {
     if (!isset($account)) {
       $account = \Drupal::currentUser();
     }

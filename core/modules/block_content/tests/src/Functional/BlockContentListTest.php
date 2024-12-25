@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
@@ -44,9 +46,7 @@ class BlockContentListTest extends BlockContentTestBase {
   ];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_content', 'config_translation'];
 
@@ -70,9 +70,25 @@ class BlockContentListTest extends BlockContentTestBase {
   }
 
   /**
+   * Tests the region value when a new block is saved.
+   */
+  public function testBlockRegionPlacement(): void {
+    $this->drupalLogin($this->drupalCreateUser($this->permissions));
+    $this->drupalGet("admin/structure/block/library/stark", ['query' => ['region' => 'content']]);
+
+    $this->clickLink('Add content block');
+    $this->assertSession()->statusCodeEquals(200);
+    $edit = [
+      'info[0][value]' => 'foo',
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->fieldValueEquals('region', 'content');
+  }
+
+  /**
    * Tests the content block listing page with different permissions.
    */
-  public function testListing() {
+  public function testListing(): void {
     // Test with the admin user.
     $this->drupalLogin($this->drupalCreateUser(['access block library', 'administer block content']));
     $this->drupalGet('admin/content/block');
@@ -117,7 +133,7 @@ class BlockContentListTest extends BlockContentTestBase {
       ->loadByProperties(['info' => $label]);
     $block = reset($blocks);
     if (!empty($block)) {
-      $this->assertSession()->linkByHrefExists('block/' . $block->id());
+      $this->assertSession()->linkByHrefExists('admin/content/block/' . $block->id());
       $this->clickLink('Edit');
       $this->assertSession()->statusCodeEquals(200);
       $this->assertSession()->titleEquals("Edit content block $label | Drupal");
@@ -133,7 +149,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->assertSession()->elementTextContains('xpath', '//td', $new_label);
 
     // Delete the added entity using the operations link.
-    $this->assertSession()->linkByHrefExists('block/' . $block->id() . '/delete');
+    $this->assertSession()->linkByHrefExists('admin/content/block/' . $block->id() . '/delete');
     $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->titleEquals("Are you sure you want to delete the content block $new_label? | Drupal");
@@ -164,14 +180,13 @@ class BlockContentListTest extends BlockContentTestBase {
     // Create test block for other user tests.
     $test_block = $this->createBlockContent($label);
 
-    $link_text = t('Add content block');
     // Test as a user with view only permissions.
     $this->drupalLogin($this->baseUser1);
     $this->drupalGet('admin/content/block');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->linkNotExists($link_text);
-    $this->assertSession()->linkByHrefNotExists('block/' . $test_block->id());
-    $this->assertSession()->linkByHrefNotExists('block/' . $test_block->id() . '/delete');
+    $this->assertSession()->linkNotExists('Add content block');
+    $this->assertSession()->linkByHrefNotExists('admin/content/block/' . $test_block->id());
+    $this->assertSession()->linkByHrefNotExists('admin/content/block/' . $test_block->id() . '/delete');
 
     $this->drupalLogout();
 
@@ -179,9 +194,9 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('admin/content/block');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->linkExists($link_text);
-    $this->assertSession()->linkByHrefExists('block/' . $test_block->id());
-    $this->assertSession()->linkByHrefExists('block/' . $test_block->id() . '/delete');
+    $this->assertSession()->linkExists('Add content block');
+    $this->assertSession()->linkByHrefExists('admin/content/block/' . $test_block->id());
+    $this->assertSession()->linkByHrefExists('admin/content/block/' . $test_block->id() . '/delete');
   }
 
 }

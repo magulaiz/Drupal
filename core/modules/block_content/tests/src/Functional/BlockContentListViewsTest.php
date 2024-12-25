@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
@@ -42,9 +44,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
   ];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',
@@ -75,7 +75,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
   /**
    * Tests the content block listing page.
    */
-  public function testListing() {
+  public function testListing(): void {
     // Test with an admin user.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/content/block');
@@ -127,7 +127,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
       ->loadByProperties(['info' => $label]);
     $block = reset($blocks);
     if (!empty($block)) {
-      $this->assertSession()->linkByHrefExists('block/' . $block->id());
+      $this->assertSession()->linkByHrefExists('admin/content/block/' . $block->id());
       $this->clickLink('Edit');
       $this->assertSession()->statusCodeEquals(200);
       $this->assertSession()->titleEquals("Edit content block $label | Drupal");
@@ -143,7 +143,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertSession()->elementTextContains('xpath', '//td/a', $new_label);
 
     // Delete the added entity using the operations link.
-    $this->assertSession()->linkByHrefExists('block/' . $block->id() . '/delete');
+    $this->assertSession()->linkByHrefExists('admin/content/block/' . $block->id() . '/delete');
     $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->titleEquals("Are you sure you want to delete the content block $new_label? | Drupal");
@@ -175,18 +175,17 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     // Create test block for other user tests.
     $test_block = $this->createBlockContent($label);
 
-    $link_text = t('Add content block');
     // Test as a user with view only permissions.
     $this->drupalLogin($this->baseUser1);
     $this->drupalGet('admin/content/block');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->linkNotExists($link_text);
-    $matches = $this->xpath('//td/a');
+    $this->assertSession()->linkNotExists('Add content block');
+    $matches = $this->xpath('//td[1]');
     $actual = $matches[0]->getText();
     $this->assertEquals($label, $actual, 'Label found for test block.');
     $this->assertSession()->linkNotExists('Edit');
     $this->assertSession()->linkNotExists('Delete');
-    $this->assertSession()->linkByHrefNotExists('block/' . $test_block->id() . '/delete');
+    $this->assertSession()->linkByHrefNotExists('admin/content/block/' . $test_block->id() . '/delete');
 
     $this->drupalLogout();
 
@@ -194,12 +193,12 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('admin/content/block');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->linkExists($link_text);
+    $this->assertSession()->linkExists('Add content block');
     $matches = $this->xpath('//td/a');
     $actual = $matches[0]->getText();
     $this->assertEquals($label, $actual, 'Label found for test block.');
-    $this->assertSession()->linkByHrefExists('block/' . $test_block->id());
-    $this->assertSession()->linkByHrefExists('block/' . $test_block->id() . '/delete');
+    $this->assertSession()->linkByHrefExists('admin/content/block/' . $test_block->id());
+    $this->assertSession()->linkByHrefExists('admin/content/block/' . $test_block->id() . '/delete');
   }
 
 }

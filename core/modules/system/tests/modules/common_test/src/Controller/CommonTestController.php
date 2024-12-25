@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\common_test\Controller;
 
 use Drupal\Component\Utility\Html;
@@ -93,8 +95,7 @@ class CommonTestController {
   }
 
   /**
-   * Returns a sample response with some early rendering in
-   * common_test_page_attachments.
+   * Returns a response with early rendering in common_test_page_attachments.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   A new Response object.

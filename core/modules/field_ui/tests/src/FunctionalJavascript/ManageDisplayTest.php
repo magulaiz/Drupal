@@ -1,10 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field_ui\FunctionalJavascript;
 
 use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
+
+// cspell:ignore onewidgetfield
 
 /**
  * Tests the Field UI "Manage display" and "Manage form display" screens.
@@ -12,6 +18,9 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * @group field_ui
  */
 class ManageDisplayTest extends WebDriverTestBase {
+
+  use FieldUiTestTrait;
+  use FieldUiJSTestTrait;
 
   /**
    * {@inheritdoc}
@@ -66,7 +75,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
-    $type_name = strtolower($this->randomMachineName(8)) . '_test';
+    $type_name = $this->randomMachineName(8) . '_test';
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
     $this->type = $type->id();
 
@@ -76,12 +85,12 @@ class ManageDisplayTest extends WebDriverTestBase {
   /**
    * Tests formatter settings.
    */
-  public function testFormatterUI() {
+  public function testFormatterUI(): void {
     $manage_fields = 'admin/structure/types/manage/' . $this->type;
     $manage_display = $manage_fields . '/display';
 
     // Create a field, and a node with some data for the field.
-    $this->fieldUIAddNewField($manage_fields, 'test', 'Test field');
+    $this->fieldUIAddNewFieldJS($manage_fields, 'test', 'Test field');
 
     $display_id = 'node.' . $this->type . '.default';
     $displayStorage = $this->entityTypeManager->getStorage('entity_view_display');
@@ -131,7 +140,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Ensure that fields can be hidden directly by dragging the element.
     $target = $page->find('css', '.region-hidden-message');
     $field_test_drag_handle->dragTo($target);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
 
     $button_save->click();
 
@@ -147,7 +156,6 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Change the region to content using the region field.
     $this->assertEquals('hidden', $field_region->getValue());
     $field_region->setValue('content');
-    $assert_session->assertWaitOnAjaxRequest();
 
     // Confirm the region element retains focus after the AJAX update completes.
     $this->assertJsCondition('document.activeElement === document.querySelector("[name=\'fields[field_test][region]\']")');
@@ -155,7 +163,7 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     // Change the format for the test field.
     $field_test_format_type->setValue('field_test_multiple');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
 
     // Confirm the format element retains focus after the AJAX update completes.
     $this->assertJsCondition('document.activeElement === document.querySelector("[name=\'fields[field_test][type]\']")');
@@ -170,7 +178,7 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     // Open the settings form for the test field.
     $field_test_settings->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
 
     // Assert that the field added in
     // field_test_field_formatter_third_party_settings_form() is present.
@@ -180,7 +188,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Change the value and submit the form to save the third party settings.
     $field_third_party->setValue('foo');
     $page->findButton('Update')->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(2);
     $button_save->click();
 
     // Assert the third party settings.
@@ -197,32 +205,30 @@ class ManageDisplayTest extends WebDriverTestBase {
     // correctly.
     $field_test_format_type = $page->findField('fields[field_test][type]');
     $field_test_format_type->setValue('field_empty_setting');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
     $assert_session->responseNotContains('Default empty setting now has a value.');
-    $this->assertTrue($field_test_settings->isVisible(), TRUE);
+    $this->assertTrue($field_test_settings->isVisible());
 
     // Set the empty_setting option to a non-empty value again and validate
     // the formatting summary now display's this correctly.
     $field_test_settings->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(2);
     $field_empty_setting = $page->findField('fields[field_test][settings_edit_form][settings][field_empty_setting]');
     $field_empty_setting->setValue('non empty setting');
     $page->findButton('Update')->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(3);
     $assert_session->responseContains('Default empty setting now has a value.');
 
     // Test the settings form behavior. An edit button should be present since
     // there are third party settings to configure.
     $field_test_format_type->setValue('field_no_settings');
-    $assert_session->assertWaitOnAjaxRequest();
     $this->assertTrue($field_test_settings->isVisible());
 
     // Make sure we can save the third party settings when there are no settings
     // available.
     $field_test_settings->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(4);
     $page->findButton('Update')->click();
-    $assert_session->assertWaitOnAjaxRequest();
 
     // When a module providing third-party settings to a formatter (or widget)
     // is uninstalled, the formatter remains enabled but the provided settings,
@@ -232,11 +238,11 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     // Ensure the button is still there after the module has been disabled.
     $this->drupalGet($manage_display);
-    $this->assertTrue($field_test_settings->isVisible(), TRUE);
+    $this->assertTrue($field_test_settings->isVisible());
 
     // Ensure that third-party form elements are not present anymore.
     $field_test_settings->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
     $field_third_party = $page->findField('fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][field_test_field_formatter_third_party_settings_form]');
     $this->assertEmpty($field_third_party);
 
@@ -250,7 +256,7 @@ class ManageDisplayTest extends WebDriverTestBase {
   /**
    * Tests widget settings.
    */
-  public function testWidgetUI() {
+  public function testWidgetUI(): void {
     // Admin Manage Fields page.
     $manage_fields = 'admin/structure/types/manage/' . $this->type;
     // Admin Manage Display page.
@@ -260,7 +266,7 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     // Creates a new field that can be used with multiple formatters.
     // Reference: Drupal\field_test\Plugin\Field\FieldWidget\TestFieldWidgetMultiple::isApplicable().
-    $this->fieldUIAddNewField($manage_fields, 'test', 'Test field');
+    $this->fieldUIAddNewFieldJS($manage_fields, 'test', 'Test field');
 
     // Get the display options (formatter and settings) that were automatically
     // assigned for the 'default' display.
@@ -295,7 +301,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     ]);
 
     $field_test_type->setValue('test_field_widget_multiple');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
     $button_save->click();
 
     $this->drupalGet($manage_display);
@@ -319,7 +325,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $assert_session->responseContains('field_test_field_widget_settings_summary_alter');
 
     $field_test_settings->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
 
     // Assert that the field added in
     // field_test_field_widget_third_party_settings_form() is present.
@@ -342,7 +348,7 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     // Creates a new field that can not be used with the multiple formatter.
     // Reference: Drupal\field_test\Plugin\Field\FieldWidget\TestFieldWidgetMultiple::isApplicable().
-    $this->fieldUIAddNewField($manage_fields, 'onewidgetfield', 'One Widget Field');
+    $this->fieldUIAddNewFieldJS($manage_fields, 'onewidgetfield', 'One Widget Field');
 
     // Go to the Manage Form Display.
     $this->drupalGet($manage_display);
@@ -379,7 +385,6 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Change the region to content using the region field.
     $this->assertEquals('hidden', $field_region->getValue());
     $field_region->setValue('content');
-    $assert_session->assertWaitOnAjaxRequest();
     $button_save->click();
 
     // Validate the change on the server.
@@ -419,83 +424,16 @@ class ManageDisplayTest extends WebDriverTestBase {
   }
 
   /**
-   * Creates a new field through the Field UI.
-   *
-   * @param string $bundle_path
-   *   Admin path of the bundle that the new field is to be attached to.
-   * @param string $field_name
-   *   The field name of the new field storage.
-   * @param string $label
-   *   (optional) The label of the new field. Defaults to a random string.
-   * @param string $field_type
-   *   (optional) The field type of the new field storage. Defaults to
-   *   'test_field'.
-   */
-  public function fieldUIAddNewField($bundle_path, $field_name, $label = NULL, $field_type = 'test_field') {
-    $label = $label ?: $field_name;
-
-    // Allow the caller to set a NULL path in case they navigated to the right
-    // page before calling this method.
-    if ($bundle_path !== NULL) {
-      $bundle_path = "$bundle_path/fields/add-field";
-    }
-
-    // First step: 'Add field' page.
-    $this->drupalGet($bundle_path);
-
-    $session = $this->getSession();
-
-    $page = $session->getPage();
-    $assert_session = $this->assertSession();
-
-    $field_new_storage_type = $page->findField('new_storage_type');
-    $field_new_storage_type->setValue($field_type);
-    $assert_session->assertWaitOnAjaxRequest();
-
-    $field_label = $page->findField('label');
-    $this->assertTrue($field_label->isVisible());
-    $field_label->setValue($label);
-    $machine_name = $assert_session->waitForElementVisible('css', '[name="label"] + * .machine-name-value');
-    $this->assertNotEmpty($machine_name);
-    $page->findButton('Edit')->press();
-
-    $field_field_name = $page->findField('field_name');
-    $this->assertTrue($field_field_name->isVisible());
-    $field_field_name->setValue($field_name);
-    $assert_session->assertWaitOnAjaxRequest();
-
-    $page->findButton('Save and continue')->click();
-
-    $assert_session->pageTextContains("These settings apply to the $label field everywhere it is used.");
-    $breadcrumb_link = $page->findLink($label);
-
-    // Test breadcrumb.
-    $this->assertTrue($breadcrumb_link->isVisible());
-
-    // Second step: 'Storage settings' form.
-    $page->findButton('Save field settings')->click();
-    $assert_session->pageTextContains("Updated field $label field settings.");
-
-    // Third step: 'Field settings' form.
-    $page->findButton('Save settings')->click();
-    $assert_session->pageTextContains("Saved $label configuration.");
-
-    // Check that the field appears in the overview form.
-    $row = $page->find('css', '#field-' . $field_name);
-    $this->assertNotEmpty($row, 'Field was created and appears in the overview page.');
-  }
-
-  /**
    * Confirms that notifications to save appear when necessary.
    */
-  public function testNotAppliedUntilSavedWarning() {
+  public function testNotAppliedUntilSavedWarning(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
     // Admin Manage Fields page.
     $manage_fields = 'admin/structure/types/manage/' . $this->type;
 
-    $this->fieldUIAddNewField($manage_fields, 'test', 'Test field');
+    $this->fieldUIAddNewFieldJS($manage_fields, 'test', 'Test field');
     $manage_display = 'admin/structure/types/manage/' . $this->type . '/display';
     $manage_form = 'admin/structure/types/manage/' . $this->type . '/form-display';
 

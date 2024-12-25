@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 
 /**
@@ -47,6 +48,7 @@ use Drupal\Core\Render\Element;
  *     since all user agents automatically preselect the first available
  *     option. But people are used to this being the behavior of select
  *     controls.
+ *
  *     @todo Address the above issue in Drupal 8.
  *   - If #required is not TRUE and this value is set (most commonly to an
  *     empty string), then an extra option (see #empty_option above)
@@ -76,10 +78,9 @@ use Drupal\Core\Render\Element;
  *   ],
  * ];
  * @endcode
- *
- * @FormElement("select")
  */
-class Select extends FormElement {
+#[FormElement('select')]
+class Select extends FormElementBase {
 
   /**
    * {@inheritdoc}

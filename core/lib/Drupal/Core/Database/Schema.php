@@ -30,9 +30,9 @@ abstract class Schema implements PlaceholderInterface {
    * by defining the defaultSchema variable only MySQL has to re-write the
    * method.
    *
-   * @see DatabaseSchema::getPrefixInfo()
-   *
    * @var string
+   *
+   * @see DatabaseSchema::getPrefixInfo()
    */
   protected $defaultSchema = 'public';
 
@@ -118,6 +118,31 @@ abstract class Schema implements PlaceholderInterface {
   }
 
   /**
+   * Executes a data definition language (DDL) statement.
+   *
+   * This method allows to void an active transaction when the driver does
+   * not support transactional DDL.
+   *
+   * @param string $sql
+   *   The DDL statement to execute. This is a SQL string that may contain
+   *   placeholders.
+   * @param array $arguments
+   *   (Optional) The associative array of arguments for the prepared
+   *   statement.
+   * @param array $options
+   *   (Optional) An associative array of options to control how the query is
+   *   run. The given options will be merged with self::defaultOptions().
+   */
+  protected function executeDdlStatement(string $sql, array $arguments = [], array $options = []): void {
+    $this->connection->query($sql, $arguments, $options);
+    // DDL statements when in a transaction force a commit in some databases.
+    // Void the transaction in that case.
+    if (!$this->connection->supportsTransactionalDDL() && $this->connection->transactionManager()->inTransaction()) {
+      $this->connection->transactionManager()->voidClientTransaction();
+    }
+  }
+
+  /**
    * Build a condition to match a table name against a standard information_schema.
    *
    * The information_schema is a SQL standard that provides information about the
@@ -161,12 +186,14 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @param $table
    *   The name of the table in drupal (no prefixing).
+   * @param bool $add_prefix
+   *   Boolean to indicate whether the table name needs to be prefixed.
    *
    * @return bool
    *   TRUE if the given table exists, otherwise FALSE.
    */
-  public function tableExists($table) {
-    $condition = $this->buildTableNameCondition($table);
+  public function tableExists($table, bool $add_prefix = TRUE) {
+    $condition = $this->buildTableNameCondition($table, '=', $add_prefix);
     $condition->compile($this->connection, $this);
     // Normally, we would heartily discourage the use of string
     // concatenation for conditionals like this however, we
@@ -520,6 +547,7 @@ abstract class Schema implements PlaceholderInterface {
    * @throws \RuntimeException
    *   If the driver does not implement this method.
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn
   protected function introspectIndexSchema($table) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("The table $table doesn't exist.");
@@ -541,20 +569,20 @@ abstract class Schema implements PlaceholderInterface {
    *
    * For example, suppose you have:
    * @code
-   * $schema['foo'] = array(
-   *   'fields' => array(
-   *     'bar' => array('type' => 'int', 'not null' => TRUE)
-   *   ),
-   *   'primary key' => array('bar')
-   * );
+   * $schema['foo'] = [
+   *   'fields' => [
+   *     'bar' => ['type' => 'int', 'not null' => TRUE]
+   *   ],
+   *   'primary key' => ['bar']
+   * ];
    * @endcode
    * and you want to change foo.bar to be type serial, leaving it as the
    * primary key. The correct sequence is:
    * @code
    * $injected_database->schema()->dropPrimaryKey('foo');
    * $injected_database->schema()->changeField('foo', 'bar', 'bar',
-   *   array('type' => 'serial', 'not null' => TRUE),
-   *   array('primary key' => array('bar')));
+   *   ['type' => 'serial', 'not null' => TRUE],
+   *   ['primary key' => ['bar'])];
    * @endcode
    *
    * The reasons for this are due to the different database engines:
@@ -614,7 +642,7 @@ abstract class Schema implements PlaceholderInterface {
     }
     $statements = $this->createTableSql($name, $table);
     foreach ($statements as $statement) {
-      $this->connection->query($statement);
+      $this->executeDdlStatement($statement);
     }
   }
 
@@ -640,6 +668,7 @@ abstract class Schema implements PlaceholderInterface {
    *   make it private for each driver, and ::createTable actually an abstract
    *   method here for implementation in each driver.
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn
   protected function createTableSql($name, $table) {
     throw new \BadMethodCallException(get_class($this) . '::createTableSql() not implemented.');
   }
@@ -687,8 +716,7 @@ abstract class Schema implements PlaceholderInterface {
   }
 
   /**
-   * Return an escaped version of its parameter to be used as a default value
-   * on a column.
+   * Escapes a value to be used as the default value on a column.
    *
    * @param mixed $value
    *   The value to be escaped (int, float, null or string).
