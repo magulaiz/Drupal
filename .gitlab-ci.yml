@@ -454,7 +454,9 @@ default:
     - cd core
     - yarn install
     - yarn run build:css --check
+    - pwd
     - cd ../..
+    - pwd
     - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color --custom-formatter=@gitlab-formatters/stylelint-formatter-gitlab --output-file=$CI_PROJECT_DIR/gl-codequality.json
   artifacts:
     reports:
