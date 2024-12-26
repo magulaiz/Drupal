@@ -4,7 +4,6 @@ namespace Drupal\Core\Theme;
 
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Extension\Extension;
-use Drupal\Core\Plugin\Component;
 
 /**
  * Determines which component should be used.
