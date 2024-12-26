@@ -19,7 +19,6 @@ use Drupal\Core\Entity\Attribute\HandlerClass;
 use Drupal\Core\Entity\Attribute\LinkTemplate;
 use Drupal\Core\Entity\Attribute\ListBuilderClass;
 use Drupal\Core\Entity\Attribute\StorageClass;
-use Drupal\Core\Entity\Attribute\UriCallback;
 use Drupal\Core\Entity\Attribute\ViewBuilderClass;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -62,6 +61,7 @@ use Drupal\user\EntityOwnerTrait;
     'singular' => '@count comment',
     'plural' => '@count comments',
   ],
+  uri_callback: 'comment_uri',
 )]
 #[AccessClass(CommentAccessControlHandler::class)]
 #[Constraints(['CommentName' => []])]
@@ -76,7 +76,6 @@ use Drupal\user\EntityOwnerTrait;
 #[LinkTemplate(key: 'edit-form', path: '/comment/{comment}/edit')]
 #[LinkTemplate(key: 'create', path: '/comment')]
 #[ListBuilderClass(EntityListBuilder::class)]
-#[UriCallback('comment_uri')]
 #[StorageClass(CommentStorage::class)]
 #[ViewBuilderClass(CommentViewBuilder::class)]
 #[EntityTypeProperty(key: 'field_ui_base_route', value: 'entity.comment_type.edit_form')]
