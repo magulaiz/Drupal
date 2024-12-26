@@ -1523,8 +1523,11 @@ function _locale_parse_js_file($filepath) {
   // actual file.
   $parsed_url = drupal_parse_url($filepath);
   $filepath = $parsed_url['path'];
+  if (!file_exists($filepath)) {
+    return;
+  }
   // Load the JavaScript file.
-  $file = (is_file($filepath)) ? file_get_contents($filepath) : '';
+  $file = file_get_contents($filepath);
 
   // Match all calls to Drupal.t() in an array.
   // Note: \s also matches newlines with the 's' modifier.
