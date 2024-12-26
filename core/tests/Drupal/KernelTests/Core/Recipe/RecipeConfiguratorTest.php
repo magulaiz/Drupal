@@ -40,7 +40,6 @@ class RecipeConfiguratorTest extends KernelTestBase {
       'field',
       'text',
       'node',
-      'dblog',
     ];
 
     $this->assertEquals($expected_recipes_names, $recipes_names);
