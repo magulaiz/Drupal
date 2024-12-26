@@ -2,7 +2,15 @@
 
 namespace Drupal\node\Entity;
 
+use Drupal\Core\Entity\Attribute\AccessClass;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\Attribute\EntityTypeProperty;
+use Drupal\Core\Entity\Attribute\FormClass;
+use Drupal\Core\Entity\Attribute\HandlerClass;
+use Drupal\Core\Entity\Attribute\LinkTemplate;
+use Drupal\Core\Entity\Attribute\ListBuilderClass;
+use Drupal\Core\Entity\Attribute\StorageClass;
+use Drupal\Core\Entity\Attribute\ViewBuilderClass;
 use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -43,33 +51,6 @@ use Drupal\user\EntityOwnerTrait;
     'uid' => 'uid',
     'owner' => 'uid',
   ],
-  handlers: [
-    'storage' => NodeStorage::class,
-    'storage_schema' => NodeStorageSchema::class,
-    'view_builder' => NodeViewBuilder::class,
-    'access' => NodeAccessControlHandler::class,
-    'views_data' => NodeViewsData::class,
-    'form' => [
-      'default' => NodeForm::class,
-      'delete' => NodeDeleteForm::class,
-      'edit' => NodeForm::class,
-      'delete-multiple-confirm' => DeleteMultiple::class,
-    ],
-    'route_provider' => [
-      'html' => NodeRouteProvider::class,
-    ],
-    'list_builder' => NodeListBuilder::class,
-    'translation' => NodeTranslationHandler::class,
-  ],
-  links: [
-    'canonical' => '/node/{node}',
-    'delete-form' => '/node/{node}/delete',
-    'delete-multiple-form' => '/admin/content/node/delete',
-    'edit-form' => '/node/{node}/edit',
-    'version-history' => '/node/{node}/revisions',
-    'revision' => '/node/{node}/revisions/{node_revision}/view',
-    'create' => '/node',
-  ],
   collection_permission: 'access content overview',
   permission_granularity: 'bundle',
   bundle_entity_type: 'node_type',
@@ -84,7 +65,6 @@ use Drupal\user\EntityOwnerTrait;
     'singular' => '@count content item',
     'plural' => '@count content items',
   ],
-  field_ui_base_route: 'entity.node_type.edit_form',
   common_reference_target: TRUE,
   list_cache_contexts: ['user.node_grants:view'],
   revision_metadata_keys: [
@@ -93,6 +73,26 @@ use Drupal\user\EntityOwnerTrait;
     'revision_log_message' => 'revision_log',
   ],
 )]
+#[AccessClass(NodeAccessControlHandler::class)]
+#[FormClass(operation: 'default', formClass: NodeForm::class)]
+#[FormClass(operation: 'delete', formClass: NodeDeleteForm::class)]
+#[FormClass(operation: 'edit', formClass: NodeForm::class)]
+#[FormClass(operation: 'delete-multiple-confirm', formClass: DeleteMultiple::class)]
+#[HandlerClass(type: 'route_provider', value: ['html' => NodeRouteProvider::class])]
+#[HandlerClass(type: 'storage_schema', value: NodeStorageSchema::class)]
+#[HandlerClass(type: 'translation', value: NodeTranslationHandler::class)]
+#[HandlerClass(type: 'views_data', value: NodeViewsData::class)]
+#[LinkTemplate(key: 'canonical', path: '/node/{node}')]
+#[LinkTemplate(key: 'delete-form', path: '/node/{node}/delete')]
+#[LinkTemplate(key: 'delete-multiple-form', path: '/admin/content/node/delete')]
+#[LinkTemplate(key: 'edit-form', path: '/node/{node}/edit')]
+#[LinkTemplate(key: 'version-history', path: '/node/{node}/revisions')]
+#[LinkTemplate(key: 'revision', path: '/node/{node}/revisions/{node_revision}/view')]
+#[LinkTemplate(key: 'create', path: '/node')]
+#[ListBuilderClass(NodeListBuilder::class)]
+#[StorageClass(NodeStorage::class)]
+#[ViewBuilderClass(NodeViewBuilder::class)]
+#[EntityTypeProperty(key: 'field_ui_base_route', value: 'entity.node_type.edit_form')]
 class Node extends EditorialContentEntityBase implements NodeInterface {
 
   use EntityOwnerTrait;
