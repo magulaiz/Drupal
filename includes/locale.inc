@@ -1523,6 +1523,9 @@ function _locale_parse_js_file($filepath) {
   // actual file.
   $parsed_url = drupal_parse_url($filepath);
   $filepath = $parsed_url['path'];
+  if (!file_exists($filepath)) {
+    return;
+  }
   // Load the JavaScript file.
   $file = file_get_contents($filepath);
 
