@@ -311,8 +311,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function getModuleImplementations(string $hook, string $module): array {
     $implementations = $this->getHookListeners($hook);
-    $module_implementations = $implementations[$module] ?? [];
-    return $module_implementations;
+    return $implementations[$module] ?? [];
   }
 
   /**
