@@ -455,6 +455,7 @@ default:
     - yarn install
     - yarn run build:css --check
     - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color --custom-formatter=@gitlab-formatters/stylelint-formatter-gitlab --output-file=$CI_PROJECT_DIR/gl-codequality.json
+    - ls -lah $CI_PROJECT_DIR/gl-codequality.json
     - sed -i "s|{\"path\":\"|{\"path\":\"core/|g" $CI_PROJECT_DIR/gl-codequality.json
     - cp $CI_PROJECT_DIR/gl-codequality.json $CI_PROJECT_DIR/edited-gl-codequality.json
   artifacts:
