@@ -63,7 +63,7 @@ class TermName extends Entity {
    * {@inheritdoc}
    */
   public function validateArgument($argument) {
-    if (!($argument === null || $argument === '')) {
+    if (!($argument === NULL || $argument === '')) {
       if ($this->options['transform']) {
         $argument = str_replace('-', ' ', $argument);
         $this->argument->argument = $argument;
@@ -83,7 +83,7 @@ class TermName extends Entity {
         }
       }
     }
-    
+
     return FALSE;
   }
 
