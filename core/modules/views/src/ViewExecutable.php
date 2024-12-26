@@ -488,7 +488,7 @@ class ViewExecutable {
   protected $baseEntityType;
 
   /**
-   * Holds all necessary data for proper unserialization.
+   * Holds all necessary data for proper un-serialization.
    *
    * @var array
    */
@@ -2538,7 +2538,7 @@ class ViewExecutable {
    */
   public function __sleep(): array {
     // Limit to only the required data which is needed to properly restore the
-    // state during unserialization.
+    // state during un-serialization.
     $this->serializationData = [
       'storage' => $this->storage->id(),
       'current_display' => $this->current_display,

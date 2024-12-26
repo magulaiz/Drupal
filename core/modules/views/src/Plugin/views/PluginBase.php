@@ -349,7 +349,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * The resulting string will be sanitized with Xss::filterAdmin.
    *
    * @param $text
-   *   Unsanitized string with possible tokens.
+   *   An un-sanitized string with possible tokens.
    * @param $tokens
    *   Array of token => replacement_value items.
    *

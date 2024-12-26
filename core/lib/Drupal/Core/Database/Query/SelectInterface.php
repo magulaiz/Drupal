@@ -144,7 +144,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * database-specific escape characters.
    *
    * @param string $string
-   *   An unsanitized field name.
+   *   An un-sanitized field name.
    *
    * @return string
    *   The sanitized field name string.

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 /**
- * Tests serializing and unserializing a query.
+ * Tests serializing and un-serializing a query.
  *
  * @group Database
  */
@@ -22,7 +22,7 @@ class SerializeQueryTest extends DatabaseTestBase {
     // assertion.
     $query = unserialize(serialize($query));
     $results = $query->execute()->fetchCol();
-    $this->assertEquals(28, $results[0], 'Query properly executed after unserialization.');
+    $this->assertEquals(28, $results[0], 'Query properly executed after un-serialization.');
   }
 
 }

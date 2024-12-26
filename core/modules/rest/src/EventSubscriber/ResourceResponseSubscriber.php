@@ -172,7 +172,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
    *
    * Ensures that complex data structures in ResourceResponse::getResponseData()
    * are not serialized. Not doing this means that caching this response object
-   * requires unserializing the PHP data when reading this response object from
+   * requires un-serializing the PHP data when reading this response object from
    * cache, which can be very costly, and is unnecessary.
    *
    * @param \Drupal\rest\ResourceResponseInterface $response

@@ -111,7 +111,7 @@ class FilterCaption extends FilterBase implements ContainerFactoryPluginInterfac
         $node = ($node->parentNode->tagName === 'a') ? $node->parentNode : $node;
         $filter_caption = [
           '#theme' => 'filter_caption',
-          // We pass the unsanitized string because this is a text format
+          // We pass the un-sanitized string because this is a text format
           // filter, and after filtering, we always assume the output is safe.
           // @see \Drupal\filter\Element\ProcessedText::preRenderText()
           '#node' => FilteredMarkup::create($node->C14N()),

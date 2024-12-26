@@ -123,19 +123,19 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
     if ($last_write_timestamp) {
       // Items in the fast backend might be invalid based on their timestamp,
       // but we can't check the timestamp prior to getting the item, which
-      // includes unserializing it. However, unserializing an invalid item can
+      // includes un-serializing it. However, un-serializing an invalid item can
       // throw an exception. For example, a __wakeup() implementation that
       // receives object properties containing references to code or data that
       // no longer exists in the application's current state.
       //
-      // Unserializing invalid data, whether it throws an exception or not, is
+      // Un-serializing invalid data, whether it throws an exception or not, is
       // a waste of time, but we only incur it while a cache invalidation has
       // not yet finished propagating to all the fast backend instances.
       //
       // Most cache backend implementations should not wrap their internal
       // get() implementations with a try/catch, because they have no reason to
       // assume that their data is invalid, and doing so would mask
-      // unserialization errors of valid data. We do so here, only because the
+      // un-serialization errors of valid data. We do so here, only because the
       // fast backend is non-authoritative, and after discarding its
       // exceptions, we proceed to check the consistent (authoritative) backend
       // and allow exceptions from that to bubble up.

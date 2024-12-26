@@ -83,7 +83,7 @@ function _contextual_links_to_id($contextual_links) {
 }
 
 /**
- * Unserializes the result of _contextual_links_to_id().
+ * Un-serializes the result of _contextual_links_to_id().
  *
  * Note that $id is user input. Before calling this method the ID should be
  * checked against the token stored in the 'data-contextual-token' attribute

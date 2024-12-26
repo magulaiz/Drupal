@@ -290,7 +290,7 @@ class EntityFormDisplayTest extends KernelTestBase {
   }
 
   /**
-   * Tests the serialization and unserialization of the class.
+   * Tests the serialization and un-serialization of the class.
    */
   public function testSerialization(): void {
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
@@ -304,7 +304,7 @@ class EntityFormDisplayTest extends KernelTestBase {
     $form_display->removeComponent('langcode');
 
     $unserialized = unserialize(serialize($form_display));
-    // Verify that components are retained upon unserialization.
+    // Verify that components are retained upon un-serialization.
     $this->assertEquals($form_display->getComponents(), $unserialized->getComponents());
   }
 

@@ -259,7 +259,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $affected_menus = [];
 
     // Get the existing definition if it exists. This does not use
-    // self::loadFull() to avoid the unserialization of fields with 'serialize'
+    // self::loadFull() to avoid the un-serialization of fields with 'serialize'
     // equal to TRUE as defined in self::schemaDefinition(). The makes $original
     // easier to compare with the return value of self::preSave().
     $query = $this->connection->select($this->table, NULL, $this->options);
@@ -606,7 +606,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   }
 
   /**
-   * Prepares a link by unserializing values and saving the definition.
+   * Prepares a link by un-serializing values and saving the definition.
    *
    * @param array $link
    *   The data loaded in the query.

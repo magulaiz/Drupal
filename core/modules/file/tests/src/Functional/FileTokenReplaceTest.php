@@ -95,7 +95,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
       $this->assertEquals($metadata_tests[$input], $bubbleable_metadata);
     }
 
-    // Generate and test unsanitized tokens.
+    // Generate and test un-sanitized tokens.
     $tests['[file:name]'] = $file->getFilename();
     $tests['[file:path]'] = $file->getFileUri();
     $tests['[file:mime]'] = $file->getMimeType();
@@ -103,7 +103,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, ['file' => $file], ['langcode' => $language_interface->getId(), 'sanitize' => FALSE]);
-      $this->assertEquals($expected, $output, "Unsanitized file token $input replaced.");
+      $this->assertEquals($expected, $output, "Un-sanitized file token $input replaced.");
     }
   }
 

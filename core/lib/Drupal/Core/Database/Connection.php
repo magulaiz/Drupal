@@ -973,7 +973,7 @@ abstract class Connection {
    * database-specific escape characters.
    *
    * @param string $database
-   *   An unsanitized database name.
+   *   An un-sanitized database name.
    *
    * @return string
    *   The sanitized database name.
@@ -993,7 +993,7 @@ abstract class Connection {
    * database-specific escape characters are added in Connection::setPrefix().
    *
    * @param string $table
-   *   An unsanitized table name.
+   *   An un-sanitized table name.
    *
    * @return string
    *   The sanitized table name.
@@ -1016,7 +1016,7 @@ abstract class Connection {
    * database-specific escape characters.
    *
    * @param string $field
-   *   An unsanitized field name.
+   *   An un-sanitized field name.
    *
    * @return string
    *   The sanitized field name.
@@ -1041,7 +1041,7 @@ abstract class Connection {
    * because that is not allowed in aliases.
    *
    * @param string $field
-   *   An unsanitized alias name.
+   *   An un-sanitized alias name.
    *
    * @return string
    *   The sanitized alias name.

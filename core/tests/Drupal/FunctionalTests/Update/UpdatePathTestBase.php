@@ -268,7 +268,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
         unserialize($route);
       }
       catch (\Exception $e) {
-        $this->fail(sprintf('Error "%s" while unserializing route %s', $e->getMessage(), Html::escape($route_name)));
+        $this->fail(sprintf('Error "%s" while un-serializing route %s', $e->getMessage(), Html::escape($route_name)));
       }
     }
     restore_error_handler();

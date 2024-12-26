@@ -39,7 +39,7 @@ class FieldNormalizer extends ListNormalizer implements DenormalizerInterface {
     }
 
     foreach ($data as $item_data) {
-      // Create a new item and pass it as the target for the unserialization of
+      // Create a new item and pass it as the target for the un-serialization of
       // $item_data. All items in field should have removed before this method
       // was called.
       // @see \Drupal\serialization\Normalizer\ContentEntityNormalizer::denormalize().
