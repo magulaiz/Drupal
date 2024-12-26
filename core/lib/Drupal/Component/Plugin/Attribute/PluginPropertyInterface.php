@@ -5,36 +5,36 @@ namespace Drupal\Component\Plugin\Attribute;
 /**
  * Interface for attributes that provide properties to plugin definitions.
  */
-interface PluginPropertyInterface extends AttributeInterface {
+interface PluginPropertyInterface {
 
   /**
-   * Returns the key within the plugin definition of the property to set.
+   * Gets the class name of the plugin associated with the attribute.
    *
-   * If the key is an array, it will be treated as a nested key, with the
-   * outermost keys coming first.
-   *
-   * @return int|string|array
+   * @return class-string
    */
-  public function getKey(): int|string|array;
+  public function getPluginClass(): string;
 
   /**
-   * Returns the value to be set for the plugin definition property.
+   * Sets the class name of the plugin associated with the attribute.
    *
-   * @return mixed
+   * @param class-string $class
+   *   The class name of the plugin associated with the attribute.
+   *
+   * @return $this
    */
-  public function getValue(): mixed;
+  public function setPluginClass(string $class): static;
 
   /**
    * Checks whether the property attribute can be applied to a plugin attribute.
    *
-   * @param class-string $pluginClass
+   * @param class-string $pluginAttributeClass
    *   The class of the plugin attribute.
    *
    * @return bool
    *   TRUE if no restriction on allowed plugin classes or plugin class is an
    *   instance of the allowed plugin classes.
    */
-  public function isValidPluginClass(string $pluginClass): bool;
+  public function isValidPluginAttribute(string $pluginAttributeClass): bool;
 
   /**
    * Adds the property value to the plugin definition.

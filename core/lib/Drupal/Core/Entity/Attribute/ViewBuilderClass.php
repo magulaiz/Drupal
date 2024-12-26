@@ -13,11 +13,11 @@ class ViewBuilderClass extends EntityTypeProperty {
   /**
    * Constructs a ViewBuilderClass attribute.
    *
-   * @param class-string $viewBuilderClass
+   * @param class-string $class
    *   The class for this entity type's view builder.
    */
-  public function __construct(public readonly string $viewBuilderClass) {
-    parent::__construct(['handlers', 'view_builder'], $this->viewBuilderClass);
+  public function __construct(public readonly string $class) {
+    parent::__construct(['handlers', 'view_builder'], $this->class);
   }
 
   /**
@@ -25,9 +25,9 @@ class ViewBuilderClass extends EntityTypeProperty {
    */
   public function addToDefinition(object|array $definition): EntityTypeInterface {
     if (!($definition instanceof EntityTypeInterface)) {
-      throw new \InvalidArgumentException(sprintf('%s attribute can not be used with %s, because it is not an entity type definition.', static::class, $this->getClass()));
+      throw new \InvalidArgumentException(sprintf('%s attribute can not be used with %s, because it is not an entity type definition.', static::class, $this->getPluginClass()));
     }
-    return $definition->setViewBuilderClass($this->viewBuilderClass);
+    return $definition->setViewBuilderClass($this->class);
   }
 
 }

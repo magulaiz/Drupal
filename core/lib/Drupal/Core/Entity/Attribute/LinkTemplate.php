@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  * Attribute class to add a single link template to entity type definition.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
-class LinkTemplate extends EntityTypeProperty {
+class LinkTemplate extends EntityTypePropertyBase {
 
   /**
    * Constructs a LinkTemplate attribute.
@@ -19,18 +19,16 @@ class LinkTemplate extends EntityTypeProperty {
    *   The route path to use for the link.
    */
   public function __construct(
-    string $key,
+    public readonly string $key,
     public readonly string $path,
-  ) {
-    parent::__construct($key, $path);
-  }
+  ) {}
 
   /**
    * {@inheritdoc}
    */
   public function addToDefinition(object|array $definition): EntityTypeInterface {
     if (!($definition instanceof EntityTypeInterface)) {
-      throw new \InvalidArgumentException(sprintf('%s attribute can not be used with %s, because it is not an entity type definition.', static::class, $this->getClass()));
+      throw new \InvalidArgumentException(sprintf('%s attribute can not be used with %s, because it is not an entity type definition.', static::class, $this->getPluginClass()));
     }
     return $definition->setLinkTemplate($this->key, $this->path);
   }

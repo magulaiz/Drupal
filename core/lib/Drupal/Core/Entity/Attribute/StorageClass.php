@@ -15,11 +15,11 @@ class StorageClass extends EntityTypeProperty {
   /**
    * Constructs a StorageClass attribute.
    *
-   * @param class-string $storageClass
+   * @param class-string $class
    *   The class for the entity type's storage.
    */
-  public function __construct(public readonly string $storageClass) {
-    parent::__construct(['handlers', 'storage'], $storageClass);
+  public function __construct(public readonly string $class) {
+    parent::__construct(['handlers', 'storage'], $class);
   }
 
   /**
@@ -27,9 +27,9 @@ class StorageClass extends EntityTypeProperty {
    */
   public function addToDefinition(object|array $definition): EntityTypeInterface {
     if (!($definition instanceof EntityTypeInterface)) {
-      throw new \InvalidArgumentException(sprintf('%s attribute can not be used with %s, because it is not an entity type definition.', static::class, $this->getClass()));
+      throw new \InvalidArgumentException(sprintf('%s attribute can not be used with %s, because it is not an entity type definition.', static::class, $this->getPluginClass()));
     }
-    return $definition->setStorageClass($this->storageClass);
+    return $definition->setStorageClass($this->class);
   }
 
 }

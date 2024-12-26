@@ -8,26 +8,24 @@ use Drupal\Core\Entity\EntityTypeInterface;
  * Attribute class to add list builder class to entity type definition.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ListBuilderClass extends EntityTypeProperty {
+class ListBuilderClass extends EntityTypePropertyBase {
 
   /**
    * Constructs a ListBuilderClass attribute.
    *
-   * @param class-string $listBuilderClass
+   * @param class-string $class
    *   The list class to use for the entity type.
    */
-  public function __construct(public readonly string $listBuilderClass) {
-    parent::__construct(['handlers', 'list_builder'], $this->listBuilderClass);
-  }
+  public function __construct(public readonly string $class) {}
 
   /**
    * {@inheritdoc}
    */
   public function addToDefinition(object|array $definition): EntityTypeInterface {
     if (!($definition instanceof EntityTypeInterface)) {
-      throw new \InvalidArgumentException(sprintf('%s attribute can not be used with %s, because it is not an entity type definition.', static::class, $this->getClass()));
+      throw new \InvalidArgumentException(sprintf('%s attribute can not be used with %s, because it is not an entity type definition.', static::class, $this->getPluginClass()));
     }
-    return $definition->setListBuilderClass($this->listBuilderClass);
+    return $definition->setListBuilderClass($this->class);
   }
 
 }

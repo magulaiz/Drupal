@@ -202,10 +202,10 @@ class AttributeClassDiscovery implements DiscoveryInterface {
 
     /** @var \Drupal\Component\Plugin\Attribute\PluginPropertyInterface $property_attribute */
     $property_attribute = $property_reflector->newInstance();
-    $this->prepareAttributeDefinition($property_attribute, $plugin_class);
+    $property_attribute->setPluginClass($plugin_class);
     // Check that the property attribute is allowed to work with the plugin
     // attribute.
-    if (!$property_attribute->isValidPluginClass($plugin_attribute::class)) {
+    if (!$property_attribute->isValidPluginAttribute($plugin_attribute::class)) {
       throw new InvalidPluginDefinitionException($id, sprintf('May not use plugin property class %s with main plugin attribute class "%s for plugin class %s".', $property_class, $plugin_attribute::class, $plugin_class));
     }
     // Add properties from attributes if they do not dependencies, because
