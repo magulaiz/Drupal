@@ -481,7 +481,10 @@ views_exposed_form:
       label: 'Exposed sort key'
       constraints:
         NotBlank: [ ]
-        Regex: '/[^a-zA-Z0-9_~\.\-]+/'
+        Regex:
+          pattern: '/[^a-zA-Z0-9_~\.\-]+/'
+          match: false
+          message: 'Invalid characters in expose_sort_key'
         Choice:
           choices:
             - 'value'
@@ -499,7 +502,10 @@ views_exposed_form:
       label: 'Sort order key'
       constraints:
         NotBlank: [ ]
-        Regex: '/[^a-zA-Z0-9_~\.\-]+/'
+        Regex:
+          pattern: '/[^a-zA-Z0-9_~\.\-]+/'
+          match: false
+          message: 'Invalid characters in sort_order_key'
         Choice:
           choices:
             - 'value'
