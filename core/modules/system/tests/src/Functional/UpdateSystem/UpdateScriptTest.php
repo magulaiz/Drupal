@@ -28,6 +28,7 @@ class UpdateScriptTest extends BrowserTestBase {
    */
   protected static $modules = [
     'update_script_test',
+    'dblog',
     'language',
     'test_module_required_by_theme',
     'test_another_module_required_by_theme',

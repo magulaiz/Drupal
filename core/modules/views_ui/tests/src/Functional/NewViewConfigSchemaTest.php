@@ -20,6 +20,7 @@ class NewViewConfigSchemaTest extends UITestBase {
     'comment',
     'file',
     'taxonomy',
+    'dblog',
   ];
 
   /**
