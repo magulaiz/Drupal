@@ -1522,7 +1522,7 @@ function _locale_parse_js_file($filepath) {
   // The file path might contain a query string, so make sure we only use the
   // actual file.
   $parsed_url = drupal_parse_url($filepath);
-  $filepath = drupal_realpath($parsed_url['path']);
+  $filepath = $parsed_url['path'];
   // Load the JavaScript file.
   $file = (is_file($filepath)) ? file_get_contents($filepath) : '';
 
