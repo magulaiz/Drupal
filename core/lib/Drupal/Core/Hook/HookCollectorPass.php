@@ -138,7 +138,9 @@ class HookCollectorPass implements CompilerPassInterface {
    *   https://www.drupal.org/project/drupal/issues/3481778
    */
   public static function collectAllHookImplementations(array $module_filenames, ?ContainerBuilder $container = NULL): static {
-    $modules = array_map(fn ($x) => preg_quote($x, '/'), array_keys($module_filenames));
+    $modules_and_template = array_keys($module_filenames);
+    $modules_and_template[] = 'template';
+    $modules = array_map(fn ($x) => preg_quote($x, '/'), $modules_and_template);
     // Longer modules first.
     usort($modules, fn($a, $b) => strlen($b) - strlen($a));
     $module_preg = '/^(?<function>(?<module>' . implode('|', $modules) . ')_(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
