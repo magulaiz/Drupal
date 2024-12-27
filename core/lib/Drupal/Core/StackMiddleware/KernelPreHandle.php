@@ -29,7 +29,7 @@ class KernelPreHandle implements HttpKernelInterface {
    */
   public function __construct(
     protected HttpKernelInterface $httpKernel,
-    DrupalKernelInterface $drupal_kernel
+    DrupalKernelInterface $drupal_kernel,
   ) {
     $this->drupalKernel = $drupal_kernel;
   }

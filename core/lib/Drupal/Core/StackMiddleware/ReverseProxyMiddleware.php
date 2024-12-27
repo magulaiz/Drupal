@@ -29,7 +29,7 @@ class ReverseProxyMiddleware implements HttpKernelInterface {
    */
   public function __construct(
     protected HttpKernelInterface $httpKernel,
-    Settings $settings
+    Settings $settings,
   ) {
     $this->settings = $settings;
   }

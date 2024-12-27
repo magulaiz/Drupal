@@ -30,7 +30,7 @@ class TestMiddleware implements HttpKernelInterface {
    */
   public function __construct(
     protected HttpKernelInterface $httpKernel,
-    $optional_argument = NULL
+    $optional_argument = NULL,
   ) {
     $this->optionalArgument = $optional_argument;
   }

@@ -34,7 +34,7 @@ class StackedHttpKernel implements HttpKernelInterface, TerminableInterface {
    */
   public function __construct(
     private HttpKernelInterface $httpKernel,
-    array $middlewares
+    array $middlewares,
   ) {
     $this->middlewares = $middlewares;
   }

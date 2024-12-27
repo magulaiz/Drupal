@@ -29,7 +29,7 @@ class BanMiddleware implements HttpKernelInterface {
    */
   public function __construct(
     protected HttpKernelInterface $httpKernel,
-    BanIpManagerInterface $manager
+    BanIpManagerInterface $manager,
   ) {
     $this->banIpManager = $manager;
   }

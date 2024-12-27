@@ -68,7 +68,7 @@ class PageCache implements HttpKernelInterface {
     protected HttpKernelInterface $httpKernel,
     CacheBackendInterface $cache,
     RequestPolicyInterface $request_policy,
-    ResponsePolicyInterface $response_policy
+    ResponsePolicyInterface $response_policy,
   ) {
     $this->cache = $cache;
     $this->requestPolicy = $request_policy;
