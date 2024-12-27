@@ -220,10 +220,7 @@ function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
   foreach ($uuids as $uuid) {
     if ($file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $uuid)) {
       /** @var \Drupal\file\FileInterface $file */
-      if ($file->isTemporary()) {
-        $file->setPermanent();
-        $file->save();
-      }
+      // Removed the block that set the file to permanent
       \Drupal::service('file.usage')->add($file, 'editor', $entity->getEntityTypeId(), $entity->id());
     }
   }
