@@ -25,6 +25,13 @@ class PageCache implements HttpKernelInterface {
   const HEADER = 'X-Drupal-Cache';
 
   /**
+   * The wrapped HTTP kernel.
+   *
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
+   */
+  protected $httpKernel;
+
+  /**
    * The cache bin.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
@@ -55,7 +62,7 @@ class PageCache implements HttpKernelInterface {
   /**
    * Constructs a PageCache object.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The decorated kernel.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache bin.
@@ -64,12 +71,8 @@ class PageCache implements HttpKernelInterface {
    * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
    *   A policy rule determining the cacheability of the response.
    */
-  public function __construct(
-    protected HttpKernelInterface $httpKernel,
-    CacheBackendInterface $cache,
-    RequestPolicyInterface $request_policy,
-    ResponsePolicyInterface $response_policy,
-  ) {
+  public function __construct(HttpKernelInterface $http_kernel, CacheBackendInterface $cache, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy) {
+    $this->httpKernel = $http_kernel;
     $this->cache = $cache;
     $this->requestPolicy = $request_policy;
     $this->responsePolicy = $response_policy;

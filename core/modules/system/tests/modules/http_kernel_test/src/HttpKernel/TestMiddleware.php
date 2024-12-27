@@ -14,6 +14,13 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class TestMiddleware implements HttpKernelInterface {
 
   /**
+   * The decorated kernel.
+   *
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
+   */
+  protected $kernel;
+
+  /**
    * An optional argument.
    *
    * @var mixed
@@ -23,15 +30,13 @@ class TestMiddleware implements HttpKernelInterface {
   /**
    * Constructs a new TestMiddleware object.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
    *   The decorated kernel.
    * @param mixed $optional_argument
    *   (optional) An optional argument.
    */
-  public function __construct(
-    protected HttpKernelInterface $httpKernel,
-    $optional_argument = NULL,
-  ) {
+  public function __construct(HttpKernelInterface $kernel, $optional_argument = NULL) {
+    $this->kernel = $kernel;
     $this->optionalArgument = $optional_argument;
   }
 
@@ -47,7 +52,7 @@ class TestMiddleware implements HttpKernelInterface {
       $request->attributes->set('_optional_argument', $this->optionalArgument);
     }
 
-    return $this->httpKernel->handle($request, $type, $catch);
+    return $this->kernel->handle($request, $type, $catch);
   }
 
 }
