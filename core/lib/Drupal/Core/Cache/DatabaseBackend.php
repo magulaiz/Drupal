@@ -377,7 +377,7 @@ class DatabaseBackend implements CacheBackendInterface {
   public function invalidateAll() {
     try {
       $this->connection->update($this->bin)
-        ->fields(['expire' => $this->time->getRequestTime() - 1])
+        ->fields(['expire' => $this->time->getRequestTime() - 10])
         ->execute();
     }
     catch (\Exception $e) {
