@@ -99,8 +99,12 @@ class State extends CacheCollector implements StateInterface {
     // the race condition detection in CacheCollector::updateCache() to work.
     parent::set($key, $value);
     $this->persist($key);
-    $this->lock->acquire($this->getCid() . ':' . CacheCollector::class);
+    $lock_name =  $this->getCid() . ':' . CacheCollector::class);
+    $lock_acquired = $this->lock->acquire($lock_name);
     $this->cache->set($this->getCid(), [$key => $value], CacheBackendInterface::CACHE_PERMANENT, $this->tags);
+    if ($lock_acquired) {
+      $this->lock->release($lock_name);
+    }
   }
 
   /**
@@ -118,8 +122,12 @@ class State extends CacheCollector implements StateInterface {
     // request. To avoid this race condition, attempt to acquire a the lock and
     // write to the cache immediately after calling parent::set(). This allows
     // the race condition detection in CacheCollector::updateCache() to work.
-    $this->lock->acquire($this->getCid() . ':' . CacheCollector::class);
+    $lock_name =  $this->getCid() . ':' . CacheCollector::class);
+    $lock_acquired = $this->lock->acquire($lock_name);
     $this->cache->set($this->getCid(), [$data], CacheBackendInterface::CACHE_PERMANENT, $this->tags);
+    if ($lock_acquired) {
+      $this->lock->release($lock_name);
+    }
   }
 
   /**
