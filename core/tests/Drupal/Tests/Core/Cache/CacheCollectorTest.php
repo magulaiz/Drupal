@@ -178,7 +178,7 @@ class CacheCollectorTest extends UnitTestCase {
     // finally the lock is released again.
     $this->lock->expects($this->once())
       ->method('acquire')
-      ->with($this->cid . ':Drupal\Tests\Core\Cache\CacheCollectorHelper')
+      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector')
       ->willReturn(TRUE);
     $this->cacheBackend->expects($this->once())
       ->method('get')
@@ -188,7 +188,7 @@ class CacheCollectorTest extends UnitTestCase {
       ->with($this->cid, [$key => $value], Cache::PERMANENT, []);
     $this->lock->expects($this->once())
       ->method('release')
-      ->with($this->cid . ':Drupal\Tests\Core\Cache\CacheCollectorHelper');
+      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector');
 
     // Destruct the object to trigger the update data process.
     $this->collector->destruct();
@@ -207,7 +207,7 @@ class CacheCollectorTest extends UnitTestCase {
     // The lock acquire returns false, so the method should abort.
     $this->lock->expects($this->once())
       ->method('acquire')
-      ->with($this->cid . ':Drupal\Tests\Core\Cache\CacheCollectorHelper')
+      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector')
       ->willReturn(FALSE);
     $this->cacheBackend->expects($this->never())
       ->method('set');
@@ -247,14 +247,14 @@ class CacheCollectorTest extends UnitTestCase {
     // when cache get finds conflicting entries it deletes the cache and aborts.
     $this->lock->expects($this->once())
       ->method('acquire')
-      ->with($this->cid . ':Drupal\Tests\Core\Cache\CacheCollectorHelper')
+      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector')
       ->willReturn(TRUE);
     $this->cacheBackend->expects($this->once())
       ->method('delete')
       ->with($this->cid);
     $this->lock->expects($this->once())
       ->method('release')
-      ->with($this->cid . ':Drupal\Tests\Core\Cache\CacheCollectorHelper');
+      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector');
 
     // Destruct the object to trigger the update data process.
     $this->collector->destruct();
@@ -275,7 +275,7 @@ class CacheCollectorTest extends UnitTestCase {
     // and then it merges them.
     $this->lock->expects($this->once())
       ->method('acquire')
-      ->with($this->cid . ':Drupal\Tests\Core\Cache\CacheCollectorHelper')
+      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector')
       ->willReturn(TRUE);
     $cache = (object) [
       'data' => ['other key' => 'other value'],
@@ -291,7 +291,7 @@ class CacheCollectorTest extends UnitTestCase {
       ->with($this->cid, ['other key' => 'other value', $key => $value], Cache::PERMANENT, []);
     $this->lock->expects($this->once())
       ->method('release')
-      ->with($this->cid . ':Drupal\Tests\Core\Cache\CacheCollectorHelper');
+      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector');
 
     // Destruct the object to trigger the update data process.
     $this->collector->destruct();
@@ -312,7 +312,7 @@ class CacheCollectorTest extends UnitTestCase {
     // and then it merges them.
     $this->lock->expects($this->once())
       ->method('acquire')
-      ->with($this->cid . ':Drupal\Tests\Core\Cache\CacheCollectorHelper')
+      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector')
       ->willReturn(TRUE);
     $cache = (object) [
       'data' => ['other key' => 'other value'],
@@ -354,14 +354,14 @@ class CacheCollectorTest extends UnitTestCase {
     // a cache set and finally the lock is released again.
     $this->lock->expects($this->once())
       ->method('acquire')
-      ->with($this->cid . ':Drupal\Tests\Core\Cache\CacheCollectorHelper')
+      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector')
       ->willReturn(TRUE);
     $this->cacheBackend->expects($this->once())
       ->method('set')
       ->with($this->cid, [], Cache::PERMANENT, []);
     $this->lock->expects($this->once())
       ->method('release')
-      ->with($this->cid . ':Drupal\Tests\Core\Cache\CacheCollectorHelper');
+      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector');
 
     // Destruct the object to trigger the update data process.
     $this->collector->destruct();
