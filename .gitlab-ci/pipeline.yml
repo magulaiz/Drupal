@@ -106,3 +106,20 @@ variables:
 .run-repeat-class-test: &run-repeat-class-test
   script:
     - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "2500" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class "\Drupal\Tests\layout_builder\Functional\LayoutBuilderBlocksTest"
+
+################
+# Jobs
+#
+# Jobs define what scripts are actually executed in each stage.
+#
+# The 'rules' keyword can also be used to define conditions for each job.
+#
+# Documentation: https://docs.gitlab.com/ee/ci/jobs/
+################
+
+'🔁 Repeat Class Test':
+  <<: [ *with-composer, *run-repeat-class-test, *default-job-settings ]
+  when: always
+  allow_failure: false
+  services:
+    - <<: *with-database
