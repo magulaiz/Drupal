@@ -13,11 +13,13 @@ use PHPStan\Type\FileTypeMapper;
 
 /**
  * Tests ReturnTypeWillBeAdded rule.
+ *
+ * @extends \PHPStan\Rules\Rule<\Drupal\PHPStan\Rules\ReturnTypeWillBeAdded>
  */
 class ReturnTypeWillBeAddedTest extends RuleTestCase {
 
   /**
-   * @return \PHPStan\Rules\Rule<\Drupal\PHPStan\Rules\ReturnTypeWillBeAdded>
+   * {@inheritdoc}
    */
   protected function getRule(): Rule {
     return new ReturnTypeWillBeAdded(
