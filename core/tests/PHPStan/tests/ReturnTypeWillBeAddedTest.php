@@ -14,7 +14,7 @@ use PHPStan\Type\FileTypeMapper;
 /**
  * Tests ReturnTypeWillBeAdded rule.
  *
- * @extends \PHPStan\Rules\Rule<\Drupal\PHPStan\Rules\ReturnTypeWillBeAdded>
+ * @extends \PHPStan\Testing\RuleTestCase<\Drupal\PHPStan\Rules\ReturnTypeWillBeAdded>
  */
 class ReturnTypeWillBeAddedTest extends RuleTestCase {
 
