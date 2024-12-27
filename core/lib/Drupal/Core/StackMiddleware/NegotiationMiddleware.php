@@ -48,7 +48,7 @@ class NegotiationMiddleware implements HttpKernelInterface {
     if ($requested_format = $this->getContentType($request)) {
       $request->setRequestFormat($requested_format);
     }
-    return $this->app->handle($request, $type, $catch);
+    return $this->httpKernel->handle($request, $type, $catch);
   }
 
   /**
