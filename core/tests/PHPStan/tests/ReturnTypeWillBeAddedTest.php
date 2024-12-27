@@ -17,7 +17,7 @@ use PHPStan\Type\FileTypeMapper;
 class ReturnTypeWillBeAddedTest extends RuleTestCase {
 
   /**
-   * {@inheritdoc}
+   * @return \PHPStan\Rules\Rule<\Drupal\PHPStan\Rules\ReturnTypeWillBeAdded>
    */
   protected function getRule(): Rule {
     return new ReturnTypeWillBeAdded(
