@@ -13,13 +13,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class ReverseProxyMiddleware implements HttpKernelInterface {
 
   /**
-   * The decorated kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $httpKernel;
-
-  /**
    * The site settings.
    *
    * @var \Drupal\Core\Site\Settings
@@ -29,13 +22,15 @@ class ReverseProxyMiddleware implements HttpKernelInterface {
   /**
    * Constructs a ReverseProxyMiddleware object.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   The decorated kernel.
    * @param \Drupal\Core\Site\Settings $settings
    *   The site settings.
    */
-  public function __construct(HttpKernelInterface $http_kernel, Settings $settings) {
-    $this->httpKernel = $http_kernel;
+  public function __construct(
+    protected HttpKernelInterface $httpKernel,
+    Settings $settings
+  ) {
     $this->settings = $settings;
   }
 
