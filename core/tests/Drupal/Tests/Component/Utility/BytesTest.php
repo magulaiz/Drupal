@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Bytes;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
@@ -89,6 +89,7 @@ class BytesTest extends TestCase {
    *
    * @dataProvider providerTestValidate
    * @covers ::validate
+   * @covers ::validateConstraint
    */
   public function testValidate($string, bool $expected_result): void {
     $this->assertSame($expected_result, Bytes::validate($string));
