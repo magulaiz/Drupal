@@ -105,7 +105,7 @@ variables:
 
 .run-repeat-class-test: &run-repeat-class-test
   script:
-    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "2500" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class "\Drupal\Tests\comment\Functional\CommentPreviewTest,\Drupal\Tests\user\Functional\UserEditTest"
+    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "1500" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class "\Drupal\Tests\comment\Functional\CommentPreviewTest,\Drupal\Tests\user\Functional\UserEditTest,\Drupal\Tests\user\Functional\UserTokenReplaceTest,\Drupal\Tests\user\Kernel\UserEntityLabelTest"
 
 ################
 # Jobs
