@@ -101,7 +101,12 @@ class State extends CacheCollector implements StateInterface {
     $this->persist($key);
     $lock_name = $this->getCid() . ':' . CacheCollector::class;
     $lock_acquired = $this->lock->acquire($lock_name);
-    $this->cache->set($this->getCid(), [$key => $value], CacheBackendInterface::CACHE_PERMANENT, $this->tags);
+    $cache_data = [
+      'storage' => [$key => $value],
+      'hash' => hash('xxh64', serialize([$key => $value])),
+    ];
+    $this->cacheHash = $cache_data['hash'];
+    $this->cache->set($this->getCid(), $cache_data, CacheBackendInterface::CACHE_PERMANENT, $this->tags);
     if ($lock_acquired) {
       $this->lock->release($lock_name);
     }
