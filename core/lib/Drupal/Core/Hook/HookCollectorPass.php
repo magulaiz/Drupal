@@ -143,7 +143,10 @@ class HookCollectorPass implements CompilerPassInterface {
     $module_preg = '/^(?<function>(?<module>' . implode('|', $modules) . ')_(?!preprocess_)(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
     $collector = new static();
     foreach ($module_filenames as $module => $info) {
-      $skip_procedural = isset($container) ? $container->hasParameter("$module.hooks_converted") : FALSE;
+      $skip_procedural = FALSE;
+      if ($container?->hasParameter("$module.hooks_converted")) {
+        $skip_procedural = $container->getParameter("$module.hooks_converted");
+      }
       $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, $skip_procedural);
     }
     return $collector;
@@ -168,74 +171,67 @@ class HookCollectorPass implements CompilerPassInterface {
     $hook_file_cache = FileCacheFactory::get('hook_implementations');
     $procedural_hook_file_cache = FileCacheFactory::get('procedural_hook_implementations:' . $module_preg);
 
-    // Check only hook classes.
-    if ($skip_procedural) {
-      $dir = $dir . '/src/Hook';
-    }
+    $iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS);
+    $iterator = new \RecursiveCallbackFilterIterator($iterator, static::filterIterator(...));
+    $iterator = new \RecursiveIteratorIterator($iterator);
+    /** @var \RecursiveDirectoryIterator | \RecursiveIteratorIterator $iterator*/
+    foreach ($iterator as $fileinfo) {
+      assert($fileinfo instanceof \SplFileInfo);
+      $extension = $fileinfo->getExtension();
+      $filename = $fileinfo->getPathname();
 
-    if (is_dir($dir)) {
-      $iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS);
-      $iterator = new \RecursiveCallbackFilterIterator($iterator, static::filterIterator(...));
-      $iterator = new \RecursiveIteratorIterator($iterator);
-      /** @var \RecursiveDirectoryIterator | \RecursiveIteratorIterator $iterator*/
-      foreach ($iterator as $fileinfo) {
-        assert($fileinfo instanceof \SplFileInfo);
-        $extension = $fileinfo->getExtension();
-        $filename = $fileinfo->getPathname();
-
-        if (($extension === 'module' || $extension === 'profile') && !$iterator->getDepth() && !$skip_procedural) {
-          // There is an expectation for all modules and profiles to be loaded.
-          // .module and .profile files are not supposed to be in subdirectories.
-
-          include_once $filename;
+      if (($extension === 'module' || $extension === 'profile') && !$iterator->getDepth() && !$skip_procedural) {
+        // There is an expectation for all modules and profiles to be loaded.
+        // .module and .profile files are not supposed to be in subdirectories.
+        // These need to be loaded even if the module has no procedural hooks.
+        include_once $filename;
+      }
+      if ($extension === 'php') {
+        $cached = $hook_file_cache->get($filename);
+        if ($cached) {
+          $class = $cached['class'];
+          $attributes = $cached['attributes'];
         }
-        if ($extension === 'php') {
-          $cached = $hook_file_cache->get($filename);
-          if ($cached) {
-            $class = $cached['class'];
-            $attributes = $cached['attributes'];
+        else {
+          $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
+          $class = $namespace . '/' . $fileinfo->getBasename('.php');
+          $class = str_replace('/', '\\', $class);
+          if (class_exists($class)) {
+            $attributes = static::getHookAttributesInClass($class);
+            $hook_file_cache->set($filename, ['class' => $class, 'attributes' => $attributes]);
           }
           else {
-            $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
-            $class = $namespace . '/' . $fileinfo->getBasename('.php');
-            $class = str_replace('/', '\\', $class);
-            if (class_exists($class)) {
-              $attributes = static::getHookAttributesInClass($class);
-              $hook_file_cache->set($filename, ['class' => $class, 'attributes' => $attributes]);
-            }
-            else {
-              $attributes = [];
-            }
-          }
-          foreach ($attributes as $attribute) {
-            $this->addFromAttribute($attribute, $class, $module);
+            $attributes = [];
           }
         }
-        elseif (!$skip_procedural) {
-          $implementations = $procedural_hook_file_cache->get($filename);
-          if ($implementations === NULL) {
-            $finder = MockFileFinder::create($filename);
-            $parser = new StaticReflectionParser('', $finder);
-            $implementations = [];
-            foreach ($parser->getMethodAttributes() as $function => $attributes) {
-              if (StaticReflectionParser::hasAttribute($attributes, StopProceduralHookScan::class)) {
-                break;
-              }
-              if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches)) {
-                $implementations[] = ['function' => $function, 'module' => $matches['module'], 'hook' => $matches['hook']];
-              }
-            }
-            $procedural_hook_file_cache->set($filename, $implementations);
-          }
-          foreach ($implementations as $implementation) {
-            $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module'], $implementation['function']);
-          }
+        foreach ($attributes as $attribute) {
+          $this->addFromAttribute($attribute, $class, $module);
         }
-        if ($extension === 'inc') {
-          $parts = explode('.', $fileinfo->getFilename());
-          if (count($parts) === 3 && $parts[0] === $module) {
-            $this->groupIncludes[$parts[1]][] = $filename;
+      }
+      elseif (!$skip_procedural) {
+        $implementations = $procedural_hook_file_cache->get($filename);
+        if ($implementations === NULL) {
+          $finder = MockFileFinder::create($filename);
+          $parser = new StaticReflectionParser('', $finder);
+          $implementations = [];
+          foreach ($parser->getMethodAttributes() as $function => $attributes) {
+            if (StaticReflectionParser::hasAttribute($attributes, StopProceduralHookScan::class)) {
+              break;
+            }
+            if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches)) {
+              $implementations[] = ['function' => $function, 'module' => $matches['module'], 'hook' => $matches['hook']];
+            }
           }
+          $procedural_hook_file_cache->set($filename, $implementations);
+        }
+        foreach ($implementations as $implementation) {
+          $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module'], $implementation['function']);
+        }
+      }
+      if ($extension === 'inc') {
+        $parts = explode('.', $fileinfo->getFilename());
+        if (count($parts) === 3 && $parts[0] === $module) {
+          $this->groupIncludes[$parts[1]][] = $filename;
         }
       }
     }
@@ -389,7 +385,7 @@ class HookCollectorPass implements CompilerPassInterface {
       'hook_install_tasks_alter',
     ];
 
-    if (in_array($hook->hook, $staticDenyHooks) || preg_match('/^(post_update_|preprocess_|process_|update_\d+$)/', $hook->hook)) {
+    if (in_array($hook->hook, $staticDenyHooks) || preg_match('/^(post_update_|preprocess_|update_\d+$)/', $hook->hook)) {
       throw new \LogicException("The hook $hook->hook on class $class does not support attributes and must remain procedural.");
     }
   }
