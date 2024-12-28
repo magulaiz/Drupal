@@ -94,7 +94,7 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
 
       // Check the schema for this configuration.
       $errors = $this->checkConfigSchema($this->typedManager, $name, $data, $this->validateConstraints);
-      
+
       if ($errors === FALSE) {
         throw new SchemaIncompleteException("No schema for $name");
       }
