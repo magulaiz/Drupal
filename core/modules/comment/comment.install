@@ -121,7 +121,7 @@ function comment_update_last_removed(): int {
 /**
  * Increase max length of comment subject field to 255.
  */
-function comment_update_10200(&$sandbox = NULL) {
+function comment_update_10200(&$sandbox = NULL): void {
   $connection = \Drupal::database();
   if ($connection->schema()->tableExists('comment_field_data')) {
     $new = [
