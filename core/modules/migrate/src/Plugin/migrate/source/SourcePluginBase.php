@@ -406,10 +406,10 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
 
       // Clear any previous messages for this row before potentially adding
       // new ones.
-      $messageBackup = [];
+      $message_backup = [];
       if (!empty($this->currentSourceIds)) {
         // Backup messages for current row.
-        $messageBackup = $this->idMap->getMessages($this->currentSourceIds);
+        $message_backup = $this->idMap->getMessages($this->currentSourceIds);
         // Delete messages for current row.
         $this->idMap->delete($this->currentSourceIds, TRUE);
       }
@@ -434,7 +434,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
 
       // Restore deleted messages, if this row will not be processed.
       if (!isset($this->currentRow) || is_null($this->currentRow)) {
-        foreach ($messageBackup as $msgItem) {
+        foreach ($message_backup as $msgItem) {
           $this->idMap->saveMessage($this->currentSourceIds, $msgItem->message, $msgItem->level);
         }
       }
