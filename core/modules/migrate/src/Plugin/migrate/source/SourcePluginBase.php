@@ -433,7 +433,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
       }
 
       // Restore deleted messages, if this row will not be processed.
-      if (!isset($this->currentRow) || is_null($this->currentRow)) {
+      if (!isset($this->currentRow)) {
         foreach ($message_backup as $msgItem) {
           $this->idMap->saveMessage($this->currentSourceIds, $msgItem->message, $msgItem->level);
         }
