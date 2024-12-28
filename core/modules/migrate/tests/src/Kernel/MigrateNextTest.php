@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\migrate\MigrateExecutable;
@@ -22,7 +24,7 @@ class MigrateNextTest extends MigrateTestBase {
   /**
    * Tests message deletion.
    */
-  public function testNext() {
+  public function testNext(): void {
     // Create a migration that will generate an exception. Here the second
     // row will cause the flatten process plugin to throw a MigrateException.
     $ids = ['id' => ['type' => 'integer']];
