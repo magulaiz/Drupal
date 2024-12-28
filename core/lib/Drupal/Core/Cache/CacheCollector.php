@@ -268,7 +268,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
       // there is now, then there has been a cache write in the interim. Discard
       // our data since the other request may have set new data as well as
       // written the cache item.
-      if (!$this->cacheCreated) {
+      if (!$this->cacheHash) {
         $write_cache = FALSE;
         // If this request is invalidating the cache, delete the cache item we
         // found and allow the cache to rebuild in later requests.
@@ -278,7 +278,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
       }
       $data = array_merge($cache->data, $data);
     }
-    elseif ($this->cacheCreated) {
+    elseif ($this->cacheHash) {
       // Getting here indicates that there was a cache entry at the
       // beginning of the request, but now it's gone (some other process
       // must have cleared it). We back out to prevent corrupting the cache
