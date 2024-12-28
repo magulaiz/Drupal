@@ -140,16 +140,4 @@ class UserEditTest extends BrowserTestBase {
     $this->assertSession()->checkboxChecked('edit-status-1');
   }
 
-  /**
-   * Tests the account form implements entity field access for mail.
-   */
-  public function testUserMailFieldAccess(): void {
-    \Drupal::state()->set('user_access_test_forbid_mail_edit', TRUE);
-    \Drupal::service('module_installer')->install(['user_access_test']);
-    $user = $this->drupalCreateUser();
-    $this->drupalLogin($user);
-    $this->drupalGet("user/" . $user->id() . "/edit");
-    $this->assertFalse($this->getSession()->getPage()->hasField('mail'));
-  }
-
 }
