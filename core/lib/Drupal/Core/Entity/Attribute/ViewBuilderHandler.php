@@ -7,18 +7,20 @@ namespace Drupal\Core\Entity\Attribute;
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
- * Attribute class to add an access class to entity type definition.
+ * Attribute class to add view builder class to entity type definition.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class AccessClass extends EntityTypePropertyBase {
+class ViewBuilderHandler extends EntityTypeProperty {
 
   /**
-   * Constructs an AccessClass attribute.
+   * Constructs a ViewBuilderHandler attribute.
    *
    * @param class-string $class
-   *   The class for this entity type's access control handler.
+   *   The class for this entity type's view builder.
    */
-  public function __construct(public readonly string $class) {}
+  public function __construct(public readonly string $class) {
+    parent::__construct(['handlers', 'view_builder'], $this->class);
+  }
 
   /**
    * {@inheritdoc}
@@ -27,7 +29,7 @@ class AccessClass extends EntityTypePropertyBase {
     if (!($definition instanceof EntityTypeInterface)) {
       throw new \InvalidArgumentException(sprintf('%s attribute can not be used with %s, because it is not an entity type definition.', static::class, $this->getPluginClass()));
     }
-    return $definition->setAccessClass($this->class);
+    return $definition->setViewBuilderClass($this->class);
   }
 
 }

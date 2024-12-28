@@ -7,20 +7,20 @@ namespace Drupal\Core\Entity\Attribute;
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
- * Attribute class to add constraints to entity type definition.
+ * Attribute class to add storage handler property to entity type definition.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class Constraints extends EntityTypePropertyBase {
+class StorageHandler extends EntityTypeProperty {
 
   /**
-   * Constructs a Constraints attribute.
+   * Constructs a StorageHandler attribute.
    *
-   * @param array $constraints
-   *   An array of validation constraint definitions, keyed by constraint name.
-   *   Each constraint definition can be used for instantiating
-   *   \Symfony\Component\Validator\Constraint objects.
+   * @param class-string $class
+   *   The class for the entity type's storage.
    */
-  public function __construct(public readonly array $constraints) {}
+  public function __construct(public readonly string $class) {
+    parent::__construct(['handlers', 'storage'], $class);
+  }
 
   /**
    * {@inheritdoc}
@@ -29,7 +29,7 @@ class Constraints extends EntityTypePropertyBase {
     if (!($definition instanceof EntityTypeInterface)) {
       throw new \InvalidArgumentException(sprintf('%s attribute can not be used with %s, because it is not an entity type definition.', static::class, $this->getPluginClass()));
     }
-    return $definition->setConstraints($this->constraints);
+    return $definition->setStorageClass($this->class);
   }
 
 }

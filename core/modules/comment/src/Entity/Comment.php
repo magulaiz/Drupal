@@ -10,16 +10,17 @@ use Drupal\comment\CommentTranslationHandler;
 use Drupal\comment\CommentViewBuilder;
 use Drupal\comment\CommentViewsData;
 use Drupal\comment\Form\DeleteForm;
-use Drupal\Core\Entity\Attribute\AccessClass;
-use Drupal\Core\Entity\Attribute\Constraints;
+use Drupal\Core\Entity\Attribute\AccessHandler;
+use Drupal\Core\Entity\Attribute\Constraint;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
-use Drupal\Core\Entity\Attribute\EntityTypeProperty;
-use Drupal\Core\Entity\Attribute\FormClass;
-use Drupal\Core\Entity\Attribute\HandlerClass;
+use Drupal\Core\Entity\Attribute\EntityKey;
+use Drupal\Core\Entity\Attribute\FormHandler;
+use Drupal\Core\Entity\Attribute\Handler;
+use Drupal\Core\Entity\Attribute\Label;
 use Drupal\Core\Entity\Attribute\LinkTemplate;
-use Drupal\Core\Entity\Attribute\ListBuilderClass;
-use Drupal\Core\Entity\Attribute\StorageClass;
-use Drupal\Core\Entity\Attribute\ViewBuilderClass;
+use Drupal\Core\Entity\Attribute\ListBuilderHandler;
+use Drupal\Core\Entity\Attribute\StorageHandler;
+use Drupal\Core\Entity\Attribute\ViewBuilderHandler;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Component\Utility\Number;
@@ -40,20 +41,7 @@ use Drupal\user\EntityOwnerTrait;
  */
 #[ContentEntityType(
   id: 'comment',
-  label: new TranslatableMarkup('Comment'),
-  label_singular: new TranslatableMarkup('comment'),
-  label_plural: new TranslatableMarkup('comments'),
-  entity_keys: [
-    'id' => 'cid',
-    'bundle' => 'comment_type',
-    'label' => 'subject',
-    'langcode' => 'langcode',
-    'uuid' => 'uuid',
-    'published' => 'status',
-    'owner' => 'uid',
-  ],
   bundle_entity_type: 'comment_type',
-  bundle_label: new TranslatableMarkup('Comment type'),
   base_table: 'comment',
   data_table: 'comment_field_data',
   translatable: TRUE,
@@ -62,23 +50,34 @@ use Drupal\user\EntityOwnerTrait;
     'plural' => '@count comments',
   ],
   uri_callback: 'comment_uri',
+  field_ui_base_route: 'entity.comment_type.edit_form',
 )]
-#[AccessClass(CommentAccessControlHandler::class)]
-#[Constraints(['CommentName' => []])]
-#[FormClass('default', CommentForm::class)]
-#[FormClass('delete', DeleteForm::class)]
-#[HandlerClass('storage_schema', CommentStorageSchema::class)]
-#[HandlerClass('views_data', CommentViewsData::class)]
-#[HandlerClass('translation', CommentTranslationHandler::class)]
+#[Label(new TranslatableMarkup('Comment'))]
+#[Label(new TranslatableMarkup('comment'), 'singular')]
+#[Label(new TranslatableMarkup('comments'), 'plural')]
+#[Label(new TranslatableMarkup('Comment type'), 'bundle')]
+#[EntityKey('id', 'cid')]
+#[EntityKey('bundle', 'comment_type')]
+#[EntityKey('label', 'subject')]
+#[EntityKey('langcode')]
+#[EntityKey('uuid')]
+#[EntityKey('published', 'status')]
+#[EntityKey('owner', 'uid')]
+#[AccessHandler(CommentAccessControlHandler::class)]
+#[FormHandler('default', CommentForm::class)]
+#[FormHandler('delete', DeleteForm::class)]
+#[Handler('storage_schema', CommentStorageSchema::class)]
+#[Handler('views_data', CommentViewsData::class)]
+#[Handler('translation', CommentTranslationHandler::class)]
+#[ListBuilderHandler(EntityListBuilder::class)]
+#[StorageHandler(CommentStorage::class)]
+#[ViewBuilderHandler(CommentViewBuilder::class)]
+#[Constraint('CommentName')]
 #[LinkTemplate('canonical', '/comment/{comment}')]
 #[LinkTemplate('delete-form', '/comment/{comment}/delete')]
 #[LinkTemplate('delete-multiple-form', '/admin/content/comment/delete')]
 #[LinkTemplate('edit-form', '/comment/{comment}/edit')]
 #[LinkTemplate('create', '/comment')]
-#[ListBuilderClass(EntityListBuilder::class)]
-#[StorageClass(CommentStorage::class)]
-#[ViewBuilderClass(CommentViewBuilder::class)]
-#[EntityTypeProperty('field_ui_base_route', 'entity.comment_type.edit_form')]
 class Comment extends ContentEntityBase implements CommentInterface {
 
   use EntityChangedTrait;

@@ -8,10 +8,10 @@ namespace Drupal\Core\Entity\Attribute;
  * Attribute class to add handler properties to entity type definition.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
-class HandlerClass extends EntityTypeProperty {
+class Handler extends EntityTypeProperty {
 
   /**
-   * Constructs a HandlerClass attribute.
+   * Constructs a Handler attribute.
    *
    * @param string $type
    *   The type of handler to set.

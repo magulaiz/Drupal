@@ -7,20 +7,18 @@ namespace Drupal\Core\Entity\Attribute;
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
- * Attribute class to add storage handler property to entity type definition.
+ * Attribute class to add list builder class to entity type definition.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class StorageClass extends EntityTypeProperty {
+class ListBuilderHandler extends EntityTypePropertyBase {
 
   /**
-   * Constructs a StorageClass attribute.
+   * Constructs a ListBuilderHandler attribute.
    *
    * @param class-string $class
-   *   The class for the entity type's storage.
+   *   The list class to use for the entity type.
    */
-  public function __construct(public readonly string $class) {
-    parent::__construct(['handlers', 'storage'], $class);
-  }
+  public function __construct(public readonly string $class) {}
 
   /**
    * {@inheritdoc}
@@ -29,7 +27,7 @@ class StorageClass extends EntityTypeProperty {
     if (!($definition instanceof EntityTypeInterface)) {
       throw new \InvalidArgumentException(sprintf('%s attribute can not be used with %s, because it is not an entity type definition.', static::class, $this->getPluginClass()));
     }
-    return $definition->setStorageClass($this->class);
+    return $definition->setListBuilderClass($this->class);
   }
 
 }

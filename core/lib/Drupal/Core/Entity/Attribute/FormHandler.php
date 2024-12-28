@@ -10,10 +10,10 @@ use Drupal\Core\Entity\EntityTypeInterface;
  * Attribute class to add form handler properties to entity type definition.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
-class FormClass extends EntityTypePropertyBase {
+class FormHandler extends EntityTypePropertyBase {
 
   /**
-   * Constructs a FormClass attribute.
+   * Constructs a FormHandler attribute.
    *
    * @param string $operation
    *   The name of the operation to use, e.g., 'default'.
