@@ -6,15 +6,15 @@ namespace Drupal\user_hooks_test\Hook;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\State\StateInterface;
 
 /**
  * Contains hook implementations.
  */
 class UserHooksTest {
 
-  public function __construct(protected StateInterface $state) {
+  public function __construct(protected KeyValueStoreInterface $keyValue) {
   }
 
   /**
@@ -29,8 +29,8 @@ class UserHooksTest {
    */
   #[Hook('user_format_name_alter')]
   public function userFormatNameAlter(&$name, AccountInterface $account): void {
-    if ($this->state->get('user_hooks_test_user_format_name_alter', FALSE)) {
-      if ($this->state->get('user_hooks_test_user_format_name_alter_safe', FALSE)) {
+    if ($this->keyValue->get('user_hooks_test')->get('user_format_name_alter', FALSE)) {
+      if ($this->keyValue->get('user_hooks_test')->get('user_format_name_alter_safe', FALSE)) {
         $name = new FormattableMarkup('<em>@uid</em>', ['@uid' => $account->id()]);
       }
       else {
