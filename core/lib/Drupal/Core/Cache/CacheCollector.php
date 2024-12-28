@@ -83,6 +83,16 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
   protected $cacheCreated;
 
   /**
+   * Stores the cache data hash.
+   *
+   * This is used to check if an invalidated cache item has been overwritten in
+   * the meantime.
+   *
+   * @var string
+   */
+  protected $cacheHash;
+
+  /**
    * Flag that indicates of the cache has been invalidated.
    *
    * @var bool
@@ -243,10 +253,10 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
     }
     // Set and delete operations invalidate the cache item. Try to also load
     // an eventually invalidated cache entry, only update an invalidated cache
-    // entry if the creation date did not change as this could result in an
+    // entry if the hash did not change as this could result in an
     // inconsistent cache.
     if ($cache = $this->cache->get($cid, $this->cacheInvalidated)) {
-      if ($this->cacheInvalidated && $cache->created != $this->cacheCreated) {
+      if ($this->cacheInvalidated && $cache->data['hash'] !== $this->cacheHash) {
         // We have invalidated the cache in this request and got a different
         // cache entry. Do not attempt to overwrite data that might have been
         // changed in a different request. We'll let the cache rebuild in
@@ -281,10 +291,11 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
     foreach ($this->keysToRemove as $delete_key) {
       unset($data[$delete_key]);
     }
+    $cache_data = ['data' => $data, 'hash' => hash('xxh64', $data)];
     // Even if we didn't acquire a lock write the cache item if we're attempting
     // to invalidate the cache.
     if ($write_cache && ($lock_acquired || $this->cacheInvalidated)) {
-      $this->cache->set($cid, $data, Cache::PERMANENT, $this->tags);
+      $this->cache->set($cid, $cache_data, Cache::PERMANENT, $this->tags);
     }
     if ($lock_acquired) {
       $this->lock->release($lock_name);
@@ -335,8 +346,11 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
     $this->cacheLoaded = TRUE;
 
     if ($cache = $this->cache->get($this->getCid())) {
-      $this->cacheCreated = $cache->created;
-      $this->storage = $cache->data;
+      if (isset($cache->data['storage'])) {
+        $this->cacheCreated = $cache->created;
+        $this->storage = $cache->data['storage'];
+        $this->cacheHash = $cache->data['hash'];
+      }
     }
   }
 
