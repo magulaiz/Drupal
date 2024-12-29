@@ -32,7 +32,7 @@ interface CoreStreamWrapperManagerInterface {
   public function register(): void;
 
   /**
-   * Unregisters the tagged stream wrappers.
+   * Un-registers the tagged stream wrappers.
    */
   public function unregister(): void;
 
