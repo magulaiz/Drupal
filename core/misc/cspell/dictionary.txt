@@ -601,7 +601,6 @@ unminified
 unmoderated
 unpromote
 unpublishing
-unregisters
 unrevisionable
 unrouted
 unsanitized
