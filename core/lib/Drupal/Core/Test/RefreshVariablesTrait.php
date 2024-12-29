@@ -5,7 +5,7 @@ namespace Drupal\Core\Test;
 use Drupal\Core\Cache\Cache;
 
 /**
- * Provides a method to refresh in-memory configuration and state information.
+ * Provides a method to refresh in-memory configuration.
  */
 trait RefreshVariablesTrait {
 
