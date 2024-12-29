@@ -100,19 +100,17 @@ class EntityConstraintViolationListTest extends UnitTestCase {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   An account.
    *
-   * @return \Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>
+   * @return \Drupal\Core\Entity\FieldableEntityInterface
    *   A fieldable entity.
    */
-  protected function setupEntity(AccountInterface $account): FieldItemListInterface {
-    $prophecy = $this->prophesize(FieldItemListInterface::class);
-    $prophecy->access('edit', $account)
+  protected function setupEntity(AccountInterface $account): FieldableEntityInterface {
+    $name_field_item_list = $this->prophesize(FieldItemListInterface::class);
+    $name_field_item_list->access('edit', $account)
       ->willReturn(FALSE);
-    $name_field_item_list = $prophecy->reveal();
 
-    $prophecy = $this->prophesize(FieldItemListInterface::class);
-    $prophecy->access('edit', $account)
+    $type_field_item_list = $this->prophesize(FieldItemListInterface::class);
+    $type_field_item_list->access('edit', $account)
       ->willReturn(TRUE);
-    $type_field_item_list = $prophecy->reveal();
 
     $prophecy = $this->prophesize(FieldableEntityInterface::class);
     $prophecy->hasField('name')
@@ -120,9 +118,9 @@ class EntityConstraintViolationListTest extends UnitTestCase {
     $prophecy->hasField('type')
       ->willReturn(TRUE);
     $prophecy->get('name')
-      ->willReturn($name_field_item_list);
+      ->willReturn($name_field_item_list->reveal());
     $prophecy->get('type')
-      ->willReturn($type_field_item_list);
+      ->willReturn($type_field_item_list->reveal());
 
     return $prophecy->reveal();
   }
