@@ -6,6 +6,7 @@ namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityConstraintViolationList;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity_test\Plugin\Validation\Constraint\EntityTestCompositeConstraint;
 use Drupal\Tests\UnitTestCase;
@@ -102,18 +103,18 @@ class EntityConstraintViolationListTest extends UnitTestCase {
    * @return \Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>
    *   A fieldable entity.
    */
-  protected function setupEntity(AccountInterface $account) {
-    $prophecy = $this->prophesize('\Drupal\Core\Field\FieldItemListInterface');
+  protected function setupEntity(AccountInterface $account): FieldItemListInterface {
+    $prophecy = $this->prophesize(FieldItemListInterface::class);
     $prophecy->access('edit', $account)
       ->willReturn(FALSE);
     $name_field_item_list = $prophecy->reveal();
 
-    $prophecy = $this->prophesize('\Drupal\Core\Field\FieldItemListInterface');
+    $prophecy = $this->prophesize(FieldItemListInterface::class);
     $prophecy->access('edit', $account)
       ->willReturn(TRUE);
     $type_field_item_list = $prophecy->reveal();
 
-    $prophecy = $this->prophesize('\Drupal\Core\Entity\FieldableEntityInterface');
+    $prophecy = $this->prophesize(FieldableEntityInterface::class);
     $prophecy->hasField('name')
       ->willReturn(TRUE);
     $prophecy->hasField('type')
