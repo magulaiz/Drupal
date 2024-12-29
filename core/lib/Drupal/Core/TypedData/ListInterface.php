@@ -13,10 +13,6 @@ namespace Drupal\Core\TypedData;
  *
  * @see \Drupal\Core\TypedData\ListDefinitionInterface
  *
- * @extends \ArrayAccess<int<0,max>,\Drupal\Core\TypedData\TypedDataInterface|null>
- * @extends \Traversable<int<0,max>,\Drupal\Core\TypedData\TypedDataInterface|null>
- * @extends iterable<int<0,max>,\Drupal\Core\TypedData\TypedDataInterface|null>
- *
  * @ingroup typed_data
  */
 interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Countable {
