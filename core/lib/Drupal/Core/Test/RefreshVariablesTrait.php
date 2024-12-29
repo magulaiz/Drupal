@@ -10,12 +10,12 @@ use Drupal\Core\Cache\Cache;
 trait RefreshVariablesTrait {
 
   /**
-   * Refreshes in-memory configuration and state information.
+   * Refreshes in-memory configuration and key value information.
    *
-   * Useful after a page request is made that changes configuration or state in
-   * a different thread.
+   * Useful after a page request is made that changes configuration or key value
+   * in a different thread.
    *
-   * In other words calling a settings page with $this->submitForm() with a
+   * In other words, calling a settings page with $this->submitForm() with a
    * changed value would update configuration to reflect that change, but in the
    * thread that made the call (thread running the test) the changed values
    * would not be picked up.
@@ -37,7 +37,7 @@ trait RefreshVariablesTrait {
     }
 
     \Drupal::service('config.factory')->reset();
-    \Drupal::service('state')->reset();
+//    \Drupal::service('keyvalue')->reset();
   }
 
 }
