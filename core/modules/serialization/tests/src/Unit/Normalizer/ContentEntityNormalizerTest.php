@@ -153,7 +153,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    * @param \Drupal\Core\Session\AccountInterface $user_context
    *   The user context used for the access check.
    *
-   * @return \Drupal\Core\Field\FieldItemListInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @return \Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>&\PHPUnit\Framework\MockObject\MockObject
    */
   protected function createMockFieldListItem($access, $internal, ?AccountInterface $user_context = NULL) {
     $data_definition = $this->prophesize(DataDefinitionInterface::class);

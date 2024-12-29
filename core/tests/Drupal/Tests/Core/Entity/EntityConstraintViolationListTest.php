@@ -99,7 +99,7 @@ class EntityConstraintViolationListTest extends UnitTestCase {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   An account.
    *
-   * @return \Drupal\Core\Field\FieldItemListInterface
+   * @return \Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>
    *   A fieldable entity.
    */
   protected function setupEntity(AccountInterface $account) {
