@@ -8,7 +8,9 @@ use Drupal\Core\Menu\MenuActiveTrail;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\Random;
+use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,10 +71,8 @@ class MenuActiveTrailTest extends UnitTestCase {
 
   /**
    * The mocked path matcher.
-   *
-   * @var \Drupal\Core\Path\PathMatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $pathMatcher;
+  protected PathMatcherInterface|MockObject $pathMatcher;
 
   /**
    * {@inheritdoc}

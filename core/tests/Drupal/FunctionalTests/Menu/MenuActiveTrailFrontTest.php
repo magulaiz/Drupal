@@ -23,13 +23,6 @@ class MenuActiveTrailFrontTest extends BrowserTestBase {
   protected $defaultTheme = 'olivero';
 
   /**
-   * The menu which active trail is tested.
-   *
-   * @var string
-   */
-  protected $menu = 'footer';
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = ['system', 'block', 'menu_link_content'];
@@ -41,7 +34,7 @@ class MenuActiveTrailFrontTest extends BrowserTestBase {
     parent::setUp();
 
     $this->drupalPlaceBlock(
-      'system_menu_block:' . $this->menu,
+      'system_menu_block:footer',
       [
         'level' => 1,
       ]
