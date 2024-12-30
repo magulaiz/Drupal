@@ -26,7 +26,7 @@ class AliasTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['path_alias', 'user'];
+  protected static $modules = ['path_alias'];
 
   /**
    * {@inheritdoc}
