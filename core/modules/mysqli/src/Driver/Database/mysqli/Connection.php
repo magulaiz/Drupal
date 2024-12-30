@@ -89,7 +89,7 @@ class Connection extends BaseMySqlConnection {
     ];
 
     try {
-      $mysqli = new \mysqli(
+      $mysqli = @new \mysqli(
         $connection_options['host'],
         $connection_options['username'],
         $connection_options['password'],
