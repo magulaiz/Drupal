@@ -83,24 +83,6 @@ class Statement extends StatementWrapperIterator {
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
-    // Prepare the lower-level statement if it's not been prepared already.
-    if (!isset($this->clientStatement)) {
-      // Replace named placeholders with positional ones if needed.
-      $this->paramsPositions = array_flip(array_keys($args));
-      $converter = new NamedPlaceholderConverter();
-      $converter->parse($this->queryString, $args);
-      [$this->queryString, $args] = [$converter->getConvertedSQL(), $converter->getConvertedParameters()];
-      $this->clientStatement = $this->mysqliConnection->prepare($this->queryString);
-    }
-    else {
-      // Transform the $args to positional.
-      $tmp = [];
-      foreach ($this->paramsPositions as $param => $pos) {
-        $tmp[$pos] = $args[$param];
-      }
-      $args = $tmp;
-    }
-
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
         $this->setFetchMode(\PDO::FETCH_CLASS, $options['fetch']);
@@ -123,6 +105,24 @@ class Statement extends StatementWrapperIterator {
     }
 
     try {
+      // Prepare the lower-level statement if it's not been prepared already.
+      if (!isset($this->clientStatement)) {
+        // Replace named placeholders with positional ones if needed.
+        $this->paramsPositions = array_flip(array_keys($args));
+        $converter = new NamedPlaceholderConverter();
+        $converter->parse($this->queryString, $args);
+        [$this->queryString, $args] = [$converter->getConvertedSQL(), $converter->getConvertedParameters()];
+        $this->clientStatement = $this->mysqliConnection->prepare($this->queryString);
+      }
+      else {
+        // Transform the $args to positional.
+        $tmp = [];
+        foreach ($this->paramsPositions as $param => $pos) {
+          $tmp[$pos] = $args[$param];
+        }
+        $args = $tmp;
+      }
+
       // In mysqli, the results of the statement execution are returned in a
       // different object than the statement itself.
       $return = $this->clientStatement->execute($args);
