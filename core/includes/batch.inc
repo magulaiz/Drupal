@@ -269,13 +269,14 @@ function _batch_process() {
   }
 
   $queue = _batch_queue($current_set);
+  $drupal_root = \Drupal::root();
 
   while (!$current_set['success']) {
     // If this is the first time we iterate this batch set in the current
     // request, we check if it requires an additional file for functions
     // definitions.
     if ($set_changed && isset($current_set['file']) && is_file($current_set['file'])) {
-      include_once \Drupal::root() . '/' . $current_set['file'];
+      include_once $drupal_root . '/' . $current_set['file'];
     }
 
     $task_message = '';
@@ -442,6 +443,8 @@ function _batch_next_set() {
  */
 function _batch_finished() {
   $batch = &batch_get();
+  $drupal_root = \Drupal::root();
+  $date_formatter = \Drupal::service('date.formatter');
   $batch_finished_redirect = NULL;
 
   // Execute the 'finished' callbacks for each batch set, if defined.
@@ -449,12 +452,12 @@ function _batch_finished() {
     if (isset($batch_set['finished'])) {
       // Check if the set requires an additional file for function definitions.
       if (isset($batch_set['file']) && is_file($batch_set['file'])) {
-        include_once \Drupal::root() . '/' . $batch_set['file'];
+        include_once $drupal_root . '/' . $batch_set['file'];
       }
       if (is_callable($batch_set['finished'])) {
         $queue = _batch_queue($batch_set);
-        $operations = $queue->getAllItems();
-        $batch_set_result = call_user_func_array($batch_set['finished'], [$batch_set['success'], $batch_set['results'], $operations, \Drupal::service('date.formatter')->formatInterval((int) ($batch_set['elapsed'] / 1000))]);
+        $operations = $queue ? $queue->getAllItems() : [];
+        $batch_set_result = call_user_func_array($batch_set['finished'], [$batch_set['success'], $batch_set['results'], $operations, $date_formatter->formatInterval((int) ($batch_set['elapsed'] / 1000))]);
         // If a batch 'finished' callback requested a redirect after the batch
         // is complete, save that for later use. If more than one batch set
         // returned a redirect, the last one is used.

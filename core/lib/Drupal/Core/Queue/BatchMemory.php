@@ -14,10 +14,10 @@ namespace Drupal\Core\Queue;
  *
  * @ingroup queue
  */
-class BatchMemory extends Memory {
+class BatchMemory extends Memory implements BatchQueueInterface {
 
   /**
-   * Overrides \Drupal\Core\Queue\Memory::claimItem().
+   * {@inheritdoc}
    *
    * Unlike \Drupal\Core\Queue\Memory::claimItem(), this method provides a
    * default lease time of 0 (no expiration) instead of 30. This allows the item
@@ -32,13 +32,7 @@ class BatchMemory extends Memory {
   }
 
   /**
-   * Retrieves all remaining items in the queue.
-   *
-   * This is specific to Batch API and is not part of the
-   * \Drupal\Core\Queue\QueueInterface.
-   *
-   * @return array
-   *   An array of queue items.
+   * {@inheritdoc}
    */
   public function getAllItems() {
     $result = [];

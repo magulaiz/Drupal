@@ -13,7 +13,15 @@ use Psr\Log\LoggerInterface;
  * @see \Drupal\system\Tests\System\UncaughtExceptionTest::testLoggerException()
  */
 class TestLog implements LoggerInterface {
+
   use RfcLoggerTrait;
+
+  /**
+   * An array of arrays with three items: "level", "context" and "message".
+   *
+   * @var array[]
+   */
+  public static $entries = [];
 
   /**
    * {@inheritdoc}
@@ -26,6 +34,13 @@ class TestLog implements LoggerInterface {
       'severity_level' => 3,
       'channel' => 'php',
     ];
+
+    static::$entries[] = [
+      'level' => $level,
+      'message' => $message,
+      'context' => $context,
+    ];
+
     if (array_diff_assoc($trigger, $context) === []) {
       throw new \Exception('Oh, oh, frustrated monkeys!');
     }

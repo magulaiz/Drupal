@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Batch;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Queue\DatabaseQueue;
+use Drupal\Core\Queue\BatchQueueInterface;
 
 /**
  * Tests the content of the progress page.
@@ -16,7 +19,7 @@ class PageTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['batch_test'];
+  protected static $modules = ['error_service_test', 'batch_test'];
 
   /**
    * {@inheritdoc}
@@ -85,6 +88,40 @@ class PageTest extends BrowserTestBase {
     $this->drupalGet('batch-test/test-title');
     // Check that the progress message for second step appears correctly.
     $this->assertSession()->responseContains('<div class="progress__description">Completed 1 of 1.</div>');
+  }
+
+  /**
+   * Tests an incorrectly implemented batch queue.
+   */
+  public function testWrongQueueImplementation(): void {
+    $message = sprintf('Batch queue "%s" does not implement "%s" interface.', DatabaseQueue::class, BatchQueueInterface::class);
+    $logger = \Drupal::service('logger.broken');
+    $found = FALSE;
+
+    batch_set([
+      'operations' => [
+        ['dummy', []],
+      ],
+      'queue' => [
+        'name' => 'test_wrong_batch_queue',
+        'class' => DatabaseQueue::class,
+      ],
+    ]);
+
+    batch_process();
+
+    foreach ($logger::$entries as $i => $entry) {
+      // Use non-strict comparison since "TranslatableMarkup" could
+      // be the value in "$entry['message']".
+      if ($entry['level'] === RfcLogLevel::EMERGENCY && $entry['message'] == $message) {
+        $found = TRUE;
+
+        unset($logger::$entries[$i]);
+        break;
+      }
+    }
+
+    $this->assertTrue($found, sprintf('Log entry "%s" about wrong queue implementation was found.', $message));
   }
 
 }
