@@ -359,7 +359,8 @@ class MenuForm extends EntityForm {
           $element['title'],
         ];
         $provider = $element['#item']->link->getProvider();
-        $form['links'][$id]['provider'] = ['#markup' => $moduleExtensionList->getName($provider)];
+        $provider_name = $moduleExtensionList->exists($provider) ? $moduleExtensionList->getName($provider) : $provider;
+        $form['links'][$id]['provider'] = ['#markup' => $provider_name];
         $form['links'][$id]['enabled'] = $element['enabled'];
         $form['links'][$id]['enabled']['#wrapper_attributes']['class'] = ['checkbox', 'menu-enabled'];
 
