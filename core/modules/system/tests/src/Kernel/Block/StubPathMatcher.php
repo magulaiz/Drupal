@@ -14,7 +14,7 @@ class StubPathMatcher extends PathMatcher {
   /**
    * {@inheritdoc}
    */
-  public function isFrontPage() {
+  public function isFrontPage(): bool {
     return FALSE;
   }
 
