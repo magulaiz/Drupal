@@ -262,6 +262,10 @@ class MenuForm extends EntityForm {
           'data' => $this->t('Enabled'),
           'class' => ['checkbox'],
         ],
+        [
+          'data' => $this->t('Expanded'),
+          'class' => ['checkbox'],
+        ],
         $this->t('Weight'),
         [
           'data' => $this->t('Operations'),
@@ -363,6 +367,11 @@ class MenuForm extends EntityForm {
         $form['links'][$id]['provider'] = ['#markup' => $provider_name];
         $form['links'][$id]['enabled'] = $element['enabled'];
         $form['links'][$id]['enabled']['#wrapper_attributes']['class'] = ['checkbox', 'menu-enabled'];
+        $form['links'][$id]['expanded'] = [
+          '#type' => 'checkbox',
+          '#value' => $element['#item']->link->isExpanded(),
+        ];
+        $form['links'][$id]['expanded']['#wrapper_attributes']['class'] = ['checkbox', 'menu-enabled'];
 
         // Disallow changing the publishing status of a pending revision.
         if ($is_pending_menu_link) {
