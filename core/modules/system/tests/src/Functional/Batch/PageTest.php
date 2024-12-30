@@ -93,7 +93,7 @@ class PageTest extends BrowserTestBase {
   /**
    * Tests an incorrectly implemented batch queue.
    */
-  public function testWrongQueueImplementation() {
+  public function testWrongQueueImplementation(): void {
     $message = sprintf('Batch queue "%s" does not implement "%s" interface.', DatabaseQueue::class, BatchQueueInterface::class);
     $logger = \Drupal::service('logger.broken');
     $found = FALSE;
