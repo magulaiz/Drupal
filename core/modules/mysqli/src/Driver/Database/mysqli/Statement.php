@@ -7,6 +7,7 @@ namespace Drupal\mysqli\Driver\Database\mysqli;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\RowCountException;
 use Drupal\Core\Database\StatementWrapperIterator;
@@ -116,17 +117,36 @@ class Statement extends StatementWrapperIterator {
         $this->connection->getTarget(),
         $this->getQueryString(),
         $args,
-        $this->connection->findCallerFromDebugBacktrace()
+        $this->connection->findCallerFromDebugBacktrace(),
       );
       $this->connection->dispatchEvent($startEvent);
     }
 
-    // In mysqli, the results of the statement execution are returned in a
-    // different object than the statement itself.
-    $return = $this->clientStatement->execute($args);
-    $this->markResultsetIterable($return);
-    $result = $this->clientStatement->get_result();
-    $this->mysqliResult = $result !== FALSE ? $result : NULL;
+    try {
+      // In mysqli, the results of the statement execution are returned in a
+      // different object than the statement itself.
+      $return = $this->clientStatement->execute($args);
+      $this->markResultsetIterable($return);
+      $result = $this->clientStatement->get_result();
+      $this->mysqliResult = $result !== FALSE ? $result : NULL;
+    }
+    catch (\Exception $e) {
+      if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionFailureEvent::class)) {
+        $this->connection->dispatchEvent(new StatementExecutionFailureEvent(
+          $startEvent->statementObjectId,
+          $startEvent->key,
+          $startEvent->target,
+          $startEvent->queryString,
+          $startEvent->args,
+          $startEvent->caller,
+          $startEvent->time,
+          get_class($e),
+          $e->getCode(),
+          $e->getMessage(),
+        ));
+      }
+      throw $e;
+    }
 
     if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
       $this->connection->dispatchEvent(new StatementExecutionEndEvent(
@@ -136,7 +156,7 @@ class Statement extends StatementWrapperIterator {
         $startEvent->queryString,
         $startEvent->args,
         $startEvent->caller,
-        $startEvent->time
+        $startEvent->time,
       ));
     }
 

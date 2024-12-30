@@ -7,123 +7,22 @@ namespace Drupal\Tests\mysqli\Kernel\mysqli;
 use Drupal\KernelTests\Core\Database\DriverSpecificTransactionTestBase;
 
 /**
- * Tests transaction for the MySQL driver.
+ * Tests transaction for the MySQLi driver.
  *
  * @group Database
  */
 class TransactionTest extends DriverSpecificTransactionTestBase {
 
   /**
-   * Tests the compatibility of transactions with DDL statements.
-   */
-  public function testTransactionWithDdlStatement(): void {
-    // First, test that a commit works normally, even with DDL statements.
-    $transaction = $this->connection->startTransaction();
-    $this->insertRow('row');
-    $this->executeDDLStatement();
-    unset($transaction);
-    $this->assertRowPresent('row');
-
-    // Even in different order.
-    $this->cleanUp();
-    $transaction = $this->connection->startTransaction();
-    $this->executeDDLStatement();
-    $this->insertRow('row');
-    unset($transaction);
-    $this->assertRowPresent('row');
-
-    // Even with stacking.
-    $this->cleanUp();
-    $transaction = $this->connection->startTransaction();
-    $transaction2 = $this->connection->startTransaction();
-    $this->executeDDLStatement();
-    unset($transaction2);
-    $transaction3 = $this->connection->startTransaction();
-    $this->insertRow('row');
-    unset($transaction3);
-    unset($transaction);
-    $this->assertRowPresent('row');
-
-    // Note: THIS IS DIFFERENT FROM MySQL.
-    // MySQLi will only cleanup the transaction stack on rollback, because the
-    // rollback will fail since no savepoint is any longer present given the
-    // auto-commit related to the DDL statement.
-    // So a transaction after a DDL statement should still work the same.
-    $this->cleanUp();
-    $transaction = $this->connection->startTransaction();
-    $transaction2 = $this->connection->startTransaction();
-    $this->executeDDLStatement();
-    unset($transaction2);
-    $transaction3 = $this->connection->startTransaction();
-    $this->insertRow('row');
-    // $transaction3->rollBack();
-    unset($transaction3);
-    unset($transaction);
-    // $this->assertRowAbsent('row');
-
-    // The behavior of a rollback depends on the type of database server.
-    if ($this->connection->supportsTransactionalDDL()) {
-      // For database servers that support transactional DDL, a rollback
-      // of a transaction including DDL statements should be possible.
-      $this->cleanUp();
-      $transaction = $this->connection->startTransaction();
-      $this->insertRow('row');
-      $this->executeDDLStatement();
-      $transaction->rollBack();
-      unset($transaction);
-      $this->assertRowAbsent('row');
-
-      // Including with stacking.
-      $this->cleanUp();
-      $transaction = $this->connection->startTransaction();
-      $transaction2 = $this->connection->startTransaction();
-      $this->executeDDLStatement();
-      unset($transaction2);
-      $transaction3 = $this->connection->startTransaction();
-      $this->insertRow('row');
-      unset($transaction3);
-      $transaction->rollBack();
-      unset($transaction);
-      $this->assertRowAbsent('row');
-    }
-    else {
-      // For database servers that do not support transactional DDL,
-      // the DDL statement should commit the transaction stack.
-      $this->cleanUp();
-      $transaction = $this->connection->startTransaction();
-      $this->insertRow('row');
-      $this->executeDDLStatement();
-
-      try {
-        // Rollback the outer transaction.
-        $transaction->rollBack();
-        // Note: THIS IS DIFFERENT FROM MySQL.
-        // MySQLi does not fail when rolling back and no transaction active.
-        // $this->fail('Rolling back a transaction containing DDL should produce a warning.');
-      }
-      catch (\RuntimeException $warning) {
-        $this->assertSame('Rollback attempted when there is no active transaction. This can cause data integrity issues.', $warning->getMessage());
-      }
-      unset($transaction);
-      $this->assertRowPresent('row');
-    }
-  }
-
-  /**
-   * Tests deprecation of Connection methods.
-   *
-   * @group legacy
-   */
-  public function testConnectionDeprecations(): void {
-    $this->markTestSkipped('Skipping this test for MySQLi.');
-  }
-
-  /**
    * Tests starting a transaction when there's one active on the client.
    *
-   * MySQLi does not fail if multiple transactions are begun on the client, so
-   * this test is failing. Let's change this when MySQLi will provide a way to
+   * MySQLi does not fail if multiple commits are made on the client, so this
+   * test is failing. Let's change this if/when MySQLi will provide a way to
    * check if a client transaction is active.
+   *
+   * This is mitigated by the fact that transaction should not be initiated
+   * from code outside of the TransactionManager, that keeps track of the
+   * stack of transaction-related operations in its stack.
    */
   public function testStartTransactionWhenActive(): void {
     $this->markTestSkipped('Skipping this while MySQLi cannot detect if a client transaction is active.');
@@ -136,8 +35,12 @@ class TransactionTest extends DriverSpecificTransactionTestBase {
    * Tests committing a transaction when there's none active on the client.
    *
    * MySQLi does not fail if multiple commits are made on the client, so this
-   * test is failing. Let's change this when MySQLi will provide a way to check
-   * if a client transaction is active.
+   * test is failing. Let's change this if/when MySQLi will provide a way to
+   * check if a client transaction is active.
+   *
+   * This is mitigated by the fact that transaction should not be initiated
+   * from code outside of the TransactionManager, that keeps track of the
+   * stack of transaction-related operations in its stack.
    */
   public function testCommitTransactionWhenInactive(): void {
     $this->markTestSkipped('Skipping this while MySQLi cannot detect if a client transaction is active.');
