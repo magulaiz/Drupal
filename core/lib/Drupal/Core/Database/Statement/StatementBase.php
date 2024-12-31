@@ -245,9 +245,9 @@ abstract class StatementBase implements \Iterator, StatementInterface {
 
     }
     try {
-      return $this->result->setFetchMode($mode, $a1, $a2);
+      return $this->clientSetFetchMode($mode, $a1, $a2);
     }
-    catch (\RuntimeException) {
+    catch (\LogicException) {
       // The client statement is missing, just do with the properties setting.
       return TRUE;
     }

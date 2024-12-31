@@ -915,8 +915,6 @@ class ConnectionTest extends UnitTestCase {
     $mockConnection = new StubConnection($mockPdo, []);
     $statement = new StatementPrefetchIterator($mockPdo, $mockConnection, '');
     $this->assertInstanceOf(StatementPrefetchIterator::class, $statement);
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage("\\PDOStatement not initialized");
     $statement->setFetchMode($mode);
   }
 
@@ -946,8 +944,6 @@ class ConnectionTest extends UnitTestCase {
     $mockConnection = new StubConnection($mockPdo, []);
     $statement = new StatementPrefetchIterator($mockPdo, $mockConnection, '');
     $this->assertInstanceOf(StatementPrefetchIterator::class, $statement);
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage("\\PDOStatement not initialized");
     $statement->setFetchMode($mode);
   }
 

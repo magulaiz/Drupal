@@ -20,16 +20,20 @@ class DqlPrefetchedResult extends DqlResultBase {
    */
   protected ?int $currentRowIndex = NULL;
 
+  /**
+   * Constructor.
+   *
+   * @param array $data
+   *   Data.
+   * @param int|null $rowCount
+   *   The row count.
+   */
   public function __construct(
     protected array $data,
     public readonly ?int $rowCount,
   ) {
     $this->columnNames = isset($this->data[0]) ? array_keys($this->data[0]) : [];
     $this->currentRowIndex = -1;
-  }
-
-  public function setFetchMode(FetchAs $mode, ?string $a1 = NULL, ?array $a2 = []): bool {
-    return TRUE;
   }
 
   public function fetch(FetchAs $mode, array $fetchOptions = []): array|object|int|float|string|bool|NULL {
