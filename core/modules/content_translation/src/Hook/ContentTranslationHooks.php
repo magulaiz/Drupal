@@ -140,7 +140,7 @@ class ContentTranslationHooks {
    *
    * @see \Drupal\Core\Entity\Annotation\EntityType
    */
-  #[Hook('entity_type_alter', order: Order::First)]
+  #[Hook('entity_type_alter', order: Order::Last)]
   public function entityTypeAlter(array &$entity_types) : void {
     // Provide defaults for translation info.
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
@@ -190,8 +190,13 @@ class ContentTranslationHooks {
    * @see content_translation_entity_bundle_info_alter()
    * @see \Drupal\content_translation\ContentTranslationManager::isEnabled()
    */
+<<<<<<< HEAD
   #[Hook('language_content_settings_insert', order: Order::Last)]
   public function languageContentSettingsInsert(ContentLanguageSettingsInterface $settings): void {
+=======
+  #[Hook('language_content_settings_insert')]
+  public function languageContentSettingsInsert(ContentLanguageSettingsInterface $settings): void {
+>>>>>>> beef39243fd (Update correct hooks)
     if ($settings->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
       _content_translation_install_field_storage_definitions($settings->getTargetEntityTypeId());
     }
@@ -222,7 +227,7 @@ class ContentTranslationHooks {
   /**
    * Implements hook_entity_bundle_info_alter().
    */
-  #[Hook('entity_bundle_info_alter')]
+  #[Hook('entity_bundle_info_alter', order: Order::First)]
   public function entityBundleInfoAlter(&$bundles): void {
     /** @var \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager */
     $content_translation_manager = \Drupal::service('content_translation.manager');
