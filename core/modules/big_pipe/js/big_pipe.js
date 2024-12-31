@@ -89,10 +89,12 @@
    */
   function checkMutation(node) {
     return Boolean(
-      node.nodeType === Node.ELEMENT_NODE &&
+      node &&
+        node.nodeType === Node.ELEMENT_NODE &&
         node.nodeName === 'SCRIPT' &&
         node.dataset &&
         node.dataset.bigPipeReplacementForPlaceholderWithId &&
+        drupalSettings.bigPipePlaceholderIds &&
         typeof drupalSettings.bigPipePlaceholderIds[
           node.dataset.bigPipeReplacementForPlaceholderWithId
         ] !== 'undefined',
@@ -148,6 +150,9 @@
   }
 
   const observer = new MutationObserver(processMutations);
+
+  // Attach behaviors early, if possible.
+  Drupal.attachBehaviors(document);
 
   // If loaded asynchronously there might already be replacement elements
   // in the DOM before the mutation observer is started.
