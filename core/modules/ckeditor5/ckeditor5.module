@@ -18,20 +18,6 @@ use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Implements hook_theme().
- */
-function ckeditor5_theme() {
-  return [
-    'field__ckeditor_inline' => [
-      'base hook' => 'field',
-    ],
-    'media__ckeditor_inline_embed' => [
-      'base hook' => 'media',
-    ],
-  ];
-}
-
-/**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
 function ckeditor5_theme_suggestions_media_alter(array &$suggestions, array $variables) {
