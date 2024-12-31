@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Database\Statement;
 
 use Drupal\Core\Database\FetchModeTrait;
 
-class PrefetchedResult {
+class DqlPrefetchedResult extends DqlResultBase {
 
   use FetchModeTrait;
 
@@ -19,7 +21,11 @@ class PrefetchedResult {
     $this->currentRowIndex = -1;
   }
 
-  public function fetch(FetchAs $mode, array $fetchOptions): array|object|int|float|string|bool|NULL {
+  public function setFetchMode(FetchAs $mode, ?string $a1 = NULL, ?array $a2 = []): bool {
+    return TRUE;
+  }
+
+  public function fetch(FetchAs $mode, array $fetchOptions = []): array|object|int|float|string|bool|NULL {
     $this->currentRowIndex++;
     if (!isset($this->data[$this->currentRowIndex])) {
       $this->currentRowIndex = NULL;
@@ -34,6 +40,29 @@ class PrefetchedResult {
     $result = [];
     while ($rowAssoc = $this->fetch(FetchAs::Associative, $fetchOptions)) {
       $result[] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
+    }
+    return $result;
+  }
+
+  public function fetchAllKeyed(int $keyIndex = 0, int $valueIndex = 1): array {
+    if (!isset($this->columnNames[$keyIndex]) || !isset($this->columnNames[$valueIndex])) {
+      return [];
+    }
+
+    $key = $this->columnNames[$keyIndex];
+    $value = $this->columnNames[$valueIndex];
+
+    $result = [];
+    while ($row = $this->fetch(FetchAs::Associative)) {
+      $result[$row[$key]] = $row[$value];
+    }
+    return $result;
+  }
+
+  public function fetchAllAssoc(string $column, FetchAs $mode, array $fetchOptions): array {
+    $result = [];
+    while ($rowAssoc = $this->fetch(FetchAs::Associative, $fetchOptions)) {
+      $result[$rowAssoc[$column]] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
     }
     return $result;
   }

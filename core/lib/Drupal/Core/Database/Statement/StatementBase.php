@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Database\Statement;
 
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
@@ -35,9 +37,9 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   use StatementIteratorTrait;
 
   /**
-   * Determines if results are prefetched.
+   * The results of a data query language (DQL) statement.
    */
-  protected ?PrefetchedResult $prefetchedResult = NULL;
+  protected ?DqlResultBase $result = NULL;
 
   /**
    * Holds the default fetch mode.
@@ -159,58 +161,21 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllAssoc($key, $fetch = NULL) {
-    if (isset($fetch)) {
-      if (is_string($fetch)) {
-        $this->setFetchMode(FetchAs::ClassObject, $fetch);
-      }
-      else {
-        $this->setFetchMode($fetch);
-      }
-    }
-
-    // Return early if the statement was already fully traversed.
-    if (!$this->isResultsetIterable) {
-      return [];
-    }
-
-    // Once the while loop is completed, the resultset is marked so not to
-    // allow more fetching.
-    $return = [];
-    while ($record = $this->fetch()) {
-      $recordKey = is_object($record) ? $record->$key : $record[$key];
-      $return[$recordKey] = $record;
-    }
-
-    return $return;
+    return $this->result->fetchAllAssoc($key, $fetch ?? $this->defaultFetchMode, $this->fetchOptions);
   }
 
   /**
    * {@inheritdoc}
    */
   public function fetchAllKeyed($keyIndex = 0, $valueIndex = 1) {
-    $this->setFetchMode(FetchAs::List);
-
-    // Return early if the statement was already fully traversed.
-    if (!$this->isResultsetIterable) {
-      return [];
-    }
-
-    // Once the while loop is completed, the resultset is marked so not to
-    // allow more fetching.
-    $return = [];
-    while ($record = $this->fetch()) {
-      $return[$record[$keyIndex]] = $record[$valueIndex];
-    }
-    return $return;
+    return $this->result->fetchAllKeyed($keyIndex, $valueIndex);
   }
 
   /**
    * {@inheritdoc}
    */
   public function fetchField($index = 0) {
-    $column = $this->prefetchedResult ?
-      $this->prefetchedResult->fetch(FetchAs::Column, ['column' => $index]) :
-      $this->clientFetchColumn($index);
+    $column = $this->result->fetch(FetchAs::Column, ['column' => $index]);
 
     if ($column === FALSE) {
       $this->markResultsetFetchingComplete();
@@ -232,15 +197,12 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchObject(?string $className = NULL, array $constructorArguments = []) {
-    $row = $this->prefetchedResult ? (
-        $className === NULL ?
-        $this->prefetchedResult->fetch(FetchAs::Object, []) :
-        $this->prefetchedResult->fetch(FetchAs::ClassObject, [
-          'class' => $className,
-          'constructor_args' => $constructorArguments,
-        ])
-      ) :
-      $this->clientFetchObject($className, $constructorArguments);
+    $row = $className === NULL ?
+      $this->result->fetch(FetchAs::Object, []) :
+      $this->result->fetch(FetchAs::ClassObject, [
+        'class' => $className,
+        'constructor_args' => $constructorArguments,
+      ]);
 
     if ($row === FALSE) {
       $this->markResultsetFetchingComplete();
@@ -257,9 +219,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   public function rowCount() {
     // SELECT query should not use the method.
     if ($this->rowCountEnabled) {
-      return $this->prefetchedResult ?
-        $this->prefetchedResult->rowCount :
-        $this->clientRowCount();
+      return $this->result->rowCount;
     }
     else {
       throw new RowCountException();
@@ -285,9 +245,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
 
     }
     try {
-      return $this->prefetchedResult ?
-        TRUE :
-        $this->clientSetFetchMode($mode, $a1, $a2);
+      return $this->result->setFetchMode($mode, $a1, $a2);
     }
     catch (\RuntimeException) {
       // The client statement is missing, just do with the properties setting.
@@ -299,12 +257,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetch($mode = NULL, $cursorOrientation = NULL, $cursorOffset = NULL) {
-    $row = match(func_num_args()) {
-      0 => $this->clientFetch(),
-      1 => $this->clientFetch($mode),
-      2 => $this->clientFetch($mode, $cursorOrientation),
-      default => $this->clientFetch($mode, $cursorOrientation, $cursorOffset),
-    };
+    $row = $this->result->fetch($mode ?? $this->defaultFetchMode, $this->fetchOptions);
 
     if ($row === FALSE) {
       $this->markResultsetFetchingComplete();
@@ -327,9 +280,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
       $this->fetchOptions['constructor_args'] = $constructorArguments;
     }
 
-    $return = $this->prefetchedResult ?
-      $this->prefetchedResult->fetchAll($fetchMode, $this->fetchOptions) :
-      $this->clientFetchAll($fetchMode, $columnIndex, $constructorArguments);
+    $return = $this->result->fetchAll($fetchMode, $this->fetchOptions);
 
     $this->markResultsetFetchingComplete();
 

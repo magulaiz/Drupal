@@ -7,7 +7,7 @@ use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\Statement\PdoTrait;
-use Drupal\Core\Database\Statement\PrefetchedResult;
+use Drupal\Core\Database\Statement\DqlPrefetchedResult;
 use Drupal\Core\Database\Statement\StatementBase;
 
 /**
@@ -109,7 +109,7 @@ class StatementPrefetchIterator extends StatementBase {
     // Fetch all the data from the reply, in order to release any lock as soon
     // as possible.
     $data = $this->clientFetchAll(FetchAs::Associative);
-    $this->prefetchedResult = new PrefetchedResult(
+    $this->result = new DqlPrefetchedResult(
       $data,
       $this->rowCountEnabled ? $this->clientRowCount() : NULL,
     );
@@ -193,16 +193,7 @@ class StatementPrefetchIterator extends StatementBase {
       @trigger_error("Passing the \$fetch_style argument as an integer to fetch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
       $fetch_style = $this->pdoToFetchAs($fetch_style);
     }
-
-    $row = $this->prefetchedResult->fetch($fetch_style ?? $this->defaultFetchMode, $this->fetchOptions);
-
-    if ($row === FALSE) {
-      $this->markResultsetFetchingComplete();
-      return FALSE;
-    }
-
-    $this->setResultsetCurrentRow($row);
-    return $row;
+    return parent::fetch($fetch_style);
   }
 
   /**
@@ -228,41 +219,12 @@ class StatementPrefetchIterator extends StatementBase {
   /**
    * {@inheritdoc}
    */
-  public function fetchAllKeyed($key_index = 0, $value_index = 1) {
-    if (!isset($this->prefetchedResult->columnNames[$key_index]) || !isset($this->prefetchedResult->columnNames[$value_index])) {
-      return [];
-    }
-
-    $key = $this->prefetchedResult->columnNames[$key_index];
-    $value = $this->prefetchedResult->columnNames[$value_index];
-
-    $result = [];
-    while ($row = $this->fetch(FetchAs::Associative)) {
-      $result[$row[$key]] = $row[$value];
-    }
-    return $result;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function fetchAllAssoc($key, $fetch = NULL) {
     if (is_int($fetch)) {
       @trigger_error("Passing the \$fetch argument as an integer to fetchAllAssoc() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
       $fetch = $this->pdoToFetchAs($fetch);
     }
-
-    $result = [];
-    while ($rowAssoc = $this->prefetchedResult->fetch(FetchAs::Associative, $this->fetchOptions)) {
-      $result[$rowAssoc[$key]] = match ($fetch ?? $this->defaultFetchMode) {
-        FetchAs::Associative => $rowAssoc,
-        FetchAs::ClassObject => $this->assocToClass($rowAssoc, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
-        FetchAs::Column => $this->assocToColumn($rowAssoc, $this->prefetchedResult->columnNames, $this->fetchOptions['column']),
-        FetchAs::List => $this->assocToNum($rowAssoc),
-        FetchAs::Object => $this->assocToObj($rowAssoc),
-      };
-    }
-    return $result;
+    return parent::fetchAllAssoc($key, $fetch);
   }
 
 }
