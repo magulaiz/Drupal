@@ -229,7 +229,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function setFetchMode($mode, $a1 = NULL, $a2 = []): bool {
+  public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
     $this->defaultFetchMode = $mode;
     switch ($mode) {
       case FetchAs::ClassObject:
