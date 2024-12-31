@@ -30,10 +30,13 @@ class Date extends NumericFilter {
     return $instance;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    // value is already set up properly, we're just adding our new field to it.
+    // Value is already set up properly, we're just adding our new field to it.
     $options['value']['contains']['type']['default'] = 'date';
 
     return $options;
@@ -57,6 +60,9 @@ class Date extends NumericFilter {
     parent::valueForm($form, $form_state);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
 
@@ -68,6 +74,9 @@ class Date extends NumericFilter {
     $this->validateValidTime($form['value'], $form_state, $form_state->getValue(['options', 'operator']), $form_state->getValue(['options', 'value']));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateExposed(&$form, FormStateInterface $form_state) {
     if (empty($this->options['exposed'])) {
       return;
@@ -133,6 +142,9 @@ class Date extends NumericFilter {
     return $actual == $expected;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function acceptExposedInput($input) {
     if (empty($this->options['exposed'])) {
       return TRUE;
@@ -182,6 +194,9 @@ class Date extends NumericFilter {
     return $rc;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function opBetween($field) {
     $request_time = $this->time->getRequestTime();
     $a = intval(strtotime($this->value['min'], $request_time));
@@ -194,6 +209,9 @@ class Date extends NumericFilter {
     $this->query->addWhereExpression($this->options['group'], "$field $operator $a AND $b");
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function opSimple($field) {
     $request_time = $this->time->getRequestTime();
     $value = intval(strtotime($this->value['value'], $request_time));

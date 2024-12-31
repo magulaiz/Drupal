@@ -311,7 +311,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
     // Construct the join.
     $definition = [
       'table' => 'workspace_association',
-      'field' => 'target_entity_id',
+      'field' => WorkspaceAssociation::getIdField($entity_type_id),
       'left_table' => $relationship,
       'left_field' => $table_data['table']['base']['field'],
       'extra' => [
@@ -404,14 +404,15 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
     $definition = [
       'table' => $table,
       'field' => $field,
-      // Making this explicitly NULL allows the left table to be a formula.
-      'left_table' => NULL,
-      'left_field' => "COALESCE($workspace_association_table.target_entity_revision_id, $relationship.$field)",
+      'left_table' => $relationship,
+      'left_formula' => "COALESCE($workspace_association_table.target_entity_revision_id, $relationship.$field)",
     ];
 
     if ($entity_type->isTranslatable() && $this->languageManager->isMultilingual()) {
       $langcode_field = $entity_type->getKey('langcode');
-      $definition['extra'] = "$table.$langcode_field = $relationship.$langcode_field";
+      $definition['extra'] = [
+        ['field' => $langcode_field, 'left_field' => $langcode_field],
+      ];
     }
 
     /** @var \Drupal\views\Plugin\views\join\JoinPluginInterface $join */
