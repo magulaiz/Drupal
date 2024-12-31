@@ -10,6 +10,7 @@ use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Hook\Order;
 use Drupal\navigation\TopBarItemManagerInterface;
 
 /**
@@ -44,7 +45,7 @@ class NavigationHooks {
   /**
    * Implements hook_page_top().
    */
-  #[Hook('page_top')]
+  #[Hook('page_top', order: Order::Last)]
   public function pageTop(array &$page_top): void {
     if (!\Drupal::currentUser()->hasPermission('access navigation')) {
       return;
