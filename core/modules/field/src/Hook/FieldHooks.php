@@ -161,7 +161,7 @@ class FieldHooks {
    * Implements hook_cron().
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     // Do a pass of purging on deleted Field API data, if any exists.
     $limit = \Drupal::config('field.settings')->get('purge_batch_size');
     field_purge_batch($limit);
@@ -324,7 +324,7 @@ class FieldHooks {
       return;
     }
     // If target_type changed, reset the handler in the fields using that storage.
-    if ($field_storage->getSetting('target_type') !== $field_storage->original->getSetting('target_type')) {
+    if ($field_storage->getSetting('target_type') !== $field_storage->getOriginal()->getSetting('target_type')) {
       foreach ($field_storage->getBundles() as $bundle) {
         $field = FieldConfig::loadByName($field_storage->getTargetEntityTypeId(), $bundle, $field_storage->getName());
         // Reset the handler settings. This triggers field_field_config_presave(),
