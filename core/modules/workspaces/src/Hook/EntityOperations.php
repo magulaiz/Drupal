@@ -12,6 +12,7 @@ use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Hook\Order;
 use Drupal\workspaces\WorkspaceAssociationInterface;
 use Drupal\workspaces\WorkspaceInformationInterface;
 use Drupal\workspaces\WorkspaceManagerInterface;
@@ -72,7 +73,8 @@ class EntityOperations {
   /**
    * Implements hook_entity_presave().
    */
-  #[Hook('entity_presave')]
+  #[Hook('entity_presave', order: Order::First)]
+  #[Hook('entity_presave', order: Order::Last)]
   public function entityPresave(EntityInterface $entity): void {
     if ($this->shouldSkipOperations($entity)) {
       return;
@@ -129,7 +131,7 @@ class EntityOperations {
   /**
    * Implements hook_entity_insert().
    */
-  #[Hook('entity_insert')]
+  #[Hook('entity_insert', order: Order::Last)]
   public function entityInsert(EntityInterface $entity): void {
     if ($entity->getEntityTypeId() === 'workspace') {
       $this->workspaceAssociation->workspaceInsert($entity);
