@@ -215,11 +215,10 @@ function template_preprocess_fieldset(&$variables) {
     $variables['legend_span']['attributes'] = new Attribute();
   }
 
-  $description_id = $element['#attributes']['id'] . '--description';
-  // Add the description's id to the fieldset aria attributes.
-  $variables['attributes']['aria-describedby'] = $description_id;
-
   if (!empty($element['#description'])) {
+    $description_id = $element['#attributes']['id'] . '--description';
+    // Add the description's id to the fieldset aria attributes.
+    $variables['attributes']['aria-describedby'] = $description_id;
     $description_attributes['id'] = $description_id;
     $variables['description_display'] = $element['#description_display'];
     if ($element['#description_display'] === 'invisible') {
