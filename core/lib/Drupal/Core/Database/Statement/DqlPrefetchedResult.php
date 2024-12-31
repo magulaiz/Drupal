@@ -10,7 +10,14 @@ class DqlPrefetchedResult extends DqlResultBase {
 
   use FetchModeTrait;
 
+  /**
+   * The column names.
+   */
   public readonly array $columnNames;
+
+  /**
+   * The current row index in the result set.
+   */
   protected ?int $currentRowIndex = NULL;
 
   public function __construct(
