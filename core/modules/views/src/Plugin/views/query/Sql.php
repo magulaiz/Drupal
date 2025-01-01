@@ -291,6 +291,9 @@ class Sql extends QueryPluginBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['disable_sql_rewrite'] = [
@@ -574,6 +577,9 @@ class Sql extends QueryPluginBase {
     return $alias;
   }
 
+  /**
+   * Marks a relationship based table as included.
+   */
   protected function markTable($table, $relationship, $alias) {
     // Mark that this table has been added.
     if (empty($this->tables[$relationship][$table])) {
@@ -1758,10 +1764,16 @@ class Sql extends QueryPluginBase {
     return $entities;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addSignature(ViewExecutable $view) {
     $view->query->addField(NULL, "'" . $view->storage->id() . ':' . $view->current_display . "'", 'view_name');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getAggregationInfo() {
     // @todo Need a way to get database specific and customized aggregation
     //   functions into here.
@@ -1843,10 +1855,16 @@ class Sql extends QueryPluginBase {
     ];
   }
 
+  /**
+   * Builds a simple SQL expression.
+   */
   public function aggregationMethodSimple($group_type, $field) {
     return strtoupper($group_type) . '(' . $field . ')';
   }
 
+  /**
+   * Builds a SQL expression using DISTINCT.
+   */
   public function aggregationMethodDistinct($group_type, $field) {
     $group_type = str_replace('_distinct', '', $group_type);
     return strtoupper($group_type) . '(DISTINCT ' . $field . ')';
