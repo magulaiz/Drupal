@@ -171,7 +171,7 @@ class LinkFieldTest extends BrowserTestBase {
       '#example' => '#example',
 
       // Complex query string.
-      // @see \Drupal\Tests\link\Kernel\LinkItemUrlDisplayTest::getTestingUrls
+      // @see \Drupal\Tests\link\Kernel\LinkItemUrlDisplayTest::getTestingUrls()
       '?a[]=1&a[]=2' => '?a[]=1&amp;a[]=2',
       '?b[0]=1&b[1]=2' => '?b[0]=1&amp;b[1]=2',
       '?c[]=1&d=3&c[]=2' => '?c[]=1&amp;d=3&amp;c[]=2',
