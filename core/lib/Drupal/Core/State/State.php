@@ -94,12 +94,28 @@ class State extends CacheCollector implements StateInterface {
     // If another request had a cache miss before this request, and also hasn't
     // written to cache yet, then it may already have read this value from the
     // database and could write that value to the cache to the end of the
-    // request. To avoid this race condition, write to the cache immediately
-    // after calling parent::set(). This allows the race condition detection in
-    // CacheCollector::set() to work.
+    // request. To avoid this race condition, attempt to acquire a the lock and
+    // write to the cache immediately after calling parent::set(). This allows
+    // the race condition detection in CacheCollector::updateCache() to work.
     parent::set($key, $value);
     $this->persist($key);
-    static::updateCache();
+
+    // This duplicates some of the logic in CacheCollector::updateCache() with
+    // some important changes. We attempt to acquire a lock, but if it's not
+    // acquired, go ahead with the cache write anyway. This ensures that the
+    // cache item is always written rather than potentially discarded or
+    // deleted.
+    $lock_name = $this->getCid() . ':' . CacheCollector::class;
+    $lock_acquired = $this->lock->acquire($lock_name);
+    $cache_data = [
+      'storage' => [$key => $value],
+      'hash' => hash('xxh64', serialize([$key => $value])),
+    ];
+    $this->cacheHash = $cache_data['hash'];
+    $this->cache->set($this->getCid(), $cache_data, CacheBackendInterface::CACHE_PERMANENT, $this->tags);
+    if ($lock_acquired) {
+      $this->lock->release($lock_name);
+    }
   }
 
   /**
@@ -110,6 +126,22 @@ class State extends CacheCollector implements StateInterface {
     foreach ($data as $key => $value) {
       parent::set($key, $value);
       $this->persist($key);
+    }
+    // If another request had a cache miss before this request, and also hasn't
+    // written to cache yet, then it may already have read this value from the
+    // database and could write that value to the cache to the end of the
+    // request. To avoid this race condition, attempt to acquire a the lock and
+    // write to the cache immediately after calling parent::set(). This allows
+    // the race condition detection in CacheCollector::updateCache() to work.
+    $lock_name = $this->getCid() . ':' . CacheCollector::class;
+    $lock_acquired = $this->lock->acquire($lock_name);
+    $cache_data = [
+      'storage' => $data,
+      'hash' => hash('xxh64', serialize($data)),
+    ];
+    $this->cache->set($this->getCid(), [$cache_data], CacheBackendInterface::CACHE_PERMANENT, $this->tags);
+    if ($lock_acquired) {
+      $this->lock->release($lock_name);
     }
   }
 
