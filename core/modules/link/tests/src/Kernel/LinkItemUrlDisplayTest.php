@@ -13,11 +13,10 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\link\LinkItemInterface;
 
 /**
- * Tests the default 'link' formatter with complex query parameters.
+ * Tests the link field formatter.
  *
- * Create entity with link field. Add multiple links to that field. Render
- * field using different display settings. Check render results.
- *
+ * The formatter is tested with several forms of complex query parameters. And
+ * each form is tested with different display settings.
  * @group link
  */
 class LinkItemUrlDisplayTest extends FieldKernelTestBase {
@@ -60,6 +59,8 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
   }
 
   /**
+   * Tests that internal links are rendered correctly.
+   *
    * Run tests without dataProvider to improve speed.
    */
   public function testInternalLinksRender(): void {
@@ -70,7 +71,7 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test rendered entity field with complex internal url.
+   * Test rendered entity field with complex internal URL.
    *
    * @param array $display_settings
    *   Display settings for link field formatter.
@@ -98,7 +99,7 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
   }
 
   /**
-   * Get array of url with complex query parameters for render check.
+   * Gets an array of URLs with complex query parameters.
    *
    * @return array
    *   The URLs to test.
@@ -146,7 +147,7 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
   }
 
   /**
-   * Link field display settings and expected results.
+   * Provides an array of link field display settings and expected results.
    *
    * @return array
    *   Test cases.
@@ -195,7 +196,7 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
   }
 
   /**
-   * Prepare values for the link field.
+   * Prepares values for the link field.
    *
    * @return array
    *   Values to use at link field setter.
