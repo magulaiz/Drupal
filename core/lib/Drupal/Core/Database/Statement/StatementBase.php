@@ -163,7 +163,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   public function rowCount() {
     // SELECT query should not use the method.
     if ($this->rowCountEnabled) {
-      return $this->result->rowCount;
+      return $this->result->rowCount();
     }
     else {
       throw new RowCountException();

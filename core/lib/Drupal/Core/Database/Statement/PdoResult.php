@@ -13,8 +13,11 @@ class PdoResult extends DqlResultBase {
 
   public function __construct(
     protected readonly \PDOStatement $clientStatement,
-    protected readonly bool $rowCountEnabled = FALSE,
   ) {
+  }
+
+  public function rowCount(): ?int {
+    return $this->clientRowCount();
   }
 
   public function setFetchMode(FetchAs $mode, array $fetchOptions = []): bool {
