@@ -61,6 +61,8 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    *   Drupal database connection object.
    * @param object $clientConnection
    *   Client database connection object, for example \PDO.
+   * @param string $queryString
+   *   The query string.
    * @param bool $rowCountEnabled
    *   (optional) Enables counting the rows matched. Defaults to FALSE.
    */
@@ -88,7 +90,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function getQueryString() {
-    return $this->queryString();
+    return $this->queryString;
   }
 
   /**

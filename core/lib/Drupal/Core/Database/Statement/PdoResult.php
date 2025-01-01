@@ -11,16 +11,10 @@ class PdoResult extends DqlResultBase {
   use FetchModeTrait;
   use PdoTrait;
 
-  /**
-   * The current row index in the result set.
-   */
-  protected ?int $currentRowIndex = NULL;
-
   public function __construct(
     protected readonly \PDOStatement $clientStatement,
     protected readonly bool $rowCountEnabled = FALSE,
   ) {
-    $this->currentRowIndex = -1;
   }
 
   public function setFetchMode(FetchAs $mode, array $fetchOptions = []): bool {
@@ -38,16 +32,9 @@ class PdoResult extends DqlResultBase {
   }
 
   public function fetchAllKeyed(int $keyIndex = 0, int $valueIndex = 1): array {
-    if (!isset($this->columnNames[$keyIndex]) || !isset($this->columnNames[$valueIndex])) {
-      return [];
-    }
-
-    $key = $this->columnNames[$keyIndex];
-    $value = $this->columnNames[$valueIndex];
-
     $result = [];
-    while ($row = $this->fetch(FetchAs::Associative)) {
-      $result[$row[$key]] = $row[$value];
+    while ($record = $this->fetch(FetchAs::List, [])) {
+      $result[$record[$keyIndex]] = $record[$valueIndex];
     }
     return $result;
   }
@@ -58,16 +45,6 @@ class PdoResult extends DqlResultBase {
       $result[$rowAssoc[$column]] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
     }
     return $result;
-  }
-
-  protected function assocToFetchMode(array $rowAssoc, FetchAs $mode, array $fetchOptions): array|object|int|float|string|bool|NULL {
-    return match($mode) {
-      FetchAs::Associative => $rowAssoc,
-      FetchAs::ClassObject => $this->assocToClass($rowAssoc, $fetchOptions['class'], $fetchOptions['constructor_args']),
-      FetchAs::Column => $this->assocToColumn($rowAssoc, $this->columnNames, $fetchOptions['column']),
-      FetchAs::List => $this->assocToNum($rowAssoc),
-      FetchAs::Object => $this->assocToObj($rowAssoc),
-    };
   }
 
 }
