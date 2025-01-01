@@ -7,7 +7,7 @@ use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\Statement\PdoTrait;
-use Drupal\Core\Database\Statement\DqlPrefetchedResult;
+use Drupal\Core\Database\Statement\PrefetchedResult;
 use Drupal\Core\Database\Statement\StatementBase;
 
 /**
@@ -109,7 +109,7 @@ class StatementPrefetchIterator extends StatementBase {
     // Fetch all the data from the reply, in order to release any lock as soon
     // as possible.
     $data = $this->clientFetchAll(FetchAs::Associative);
-    $this->result = new DqlPrefetchedResult(
+    $this->result = new PrefetchedResult(
       $data,
       $this->rowCountEnabled ? $this->clientRowCount() : NULL,
     );

@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\Statement\FetchAs;
+use Drupal\Core\Database\Statement\PdoResult;
 use Drupal\Core\Database\Statement\PdoTrait;
 use Drupal\Core\Database\Statement\StatementBase;
 
@@ -53,7 +54,67 @@ class StatementWrapperIterator extends StatementBase {
     if (isset($options['fetch']) && is_int($options['fetch'])) {
       @trigger_error("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
     }
-    return parent::execute($args, $options);
+
+    if (isset($options['fetch'])) {
+      if (is_string($options['fetch'])) {
+        $this->setFetchMode(FetchAs::ClassObject, $options['fetch']);
+      }
+      else {
+        $this->setFetchMode($options['fetch']);
+      }
+    }
+
+    if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
+      $startEvent = new StatementExecutionStartEvent(
+        spl_object_id($this),
+        $this->connection->getKey(),
+        $this->connection->getTarget(),
+        $this->getQueryString(),
+        $args ?? [],
+        $this->connection->findCallerFromDebugBacktrace()
+      );
+      $this->connection->dispatchEvent($startEvent);
+    }
+
+    try {
+      $return = $this->clientExecute($args, $options);
+      $this->result = new PdoResult(
+        $this->clientStatement,
+        $this->rowCountEnabled,
+      );
+      $this->markResultsetIterable($return);
+    }
+    catch (\Exception $e) {
+      if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionFailureEvent::class)) {
+        $this->connection->dispatchEvent(new StatementExecutionFailureEvent(
+          $startEvent->statementObjectId,
+          $startEvent->key,
+          $startEvent->target,
+          $startEvent->queryString,
+          $startEvent->args,
+          $startEvent->caller,
+          $startEvent->time,
+          get_class($e),
+          $e->getCode(),
+          $e->getMessage(),
+        ));
+      }
+      throw $e;
+    }
+
+    if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
+      $this->connection->dispatchEvent(new StatementExecutionEndEvent(
+        $startEvent->statementObjectId,
+        $startEvent->key,
+        $startEvent->target,
+        $startEvent->queryString,
+        $startEvent->args,
+        $startEvent->caller,
+        $startEvent->time
+      ));
+    }
+
+    return $return;
   }
 
   /**
@@ -86,12 +147,7 @@ class StatementWrapperIterator extends StatementBase {
       @trigger_error("Passing the \$mode argument as an integer to fetch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
       $mode = $this->pdoToFetchAs($mode);
     }
-    return match(func_num_args()) {
-      0 => parent::fetch(),
-      1 => parent::fetch($mode),
-      2 => parent::fetch($mode, $cursor_orientation),
-      default => parent::fetch($mode, $cursor_orientation, $cursor_offset),
-    };
+    return parent::fetch($mode, $cursor_orientation, $cursor_offset);
   }
 
   /**

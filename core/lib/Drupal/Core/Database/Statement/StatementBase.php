@@ -84,64 +84,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function execute($args = [], $options = []) {
-    if (isset($options['fetch'])) {
-      if (is_string($options['fetch'])) {
-        $this->setFetchMode(FetchAs::ClassObject, $options['fetch']);
-      }
-      else {
-        $this->setFetchMode($options['fetch']);
-      }
-    }
-
-    if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
-      $startEvent = new StatementExecutionStartEvent(
-        spl_object_id($this),
-        $this->connection->getKey(),
-        $this->connection->getTarget(),
-        $this->getQueryString(),
-        $args ?? [],
-        $this->connection->findCallerFromDebugBacktrace()
-      );
-      $this->connection->dispatchEvent($startEvent);
-    }
-
-    try {
-      $return = $this->clientExecute($args, $options);
-      $this->markResultsetIterable($return);
-    }
-    catch (\Exception $e) {
-      if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionFailureEvent::class)) {
-        $this->connection->dispatchEvent(new StatementExecutionFailureEvent(
-          $startEvent->statementObjectId,
-          $startEvent->key,
-          $startEvent->target,
-          $startEvent->queryString,
-          $startEvent->args,
-          $startEvent->caller,
-          $startEvent->time,
-          get_class($e),
-          $e->getCode(),
-          $e->getMessage(),
-        ));
-      }
-      throw $e;
-    }
-
-    if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
-      $this->connection->dispatchEvent(new StatementExecutionEndEvent(
-        $startEvent->statementObjectId,
-        $startEvent->key,
-        $startEvent->target,
-        $startEvent->queryString,
-        $startEvent->args,
-        $startEvent->caller,
-        $startEvent->time
-      ));
-    }
-
-    return $return;
-  }
+  abstract public function execute($args = [], $options = []);
 
   /**
    * {@inheritdoc}
@@ -161,6 +104,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllAssoc($key, $fetch = NULL) {
+    assert($fetch === NULL || $fetch instanceof FetchAs);
     return $this->result->fetchAllAssoc($key, $fetch ?? $this->defaultFetchMode, $this->fetchOptions);
   }
 
@@ -230,6 +174,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
+    assert($mode instanceof FetchAs);
     $this->defaultFetchMode = $mode;
     switch ($mode) {
       case FetchAs::ClassObject:
@@ -257,6 +202,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetch($mode = NULL, $cursorOrientation = NULL, $cursorOffset = NULL) {
+    assert($mode === NULL || $mode instanceof FetchAs);
     $row = $this->result->fetch($mode ?? $this->defaultFetchMode, $this->fetchOptions);
 
     if ($row === FALSE) {
@@ -272,6 +218,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAll($mode = NULL, $columnIndex = NULL, $constructorArguments = NULL) {
+    assert($mode === NULL || $mode instanceof FetchAs);
     $fetchMode = $mode ?? $this->defaultFetchMode;
     if (isset($columnIndex)) {
       $this->fetchOptions['column'] = $columnIndex;
@@ -286,126 +233,5 @@ abstract class StatementBase implements \Iterator, StatementInterface {
 
     return $return;
   }
-
-  /**
-   * Returns the client-level database PDO statement object.
-   *
-   * This method should normally be used only within database driver code.
-   *
-   * @return \PDOStatement
-   *   The client-level database PDO statement.
-   *
-   * @throws \RuntimeException
-   *   If the client-level statement is not set.
-   */
-  abstract public function getClientStatement(): object;
-
-  /**
-   * Sets the default fetch mode for the PDO statement.
-   *
-   * @param \Drupal\Core\Database\FetchAs $mode
-   *   One of the cases of the FetchAs enum.
-   * @param int|class-string|null $columnOrClass
-   *   If $mode is FetchAs::Column, the index of the column to fetch.
-   *   If $mode is FetchAs::ClassObject, the FQCN of the object.
-   * @param list<mixed>|null $constructorArguments
-   *   If $mode is FetchAs::ClassObject, the arguments to pass to the
-   *   constructor.
-   *
-   * @return bool
-   *   Returns true on success or false on failure.
-   */
-  abstract protected function clientSetFetchMode(FetchAs $mode, int|string|null $columnOrClass = NULL, array|null $constructorArguments = NULL): bool;
-
-  /**
-   * Executes the prepared PDO statement.
-   *
-   * @param array|null $arguments
-   *   An array of values with as many elements as there are bound parameters in
-   *   the SQL statement being executed. This can be NULL.
-   * @param array $options
-   *   An array of options for this query.
-   *
-   * @return bool
-   *   TRUE on success, or FALSE on failure.
-   */
-  abstract protected function clientExecute(?array $arguments = [], array $options = []): bool;
-
-  /**
-   * Fetches the next row from the PDO statement.
-   *
-   * @param \Drupal\Core\Database\FetchAs|null $mode
-   *   (Optional) one of the cases of the FetchAs enum. If not specified,
-   *   defaults to what is specified by setFetchMode().
-   * @param int|null $cursorOrientation
-   *   Not implemented in all database drivers, don't use.
-   * @param int|null $cursorOffset
-   *   Not implemented in all database drivers, don't use.
-   *
-   * @return array<scalar|null>|object|scalar|null|false
-   *   A result, formatted according to $mode, or FALSE on failure.
-   */
-  abstract protected function clientFetch(?FetchAs $mode = NULL, ?int $cursorOrientation = NULL, ?int $cursorOffset = NULL): array|object|int|float|string|bool|NULL;
-
-  /**
-   * Returns a single column from the next row of a result set.
-   *
-   * @param int $column
-   *   0-indexed number of the column to retrieve from the row. If no value is
-   *   supplied, the first column is fetched.
-   *
-   * @return string|int|float|bool|false
-   *   A single column from the next row of a result set or false if there are
-   *   no more rows.
-   */
-  abstract protected function clientFetchColumn(int $column = 0): mixed;
-
-  /**
-   * Fetches the next row and returns it as an object.
-   *
-   * @param class-string|null $class
-   *   FQCN of the class to be instantiated.
-   * @param list<mixed>|null $constructorArguments
-   *   The arguments to be passed to the constructor.
-   *
-   * @return object|false
-   *   An instance of the required class with property names that correspond
-   *   to the column names, or FALSE on failure.
-   */
-  abstract protected function clientFetchObject(?string $class = NULL, array $constructorArguments = []): object|FALSE;
-
-  /**
-   * Returns an array containing all of the result set rows.
-   *
-   * @param \Drupal\Core\Database\FetchAs|null $mode
-   *   (Optional) one of the cases of the FetchAs enum. If not specified,
-   *   defaults to what is specified by setFetchMode().
-   * @param int|class-string|null $columnOrClass
-   *   If $mode is FetchAs::Column, the index of the column to fetch.
-   *   If $mode is FetchAs::ClassObject, the FQCN of the object.
-   * @param list<mixed>|null $constructorArguments
-   *   If $mode is FetchAs::ClassObject, the arguments to pass to the
-   *   constructor.
-   *
-   * @return array
-   *   An array of results.
-   */
-  abstract protected function clientFetchAll(?FetchAs $mode = NULL, int|string|null $columnOrClass = NULL, array|null $constructorArguments = NULL): array;
-
-  /**
-   * Returns the number of rows affected by the last SQL statement.
-   *
-   * @return int
-   *   The number of rows.
-   */
-  abstract protected function clientRowCount(): int;
-
-  /**
-   * Returns the query string used to prepare the statement.
-   *
-   * @return string
-   *   The query string.
-   */
-  abstract protected function clientQueryString(): string;
 
 }
