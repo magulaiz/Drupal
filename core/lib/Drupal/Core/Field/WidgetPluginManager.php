@@ -138,7 +138,7 @@ class WidgetPluginManager extends DefaultPluginManager {
    *   The display properties with defaults added.
    */
   public function prepareConfiguration($field_type, array $configuration) {
-    $add_more = $configuration['settings']['add_more'] ?? FALSE;
+    $add_more = $configuration['settings']['add_more'] ?? NULL;
     // Fill in defaults for missing properties.
     $configuration += [
       'settings' => [],
@@ -152,10 +152,9 @@ class WidgetPluginManager extends DefaultPluginManager {
     // Filter out unknown settings, and fill in defaults for missing settings.
     $default_settings = $this->getDefaultSettings($configuration['type']);
     $configuration['settings'] = array_intersect_key($configuration['settings'], $default_settings) + $default_settings;
-    if ($add_more) {
-      $configuration['settings']['add_more'] = TRUE;
+    if (isset($add_more)) {
+      $configuration['settings']['add_more'] = $add_more;
     }
-
     return $configuration;
   }
 

@@ -15,18 +15,43 @@ function field_update_last_removed(): int {
 /**
  * Adds default config for Show add more button for multivalued fields.
  */
-function field_update_9001(): void {
-  // Get all the fields which are multivalued but not unlimited cardinality.
-  $query = \Drupal::entityQuery('field_storage_config')
+function field_update_9001(&$sandbox): void {
+  // Get count of fields which are multivalued but not unlimited cardinality.
+  $count = \Drupal::entityQuery('field_storage_config')
     ->condition('cardinality', 1, '>')
-    ->accessCheck(TRUE);
-  $results = $query->execute();
+    ->sort('field_name', 'ASC')
+    ->accessCheck(TRUE)
+    ->count()->execute();
 
-  if (!empty($results)) {
+  if ($count > 0) {
+    if (!isset($sandbox['progress'])) {
+      $sandbox['progress'] = 0;
+      $sandbox['max'] = $count;
+    }
+
+    $batch_limit = 1;
+    // Get the multivalued fields but not unlimited cardinality for this batch.
+    $query = \Drupal::entityQuery('field_storage_config')
+      ->condition('cardinality', 1, '>')
+      ->sort('field_name', 'ASC')
+      ->accessCheck(TRUE)
+      ->range($sandbox['progress'], $batch_limit);
+    $results = $query->execute();
+
+    // Get the entities for bundle field mappings to be loaded.
+    $list_entity_type_keys = [];
+    $list_entity_type_keys = array_reduce($results, function ($carry, $value) {
+      [$entity_type_key] = explode('.', $value);
+      $carry[] = $entity_type_key;
+      return array_unique($carry);
+    });
+
+    // Retrieve the bundle field mappings from keyvalue storage.
     $bundle_field_maps = \Drupal::service('keyvalue')
       ->get('entity.definitions.bundle_field_map')
-      ->getAll();
-    // Get all the bundles for which the multivalued fields are configured.
+      ->getMultiple($list_entity_type_keys);
+
+    // Prepare field map.
     $fieldMap = [];
     foreach ($bundle_field_maps as $entity_type_id => $bundle_field_map) {
       foreach ($bundle_field_map as $field_name => $map_entry) {
@@ -36,25 +61,33 @@ function field_update_9001(): void {
           }
           else {
             $fieldMap["$entity_type_id.$field_name"]['bundles']
-            += $map_entry['bundles'];
+              += $map_entry['bundles'];
           }
         }
       }
     }
+    // Load the entity form display and update the add more config.
     foreach ($fieldMap as $field_storage => $array_bundles) {
       [$entity_type, $field_name] = explode('.', $field_storage);
       foreach ($array_bundles['bundles'] as $bundle) {
-        // Update Show add more for the fields in entity form display.
-        $entity_form_display = \Drupal::entityTypeManager()
+        $entity_form_display = \Drupal::service('entity_type.manager')
           ->getStorage('entity_form_display')
           ->load("$entity_type.$bundle.default");
-        if ($component = $entity_form_display->getComponent($field_name)) {
+
+        if ($entity_form_display && $component = $entity_form_display->getComponent($field_name)) {
+          // Update the add more config in the settings.
           $component['settings']['add_more'] = FALSE;
           $entity_form_display->setComponent($field_name, $component)->save();
+          // Log the config change.
           \Drupal::logger('field')
-            ->notice("Show add more configured FALSE for $field_name");
+            ->notice("Show add more configured FALSE for field @field_name in bundle @bundle.", [
+              '@field_name' => $field_name,
+              '@bundle' => $bundle,
+            ]);
+          $sandbox['progress']++;
         }
       }
     }
+    $sandbox['#finished'] = ($sandbox['progress'] >= $sandbox['max']) ? TRUE : ($sandbox['progress'] / $sandbox['max']);
   }
 }
