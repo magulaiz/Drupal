@@ -626,7 +626,6 @@ versionable
 versionless
 vfsstream
 viewports
-vocabs
 warmable
 wcag
 webcal
