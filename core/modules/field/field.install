@@ -29,7 +29,7 @@ function field_update_9001(&$sandbox): void {
       $sandbox['max'] = $count;
     }
 
-    $batch_limit = 1;
+    $batch_limit = 10;
     // Get the multivalued fields but not unlimited cardinality for this batch.
     $query = \Drupal::entityQuery('field_storage_config')
       ->condition('cardinality', 1, '>')
