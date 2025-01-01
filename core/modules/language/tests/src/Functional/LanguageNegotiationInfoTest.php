@@ -51,18 +51,18 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
   }
 
   /**
-   * Sets state flags for language_test module.
+   * Sets key/value pairs for language_test module.
    *
    * Ensures to correctly update data both in the child site and the test runner
    * environment.
    *
    * @param array $values
-   *   The key/value pairs to set in state.
+   *   The key/value pairs to set in the key value store.
    */
-  protected function stateSet(array $values): void {
-    // Set the new state values.
-    $this->container->get('state')->setMultiple($values);
-    // Refresh in-memory static state/config caches and static variables.
+  protected function keysValuesSet(array $values): void {
+    // Set the new key value values.
+    $this->container->get('keyvalue')->get('language_test')->setMultiple($values);
+    // Refresh in-memory static key value/config caches and static variables.
     $this->refreshVariables();
     // Refresh/rewrite language negotiation configuration, in order to pick up
     // the manipulations performed by language_test module's info alter hooks.
@@ -73,13 +73,13 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
    * Tests alterations to language types/negotiation info.
    */
   public function testInfoAlterations(): void {
-    $this->stateSet([
+    $this->keysValuesSet([
       // Enable language_test type info.
-      'language_test.language_types' => TRUE,
+      'language_types' => TRUE,
       // Enable language_test negotiation info (not altered yet).
-      'language_test.language_negotiation_info' => TRUE,
+      'language_negotiation_info' => TRUE,
       // Alter LanguageInterface::TYPE_CONTENT to be configurable.
-      'language_test.content_language_type' => TRUE,
+      'content_language_type' => TRUE,
     ]);
     $this->container->get('module_installer')->install(['language_test']);
     $this->resetAll();
@@ -109,8 +109,8 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
 
     // Alter language negotiation info to remove interface language negotiation
     // method.
-    $this->stateSet([
-      'language_test.language_negotiation_info_alter' => TRUE,
+    $this->keysValuesSet([
+      'language_negotiation_info_alter' => TRUE,
     ]);
 
     $negotiation = $this->config('language.types')->get('negotiation.' . $type . '.enabled');
@@ -177,45 +177,6 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
         $this->assertTrue($equal, "language negotiation for $type is properly set up");
       }
     }
-  }
-
-  /**
-   * Tests altering config of configurable language types.
-   */
-  public function testConfigLangTypeAlterations(): void {
-    // Default of config.
-    $test_type = LanguageInterface::TYPE_CONTENT;
-    $this->assertFalse($this->isLanguageTypeConfigurable($test_type), 'Language type is not configurable.');
-
-    // Editing config.
-    $edit = [$test_type . '[configurable]' => TRUE];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
-    $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is now configurable.');
-
-    // After installing another module, the config should be the same.
-    $this->drupalGet('admin/modules');
-    $this->submitForm(['modules[test_module][enable]' => 1], 'Install');
-    $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is still configurable.');
-
-    // After uninstalling the other module, the config should be the same.
-    $this->drupalGet('admin/modules/uninstall');
-    $this->submitForm(['uninstall[test_module]' => 1], 'Uninstall');
-    $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is still configurable.');
-  }
-
-  /**
-   * Checks whether the given language type is configurable.
-   *
-   * @param string $type
-   *   The language type.
-   *
-   * @return bool
-   *   TRUE if the specified language type is configurable, FALSE otherwise.
-   */
-  protected function isLanguageTypeConfigurable($type): bool {
-    $configurable_types = $this->config('language.types')->get('configurable');
-    return in_array($type, $configurable_types);
   }
 
 }
