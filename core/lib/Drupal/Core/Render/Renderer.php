@@ -455,7 +455,9 @@ class Renderer implements RendererInterface {
     // has an empty #children attribute, render the children now. This is the
     // same process as Renderer::render() but is inlined for speed.
     if ((!$theme_is_implemented || isset($elements['#render_children'])) && empty($elements['#children'])) {
+      $fibers = [];
       // @todo use revolt.
+      dump($children);
       foreach ($children as $key) {
         $fibers[$key] = new \Fiber(fn() => $this->doRender($elements[$key]));
       }
@@ -492,7 +494,7 @@ class Renderer implements RendererInterface {
         }
       }
       foreach ($children as $key) {
-        $elements['#children'] .= $rendered_chidren[$key];
+        $elements['#children'] .= $rendered_children[$key];
       }
       $elements['#children'] = Markup::create($elements['#children']);
     }
