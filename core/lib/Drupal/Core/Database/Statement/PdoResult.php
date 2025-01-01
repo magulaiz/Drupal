@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Core\Database\Statement;
 
 use Drupal\Core\Database\FetchModeTrait;
-use Drupal\Core\Database\StatementInterface;
 
 class PdoResult extends DqlResultBase {
 
@@ -22,6 +21,11 @@ class PdoResult extends DqlResultBase {
     protected readonly bool $rowCountEnabled = FALSE,
   ) {
     $this->currentRowIndex = -1;
+  }
+
+  public function setFetchMode(FetchAs $mode, array $fetchOptions = []): bool {
+    // @todo fix this.
+    return $this->clientSetFetchMode($mode);
   }
 
   public function fetch(FetchAs $mode, array $fetchOptions = []): array|object|int|float|string|bool|NULL {

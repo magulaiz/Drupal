@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database\Statement;
 
-use Drupal\Core\Database\Event\StatementExecutionEndEvent;
-use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
-use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\FetchModeTrait;
 use Drupal\Core\Database\RowCountException;
@@ -70,6 +67,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   public function __construct(
     protected readonly Connection $connection,
     protected readonly object $clientConnection,
+    protected readonly string $queryString,
     protected readonly bool $rowCountEnabled = FALSE,
   ) {
   }
@@ -90,7 +88,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function getQueryString() {
-    return $this->clientQueryString();
+    return $this->queryString();
   }
 
   /**
@@ -189,11 +187,14 @@ abstract class StatementBase implements \Iterator, StatementInterface {
         break;
 
     }
+    // If the result is missing, just do with the properties setting.
     try {
-      return $this->clientSetFetchMode($mode, $a1, $a2);
+      if ($this->result) {
+        return $this->result->setFetchMode($mode, $this->fetchOptions);
+      }
+      return TRUE;
     }
     catch (\LogicException) {
-      // The client statement is missing, just do with the properties setting.
       return TRUE;
     }
   }

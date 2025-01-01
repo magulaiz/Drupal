@@ -36,6 +36,11 @@ class PrefetchedResult extends DqlResultBase {
     $this->currentRowIndex = -1;
   }
 
+  public function setFetchMode(FetchAs $mode, array $fetchOptions = []): bool {
+    // @todo fix this.
+    return TRUE;
+  }
+
   public function fetch(FetchAs $mode, array $fetchOptions = []): array|object|int|float|string|bool|NULL {
     $this->currentRowIndex++;
     if (!isset($this->data[$this->currentRowIndex])) {

@@ -55,11 +55,11 @@ class StatementPrefetchIterator extends StatementBase {
   public function __construct(
     object $clientConnection,
     Connection $connection,
-    protected string $queryString,
+    string $queryString,
     protected array $driverOptions = [],
     bool $rowCountEnabled = FALSE,
   ) {
-    parent::__construct($connection, $clientConnection, $rowCountEnabled);
+    parent::__construct($connection, $clientConnection, $queryString, $rowCountEnabled);
   }
 
   /**
@@ -162,13 +162,6 @@ class StatementPrefetchIterator extends StatementBase {
    */
   protected function getStatement(string $query, ?array &$args = []): object {
     return $this->connection->prepare($query, $this->driverOptions);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getQueryString(): string {
-    return $this->queryString;
   }
 
   /**

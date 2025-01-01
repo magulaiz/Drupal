@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Database;
 
+use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
+use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\Statement\PdoResult;
 use Drupal\Core\Database\Statement\PdoTrait;
@@ -42,7 +45,7 @@ class StatementWrapperIterator extends StatementBase {
     array $options,
     bool $rowCountEnabled = FALSE,
   ) {
-    parent::__construct($connection, $clientConnection, $rowCountEnabled);
+    parent::__construct($connection, $clientConnection, $query, $rowCountEnabled);
     $this->clientStatement = $this->clientConnection->prepare($query, $options);
     $this->setFetchMode(FetchAs::Object);
   }
