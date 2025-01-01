@@ -67,10 +67,15 @@ class CachePreWarmer implements CachePreWarmerInterface {
   /**
    * {@inheritdoc}
    */
-  public function preWarmAllCaches(): void {
+  public function preWarmAllCaches(): bool {
+    $prewarmed = FALSE;
     do {
       $continue = $this->preWarmOneCache();
+      if ($continue) {
+        $prewarmed = TRUE;
+      }
     } while ($continue);
+    return $prewarmed;
   }
 
 }

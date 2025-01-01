@@ -18,7 +18,8 @@ class PreWarmerTest extends KernelTestBase {
    */
   public function testPreWarmAllCaches(): void {
     $prewarmer = \Drupal::service('cache_prewarmer');
-    $this->assertNull($prewarmer->preWarmAllCaches());
+    $this->assertTrue($prewarmer->preWarmAllCaches());
+    $this->assertFalse($prewarmer->preWarmAllCaches());
   }
 
   /**
