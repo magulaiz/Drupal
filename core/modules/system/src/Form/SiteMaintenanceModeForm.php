@@ -5,6 +5,7 @@ namespace Drupal\system\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Url;
@@ -33,6 +34,13 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
   protected $permissionHandler;
 
   /**
+   * The logger channel factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
    * Constructs a new SiteMaintenanceModeForm.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -43,11 +51,14 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    *   The state keyvalue collection to use.
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
    *   The permission handler.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The factory for logging channels.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, StateInterface $state, PermissionHandlerInterface $permission_handler) {
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, StateInterface $state, PermissionHandlerInterface $permission_handler, LoggerChannelFactoryInterface $logger_factory) {
     parent::__construct($config_factory, $typedConfigManager);
     $this->state = $state;
     $this->permissionHandler = $permission_handler;
+    $this->loggerFactory = $logger_factory;
   }
 
   /**
@@ -58,7 +69,8 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
       $container->get('config.factory'),
       $container->get('config.typed'),
       $container->get('state'),
-      $container->get('user.permissions')
+      $container->get('user.permissions'),
+      $container->get('logger.factory'),
     );
   }
 
@@ -101,7 +113,13 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->state->set('system.maintenance_mode', $form_state->getValue('maintenance_mode'));
+    $maintenance_mode = $form_state->getValue('maintenance_mode');
+    $this->state->set('system.maintenance_mode', $maintenance_mode);
+    $this->loggerFactory->get('system')->notice(
+        $maintenance_mode
+        ? $this->t('Maintenance Mode enabled')
+        : $this->t('Maintenance Mode disabled')
+    );
     parent::submitForm($form, $form_state);
   }
 
