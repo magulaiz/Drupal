@@ -43,16 +43,6 @@ class CachePreWarmer implements CachePreWarmerInterface {
    */
   protected bool $needsPreWarming = FALSE;
 
-  /**
-   * Called services.
-   *
-   * A list of services we have already prewarmed, so they can be skipped on
-   * subsequent calls.
-   *
-   * @var string[]
-   */
-  protected array $calledServices = [];
-
   public function __construct(
     protected readonly ClassResolverInterface $classResolver,
     protected array $serviceIds,

@@ -10,7 +10,8 @@ namespace Drupal\Core\PreWarm;
  *
  * You should consider carefully whether your service will benefit from
  * implementing this interface, it should only be used when:
- * 1. Your service has an expensive cache rebuild.
+ * 1. Your service has an expensive cache rebuild, such as attribute or YAML
+ * discovery.
  * 2. Your service is in the critical path of most requests to the site and is
  * likely to be impacted by a cache stampede. If it's mainly used on cron or
  * admin pages, then prewarming would be counter-productive.
