@@ -17,6 +17,7 @@ use Drupal\link\LinkItemInterface;
  *
  * The formatter is tested with several forms of complex query parameters. And
  * each form is tested with different display settings.
+ *
  * @group link
  */
 class LinkItemUrlDisplayTest extends FieldKernelTestBase {
