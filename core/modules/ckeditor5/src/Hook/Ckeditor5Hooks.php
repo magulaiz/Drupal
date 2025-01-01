@@ -91,7 +91,17 @@ class Ckeditor5Hooks {
    */
   #[Hook('theme')]
   public function theme() : array {
-    return ['ckeditor5_settings_toolbar' => ['render element' => 'form']];
+    return [
+      'ckeditor5_settings_toolbar' => [
+        'render element' => 'form',
+      ],
+      'field__ckeditor_inline' => [
+        'base hook' => 'field',
+      ],
+      'media__ckeditor_inline_embed' => [
+        'base hook' => 'media',
+      ],
+    ];
   }
 
   /**
