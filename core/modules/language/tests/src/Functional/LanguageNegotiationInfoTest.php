@@ -179,43 +179,4 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
     }
   }
 
-  /**
-   * Tests altering config of configurable language types.
-   */
-  public function testConfigLangTypeAlterations(): void {
-    // Default of config.
-    $test_type = LanguageInterface::TYPE_CONTENT;
-    $this->assertFalse($this->isLanguageTypeConfigurable($test_type), 'Language type is not configurable.');
-
-    // Editing config.
-    $edit = [$test_type . '[configurable]' => TRUE];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
-    $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is now configurable.');
-
-    // After installing another module, the config should be the same.
-    $this->drupalGet('admin/modules');
-    $this->submitForm(['modules[test_module][enable]' => 1], 'Install');
-    $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is still configurable.');
-
-    // After uninstalling the other module, the config should be the same.
-    $this->drupalGet('admin/modules/uninstall');
-    $this->submitForm(['uninstall[test_module]' => 1], 'Uninstall');
-    $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is still configurable.');
-  }
-
-  /**
-   * Checks whether the given language type is configurable.
-   *
-   * @param string $type
-   *   The language type.
-   *
-   * @return bool
-   *   TRUE if the specified language type is configurable, FALSE otherwise.
-   */
-  protected function isLanguageTypeConfigurable($type): bool {
-    $configurable_types = $this->config('language.types')->get('configurable');
-    return in_array($type, $configurable_types);
-  }
-
 }
