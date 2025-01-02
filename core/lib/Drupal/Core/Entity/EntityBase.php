@@ -60,6 +60,13 @@ abstract class EntityBase implements EntityInterface {
   protected ?EntityInterface $originalEntity = NULL;
 
   /**
+   * Temporary data.
+   *
+   * @var array
+   */
+  protected array $temporaryData = [];
+
+  /**
    * Constructs an Entity object.
    *
    * @param array $values
@@ -704,7 +711,7 @@ abstract class EntityBase implements EntityInterface {
       @trigger_error("Getting the original property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Entity\EntityInterface::getOriginal() instead. See https://www.drupal.org/node/3295826", E_USER_DEPRECATED);
       return $this->getOriginal();
     }
-    return $this->$name ?? NULL;
+    return $this->getTemporaryData($name);
   }
 
   /**
@@ -716,7 +723,7 @@ abstract class EntityBase implements EntityInterface {
       $this->setOriginal($value);
       return;
     }
-    $this->$name = $value;
+    $this->setTemporaryData($name, $value);
   }
 
   /**
@@ -727,7 +734,7 @@ abstract class EntityBase implements EntityInterface {
       @trigger_error("Checking for the original property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Entity\EntityInterface::getOriginal() instead. See https://www.drupal.org/node/3295826", E_USER_DEPRECATED);
       return $this->getOriginal();
     }
-    return isset($this->$name);
+    return isset($this->temporaryData[$name]);
   }
 
   /**
@@ -739,7 +746,30 @@ abstract class EntityBase implements EntityInterface {
       $this->setOriginal(NULL);
       return;
     }
-    unset($this->$name);
+    $this->clearTemporaryData($name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTemporaryData($key, $value): static {
+    $this->temporaryData[$key] = $value;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTemporaryData($key): mixed {
+    return $this->temporaryData[$key] ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearTemporaryData($key): static {
+    unset($this->temporaryData[$key]);
+    return $this;
   }
 
 }

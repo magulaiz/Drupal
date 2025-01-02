@@ -1096,10 +1096,11 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     }
     // Else directly read/write plain values. That way, non-field entity
     // properties can always be accessed directly.
-    if (!isset($this->values[$name])) {
-      $this->values[$name] = NULL;
+    // Directly access the property to respect the by-reference contract.
+    if (!isset($this->temporaryData[$name])) {
+      $this->temporaryData[$name] = NULL;
     }
-    return $this->values[$name];
+    return $this->temporaryData[$name];
   }
 
   /**
@@ -1135,9 +1136,8 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     elseif ($name == 'original') {
       parent::__set('original', $value);
     }
-    // Directly write non-field values.
     else {
-      $this->values[$name] = $value;
+      $this->setTemporaryData($name, $value);
     }
   }
 
@@ -1149,8 +1149,8 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       return parent::__isset('original');
     }
     // "Official" Field API fields are always set. For non-field properties,
-    // check the internal values.
-    return $this->hasField($name) ? TRUE : isset($this->values[$name]);
+    // check the temporary data.
+    return $this->hasField($name) || isset($this->temporaryData[$name]);
   }
 
   /**
@@ -1164,9 +1164,8 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     if ($this->hasField($name)) {
       $this->get($name)->setValue([]);
     }
-    // For non-field properties, unset the internal value.
     else {
-      unset($this->values[$name]);
+      $this->clearTemporaryData($name);
     }
   }
 
