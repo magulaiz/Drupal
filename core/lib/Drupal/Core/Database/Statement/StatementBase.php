@@ -105,14 +105,18 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    */
   public function fetchAllAssoc($key, $fetch = NULL) {
     assert($fetch === NULL || $fetch instanceof FetchAs);
-    return $this->result->fetchAllAssoc($key, $fetch ?? $this->defaultFetchMode, $this->fetchOptions);
+    $result = $this->result->fetchAllAssoc($key, $fetch ?? $this->defaultFetchMode, $this->fetchOptions);
+    $this->markResultsetFetchingComplete();
+    return $result;
   }
 
   /**
    * {@inheritdoc}
    */
   public function fetchAllKeyed($keyIndex = 0, $valueIndex = 1) {
-    return $this->result->fetchAllKeyed($keyIndex, $valueIndex);
+    $result = $this->result->fetchAllKeyed($keyIndex, $valueIndex);
+    $this->markResultsetFetchingComplete();
+    return $result;
   }
 
   /**
@@ -206,7 +210,20 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    */
   public function fetch($mode = NULL, $cursorOrientation = NULL, $cursorOffset = NULL) {
     assert($mode === NULL || $mode instanceof FetchAs);
-    $row = $this->result->fetch($mode ?? $this->defaultFetchMode, $this->fetchOptions);
+
+    $fetchOptions = match(func_num_args()) {
+      0 => $this->fetchOptions,
+      1 => $this->fetchOptions,
+      2 => $this->fetchOptions + [
+        'cursor_orientation' => $cursor_orientation,
+      ],
+      default => $this->fetchOptions + [
+        'cursor_orientation' => $cursor_orientation,
+        'cursor_offset' => $cursor_offset,
+      ],
+    };
+
+    $row = $this->result->fetch($mode ?? $this->defaultFetchMode, $fetchOptions);
 
     if ($row === FALSE) {
       $this->markResultsetFetchingComplete();

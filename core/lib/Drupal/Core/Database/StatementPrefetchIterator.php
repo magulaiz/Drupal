@@ -186,7 +186,16 @@ class StatementPrefetchIterator extends StatementBase {
       @trigger_error("Passing the \$fetch_style argument as an integer to fetch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
       $fetch_style = $this->pdoToFetchAs($fetch_style);
     }
-    return parent::fetch($fetch_style);
+
+    // \PDOStatement is picky about the number of arguments in some cases so we
+    // need to pass the exact number of arguments we were given.
+    $row = match(func_num_args()) {
+      0 => parent::fetch(),
+      1 => parent::fetch($mode),
+      2 => parent::fetch($mode, $cursor_orientation),
+      default => parent::fetch($mode, $cursor_orientation, $cursor_offset),
+    };
+    return $row;
   }
 
   /**

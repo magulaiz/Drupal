@@ -21,12 +21,16 @@ class PdoResult extends DqlResultBase {
   }
 
   public function setFetchMode(FetchAs $mode, array $fetchOptions = []): bool {
-    // @todo fix this.
-    return $this->clientSetFetchMode($mode);
+    return match ($mode) {
+      FetchAs::ClassObject => $this->clientSetFetchMode($mode, $fetchOptions['class'], $fetchOptions['constructor_args'] ?? NULL),
+      FetchAs::Column => $this->clientSetFetchMode($mode, $fetchOptions['column']),
+      default => $this->clientSetFetchMode($mode),
+    };
   }
 
   public function fetch(FetchAs $mode, array $fetchOptions = []): array|object|int|float|string|bool|NULL {
-    // @todo various options.
+    // @todo setFetchMode is temporary.
+    $this->setFetchMode($mode, $fetchOptions);
     return $this->clientFetch($mode);
   }
 
