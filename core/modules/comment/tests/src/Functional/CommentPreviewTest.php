@@ -9,6 +9,7 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\comment\Entity\Comment;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\Core\Render\Markup;
 
 /**
  * Tests comment preview.
@@ -56,7 +57,7 @@ class CommentPreviewTest extends CommentTestBase {
     \Drupal::state()->set('user_hooks_test_user_format_name_alter_safe', TRUE);
     $this->drupalGet('node/' . $this->node->id());
     $this->submitForm($edit, 'Preview');
-    $this->assertInstanceOf(MarkupInterface::class, $this->webUser->getDisplayName());
+    $this->assertInstanceOf(MarkupInterface::class, Markup::create($this->webUser->getDisplayName()));
     $this->assertSession()->assertNoEscaped('<em>' . $this->webUser->id() . '</em>');
     $this->assertSession()->responseContains('<em>' . $this->webUser->id() . '</em>');
 

@@ -63,7 +63,6 @@ class ElementsLabelsTest extends BrowserTestBase {
 
     // Exercise various defaults for textboxes and modifications to ensure
     // appropriate override and correct behavior.
-
     // Verify that label precedes textfield, with required marker inside label.
     $this->assertSession()->elementExists('xpath', '//label[@for="edit-form-textfield-test-title-and-required" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-form-textfield-test-title-and-required"]');
 
@@ -131,12 +130,16 @@ class ElementsLabelsTest extends BrowserTestBase {
     $description_id = $field_id . '--description';
     // Verify the #description element is placed after the form item.
     $this->assertSession()->elementExists('xpath', '//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/following-sibling::div[@id="' . $description_id . '"]');
+    // Check #prefix placement. Elements placed after the form.
+    $this->assertSession()->elementExists('xpath', '//div[@id="form-test-description-textfield-before-field-prefix"]');
 
     // Check #description placement with #description_display='before'.
     $field_id = 'edit-form-textfield-test-description-before';
     $description_id = $field_id . '--description';
     // Verify the #description element is placed before the form item.
     $this->assertSession()->elementExists('xpath', '//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/preceding-sibling::div[@id="' . $description_id . '"]');
+    // Check #prefix placement. Elements placed after the form.
+    $this->assertSession()->elementExists('xpath', '//div[@id="form-test-description-textfield-after-field-prefix"]/following-sibling::div[contains(@class, \'js-form-item-form-textfield-test-description-after\')]');
 
     // Check if the class is 'visually-hidden' on the form element description
     // for the option with #description_display='invisible' and also check that
@@ -145,6 +148,8 @@ class ElementsLabelsTest extends BrowserTestBase {
     $description_id = $field_id . '--description';
     // Verify that the #description element is visually-hidden.
     $this->assertSession()->elementExists('xpath', '//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/following-sibling::div[contains(@class, "visually-hidden")]');
+    // Check #prefix placement element is visually-hidden.
+    $this->assertSession()->elementExists('xpath', '//div[@id="form-test-description-textfield-invisible-field-prefix"]/following-sibling::div[contains(@class, \'js-form-item-form-textfield-test-description-invisible\')]');
   }
 
   /**
