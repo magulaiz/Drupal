@@ -1418,5 +1418,4 @@ class ViewUI implements ViewEntityInterface {
     return $this;
   }
 
-
 }
