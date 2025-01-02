@@ -14,7 +14,15 @@ use Drupal\Core\Session\AccountInterface;
  */
 class UserHooksTest {
 
-  public function __construct(protected KeyValueStoreInterface $keyValue) {
+  /**
+   * The key value store implementation.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected KeyValueStoreInterface $keyValue;
+
+  public function __construct(KeyValueStoreInterface $key_value) {
+    $this->keyValue = $key_value;
   }
 
   /**
@@ -29,8 +37,8 @@ class UserHooksTest {
    */
   #[Hook('user_format_name_alter')]
   public function userFormatNameAlter(&$name, AccountInterface $account): void {
-    if ($this->keyValue->get('user_format_name_alter', FALSE)) {
-      if ($this->keyValue->get('user_format_name_alter_safe', FALSE)) {
+    if ($this->keyValue->get('user_hooks_test')->get('user_format_name_alter', FALSE)) {
+      if ($this->keyValue->get('user_hooks_test')->get('user_format_name_alter_safe', FALSE)) {
         $name = new FormattableMarkup('<em>@uid</em>', ['@uid' => $account->id()]);
       }
       else {
