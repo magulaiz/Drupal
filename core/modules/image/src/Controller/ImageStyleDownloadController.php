@@ -9,7 +9,6 @@ use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
-use Drupal\image\Entity\ImageStyle;
 use Drupal\image\ImageStyleInterface;
 use Drupal\system\FileDownloadController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -275,7 +274,6 @@ class ImageStyleDownloadController extends FileDownloadController {
     return $original_uri;
   }
 
-
   /**
    * Factorization of ImageStyleDownloadController::deliver Line 114-124.
    *
@@ -287,7 +285,7 @@ class ImageStyleDownloadController extends FileDownloadController {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   Thrown when the file request is invalid.
    */
-  protected function checkNormalizedScheme($scheme, $image_uri) {
+  protected function checkNormalizedScheme($scheme, $image_uri): void {
 
     if ($this->streamWrapperManager->isValidScheme($scheme)) {
       $normalized_target = $this->streamWrapperManager->getTarget($image_uri);
@@ -313,13 +311,13 @@ class ImageStyleDownloadController extends FileDownloadController {
    *   Target Scheme.
    * @param string $target
    *   Target File.
-   * @param \Drupal\image\Entity\ImageStyle $image_style
+   * @param \Drupal\image\ImageStyleInterface $image_style
    *   Image Style.
    *
    * @return bool
    *   ITOK Token ins valid.
    */
-  protected function checkToken(Request $request, $image_uri, $scheme, $target, ImageStyle $image_style) {
+  protected function checkToken(Request $request, $image_uri, $scheme, $target, ImageStyleInterface $image_style) {
     $token = $request->query->get(IMAGE_DERIVATIVE_TOKEN, '');
     $token_is_valid = hash_equals($image_style->getPathToken($image_uri), $token)
       || hash_equals($image_style->getPathToken($scheme . '://' . $target), $token);
@@ -329,7 +327,7 @@ class ImageStyleDownloadController extends FileDownloadController {
   /**
    * Factorization of ImageStyleDownloadController::deliver Line 126-152.
    *
-   * @param \Drupal\image\Entity\ImageStyle $image_style
+   * @param \Drupal\image\ImageStyleInterface $image_style
    *   ImageStyle used.
    * @param string $scheme
    *   Target Scheme.
@@ -341,7 +339,7 @@ class ImageStyleDownloadController extends FileDownloadController {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   Thrown when the file request is invalid.
    */
-  protected function authorizedDerivativeGeneration(ImageStyle $image_style, $scheme, $target, $token_is_valid) {
+  protected function authorizedDerivativeGeneration(ImageStyleInterface $image_style, $scheme, $target, $token_is_valid): void {
 
     // Check that the style is defined and the scheme is valid.
     $valid = !empty($image_style) && $this->streamWrapperManager->isValidScheme($scheme);
