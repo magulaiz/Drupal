@@ -9,7 +9,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
- * Tests password reset behaviors.
+ * Tests add_more config update for multivalued fields.
  *
  * @group field
  */
@@ -59,7 +59,7 @@ class ShowAddMoreButtonConfigTest extends BrowserTestBase {
   /**
    * Tests that the add_more config gets updated for the multivalued fields.
    */
-  public function testEmailField(): void {
+  public function testAddMoreConfig(): void {
     $field_name = $this->randomMachineName();
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
