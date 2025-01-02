@@ -113,13 +113,15 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $maintenance_mode = $form_state->getValue('maintenance_mode');
-    $this->state->set('system.maintenance_mode', $maintenance_mode);
-    $this->loggerFactory->get('system')->notice(
-        $maintenance_mode
-        ? $this->t('Maintenance Mode enabled')
-        : $this->t('Maintenance Mode disabled')
-    );
+    $maintenance_mode_form_value = $form_state->getValue('maintenance_mode');
+    if ($this->state->get('system.maintenance_mode', 0) !== $maintenance_mode_form_value) {
+      $this->loggerFactory->get('system')->notice(
+        $maintenance_mode_form_value
+          ? $this->t('Maintenance mode enabled')
+          : $this->t('Maintenance mode disabled')
+      );
+    }
+    $this->state->set('system.maintenance_mode', $maintenance_mode_form_value);
     parent::submitForm($form, $form_state);
   }
 
