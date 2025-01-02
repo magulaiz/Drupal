@@ -24,8 +24,16 @@ class SiteMaintenanceModeFormTest extends KernelTestBase {
    */
   protected static $modules = ['system', 'user', 'language'];
 
+  /**
+   * The logger spy object for this test class.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
   protected LoggerChannelInterface $loggerSpy;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
