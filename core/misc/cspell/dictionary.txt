@@ -37,6 +37,7 @@ autosubmit
 backlink
 bakeware
 barchart
+basetheme
 beatle
 bebebe
 beforeclose
@@ -272,6 +273,7 @@ kinberg
 kolkata
 lamoids
 languageswitcher
+legacyfind
 libc
 licious
 lified

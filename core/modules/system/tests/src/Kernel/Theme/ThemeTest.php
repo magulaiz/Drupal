@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\Theme;
 
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests low-level theme functions.
@@ -35,7 +35,7 @@ class ThemeTest extends KernelTestBase {
    * are all merged correctly:
    *   - $variables['attributes'] as passed in to the theme hook implementation.
    *   - the render element's #attributes
-   *   - any attributes set in the template's preprocessing function
+   *   - any attributes set in the template's preprocessing function.
    */
   public function testAttributeMerging(): void {
     $theme_test_render_element = [
@@ -68,8 +68,8 @@ class ThemeTest extends KernelTestBase {
       }
     }
 
-    // suggestion_not_implemented is not an implemented theme hook so \Drupal::theme() service
-    // should return FALSE instead of a string.
+    // suggestion_not_implemented is not an implemented theme hook so
+    // \Drupal::theme() service should return FALSE instead of a string.
     $output = \Drupal::theme()->render(['suggestion_not_implemented'], []);
     $this->assertFalse($output, '\Drupal::theme() returns FALSE when a hook suggestion is not implemented.');
   }
@@ -148,11 +148,15 @@ class ThemeTest extends KernelTestBase {
   }
 
   /**
-   * Tests drupal_find_theme_templates().
+   * Tests \Drupal\Core\Theme\Registry:findThemeTemplates().
    */
   public function testFindThemeTemplates(): void {
-    $registry = $this->container->get('theme.registry')->get();
-    $templates = drupal_find_theme_templates($registry, '.html.twig', $this->getThemePath('test_theme'));
+
+    $registry = $this->container->get('theme.registry');
+    $cache = $registry->get();
+    $extension = '.html.twig';
+    $path = $this->getThemePath('test_theme');
+    $templates = $registry->findThemeTemplates($cache, $extension, $path);
     $this->assertEquals('node--1', $templates['node__1']['template'], 'Template node--1.html.twig was found in test_theme.');
   }
 
