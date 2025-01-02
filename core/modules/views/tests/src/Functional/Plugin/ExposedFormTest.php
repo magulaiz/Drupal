@@ -256,12 +256,14 @@ class ExposedFormTest extends ViewTestBase {
     $block->getPlugin()->setConfigurationValue('label_display', TRUE);
     $block->save();
 
+    $view_title = (string) $view->getTitle();
+
     // Assert that the only two occurrences of `$view->getTitle()` are the title
     // and h2 tags.
     $this->drupalGet('test_exposed_block');
-    $this->assertSession()->elementContains('css', 'title', $view->getTitle());
-    $this->assertSession()->elementExists('xpath', '//h2[text()="' . $view->getTitle() . '"]');
-    $this->assertSession()->pageTextMatchesCount(2, '/' . $view->getTitle() . '/');
+    $this->assertSession()->elementContains('css', 'title', $view_title);
+    $this->assertSession()->elementExists('xpath', '//h2[text()="' . $view_title . '"]');
+    $this->assertSession()->pageTextMatchesCount(2, '/' . $view_title . '/');
 
     // Set a custom label on the exposed filter form block.
     $block->getPlugin()->setConfigurationValue('views_label', '<strong>Custom</strong> title<script>alert("hacked!");</script>');
@@ -280,8 +282,8 @@ class ExposedFormTest extends ViewTestBase {
     // now that label has been removed.
     $this->drupalGet('test_exposed_block');
     $this->assertSession()->responseNotContains('<strong>Custom</strong> titlealert("hacked!");');
-    $this->assertSession()->elementContains('css', 'title', $view->getTitle());
-    $this->assertSession()->pageTextMatchesCount(1, '/' . $view->getTitle() . '/');
+    $this->assertSession()->elementContains('css', 'title', $view_title);
+    $this->assertSession()->pageTextMatchesCount(1, '/' . $view_title . '/');
 
     // Test there is an exposed form in a block.
     $this->assertSession()->elementsCount('xpath', '//div[@id="' . Html::getUniqueId('block-' . $block->id()) . '"]/form/@id', 1);

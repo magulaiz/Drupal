@@ -4,12 +4,14 @@ namespace Drupal\views;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Tags;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayRouterInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\Plugin\ViewsPluginManager;
+use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -1901,6 +1903,7 @@ class ViewExecutable {
     // Allow substitutions from the first row.
     if ($this->initStyle()) {
       $title = $this->style_plugin->tokenizeValue($title, 0);
+      $title = ViewsRenderPipelineMarkup::create(Xss::filter(Html::decodeEntities($title)));
     }
     return $title;
   }

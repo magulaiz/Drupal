@@ -16,7 +16,11 @@ class ViewsEscapingTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_page_display', 'test_field_header'];
+  public static $testViews = [
+    'test_field_header',
+    'test_page_display',
+    'test_title_token',
+  ];
 
   /**
    * {@inheritdoc}
@@ -86,6 +90,16 @@ class ViewsEscapingTest extends ViewTestBase {
 
     // Assert that harmful tags are escaped in header label.
     $this->assertSession()->responseNotContains('<script>alert("XSS")</script>');
+  }
+
+  /**
+   * Tests for an incorrectly escaped view title token.
+   */
+  public function testViewsTitleEscaping(): void {
+    $this->drupalGet('test_title_token');
+
+    $this->assertSession()->assertEscaped('Alice & Bob');
+    $this->assertSession()->assertNoEscaped('Alice &amp; Bob');
   }
 
 }

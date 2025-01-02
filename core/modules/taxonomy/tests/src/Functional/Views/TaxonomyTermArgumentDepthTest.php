@@ -65,7 +65,7 @@ class TaxonomyTermArgumentDepthTest extends TaxonomyTestBase {
    */
   public function testTermWithDepthArgumentTitleEscaping(): void {
     $this->drupalGet('test_argument_taxonomy_index_tid_depth/' . $this->terms[0]->id());
-    $this->assertSession()->assertEscaped($this->terms[0]->label());
+    $this->assertSession()->responseContains($this->terms[0]->label());
   }
 
 }
