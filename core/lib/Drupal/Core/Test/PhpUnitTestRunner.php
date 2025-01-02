@@ -152,6 +152,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     // are deprecations that get reported (i.e. not ignored or expected).
     if (DeprecationHandler::getConfiguration() !== FALSE) {
       $command[] = '--fail-on-deprecation';
+      $command[] = '--fail-on-phpunit-deprecation';
     }
 
     // Add to the command the file containing the test class to be run.
