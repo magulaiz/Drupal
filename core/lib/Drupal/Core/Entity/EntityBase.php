@@ -711,7 +711,7 @@ abstract class EntityBase implements EntityInterface {
       @trigger_error("Getting the original property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Entity\EntityInterface::getOriginal() instead. See https://www.drupal.org/node/3295826", E_USER_DEPRECATED);
       return $this->getOriginal();
     }
-    return $this->getTemporaryData($name);
+    return $this->$name ?? NULL;
   }
 
   /**
@@ -723,7 +723,7 @@ abstract class EntityBase implements EntityInterface {
       $this->setOriginal($value);
       return;
     }
-    $this->setTemporaryData($name, $value);
+    $this->$name = $value;
   }
 
   /**
@@ -734,7 +734,7 @@ abstract class EntityBase implements EntityInterface {
       @trigger_error("Checking for the original property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Entity\EntityInterface::getOriginal() instead. See https://www.drupal.org/node/3295826", E_USER_DEPRECATED);
       return $this->getOriginal();
     }
-    return isset($this->temporaryData[$name]);
+    return isset($this->$name);
   }
 
   /**
@@ -746,7 +746,7 @@ abstract class EntityBase implements EntityInterface {
       $this->setOriginal(NULL);
       return;
     }
-    $this->clearTemporaryData($name);
+    unset($this->$name);
   }
 
   /**
