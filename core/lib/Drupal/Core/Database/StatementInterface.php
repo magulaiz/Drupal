@@ -23,10 +23,10 @@ interface StatementInterface extends \Traversable {
   /**
    * Executes a prepared statement.
    *
-   * @param $args
+   * @param array|null $args
    *   An array of values with as many elements as there are bound parameters in
    *   the SQL statement being executed. This can be NULL.
-   * @param $options
+   * @param array $options
    *   An array of options for this query.
    *
    * @return bool
@@ -85,9 +85,9 @@ interface StatementInterface extends \Traversable {
    *   (Optional) one of the cases of the FetchAs enum, or (deprecated) a
    *   \PDO::FETCH_* constant. If not specified, defaults to what is specified
    *   by setFetchMode().
-   * @param $cursor_orientation
+   * @param int|null $cursor_orientation
    *   Not implemented in all database drivers, don't use.
-   * @param $cursor_offset
+   * @param int|null $cursor_offset
    *   Not implemented in all database drivers, don't use.
    *
    * @return array|object|false
@@ -98,7 +98,7 @@ interface StatementInterface extends \Traversable {
   /**
    * Returns a single field from the next record of a result set.
    *
-   * @param $index
+   * @param int $index
    *   The numeric index of the field to return. Defaults to the first field.
    *
    * @return mixed
@@ -145,9 +145,9 @@ interface StatementInterface extends \Traversable {
    *   (Optional) one of the cases of the FetchAs enum, or (deprecated) a
    *   \PDO::FETCH_* constant. If not specified, defaults to what is specified
    *   by setFetchMode().
-   * @param $column_index
+   * @param int|null $column_index
    *   If $mode is FetchAs::Column, the index of the column to fetch.
-   * @param $constructor_arguments
+   * @param array $constructor_arguments
    *   If $mode is FetchAs::ClassObject, the arguments to pass to the constructor.
    *
    * @return array
@@ -160,7 +160,7 @@ interface StatementInterface extends \Traversable {
    *
    * Note that this method will run the result set to the end.
    *
-   * @param $index
+   * @param int $index
    *   The index of the column number to fetch.
    *
    * @return array
@@ -178,9 +178,9 @@ interface StatementInterface extends \Traversable {
    *
    * Note that this method will run the result set to the end.
    *
-   * @param $key_index
+   * @param int $key_index
    *   The numeric index of the field to use as the array key.
-   * @param $value_index
+   * @param int $value_index
    *   The numeric index of the field to use as the array value.
    *
    * @return array
@@ -194,7 +194,7 @@ interface StatementInterface extends \Traversable {
    * If the given key appears multiple times, later records will overwrite
    * earlier ones.
    *
-   * @param $key
+   * @param string $key
    *   The name of the field on which to index the array.
    * @param \Drupal\Core\Database\FetchAs|int|string|null $fetch
    *   (Optional) the fetch mode to use. One of the cases of the FetchAs enum,
