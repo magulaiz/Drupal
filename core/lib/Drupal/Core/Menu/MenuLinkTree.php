@@ -306,8 +306,6 @@ class MenuLinkTree implements MenuLinkTreeInterface {
    *
    * @param \Drupal\Core\Menu\MenuLinkTreeContextualManipulatorInterface $manipulator
    *   A menu link tree manipulator.
-   *
-   * @return void
    */
   public function addContextualManipulator(MenuLinkTreeContextualManipulatorInterface $manipulator): void {
     $this->contextualManipulators[] = $manipulator;
