@@ -50,6 +50,9 @@ interface MenuLinkTreeInterface {
   /**
    * Loads a menu tree with a menu link plugin instance at each element.
    *
+   * There will be no sorting or access checks. For that, use ::transform().
+   *
+   *
    * @param string $menu_name
    *   The name of the menu.
    * @param \Drupal\Core\Menu\MenuTreeParameters $parameters
