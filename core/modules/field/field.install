@@ -79,7 +79,7 @@ function field_update_9001(&$sandbox): void {
 
           if ($entity_form_display && $component = $entity_form_display->getComponent($field_name)) {
             // Update the add more config in the settings.
-            $component['settings']['add_more'] = TRUE;
+            $component['settings']['add_more'] = FALSE;
             $entity_form_display->setComponent($field_name, $component)->save();
             // Log the config change.
             \Drupal::logger('field')
