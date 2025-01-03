@@ -19,9 +19,7 @@ class BulkFormTest extends BrowserTestBase {
   use NodeCreationTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'action_bulk_test'];
 
@@ -50,7 +48,7 @@ class BulkFormTest extends BrowserTestBase {
   /**
    * Tests the bulk form.
    */
-  public function testBulkForm() {
+  public function testBulkForm(): void {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
 
     // First, test an empty bulk form with the default style plugin to make sure
@@ -234,7 +232,7 @@ class BulkFormTest extends BrowserTestBase {
     // by another user before the loaded bulk form was submitted.
     $this->drupalGet('test_bulk_form');
     // Call the node delete action.
-    foreach ($nodes as $key => $node) {
+    foreach ($nodes as $node) {
       $node->delete();
     }
     $edit = [
