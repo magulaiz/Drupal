@@ -118,6 +118,7 @@ class AliasManager implements AliasManagerInterface {
       unset($this->requestedPaths[$langcode][$path]);
       return $this->lookupMap[$langcode][$path];
     }
+    dump($this->requestedPaths[$langcode]);
 
     $this->lookupMap[$langcode] = array_merge($this->lookupMap[$langcode] ?? [], $this->pathAliasRepository->preloadPathAlias($this->requestedPaths[$langcode], $langcode));
     // Keep a record of paths with no alias to avoid querying twice.
