@@ -78,7 +78,7 @@ interface MenuLinkTreeInterface {
    *     ['callable' => 'menu.default_tree_manipulators:checkNodeAccess'],
    *     ['callable' => 'menu.default_tree_manipulators:checkAccess'],
    *     ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
-   *   ];    
+   *   ];
    *   @endcode
    * phpcs:disable Drupal.Commenting
    * @todo Uncomment new method parameters before drupal:12.0.0.
