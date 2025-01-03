@@ -6,6 +6,7 @@
 
 use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -16,6 +17,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
@@ -548,12 +550,14 @@ function system_page_top(): array {
       }
     }
   }
+  // Default return value.
+  return [];
 }
 
 /**
  * Implements hook_entity_field_access().
  */
-function system_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL): \Drupal\Core\Access\AccessResultInterface {
+function system_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL): AccessResultInterface {
   if ($items) {
     $entity_type = $items->getEntity()->getEntityType();
     if ($entity_type->hasKey('langcode') && $entity_type->getKey('langcode') === $field_definition->getName()) {
@@ -566,7 +570,7 @@ function system_entity_field_access($operation, FieldDefinitionInterface $field_
 /**
  * Implements hook_file_download().
  */
-function system_file_download($uri): \Symfony\Component\HttpFoundation\Response {
+function system_file_download($uri): Response {
   $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
   $scheme = $stream_wrapper_manager->getScheme($uri);
   if ($stream_wrapper_manager->isValidScheme($scheme)) {
