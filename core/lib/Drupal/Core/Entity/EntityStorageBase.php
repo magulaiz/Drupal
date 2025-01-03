@@ -291,18 +291,18 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     }
 
     if ($ids) {
+      $this->entityIdsToLoad += $ids;
       $fiber = \Fiber::getCurrent();
       if ($fiber !== NULL) {
-        $this->entityIdsToLoad += $ids;
-
         $fiber->suspend();
-        // In the meantime, code executed outside the bi
-        $entities_from_cache = $this->getFromStaticCache($ids);
-        // Replace the IDs to load with the full list of entity IDs to load
-        // collected from previous calls to this method up to this point.
-        $ids = array_keys(array_diff_key(array_flip($this->entityIdsToLoad), $entities_from_cache));
-        $this->entityIdsToLoad = [];
       }
+      $entities += $this->getFromStaticCache($this->entityIdsToLoad);
+      // Replace the IDs to load with the full list of entity IDs to load
+      // collected from previous calls to this method up to this point.
+      if ($entities)  {
+        $ids = array_keys(array_diff_key(array_flip($this->entityIdsToLoad), $entities));
+      }
+      $this->entityIdsToLoad = [];
     }
 
     // Try to gather any remaining entities from a 'preload' method. This method
