@@ -7,7 +7,6 @@ namespace Drupal\block_content_theme_suggestions_test\Hook;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\block_content\Entity\BlockContent;
 
 /**
  * Hook implementations for block_content_theme_suggestions_test.
