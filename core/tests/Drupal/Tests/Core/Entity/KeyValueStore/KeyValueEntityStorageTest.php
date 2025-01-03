@@ -231,10 +231,8 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   /**
    * @covers ::save
    * @covers ::doSave
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
    */
-  public function testSaveInsert() {
+  public function testSaveInsert(): EntityInterface&MockObject {
     $this->setUpKeyValueEntityStorage();
 
     $entity = $this->getMockEntity(EntityBaseTest::class, [['id' => 'foo']], ['toArray']);
@@ -276,11 +274,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *
    * @depends testSaveInsert
    */
-  public function testSaveUpdate(EntityInterface $entity) {
+  public function testSaveUpdate(EntityInterface $entity): void {
     $this->entityType->expects($this->once())
       ->method('getClass')
       ->willReturn(get_class($entity));
@@ -310,7 +306,6 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->with('foo', $expected);
     $return = $this->entityStorage->save($entity);
     $this->assertSame(SAVED_UPDATED, $return);
-    return $entity;
   }
 
   /**
