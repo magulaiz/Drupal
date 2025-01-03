@@ -191,9 +191,9 @@ class StatementPrefetchIterator extends StatementBase {
     // need to pass the exact number of arguments we were given.
     $row = match(func_num_args()) {
       0 => parent::fetch(),
-      1 => parent::fetch($mode),
-      2 => parent::fetch($mode, $cursor_orientation),
-      default => parent::fetch($mode, $cursor_orientation, $cursor_offset),
+      1 => parent::fetch($fetch_style),
+      2 => parent::fetch($fetch_style, $cursor_orientation),
+      default => parent::fetch($fetch_style, $cursor_orientation, $cursor_offset),
     };
     return $row;
   }
