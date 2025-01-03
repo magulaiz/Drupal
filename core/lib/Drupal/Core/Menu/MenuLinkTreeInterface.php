@@ -73,7 +73,7 @@ interface MenuLinkTreeInterface {
    *     by Drupal\Core\Utility\CallableResolver::getCallableFromDefinition()
    *   - args: optional array of arguments to pass to the callable after $tree.
    *   For example, to sort and check access:
-   *   @code    
+   *   @code
    *   $manipulators = [
    *     ['callable' => 'menu.default_tree_manipulators:checkNodeAccess'],
    *     ['callable' => 'menu.default_tree_manipulators:checkAccess'],
