@@ -90,11 +90,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected $memoryCacheTag;
 
   /**
-   * Entity IDs awaiting loading.
-   */
-  protected array $entityIdsToLoad = [];
-
-  /**
    * Constructs an EntityStorageBase instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -288,21 +283,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       $entities += $this->getFromStaticCache($ids);
       // If any entities were loaded, remove them from the IDs still to load.
       $ids = array_keys(array_diff_key($flipped_ids, $entities));
-    }
-
-    if ($ids) {
-      $fiber = \Fiber::getCurrent();
-      if ($fiber !== NULL) {
-        $this->entityIdsToLoad += $ids;
-
-        $fiber->suspend();
-        // In the meantime, code executed outside the bi
-        $entities_from_cache = $this->getFromStaticCache($ids);
-        // Replace the IDs to load with the full list of entity IDs to load
-        // collected from previous calls to this method up to this point.
-        $ids = array_keys(array_diff_key(array_flip($this->entityIdsToLoad), $entities_from_cache));
-        $this->entityIdsToLoad = [];
-      }
     }
 
     // Try to gather any remaining entities from a 'preload' method. This method
