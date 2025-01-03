@@ -15,6 +15,7 @@ use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Link;
 use Drupal\Core\Lock\LockAcquiringException;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -36,6 +37,7 @@ use Drupal\file\Upload\FormUploadedFile;
  *   An associative array of headers, as expected by
  *   \Symfony\Component\HttpFoundation\StreamedResponse.
  */
+#[StopProceduralHookScan]
 function file_get_content_headers(FileInterface $file) {
   return [
     'Content-Type' => $file->getMimeType(),

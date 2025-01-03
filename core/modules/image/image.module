@@ -5,6 +5,7 @@
  */
 
 use Drupal\image\Entity\ImageStyle;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 
 /**
  * The name of the query parameter for image derivative tokens.
@@ -17,6 +18,7 @@ define('IMAGE_DERIVATIVE_TOKEN', 'itok');
  * @param $path
  *   The Drupal file path to the original image.
  */
+#[StopProceduralHookScan]
 function image_path_flush($path) {
   $styles = ImageStyle::loadMultiple();
   foreach ($styles as $style) {

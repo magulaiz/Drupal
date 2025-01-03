@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 
 /**
  * Implements hook_requirements().
@@ -44,6 +45,7 @@ function pgsql_requirements() {
 /**
  * Implements hook_update_last_removed().
  */
+#[StopProceduralHookScan]
 function pgsql_update_last_removed(): int {
   return 10101;
 }

@@ -5,6 +5,7 @@
  */
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Link;
 use Drupal\node\NodeInterface;
 
@@ -78,6 +79,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
  *
  * @see node_mass_update()
  */
+#[StopProceduralHookScan]
 function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode = NULL) {
   $langcodes = isset($langcode) ? [$langcode] : array_keys($node->getTranslationLanguages());
   // For efficiency manually save the original node before applying any changes.

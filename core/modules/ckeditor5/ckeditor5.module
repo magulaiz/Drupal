@@ -16,6 +16,7 @@ use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 
 /**
  * Implements hook_module_implements_alter().
@@ -45,6 +46,7 @@ function ckeditor5_module_implements_alter(&$implementations, $hook): void {
 /**
  * Form submission handler for filter format forms.
  */
+#[StopProceduralHookScan]
 function ckeditor5_filter_format_edit_form_submit(array $form, FormStateInterface $form_state) {
   $limit_allowed_html_tags = isset($form['filters']['settings']['filter_html']['allowed_html']);
   $manually_editable_tags = $form_state->getValue(['editor', 'settings', 'plugins', 'ckeditor5_sourceEditing', 'allowed_tags']);

@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\navigation\TopBarRegion;
 
 /**
@@ -31,6 +32,7 @@ function navigation_module_implements_alter(&$implementations, $hook): void {
  *    - element: An associative array containing the properties and children of
  *      the top bar.
  */
+#[StopProceduralHookScan]
 function template_preprocess_top_bar(&$variables): void {
   $element = $variables['element'];
 
