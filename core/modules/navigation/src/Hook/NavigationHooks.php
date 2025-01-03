@@ -10,7 +10,9 @@ use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Hook\Attribute\RemoveHook;
 use Drupal\Core\Hook\Order;
+use Drupal\layout_builder\Hook\LayoutBuilderHooks;
 use Drupal\navigation\TopBarItemManagerInterface;
 
 /**
@@ -21,7 +23,8 @@ class NavigationHooks {
   /**
    * Implements hook_help().
    */
-  #[Hook('help', remove: ['layout_builder' => ['help']])]
+  #[Hook('help')]
+  #[RemoveHook('help', LayoutBuilderHooks::class, 'layout_builder', 'help')]
   public function help($route_name, RouteMatchInterface $route_match) {
     switch ($route_name) {
       case 'help.page.navigation':
