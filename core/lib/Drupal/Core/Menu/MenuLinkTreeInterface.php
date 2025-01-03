@@ -52,7 +52,6 @@ interface MenuLinkTreeInterface {
    *
    * There will be no sorting or access checks. For that, use ::transform().
    *
-   *
    * @param string $menu_name
    *   The name of the menu.
    * @param \Drupal\Core\Menu\MenuTreeParameters $parameters
@@ -74,7 +73,8 @@ interface MenuLinkTreeInterface {
    *     by Drupal\Core\Utility\CallableResolver::getCallableFromDefinition()
    *   - args: optional array of arguments to pass to the callable after $tree.
    *   For example, to sort and check access:
-   *   @code    *   $manipulators = [
+   *   @code    
+   *   $manipulators = [
    *     ['callable' => 'menu.default_tree_manipulators:checkNodeAccess'],
    *     ['callable' => 'menu.default_tree_manipulators:checkAccess'],
    *     ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
