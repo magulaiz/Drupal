@@ -36,15 +36,24 @@ class PrefetchedResult extends DqlResultBase {
     $this->currentRowIndex = -1;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function rowCount(): ?int {
     return $this->rowCount;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setFetchMode(FetchAs $mode, array $fetchOptions = []): bool {
     // @todo fix this.
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fetch(FetchAs $mode, array $fetchOptions = []): array|object|int|float|string|bool|NULL {
     $this->currentRowIndex++;
     if (!isset($this->data[$this->currentRowIndex])) {
@@ -56,6 +65,9 @@ class PrefetchedResult extends DqlResultBase {
     return $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fetchAll(FetchAs $mode, array $fetchOptions): array {
     $result = [];
     while ($rowAssoc = $this->fetch(FetchAs::Associative, $fetchOptions)) {
@@ -64,6 +76,9 @@ class PrefetchedResult extends DqlResultBase {
     return $result;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fetchAllKeyed(int $keyIndex = 0, int $valueIndex = 1): array {
     if (!isset($this->columnNames[$keyIndex]) || !isset($this->columnNames[$valueIndex])) {
       return [];
@@ -79,6 +94,9 @@ class PrefetchedResult extends DqlResultBase {
     return $result;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function fetchAllAssoc(string $column, FetchAs $mode, array $fetchOptions): array {
     $result = [];
     while ($rowAssoc = $this->fetch(FetchAs::Associative, $fetchOptions)) {

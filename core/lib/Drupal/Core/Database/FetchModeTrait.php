@@ -114,6 +114,22 @@ trait FetchModeTrait {
     return $rowAssoc[$columnNames[$columnIndex]];
   }
 
+  /**
+   * Converts a row of data in associative format to a specified format.
+   *
+   * @param array $rowAssoc
+   *   A row of data in FetchAs::Associative format.
+   * @param \Drupal\Core\Database\Statement\FetchAs $mode
+   *   The target target mode.
+   * @param array $fetchOptions
+   *   The fetch mode options.
+   *
+   * @return array<scalar|null>|object|scalar|null|false
+   *   The data in the target mode.
+   *
+   * @throws \ValueError
+   *   If the column index is not defined.
+   */
   protected function assocToFetchMode(array $rowAssoc, FetchAs $mode, array $fetchOptions): array|object|int|float|string|bool|NULL {
     return match($mode) {
       FetchAs::Associative => $rowAssoc,
