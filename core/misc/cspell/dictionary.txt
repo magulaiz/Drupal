@@ -163,6 +163,7 @@ drupalelementstylecommand
 drupalelementstyleediting
 drupalelementstyleui
 drupalhtmlbuilder
+drupalimagecaption
 drupalmediaediting
 drupalmediatoolbar
 editables
