@@ -215,11 +215,11 @@ abstract class StatementBase implements \Iterator, StatementInterface {
       0 => $this->fetchOptions,
       1 => $this->fetchOptions,
       2 => $this->fetchOptions + [
-        'cursor_orientation' => $cursor_orientation,
+        'cursor_orientation' => $cursorOrientation,
       ],
       default => $this->fetchOptions + [
-        'cursor_orientation' => $cursor_orientation,
-        'cursor_offset' => $cursor_offset,
+        'cursor_orientation' => $cursorOrientation,
+        'cursor_offset' => $cursorOffset,
       ],
     };
 
