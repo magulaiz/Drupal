@@ -68,7 +68,7 @@ function field_update_9001(&$sandbox): void {
     }
 
     // Load the entity form display and update the add more config.
-    $exclude_field_types = ['list_string', 'list_float', 'list_string', 'list_integer'];
+    $exclude_field_types = ['list_string', 'list_float', 'list_integer'];
     foreach ($fieldMap as $field_storage => $array_field_bundles) {
       if (!in_array($array_field_bundles['type'], $exclude_field_types)) {
         [$entity_type, $field_name] = explode('.', $field_storage);
