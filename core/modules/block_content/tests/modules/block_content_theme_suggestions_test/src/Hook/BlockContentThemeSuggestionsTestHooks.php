@@ -35,13 +35,14 @@ class BlockContentThemeSuggestionsTestHooks {
   public function nodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, string $view_mode): void {
     // Provide content for the extra field in the form of a content block.
     if ($display->getComponent('block_content_extra_field_test')) {
-      $block_content = BlockContent::create([
-        'info' => 'test',
-        'type' => 'basic',
-        'langcode' => 'en',
+      $entity_type_manager = \Drupal::entityTypeManager();
+      // Load a block content entity with a known UUID created by test setup.
+      // @see \Drupal\Tests\block_content\Functional\BlockContentThemeSuggestionsTest::setUp()
+      $block_content = $entity_type_manager->getStorage('block_content')->loadByProperties([
+        'uuid' => 'b22c881a-bcfd-4d0c-a41d-3573327705df',
       ]);
-      $block_content->save();
-      $build['block_content_extra_field_test'] = \Drupal::entityTypeManager()->getViewBuilder('block_content')->view($block_content);
+      $block_content = reset($block_content);
+      $build['block_content_extra_field_test'] = $entity_type_manager->getViewBuilder('block_content')->view($block_content);
     }
   }
 
