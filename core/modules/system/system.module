@@ -587,6 +587,8 @@ function system_file_download($uri): Response {
         if (array_intersect($parts, ['.', '..'])) {
           return -1;
         }
+        // Default response when the file is not found.
+        return new Response('File not found', 404);
       }
     }
   }
