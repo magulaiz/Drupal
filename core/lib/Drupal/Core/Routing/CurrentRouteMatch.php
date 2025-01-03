@@ -126,14 +126,16 @@ class CurrentRouteMatch implements ResettableStackedRouteMatchInterface {
    * {@inheritdoc}
    */
   public function getMasterRouteMatch() {
-    return $this->getRouteMatch($this->requestStack->getMainRequest());
+    $request = $this->requestStack->getMainRequest();
+    return $request ? $this->getRouteMatch($request) : new NullRouteMatch();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getParentRouteMatch() {
-    return $this->getRouteMatch($this->requestStack->getParentRequest());
+    $request = $this->requestStack->getParentRequest();
+    return $request ? $this->getRouteMatch($request) : new NullRouteMatch();
   }
 
   /**

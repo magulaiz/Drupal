@@ -107,7 +107,6 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
     $generated_url = $collect_bubbleable_metadata ? new GeneratedUrl() : NULL;
 
     $this->addOptionDefaults($options);
-    $request = $this->requestStack->getCurrentRequest();
 
     // Remove the base: scheme.
     // @todo Consider using a class constant for this in
@@ -126,31 +125,35 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
     // external URLs without protocol. /example.com should not be turned into
     // //example.com.
     $uri = ltrim($uri, '/');
+    $base = '';
 
-    // Add any subdirectory where Drupal is installed.
-    $current_base_path = $request->getBasePath() . '/';
+    $request = $this->requestStack->getCurrentRequest();
+    if ($request) {
+      // Add any subdirectory where Drupal is installed.
+      $current_base_path = $request->getBasePath() . '/';
 
-    if ($options['absolute']) {
-      $current_base_url = $request->getSchemeAndHttpHost() . $current_base_path;
-      if (isset($options['https'])) {
-        if (!empty($options['https'])) {
-          $base = str_replace('http://', 'https://', $current_base_url);
-          $options['absolute'] = TRUE;
+      if ($options['absolute']) {
+        $current_base_url = $request->getSchemeAndHttpHost() . $current_base_path;
+        if (isset($options['https'])) {
+          if (!empty($options['https'])) {
+            $base = str_replace('http://', 'https://', $current_base_url);
+            $options['absolute'] = TRUE;
+          }
+          else {
+            $base = str_replace('https://', 'http://', $current_base_url);
+            $options['absolute'] = TRUE;
+          }
         }
         else {
-          $base = str_replace('https://', 'http://', $current_base_url);
-          $options['absolute'] = TRUE;
+          $base = $current_base_url;
+        }
+        if ($collect_bubbleable_metadata) {
+          $generated_url?->addCacheContexts(['url.site']);
         }
       }
       else {
-        $base = $current_base_url;
+        $base = $current_base_path;
       }
-      if ($collect_bubbleable_metadata) {
-        $generated_url->addCacheContexts(['url.site']);
-      }
-    }
-    else {
-      $base = $current_base_path;
     }
 
     $prefix = empty($uri) ? rtrim($options['prefix'], '/') : $options['prefix'];
@@ -158,7 +161,7 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
     $uri = str_replace('%2F', '/', rawurlencode($prefix . $uri));
     $query = $options['query'] ? ('?' . UrlHelper::buildQuery($options['query'])) : '';
     $url = $base . $options['script'] . $uri . $query . $options['fragment'];
-    return $collect_bubbleable_metadata ? $generated_url->setGeneratedUrl($url) : $url;
+    return $collect_bubbleable_metadata ? $generated_url?->setGeneratedUrl($url) : $url;
   }
 
   /**
