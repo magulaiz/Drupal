@@ -70,6 +70,7 @@ class PathAliasTest extends PathTestBase {
     // Visit the system path for the node and confirm a cache entry is
     // created.
     \Drupal::cache('data')->deleteAll();
+    $this->assertEmpty(\Drupal::cache('data')->get('preload-paths:' . $edit['path[0][value]']));
     // Make sure the path is not converted to the alias.
     $this->drupalGet(trim($edit['path[0][value]'], '/'), ['alias' => TRUE]);
     $this->assertNotEmpty(\Drupal::cache('data')->get('preload-paths:' . $edit['path[0][value]']), 'Cache entry was created.');
