@@ -66,25 +66,29 @@ function field_update_9001(&$sandbox): void {
         }
       }
     }
-    // Load the entity form display and update the add more config.
-    foreach ($fieldMap as $field_storage => $array_bundles) {
-      [$entity_type, $field_name] = explode('.', $field_storage);
-      foreach ($array_bundles['bundles'] as $bundle) {
-        $entity_form_display = \Drupal::service('entity_type.manager')
-          ->getStorage('entity_form_display')
-          ->load("$entity_type.$bundle.default");
 
-        if ($entity_form_display && $component = $entity_form_display->getComponent($field_name)) {
-          // Update the add more config in the settings.
-          $component['settings']['add_more'] = FALSE;
-          $entity_form_display->setComponent($field_name, $component)->save();
-          // Log the config change.
-          \Drupal::logger('field')
-            ->notice("Show add more configured FALSE for field @field_name in bundle @bundle.", [
-              '@field_name' => $field_name,
-              '@bundle' => $bundle,
-            ]);
-          $sandbox['progress']++;
+    // Load the entity form display and update the add more config.
+    $exclude_field_types = ['list_string', 'list_float', 'list_string', 'list_integer'];
+    foreach ($fieldMap as $field_storage => $array_field_bundles) {
+      if (!in_array($array_field_bundles['type'], $exclude_field_types)) {
+        [$entity_type, $field_name] = explode('.', $field_storage);
+        foreach ($array_field_bundles['bundles'] as $bundle) {
+          $entity_form_display = \Drupal::service('entity_type.manager')
+            ->getStorage('entity_form_display')
+            ->load("$entity_type.$bundle.default");
+
+          if ($entity_form_display && $component = $entity_form_display->getComponent($field_name)) {
+            // Update the add more config in the settings.
+            $component['settings']['add_more'] = TRUE;
+            $entity_form_display->setComponent($field_name, $component)->save();
+            // Log the config change.
+            \Drupal::logger('field')
+              ->notice("Show add more configured FALSE for field @field_name in bundle @bundle.", [
+                '@field_name' => $field_name,
+                '@bundle' => $bundle,
+              ]);
+            $sandbox['progress']++;
+          }
         }
       }
     }
