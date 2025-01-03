@@ -461,6 +461,7 @@ class Renderer implements RendererInterface {
         $fibers[$key] = new \Fiber(fn() => $this->doRender($elements[$key]));
       }
       $rendered_children = [];
+      $iterations = 0;
       while (count($fibers) > 0) {
         foreach ($fibers as $key => $fiber) {
           try {
@@ -491,6 +492,7 @@ class Renderer implements RendererInterface {
             throw $e;
           }
         }
+        $iterations++;
       }
       foreach ($children as $key) {
         $elements['#children'] .= $rendered_children[$key];
