@@ -1,0 +1,33 @@
+/**
+ * @file
+ * Styling for toolbar warning message.
+ */
+
+.demo-profile-warning {
+  margin: 0;
+  padding-block: 0.5em;
+  padding-inline: var(--drupal-displace-offset-left);
+  background-color: #fdf8ed;
+}
+
+.demo-profile-warning a {
+  overflow: hidden;
+  margin-block-start: 20px;
+  padding: 0.5em 2em 0.5em 2.3333em;
+  text-decoration: none;
+  text-indent: -1000px;
+  color: #000;
+  background: url(../../../../core/misc/icons/e29700/warning.svg) no-repeat transparent;
+  background-position: 0.5em center; /* LTR */
+  background-size: auto 18px;
+  font-weight: bold;
+}
+
+[dir="rtl"] .demo-profile-warning a {
+  background-position: right 0.5em center;
+}
+
+.demo-profile-warning a:hover {
+  text-decoration: underline;
+  color: #000;
+}

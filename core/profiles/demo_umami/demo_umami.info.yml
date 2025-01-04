@@ -23,6 +23,7 @@ install:
   - media
   - media_library
   - menu_ui
+  - navigation
   - options
   - path
   - page_cache
@@ -31,7 +32,6 @@ install:
   - dblog
   - search
   - shortcut
-  - toolbar
   - field_ui
   - file
   - views

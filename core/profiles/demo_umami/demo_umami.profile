@@ -70,27 +70,19 @@ function demo_umami_set_users_passwords(#[\SensitiveParameter] $admin_password) 
 }
 
 /**
- * Implements hook_toolbar().
+ * Implements hook_preprocess_html().
  */
-function demo_umami_toolbar() {
-  // Add a warning about using an experimental profile.
-  // @todo This can be removed once a generic warning for experimental profiles
-  //   has been introduced. https://www.drupal.org/project/drupal/issues/2934374
-  $items['experimental-profile-warning'] = [
-    '#weight' => 3400,
-    '#cache' => [
-      'contexts' => ['route'],
-    ],
-  ];
-
-  // Show warning only on administration pages.
+function demo_umami_preprocess_html(&$variables) {
+  // We want to make sure people know that Umami is only a demonstration of
+  // Drupal, and should not be used as a starterkit.
+  // To do so, we will show warning at the top of administration pages.
   $admin_context = \Drupal::service('router.admin_context');
   if ($admin_context->isAdminRoute()) {
     $link_to_help_page = \Drupal::moduleHandler()->moduleExists('help') && \Drupal::currentUser()->hasPermission('access help pages');
-    $items['experimental-profile-warning']['#type'] = 'toolbar_item';
-    $items['experimental-profile-warning']['tab'] = [
+    // Add this to the end of the page
+    $variables['page_top'][] = [
       '#type' => 'inline_template',
-      '#template' => '<a class="toolbar-warning" href="{{ more_info_link }}">This site is intended for demonstration purposes.</a>',
+      '#template' => '<p class="demo-profile-warning"><a href="{{ more_info_link }}">This site is intended for demonstration purposes.</a></p>',
       '#context' => [
         // Link directly to the drupal.org documentation if the help pages
         // aren't available.
@@ -98,9 +90,8 @@ function demo_umami_toolbar() {
           : 'https://www.drupal.org/node/2941833',
       ],
       '#attached' => [
-        'library' => ['demo_umami/toolbar-warning'],
+        'library' => ['demo_umami/demo-profile-warning'],
       ],
     ];
   }
-  return $items;
 }
