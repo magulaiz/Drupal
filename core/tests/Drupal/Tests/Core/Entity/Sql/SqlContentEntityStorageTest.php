@@ -1514,7 +1514,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider safeUnserializeDataProvider
    */
-  public function testSafeUnserialize($input, $expected) {
+  public function testSafeUnserialize(mixed $input, mixed $expected): void {
     $this->assertEquals(
       $expected,
       SqlContentEntityStorage::safeUnserialize($input),

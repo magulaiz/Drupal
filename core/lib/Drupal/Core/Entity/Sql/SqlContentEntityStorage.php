@@ -1795,7 +1795,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @return mixed|null
    *   The unserialized data, or null if the data is invalid.
    */
-  public static function safeUnserialize(?string $value): mixed|NULL {
+  public static function safeUnserialize(?string $value): mixed {
     // Return null if the value is an empty string or null.
     if ($value === '' || $value === NULL) {
       return NULL;

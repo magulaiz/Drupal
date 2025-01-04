@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Field;
 
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test_update\Entity\EntityTestUpdate;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
@@ -20,8 +21,7 @@ class InitializeSerializedPropTest extends EntityKernelTestBase {
    *
    * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
    */
-  protected EntityDefinitionUpdateManagerInterface 
- $entityDefinitionUpdateManager;
+  protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
   /**
    * {@inheritdoc}
