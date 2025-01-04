@@ -111,7 +111,7 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
   /**
    * {@inheritdoc}
    */
-  public function getName() {
+  public function getName(): string {
     return $this->name ?? '';
   }
 
