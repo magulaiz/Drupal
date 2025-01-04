@@ -1457,7 +1457,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @return array
    *   Array of test cases with input value and expected output.
    */
-  public static function safeUnserializeDataProvider() {
+  public static function safeUnserializeDataProvider(): array {
     $object = new \stdClass();
     $object->property = 'value';
 

@@ -20,7 +20,8 @@ class InitializeSerializedPropTest extends EntityKernelTestBase {
    *
    * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
    */
-  protected $entityDefinitionUpdateManager;
+  protected EntityDefinitionUpdateManagerInterface 
+ $entityDefinitionUpdateManager;
 
   /**
    * {@inheritdoc}
@@ -48,7 +49,7 @@ class InitializeSerializedPropTest extends EntityKernelTestBase {
   /**
    * Tests uninstalling map item base field.
    */
-  public function testUninstallMapItemBaseField() {
+  public function testUninstallMapItemBaseField(): void {
 
     $entity = EntityTestUpdate::create([
       'data_map' => [
