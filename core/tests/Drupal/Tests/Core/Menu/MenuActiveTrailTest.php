@@ -72,7 +72,7 @@ class MenuActiveTrailTest extends UnitTestCase {
   /**
    * The mocked path matcher.
    */
-  protected PathMatcherInterface|MockObject $pathMatcher;
+  protected PathMatcherInterface $pathMatcher;
 
   /**
    * {@inheritdoc}
