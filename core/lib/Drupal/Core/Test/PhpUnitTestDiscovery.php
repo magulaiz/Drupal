@@ -60,53 +60,110 @@ class PhpUnitTestDiscovery {
       $args[] = '--testsuite=' . implode(',', $tmp);
     }
 
+    if ($directory !== NULL) {
+      $args[] = $directory;
+    }
+
     $phpUnitConfiguration = (new Builder())->build($args);
     $phpUnitTestSuite = (new TestSuiteBuilder())->build($phpUnitConfiguration);
 
-    $list = [];
-    foreach ($phpUnitTestSuite->tests() as $testSuite) {
-      foreach ($testSuite->tests() as $testClass) {
-        if ($extension !== NULL && !str_starts_with($testClass->name(), "Drupal\\Tests\\{$extension}\\")) {
-          continue;
-        }
+    if ($directory !== NULL) {
+      $list = [];
+        foreach ($phpUnitTestSuite->tests() as $testClass) {
+          if ($extension !== NULL && !str_starts_with($testClass->name(), "Drupal\\Tests\\{$extension}\\")) {
+            continue;
+          }
 
-        $reflection = new \ReflectionClass($testClass->name());
-        $docComment = $reflection->getDocComment();
+          if (!empty($types) && !in_array('PHPUnit-' . TestDiscovery::getPhpunitTestSuite($testClass->name()), $types, TRUE)) {
+            continue;
+          }
 
-        $annotations = [];
-        // Look for annotations, allow an arbitrary amount of spaces before the
-        // * but nothing else.
-        preg_match_all('/^[ ]*\* (\@[^\s]*)(.*)/m', $docComment, $matches);
-        if (isset($matches[1])) {
-          foreach ($matches[1] as $key => $annotation) {
-            $annotations[$annotation][] = substr($matches[2][$key], 1);
+          $reflection = new \ReflectionClass($testClass->name());
+          $docComment = $reflection->getDocComment();
+
+          $annotations = [];
+          // Look for annotations, allow an arbitrary amount of spaces before the
+          // * but nothing else.
+          preg_match_all('/^[ ]*\* (\@[^\s]*)(.*)/m', $docComment, $matches);
+          if (isset($matches[1])) {
+            foreach ($matches[1] as $key => $annotation) {
+              $annotations[$annotation][] = substr($matches[2][$key], 1);
+            }
+          }
+
+          $groups = array_filter($testClass->groups(), function (string $value): bool {
+            return !str_starts_with($value, '__');
+          });
+          # $groups = $annotations['@group'] ?? [];
+          // @todo add failure if missing
+
+          if (isset($annotations['@coversDefaultClass'][0])) {
+            $description = sprintf('Tests %s.', $annotations['@coversDefaultClass'][0]);
+          }
+          else {
+            $description = TestDiscovery::parseTestClassSummary($docComment);
+          }
+
+          $item = [
+            'name' => $testClass->name(),
+            'group' => $groups[0],
+            'groups' => $groups,
+            'type' => 'PHPUnit-' . TestDiscovery::getPhpunitTestSuite($testClass->name()),
+            'description' => $description,
+            'file' => $this->classLoader->findFile($testClass->name()),
+          ];
+
+          foreach ($groups as $group) {
+            $list[$group][$testClass->name()] = $item;
           }
         }
+    }
+    else {
+      $list = [];
+      foreach ($phpUnitTestSuite->tests() as $testSuite) {
+        foreach ($testSuite->tests() as $testClass) {
+          if ($extension !== NULL && !str_starts_with($testClass->name(), "Drupal\\Tests\\{$extension}\\")) {
+            continue;
+          }
 
-        $groups = array_filter($testClass->groups(), function (string $value): bool {
-          return !str_starts_with($value, '__');
-        });
-        # $groups = $annotations['@group'] ?? [];
-        // @todo add failure if missing
+          $reflection = new \ReflectionClass($testClass->name());
+          $docComment = $reflection->getDocComment();
 
-        if (isset($annotations['@coversDefaultClass'][0])) {
-          $description = sprintf('Tests %s.', $annotations['@coversDefaultClass'][0]);
-        }
-        else {
-          $description = TestDiscovery::parseTestClassSummary($docComment);
-        }
+          $annotations = [];
+          // Look for annotations, allow an arbitrary amount of spaces before the
+          // * but nothing else.
+          preg_match_all('/^[ ]*\* (\@[^\s]*)(.*)/m', $docComment, $matches);
+          if (isset($matches[1])) {
+            foreach ($matches[1] as $key => $annotation) {
+              $annotations[$annotation][] = substr($matches[2][$key], 1);
+            }
+          }
 
-        $item = [
-          'name' => $testClass->name(),
-          'group' => $groups[0],
-          'groups' => $groups,
-          'type' => $this->reverseMap[$testSuite->name()] ?? $testSuite->name(),
-          'description' => $description,
-          'file' => $this->classLoader->findFile($testClass->name()),
-        ];
+          $groups = array_filter($testClass->groups(), function (string $value): bool {
+            return !str_starts_with($value, '__');
+          });
+          # $groups = $annotations['@group'] ?? [];
+          // @todo add failure if missing
 
-        foreach ($groups as $group) {
-          $list[$group][$testClass->name()] = $item;
+          if (isset($annotations['@coversDefaultClass'][0])) {
+            $description = sprintf('Tests %s.', $annotations['@coversDefaultClass'][0]);
+          }
+          else {
+            $description = TestDiscovery::parseTestClassSummary($docComment);
+          }
+
+          $item = [
+            'name' => $testClass->name(),
+            'group' => $groups[0],
+            'groups' => $groups,
+            'type' => $this->reverseMap[$testSuite->name()] ?? $testSuite->name(),
+            'description' => $description,
+            'file' => $this->classLoader->findFile($testClass->name()),
+          ];
+
+          foreach ($groups as $group) {
+            $list[$group][$testClass->name()] = $item;
+          }
         }
       }
     }

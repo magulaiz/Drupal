@@ -406,8 +406,6 @@ class TestDiscovery {
    *
    * @return string|false
    *   The testsuite name or FALSE if its not a phpunit test.
-   *
-   * @deprecated
    */
   public static function getPhpunitTestSuite($classname) {
     if (preg_match('/Drupal\\\\Tests\\\\(\w+)\\\\(\w+)/', $classname, $matches)) {

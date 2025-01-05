@@ -29,20 +29,43 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
    */
   #[DataProvider('argumentsProvider')]
   #[IgnoreDeprecations]
-  public function testEquality(array $suites, ?string $extension = NULL): void {
+  public function testEquality(array $suites, ?string $extension = NULL, ?string $directory = NULL): void {
     $testDiscovery = new TestDiscovery(
       $this->container->getParameter('app.root'),
       $this->container->get('class_loader')
     );
-    $internalList = $testDiscovery->getTestClasses($extension, $suites);
+    $internalList = $testDiscovery->getTestClasses($extension, $suites, $directory);
 
     $phpUnitTestDiscovery = new PhpUnitTestDiscovery(
       $this->container->getParameter('app.root'),
       $this->container->get('class_loader')
     );
-    $phpUnitList = $phpUnitTestDiscovery->getTestClasses($extension, $suites);
+    $phpUnitList = $phpUnitTestDiscovery->getTestClasses($extension, $suites, $directory);
 
-    $this->assertEquals(array_filter($internalList), $phpUnitList);
+    // Downgrade results to make them comparable, working around bugs and
+    // additions.
+    // 1. Remove TestDiscovery empty groups.
+    $internalList = array_filter($internalList);
+    // 2. Remove 'file' keys from PHPUnit results.
+    foreach ($phpUnitList as &$group) {
+      foreach ($group as &$testClass) {
+        unset($testClass['file']);
+      }
+    }
+    // 3. Remove from PHPUnit results groups not found by TestDiscovery.
+    $phpUnitList = array_intersect_key($phpUnitList, $internalList);
+    // 4. Remove from PHPUnit groups classes not found by TestDiscovery.
+    foreach ($phpUnitList as $groupName => &$group) {
+      $group = array_intersect_key($group, $internalList[$groupName]);
+    }
+    // 5. Remove from PHPUnit test classes groups not found by TestDiscovery.
+    foreach ($phpUnitList as $groupName => &$group) {
+      foreach ($group as $testClassName => &$testClass) {
+        $testClass['groups'] = array_intersect_key($testClass['groups'], $internalList[$groupName][$testClassName]['groups']);
+      }
+    }
+
+    $this->assertEquals($internalList, $phpUnitList);
   }
 
   /**
@@ -56,7 +79,20 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
     yield 'Testsuite: unit' => ['suites' => ['PHPUnit-Unit']];
     yield 'Testsuite: build' => ['suites' => ['PHPUnit-Build']];
     yield 'Extension: system' => ['suites' => [], 'extension' => 'system'];
-    yield 'Extension: system, Testsuite: unit' => ['suites' => ['PHPUnit-Unit'], 'extension' => 'system'];
+    yield 'Extension: system, testsuite: unit' => [
+      'suites' => ['PHPUnit-Unit'],
+      'extension' => 'system'
+    ];
+    yield 'Extension: system, directory' => [
+      'suites' => [],
+      'extension' => 'system',
+      'directory' => 'core/modules/system/tests/src'
+    ];
+    yield 'Extension: system, testsuite: unit, directory' => [
+      'suites' => ['PHPUnit-Unit'],
+      'extension' => 'system',
+      'directory' => 'core/modules/system/tests/src'
+    ];
   }
 
 }
