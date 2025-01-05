@@ -10,7 +10,6 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\Random;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -164,6 +163,42 @@ class MenuActiveTrailTest extends UnitTestCase {
     $this->assertSame($expected_link, $this->menuActiveTrail->getActiveLink($menu_name));
     // Test without menu name.
     $this->assertSame($expected_link, $this->menuActiveTrail->getActiveLink());
+  }
+
+  /**
+   * Tests that getActiveLink() returns a <front> route link for a route that is the front page and has no other links.
+   *
+   * @covers ::getActiveLink
+   */
+  public function testGetActiveLinkReturnsFrontPageLinkAtTheFrontPage(): void {
+
+    // Mock the request.
+    $mock_route = new Route('');
+    $request = new Request();
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'link_1');
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $mock_route);
+    $request->attributes->set('_raw_variables', new InputBag([]));
+    $this->requestStack->push($request);
+
+    // Pretend that the current path is the front page.
+    $this->pathMatcher
+      ->method('isFrontPage')
+      ->willReturn(TRUE);
+
+    // Make 'link_1' route to have no links and the '<front>' route to have a link.
+    $home_link = MenuLinkMock::create(['id' => 'home_link', 'route_name' => 'home_link', 'title' => 'Home', 'parent' => NULL]);
+    $this->menuLinkManager
+      ->method('loadLinksByRoute')
+      ->willReturnCallback(function ($route_name) use ($home_link) {
+        return match ($route_name) {
+          'link_1' => [],
+          '<front>' => [$home_link],
+        };
+      });
+
+    // Test.
+    $this->assertSame($home_link, $this->menuActiveTrail->getActiveLink());
+
   }
 
   /**
