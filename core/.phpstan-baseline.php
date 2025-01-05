@@ -61284,5 +61284,11 @@ $ignoreErrors[] = [
 	'count' => 1,
 	'path' => __DIR__ . '/themes/olivero/src/OliveroPreRender.php',
 ];
+$ignoreErrors[] = [
+	'message' => '#^Call to an undefined static method Drupal\\\\Core\\\\Test\\\\PhpUnitTestDiscovery\\:\\:getTestInfo\\(\\)\\.$#',
+	'identifier' => 'staticMethod.notFound',
+	'count' => 1,
+	'path' => __DIR__ . '//build/core/scripts/run-tests.sh',
+];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];
