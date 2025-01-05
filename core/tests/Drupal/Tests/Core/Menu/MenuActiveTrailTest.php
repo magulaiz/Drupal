@@ -104,6 +104,7 @@ class MenuActiveTrailTest extends UnitTestCase {
    *     - links: An array of menu links keyed by ID.
    *     - menu_name: The active menu name.
    *     - expected_link: The expected active link for the given menu.
+   *     - expected_trail: The expected active trail for the given menu.
    */
   public static function provider() {
     $data = [];
