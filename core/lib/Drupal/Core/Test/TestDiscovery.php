@@ -7,7 +7,6 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Discovers available tests.
@@ -178,14 +177,6 @@ class TestDiscovery {
       if ($info['group'] === '##no-group-annotations') {
         // If the class name ends in Test and is not a migrate table dump.
         if (str_ends_with($classname, 'Test') && !str_contains($classname, 'migrate_drupal\Tests\Table')) {
-          $reflection = new \ReflectionClass($classname);
-          $groupAttributes = $reflection->getAttributes(Group::class, \ReflectionAttribute::IS_INSTANCEOF);
-          if (!empty($groupAttributes)) {
-            foreach ($info['groups'] as $group) {
-              $list[$group][$classname] = $info;
-            }
-            continue;
-          }
           throw new MissingGroupException(sprintf('Missing @group annotation in %s', $classname));
         }
         // If the class is @group annotation just skip it. Most likely it is an
