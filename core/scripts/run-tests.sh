@@ -17,6 +17,7 @@ use Drupal\Component\Utility\Timer;
 use Drupal\Core\Composer\Composer;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\EnvironmentCleaner;
+use Drupal\Core\Test\PhpUnitTestDiscovery;
 use Drupal\Core\Test\PhpUnitTestRunner;
 use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Drupal\Core\Test\RunTests\TestFileParser;
@@ -24,7 +25,6 @@ use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Test\TestRunResultsStorageInterface;
-use Drupal\Core\Test\TestDiscovery;
 use Drupal\BuildTests\Framework\BuildTestBase;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\KernelTests\KernelTestBase;
@@ -81,7 +81,7 @@ if ($args['list']) {
   // Display all available tests organized by one @group annotation.
   echo "\nAvailable test groups & classes\n";
   echo "-------------------------------\n\n";
-  $test_discovery = new TestDiscovery(
+  $test_discovery = new PhpUnitTestDiscovery(
     \Drupal::root(),
     \Drupal::service('class_loader')
   );
@@ -114,11 +114,11 @@ if ($args['list']) {
 // @see https://www.drupal.org/node/2569585
 if ($args['list-files'] || $args['list-files-json']) {
   // List all files which could be run as tests.
-  $test_discovery = new TestDiscovery(
+  $test_discovery = new PhpUnitTestDiscovery(
     \Drupal::root(),
     \Drupal::service('class_loader')
   );
-  // TestDiscovery::findAllClassFiles() gives us a classmap similar to a
+  // PhpUnitTestDiscovery::findAllClassFiles() gives us a classmap similar to a
   // Composer 'classmap' array.
   $test_classes = $test_discovery->findAllClassFiles();
   // JSON output is the easiest.
@@ -932,7 +932,7 @@ function simpletest_script_command(TestRun $test_run, string $test_class): array
 function simpletest_script_get_test_list() {
   global $args;
 
-  $test_discovery = new TestDiscovery(
+  $test_discovery = new PhpUnitTestDiscovery(
     \Drupal::root(),
     \Drupal::service('class_loader')
   );
@@ -1058,7 +1058,7 @@ function simpletest_script_get_test_list() {
   // we need to do so here.
   if (!$types_processed) {
     $test_list = array_filter($test_list, function ($test_class) use ($args) {
-      $test_info = TestDiscovery::getTestInfo($test_class);
+      $test_info = PhpUnitTestDiscovery::getTestInfo($test_class);
       return in_array($test_info['type'], $args['types'], TRUE);
     });
   }
