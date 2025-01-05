@@ -61438,19 +61438,19 @@ $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method findAllClassFiles\\(\\) of class Drupal\\\\Core\\\\Test\\\\TestDiscovery\\.$#',
 	'identifier' => 'method.deprecated',
 	'count' => 1,
-	'path' => __DIR__ . '//build/core/scripts/run-tests.sh',
+	'path' => __DIR__ . '/scripts/run-tests.sh',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getTestClasses\\(\\) of class Drupal\\\\Core\\\\Test\\\\TestDiscovery\\.$#',
 	'identifier' => 'method.deprecated',
 	'count' => 4,
-	'path' => __DIR__ . '//build/core/scripts/run-tests.sh',
+	'path' => __DIR__ . '/scripts/run-tests.sh',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getTestInfo\\(\\) of class Drupal\\\\Core\\\\Test\\\\TestDiscovery\\.$#',
 	'identifier' => 'staticMethod.deprecated',
 	'count' => 1,
-	'path' => __DIR__ . '//build/core/scripts/run-tests.sh',
+	'path' => __DIR__ . '/scripts/run-tests.sh',
 ];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];
