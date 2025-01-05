@@ -352,8 +352,11 @@ class TestDiscovery {
     }
 
     if (empty($annotations['group'])) {
-      // Concrete tests must have a group.
-      throw new MissingGroupException(sprintf('Missing @group annotation in %s', $classname));
+      // No group annotations, but they might have been replaced by attributes.
+      // We still associate to a dummy group, so not to fail calling this
+      // deprecated method for testing purposes.
+      $annotations['group'] = '##no-group-annotations';
+      $annotations['groups'] = [$annotations['group']];
     }
     $info['group'] = $annotations['group'];
     $info['groups'] = $annotations['groups'];
