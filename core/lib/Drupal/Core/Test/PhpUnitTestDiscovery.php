@@ -66,6 +66,10 @@ class PhpUnitTestDiscovery {
     $list = [];
     foreach ($phpUnitTestSuite->tests() as $testSuite) {
       foreach ($testSuite->tests() as $testClass) {
+        if ($extension !== NULL && !str_starts_with($testClass->name(), "Drupal\\Tests\\{$extension}\\")) {
+          continue;
+        }
+
         $reflection = new \ReflectionClass($testClass->name());
         $docComment = $reflection->getDocComment();
 
@@ -98,6 +102,7 @@ class PhpUnitTestDiscovery {
           'groups' => $groups,
           'type' => $this->reverseMap[$testSuite->name()] ?? $testSuite->name(),
           'description' => $description,
+          'file' => $this->classLoader->findFile($testClass->name()),
         ];
 
         foreach ($groups as $group) {
