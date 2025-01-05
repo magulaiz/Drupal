@@ -9,9 +9,10 @@ use Behat\Mink\Exception\ExpectationException;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\StreamCapturer;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
-use Drupal\TestTools\Extension\Dump\DebugDump;
+use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
 
 // cspell:ignore htkey
@@ -600,19 +601,20 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests the dump() function provided by the var-dumper Symfony component.
    */
   public function testVarDump(): void {
-    // Dump some variables.
-    $object = (object) [
-      'Aldebaran' => 'Betelgeuse',
-    ];
-    dump($object);
-    dump('Alpheratz');
+    // Append the stream capturer to the STDERR stream, so that we can test the
+    // dump() output and also prevent it from actually outputting in this
+    // particular test.
+    stream_filter_register("capture", StreamCapturer::class);
+    stream_filter_append(STDERR, "capture");
 
-    $dumpString = json_encode(DebugDump::getDumps());
+    // Dump some variables to check that dump() in test code produces output
+    // on the command line that is running the test.
+    $role = Role::load('authenticated');
+    dump($role);
+    dump($role->id());
 
-    $this->assertStringContainsString('BrowserTestBaseTest::testVarDump', $dumpString);
-    $this->assertStringContainsString('Aldebaran', $dumpString);
-    $this->assertStringContainsString('Betelgeuse', $dumpString);
-    $this->assertStringContainsString('Alpheratz', $dumpString);
+    $this->assertStringContainsString('Drupal\user\Entity\Role', StreamCapturer::$cache);
+    $this->assertStringContainsString('authenticated', StreamCapturer::$cache);
 
     // Visit a Drupal page with call to the dump() function to check that dump()
     // in site code produces output in the requested web page's HTML.
@@ -628,9 +630,6 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">permissions</span>: []', $body);
     $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">uuid</span>: "', $body);
     $this->assertStringContainsString('</samp>}', $body);
-
-    // Check that dump() in SUT did not leak into the test's dumps.
-    $this->assertSame($dumpString, json_encode(DebugDump::getDumps()));
   }
 
   /**
