@@ -13,13 +13,16 @@ use Drupal\Core\Test\Exception\MissingGroupException;
 use Drupal\Core\Test\TestDiscovery;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
- * @coversDefaultClass \Drupal\Core\Test\TestDiscovery
- * @group Test
+ * Unit tests for TestDiscovery.
  */
+#[CoversClass(TestDiscovery::class)]
+#[Group('Test')]
 class TestDiscoveryTest extends UnitTestCase {
 
   /**

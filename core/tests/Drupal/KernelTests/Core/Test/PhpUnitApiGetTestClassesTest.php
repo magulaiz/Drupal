@@ -7,7 +7,9 @@ namespace Drupal\KernelTests\Core\Test;
 use Drupal\Core\Test\PhpUnitTestDiscovery;
 use Drupal\Core\Test\TestDiscovery;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\TextUI\Configuration\Builder;
 use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
@@ -17,11 +19,11 @@ use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
  *
  * PhpPUnitTestDiscovery uses PHPUnit API to build the list of test classes,
  * while TestDiscovery uses Drupal legacy code.
- *
- * @group TestSuites
- * @group Test
- * @group #slow
  */
+#[CoversClass(PhpUnitTestDiscovery::class)]
+#[Group('TestSuites')]
+#[Group('Test')]
+#[Group('#slow')]
 class PhpUnitApiGetTestClassesTest extends KernelTestBase {
 
   /**
@@ -46,19 +48,21 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
     // additions.
     // 1. Remove TestDiscovery empty groups.
     $internalList = array_filter($internalList);
-    // 2. Remove 'file' keys from PHPUnit results.
+    // 2. Remove TestDiscovery '##no-group-annotations' group.
+    unset($internalList['##no-group-annotations']);
+    // 3. Remove 'file' keys from PHPUnit results.
     foreach ($phpUnitList as &$group) {
       foreach ($group as &$testClass) {
         unset($testClass['file']);
       }
     }
-    // 3. Remove from PHPUnit results groups not found by TestDiscovery.
+    // 4. Remove from PHPUnit results groups not found by TestDiscovery.
     $phpUnitList = array_intersect_key($phpUnitList, $internalList);
-    // 4. Remove from PHPUnit groups classes not found by TestDiscovery.
+    // 5. Remove from PHPUnit groups classes not found by TestDiscovery.
     foreach ($phpUnitList as $groupName => &$group) {
       $group = array_intersect_key($group, $internalList[$groupName]);
     }
-    // 5. Remove from PHPUnit test classes groups not found by TestDiscovery.
+    // 6. Remove from PHPUnit test classes groups not found by TestDiscovery.
     foreach ($phpUnitList as $groupName => &$group) {
       foreach ($group as $testClassName => &$testClass) {
         $testClass['groups'] = array_intersect_key($testClass['groups'], $internalList[$groupName][$testClassName]['groups']);
