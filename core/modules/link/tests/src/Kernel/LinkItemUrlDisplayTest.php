@@ -80,12 +80,9 @@ class LinkItemUrlDisplayTest extends FieldKernelTestBase {
    *   Render result using these display settings.
    */
   protected function checkInternalLinksRender(array $display_settings, array $expected_results): void {
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
-
     // Render link field using display settings.
     $render_array = $this->entity->field_test->view(['settings' => $display_settings]);
-    $output = (string) $renderer->renderRoot($render_array);
+    $output = (string) \Drupal::service('renderer')->renderRoot($render_array);
 
     // Check results.
     foreach ($expected_results as $expected_result) {
