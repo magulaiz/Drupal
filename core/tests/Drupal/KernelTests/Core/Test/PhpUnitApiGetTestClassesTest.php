@@ -29,18 +29,18 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
    */
   #[DataProvider('argumentsProvider')]
   #[IgnoreDeprecations]
-  public function testEquality(array $suites): void {
+  public function testEquality(array $suites, ?string $extension = NULL): void {
     $testDiscovery = new TestDiscovery(
       $this->container->getParameter('app.root'),
       $this->container->get('class_loader')
     );
-    $internalList = $testDiscovery->getTestClasses(NULL, $suites);
+    $internalList = $testDiscovery->getTestClasses($extension, $suites);
 
     $phpUnitTestDiscovery = new PhpUnitTestDiscovery(
       $this->container->getParameter('app.root'),
       $this->container->get('class_loader')
     );
-    $phpUnitList = $phpUnitTestDiscovery->getTestClasses(NULL, $suites);
+    $phpUnitList = $phpUnitTestDiscovery->getTestClasses($extension, $suites);
 
     $this->assertEquals(array_filter($internalList), $phpUnitList);
   }
@@ -55,6 +55,8 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
     yield 'Testsuite: kernel' => ['suites' => ['PHPUnit-Kernel']];
     yield 'Testsuite: unit' => ['suites' => ['PHPUnit-Unit']];
     yield 'Testsuite: build' => ['suites' => ['PHPUnit-Build']];
+    yield 'Extension: system' => ['suites' => [], 'extension' => 'system'];
+    yield 'Extension: system, Testsuite: unit' => ['suites' => ['PHPUnit-Unit'], 'extension' => 'system'];
   }
 
 }
