@@ -173,13 +173,11 @@ class TestDiscovery {
     foreach ($classmap as $classname => $pathname) {
       $finder = MockFileFinder::create($pathname);
       $parser = new StaticReflectionParser($classname, $finder, TRUE);
-      try {
-        $info = static::getTestInfo($classname, $parser->getDocComment());
-      }
-      catch (MissingGroupException $e) {
+      $info = static::getTestInfo($classname, $parser->getDocComment());
+      if ($info['group'] === '##no-group-annotations') {
         // If the class name ends in Test and is not a migrate table dump.
         if (str_ends_with($classname, 'Test') && !str_contains($classname, 'migrate_drupal\Tests\Table')) {
-          throw $e;
+          throw new MissingGroupException(sprintf('Missing @group annotation in %s', $classname));
         }
         // If the class is @group annotation just skip it. Most likely it is an
         // abstract class, trait or test fixture.
