@@ -26,6 +26,8 @@ class TestDiscovery {
    * Statically cached list of test classes.
    *
    * @var array
+   *
+   * @deprecated
    */
   protected $testClasses;
 
@@ -149,6 +151,8 @@ class TestDiscovery {
    *
    * @todo Remove singular grouping; retain list of groups in 'group' key.
    * @see https://www.drupal.org/node/2296615
+   *
+   * @deprecated
    */
   public function getTestClasses($extension = NULL, array $types = [], ?string $directory = NULL) {
     if (!isset($extension) && empty($types)) {
@@ -216,6 +220,8 @@ class TestDiscovery {
    * @return array
    *   A classmap containing all discovered class files; i.e., a map of
    *   fully-qualified classnames to path names.
+   *
+   * @deprecated
    */
   public function findAllClassFiles($extension = NULL, ?string $directory = NULL) {
     $classmap = [];
@@ -256,6 +262,8 @@ class TestDiscovery {
    *
    * @todo Limit to '*Test.php' files (~10% less files to reflect/introspect).
    * @see https://www.drupal.org/node/2296635
+   *
+   * @deprecated
    */
   public static function scanDirectory($namespace_prefix, $path) {
     if (!str_ends_with($namespace_prefix, '\\')) {
@@ -312,6 +320,8 @@ class TestDiscovery {
    *
    * @throws \Drupal\Core\Test\Exception\MissingGroupException
    *   If the class does not have a @group annotation.
+   *
+   * @deprecated
    */
   public static function getTestInfo($classname, $doc_comment = NULL) {
     if ($doc_comment === NULL) {
@@ -396,6 +406,8 @@ class TestDiscovery {
    *
    * @return string|false
    *   The testsuite name or FALSE if its not a phpunit test.
+   *
+   * @deprecated
    */
   public static function getPhpunitTestSuite($classname) {
     if (preg_match('/Drupal\\\\Tests\\\\(\w+)\\\\(\w+)/', $classname, $matches)) {
