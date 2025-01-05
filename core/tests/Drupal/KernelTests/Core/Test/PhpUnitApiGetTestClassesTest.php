@@ -8,6 +8,7 @@ use Drupal\Core\Test\PhpUnitTestDiscovery;
 use Drupal\Core\Test\TestDiscovery;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\TextUI\Configuration\Builder;
 use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
 
@@ -27,6 +28,7 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
    * Checks that Drupal legacy and PHPUnit API based discoveries are equal.
    */
   #[DataProvider('argumentsProvider')]
+  #[IgnoreDeprecations]
   public function testEquality(array $suites): void {
     $testDiscovery = new TestDiscovery(
       $this->container->getParameter('app.root'),

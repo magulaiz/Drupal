@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Test;
 
 use Drupal\Core\Test\TestDiscovery;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\Process\Process;
 
 /**
@@ -52,6 +53,7 @@ class PhpUnitTestDiscoveryTest extends KernelTestBase {
   /**
    * Tests equality of test discovery between run-tests.sh and PHPUnit CLI.
    */
+  #[IgnoreDeprecations]
   public function testPhpUnitTestDiscoveryEqualsInternal(): void {
     // PHPUnit's own test discovery.
     $process = new Process([
