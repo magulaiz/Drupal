@@ -305,7 +305,7 @@ EOF;
   }
 
   /**
-   * @covers ::getTestClasses
+   * @legacy-covers ::getTestClasses
    */
   public function testGetTestClasses(): void {
     $this->setupVfsWithTestClasses();
@@ -374,7 +374,7 @@ EOF;
   }
 
   /**
-   * @covers ::getTestClasses
+   * @legacy-covers ::getTestClasses
    */
   public function testGetTestClassesWithSelectedTypes(): void {
     $this->setupVfsWithTestClasses();
