@@ -61288,7 +61288,7 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined static method Drupal\\\\Core\\\\Test\\\\PhpUnitTestDiscovery\\:\\:getTestInfo\\(\\)\\.$#',
 	'identifier' => 'staticMethod.notFound',
 	'count' => 1,
-	'path' => __DIR__ . '//build/core/scripts/run-tests.sh',
+	'path' => __DIR__ . '/scripts/run-tests.sh',
 ];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];
