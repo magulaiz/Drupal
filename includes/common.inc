@@ -4975,6 +4975,16 @@ function drupal_add_library($module, $name, $every_page = NULL) {
   // Only process the library if it exists and it was not added already.
   if (!isset($added[$module][$name])) {
     if ($library = drupal_get_library($module, $name)) {
+      // Ensure the 'version' key is present in the library.
+      if (!isset($library['version'])) {
+        $library['version'] = '';
+      }
+      // Add 'version' key to each JavaScript file if not present.
+      foreach ($library['js'] as $file => $options) {
+        if (!isset($library['js'][$file]['version'])) {
+          $library['js'][$file]['version'] = $library['version'];
+        }
+      }
       // Add all components within the library.
       $elements['#attached'] = array(
         'library' => $library['dependencies'],
@@ -4991,6 +5001,7 @@ function drupal_add_library($module, $name, $every_page = NULL) {
 
   return $added[$module][$name];
 }
+
 
 /**
  * Retrieves information for a JavaScript/CSS library.
