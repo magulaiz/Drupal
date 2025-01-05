@@ -49,7 +49,7 @@ class PhpUnitTestDiscovery {
     $this->reverseMap = array_flip($this->map);
   }
 
-  public function getTestClasses($extension = NULL, array $types = [], ?string $directory = NULL) {
+  public function getTestClasses($extension = NULL, array $types = [], ?string $directory = NULL): array {
     $args = ['--configuration', $this->root . \DIRECTORY_SEPARATOR . 'core'];
 
     if (!empty($types)) {
@@ -66,10 +66,6 @@ class PhpUnitTestDiscovery {
     $list = [];
     foreach ($phpUnitTestSuite->tests() as $testSuite) {
       foreach ($testSuite->tests() as $testClass) {
-#        $groups = array_filter($testClass->groups(), function (string $value): bool {
-#          return !str_starts_with($value, '__');
-#        });
-
         $reflection = new \ReflectionClass($testClass->name());
         $docComment = $reflection->getDocComment();
 
@@ -83,7 +79,10 @@ class PhpUnitTestDiscovery {
           }
         }
 
-        $groups = $annotations['@group'] ?? [];
+        $groups = array_filter($testClass->groups(), function (string $value): bool {
+          return !str_starts_with($value, '__');
+        });
+        # $groups = $annotations['@group'] ?? [];
         // @todo add failure if missing
 
         if (isset($annotations['@coversDefaultClass'][0])) {
