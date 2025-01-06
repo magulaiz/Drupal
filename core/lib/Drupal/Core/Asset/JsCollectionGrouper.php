@@ -28,7 +28,7 @@ class JsCollectionGrouper implements AssetCollectionGrouperInterface {
     $index = -1;
     foreach ($js_assets as $item) {
       switch ($item['type']) {
-      case 'file':
+        case 'file':
           // Group file items if their 'preprocess' flag is TRUE.
           // Help ensure maximum reuse of aggregate files by only grouping
           // together items that share the same 'group' value.
