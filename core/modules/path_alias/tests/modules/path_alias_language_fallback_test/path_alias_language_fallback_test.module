@@ -5,6 +5,8 @@
  * Mock module for path alias language fallback tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Database\Query\AlterableInterface;
 
 /**
