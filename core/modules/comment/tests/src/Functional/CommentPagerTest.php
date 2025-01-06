@@ -136,6 +136,7 @@ class CommentPagerTest extends CommentTestBase {
 
     // Navigate to each comment permalink as anonymous and assert it appears on
     // the page.
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
     foreach ($comments as $index => $comment) {
       $this->drupalGet($comment->toUrl());
       // $this->assertTrue($this->commentExists($comment), sprintf('Comment %d appears on page %d.', $index + 1, $index + 1));

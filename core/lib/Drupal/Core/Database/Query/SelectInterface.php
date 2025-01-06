@@ -245,9 +245,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Adds a constant as an expression to the list of "fields" to be SELECTed.
    *
-   * @param $constant
+   * @param string $constant
    *   The field for which to create an expression.
-   * @param $alias
+   * @param string $alias
    *   The alias for this expression. If not specified, one will be generated
    *   automatically in the form "expression_#". The alias will be checked for
    *   uniqueness, so the requested alias may not be the alias that is assigned
@@ -261,9 +261,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Adds a field expression to the list of "fields" to be SELECTed.
    *
-   * @param $field
+   * @param string $field
    *   The field for which to create a value.
-   * @param $alias
+   * @param string $alias
    *   The alias for this expression. If not specified, one will be generated
    *   automatically in the form "expression_#". The alias will be checked for
    *   uniqueness, so the requested alias may not be the alias that is assigned
@@ -277,9 +277,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Adds a maximum field expression to the list of "fields" to be SELECTed.
    *
-   * @param $field
+   * @param string $field
    *   The field for which to get the maximum value.
-   * @param $alias
+   * @param string $alias
    *   The alias for this expression. If not specified, one will be generated
    *   automatically in the form "expression_#". The alias will be checked for
    *   uniqueness, so the requested alias may not be the alias that is assigned
@@ -293,9 +293,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Adds a minimum field expression to the list of "fields" to be SELECTed.
    *
-   * @param $field
+   * @param string $field
    *   The field for which to get the minimum value.
-   * @param $alias
+   * @param string $alias
    *   The alias for this expression. If not specified, one will be generated
    *   automatically in the form "expression_#". The alias will be checked for
    *   uniqueness, so the requested alias may not be the alias that is assigned
@@ -309,9 +309,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Adds a sum field expression to the list of "fields" to be SELECTed.
    *
-   * @param $field
+   * @param string $field
    *   The field for which to get the sum value.
-   * @param $alias
+   * @param string $alias
    *   The alias for this expression. If not specified, one will be generated
    *   automatically in the form "expression_#". The alias will be checked for
    *   uniqueness, so the requested alias may not be the alias that is assigned
@@ -325,9 +325,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Adds a count field expression to the list of "fields" to be SELECTed.
    *
-   * @param $field
+   * @param string $field
    *   The field for which to get the count value.
-   * @param $alias
+   * @param string $alias
    *   The alias for this expression. If not specified, one will be generated
    *   automatically in the form "expression_#". The alias will be checked for
    *   uniqueness, so the requested alias may not be the alias that is assigned
@@ -341,7 +341,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Adds a count all expression to the list of "fields" to be SELECTed.
    *
-   * @param $alias
+   * @param string $alias
    *   The alias for this expression. If not specified, one will be generated
    *   automatically in the form "expression_#". The alias will be checked for
    *   uniqueness, so the requested alias may not be the alias that is assigned
@@ -355,9 +355,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Adds a count distinct expression to the list of "fields" to be SELECTed.
    *
-   * @param $field
+   * @param string $field
    *   The field for which to get the count distinct value.
-   * @param $alias
+   * @param string $alias
    *   The alias for this expression. If not specified, one will be generated
    *   automatically in the form "expression_#". The alias will be checked for
    *   uniqueness, so the requested alias may not be the alias that is assigned
@@ -371,9 +371,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Adds a coalesce expression to the list of "fields" to be SELECTed.
    *
-   * @param $fields
+   * @param string $fields
    *   The fields for which to get the coalesce value.
-   * @param $alias
+   * @param string $alias
    *   The alias for this expression. If not specified, one will be generated
    *   automatically in the form "expression_#". The alias will be checked for
    *   uniqueness, so the requested alias may not be the alias that is assigned
