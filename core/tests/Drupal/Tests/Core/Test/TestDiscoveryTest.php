@@ -40,14 +40,14 @@ class TestDiscoveryTest extends UnitTestCase {
     $tests[] = [
       // Expected result.
       [
-        'name' => static::class,
+        'name' => TestDatabaseTest::class,
         'group' => 'Test',
-        'groups' => ['Test'],
-        'description' => 'Tests \Drupal\Core\Test\TestDiscovery.',
+        'groups' => ['Test', 'simpletest', 'Template'],
+        'description' => 'Tests \Drupal\Core\Test\TestDatabase.',
         'type' => 'PHPUnit-Unit',
       ],
       // Classname.
-      static::class,
+      TestDatabaseTest::class,
     ];
 
     // A core unit test.
