@@ -21,7 +21,7 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\workspaces\EntityTypeInfo;
+use Drupal\workspaces\Hook\EntityTypeInfo;
 
 /**
  * Hook implementations for system.

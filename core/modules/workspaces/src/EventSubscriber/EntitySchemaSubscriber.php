@@ -10,7 +10,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeListenerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\workspaces\EntityTypeInfo;
+use Drupal\workspaces\Hook\EntityTypeInfo;
 use Drupal\workspaces\WorkspaceInformationInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
