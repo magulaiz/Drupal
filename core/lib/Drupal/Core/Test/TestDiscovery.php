@@ -174,19 +174,22 @@ class TestDiscovery {
     foreach ($classmap as $classname => $pathname) {
       $finder = MockFileFinder::create($pathname);
       $parser = new StaticReflectionParser($classname, $finder, TRUE);
-      $info = static::getTestInfo($classname, $parser->getDocComment());
-      if ($info['group'] === '##no-group-annotations') {
+      try {
+        $info = static::getTestInfo($classname, $parser->getDocComment());
+      }
+      catch (MissingGroupException $e) {
         // If the class name ends in Test and is not a migrate table dump.
         if (str_ends_with($classname, 'Test') && !str_contains($classname, 'migrate_drupal\Tests\Table')) {
           $reflection = new \ReflectionClass($classname);
           $groupAttributes = $reflection->getAttributes(Group::class, \ReflectionAttribute::IS_INSTANCEOF);
           if (!empty($groupAttributes)) {
-            foreach ($info['groups'] as $group) {
-              $list[$group][$classname] = $info;
-            }
+            $group = '##no-group-annotations';
+            $info['group'] = $group;
+            $info['groups'] = [$group];
+            $list[$group][$classname] = $info;
             continue;
           }
-          throw new MissingGroupException(sprintf('Missing @group annotation in %s', $classname));
+          throw $e;
         }
         // If the class is @group annotation just skip it. Most likely it is an
         // abstract class, trait or test fixture.
@@ -359,11 +362,8 @@ class TestDiscovery {
     }
 
     if (empty($annotations['group'])) {
-      // No group annotations, but they might have been replaced by attributes.
-      // We still associate to a dummy group, so not to fail calling this
-      // deprecated method for testing purposes.
-      $annotations['group'] = '##no-group-annotations';
-      $annotations['groups'] = [$annotations['group']];
+      // Concrete tests must have a group.
+      throw new MissingGroupException(sprintf('Missing @group annotation in %s', $classname));
     }
     $info['group'] = $annotations['group'];
     $info['groups'] = $annotations['groups'];

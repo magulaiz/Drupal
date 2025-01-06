@@ -936,13 +936,11 @@ function simpletest_script_get_test_list() {
     \Drupal::root(),
     \Drupal::service('class_loader')
   );
-  $types_processed = empty($args['types']);
   $test_list = [];
   $slow_tests = [];
   if ($args['all'] || $args['module'] || $args['directory']) {
     try {
       $groups = $test_discovery->getTestClasses($args['module'], $args['types'], $args['directory']);
-      $types_processed = TRUE;
     }
     catch (Exception $e) {
       echo (string) $e;
@@ -1030,7 +1028,6 @@ function simpletest_script_get_test_list() {
     else {
       try {
         $groups = $test_discovery->getTestClasses(NULL, $args['types']);
-        $types_processed = TRUE;
       }
       catch (Exception $e) {
         echo (string) $e;
@@ -1052,15 +1049,6 @@ function simpletest_script_get_test_list() {
       // Ensure our list of tests contains only one entry for each test.
       $test_list = array_unique($test_list);
     }
-  }
-
-  // If the test list creation does not automatically limit by test type then
-  // we need to do so here.
-  if (!$types_processed) {
-    $test_list = array_filter($test_list, function ($test_class) use ($args) {
-      $test_info = PhpUnitTestDiscovery::getTestInfo($test_class);
-      return in_array($test_info['type'], $args['types'], TRUE);
-    });
   }
 
   if (empty($test_list)) {
