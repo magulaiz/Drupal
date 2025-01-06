@@ -71,6 +71,13 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
   }
 
   public static function testAccessProvider() {
+    $c = new ContainerBuilder();
+    $cache_contexts_manager = (new Prophet())->prophesize(CacheContextsManager::class);
+    $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
+    $cache_contexts_manager->reveal();
+    $c->set('cache_contexts_manager', $cache_contexts_manager);
+    \Drupal::setContainer($c);
+
     return [
       'No permission + unlocked' => [
         [],

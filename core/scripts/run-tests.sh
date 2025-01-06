@@ -87,6 +87,9 @@ if ($args['list']) {
   );
   try {
     $groups = $test_discovery->getTestClasses($args['module']);
+    foreach ($test_discovery->getWarnings() as $warning) {
+      simpletest_script_print($warning . "\n", SIMPLETEST_SCRIPT_COLOR_EXCEPTION);
+    }
   }
   catch (Exception $e) {
     error_log((string) $e);
@@ -941,6 +944,9 @@ function simpletest_script_get_test_list() {
   if ($args['all'] || $args['module'] || $args['directory']) {
     try {
       $groups = $test_discovery->getTestClasses($args['module'], $args['types'], $args['directory']);
+      foreach ($test_discovery->getWarnings() as $warning) {
+        simpletest_script_print($warning . "\n", SIMPLETEST_SCRIPT_COLOR_EXCEPTION);
+      }
     }
     catch (Exception $e) {
       echo (string) $e;
@@ -999,6 +1005,9 @@ function simpletest_script_get_test_list() {
         else {
           try {
             $groups = $test_discovery->getTestClasses(NULL, $args['types']);
+            foreach ($test_discovery->getWarnings() as $warning) {
+              simpletest_script_print($warning . "\n", SIMPLETEST_SCRIPT_COLOR_EXCEPTION);
+            }
           }
           catch (Exception $e) {
             echo (string) $e;
@@ -1028,6 +1037,9 @@ function simpletest_script_get_test_list() {
     else {
       try {
         $groups = $test_discovery->getTestClasses(NULL, $args['types']);
+        foreach ($test_discovery->getWarnings() as $warning) {
+          simpletest_script_print($warning . "\n", SIMPLETEST_SCRIPT_COLOR_EXCEPTION);
+        }
       }
       catch (Exception $e) {
         echo (string) $e;
