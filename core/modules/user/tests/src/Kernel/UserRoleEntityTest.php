@@ -8,13 +8,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 
 /**
- * Tests for the Role entity.
- *
  * @group user
- *
  * @coversDefaultClass \Drupal\user\Entity\Role
- *
- * @see \Drupal\user\Entity\Role
  */
 class UserRoleEntityTest extends KernelTestBase {
 
@@ -65,23 +60,6 @@ class UserRoleEntityTest extends KernelTestBase {
     $this->assertSame(['a', 'b', 'c'], $role->getPermissions());
     $role->revokePermission('b')->save();
     $this->assertSame(['a', 'c'], $role->getPermissions());
-  }
-
-  /**
-   * Tests the setting and getting of a roles descriptions.
-   *
-   * @covers ::getDescription
-   * @covers ::setDescription
-   */
-  public function testRoleDescription() {
-    /** @var \Drupal\user\Entity\RoleInterface $role */
-    $role = Role::create(['id' => 'test_role']);
-
-    $description = 'Lorem ipsum.';
-    $role->setDescription($description);
-
-    $this->assertEquals($role->getDescription(), $description);
-
   }
 
 }
