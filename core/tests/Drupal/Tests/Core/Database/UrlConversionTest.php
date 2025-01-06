@@ -8,7 +8,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Tests\UnitTestCase;
 
-// cspell:ignore replicaset dbrs
+// cspell:ignore dummydb replicaset dbrs
 
 /**
  * Tests for database URL to/from database connection array conversions.
@@ -517,12 +517,32 @@ class UrlConversionTest extends UnitTestCase {
     return [
       ['foo', '', "Missing scheme in URL 'foo'"],
       ['foo', 'bar', "Missing scheme in URL 'foo'"],
-      ['foo://', 'bar', 'The database_driver Drupal\foo\Driver\Database\foo does not exist.'],
-      ['foo://bar', 'baz', 'The database_driver Drupal\foo\Driver\Database\foo does not exist.'],
-      ['foo://bar:port', 'baz', 'The database_driver Drupal\foo\Driver\Database\foo does not exist.'],
       ['foo/bar/baz', 'bar2', "Missing scheme in URL 'foo/bar/baz'"],
-      ['foo://bar:baz@test1', 'test2', 'The database_driver Drupal\foo\Driver\Database\foo does not exist.'],
     ];
+  }
+
+  /**
+   * Tests that connection URL with no module name defaults to driver name.
+   */
+  public function testNoModuleSpecifiedDefaultsToDriverName(): void {
+    $url = 'dummydb://test_user:test_pass@test_host/test_database';
+    $connection_info = Database::convertDbUrlToConnectionInfo($url, $this->root, TRUE);
+    $expected = [
+      'driver' => 'dummydb',
+      'username' => 'test_user',
+      'password' => 'test_pass',
+      'host' => 'test_host',
+      'database' => 'test_database',
+      'namespace' => 'Drupal\dummydb\Driver\Database\dummydb',
+      'autoload' => 'core/modules/system/tests/modules/dummydb/src/Driver/Database/dummydb/',
+      'dependencies' => [
+        'mysql' => [
+          'namespace' => 'Drupal\mysql',
+          'autoload' => 'core/modules/mysql/src/',
+        ],
+      ],
+    ];
+    $this->assertSame($expected, $connection_info);
   }
 
   /**
@@ -792,7 +812,7 @@ class UrlConversionTest extends UnitTestCase {
     Database::addConnectionInfo('default', 'default', $connection_options);
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($expected_exception_message);
-    $url = Database::getConnectionInfoAsUrl();
+    Database::getConnectionInfoAsUrl();
   }
 
   /**

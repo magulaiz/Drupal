@@ -6,6 +6,7 @@ namespace Drupal\Tests\file\Functional;
 
 use Drupal\Core\File\FileExists;
 use Drupal\file\Entity\File;
+use Drupal\file_test\FileTestHelper;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -102,7 +103,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // Check that the correct hooks were called then clean out the hook
     // counters.
     $this->assertFileHooksCalled(['validate', 'insert']);
-    file_test_reset();
+    FileTestHelper::reset();
   }
 
   /**
@@ -128,7 +129,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->assertEquals('image', substr($file1->getMimeType(), 0, 5), 'A MIME type was set.');
 
     // Reset the hook counters to get rid of the 'load' we just called.
-    file_test_reset();
+    FileTestHelper::reset();
 
     // Upload a second file.
     $image2 = current($this->drupalGetTestFiles('image'));
@@ -205,7 +206,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->assertFileHooksCalled(['validate']);
 
     // Reset the hook counters.
-    file_test_reset();
+    FileTestHelper::reset();
 
     $extensions = 'foo ' . $this->imageExtension;
     // Now tell _file_save_upload_from_form() to allow the extension of our test image.
@@ -225,7 +226,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->assertFileHooksCalled(['validate', 'load', 'update']);
 
     // Reset the hook counters.
-    file_test_reset();
+    FileTestHelper::reset();
 
     // Now tell _file_save_upload_from_form() to allow any extension.
     $edit = [
@@ -273,7 +274,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // Turn on insecure uploads.
     $config->set('allow_insecure_uploads', 1)->save();
     // Reset the hook counters.
-    file_test_reset();
+    FileTestHelper::reset();
 
     $this->drupalGet('file-test/save_upload_from_form_test');
     $this->submitForm($edit, 'Submit');
@@ -289,7 +290,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $config->set('allow_insecure_uploads', 0)->save();
 
     // Reset the hook counters.
-    file_test_reset();
+    FileTestHelper::reset();
 
     $edit = [
       'file_test_replace' => FileExists::Replace->name,
@@ -322,7 +323,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->image = $file_repository->move($this->image, $original_uri . '.foo.' . $this->imageExtension);
 
     // Reset the hook counters to get rid of the 'move' we just called.
-    file_test_reset();
+    FileTestHelper::reset();
 
     $extensions = $this->imageExtension;
     $edit = [
@@ -347,7 +348,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // Test with uppercase extensions.
     $this->image = $file_repository->move($this->image, $original_uri . '.foo2.' . $this->imageExtension);
     // Reset the hook counters.
-    file_test_reset();
+    FileTestHelper::reset();
     $extensions = $this->imageExtension;
     $edit = [
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
@@ -370,7 +371,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
 
     // Ensure we don't munge files if we're allowing any extension.
     // Reset the hook counters.
-    file_test_reset();
+    FileTestHelper::reset();
 
     // Ensure we don't munge files if we're allowing any extension.
     $edit = [
@@ -391,7 +392,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // Ensure that setting $validators['FileExtension'] = ['extensions' => NULL]
     // rejects all files.
     // Reset the hook counters.
-    file_test_reset();
+    FileTestHelper::reset();
 
     $edit = [
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),

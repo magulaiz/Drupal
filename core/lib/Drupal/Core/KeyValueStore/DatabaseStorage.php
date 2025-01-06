@@ -240,7 +240,7 @@ class DatabaseStorage extends StorageBase {
    * @return bool
    *   TRUE if the data was set, FALSE if it already existed.
    */
-  public function doSetIfNotExists($key, $value) {
+  protected function doSetIfNotExists($key, $value) {
     if (($this->connection->driver() == 'mongodb') && !$this->tableExists) {
       $this->tableExists = $this->ensureTableExists();
     }

@@ -93,7 +93,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
   /**
    * Adds a queue item and store it directly to the queue.
    *
-   * @param $data
+   * @param mixed $data
    *   Arbitrary data to be associated with the new task in the queue.
    *
    * @return int|string
@@ -330,7 +330,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
    * yet the query failed, then the queue is stale and the exception needs to
    * propagate.
    *
-   * @param $e
+   * @param \Exception $e
    *   The exception.
    *
    * @throws \Exception

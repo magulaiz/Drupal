@@ -185,6 +185,7 @@ class DbLogController extends ControllerBase {
         'data' => [
           // Cells.
           ['class' => ['icon']],
+          // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
           $this->t($dblog->type),
           $this->dateFormatter->format($dblog->timestamp, 'short'),
           $message,
@@ -247,6 +248,7 @@ class DbLogController extends ControllerBase {
     $rows = [
       [
         ['data' => $this->t('Type'), 'header' => TRUE],
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         $this->t($dblog->type),
       ],
       [
@@ -303,16 +305,16 @@ class DbLogController extends ControllerBase {
   /**
    * Builds a query for database log administration filters based on session.
    *
+   * This method retrieves the session-based filters from the request and applies
+   * them to the provided query object. If no filters are present, the query is
+   * left unchanged.
+   *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
    * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   The database query.
-   *
-   * @return array|null
-   *   An associative array with keys 'where' and 'args' or NULL if there were
-   *   no filters set.
    */
-  protected function addFilterToQuery(Request $request, SelectInterface &$query) {
+  protected function addFilterToQuery(Request $request, SelectInterface &$query): void {
     $session_filters = $request->getSession()->get('dblog_overview_filter', []);
     if (empty($session_filters)) {
       return;
@@ -385,6 +387,7 @@ class DbLogController extends ControllerBase {
             $row->backtrace = $variables['@backtrace_string'];
           }
         }
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         $message = $this->t(Xss::filterAdmin($row->message), $variables);
       }
     }

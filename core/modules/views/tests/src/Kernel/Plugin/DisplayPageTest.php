@@ -166,7 +166,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests the readmore functionality.
+   * Tests the 'read more' functionality.
    */
   public function testReadMore(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */

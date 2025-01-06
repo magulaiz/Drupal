@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Random;
@@ -172,9 +173,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @var array
    */
   protected static $jsonApiMember = [
-    'version' => '1.0',
+    'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
     'meta' => [
-      'links' => ['self' => ['href' => 'http://jsonapi.org/format/1.0/']],
+      'links' => ['self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK]],
     ],
   ];
 
@@ -2585,7 +2586,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     ksort($array);
 
     // Then check for child arrays.
-    foreach ($array as $key => &$value) {
+    foreach ($array as &$value) {
       if (is_array($value)) {
         static::recursiveKsort($value);
       }
@@ -2780,7 +2781,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       }
     }
 
-    foreach ($field_sets as $type => $included_paths) {
+    foreach ($field_sets as $included_paths) {
       $this->grantIncludedPermissions($included_paths);
       $query = ['include' => implode(',', $included_paths)];
       $url->setOption('query', $query);

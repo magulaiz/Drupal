@@ -203,9 +203,9 @@ interface ConditionInterface {
    * This method does not return anything, but simply prepares data to be
    * retrieved via __toString() and arguments().
    *
-   * @param $connection
+   * @param \Drupal\Core\Database\Connection $connection
    *   The database connection for which to compile the conditionals.
-   * @param $queryPlaceholder
+   * @param \Drupal\Core\Database\Query\PlaceholderInterface $queryPlaceholder
    *   The query this condition belongs to. If not given, the current query is
    *   used.
    */
@@ -224,7 +224,7 @@ interface ConditionInterface {
    *
    * See andConditionGroup() and orConditionGroup() for more.
    *
-   * @param $conjunction
+   * @param string $conjunction
    *   - AND (default): this is the equivalent of andConditionGroup().
    *   - OR: this is the equivalent of orConditionGroup().
    *
@@ -237,6 +237,7 @@ interface ConditionInterface {
    * Creates a new group of conditions ANDed together.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
+   *   An object holding a group of conditions.
    */
   public function andConditionGroup();
 
@@ -244,6 +245,7 @@ interface ConditionInterface {
    * Creates a new group of conditions ORed together.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
+   *   An object holding a group of conditions.
    */
   public function orConditionGroup();
 
