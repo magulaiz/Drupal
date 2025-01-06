@@ -194,14 +194,6 @@ class LocalActionManagerTest extends UnitTestCase {
   }
 
   public static function getActionsForRouteProvider() {
-    $cache_contexts_manager = (new Prophet())->prophesize(CacheContextsManager::class);
-    $cache_contexts_manager->assertValidTokens(Argument::any())
-      ->willReturn(TRUE);
-
-    $container = new Container();
-    $container->set('cache_contexts_manager', $cache_contexts_manager->reveal());
-    \Drupal::setContainer($container);
-
     // Single available and single expected plugins.
     $data[] = [
       'test_route',
