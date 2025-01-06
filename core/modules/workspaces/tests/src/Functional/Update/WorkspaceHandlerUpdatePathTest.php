@@ -32,7 +32,7 @@ class WorkspaceHandlerUpdatePathTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests the update path for string IDs in workspace_association.
+   * Tests the update path for workspace handlers in entity type definitions.
    */
   public function testRunUpdates(): void {
     $handlers = [
