@@ -106,7 +106,7 @@ variables:
 .run-repeat-class-test: &run-repeat-class-test
   script:
     - echo "ℹ️ Running class ${REPEAT_TEST_CLASS}"
-    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "10" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class "\Drupal\Tests\package_manager\Build\PackageUpdateTest"
+    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class "\Drupal\Tests\package_manager\Build\PackageUpdateTest"
 
 ################
 # Jobs
