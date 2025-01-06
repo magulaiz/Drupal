@@ -17,9 +17,10 @@ use Drupal\Core\Theme\ThemeManagerInterface;
  */
 class AssetResolver implements AssetResolverInterface {
 
-  protected const ONLY_ANCESTOR = 0;
-  protected const NO_ANCESTRY = 1;
-  protected const ANCESTOR_AND_CHILD = 1;
+  protected const JS_SETTING = -300;
+  protected const ONLY_ANCESTOR = -200;
+  protected const ANCESTOR_AND_CHILD = -100;
+  protected const NO_ANCESTRY = 0;
 
   /**
    * The library discovery service.
@@ -315,7 +316,7 @@ class AssetResolver implements AssetResolverInterface {
         $libraries_without_dependencies[] = $library;
       }
       else {
-        $ancestor_libraries = $ancestor_libraries + $definition['dependencies'];
+        $ancestor_libraries = array_unique(array_merge($ancestor_libraries, $definition['dependencies']));
       }
     }
     $only_ancestors = array_intersect($ancestor_libraries, $libraries_without_dependencies);
@@ -371,13 +372,13 @@ class AssetResolver implements AssetResolverInterface {
           $options['weight'] += count($javascript) / 30000;
 
           if (in_array($library, $only_ancestors)) {
-            $options['dependency_type'] = static::ONLY_ANCESTOR;
+            $options['group'] = static::ONLY_ANCESTOR;
           }
           elseif (in_array($library, $ancestor_libraries)) {
-            $options['dependency_type'] = static::ANCESTOR_AND_CHILD;
+            $options['group'] = static::ANCESTOR_AND_CHILD;
           }
           else {
-            $options['dependency_type'] = static::NO_ANCESTRY;
+            $options['group'] = static::NO_ANCESTRY;
           }
           // Local and external files must keep their name as the associative
           // key so the same JavaScript file is not added twice.
@@ -449,7 +450,7 @@ class AssetResolver implements AssetResolverInterface {
       }
       $settings_as_inline_javascript = [
         'type' => 'setting',
-        'group' => JS_SETTING,
+        'group' => static::JS_SETTING,
         'weight' => 0,
         'data' => $settings,
       ];
