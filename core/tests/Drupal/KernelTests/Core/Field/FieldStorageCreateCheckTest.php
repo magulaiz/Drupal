@@ -31,8 +31,8 @@ class FieldStorageCreateCheckTest extends KernelTestBase {
       $this->expectExceptionMessage("Exception thrown while performing a schema update. Cannot add embedded table entity_test__field_test to the entity_test, because entity_test doesn't exist.");
     }
     else {
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Creating the "entity_test.field_test" field storage definition without the entity schema "entity_test" being installed is not allowed.');
+      $this->expectException(\LogicException::class);
+      $this->expectExceptionMessage('Creating the "entity_test.field_test" field storage definition without the entity schema "entity_test" being installed is not allowed.');
     }
 
     FieldStorageConfig::create([
