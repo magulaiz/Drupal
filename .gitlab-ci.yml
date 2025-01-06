@@ -398,6 +398,7 @@ default:
         composer outdated;
       fi
     - vendor/bin/phpcs --version
+    - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
     expire_in: 1 week
     expose_as: 'web-vendor'
