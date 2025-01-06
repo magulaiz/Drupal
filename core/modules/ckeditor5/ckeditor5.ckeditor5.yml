@@ -835,3 +835,27 @@ media_library_mediaLibrary:
     conditions:
       filter: media_embed
       toolbarItem: drupalMedia
+
+ckeditor5_mediaResize:
+  ckeditor5:
+    plugins:
+      - drupalMedia.DrupalMediaResize
+    config:
+      drupalMedia:
+        resizeUnit: 'px'
+        resizeOptions:
+          -
+            name: 'resizeMediaImage:original'
+            value: null
+        toolbar: [resizeMediaImage]
+        dataAttribute: data-media-width
+  drupal:
+    label: Media image resize
+    library: ckeditor5/internal.drupal.ckeditor5.mediaResize
+    class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\MediaResize
+    elements:
+      - <drupal-media data-media-width>
+    conditions:
+      filter: filter_resize_media
+      toolbarItem: drupalMedia
+      plugins: [media_media]

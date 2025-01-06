@@ -169,6 +169,23 @@ ckeditor5.plugin.media_media:
       constraints:
         NotNull: []
 
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\MediaResize
+ckeditor5.plugin.ckeditor5_mediaResize:
+  type: mapping
+  label: Media Resize
+  mapping:
+    apply_image_styles:
+      type: boolean
+      label: 'Apply image styles'
+      constraints:
+        NotNull: [ ]
+    image_styles:
+      type: sequence
+      label: 'Resize image styles'
+      sequence:
+        type: string
+        label: 'Resize image style'
+
 # Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\CodeBlock
 ckeditor5.plugin.ckeditor5_codeBlock:
   type: mapping
