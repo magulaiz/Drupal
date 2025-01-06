@@ -123,13 +123,6 @@ class WorkflowAccessControlHandlerTest extends KernelTestBase {
    * @return array
    */
   public static function checkAccessProvider() {
-    $container = new ContainerBuilder();
-    $cache_contexts_manager = (new Prophet())->prophesize(CacheContextsManager::class);
-    $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
-    $cache_contexts_manager->reveal();
-    $container->set('cache_contexts_manager', $cache_contexts_manager);
-    \Drupal::setContainer($container);
-
     return [
       'Admin view' => [
         'adminUser',
