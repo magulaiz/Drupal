@@ -116,4 +116,18 @@ class TransactionTest extends DriverSpecificTransactionTestBase {
     $this->markTestSkipped('The MongoDB database driver does not support nested transactions.');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function testRollbackAfterDdlStatementForNonTransactionalDdlDatabase(): void {
+    $this->markTestSkipped('The MongoDB database driver does not support nested transactions.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testRootTransactionEndCallbackFailureUponDdlAndRollbackForNonTransactionalDdlDatabase(): void {
+    $this->markTestSkipped('The MongoDB database driver does not support nested transactions.');
+  }
+
 }
