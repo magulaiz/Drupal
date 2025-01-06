@@ -80,6 +80,7 @@ class PhpUnitTestDiscovery {
       $this->warnings[] = '*** The service container was changed during the test discovery ***';
       $this->warnings[] = 'Probably a test data provider method called \\Drupal::setContainer.';
       $this->warnings[] = 'Ensure that all the data providers restore the original container before returning data.';
+      assert(isset($container));
       \Drupal::setContainer($container);
     }
 
