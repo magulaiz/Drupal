@@ -85,15 +85,25 @@ class State extends CacheCollector implements StateInterface {
    * {@inheritdoc}
    */
   public function set($key, $value) {
-    if (isset(self::$deprecatedState[$key])) {
-      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
-      @trigger_error(self::$deprecatedState[$key]['message'], E_USER_DEPRECATED);
-      $key = self::$deprecatedState[$key]['replacement'];
+    $this->setMultiple([$key => $value]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMultiple(array $data) {
+    foreach ($data as $key => $value) {
+      if (isset(self::$deprecatedState[$key])) {
+        // phpcs:ignore Drupal.Semantics.FunctionTriggerError
+        @trigger_error(self::$deprecatedState[$key]['message'], E_USER_DEPRECATED);
+        $data[self::$deprecatedState[$key]['replacement']] = $value;
+        unset($data[$key]);
+      }
     }
-    $this->keyValueStore->set($key, $value);
+    $this->keyValueStore->setMultiple($data);
     // If another request had a cache miss before this request, and also hasn't
-    // written to cache yet, then it may already have read this value from the
-    // database and could write that value to the cache to the end of the
+    // written to cache yet, then it may already have read the previous value
+    // from the database and could write it to the cache to the end of the
     // request. To avoid this race condition, attempt to acquire a lock and
     // write to the cache immediately after calling parent::set(). This allows
     // the race condition detection in CacheCollector::updateCache() to work.
@@ -102,8 +112,10 @@ class State extends CacheCollector implements StateInterface {
     // item at the beginning of the request, but one was written by another
     // request before ::updateCache() is called - the new cache item functions
     // as a tombstone record in this case.
-    parent::set($key, $value);
-    $this->persist($key);
+    foreach ($data as $key => $value) {
+      parent::set($key, $value);
+      $this->persist($key);
+    }
     $lock_name = $this->getCid() . ':' . CacheCollector::class;
     $lock_acquired = $this->lock->acquire($lock_name);
     if (!$lock_acquired) {
@@ -135,7 +147,8 @@ class State extends CacheCollector implements StateInterface {
       // CacheCollector.
       usleep(10000);
     }
-    $this->cache->set($this->getCid(), [$key => $value], CacheBackendInterface::CACHE_PERMANENT, $this->tags);
+    $this->cache->set($this->getCid(), $data, CacheBackendInterface::CACHE_PERMANENT, $this->tags);
+
     // Now that the cache item has been created, immediately read it back to
     // update cacheCreated with the new timestamp, this will be compared in
     // ::updateCache later.
@@ -146,29 +159,6 @@ class State extends CacheCollector implements StateInterface {
     // CacheCollector::updateCache() to release the lock at the end of the
     // request. This ensures we don't delete the cache item we've just set,
     // which would undo its utility as a tombstone record.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setMultiple(array $data) {
-    $this->keyValueStore->setMultiple($data);
-    foreach ($data as $key => $value) {
-      parent::set($key, $value);
-      $this->persist($key);
-    }
-    // If another request had a cache miss before this request, and also hasn't
-    // written to cache yet, then it may already have read this value from the
-    // database and could write that value to the cache to the end of the
-    // request. To avoid this race condition, attempt to acquire a the lock and
-    // write to the cache immediately after calling parent::set(). This allows
-    // the race condition detection in CacheCollector::updateCache() to work.
-    $lock_name = $this->getCid() . ':' . CacheCollector::class;
-    $lock_acquired = $this->lock->acquire($lock_name);
-    $this->cache->set($this->getCid(), [$data], CacheBackendInterface::CACHE_PERMANENT, $this->tags);
-    if ($lock_acquired) {
-      $this->lock->release($lock_name);
-    }
   }
 
   /**
