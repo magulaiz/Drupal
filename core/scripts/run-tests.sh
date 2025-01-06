@@ -1312,7 +1312,7 @@ function simpletest_script_reporter_write_xml_results(TestRunResultsStorageInter
 function simpletest_script_reporter_timer_stop() {
   echo "\n";
   $end = Timer::stop('run-tests');
-//  echo "Test run duration: " . \Drupal::service('date.formatter')->formatInterval((int) ($end['time'] / 1000));
+  echo "Test run duration: " . \Drupal::service('date.formatter')->formatInterval((int) ($end['time'] / 1000));
   echo "\n\n";
 }
 
