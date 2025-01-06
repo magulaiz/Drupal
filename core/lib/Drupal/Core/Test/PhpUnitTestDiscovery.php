@@ -207,6 +207,29 @@ class PhpUnitTestDiscovery {
     return $list;
   }
 
+  /**
+   * Discovers all class files in all available extensions.
+   *
+   * @param string|null $extension
+   *   (optional) The name of an extension to limit discovery to; e.g., 'node'.
+   * @param string|null $directory
+   *   (optional) Limit discovered tests to a specific directory.
+   *
+   * @return array
+   *   A classmap containing all discovered class files; i.e., a map of
+   *   fully-qualified classnames to path names.
+   */
+  public function findAllClassFiles(?string $extension = NULL, ?string $directory = NULL): array {
+    $testClasses = $this->getTestClasses($extension, [], $directory);
+    $classMap = [];
+    foreach ($testClasses as $group) {
+      foreach ($group as $className => $info) {
+        $classMap[$className] = $info['file'];
+      }
+    }
+    return $classMap;
+  }
+
   public function getWarnings(): array {
     return $this->warnings;
   }
