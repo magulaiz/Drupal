@@ -35,6 +35,8 @@ class PhpUnitTestDiscovery {
 
   private array $reverseMap;
 
+  private array $warnings = [];
+
   /**
    * Constructs a new test discovery.
    *
@@ -51,6 +53,8 @@ class PhpUnitTestDiscovery {
   }
 
   public function getTestClasses($extension = NULL, array $types = [], ?string $directory = NULL): array {
+    $this->warnings = [];
+
     $args = ['--configuration', $this->root . \DIRECTORY_SEPARATOR . 'core'];
 
     if (!empty($types)) {
@@ -66,7 +70,18 @@ class PhpUnitTestDiscovery {
     }
 
     $phpUnitConfiguration = (new Builder())->build($args);
+
+    if (\Drupal::hasContainer()) {
+      $container = \Drupal::getContainer();
+      $containerObjectId = spl_object_id($container);
+    }
     $phpUnitTestSuite = (new TestSuiteBuilder())->build($phpUnitConfiguration);
+    if (isset($containerObjectId) && $containerObjectId !== spl_object_id(\Drupal::getContainer())) {
+      $this->warnings[] = '*** The service container was changed during the test discovery ***';
+      $this->warnings[] = 'Probably a test data provider method called \\Drupal::setContainer.';
+      $this->warnings[] = 'Ensure that all the data providers restore the original container before returning data.';
+      \Drupal::setContainer($container);
+    }
 
     if ($directory !== NULL) {
       $list = [];
@@ -191,4 +206,7 @@ class PhpUnitTestDiscovery {
     return $list;
   }
 
+  public function getWarnings(): array {
+    return $this->warnings;
+  }
 }
