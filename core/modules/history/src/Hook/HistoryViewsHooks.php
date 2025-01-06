@@ -25,7 +25,7 @@ class HistoryViewsHooks {
     $data['history']['table']['group'] = t('Content');
 
     // Which table to use as the base table for the entity type "node".
-    if (Database::getConnection()->driver() == 'mongodb') {
+    if (\Drupal::database()->driver() == 'mongodb') {
       $node_table = 'node';
     }
     else {
@@ -34,17 +34,17 @@ class HistoryViewsHooks {
 
     // Explain how this table joins to others.
     $data['history']['table']['join'] = [
-          // Directly links to node table.
+      // Directly links to node table.
       $node_table => [
         'table' => 'history',
         'left_field' => 'nid',
         'field' => 'nid',
         'extra' => [
-                  [
-                    'field' => 'uid',
-                    'value' => '***CURRENT_USER***',
-                    'numeric' => TRUE,
-                  ],
+          [
+            'field' => 'uid',
+            'value' => '***CURRENT_USER***',
+            'numeric' => TRUE,
+          ],
         ],
       ],
     ];
