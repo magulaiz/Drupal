@@ -20888,12 +20888,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/history/history.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function history_views_data\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/history/history.views.inc',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\history\\\\Controller\\\\HistoryController\\:\\:readNode\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -38936,18 +38930,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/cron_queue_test/src/Plugin/QueueWorker/CronQueueTestSuspendQueue.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function database_test_query_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/database_test/database_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function database_test_query_database_test_alter_remove_range_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/database_test/database_test.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\database_test\\\\Form\\\\DatabaseTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -44734,30 +44716,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/taxonomy.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function taxonomy_token_info\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/taxonomy.tokens.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function taxonomy_tokens\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/taxonomy.tokens.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function taxonomy_field_views_data_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/taxonomy.views.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function taxonomy_views_data_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/taxonomy.views.inc',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy_crud\\\\Hook\\\\TaxonomyCrudHooks\\:\\:taxonomyVocabularyPresave\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -47318,12 +47276,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function user_views_query_substitutions\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.views_execution.inc',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views\\\\Ajax\\\\HighlightCommand\\:\\:render\\(\\) has no return type specified\\.$#',
@@ -54148,22 +54100,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/style/StyleTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function views_test_entity_reference_views_data_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_entity_reference/views_test_entity_reference.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_test_modal\\\\Controller\\\\TestController\\:\\:modal\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_modal/src/Controller/TestController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _views_test_query_access_restrict_by_uuid\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_query_access/views_test_query_access.module',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\DefaultViewsTest\\:\\:addDefaultCommentField\\(\\) has no return type specified\\.$#',
