@@ -79,13 +79,19 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       // Update all affected workspaces that were tracking the current revision.
       // This means they are inheriting content and should be updated.
       if ($tracked_revision_id) {
+        if ($id_field === 'target_entity_id') {
+          $entity_id = (int) $entity->id();
+        }
+        else {
+          $entity_id = (string) $entity->id();
+        }
         $this->database->update(static::TABLE)
           ->fields([
             'target_entity_revision_id' => $entity->getRevisionId(),
           ])
           ->condition('workspace', $affected_workspaces, 'IN')
           ->condition('target_entity_type_id', $entity->getEntityTypeId())
-          ->condition($id_field, (int) $entity->id())
+          ->condition($id_field, $entity_id)
           // Only update descendant workspaces if they have the same initial
           // revision, which means they are currently inheriting content.
           ->condition('target_entity_revision_id', (int) $tracked_revision_id)
@@ -162,10 +168,18 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $query->condition('target_entity_type_id', $entity_type_id);
 
       if ($entity_ids) {
-        foreach ($entity_ids as & $entity_id) {
-          $entity_id = (int) $entity_id;
+        $id_field = static::getIdField($entity_type_id);
+        if ($id_field === 'target_entity_id') {
+          foreach ($entity_ids as &$entity_id) {
+            $entity_id = (int) $entity_id;
+          }
         }
-        $query->condition(static::getIdField($entity_type_id), $entity_ids, 'IN');
+        else {
+          foreach ($entity_ids as &$entity_id) {
+            $entity_id = (string) $entity_id;
+          }
+        }
+        $query->condition($id_field, $entity_ids, 'IN');
       }
     }
 
@@ -396,10 +410,16 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    */
   public function getEntityTrackingWorkspaceIds(RevisionableInterface $entity, bool $latest_revision = FALSE) {
     $id_field = static::getIdField($entity->getEntityTypeId());
+    if ($id_field === 'target_entity_id') {
+      $entity_id = (int) $entity->id();
+    }
+    else {
+      $entity_id = (string) $entity->id();
+    }
     $query = $this->database->select(static::TABLE, 'wa')
       ->fields('wa', ['workspace'])
       ->condition('wa.target_entity_type_id', $entity->getEntityTypeId())
-      ->condition("wa.$id_field", (int) $entity->id());
+      ->condition("wa.$id_field", $entity_id);
 
     // Use a self-join to get only the workspaces in which the latest revision
     // of the entity is tracked.
@@ -407,11 +427,11 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       if ($this->database->driver() == 'mongodb') {
         $inner_select = $this->database->select(static::TABLE, 'wai')
           ->condition('wai.target_entity_type_id', $entity->getEntityTypeId())
-          ->condition("wai.$id_field", (int) $entity->id());
+          ->condition("wai.$id_field", $entity_id);
         $inner_select->addExpressionMax('wai.target_entity_revision_id', 'max_revision_id');
         $max_revision_id = $inner_select->execute()->fetchField();
         if (!empty($max_revision_id)) {
-          $query->condition('wa.target_entity_revision_id', $max_revision_id);
+          $query->condition('wa.target_entity_revision_id', (int) $max_revision_id);
         }
       }
       else {
