@@ -93,6 +93,7 @@ class SectionComponent implements ThirdPartySettingsInterface {
     $this->configuration = $configuration;
     // @todo Remove below $additional code when the drupal:11.0.x branch is opened.
     // @see https://www.drupal.org/project/drupal/issues/3160644
+    // @phpstan-ignore-next-line
     $this->additional = $additional;
     if ($additional !== []) {
       @trigger_error('Setting additional properties is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Additional component properties should be set via ::setThirdPartySetting(). See https://www.drupal.org/node/3100177', E_USER_DEPRECATED);
@@ -333,6 +334,7 @@ class SectionComponent implements ThirdPartySettingsInterface {
       'weight' => $this->getWeight(),
       // @todo Remove below key/value when the drupal:11.0.x branch is opened.
       // @see https://www.drupal.org/project/drupal/issues/3160644
+      // @phpstan-ignore-next-line
       'additional' => $this->additional,
       'third_party_settings' => $this->thirdPartySettings,
     ];
