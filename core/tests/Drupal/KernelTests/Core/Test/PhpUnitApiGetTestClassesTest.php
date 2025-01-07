@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\TextUI\Configuration\Builder;
-use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
 
 /**
  * Tests ::getTestClasses() between TestDiscovery and PhpPUnitTestDiscovery.
@@ -85,17 +83,17 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
     yield 'Extension: system' => ['suites' => [], 'extension' => 'system'];
     yield 'Extension: system, testsuite: unit' => [
       'suites' => ['PHPUnit-Unit'],
-      'extension' => 'system'
+      'extension' => 'system',
     ];
     yield 'Extension: system, directory' => [
       'suites' => [],
       'extension' => 'system',
-      'directory' => 'core/modules/system/tests/src'
+      'directory' => 'core/modules/system/tests/src',
     ];
     yield 'Extension: system, testsuite: unit, directory' => [
       'suites' => ['PHPUnit-Unit'],
       'extension' => 'system',
-      'directory' => 'core/modules/system/tests/src'
+      'directory' => 'core/modules/system/tests/src',
     ];
   }
 
