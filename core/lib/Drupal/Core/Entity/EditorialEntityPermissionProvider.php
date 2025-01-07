@@ -127,7 +127,7 @@ class EditorialEntityPermissionProvider extends DefaultEntityPermissionProvider 
   /**
    * {@inheritdoc}
    */
-  public function buildPermissions() {
+  public function buildPermissions(): array {
     $permissions = [];
 
     foreach (array_filter($this->permissionMap) as $key => $permission_name) {
@@ -148,7 +148,7 @@ class EditorialEntityPermissionProvider extends DefaultEntityPermissionProvider 
   /**
    * Generates the permission names for each supported permission key.
    */
-  protected function buildPermissionMap() {
+  protected function buildPermissionMap(): array {
     $entity_type_id = $this->entityType->id();
     $permission_map = [];
 
@@ -178,7 +178,7 @@ class EditorialEntityPermissionProvider extends DefaultEntityPermissionProvider 
   /**
    * Generates the permission map for the 'entity type' granularity.
    */
-  protected function buildPerEntityTypePermissionMap() {
+  protected function buildPerEntityTypePermissionMap(): array {
     $entity_type_id = $this->entityType->id();
     $permission_map = $this->buildPermissionMap();
 
@@ -198,7 +198,7 @@ class EditorialEntityPermissionProvider extends DefaultEntityPermissionProvider 
   /**
    * Generates the permission map for the 'bundle' granularity.
    */
-  protected function buildPerBundlePermissionMap() {
+  protected function buildPerBundlePermissionMap(): array {
     $entity_type_id = $this->entityType->id();
     $permission_map = $this->buildPermissionMap();
 
@@ -232,7 +232,7 @@ class EditorialEntityPermissionProvider extends DefaultEntityPermissionProvider 
    * @return array
    *   An array of permission values.
    */
-  protected function getPermissionInfo($permission_key) {
+  protected function getPermissionInfo($permission_key): array {
     $singular_label = $this->entityType->getSingularLabel();
     $plural_label = $this->entityType->getPluralLabel();
 
@@ -318,7 +318,7 @@ class EditorialEntityPermissionProvider extends DefaultEntityPermissionProvider 
    * @return array
    *   An array of permission values.
    */
-  protected function getPermissionInfoForBundle($permission_key, array $bundle_info) {
+  protected function getPermissionInfoForBundle($permission_key, array $bundle_info): array {
     $singular_label = $this->entityType->getSingularLabel();
     $plural_label = $this->entityType->getPluralLabel();
 

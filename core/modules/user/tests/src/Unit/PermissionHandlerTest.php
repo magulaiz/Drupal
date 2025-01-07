@@ -359,7 +359,7 @@ EOF
    *   (optional) An array of entity type definitions.
    */
   protected function setUpEntityTypeDefinitions($definitions = []): void {
-    $class = $this->getMockClass(EntityInterface::class);
+    $class = $this->getMockBuilder(EntityInterface::class);
     foreach ($definitions as $key => $entity_type) {
       // \Drupal\Core\Entity\EntityTypeInterface::getLinkTemplates() is called
       // by \Drupal\Core\Entity\EntityManager::processDefinition() so it must
