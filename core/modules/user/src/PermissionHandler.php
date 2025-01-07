@@ -210,7 +210,7 @@ class PermissionHandler implements PermissionHandlerInterface {
    *   - description: The description of the permission, defaults to NULL.
    *   - provider: The provider of the permission.
    */
-  protected function buildEntityTypePermissions() {
+  protected function buildEntityTypePermissions(): array {
     $permissions = [];
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {

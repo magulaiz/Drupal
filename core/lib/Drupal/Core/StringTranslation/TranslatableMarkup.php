@@ -238,7 +238,7 @@ class TranslatableMarkup extends FormattableMarkup {
    *
    * @return int
    */
-  public static function compare($a, $b) {
+  public static function compare($a, $b): int {
     return strcmp($a instanceof self ? $a->render() : $a, $b instanceof self ? $b->render() : $b);
   }
 
