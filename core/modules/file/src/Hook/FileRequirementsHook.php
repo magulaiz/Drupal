@@ -10,9 +10,9 @@ use Drupal\Core\Hook\Attribute\Hook;
 class FileRequirementsHook {
 
   /**
-   * Implements hook_runtime_requirements().
+   * Implements hook_requirements_check().
    */
-  #[Hook('runtime_requirements')]
+  #[Hook('requirements_check')]
   public function runtime(): array {
     $requirements = [];
     $server_software = \Drupal::request()->server->get('SERVER_SOFTWARE', '');
