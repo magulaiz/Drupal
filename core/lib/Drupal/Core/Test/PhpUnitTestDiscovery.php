@@ -108,7 +108,7 @@ class PhpUnitTestDiscovery {
     // TestSuiteBuilder calls the test data providers during the discovery.
     // Data providers may be changing the Drupal service container, which leads
     // to potential issues. We save the current container before running the
-    // discovery, and in case a change is detected, reset it and raise 
+    // discovery, and in case a change is detected, reset it and raise
     // warnings so that developers can tune their data provider code.
     if (\Drupal::hasContainer()) {
       $container = \Drupal::getContainer();
