@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Kernel;
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\link\LinkItemInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
-use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
  * Tests link field widgets and formatters.
@@ -19,36 +19,24 @@ use Drupal\Tests\Traits\Core\PathAliasTestTrait;
  */
 class LinkFieldTest extends FieldKernelTestBase {
 
-  use PathAliasTestTrait;
-
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'entity_test',
     'link',
-    'node',
-    'link_test_base_field',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'link_test_theme';
+  public function setUp(): void {
+    parent::setup();
 
-  /**
-   * A field to use in this test class.
-   *
-   * @var \Drupal\field\Entity\FieldStorageConfig
-   */
-  protected $fieldStorage;
-
-  /**
-   * The instance used in this test class.
-   *
-   * @var \Drupal\field\Entity\FieldConfig
-   */
-  protected $field;
+    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('user');
+    $this->installConfig(['system']);
+  }
 
   /**
    * Tests the functionality and rendering of the link field.
@@ -68,20 +56,19 @@ class LinkFieldTest extends FieldKernelTestBase {
    * INTERNAL).
    */
   protected function doTestLinkTypeOnLinkWidget(): void {
-
     $link_type = LinkItemInterface::LINK_EXTERNAL;
     $field_name = $this->randomMachineName();
 
     // Create a field with settings to validate.
-    $this->fieldStorage = FieldStorageConfig::create([
+    $fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',
       'cardinality' => 1,
     ]);
-    $this->fieldStorage->save();
+    $fieldStorage->save();
     FieldConfig::create([
-      'field_storage' => $this->fieldStorage,
+      'field_storage' => $fieldStorage,
       'label' => 'Read more about this entity',
       'bundle' => 'entity_test',
       'settings' => [
@@ -90,13 +77,11 @@ class LinkFieldTest extends FieldKernelTestBase {
       ],
     ])->save();
 
-    $this->container->get('entity_type.manager')
-      ->getStorage('entity_form_display')
-      ->load('entity_test.entity_test.default')
-      ->setComponent($field_name, [
-        'type' => 'link_default',
-      ])
-      ->save();
+    EntityFormDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+    ])->setComponent($field_name, ['type' => 'link_default'])->enable()->save();
 
     $form = \Drupal::service('entity.form_builder')->getForm(EntityTest::create());
     $this->assertEquals($link_type, $form[$field_name]['widget'][0]['uri']['#link_type']);
