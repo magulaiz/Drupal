@@ -23,13 +23,13 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
  */
 #[CoversClass(TestDiscovery::class)]
 #[Group('Test')]
+#[IgnoreDeprecations]
 class TestDiscoveryTest extends UnitTestCase {
 
   /**
    * @legacy-covers ::getTestInfo
    */
   #[DataProvider('infoParserProvider')]
-  #[IgnoreDeprecations]
   public function testTestInfoParser($expected, $classname, $doc_comment = NULL): void {
     $info = TestDiscovery::getTestInfo($classname, $doc_comment);
     $this->assertEquals($expected, $info);
@@ -211,7 +211,6 @@ class TestDiscoveryTest extends UnitTestCase {
   /**
    * @legacy-covers ::getTestInfo
    */
-  #[IgnoreDeprecations]
   public function testTestInfoParserMissingGroup(): void {
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
@@ -227,7 +226,6 @@ EOT;
   /**
    * @legacy-covers ::getTestInfo
    */
-  #[IgnoreDeprecations]
   public function testTestInfoParserMissingSummary(): void {
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
@@ -421,7 +419,6 @@ EOF;
   /**
    * @legacy-covers ::getTestClasses
    */
-  #[IgnoreDeprecations]
   public function testGetTestsInProfiles(): void {
     $this->setupVfsWithTestClasses();
     $class_loader = $this->prophesize(ClassLoader::class);
@@ -452,7 +449,6 @@ EOF;
    * @legacy-covers ::getPhpunitTestSuite
    */
   #[DataProvider('providerTestGetPhpunitTestSuite')]
-  #[IgnoreDeprecations]
   public function testGetPhpunitTestSuite($classname, $expected): void {
     $this->assertEquals($expected, TestDiscovery::getPhpunitTestSuite($classname));
   }
@@ -480,7 +476,6 @@ EOF;
    *
    * @legacy-covers ::getTestInfo
    */
-  #[IgnoreDeprecations]
   public function testGetTestInfoEmptyDocblock(): void {
     // If getTestInfo() performed reflection, it won't be able to find the
     // class we asked it to analyze, so it will throw a ReflectionException.
@@ -496,7 +491,6 @@ EOF;
    *
    * @legacy-covers ::scanDirectory
    */
-  #[IgnoreDeprecations]
   public function testScanDirectoryNoAbstract(): void {
     $this->setupVfsWithTestClasses();
     $files = TestDiscovery::scanDirectory('Drupal\\Tests\\test_module\\Kernel\\', vfsStream::url('drupal/modules/test_module/tests/src/Kernel'));
