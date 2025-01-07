@@ -1193,7 +1193,7 @@ function hook_requirements_alter(array &$requirements): void {
  * This hook will report requirements on the Status report and during
  * update.php.
  *
- * The runtime_requirements is not limited to pure installation requirements
+ * The requirements is not limited to runtime or install requirements
  * but can also be used for more general status information like maintenance
  * tasks and security issues.
  * The returned 'requirements' will be listed on the status report in the

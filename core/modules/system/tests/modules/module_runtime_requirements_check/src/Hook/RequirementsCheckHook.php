@@ -7,7 +7,7 @@ namespace Drupal\module_runtime_requirements_check\Hook;
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
- * Hook implementations for module_runtime_requirements.
+ * Hook implementations for module_runtime_requirements_check.
  */
 class RequirementsCheckHook {
 
