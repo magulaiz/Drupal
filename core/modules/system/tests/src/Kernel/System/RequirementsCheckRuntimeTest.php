@@ -11,7 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group system
  */
-class RequirementsCheckRuntime extends KernelTestBase {
+class RequirementsCheckRuntimeTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
