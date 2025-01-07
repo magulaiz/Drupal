@@ -23,6 +23,10 @@ class PrefetchedResult extends DqlResultBase {
   /**
    * Constructor.
    *
+   * @param \Drupal\Core\Database\Statement\FetchAs $fetchMode
+   *   The fetch mode.
+   * @param array $fetchOptions
+   *   The fetch options.
    * @param array $data
    *   Data.
    * @param int|null $rowCount
