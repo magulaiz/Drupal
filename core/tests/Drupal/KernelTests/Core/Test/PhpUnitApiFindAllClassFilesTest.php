@@ -11,8 +11,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\TextUI\Configuration\Builder;
-use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
 
 /**
  * Tests ::findAllClassFiles() between TestDiscovery and PhpPUnitTestDiscovery.
@@ -60,7 +58,7 @@ class PhpUnitApiFindAllClassFilesTest extends KernelTestBase {
     yield 'Extension: system' => ['extension' => 'system'];
     yield 'Extension: system, directory' => [
       'extension' => 'system',
-      'directory' => 'core/modules/system/tests/src'
+      'directory' => 'core/modules/system/tests/src',
     ];
   }
 
