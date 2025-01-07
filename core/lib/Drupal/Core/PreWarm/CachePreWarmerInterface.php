@@ -37,14 +37,6 @@ namespace Drupal\Core\PreWarm;
  * service tag and Drupal\Core\PreWarm\PreWarmableInterface* where any service
  * can define itself as prewarmable with a common method to call to warm caches.
  *
- * By default, prewarming is triggered when DrupalKernel::handle() reaches
- * a Fiber::suspend() call. A service can call Fiber::suspend() either when it
- * detects a cache miss in the critical path, for example
- * Drupal\Core\Routing\RouteProvider::preLoadRoutes(), or because it is about to
- * execute an async i/o operation. In either case, this allows the caller to
- * execute some different code, either a different callback in a Fiber, or in
- * the case of DrupalKernel::handle(), this prewarming service.
- *
  * The default implementation takes the list of prewarmable services, and picks
  * one at random. By choosing the service at random, it increases the likelihood
  * that when multiple requests all try to prewarm at the same time, that they'll

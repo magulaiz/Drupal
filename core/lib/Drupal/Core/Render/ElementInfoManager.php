@@ -90,6 +90,7 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    *   The theme name.
    *
    * @return array
+   *   An array containing all element information.
    */
   protected function buildInfo($theme_name) {
     // Get cached definitions.
@@ -141,6 +142,7 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    *
    * @return \Drupal\Core\Render\Element\ElementInterface
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function createInstance($plugin_id, array $configuration = []) {
     return parent::createInstance($plugin_id, $configuration);
   }
@@ -168,6 +170,7 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    *   The theme name.
    *
    * @return string
+   *   The cache ID.
    */
   protected function getCid($theme_name) {
     return 'element_info_build:' . $theme_name;
