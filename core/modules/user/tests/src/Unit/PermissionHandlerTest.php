@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Unit;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\Extension;
@@ -15,10 +14,10 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\PermissionHandler;
+use Prophecy\Argument;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
-use Prophecy\Argument;
 
 /**
  * Tests the permission handler.

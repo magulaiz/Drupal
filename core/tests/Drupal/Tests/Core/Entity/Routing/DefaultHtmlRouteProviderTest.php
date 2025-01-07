@@ -362,7 +362,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    * @covers ::getCollectionRoute
    * @dataProvider providerTestGetCollectionRouteOverviewPermission
    */
-  public function testGetCollectionRouteOverviewPermission(Route $expected = NULL, EntityTypeInterface $entity_type): void {
+  public function testGetCollectionRouteOverviewPermission(?Route $expected = NULL, EntityTypeInterface $entity_type): void {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $entity_type_bundle_info = $this->prophesize(EntityTypeBundleInfoInterface::class);
     $entity_type_manager->getPermissionProvider('the_entity_type_id')->willReturn(new EditorialEntityPermissionProvider($entity_type, $entity_type_bundle_info->reveal()));

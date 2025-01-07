@@ -23,6 +23,7 @@ interface EntityPermissionProviderInterface {
    * Gets the name of the admin permission.
    *
    * @return string|null
+   *   Returns Administrator permission.
    */
   public function getAdminPermission();
 
@@ -35,6 +36,7 @@ interface EntityPermissionProviderInterface {
    * used instead.
    *
    * @return string|null
+   *   Returns Collection Permission.
    */
   public function getCollectionPermission();
 
@@ -49,6 +51,7 @@ interface EntityPermissionProviderInterface {
    *   permission name should be returned. Defaults to 'any'.
    *
    * @return string|null
+   *   Returns view permission.
    */
   public function getViewPermission($bundle, $scope = 'any');
 
@@ -64,6 +67,7 @@ interface EntityPermissionProviderInterface {
    *   permission name should be returned. Defaults to 'own'.
    *
    * @return string|null
+   *   Returns view unpublished permission.
    */
   public function getViewUnpublishedPermission($scope = 'own');
 
@@ -78,6 +82,7 @@ interface EntityPermissionProviderInterface {
    *   returned. Defaults to 'any'.
    *
    * @return string|null
+   *   Returns update permission.
    */
   public function getUpdatePermission($bundle, $scope = 'any');
 
@@ -92,6 +97,7 @@ interface EntityPermissionProviderInterface {
    *   should be returned. Defaults to 'any'.
    *
    * @return string|null
+   *   Returns delete permission.
    */
   public function getDeletePermission($bundle, $scope = 'any');
 
@@ -103,6 +109,7 @@ interface EntityPermissionProviderInterface {
    *   bundles.
    *
    * @return string|null
+   *   Returns create permission.
    */
   public function getCreatePermission($bundle);
 

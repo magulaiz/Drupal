@@ -3,8 +3,8 @@
 namespace Drupal\user;
 
 use Drupal\Core\Discovery\YamlDiscovery;
-use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -88,7 +88,7 @@ class PermissionHandler implements PermissionHandlerInterface {
    *   The callable resolver.
    * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
   public function __construct(ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, CallableResolver $callable_resolver, protected ModuleExtensionList $moduleExtensionList, protected ?EntityTypeManagerInterface $entityTypeManager = NULL) {
