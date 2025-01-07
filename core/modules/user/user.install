@@ -133,7 +133,7 @@ function user_requirements($phase): array {
     $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
       [
         [
-          '$unwind' => [ 'path' => '$user_translations' ],
+          '$unwind' => ['path' => '$user_translations'],
         ],
         [
           '$replaceRoot' => [
@@ -147,12 +147,12 @@ function user_requirements($phase): array {
         ],
         [
           '$match' => [
-            'mail' => [ '$ne' => NULL ],
+            'mail' => ['$ne' => NULL],
           ],
         ],
         [
           '$addFields' => [
-            'lower_mail' => [ '$toLower' => '$mail' ],
+            'lower_mail' => ['$toLower' => '$mail'],
           ]
         ],
         [
@@ -163,7 +163,7 @@ function user_requirements($phase): array {
         ],
         [
           '$match' => [
-            'mail_count' => [ '$gt' => 1 ],
+            'mail_count' => ['$gt' => 1],
           ],
         ],
       ],
