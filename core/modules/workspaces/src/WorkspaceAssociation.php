@@ -62,7 +62,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $tracked_revision_id = key($tracked[$entity->getEntityTypeId()]);
     }
     $id_field = static::getIdField($entity->getEntityTypeId());
-//dump($id_field);
+
     try {
       if ($this->database->driver() == 'mongodb') {
         $session = $this->database->getMongodbSession();
