@@ -274,7 +274,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $this->assertEquals($expected, $route);
   }
 
-  public static function providerTestGetCollectionRoute(): array {
+  public static function providerTestGetCollectionRoute() {
     $data = [];
 
     $entity_type1 = static::getEntityType();
