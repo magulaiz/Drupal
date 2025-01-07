@@ -268,9 +268,16 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
 
     // Add the media author filter to the media overview view.
     $this->drupalGet('admin/structure/views/nojs/add-handler/media/media_page_list/filter');
-    $edit = [
-      'name[media_field_data.user_name]' => 1,
-    ];
+    if (\Drupal::database()->driver() === 'mongodb') {
+      $edit = [
+        'name[media.user_name]' => 1,
+      ];
+    }
+    else {
+      $edit = [
+        'name[media_field_data.user_name]' => 1,
+      ];
+    }
     $this->submitForm($edit, 'Add and configure filter criteria');
 
     $edit = [

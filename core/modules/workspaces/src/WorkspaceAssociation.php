@@ -62,7 +62,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $tracked_revision_id = key($tracked[$entity->getEntityTypeId()]);
     }
     $id_field = static::getIdField($entity->getEntityTypeId());
-
+//dump($id_field);
     try {
       if ($this->database->driver() == 'mongodb') {
         $session = $this->database->getMongodbSession();
@@ -398,8 +398,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     $id_field = static::getIdField($entity->getEntityTypeId());
     $query = $this->database->select(static::TABLE, 'wa')
       ->fields('wa', ['workspace'])
-      ->condition('[wa].[target_entity_type_id]', $entity->getEntityTypeId())
-      ->condition("[wa].[$id_field]", (int) $entity->id());
+      ->condition('wa.target_entity_type_id', $entity->getEntityTypeId())
+      ->condition("wa.$id_field", (int) $entity->id());
 
     // Use a self-join to get only the workspaces in which the latest revision
     // of the entity is tracked.
@@ -458,8 +458,12 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $query->condition('target_entity_type_id', $entity_type_id, '=');
 
       if ($entity_ids) {
+        $entity_ids_as_integers = [];
+        $entity_ids_as_strings = [];
         foreach ($entity_ids as & $entity_id) {
           $entity_id = (int) $entity_id;
+          $entity_ids_as_integers[] = (int) $entity_id;
+          $entity_ids_as_strings[] = (string) $entity_id;
         }
         try {
           $query->condition(static::getIdField($entity_type_id), $entity_ids, 'IN');
@@ -469,8 +473,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
           // to retrieve its identifier field type, so we try both.
           $query->condition(
             $query->orConditionGroup()
-              ->condition('target_entity_id', $entity_ids, 'IN')
-              ->condition('target_entity_id_string', $entity_ids, 'IN')
+              ->condition('target_entity_id', $entity_ids_as_integers, 'IN')
+              ->condition('target_entity_id_string', $entity_ids_as_strings, 'IN')
           );
         }
       }
@@ -515,6 +519,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
             $query->values([
               $workspace->id(),
               $row->target_entity_type_id,
+              $row->target_entity_id,
               $row->target_entity_id,
               $row->target_entity_revision_id,
             ]);
