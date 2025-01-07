@@ -29,9 +29,12 @@ class PrefetchedResult extends DqlResultBase {
    *   The row count.
    */
   public function __construct(
+    FetchAs $fetchMode,
+    array $fetchOptions,
     protected array $data,
     public readonly ?int $rowCount,
   ) {
+    parent::__construct($fetchMode, $fetchOptions);
     $this->columnNames = isset($this->data[0]) ? array_keys($this->data[0]) : [];
     $this->currentRowIndex = -1;
   }

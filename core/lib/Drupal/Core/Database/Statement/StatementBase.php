@@ -41,7 +41,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   /**
    * Holds the default fetch mode.
    */
-  protected FetchAs $defaultFetchMode = FetchAs::Object;
+  protected FetchAs $fetchMode = FetchAs::Object;
 
   /**
    * Holds fetch options.
@@ -96,90 +96,9 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function fetchCol($index = 0) {
-    return $this->fetchAll(FetchAs::Column, $index);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAllAssoc($key, $fetch = NULL) {
-    assert($fetch === NULL || $fetch instanceof FetchAs);
-    $result = $this->result->fetchAllAssoc($key, $fetch ?? $this->defaultFetchMode, $this->fetchOptions);
-    $this->markResultsetFetchingComplete();
-    return $result;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAllKeyed($keyIndex = 0, $valueIndex = 1) {
-    $result = $this->result->fetchAllKeyed($keyIndex, $valueIndex);
-    $this->markResultsetFetchingComplete();
-    return $result;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchField($index = 0) {
-    $column = $this->result->fetch(FetchAs::Column, ['column' => $index]);
-
-    if ($column === FALSE) {
-      $this->markResultsetFetchingComplete();
-      return FALSE;
-    }
-
-    $this->setResultsetCurrentRow($column);
-    return $column;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAssoc() {
-    return $this->fetch(FetchAs::Associative);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchObject(?string $className = NULL, array $constructorArguments = []) {
-    $row = $className === NULL ?
-      $this->result->fetch(FetchAs::Object, []) :
-      $this->result->fetch(FetchAs::ClassObject, [
-        'class' => $className,
-        'constructor_args' => $constructorArguments,
-      ]);
-
-    if ($row === FALSE) {
-      $this->markResultsetFetchingComplete();
-      return FALSE;
-    }
-
-    $this->setResultsetCurrentRow($row);
-    return $row;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function rowCount() {
-    // SELECT query should not use the method.
-    if ($this->rowCountEnabled) {
-      return $this->result->rowCount();
-    }
-    else {
-      throw new RowCountException();
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
     assert($mode instanceof FetchAs);
-    $this->defaultFetchMode = $mode;
+    $this->fetchMode = $mode;
     switch ($mode) {
       case FetchAs::ClassObject:
         $this->fetchOptions['class'] = $a1;
@@ -223,7 +142,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
       ],
     };
 
-    $row = $this->result->fetch($mode ?? $this->defaultFetchMode, $fetchOptions);
+    $row = $this->result->fetch($mode ?? $this->fetchMode, $fetchOptions);
 
     if ($row === FALSE) {
       $this->markResultsetFetchingComplete();
@@ -237,9 +156,51 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
+  public function fetchObject(?string $className = NULL, array $constructorArguments = []) {
+    $row = $className === NULL ?
+      $this->result->fetch(FetchAs::Object, []) :
+      $this->result->fetch(FetchAs::ClassObject, [
+        'class' => $className,
+        'constructor_args' => $constructorArguments,
+      ]);
+
+    if ($row === FALSE) {
+      $this->markResultsetFetchingComplete();
+      return FALSE;
+    }
+
+    $this->setResultsetCurrentRow($row);
+    return $row;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fetchAssoc() {
+    return $this->fetch(FetchAs::Associative);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fetchField($index = 0) {
+    $column = $this->result->fetch(FetchAs::Column, ['column' => $index]);
+
+    if ($column === FALSE) {
+      $this->markResultsetFetchingComplete();
+      return FALSE;
+    }
+
+    $this->setResultsetCurrentRow($column);
+    return $column;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function fetchAll($mode = NULL, $columnIndex = NULL, $constructorArguments = NULL) {
     assert($mode === NULL || $mode instanceof FetchAs);
-    $fetchMode = $mode ?? $this->defaultFetchMode;
+    $fetchMode = $mode ?? $this->fetchMode;
     if (isset($columnIndex)) {
       $this->fetchOptions['column'] = $columnIndex;
     }
@@ -252,6 +213,45 @@ abstract class StatementBase implements \Iterator, StatementInterface {
     $this->markResultsetFetchingComplete();
 
     return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fetchCol($index = 0) {
+    return $this->fetchAll(FetchAs::Column, $index);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fetchAllAssoc($key, $fetch = NULL) {
+    assert($fetch === NULL || $fetch instanceof FetchAs);
+    $result = $this->result->fetchAllAssoc($key, $fetch ?? $this->fetchMode, $this->fetchOptions);
+    $this->markResultsetFetchingComplete();
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fetchAllKeyed($keyIndex = 0, $valueIndex = 1) {
+    $result = $this->result->fetchAllKeyed($keyIndex, $valueIndex);
+    $this->markResultsetFetchingComplete();
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rowCount() {
+    // SELECT query should not use the method.
+    if ($this->rowCountEnabled) {
+      return $this->result->rowCount();
+    }
+    else {
+      throw new RowCountException();
+    }
   }
 
 }

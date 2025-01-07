@@ -12,8 +12,11 @@ class PdoResult extends DqlResultBase {
   use PdoTrait;
 
   public function __construct(
+    FetchAs $fetchMode,
+    array $fetchOptions,
     protected readonly \PDOStatement $clientStatement,
   ) {
+    parent::__construct($fetchMode, $fetchOptions);
   }
 
   /**

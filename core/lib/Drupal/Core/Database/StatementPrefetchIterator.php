@@ -110,6 +110,8 @@ class StatementPrefetchIterator extends StatementBase {
     // as possible.
     $data = $this->clientFetchAll(FetchAs::Associative);
     $this->result = new PrefetchedResult(
+      $this->fetchMode,
+      $this->fetchOptions,
       $data,
       $this->rowCountEnabled ? $this->clientRowCount() : NULL,
     );

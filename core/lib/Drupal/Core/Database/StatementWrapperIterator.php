@@ -81,7 +81,11 @@ class StatementWrapperIterator extends StatementBase {
 
     try {
       $return = $this->clientExecute($args, $options);
-      $this->result = new PdoResult($this->clientStatement);
+      $this->result = new PdoResult(
+        $this->fetchMode,
+        $this->fetchOptions,
+        $this->clientStatement,
+      );
       $this->markResultsetIterable($return);
     }
     catch (\Exception $e) {
