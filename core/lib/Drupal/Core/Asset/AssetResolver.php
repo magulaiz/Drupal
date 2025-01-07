@@ -17,6 +17,11 @@ use Drupal\Core\Theme\ThemeManagerInterface;
  */
 class AssetResolver implements AssetResolverInterface {
 
+  protected const JS_SETTING = -300;
+  protected const ONLY_ANCESTOR = -200;
+  protected const ANCESTOR_AND_CHILD = -100;
+  protected const NO_ANCESTRY = 0;
+
   /**
    * The library discovery service.
    *
@@ -299,14 +304,22 @@ class AssetResolver implements AssetResolverInterface {
 
     // Collect all libraries that contain JS assets and are in the header.
     $header_js_libraries = [];
+    $ancestor_libraries = [];
+    $libraries_without_dependencies = [];
     foreach ($libraries_to_load as $key => $library) {
       [$extension, $name] = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       if (!empty($definition['header'])) {
         $header_js_libraries[] = $library;
       }
+      if (empty($definition['dependencies'])) {
+        $libraries_without_dependencies[] = $library;
+      }
+      else {
+        $ancestor_libraries = array_unique(array_merge($ancestor_libraries, $definition['dependencies']));
+      }
     }
-
+    $only_ancestors = array_intersect($ancestor_libraries, $libraries_without_dependencies);
     // If all the libraries to load contained only CSS, there is nothing further
     // to do here, so return early.
     if (!$libraries_to_load && !$assets->getSettings()) {
@@ -358,6 +371,15 @@ class AssetResolver implements AssetResolverInterface {
           // order.
           $options['weight'] += count($javascript) / 30000;
 
+          if (in_array($library, $only_ancestors)) {
+            $options['group'] = static::ONLY_ANCESTOR;
+          }
+          elseif (in_array($library, $ancestor_libraries)) {
+            $options['group'] = static::ANCESTOR_AND_CHILD;
+          }
+          else {
+            $options['group'] = static::NO_ANCESTRY;
+          }
           // Local and external files must keep their name as the associative
           // key so the same JavaScript file is not added twice.
           $javascript[$options['data']] = $options;
@@ -428,7 +450,7 @@ class AssetResolver implements AssetResolverInterface {
       }
       $settings_as_inline_javascript = [
         'type' => 'setting',
-        'group' => JS_SETTING,
+        'group' => static::JS_SETTING,
         'weight' => 0,
         'data' => $settings,
       ];

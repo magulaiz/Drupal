@@ -27,8 +27,8 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     }, 'umamiFrontAndRecipePages');
     $this->assertSame(6, $performance_data->getStylesheetCount());
     $this->assertLessThan(125000, $performance_data->getStylesheetBytes());
-    $this->assertSame(1, $performance_data->getScriptCount());
-    $this->assertLessThan(12000, $performance_data->getScriptBytes());
+    $this->assertSame(0, $performance_data->getScriptCount());
+    $this->assertLessThan(00000, $performance_data->getScriptBytes());
   }
 
   /**
@@ -36,6 +36,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
    */
   public function testFrontAndRecipesPagesAuthenticated(): void {
     $user = $this->createUser();
+    $user->save();
     $this->drupalLogin($user);
     sleep(2);
     $performance_data = $this->collectPerformanceData(function () {
@@ -43,8 +44,26 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     }, 'umamiFrontAndRecipePagesAuthenticated');
     $this->assertSame(6, $performance_data->getStylesheetCount());
     $this->assertLessThan(132500, $performance_data->getStylesheetBytes());
-    $this->assertSame(2, $performance_data->getScriptCount());
-    $this->assertLessThan(250000, $performance_data->getScriptBytes());
+    $this->assertSame(0, $performance_data->getScriptCount());
+    $this->assertLessThan(000000, $performance_data->getScriptBytes());
+  }
+
+  /**
+   * Checks the asset requests made when the front and recipe pages are visited.
+   */
+  public function testFrontAndRecipesPagesEditor(): void {
+    $user = $this->createUser();
+    $user->addRole('editor');
+    $user->save();
+    $this->drupalLogin($user);
+    sleep(2);
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->doRequests();
+    }, 'umamiFrontAndRecipePagesEditor');
+    $this->assertSame(6, $performance_data->getStylesheetCount());
+    $this->assertLessThan(312000, $performance_data->getStylesheetBytes());
+    $this->assertSame(4, $performance_data->getScriptCount());
+    $this->assertLessThan(418000, $performance_data->getScriptBytes());
   }
 
   /**
