@@ -127,7 +127,7 @@ class ContactPersonalTest extends BrowserTestBase {
     // Assert mail content.
     $this->assertMailString('body', 'Hello ' . $this->contactUser->getDisplayName(), 1);
     $this->assertMailString('body', $this->webUser->getDisplayName(), 1);
-    $this->assertMailString('body', Html::Escape($message['message[0][value]']), 1);
+    $this->assertMailString('body', Html::escape($message['message[0][value]']), 1);
   }
 
   /**
@@ -299,7 +299,7 @@ class ContactPersonalTest extends BrowserTestBase {
    * @param bool $contact_value
    *   (optional) The value the contact field should be set too.
    */
-  protected function checkContactAccess($response, $contact_value = NULL) {
+  protected function checkContactAccess($response, $contact_value = NULL): void {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/people/create');
     if ($this->config('contact.settings')->get('user_default_enabled', TRUE)) {

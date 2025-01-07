@@ -42,11 +42,11 @@ class SectionComponentTest extends UnitTestCase {
       ['id' => 'existing-block-id'],
       [],
       [
-        'Initech' => [
-          'Bill Lumbergh' => 'TPS reports',
-          'Milton Waddams' => 'Red Stapler',
+        'Tech' => [
+          'Bill Bob' => 'TPS reports',
+          'Milton Adams' => 'Red Stapler',
         ],
-        'Chotchkies' => [
+        'Llama' => [
           'flair' => TRUE,
         ],
       ]
@@ -119,15 +119,15 @@ class SectionComponentTest extends UnitTestCase {
    */
   public static function providerTestGetThirdPartySettings(): array {
     $data = [];
-    $data['Initech third party settings'] = [
-      'Initech',
+    $data['Tech third party settings'] = [
+      'Tech',
       [
-        'Bill Lumbergh' => 'TPS reports',
-        'Milton Waddams' => 'Red Stapler',
+        'Bill Bob' => 'TPS reports',
+        'Milton Adams' => 'Red Stapler',
       ],
     ];
-    $data['Chotchkies third party settings'] = [
-      'Chotchkies',
+    $data['Llama third party settings'] = [
+      'Llama',
       ['flair' => TRUE],
     ];
     $data['Nonexisting provider'] = [
@@ -157,18 +157,18 @@ class SectionComponentTest extends UnitTestCase {
    */
   public static function providerTestGetThirdPartySetting(): array {
     $data = [];
-    $data['Initech third party setting for "Bill Lumbergh" key'] = [
-      'Initech',
-      'Bill Lumbergh',
+    $data['Tech third party setting for "Bill Bob" key'] = [
+      'Tech',
+      'Bill Bob',
       'TPS reports',
     ];
-    $data['Chotchkies third party setting for "flair" key'] = [
-      'Chotchkies',
+    $data['Llama third party setting for "flair" key'] = [
+      'Llama',
       'flair',
       TRUE,
     ];
-    $data['Chotchkies third party setting for nonexisting key'] = [
-      'Chotchkies',
+    $data['Llama third party setting for nonexisting key'] = [
+      'Llama',
       'non_existing_key',
       NULL,
     ];
@@ -203,22 +203,22 @@ class SectionComponentTest extends UnitTestCase {
    */
   public static function providerTestSetThirdPartySetting(): array {
     $data = [];
-    $data['Override "Milton Waddams" third party setting for Initech provider'] = [
-      'Initech',
-      'Milton Waddams',
+    $data['Override "Milton Adams" third party setting for Tech provider'] = [
+      'Tech',
+      'Milton Adams',
       'Storage B',
       [
-        'Bill Lumbergh' => 'TPS reports',
-        'Milton Waddams' => 'Storage B',
+        'Bill Bob' => 'TPS reports',
+        'Milton Adams' => 'Storage B',
       ],
     ];
-    $data['Add "Peter Gibbons" third party setting for Initech provider'] = [
-      'Initech',
+    $data['Add "Peter Gibbons" third party setting for Tech provider'] = [
+      'Tech',
       'Peter Gibbons',
       'Programmer',
       [
-        'Bill Lumbergh' => 'TPS reports',
-        'Milton Waddams' => 'Red Stapler',
+        'Bill Bob' => 'TPS reports',
+        'Milton Adams' => 'Red Stapler',
         'Peter Gibbons' => 'Programmer',
       ],
     ];
@@ -251,19 +251,19 @@ class SectionComponentTest extends UnitTestCase {
   public static function providerTestUnsetThirdPartySetting(): array {
     $data = [];
     $data['Key with values'] = [
-      'Initech',
-      'Bill Lumbergh',
+      'Tech',
+      'Bill Bob',
       [
-        'Milton Waddams' => 'Red Stapler',
+        'Milton Adams' => 'Red Stapler',
       ],
     ];
     $data['Key without values'] = [
-      'Chotchkies',
+      'Llama',
       'flair',
       [],
     ];
     $data['Non-existing key'] = [
-      'Chotchkies',
+      'Llama',
       'non_existing_key',
       [
         'flair' => TRUE,
@@ -281,9 +281,9 @@ class SectionComponentTest extends UnitTestCase {
    * @covers ::getThirdPartyProviders
    */
   public function testGetThirdPartyProviders(): void {
-    $this->assertSame(['Initech', 'Chotchkies'], $this->section->getComponent('some-uuid')->getThirdPartyProviders());
-    $this->section->getComponent('some-uuid')->unsetThirdPartySetting('Chotchkies', 'flair');
-    $this->assertSame(['Initech'], $this->section->getComponent('some-uuid')->getThirdPartyProviders());
+    $this->assertSame(['Tech', 'Llama'], $this->section->getComponent('some-uuid')->getThirdPartyProviders());
+    $this->section->getComponent('some-uuid')->unsetThirdPartySetting('Llama', 'flair');
+    $this->assertSame(['Tech'], $this->section->getComponent('some-uuid')->getThirdPartyProviders());
   }
 
   /**
@@ -291,12 +291,12 @@ class SectionComponentTest extends UnitTestCase {
    *
    * @group legacy
    *
-   * @todo Remove below test when the drupal:10.1.x branch is opened.
+   * @todo Remove below test when the drupal:12.x branch is opened.
    * @see https://www.drupal.org/project/drupal/issues/3160644
    */
   public function testDeprecationNotices(): void {
-    $this->expectDeprecation('Setting random section component properties is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Component properties should be set via dedicated setters. See https://www.drupal.org/node/3100177');
-    $this->expectDeprecation('Getting additional properties is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Additional component properties should be gotten via ::getThirdPartySetting(). See https://www.drupal.org/node/3100177');
+    $this->expectDeprecation('Setting random section component properties is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Component properties should be set via dedicated setters. See https://www.drupal.org/node/3100177');
+    $this->expectDeprecation('Getting additional properties is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Additional component properties should be gotten via ::getThirdPartySetting(). See https://www.drupal.org/node/3100177');
 
     // Instantiate SectionComponent with additional settings is deprecated.
     new SectionComponent(
