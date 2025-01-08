@@ -95,6 +95,7 @@ class LocalTasksBlock extends BlockBase implements ContainerFactoryPluginInterfa
       if ($parameter instanceof CacheableDependencyInterface) {
         $cacheability->addCacheableDependency($parameter);
       }
+    }
 
     $userAdminLangcode = \Drupal::currentUser()->getPreferredAdminLangcode(FALSE);
     $negotiation_method_enabled = \Drupal::moduleHandler()->moduleExists('language') && \Drupal::service('language_negotiator')->isNegotiationMethodEnabled('language-user-admin');
