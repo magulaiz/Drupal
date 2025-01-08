@@ -70,7 +70,7 @@ class LocalTaskManagerTest extends UnitTestCase {
   /**
    * The cache backend used in the test.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\Prophecy\Prophecy\ObjectProphecy
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheBackend;
 
@@ -106,7 +106,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
     $this->pluginDiscovery = $this->createMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
     $this->factory = $this->createMock('Drupal\Component\Plugin\Factory\FactoryInterface');
-    $this->cacheBackend = $this->prophesize('Drupal\Core\Cache\CacheBackendInterface');
+    $this->cacheBackend = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->accessManager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');
     $this->routeMatch = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
     $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
