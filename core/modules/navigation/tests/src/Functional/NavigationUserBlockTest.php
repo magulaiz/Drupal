@@ -48,6 +48,7 @@ class NavigationUserBlockTest extends PageCacheTagsTestBase {
     $this->adminUser = $this->drupalCreateUser([
       'access administration pages',
       'access navigation',
+      'change own username',
     ]);
 
     // Create additional users to test caching modes.
@@ -98,6 +99,14 @@ class NavigationUserBlockTest extends PageCacheTagsTestBase {
     // The Edit profile link should link to the users edit profile page.
     $links = $this->getSession()->getPage()->findAll('named', ['link', 'Edit profile']);
     $this->assertStringContainsString(sprintf('/user/%s/edit', $this->adminUser->id()), $links[0]->getAttribute('href'));
+
+    // Change the users name, assert that the changes reflect in the navigation.
+    $new_username = $this->randomMachineName();
+    $this->drupalGet('user/' . $this->adminUser->id() . '/edit');
+    $this->submitForm(['name' => $new_username], 'Save');
+    $this->verifyDynamicPageCache($test_page_url, 'MISS');
+    $rendered_user_name = $this->cssSelect('[aria-controls="admin-toolbar-user-menu"] > .toolbar-button__label')[0]->getText();
+    $this->assertEquals((string) $this->adminUser->getDisplayName(), $rendered_user_name);
   }
 
 }
