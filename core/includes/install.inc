@@ -15,21 +15,41 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Requirement severity -- Informational message only.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ * \Drupal\Core\Extension\RequirementSeverity::INFO instead.
+ *
+ * @see https://www.drupal.org/node/3409874
  */
 const REQUIREMENT_INFO = -1;
 
 /**
  * Requirement severity -- Requirement successfully met.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Extension\RequirementSeverity::OK instead.
+ *
+ * @see https://www.drupal.org/node/3409874
  */
 const REQUIREMENT_OK = 0;
 
 /**
  * Requirement severity -- Warning condition; proceed but flag warning.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ * \Drupal\Core\Extension\RequirementSeverity::WARNING instead.
+ *
+ * @see https://www.drupal.org/node/3409874
  */
 const REQUIREMENT_WARNING = 1;
 
 /**
  * Requirement severity -- Error condition; abort installation.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ * \Drupal\Core\Extension\RequirementSeverity::ERROR instead.
+ *
+ * @see https://www.drupal.org/node/3409874
  */
 const REQUIREMENT_ERROR = 2;
 
