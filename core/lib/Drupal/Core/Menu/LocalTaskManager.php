@@ -5,8 +5,8 @@ namespace Drupal\Core\Menu;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -142,7 +142,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
-  public function __construct(ArgumentResolverInterface $argument_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account, TranslationInterface $string_translation = NULL) {
+  public function __construct(ArgumentResolverInterface $argument_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account, ?TranslationInterface $string_translation = NULL) {
     $this->factory = new ContainerFactory($this, '\Drupal\Core\Menu\LocalTaskInterface');
     $this->argumentResolver = $argument_resolver;
     $this->requestStack = $request_stack;
@@ -154,7 +154,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     $this->stringTranslation = $string_translation;
 
     if ($string_translation === NULL) {
-      @trigger_error('The string_translation service must be passed to ' . __NAMESPACE__ . '\LocalTaskManager::__construct. It was added in Drupal 10.1.0 and is required in Drupal 11.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $string_translation argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/0000', E_USER_DEPRECATED);
       $string_translation = \Drupal::service('string_translation');
     }
 
@@ -355,7 +355,6 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
         // one of its child tabs is the active tab.
         $active = $active || $child->getActive();
         // @todo It might make sense to use link render elements instead.
-
         $link = [
           'title' => $this->getTitle($child),
           'url' => Url::fromRoute($route_name, $route_parameters),

@@ -1803,7 +1803,7 @@ function template_preprocess_menu_local_action(&$variables): void {
  *   - primary: HTML list items representing primary tasks.
  *   - secondary: HTML list items representing secondary tasks.
  */
-function template_preprocess_menu_local_tasks(array &$variables) {
+function template_preprocess_menu_local_tasks(array &$variables): void {
   $variables['primary_attributes'] = new Attribute($variables['primary_attributes']);
   $variables['secondary_attributes'] = new Attribute($variables['secondary_attributes']);
 }

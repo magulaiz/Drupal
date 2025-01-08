@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Tests local tasks derived from router and added/altered via hooks.
@@ -305,7 +306,7 @@ class LocalTasksTest extends BrowserTestBase {
   /**
    * Test local tasks translation when the user has a preferred admin langcode.
    */
-  public function testLocalTaskPreferredAdminLanguage() {
+  public function testLocalTaskPreferredAdminLanguage(): void {
     // Enable locale to make the local tasks translatable.
     \Drupal::service('module_installer')->install(['locale']);
     // Clear all caches so the config schema for language.negotiation is
