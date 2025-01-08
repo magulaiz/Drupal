@@ -5,7 +5,6 @@
  * Install, update and uninstall functions for the user module.
  */
 
-use Drupal\Core\Database\Database;
 use Drupal\mongodb\Driver\Database\mongodb\Statement;
 
 /**
@@ -65,7 +64,7 @@ function user_schema(): array {
     ],
   ];
 
-  if (Database::getConnection()->driver() == 'mongodb') {
+  if (\Drupal::database()->driver() == 'mongodb') {
     $schema['users_data']['fields']['serialized'] = [
       'description' => 'Whether value is serialized.',
       'type' => 'bool',

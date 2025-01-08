@@ -5,7 +5,6 @@
  * Install, update and uninstall functions for the Comment module.
  */
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -109,7 +108,7 @@ function comment_schema(): array {
     ],
   ];
 
-  if (Database::getConnection()->driver() == 'mongodb') {
+  if (\Drupal::database()->driver() == 'mongodb') {
     $schema['comment_entity_statistics']['fields']['last_comment_timestamp']['type'] = 'date';
   }
 

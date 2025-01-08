@@ -4,7 +4,6 @@
  * @file
  */
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Render\Markup;
@@ -100,7 +99,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
     return $data;
   }
 
-  $driver = Database::getConnection()->driver();
+  $driver = \Drupal::database()->driver();
 
   $field_name = $field_storage->getName();
   $field_columns = $field_storage->getColumns();
@@ -313,7 +312,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
 
   // Expose data for the field as a whole.
   foreach ($field_tables as $type => $table_info) {
-    if (Database::getConnection()->driver() == 'mongodb') {
+    if (\Drupal::database()->driver() == 'mongodb') {
       $group = $group_name;
       $field_alias = $field_name;
 
@@ -478,7 +477,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
         $allow_sort = FALSE;
       case 'bool':
       default:
-        if (Database::getConnection()->driver() == 'mongodb' && $attributes['type'] == 'bool') {
+        if (\Drupal::database()->driver() == 'mongodb' && $attributes['type'] == 'bool') {
           $filter = 'boolean';
           $argument = 'numeric';
           $sort = 'standard';

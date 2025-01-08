@@ -2,7 +2,6 @@
 
 namespace Drupal\comment\Plugin\EntityReferenceSelection;
 
-use Drupal\Core\Database\Database;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
@@ -91,7 +90,7 @@ class CommentSelection extends DefaultSelection {
    */
   public function entityQueryAlter(SelectInterface $query) {
     parent::entityQueryAlter($query);
-    $driver = Database::getConnection()->driver();
+    $driver = \Drupal::database()->driver();
 
     if ($driver != 'mongodb') {
       $tables = $query->getTables();

@@ -2,7 +2,6 @@
 
 namespace Drupal\views\Hook;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Component\Utility\NestedArray;
@@ -219,7 +218,7 @@ class ViewsViewsHooks {
    */
   #[Hook('field_views_data')]
   public function fieldViewsData(FieldStorageConfigInterface $field_storage): array {
-    $driver = Database::getConnection()->driver();
+    $driver = \Drupal::database()->driver();
     $data = views_field_default_views_data($field_storage);
     // The code below only deals with the Entity reference field type.
     if ($field_storage->getType() != 'entity_reference') {

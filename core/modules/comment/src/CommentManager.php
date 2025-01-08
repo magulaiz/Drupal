@@ -4,7 +4,6 @@ namespace Drupal\comment;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -220,7 +219,7 @@ class CommentManager implements CommentManagerInterface {
         }
       }
       $timestamp = ($timestamp > HISTORY_READ_LIMIT ? $timestamp : HISTORY_READ_LIMIT);
-      if (Database::getConnection()->databaseType() == 'mongodb') {
+      if (\Drupal::database()->databaseType() == 'mongodb') {
         $timestamp = new UTCDateTime($timestamp * 1000);
       }
 

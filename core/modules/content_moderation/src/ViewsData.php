@@ -2,7 +2,6 @@
 
 namespace Drupal\content_moderation;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -56,7 +55,7 @@ class ViewsData {
       return $this->moderationInformation->isModeratedEntityType($type);
     });
 
-    $driver = Database::getConnection()->driver();
+    $driver = \Drupal::database()->driver();
 
     foreach ($entity_types_with_moderation as $entity_type) {
       if ($driver == 'mongodb') {
