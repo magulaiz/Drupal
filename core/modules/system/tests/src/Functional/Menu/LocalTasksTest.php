@@ -11,6 +11,8 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
+// cspell:ignore ragdoll
+
 /**
  * Tests local tasks derived from router and added/altered via hooks.
  *
