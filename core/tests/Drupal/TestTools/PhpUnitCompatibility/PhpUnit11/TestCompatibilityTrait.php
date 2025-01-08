@@ -10,19 +10,4 @@ namespace Drupal\TestTools\PhpUnitCompatibility\PhpUnit11;
  * @internal
  */
 trait TestCompatibilityTrait {
-
-  /**
-   * Gets @covers defined on the test class.
-   *
-   * @return string[]
-   *   An array of classes listed with the @covers annotation.
-   */
-  public function getTestClassCovers(): array {
-    $ret = [];
-    foreach ($this->valueObjectForEvents()->metadata()->isCovers()->isClassLevel() as $metadata) {
-      $ret[] = $metadata->target();
-    }
-    return $ret;
-  }
-
 }
