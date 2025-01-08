@@ -13484,12 +13484,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/comment.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function comment_views_data_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/comment.views.inc',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\CommentForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
