@@ -6,6 +6,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldPurgerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\field_ui\FieldUI;
@@ -18,8 +19,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class FieldConfigDeleteForm extends EntityDeleteForm {
 
-  public function __construct(protected EntityTypeBundleInfoInterface $entityTypeBundleInfo, EntityTypeManagerInterface $entityTypeManager) {
+  /**
+   * The field purger service.
+   */
+  protected FieldPurgerInterface $fieldPurger;
+
+  public function __construct(protected EntityTypeBundleInfoInterface $entityTypeBundleInfo, EntityTypeManagerInterface $entityTypeManager, FieldPurgerInterface $fieldPurger) {
     $this->entityTypeManager = $entityTypeManager;
+    $this->fieldPurger = $fieldPurger;
   }
 
   /**
@@ -29,6 +36,7 @@ class FieldConfigDeleteForm extends EntityDeleteForm {
     return new static(
       $container->get('entity_type.bundle.info'),
       $container->get('entity_type.manager'),
+      $container->get('entity_field.purger'),
     );
   }
 
@@ -117,10 +125,11 @@ class FieldConfigDeleteForm extends EntityDeleteForm {
     // Fields are purged on cron. However field module prevents disabling
     // modules when field types they provided are used in a field until it is
     // fully purged. In the case that a field has minimal or no content, a
-    // single call to field_purge_batch() will remove it from the system. Call
-    // this with a low batch limit to avoid administrators having to wait for
-    // cron runs when removing fields that meet this criteria.
-    field_purge_batch(10);
+    // single call to \Drupal\Core\Field\FieldPurgerInterface::purgeBatch()
+    // will remove it from the system. Call this with a low batch limit to
+    // avoid administrators having to wait for cron runs when removing fields
+    // that meet this criteria.
+    $this->fieldPurger->purgeBatch(10);
   }
 
 }

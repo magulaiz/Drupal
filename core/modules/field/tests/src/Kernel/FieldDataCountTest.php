@@ -105,7 +105,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     $this->assertTrue($field_storage->hasData(), 'There are entities with deleted field data.');
     $this->assertEquals(12, $this->storage->countFieldData($field_storage), 'There are 12 entities with deleted field data.');
 
-    field_purge_batch(6);
+    \Drupal::service('entity_field.purger')->purgeBatch(6);
     $this->assertTrue($field_storage->hasData(), 'There are entities with deleted field data.');
     $this->assertEquals(6, $this->storage->countFieldData($field_storage), 'There are 6 entities with deleted field data.');
 
