@@ -39,7 +39,7 @@ class PermissionHandlerTest extends UnitTestCase {
   /**
    * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\Prophecy\Prophecy\ProphecyInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
@@ -72,7 +72,7 @@ class PermissionHandlerTest extends UnitTestCase {
 
     $this->stringTranslation = new TestTranslationManager();
     $this->callableResolver = $this->createMock('Drupal\Core\Utility\CallableResolver');
-    $this->entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
   }
 
   /**
