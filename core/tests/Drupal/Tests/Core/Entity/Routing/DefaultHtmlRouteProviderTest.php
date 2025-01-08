@@ -362,7 +362,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    * @covers ::getCollectionRoute
    * @dataProvider providerTestGetCollectionRouteOverviewPermission
    */
-  public function testGetCollectionRouteOverviewPermission(?Route $expected = NULL, EntityTypeInterface $entity_type): void {
+  public function testGetCollectionRouteOverviewPermission(EntityTypeInterface $entity_type, ?Route $expected = NULL): void {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $entity_type_bundle_info = $this->prophesize(EntityTypeBundleInfoInterface::class);
     $entity_type_manager->getPermissionProvider('the_entity_type_id')->willReturn(new EditorialEntityPermissionProvider($entity_type, $entity_type_bundle_info->reveal()));
@@ -373,9 +373,9 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $this->assertEquals($expected, $route);
   }
 
-  public function providerTestGetCollectionRouteOverviewPermission(): array {
+  public static function providerTestGetCollectionRouteOverviewPermission(): array {
     $data = [];
-    $entity_type = $this->getEntityType();
+    $entity_type = static::getEntityType();
     $entity_type->hasLinkTemplate('collection')->willReturn(TRUE);
     $entity_type->hasListBuilderClass()->willReturn(TRUE);
     $entity_type->getAdminPermission()->willReturn('administer the entity type');
