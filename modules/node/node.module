@@ -740,11 +740,13 @@ function _node_types_build($rebuild = FALSE) {
     $type_db = $type_object->type;
     // Original disabled value.
     $disabled = $type_object->disabled;
-    // Check for node types from disabled modules and mark their types for removal.
-    // Types defined by the node module in the database (rather than by a separate
-    // module using hook_node_info) have a base value of 'node_content'. The isset()
-    // check prevents errors on old (pre-Drupal 7) databases.
-    if (isset($type_object->base) && $type_object->base != 'node_content' && empty($_node_types->types[$type_db])) {
+    // Check for node types from disabled modules and mark their types for
+    // removal. Types defined by the node module in the database (rather than
+    // by a separate module using hook_node_info()) have a base value of
+    // 'node_content'.
+    // The isset() check prevents errors on old (pre-Drupal 7) databases.
+    $third_party_type = isset($type_object->base) && $type_object->base != 'node_content';
+    if ($third_party_type && empty($_node_types->types[$type_db])) {
       $type_object->disabled = TRUE;
     }
     if (isset($_node_types->types[$type_db])) {
@@ -753,11 +755,6 @@ function _node_types_build($rebuild = FALSE) {
     if (!isset($_node_types->types[$type_db]) || $type_object->modified) {
       $_node_types->types[$type_db] = $type_object;
       $_node_types->names[$type_db] = $type_object->name;
-
-      if ($type_db != $type_object->orig_type) {
-        unset($_node_types->types[$type_object->orig_type]);
-        unset($_node_types->names[$type_object->orig_type]);
-      }
     }
     $_node_types->types[$type_db]->disabled = $type_object->disabled;
     $_node_types->types[$type_db]->disabled_changed = $disabled != $type_object->disabled;
