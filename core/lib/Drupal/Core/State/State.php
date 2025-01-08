@@ -31,11 +31,6 @@ class State extends CacheCollector implements StateInterface {
   protected $keyValueStore;
 
   /**
-   * Whether to write to the cache at the end of the request.
-   */
-  protected bool $writeCache = TRUE;
-
-  /**
    * Constructs a State object.
    *
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
@@ -163,9 +158,10 @@ class State extends CacheCollector implements StateInterface {
       // so again at the end of the request. Other requests can safely start
       // rebuilding the cache after this point.
       $this->cache->set($this->getCid(), $data, CacheBackendInterface::CACHE_PERMANENT, $this->tags);
-      $this->writeCache = FALSE;
       $this->lock->release($lock_name);
     }
+    $this->keysToPersist = [];
+    $this->keysToRemove = [];
   }
 
   /**
@@ -191,15 +187,6 @@ class State extends CacheCollector implements StateInterface {
    */
   public function resetCache() {
     $this->clear();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function updateCache($lock = TRUE): void {
-    if ($this->writeCache) {
-      parent::updateCache($lock);
-    }
   }
 
 }
