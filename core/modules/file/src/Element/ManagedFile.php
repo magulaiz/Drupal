@@ -61,7 +61,7 @@ class ManagedFile extends FormElementBase {
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     // Find the current value of this field.
-    if ($input !== NULL && \is_array($input['fids']) && \count($input['fids']) > 0) {
+    if (!empty($input) && \is_array($input['fids'])) {
       $fids = $input['fids'];
     }
     else {
