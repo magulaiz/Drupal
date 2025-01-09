@@ -909,11 +909,14 @@ display:
         menu_name: admin
         context: ''
       tab_options:
-        type: normal
+        type: none
         title: People
         description: 'Manage user accounts, roles, and permissions.'
         weight: 0
         menu_name: admin
+        parent: system.admin
+        expanded: false
+        enabled: true
     cache_metadata:
       max-age: 0
       contexts:
