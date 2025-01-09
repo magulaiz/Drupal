@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Kernel;
 
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\link\LinkItemInterface;
@@ -23,29 +22,8 @@ class LinkFieldTest extends FieldKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'entity_test',
     'link',
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setUp(): void {
-    parent::setup();
-
-    $this->installEntitySchema('entity_test');
-    $this->installEntitySchema('user');
-    $this->installConfig(['system']);
-  }
-
-  /**
-   * Tests the functionality and rendering of the link field.
-   *
-   * This is being as one to avoid multiple Drupal install.
-   */
-  public function testLinkField(): void {
-    $this->doTestLinkTypeOnLinkWidget();
-  }
 
   /**
    * Tests '#link_type' property exists on 'link_default' widget.
@@ -55,7 +33,7 @@ class LinkFieldTest extends FieldKernelTestBase {
    * a link and also which LinkItemInterface::LINK_* is (EXTERNAL, GENERIC,
    * INTERNAL).
    */
-  protected function doTestLinkTypeOnLinkWidget(): void {
+  public function testLinkTypeOnLinkWidget(): void {
     $link_type = LinkItemInterface::LINK_EXTERNAL;
     $field_name = $this->randomMachineName();
 
@@ -77,11 +55,10 @@ class LinkFieldTest extends FieldKernelTestBase {
       ],
     ])->save();
 
-    EntityFormDisplay::create([
-      'targetEntityType' => 'entity_test',
-      'bundle' => 'entity_test',
-      'mode' => 'default',
-    ])->setComponent($field_name, ['type' => 'link_default'])->enable()->save();
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('entity_test', 'entity_test')
+      ->setComponent($field_name, ['type' => 'link_default'])
+      ->save();
 
     $form = \Drupal::service('entity.form_builder')->getForm(EntityTest::create());
     $this->assertEquals($link_type, $form[$field_name]['widget'][0]['uri']['#link_type']);

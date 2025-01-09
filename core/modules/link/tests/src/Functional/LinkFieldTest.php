@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Functional;
 
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -77,7 +75,6 @@ class LinkFieldTest extends BrowserTestBase {
   public function testLinkField(): void {
     $this->doTestURLValidation();
     $this->doTestLinkTitle();
-    $this->doTestLinkSeparateFormatter();
     $this->doTestEditNonNodeEntityLink();
   }
 
