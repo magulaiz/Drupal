@@ -11,12 +11,12 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 
 /**
- * Tests link field widgets and formatters.
+ * Tests link field widgets.
  *
  * @group link
  * @group #slow
  */
-class LinkFieldTest extends FieldKernelTestBase {
+class LinkFieldWidgetTest extends FieldKernelTestBase {
 
   /**
    * {@inheritdoc}
