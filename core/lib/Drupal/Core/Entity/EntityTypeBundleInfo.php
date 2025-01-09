@@ -85,7 +85,8 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
    * {@inheritdoc}
    */
   public function getAllBundleInfo() {
-    $langcode = $this->languageManager->getCurrentLanguage()->getId();
+    $langcode = $this->languageManager->getConfigOverrideLanguage()?->getId()
+      ?? $this->languageManager->getDefaultLanguage()->getId();
     // @fixme Replace self::bundleInfo with a proper memory cache backend.
     if (!isset($this->bundleInfo[$langcode])) {
       if ($cache = $this->cacheGet("entity_bundle_info:$langcode")) {
