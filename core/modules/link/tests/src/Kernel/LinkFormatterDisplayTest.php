@@ -28,7 +28,6 @@ class LinkFormatterDisplayTest extends LinkFormatterDisplayTestBase {
     $entity->field_test->setValue($this->getTestValues());
 
     foreach ($this->getTestCases() as $case_name => $case_options) {
-      $this->caseName = $case_name;
       [$display_settings, $expected_results] = array_values($case_options);
 
       // Render link field with default 'link' formatter and custom
@@ -36,17 +35,20 @@ class LinkFormatterDisplayTest extends LinkFormatterDisplayTestBase {
       $render_array = $entity->field_test->view(['settings' => $display_settings]);
       $output = (string) \Drupal::service('renderer')->renderRoot($render_array);
 
-      $this->checkLinksRender($expected_results, $output);
+      // Check results.
+      foreach ($expected_results as $expected_result) {
+        $this->assertStringContainsString($expected_result, $output, 'Test case failed: ' . $case_name);
+
+        // With url_plain should be no links.
+        if (!empty($display_settings['url_only']) && !empty($display_settings['url_plain'])) {
+          $this->assertStringNotContainsString('<a href="', $output, 'Test case failed: ' . $case_name);
+        }
+      }
     }
   }
 
   /**
-   * Field values, and expected results.
-   *
-   * Contains complex internal link, absolute external links,
-   *
-   * @return array
-   *   Values to use at link field setter.
+   * {@inheritdoc}
    */
   protected function getTestValues(): array {
     return [
@@ -120,10 +122,7 @@ class LinkFormatterDisplayTest extends LinkFormatterDisplayTestBase {
   }
 
   /**
-   * Provides an array of link field display settings and expected results.
-   *
-   * @return array
-   *   Test cases.
+   * {@inheritdoc}
    */
   protected function getTestCases(): array {
     $cases = [];

@@ -39,15 +39,15 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
       ]);
       $output = (string) \Drupal::service('renderer')->renderRoot($render_array);
 
-      $this->checkLinksRender($expected_results, $output);
+      // Check results.
+      foreach ($expected_results as $expected_result) {
+        $this->assertStringContainsString($expected_result, $output, 'Test case failed: ' . $this->caseName);
+      }
     }
   }
 
   /**
-   * Provides an array of link field display settings and expected results.
-   *
-   * @return array
-   *   Test cases.
+   * {@inheritdoc}
    */
   protected function getTestCases(): array {
     $cases = [];
@@ -96,12 +96,7 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
   }
 
   /**
-   * Field values, and expected results.
-   *
-   * Contains complex internal link, absolute external links,
-   *
-   * @return array
-   *   Values to use at link field setter.
+   * {@inheritdoc}
    */
   protected function getTestValues(): array {
     return [
