@@ -144,7 +144,7 @@ class RevisionLinkTest extends NodeTestBase {
     $node->save();
 
     // Create and log in user.
-    $web_user = $this->drupalCreateUser(['revert all revisions']);
+    $web_user = $this->drupalCreateUser(['revert all revisions', 'edit any page content']);
 
     $this->drupalLogin($web_user);
 
