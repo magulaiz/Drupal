@@ -11,7 +11,6 @@ use Drupal\Tests\Component\Annotation\Doctrine\Fixtures\Annotation\Autoload;
 use Drupal\Tests\Component\Annotation\Doctrine\Fixtures\AnnotationWithConstants;
 use Drupal\Tests\Component\Annotation\Doctrine\Fixtures\ClassWithConstants;
 use Drupal\Tests\Component\Annotation\Doctrine\Fixtures\IntefaceWithConstants;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -1284,7 +1283,9 @@ DOCBLOCK;
         $this->assertEquals(array('foo' => 'test', 'bar2' => 'test'), $annots[0]->settings);
     }
 
-    #[Group('44')]
+    /**
+     * @group #44
+     */
     public function testSupportsEscapedQuotedValues(): void
     {
         $result = $this->createTestParser()->parse('@Drupal\Tests\Component\Annotation\Doctrine\Name(foo="""bar""")');
