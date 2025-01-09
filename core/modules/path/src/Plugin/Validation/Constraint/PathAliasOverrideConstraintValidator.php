@@ -81,6 +81,11 @@ class PathAliasOverrideConstraintValidator extends ConstraintValidator implement
       return;
     }
 
+    // If the current user has permission to override values,
+    // short-circuit the check.
+    if ($this->currentUser->hasPermission('override url aliases')) {
+      return;
+    }
     $route_match = $this->checkPathRoute($value->alias);
     if ($route_match) {
       $this->context->addViolation($constraint->message, ["%alias" => $value->alias]);
