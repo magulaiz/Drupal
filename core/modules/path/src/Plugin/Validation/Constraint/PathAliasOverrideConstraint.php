@@ -14,6 +14,6 @@ use Symfony\Component\Validator\Constraint;
  */
 class PathAliasOverrideConstraint extends Constraint {
 
-  public $message = 'The alias overrides an existing URL.';
+  public $message = 'The alias "%alias" matches a existing system path. Please try a different alias.';
 
 }
