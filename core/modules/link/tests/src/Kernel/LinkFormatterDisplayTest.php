@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\link\Kernel;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\entity_test\Entity\EntityTest;
 
 /**
  * Tests the default 'link' field formatter.
@@ -22,13 +23,17 @@ class LinkFormatterDisplayTest extends LinkFormatterDisplayTestBase {
    * Run tests without dataProvider to improve speed.
    */
   public function testLinkFormatter(): void {
+    // Create an entity with link field values provided.
+    $entity = EntityTest::create();
+    $entity->field_test->setValue($this->getTestValues());
+
     foreach ($this->getTestCases() as $case_name => $case_options) {
       $this->caseName = $case_name;
       [$display_settings, $expected_results] = array_values($case_options);
 
       // Render link field with default 'link' formatter and custom
       // display settings.
-      $render_array = $this->entity->field_test->view(['settings' => $display_settings]);
+      $render_array = $entity->field_test->view(['settings' => $display_settings]);
       $output = (string) \Drupal::service('renderer')->renderRoot($render_array);
 
       $this->checkLinksRender($expected_results, $output);

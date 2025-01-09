@@ -22,13 +22,6 @@ use Drupal\link\LinkItemInterface;
 abstract class LinkFormatterDisplayTestBase extends FieldKernelTestBase {
 
   /**
-   * The test entity.
-   *
-   * @var \Drupal\Core\Entity\EntityInterface
-   */
-  protected EntityInterface $entity;
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = ['link'];
@@ -61,10 +54,6 @@ abstract class LinkFormatterDisplayTestBase extends FieldKernelTestBase {
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ])->save();
-
-    // Create an entity with link field values provided.
-    $this->entity = EntityTest::create();
-    $this->entity->field_test->setValue($this->getTestValues());
   }
 
   /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\link\Kernel;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\entity_test\Entity\EntityTest;
 
 /**
  * Tests the 'link_separate' field formatter.
@@ -22,13 +23,17 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
    * Run tests without dataProvider to improve speed.
    */
   public function testLinkSeparateFormatter(): void {
+    // Create an entity with link field values provided.
+    $entity = EntityTest::create();
+    $entity->field_test->setValue($this->getTestValues());
+
     foreach ($this->getTestCases() as $case_name => $case_options) {
       $this->caseName = $case_name;
       [$display_settings, $expected_results] = array_values($case_options);
 
       // Render link field with 'link_separate' formatter and custom
       // display settings.
-      $render_array = $this->entity->field_test->view([
+      $render_array = $entity->field_test->view([
         'type' => 'link_separate',
         'settings' => $display_settings,
       ]);
