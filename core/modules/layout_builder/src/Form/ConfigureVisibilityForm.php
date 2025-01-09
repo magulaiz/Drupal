@@ -128,7 +128,7 @@ class ConfigureVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $uuid = NULL, $plugin_id = NULL): array {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL, $uuid = NULL, $plugin_id = NULL): array {
     $this->sectionStorage = $section_storage;
     $this->delta = $delta;
     $this->uuid = $uuid;
