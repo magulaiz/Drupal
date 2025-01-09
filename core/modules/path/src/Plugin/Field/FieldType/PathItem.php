@@ -3,26 +3,15 @@
 namespace Drupal\path\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Random;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'path' entity field type.
- *
- * @FieldType(
- *   id = "path",
- *   label = @Translation("Path"),
- *   description = @Translation("An entity field containing a path alias and related data."),
- *   no_ui = TRUE,
- *   default_widget = "path",
- *   list_class = "\Drupal\path\Plugin\Field\FieldType\PathFieldItemList",
- *   constraints = {
- *    "PathAlias" = {},
- *    "PathAliasOverride" = {}
- *   },
- * )
  */
 #[FieldType(
   id: "path",

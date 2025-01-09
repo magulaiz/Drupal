@@ -2,12 +2,13 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\RenderElement;
+
 /**
  * Creates status report page element.
- *
- * @RenderElement("status_report")
  */
-class StatusReport extends RenderElement {
+#[RenderElement('status_report')]
+class StatusReport extends RenderElementBase {
 
   /**
    * {@inheritdoc}
@@ -64,6 +65,8 @@ class StatusReport extends RenderElement {
    * Gets the severities.
    *
    * @return array
+   *   An associative array of the requirements severities. The keys are the
+   *   requirement constants defined in install.inc.
    */
   public static function getSeverities() {
     return [

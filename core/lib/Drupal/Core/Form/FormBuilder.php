@@ -127,7 +127,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     'Drupal\Core\Render\Element\Checkbox::valueCallback',
     'Drupal\Core\Render\Element\Checkboxes::valueCallback',
     'Drupal\Core\Render\Element\Email::valueCallback',
-    'Drupal\Core\Render\Element\FormElement::valueCallback',
+    'Drupal\Core\Render\Element\FormElementBase::valueCallback',
     'Drupal\Core\Render\Element\MachineName::valueCallback',
     'Drupal\Core\Render\Element\Number::valueCallback',
     'Drupal\Core\Render\Element\PathElement::valueCallback',
@@ -172,7 +172,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
    */
-  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, FormCacheInterface $form_cache, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ElementInfoManagerInterface $element_info, ThemeManagerInterface $theme_manager, CsrfTokenGenerator $csrf_token = NULL) {
+  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, FormCacheInterface $form_cache, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ElementInfoManagerInterface $element_info, ThemeManagerInterface $theme_manager, ?CsrfTokenGenerator $csrf_token = NULL) {
     $this->formValidator = $form_validator;
     $this->formSubmitter = $form_submitter;
     $this->formCache = $form_cache;
@@ -770,10 +770,17 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
               ],
             ],
           ],
-          '#cache' => [
-            'max-age' => 0,
-          ],
         ];
+
+        // If a form hasn't explicitly opted in to caching by setting max-age at
+        // the top level, then make it uncacheable in case it doesn't have the
+        // correct cacheability metadata.
+        // @todo Remove this in the next major version, after the deprecation
+        //   process from https://www.drupal.org/project/drupal/issues/3395157
+        //   has ended.
+        if (!isset($form['#cache']['max-age'])) {
+          $form['form_token']['#cache']['max-age'] = 0;
+        }
       }
     }
 
@@ -1178,7 +1185,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // of how the element is themed or whether JavaScript is used to change the
     // control's attributes. However, it's good UI to let the user know that
     // input is not wanted for the control. HTML supports two attributes for:
-    // this: http://www.w3.org/TR/html401/interact/forms.html#h-17.12. If a form
+    // this: https://www.w3.org/TR/html401/interact/forms.html#h-17.12. If a form
     // wants to start a control off with one of these attributes for UI
     // purposes, only, but still allow input to be processed if it's submitted,
     // it can set the desired attribute in #attributes directly rather than
@@ -1219,7 +1226,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     if (!isset($element['#value']) && !array_key_exists('#value', $element)) {
       $value_callable = $element['#value_callback'] ?? NULL;
       if (!is_callable($value_callable)) {
-        $value_callable = '\Drupal\Core\Render\Element\FormElement::valueCallback';
+        $value_callable = '\Drupal\Core\Render\Element\FormElementBase::valueCallback';
       }
 
       if ($process_input) {
@@ -1322,7 +1329,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * element. If the name alone doesn't identify the element uniquely, the input
    * key '_triggering_element_value' may also be set to require a match on
    * element value. An example where this is needed is if there are several
-   * // buttons all named 'op', and only differing in their value.
+   * // buttons all named 'op', and only different in their value.
    */
   protected function elementTriggeredScriptedSubmission($element, FormStateInterface &$form_state) {
     $input = $form_state->getUserInput();
@@ -1364,7 +1371,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // The input value attribute is treated as CDATA by browsers. This means
     // that they replace character entities with characters. Therefore, we need
     // to decode the value in $element['#value']. For more details see
-    // http://www.w3.org/TR/html401/types.html#type-cdata.
+    // https://www.w3.org/TR/html401/types.html#type-cdata.
     if (isset($input[$element['#name']]) && $input[$element['#name']] == Html::decodeEntities($element['#value'])) {
       return TRUE;
     }

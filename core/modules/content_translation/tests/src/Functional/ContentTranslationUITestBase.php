@@ -53,7 +53,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests the basic translation UI.
    */
-  public function testTranslationUI() {
+  public function testTranslationUI(): void {
     $this->doTestBasicTranslation();
     $this->doTestTranslationOverview();
     $this->doTestOutdatedStatus();
@@ -325,7 +325,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $values = [];
 
     // Post different authoring information for each translation.
-    foreach ($this->langcodes as $index => $langcode) {
+    foreach ($this->langcodes as $langcode) {
       $user = $this->drupalCreateUser();
       $values[$langcode] = [
         'uid' => $user->id(),
