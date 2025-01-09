@@ -24,6 +24,18 @@ use Drupal\Core\TypedData\DataDefinition;
  *   },
  * )
  */
+#[FieldType(
+  id: "path",
+  label: new TranslatableMarkup("Path"),
+  description: new TranslatableMarkup("An entity field containing a path alias and related data."),
+  default_widget: "path",
+  no_ui: TRUE,
+  list_class: PathFieldItemList::class,
+  constraints: [
+    "PathAlias" => [],
+    "PathAliasOverride" => []
+  ],
+)]
 class PathItem extends FieldItemBase {
 
   /**
