@@ -28,7 +28,6 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
     $entity->field_test->setValue($this->getTestValues());
 
     foreach ($this->getTestCases() as $case_name => $case_options) {
-      $this->caseName = $case_name;
       [$display_settings, $expected_results] = array_values($case_options);
 
       // Render link field with 'link_separate' formatter and custom
@@ -41,7 +40,7 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
 
       // Check results.
       foreach ($expected_results as $expected_result) {
-        $this->assertStringContainsString($expected_result, $output, 'Test case failed: ' . $this->caseName);
+        $this->assertStringContainsString($expected_result, $output, 'Test case failed: ' . $case_name);
       }
     }
   }
