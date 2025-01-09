@@ -57,7 +57,10 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
       'entity_type' => 'entity_test',
       'field_name' => 'field_test',
       'bundle' => 'entity_test',
-      'settings' => ['link_type' => LinkItemInterface::LINK_GENERIC],
+      'settings' => [
+        'title' => DRUPAL_OPTIONAL,
+        'link_type' => LinkItemInterface::LINK_GENERIC,
+      ],
     ])->save();
 
     // Create an entity with link field values provided.
@@ -113,6 +116,28 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
    */
   protected function getTestValues(): array {
     return [
+      // From doTestLinkFormatter().
+      [
+        'uri'             => 'http://www.example.com/content/articles/archive?author=John&year=2012#com',
+        '#expected_href'  => 'http://www.example.com/content/articles/archive?author=John&amp;year=2012#com',
+        // Note that title is empty.
+        'title'           => '',
+        '#expected_title' => 'http://www.example.com/content/articles/archive?author=John&amp;year=2012#com',
+      ],
+      [
+        'uri'             => 'http://www.example.org/content/articles/archive?author=John&year=2012#org',
+        '#expected_href'  => 'http://www.example.org/content/articles/archive?author=John&amp;year=2012#org',
+        'title'           => 'A very long & strange example title that could break the nice layout of the site',
+        '#expected_title' => 'A very long &amp; strange example title that could break the nice layout of the site',
+      ],
+      [
+        'uri'             => 'internal:#net',
+        '#expected_href'  => '#net',
+        'title'           => 'Fragment only',
+        '#expected_title' => 'Fragment only',
+      ],
+
+      // From testLinkFormatterQueryParametersDuplication().
       [
         'uri' => 'internal:?a[]=1&a[]=2',
         // Result link: '?a[0]=1&a[1]=2'.
@@ -156,27 +181,6 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
         // Result link: '?z[0]=2'.
         '#expected_href'  => '?z%5B0%5D=2',
         '#expected_title' => '?z%5B0%5D=2',
-      ],
-
-      // From testLinkFormatter().
-      [
-        'uri'             => 'http://www.example.com/content/articles/archive?author=John&year=2012#com',
-        '#expected_href'  => 'http://www.example.com/content/articles/archive?author=John&amp;year=2012#com',
-        // Note that title is empty.
-        'title'           => '',
-        '#expected_title' => 'http://www.example.com/content/articles/archive?author=John&amp;year=2012#com',
-      ],
-      [
-        'uri'             => 'http://www.example.org/content/articles/archive?author=John&year=2012#org',
-        '#expected_href'  => 'http://www.example.org/content/articles/archive?author=John&amp;year=2012#org',
-        'title'           => 'A very long & strange example title that could break the nice layout of the site',
-        '#expected_title' => 'A very long &amp; strange example title that could break the nice layout of the site',
-      ],
-      [
-        'uri'             => 'internal:#net',
-        '#expected_href'  => '#net',
-        'title'           => 'Fragment only',
-        '#expected_title' => 'Fragment only',
       ],
     ];
   }
