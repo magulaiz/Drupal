@@ -240,14 +240,14 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * - A 'mimic_implicit_commit' does not exist already.
    * - The query is not a savepoint query.
    *
-   * @param $query
+   * @param string|null $query
    *   The query to evaluate, null if being passed from another source,
    *   such as pgsql/Select.
    *
    * @return bool
    *   Triggers wrapping with savepoint.
    */
-  public function wrapWithSavepoint($query = NULL) {
+  public function wrapWithSavepoint(?string $query = NULL): bool {
     $wrap_with_savepoint = $this->inTransaction() &&
       !$this->transactionManager()->has('mimic_implicit_commit') &&
       !(is_string($query) && (
