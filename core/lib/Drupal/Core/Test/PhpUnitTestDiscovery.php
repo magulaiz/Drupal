@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Test;
 
-use Composer\Autoload\ClassLoader;
 use Drupal\Core\Test\Exception\MissingGroupException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Test;
@@ -15,16 +16,6 @@ use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
  * @internal
  */
 class PhpUnitTestDiscovery {
-
-  /**
-   * The class loader.
-   */
-  protected ClassLoader $classLoader;
-
-  /**
-   * The app root.
-   */
-  private string $root;
 
   /**
    * The map of legacy test suite identifiers to PHPUnit.xml ones.
@@ -53,9 +44,9 @@ class PhpUnitTestDiscovery {
    */
   private array $warnings = [];
 
-  public function __construct($root, $class_loader) {
-    $this->root = $root;
-    $this->classLoader = $class_loader;
+  public function __construct(
+    private string $root, $class_loader
+  ) {
     $this->reverseMap = array_flip($this->map);
   }
 
@@ -258,7 +249,7 @@ class PhpUnitTestDiscovery {
       'groups' => $groups,
       'type' => $testSuite,
       'description' => $description,
-      'file' => $this->classLoader->findFile($testClass->name()),
+      'file' => $testClass->valueObjectForEvents()->file(),
     ];
   }
 
