@@ -330,7 +330,7 @@ class CacheCollectorTest extends UnitTestCase {
   /**
    * Tests deleting the cache after a delete.
    */
-  public function testUpdateCacheDelete(): void {
+  public function testDeleteCacheAfterDelete(): void {
     $key = $this->randomMachineName();
     $value = $this->randomMachineName();
 
