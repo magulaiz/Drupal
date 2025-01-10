@@ -44,7 +44,13 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
    * @param \Drupal\Core\Path\PathMatcherService $pathMatcher
    *   The path.matcher service.
    */
-  public function __construct(protected MenuLinkManagerInterface $menuLinkManager, protected RouteMatchInterface $routeMatch, CacheBackendInterface $cache, LockBackendInterface $lock, protected PathMatcherInterface $pathMatcher) {
+  public function __construct(
+    protected MenuLinkManagerInterface $menuLinkManager,
+    protected RouteMatchInterface $routeMatch,
+    protected CacheBackendInterface $cache,
+    protected LockBackendInterface $lock,
+    protected PathMatcherInterface $pathMatcher,
+  ) {
     parent::__construct(NULL, $cache, $lock);
     $this->menuLinkManager = $menu_link_manager;
     $this->routeMatch = $route_match;
