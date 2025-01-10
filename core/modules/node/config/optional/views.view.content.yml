@@ -1,8 +1,6 @@
 langcode: en
 status: true
 dependencies:
-  config:
-    - system.menu.admin
   module:
     - node
     - user
@@ -665,7 +663,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: admin/content/node
+      path: admin/content
       menu:
         type: 'default tab'
         title: Content
@@ -674,7 +672,7 @@ display:
         menu_name: admin
         context: ''
       tab_options:
-        type: normal
+        type: none
         title: Content
         description: 'Find and manage content'
         weight: -10
