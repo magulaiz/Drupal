@@ -119,7 +119,7 @@ class LinkUri extends ProcessPluginBase implements ContainerFactoryPluginInterfa
         if (!$this->configuration['validate_route']) {
           if ($options['query']) {
             return $url->getUri() . (isset($options['query']) ? '?' . UrlHelper::buildQuery($options['query']) : '');
-          } 
+          }
           return $url->getUri();
         }
         else {
