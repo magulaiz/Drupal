@@ -137,9 +137,6 @@ class TwigExtension extends AbstractExtension {
         ]
       ),
 
-      // Replace deprecated spaceless filter with our own.
-      new TwigFilter('drupal_spaceless', [self::class, 'spacelessFilter'], ['is_safe' => ['html']]),
-
       // Implements safe joining.
       // @todo Make that the default for |join? Upstream issue:
       //   https://github.com/fabpot/Twig/issues/1420
@@ -492,18 +489,6 @@ class TwigExtension extends AbstractExtension {
     }
     $arg['#printed'] = FALSE;
     return $this->renderer->render($arg);
-  }
-
-  /**
-   * Removes whitespaces between HTML tags.
-   *
-   * @param string|null $content
-   *   The content to remove whitespaces from.
-   *
-   * @return string
-   */
-  public static function spacelessFilter(?string $content): string {
-    return trim(preg_replace('/>\s+</', '><', $content ?? ''));
   }
 
   /**
