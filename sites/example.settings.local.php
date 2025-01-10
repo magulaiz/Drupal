@@ -45,6 +45,14 @@ $settings['container_yamls'][] = DRUPAL_ROOT . '/sites/development.services.yml'
 $config['system.logging']['error_level'] = 'verbose';
 
 /**
+ * Enable Drupal's customizations of the Symfony VarDumper.
+ *
+ * This requires the symfony/var-dumper package, which can be installed via the
+ * drupal/core-dev metapackage.
+ */
+$settings['setup_var_dumper'] = TRUE;
+
+/**
  * Disable CSS and JS aggregation.
  */
 $config['system.performance']['css']['preprocess'] = FALSE;

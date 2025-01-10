@@ -25,6 +25,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
+use Drupal\Core\Utility\VarDumper as DrupalVarDumper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -35,6 +36,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * The DrupalKernel class is the core of Drupal itself.
@@ -481,6 +483,19 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Ensure that findSitePath is set.
     if (!$this->sitePath) {
       throw new \Exception('Kernel does not have site path set before calling boot()');
+    }
+
+    if (!defined('DRUPAL_TEST_IN_CHILD_SITE') || !DRUPAL_TEST_IN_CHILD_SITE) {
+      // Set up the Symfony VarDumper. The package for this is only installed
+      // with the drupal/core-dev metapackage, so this must be enabled in
+      // settings.php.
+      // We don't do this in a test site, as the testing system has its own
+      // version of this setup. If the DRUPAL_TEST_IN_CHILD_SITE isn't defined
+      // yet then we're definitely in a non-standard or testing pathway which
+      // hasn't called bootEnvironment() yet.
+      if (Settings::get('setup_var_dumper', FALSE)) {
+        VarDumper::setHandler(DrupalVarDumper::class . '::handler');
+      }
     }
 
     // Initialize the FileCacheFactory component. We have to do it here instead

@@ -12,6 +12,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\Attribute\OmitFromDump;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -45,6 +46,7 @@ abstract class EntityBase implements EntityInterface {
    *
    * @var \Drupal\Core\TypedData\ComplexDataInterface
    */
+  #[OmitFromDump]
   protected $typedData;
 
   /**

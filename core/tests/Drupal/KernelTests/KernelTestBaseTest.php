@@ -313,6 +313,20 @@ class KernelTestBaseTest extends KernelTestBase {
 
     // Dump some variables.
     $this->enableModules(['system', 'user']);
+
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('user');
+
+    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user = $user_storage->create(['name' => 'Test user']);
+    $user->save();
+    dump($user);
+
+    $this->assertStringContainsString('Drupal\user\Entity\User', StreamCapturer::$cache);
+    // Properties which have the OmitFromDump attribute are not included.
+    $this->assertStringNotContainsString('fieldDefinitions', StreamCapturer::$cache);
+    $this->assertStringNotContainsString('typedData', StreamCapturer::$cache);
+
     $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
     dump($role);
     dump($role->id());

@@ -24,6 +24,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Utility\Error;
+use Drupal\Core\Utility\Attribute\OmitFromDump;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -53,6 +54,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *
    * @var \Drupal\Core\Entity\Sql\TableMappingInterface
    */
+  #[OmitFromDump]
   protected $tableMapping;
 
   /**
@@ -111,6 +113,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *
    * @var \Drupal\Core\Database\Connection
    */
+  #[OmitFromDump]
   protected $database;
 
   /**
@@ -125,6 +128,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
+  #[OmitFromDump]
   protected $languageManager;
 
   /**
@@ -132,6 +136,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
+  #[OmitFromDump]
   protected $entityTypeManager;
 
   /**

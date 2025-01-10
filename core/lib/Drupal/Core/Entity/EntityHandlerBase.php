@@ -5,6 +5,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Utility\Attribute\OmitFromDump;
 
 /**
  * Provides a base class for entity handlers.
@@ -20,6 +21,7 @@ abstract class EntityHandlerBase {
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
+  #[OmitFromDump]
   protected $moduleHandler;
 
   /**

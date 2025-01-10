@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools;
 
+use Drupal\Core\Utility\VarDumper;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 
 /**
  * Provides handlers for the Symfony VarDumper to work within tests.
@@ -14,13 +14,16 @@ use Symfony\Component\VarDumper\Dumper\HtmlDumper;
  * This allows the dump() function to produce output on the terminal without
  * causing PHPUnit to complain.
  */
-class TestVarDumper {
+class TestVarDumper extends VarDumper {
 
   /**
    * A CLI handler for \Symfony\Component\VarDumper\VarDumper.
    */
   public static function cliHandler($var) {
     $cloner = new VarCloner();
+
+    static::addCasters($cloner, $var);
+
     $dumper = new CliDumper();
     fwrite(STDERR, "\n");
     $dumper->setColors(TRUE);
@@ -34,15 +37,6 @@ class TestVarDumper {
         }
       }
     );
-  }
-
-  /**
-   * A HTML handler for \Symfony\Component\VarDumper\VarDumper.
-   */
-  public static function htmlHandler($var) {
-    $cloner = new VarCloner();
-    $dumper = new HtmlDumper();
-    $dumper->dump($cloner->cloneVar($var));
   }
 
 }

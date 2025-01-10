@@ -11,6 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\TranslationStatusInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\Utility\Attribute\OmitFromDump;
 
 /**
  * Implements Entity Field API specific enhancements to the Entity class.
@@ -44,6 +45,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    *
    * @var array
    */
+  #[OmitFromDump]
   protected $fields = [];
 
   /**
@@ -53,6 +55,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    *
    * @see ContentEntityBase::getFieldDefinitions()
    */
+  #[OmitFromDump]
   protected $fieldDefinitions;
 
   /**
@@ -60,6 +63,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    *
    * @var \Drupal\Core\Language\LanguageInterface[]
    */
+  #[OmitFromDump]
   protected $languages;
 
   /**
