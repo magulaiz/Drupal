@@ -2,10 +2,10 @@
 
 namespace Drupal\menu_link_content\Plugin\migrate\process;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
