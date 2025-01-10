@@ -22,7 +22,6 @@ use Drupal\Core\TypedData\DataDefinition;
   list_class: PathFieldItemList::class,
   constraints: [
     "PathAlias" => [],
-    "PathAliasOverride" => []
   ],
 )]
 class PathItem extends FieldItemBase {
