@@ -92,6 +92,7 @@ class State extends CacheCollector implements StateInterface {
    * {@inheritdoc}
    */
   public function setMultiple(array $data) {
+    $this->lazyLoadCache();
     foreach ($data as $key => $value) {
       if (isset(self::$deprecatedState[$key])) {
         // phpcs:ignore Drupal.Semantics.FunctionTriggerError
@@ -113,7 +114,9 @@ class State extends CacheCollector implements StateInterface {
     // request before ::updateCache() is called - the new cache item functions
     // as a tombstone record in this case.
     foreach ($data as $key => $value) {
-      parent::set($key, $value);
+      $this->storage[$key] = $value;
+      // The key might have been marked for deletion.
+      unset($this->keysToRemove[$key]);
       $this->persist($key);
     }
     $lock_name = $this->getCid() . ':' . CacheCollector::class;
