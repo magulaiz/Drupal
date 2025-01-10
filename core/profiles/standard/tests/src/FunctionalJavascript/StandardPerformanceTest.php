@@ -10,6 +10,8 @@ use Drupal\Tests\PerformanceData;
 use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
 
+// cSpell:ignore mlid
+
 /**
  * Tests the performance of basic functionality in the standard profile.
  *
