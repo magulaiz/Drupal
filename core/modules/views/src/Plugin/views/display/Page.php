@@ -492,7 +492,7 @@ class Page extends PathPluginBase {
           $menu_parent = $tab_options['menu_name'] . ':' . $tab_options['parent'];
         }
         else {
-          $menu_parent = $tab_options['parent'];
+          $menu_parent = $tab_options['parent'] ?? '';
         }
         $menu_link = 'views_view:views.' . $form_state->get('view')->id() . '.' . $form_state->get('display_id');
         $form['tab_options']['parent'] = $this->parentFormSelector->parentSelectElement($menu_parent, $menu_link);
