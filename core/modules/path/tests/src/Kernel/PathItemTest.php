@@ -228,7 +228,7 @@ class PathItemTest extends KernelTestBase {
     $node_storage->resetCache();
     $node = $node_storage->load($node->id());
     $path_id = $node->get('path')->pid;
-    $this->assertNotNull($path_id);
+    $this->assertTrue($path_id && is_numeric($path_id));
 
     $second_node = $node->createDuplicate();
     $this->assertTrue($second_node->isNew());
