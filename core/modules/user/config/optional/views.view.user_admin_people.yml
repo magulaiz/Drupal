@@ -1,6 +1,8 @@
 langcode: en
 status: true
 dependencies:
+  config:
+    - system.menu.admin
   module:
     - user
 id: user_admin_people
@@ -909,7 +911,7 @@ display:
         menu_name: admin
         context: ''
       tab_options:
-        type: none
+        type: normal
         title: People
         description: 'Manage user accounts, roles, and permissions.'
         weight: 0

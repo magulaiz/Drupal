@@ -1,6 +1,8 @@
 langcode: en
 status: true
 dependencies:
+  config:
+    - system.menu.admin
   module:
     - node
     - user
@@ -672,7 +674,7 @@ display:
         menu_name: admin
         context: ''
       tab_options:
-        type: none
+        type: normal
         title: Content
         description: 'Find and manage content'
         weight: -10
