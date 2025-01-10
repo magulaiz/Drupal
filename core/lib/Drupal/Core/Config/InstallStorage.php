@@ -243,10 +243,8 @@ class InstallStorage extends FileStorage {
 
   /**
    * Initiate the base database driver override directory.
-   *
-   * @return void
    */
-  protected function initBaseDatabaseDriverOverrideDirectory() {
+  protected function initBaseDatabaseDriverOverrideDirectory(): void {
     if (Database::isActiveConnection()) {
       $connection = Database::getConnection();
       // Get the module root directory from the autoload directory setting from
