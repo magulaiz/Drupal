@@ -40,11 +40,10 @@ function field_update_9001(&$sandbox): void {
 
     // Get the entities for bundle field mappings to be loaded.
     $list_entity_type_keys = [];
-    $list_entity_type_keys = array_reduce($results, function ($carry, $value) {
+    $list_entity_type_keys = array_unique(array_map(function ($value) {
       [$entity_type_key] = explode('.', $value);
-      $carry[] = $entity_type_key;
-      return array_unique($carry);
-    });
+      return $entity_type_key;
+    }, $results));
 
     // Retrieve the bundle field mappings from keyvalue storage.
     $bundle_field_maps = \Drupal::service('keyvalue')
