@@ -67,12 +67,12 @@ class FileStorage implements StorageInterface {
    */
   public function getFilePath($name) {
     // Let a config item be overridden by a database driver one.
-    if ($this->getDatabaseDriver()) {
-      $file_name = $this->getCollectionDirectory() . '/' . $this->getDatabaseDriver() . '/' . $name . '.' . static::getFileExtension();
-      if (file_exists($file_name)) {
-        return $file_name;
-      }
-    }
+    // if ($this->getDatabaseDriver()) {
+    // $file_name = $this->getCollectionDirectory() . '/' . $this->getDatabaseDriver() . '/' . $name . '.' . static::getFileExtension();
+    // if (file_exists($file_name)) {
+    // return $file_name;
+    // }
+    // }
 
     return $this->getCollectionDirectory() . '/' . $name . '.' . static::getFileExtension();
   }
