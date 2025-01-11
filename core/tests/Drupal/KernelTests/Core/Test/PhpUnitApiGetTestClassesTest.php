@@ -38,6 +38,7 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
 
     $phpUnitTestDiscovery = new PhpUnitTestDiscovery(
       $this->container->getParameter('app.root'),
+      $this->container->get('class_loader')
     );
     $phpUnitList = $phpUnitTestDiscovery->getTestClasses($extension, $suites, $directory);
 

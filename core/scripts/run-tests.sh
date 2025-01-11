@@ -114,7 +114,7 @@ if ($args['list']) {
 // @see https://www.drupal.org/node/2569585
 if ($args['list-files'] || $args['list-files-json']) {
   // List all files which could be run as tests.
-  $test_discovery = new PhpUnitTestDiscovery(\Drupal::root());
+  $test_discovery = PhpUnitTestDiscovery(\Drupal::root());
   // PhpUnitTestDiscovery::findAllClassFiles() gives us a classmap similar to a
   // Composer 'classmap' array.
   $test_classes = $test_discovery->findAllClassFiles();
@@ -929,7 +929,7 @@ function simpletest_script_command(TestRun $test_run, string $test_class): array
 function simpletest_script_get_test_list() {
   global $args;
 
-  $test_discovery = new PhpUnitTestDiscovery(\Drupal::root());
+  $test_discovery = PhpUnitTestDiscovery(\Drupal::root());
   $test_list = [];
   $slow_tests = [];
   if ($args['all'] || $args['module'] || $args['directory']) {
