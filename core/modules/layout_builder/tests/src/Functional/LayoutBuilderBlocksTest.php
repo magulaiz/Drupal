@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Functional;
 
-use Drupal\Tests\WaitTerminateTestTrait;
-
 /**
  * Tests the Layout Builder UI with blocks.
  *
  * @group layout_builder
  */
 class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
-
-  use WaitTerminateTestTrait;
 
   /**
    * Tests the usage of placeholders for empty blocks.
