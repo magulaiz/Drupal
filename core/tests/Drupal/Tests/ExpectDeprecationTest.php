@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
-use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\Group;

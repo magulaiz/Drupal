@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\Extension\DeprecationBridge;
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Drupal's PHPUnit extension to manage code deprecation.
  *
