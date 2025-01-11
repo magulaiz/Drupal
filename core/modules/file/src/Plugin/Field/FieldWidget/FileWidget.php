@@ -70,7 +70,6 @@ class FileWidget extends WidgetBase {
       '#default_value' => $this->getSetting('progress_indicator'),
       '#description' => $this->t('The throbber display does not show the status of uploads but takes up less space. The progress bar is helpful for monitoring progress on large uploads.'),
       '#weight' => 16,
-      '#access' => extension_loaded('uploadprogress'),
     ];
     return $element;
   }
