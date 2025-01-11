@@ -1668,16 +1668,9 @@ function system_update_last_removed(): int {
 }
 
 /**
- * Invalidate container because the module handler has changed.
- */
-function system_update_11100(): void {
-  \Drupal::service('kernel')->invalidateContainer();
-}
-
-/**
  * Add a [time] column to the {simpletest} table, if existing.
  */
-function system_update_11101(): void {
+function system_update_11200(): void {
   $schema = \Drupal::database()->schema();
   if ($schema->tableExists('simpletest') && !$schema->fieldExists('simpletest', 'time')) {
     $schema->addField('simpletest', 'time', [
@@ -1738,6 +1731,13 @@ function _system_advisories_requirements(array &$requirements): void {
       )->toRenderable();
     }
   }
+}
+
+/**
+ * Invalidate container because the module handler has changed.
+ */
+function system_update_11100(): void {
+  \Drupal::service('kernel')->invalidateContainer();
 }
 
 /**
