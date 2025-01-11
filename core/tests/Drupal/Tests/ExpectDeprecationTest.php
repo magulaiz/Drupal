@@ -13,6 +13,8 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 /**
  * Ensures test coverage for deprecation testing.
+ *
+ * @group Test
  */
 #[Group('Test')]
 #[IgnoreDeprecations]
