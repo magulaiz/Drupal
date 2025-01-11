@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\Core\Render\Element\FormElement;
+use Drupal\Core\Render\Element\FormElementBase;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -230,7 +230,7 @@ class ElementTest extends BrowserTestBase {
     $element_info_manager = $this->container->get('plugin.manager.element_info');
 
     foreach ($element_info_manager->getDefinitions() as $definition) {
-      if (!is_subclass_of($definition['class'], FormElement::class)) {
+      if (!is_subclass_of($definition['class'], FormElementBase::class)) {
         continue;
       }
       $info = $element_info_manager->getInfo($definition['id']);
@@ -240,7 +240,7 @@ class ElementTest extends BrowserTestBase {
       }
       $info_has_process_group = FALSE;
       foreach ($info['#process'] as $item) {
-        if (is_subclass_of($item[0], FormElement::class) && $item[1] == 'processGroup') {
+        if (is_subclass_of($item[0], FormElementBase::class) && $item[1] == 'processGroup') {
           $info_has_process_group = TRUE;
           break;
         }
@@ -254,7 +254,7 @@ class ElementTest extends BrowserTestBase {
       }
       $info_has_pre_render_group = FALSE;
       foreach ($info['#pre_render'] as $item) {
-        if (is_subclass_of($item[0], FormElement::class) && $item[1] == 'preRenderGroup') {
+        if (is_subclass_of($item[0], FormElementBase::class) && $item[1] == 'preRenderGroup') {
           $info_has_pre_render_group = TRUE;
           break;
         }
