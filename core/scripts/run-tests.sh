@@ -81,7 +81,10 @@ if ($args['list']) {
   // Display all available tests organized by one @group annotation.
   echo "\nAvailable test groups & classes\n";
   echo "-------------------------------\n\n";
-  $test_discovery = new PhpUnitTestDiscovery(\Drupal::root());
+  $test_discovery = new PhpUnitTestDiscovery(
+    \Drupal::root(),
+    \Drupal::service('class_loader')
+  );
   try {
     $groups = $test_discovery->getTestClasses($args['module']);
     foreach ($test_discovery->getWarnings() as $warning) {
@@ -114,7 +117,10 @@ if ($args['list']) {
 // @see https://www.drupal.org/node/2569585
 if ($args['list-files'] || $args['list-files-json']) {
   // List all files which could be run as tests.
-  $test_discovery = PhpUnitTestDiscovery(\Drupal::root());
+  $test_discovery = new PhpUnitTestDiscovery(
+    \Drupal::root(),
+    \Drupal::service('class_loader')
+  );
   // PhpUnitTestDiscovery::findAllClassFiles() gives us a classmap similar to a
   // Composer 'classmap' array.
   $test_classes = $test_discovery->findAllClassFiles();
@@ -929,7 +935,10 @@ function simpletest_script_command(TestRun $test_run, string $test_class): array
 function simpletest_script_get_test_list() {
   global $args;
 
-  $test_discovery = PhpUnitTestDiscovery(\Drupal::root());
+  $test_discovery = new PhpUnitTestDiscovery(
+    \Drupal::root(),
+    \Drupal::service('class_loader')
+  );
   $test_list = [];
   $slow_tests = [];
   if ($args['all'] || $args['module'] || $args['directory']) {
