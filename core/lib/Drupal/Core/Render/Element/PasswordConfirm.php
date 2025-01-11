@@ -40,7 +40,7 @@ class PasswordConfirm extends FormElementBase {
         [static::class, 'processGroup'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderGroup'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme_wrappers' => ['form_element'],
     ];

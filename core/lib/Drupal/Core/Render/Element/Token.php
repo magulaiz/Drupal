@@ -27,7 +27,7 @@ class Token extends Hidden {
         [static::class, 'preRenderGroup'],
       ],
       '#process' => [
-        [$class, 'processGroup'],
+        [static::class, 'processGroup'],
       ],
       '#theme' => 'input__hidden',
     ];
