@@ -21,15 +21,14 @@ class LanguageSelect extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#default_value' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       '#process' => [
-        [$class, 'processGroup'],
+        [static::class, 'processGroup'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderGroup'],
+        [static::class, 'preRenderGroup'],
       ],
     ];
   }

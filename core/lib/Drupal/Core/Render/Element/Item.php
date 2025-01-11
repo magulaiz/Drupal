@@ -18,7 +18,6 @@ class Item extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       // Forms that show author fields to both anonymous and authenticated users
       // need to dynamically switch between #type 'textfield' and #type 'item'
@@ -29,10 +28,10 @@ class Item extends FormElementBase {
       '#markup' => '',
       '#theme_wrappers' => ['form_element'],
       '#process' => [
-        [$class, 'processGroup'],
+        [static::class, 'processGroup'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderGroup'],
+        [static::class, 'preRenderGroup'],
       ],
     ];
   }
