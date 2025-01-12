@@ -42,7 +42,7 @@ class FetchTest extends DatabaseTestBase {
   public function testQueryFetchColumn(): void {
     $statement = $this->connection
       ->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25]);
-    $statement->setFetchMode(\PDO::FETCH_COLUMN, 0);
+    $statement->setFetchMode(FetchAs::Column, 0);
     $this->assertSame('John', $statement->fetch());
   }
 
@@ -54,7 +54,7 @@ class FetchTest extends DatabaseTestBase {
     $this->expectExceptionMessage('Invalid column index');
     $statement = $this->connection
       ->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25]);
-    $statement->setFetchMode(\PDO::FETCH_COLUMN, 200);
+    $statement->setFetchMode(FetchAs::Column, 200);
     $statement->fetch();
   }
 
