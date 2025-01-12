@@ -145,7 +145,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
   }
 
   // Determine if the fields are translatable.
-  $bundles_names = $field_storage->getBundles();
+  $bundles_names = \Drupal::service('entity_type.bundle.info')->getFieldStorageBundles($field_storage);
   $translation_join_type = FALSE;
   $fields = [];
   $translatable_configs = [];
@@ -278,8 +278,6 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
   }
 
   $group_name = $entity_type->getLabel();
-  // Get the list of bundles the field appears in.
-  $bundles_names = $field_storage->getBundles();
   // Build the list of additional fields to add to queries.
   $add_fields = ['delta', 'langcode', 'bundle'];
   foreach (array_keys($field_columns) as $column) {

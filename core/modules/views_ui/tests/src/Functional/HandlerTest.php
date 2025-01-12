@@ -216,7 +216,7 @@ class HandlerTest extends UITestBase {
 
     $this->drupalGet('admin/structure/views/nojs/add-handler/content/default/field');
     $this->assertSession()->assertEscaped('The <em>giraffe"</em> label <script>alert("the return of the xss")</script>');
-    $this->assertSession()->assertEscaped('Appears in: page, article. Also known as: Content: The giraffe" label');
+    $this->assertSession()->assertEscaped('Appears in: article, page. Also known as: Content: The giraffe" label');
   }
 
   /**
@@ -300,7 +300,8 @@ class HandlerTest extends UITestBase {
    * @internal
    */
   public function assertNoDuplicateField(string $field_name, string $entity_type): void {
-    $this->assertSession()->elementsCount('xpath', '//td[.="' . $entity_type . '"]/preceding-sibling::td[@class="title" and .="' . $field_name . '"]', 1);
+    $elements = $this->xpath('//td[.=:entity_type]/preceding-sibling::td[@class="title" and .=:title]', [':title' => $field_name, ':entity_type' => $entity_type]);
+    $this->assertCount(1, $elements, $field_name . ' appears just once in ' . $entity_type . '.');
   }
 
 }

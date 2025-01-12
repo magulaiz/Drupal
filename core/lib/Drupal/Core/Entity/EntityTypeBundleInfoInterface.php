@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+
 /**
  * Provides an interface for an entity type bundle info.
  */
@@ -31,6 +33,18 @@ interface EntityTypeBundleInfoInterface {
    *   the label for the bundle.
    */
   public function getBundleInfo($entity_type_id);
+
+  /**
+   * Gets the list of bundles where the field storage has fields.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $field_storage_definition
+   *   A field storage definition.
+   *
+   * @return array
+   *   An array of bundle labels, keyed by their machine name and sorted by
+   *   label.
+   */
+  public function getFieldStorageBundles(FieldStorageDefinitionInterface $field_storage_definition): ?array;
 
   /**
    * Clears static and persistent bundles.

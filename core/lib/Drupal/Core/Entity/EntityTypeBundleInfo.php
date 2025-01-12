@@ -6,6 +6,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 
@@ -113,6 +114,38 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
     }
 
     return $this->bundleInfo;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldStorageBundles(FieldStorageDefinitionInterface $field_storage_definition): ?array {
+    $bundles = $field_storage_definition->getBundles();
+    $entity_type_ids = $field_storage_definition->getTargetEntityTypeId();
+
+    // Combined array using values of bundles and entity type ids.
+    $bundlesCombine[$entity_type_ids] = $bundles;
+
+    // Creating bundles array including their label.
+    $bundlesOutput = [];
+    foreach ($bundlesCombine as $entity_type_id => $bundle) {
+      foreach ($bundle as $value) {
+        $bundleInfo = $this->getAllBundleInfo()[$entity_type_id][$value] ?? [];
+        if ($bundleInfo) {
+          if (is_object($bundleInfo['label'])) {
+            $bundlesOutput[$bundleInfo['label']->__toString()] = $value;
+          }
+          else {
+            $bundlesOutput[$bundleInfo['label']] = $value;
+          }
+        }
+      }
+    }
+    // Sort the bundles by label.
+    uasort($bundlesOutput, function ($a, $b) {
+      return strnatcasecmp($a, $b);
+    });
+    return $bundlesOutput;
   }
 
   /**

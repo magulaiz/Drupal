@@ -56,14 +56,14 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
    *   The entity type manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The 'field type' plugin manager.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info_service
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundleInfoStorage
    *   The bundle info service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_manager, EntityTypeBundleInfoInterface $bundle_info_service) {
+  public function __construct(EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_manager, protected EntityTypeBundleInfoInterface $bundleInfoStorage) {
     parent::__construct($entity_type, $entity_type_manager->getStorage($entity_type->id()));
 
     $this->entityTypeManager = $entity_type_manager;
-    $this->bundles = $bundle_info_service->getAllBundleInfo();
+    $this->bundles = $bundleInfoStorage->getAllBundleInfo();
     $this->fieldTypeManager = $field_type_manager;
     $this->fieldTypes = $this->fieldTypeManager->getDefinitions();
     $this->limit = FALSE;
@@ -125,7 +125,7 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
     $row['data']['type'] = $this->t('@type (module: @module)', ['@type' => $field_type['label'], '@module' => $field_type['provider']]);
 
     $usage = [];
-    foreach ($field_storage->getBundles() as $bundle) {
+    foreach ($this->bundleInfoStorage->getFieldStorageBundles($field_storage) as $bundle) {
       if ($route_info = FieldUI::getOverviewRouteInfo($entity_type_id, $bundle)) {
         $usage[] = Link::fromTextAndUrl($this->bundles[$entity_type_id][$bundle]['label'], $route_info)->toRenderable();
       }
