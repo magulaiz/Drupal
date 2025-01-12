@@ -6,13 +6,16 @@ namespace Drupal\Tests\Core\Test;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Test how unit tests interact with deprecation errors.
  *
  * @group Test
- * @group legacy
  */
+#[Group('Test')]
+#[IgnoreDeprecations]
 class PhpUnitBridgeTest extends UnitTestCase {
 
   /**
