@@ -175,14 +175,4 @@ class RouteProcessorCsrfTest extends UnitTestCase {
     $this->assertEquals('real_token_value', $parameters['token']);
   }
 
-  /**
-   * Tests deprecation warning for missing request stack argument.
-   *
-   * @group legacy
-   */
-  public function testRouteProcessorCsrfWithoutRequestStackArgumentDeprecation(): void {
-    $processor = new RouteProcessorCsrf($this->csrfToken);
-    $this->expectDeprecation('Calling Drupal\Core\Access\RouteProcessorCsrf constructor without the $requestStack argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3485174');
-  }
-
 }
