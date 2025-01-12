@@ -148,6 +148,13 @@
         let firstState =
           localStorage.getItem('Drupal.navigation.sidebarExpanded') !== 'false';
 
+        if (firstState && window.matchMedia('(min-width: 1024px)').matches) {
+          document.documentElement.setAttribute(
+            'data-admin-toolbar',
+            'expanded',
+          );
+        }
+
         // We need to display closed sidebar on init on mobile.
         if (window.matchMedia('(max-width: 1023px)').matches) {
           firstState = false;
