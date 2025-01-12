@@ -287,10 +287,13 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   }
 
   /**
-   * @todo Deprecate this method, it's not on the interface or on the other
-   *   StatementWrapperIterator class either.
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   *   ::fetchField() instead.
+   *
+   * @see https://www.drupal.org/node/3490312
    */
   public function fetchColumn($index = 0) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ::fetchField() instead. See https://www.drupal.org/node/3490312', E_USER_DEPRECATED);
     return $this->fetchField($index);
   }
 
@@ -353,14 +356,11 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchCol($index = 0) {
-    if (isset($this->columnNames[$index])) {
-      $result = [];
-      while ($row = $this->fetch(FetchAs::Associative)) {
-        $result[] = $row[$this->columnNames[$index]];
-      }
-      return $result;
+    $result = [];
+    while (($columnValue = $this->fetchField($index)) !== FALSE) {
+      $result[] = $columnValue;
     }
-    return [];
+    return $result;
   }
 
   /**
