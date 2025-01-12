@@ -14,9 +14,10 @@ require __DIR__ . '/../../core/.phpstan-baseline.php';
 
 $stats = ['__total' => 0];
 foreach ($ignoreErrors as $ignore) {
-  $stats['__total']++;
   $identifier = $ignore['identifier'] ?? '* not specified *';
-  $stats[$identifier] = isset($stats[$identifier]) ? $stats[$ignore['identifier']] + 1 : 1;
+  $count = $ignore['count'] ?? 1;
+  $stats['__total'] += $count;
+  $stats[$identifier] = isset($stats[$identifier]) ? $stats[$ignore['identifier']] + $count : $count;
 }
 
 echo "----------------------------------------\n";
