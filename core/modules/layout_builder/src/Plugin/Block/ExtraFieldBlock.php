@@ -10,7 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\layout_builder\Plugin\Derivative\ExtraFieldBlockDeriver;
@@ -33,7 +33,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   id: "extra_field_block",
   deriver: ExtraFieldBlockDeriver::class
 )]
-class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface, TrustedCallbackInterface {
+class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface {
 
   /**
    * The entity field manager.
@@ -189,6 +189,7 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
    * @return array
    *   The modified block render array.
    */
+  #[TrustedCallback]
   public static function preRenderBlock(array $block_build): array {
     $content = $block_build['content'] ?? NULL;
     if ($content === NULL || Element::isEmpty($content)) {
@@ -198,13 +199,6 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
       $block_build['#printed'] = TRUE;
     }
     return $block_build;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks(): array {
-    return ['preRenderBlock'];
   }
 
   /**
