@@ -10,7 +10,7 @@ if (PHP_SAPI !== 'cli') {
   return;
 }
 
-require __DIR__ . '/../core/.phpstan-baseline.php';
+require __DIR__ . '/../../core/.phpstan-baseline.php';
 
 $stats = ['__total' => 0];
 foreach ($ignoreErrors as $ignore) {
