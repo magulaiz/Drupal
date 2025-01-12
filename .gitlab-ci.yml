@@ -376,7 +376,7 @@ default:
         exit $EXIT_CODE
       fi
     # Output baseline statistics.
-    - php ./.gitlab-ci/scripts/phpstan-baseline-statistics.php
+    - php $CI_PROJECT_DIR/.gitlab-ci/scripts/phpstan-baseline-statistics.php
 
   artifacts:
     # Only store the baseline if the job fails.
