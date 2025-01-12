@@ -120,4 +120,28 @@ class FetchLegacyTest extends DatabaseTestBase {
     $this->assertEquals((object) $expected_result['Drummer'], $result['Drummer']);
   }
 
+  /**
+   * Confirms that we can fetch a single column value.
+   */
+  #[IgnoreDeprecations]
+  public function testQueryFetchColumn(): void {
+    $statement = $this->connection
+      ->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25]);
+    $statement->setFetchMode(\PDO::FETCH_COLUMN, 0);
+    $this->assertSame('John', $statement->fetch());
+  }
+
+  /**
+   * Confirms that an out of range index throws an error.
+   */
+  #[IgnoreDeprecations]
+  public function testQueryFetchColumnOutOfRange(): void {
+    $this->expectException(\ValueError::class);
+    $this->expectExceptionMessage('Invalid column index');
+    $statement = $this->connection
+      ->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25]);
+    $statement->setFetchMode(\PDO::FETCH_COLUMN, 200);
+    $statement->fetch();
+  }
+
 }

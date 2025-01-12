@@ -10,7 +10,13 @@ namespace Drupal\Core\Database\Statement;
 trait PdoTrait {
 
   /**
-   * {@inheritdoc}
+   * Converts a FetchAs mode to a \PDO::FETCH_* constant value.
+   *
+   * @param \Drupal\Core\Database\FetchAs $mode
+   *   The FetchAs mode.
+   *
+   * @return int
+   *   A \PDO::FETCH_* constant value.
    */
   protected function fetchAsToPdo(FetchAs $mode): int {
     return match ($mode) {
@@ -23,7 +29,13 @@ trait PdoTrait {
   }
 
   /**
-   * {@inheritdoc}
+   * Converts a \PDO::FETCH_* constant value to a FetchAs mode.
+   *
+   * @param int $mode
+   *   The \PDO::FETCH_* constant value.
+   *
+   * @return \Drupal\Core\Database\FetchAs
+   *   A FetchAs mode.
    */
   protected function pdoToFetchAs(int $mode): FetchAs {
     return match ($mode) {
