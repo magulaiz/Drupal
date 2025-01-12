@@ -28,6 +28,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
   ) {
     if ($requestStack === NULL) {
       @trigger_error('Calling ' . __CLASS__ . ' constructor without the $requestStack argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3485174', E_USER_DEPRECATED);
+      $this->requestStack = \Drupal::service('request_stack');
     }
   }
 
