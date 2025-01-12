@@ -618,7 +618,7 @@ function drupal_check_profile($profile) {
         $requirements = array_merge($requirements, $function('install'));
       }
 
-      $requirements = array_merge($requirements, install_check_class_requirements($module));
+      $requirements = array_merge($requirements, install_check_class_requirements($module, $module_path));
     }
   }
 
@@ -813,7 +813,7 @@ function install_profile_info($profile, $langcode = 'en') {
  *
  * @internal
  */
-function install_check_class_requirements(string $module, string $module_path = ''): array {
+function install_check_class_requirements(string $module, string $module_path): array {
   $requirements = [];
   $camelized = ContainerBuilder::camelize($module);
   $name = "{$camelized}Requirements";
