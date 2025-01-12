@@ -52,7 +52,6 @@ parameters:
     - "#Drupal calls should be avoided in classes, use dependency injection instead#"
     - "#^Class .* extends @internal class#"
     - identifier: missingType.iterableValue
-    - "#Call to an undefined method .*::expectDeprecation#"
 
 rules:
   - Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest
