@@ -13,7 +13,7 @@ class ThemeSuggestionsHook {
    * Implements hook_theme_suggestions_HOOK().
    */
   #[Hook('theme_suggestions_views_view')]
-  public function themeSuggestionsViewsView(array $variables) {
+  public function themeSuggestionsViewsView(array $variables): array {
     $suggestions = [];
     $view = $variables['view'];
 
