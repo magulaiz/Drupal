@@ -266,6 +266,9 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     return parent::prepareStatement($query, $options, $allow_row_count);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $count . ' OFFSET ' . (int) $from, $args, $options);
   }
@@ -279,10 +282,16 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     return $tablename;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function driver() {
     return 'pgsql';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function databaseType() {
     return 'pgsql';
   }
@@ -329,6 +338,9 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function mapConditionOperator($operator) {
     return static::$postgresqlConditionOperatorMap[$operator] ?? NULL;
   }
@@ -373,7 +385,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * The main use for this method is to mimic InnoDB functionality, which
    * provides an inherent savepoint before any query in a transaction.
    *
-   * @param $savepoint_name
+   * @param string $savepoint_name
    *   A string representing the savepoint name. By default,
    *   "mimic_implicit_commit" is used.
    */
@@ -386,7 +398,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * Release a savepoint by name.
    *
-   * @param $savepoint_name
+   * @param string $savepoint_name
    *   A string representing the savepoint name. By default,
    *   "mimic_implicit_commit" is used.
    */
@@ -399,7 +411,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * Rollback a savepoint by name if it exists.
    *
-   * @param $savepoint_name
+   * @param string $savepoint_name
    *   A string representing the savepoint name. By default,
    *   "mimic_implicit_commit" is used.
    */
