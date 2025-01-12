@@ -13,9 +13,11 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\StringFormatter;
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
 
 /**
  * Tests the string field formatter.
@@ -106,6 +108,91 @@ final class StringFormatterTest extends UnitTestCase {
       TRUE,
       AccessResultForbidden::class,
       FALSE,
+    ];
+  }
+
+  /**
+   * Checks that an entity link links to the entity in the current language if the entity has no language.
+   *
+   * @param string $entityLanguageCode
+   *   The language code that will have the test entity.
+   *
+   * @dataProvider providerTestLinkToEntityPointsToCurrentLanguage
+   */
+  public function testLinkToEntityPointsToCurrentLanguage(string $entityLanguageCode): void {
+
+    // Mock the language manager and the current language.
+    $currentLanguage = $this->prophesize(LanguageInterface::class)->reveal();
+    $languageManager = $this->prophesize(LanguageManagerInterface::class);
+    $languageManager
+      ->getCurrentLanguage()
+      ->willReturn($currentLanguage);
+    $languageManager
+      ->isMultilingual()
+      ->willReturn(TRUE);
+
+    // Mock the entity type manager.
+    $entityTypeManager = $this->prophesize(EntityTypeManagerInterface::class);
+
+    // Mock an entity type.
+    $entityType = $this->prophesize(EntityTypeInterface::class);
+    $entityType->hasLinkTemplate('canonical')->willReturn(TRUE)->shouldBeCalledTimes(1);
+    $entityType->hasLinkTemplate('revision')->willReturn(FALSE)->shouldBeCalledTimes(1);
+
+    // Mock an entity with its own language, different from the current language.
+    $entityLanguage = $this->prophesize(LanguageInterface::class);
+    $entityLanguage->getId()->willReturn($entityLanguageCode);
+    $entity = $this->prophesize(EntityInterface::class);
+    $entity->isNew()->willReturn(FALSE);
+    $entity->getEntityType()->willReturn($entityType->reveal());
+    $entity->language()->willReturn($entityLanguage->reveal());
+    $url = $this->prophesize(Url::class);
+    $url->access(NULL, TRUE)->willReturn(new AccessResultAllowed());
+
+    $urlOptionLanguage = NULL;
+    $url->setOption('language', Argument::any())
+      ->will(function ($args) use (&$urlOptionLanguage) {
+        if ('language' === $args[0]) {
+          $urlOptionLanguage = $args[1];
+        }
+        return $this;
+      })
+      ->shouldBeCalledTimes(1);
+
+    $entity->toUrl('canonical')->willReturn($url->reveal());
+
+    // Mock a field item list.
+    $item = $this->getMockBuilder(StringItem::class)
+      ->disableOriginalConstructor()
+      ->onlyMethods([])
+      ->getMock();
+    $item->setValue(['value' => 'FooText']);
+    $items = $this->prophesize(FieldItemListInterface::class);
+    $items->getEntity()->willReturn($entity->reveal());
+    $items->valid()->willReturn(TRUE, FALSE);
+    $items->next();
+    $items->rewind();
+    $items->current()->willReturn($item);
+    $items->key()->willReturn(0);
+
+    // Build a render array with the string formatter producing a link to the entity.
+    $fieldDefinition = $this->prophesize(FieldDefinitionInterface::class);
+    $fieldFormatter = new StringFormatter('foobar', [], $fieldDefinition->reveal(), [], 'TestLabel', 'default', [], $entityTypeManager->reveal(), $languageManager->reveal());
+    $fieldFormatter->setSetting('link_to_entity', TRUE);
+    $fieldFormatter->viewElements($items->reveal(), 'en');
+
+    $this->assertSame($currentLanguage, $urlOptionLanguage);
+  }
+
+  /**
+   * Provides entity languages that will produce a link to the entity in the current language.
+   *
+   * @return array[]
+   */
+  public static function providerTestLinkToEntityPointsToCurrentLanguage(): array {
+    return [
+      'Not specified' => ['und'],
+      'Not applicable' => ['zxx'],
     ];
   }
 
