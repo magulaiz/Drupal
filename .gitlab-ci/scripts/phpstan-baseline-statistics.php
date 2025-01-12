@@ -1,0 +1,34 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * @file
+ * PHPStan baseline statistics.
+ */
+
+if (PHP_SAPI !== 'cli') {
+  return;
+}
+
+require __DIR__ . '/../core/.phpstan-baseline.php';
+
+$stats = ['__total' => 0];
+foreach ($ignoreErrors as $ignore) {
+  $stats['__total']++;
+  $identifier = $ignore['identifier'] ?? '* not specified *';
+  $stats[$identifier] = isset($stats[$identifier]) ? $stats[$ignore['identifier']] + 1 : 1;
+}
+
+echo "----------------------------------------\n";
+echo "PHPStan baseline statistics\n";
+echo "----------------------------------------\n";
+echo sprintf("%6d * Total baselined errors\n", $stats['__total']);
+echo "----------------------------------------\n";
+echo "Breakdown by error identifier:\n";
+
+unset($stats['__total']);
+arsort($stats);
+
+foreach ($stats as $identifier => $stat) {
+  echo sprintf("%6d %s\n", $stat, $identifier);
+}
