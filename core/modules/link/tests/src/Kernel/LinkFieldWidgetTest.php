@@ -14,7 +14,6 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  * Tests link field widgets.
  *
  * @group link
- * @group #slow
  */
 class LinkFieldWidgetTest extends FieldKernelTestBase {
 
