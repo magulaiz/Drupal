@@ -52,7 +52,7 @@ class HistoryHooks {
     if ($display->getOriginalMode() === 'full') {
       if (!isset($build['#cache']['contexts']) || !is_array($build['#cache']['contexts'])) {
         $build['#cache'] = [];
-  }
+      }
       $build['#cache']['contexts'][] = 'user.roles:authenticated';
       if (\Drupal::currentUser()->isAuthenticated()) {
         // When the window's "load" event is triggered, mark the node as read.
