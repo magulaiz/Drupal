@@ -278,8 +278,8 @@ class ExtensionDiscovery {
       return $all_files;
     }
 
-    $all_files = array_filter($all_files, function ($file) {
-      if (!str_starts_with($file->subpath, 'profiles')) {
+    $all_files = array_filter($all_files, function ($file, $key) {
+      if (!str_starts_with($this->subPaths[$key] ?? '', 'profiles')) {
         // This extension doesn't belong to a profile, ignore it.
         return TRUE;
       }
@@ -292,7 +292,7 @@ class ExtensionDiscovery {
       }
 
       return FALSE;
-    });
+    }, ARRAY_FILTER_USE_BOTH);
 
     return $all_files;
   }
@@ -314,7 +314,7 @@ class ExtensionDiscovery {
     foreach ($all_files as $key => $file) {
       // If the extension does not belong to a profile, just apply the weight
       // of the originating directory.
-      if (!str_starts_with($this->subPaths[$key], 'profiles')) {
+      if (!str_starts_with($this->subPaths[$key] ?? '', 'profiles')) {
         $origins[$key] = $weights[$this->origins[$key]];
         $profiles[$key] = NULL;
       }
