@@ -77,7 +77,7 @@ class ExtensionDiscovery {
    *
    * @see \RecursiveDirectoryIterator::getSubPath
    */
-    protected $subpaths;
+  protected $subPaths;
 
   /**
    * Contains the path for each extension.
@@ -93,7 +93,7 @@ class ExtensionDiscovery {
     protected string $root,
     protected $use_file_cache = TRUE,
     protected ?array $profileDirectories = NULL,
-    protected ?string $sitePath = NULL
+    protected ?string $sitePath = NULL,
   ) {
     $this->fileCache = $use_file_cache ? FileCacheFactory::get('extension_discovery') : NULL;
   }
@@ -314,7 +314,7 @@ class ExtensionDiscovery {
     foreach ($all_files as $key => $file) {
       // If the extension does not belong to a profile, just apply the weight
       // of the originating directory.
-      if (!str_starts_with($this->subpaths[$key], 'profiles')) {
+      if (!str_starts_with($this->subPaths[$key], 'profiles')) {
         $origins[$key] = $weights[$this->origins[$key]];
         $profiles[$key] = NULL;
       }
@@ -487,7 +487,7 @@ class ExtensionDiscovery {
       $extension = new Extension($this->root, $extension_arguments['type'], $extension_arguments['pathname'], $extension_arguments['filename']);
 
       // Track the originating directory for sorting purposes.
-      $this->subpaths[$key] = $extension_arguments['subpath'];
+      $this->subPaths[$key] = $extension_arguments['subpath'];
       $this->origins[$key] = $dir;
 
       $files[$extension_arguments['type']][$key] = $extension;
