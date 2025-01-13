@@ -563,6 +563,12 @@ class ConfigInstaller implements ConfigInstallerInterface {
         continue;
       }
 
+      if ($name == 'standard') {
+//        dump('$type: ' . $type);
+//        dump($config_install_path);
+      }
+
+
       $storage = new FileStorage($config_install_path, StorageInterface::DEFAULT_COLLECTION);
 
       // Gets profile storages to search for overrides if necessary.
@@ -775,6 +781,10 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   The extension's default configuration directory.
    */
   protected function getDefaultConfigDirectory($type, $name) {
+    return $this->extensionPathResolver->getPath($type, $name) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
+  }
+
+  protected function getDatabaseDriverOverrideConfigDirectory($type, $name) {
     return $this->extensionPathResolver->getPath($type, $name) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
   }
 

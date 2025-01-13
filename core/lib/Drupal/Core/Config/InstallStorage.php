@@ -225,8 +225,10 @@ class InstallStorage extends FileStorage {
         }
 
         // Let a config item be overridden by a database driver one.
-        if ($this->hasBaseDatabaseDriverOverrideDirectory()) {
-          $database_driver_override_directory = $this->getDatabaseDriverOverrideDirectory($directory, $extension_object);
+        // if ($this->hasBaseDatabaseDriverOverrideDirectory()) {
+        // $database_driver_override_directory = $this->getDatabaseDriverOverrideDirectory($directory, $extension_object);
+        if ($this->getDatabaseDriver()) {
+          $database_driver_override_directory = $directory . '/' . $this->getDatabaseDriver();
           if (is_dir($database_driver_override_directory)) {
             $database_driver_override_files = scandir($database_driver_override_directory);
             foreach ($database_driver_override_files as $database_driver_override_file) {
@@ -289,17 +291,16 @@ class InstallStorage extends FileStorage {
     $dir = $this->databaseDriverOverrideDirectory . '/' . $extension->getName();
 
     if (str_ends_with($directory, self::CONFIG_INSTALL_DIRECTORY)) {
-      return $dir . '/install';
+      $dir .= '/install';
     }
     elseif (str_ends_with($directory, self::CONFIG_OPTIONAL_DIRECTORY)) {
-      return $dir . '/optional';
+      $dir .= '/optional';
     }
     elseif (str_ends_with($directory, self::CONFIG_SCHEMA_DIRECTORY)) {
-      return $dir . '/schema';
+      $dir .= '/schema';
     }
-    else {
-      return $dir . '/' . $directory;
-    }
+
+    return $dir;
   }
 
   /**
