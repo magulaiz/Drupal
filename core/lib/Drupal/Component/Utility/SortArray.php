@@ -10,10 +10,7 @@ namespace Drupal\Component\Utility;
 class SortArray {
 
   /**
-   * Sorts a structured array by the 'weight' element.
-   *
-   * Note that the sorting is by the 'weight' array element, not by the render
-   * element property '#weight'.
+   * Sorts a structured array by 'weight' element in numeric ascending order.
    *
    * Callback for uasort().
    *
@@ -26,67 +23,78 @@ class SortArray {
    *
    * @return int
    *   The comparison result for uasort().
+   *
+   * @see static::sortByKeyInt()
    */
   public static function sortByWeightElement(array $a, array $b) {
     return static::sortByKeyInt($a, $b, 'weight');
   }
 
   /**
-   * Sorts a structured array by '#weight' property.
+   * Sorts a structured array by '#weight' property in numeric ascending order.
    *
    * Callback for uasort().
    *
    * @param array $a
    *   First item for comparison. The compared items should be associative
-   *   arrays that optionally include a '#weight' key.
+   *   arrays that optionally include a '#weight' key. For items without a
+   *   '#weight' key, a default value of 0 will be used.
    * @param array $b
    *   Second item for comparison.
    *
    * @return int
    *   The comparison result for uasort().
+   *
+   * @see static::sortByKeyInt()
    */
   public static function sortByWeightProperty($a, $b) {
     return static::sortByKeyInt($a, $b, '#weight');
   }
 
   /**
-   * Sorts a structured array by 'title' key (no # prefix).
+   * Sorts a structured array by 'title' key using natural case insensitive sort.
    *
    * Callback for uasort().
    *
    * @param array $a
-   *   First item for comparison. The compared items should be associative arrays
-   *   that optionally include a 'title' key.
+   *   First item for comparison. The compared items should be associative
+   *   arrays that optionally include a 'title' key. For items without a 'title'
+   *   key, an empty string will be used.
    * @param array $b
    *   Second item for comparison.
    *
    * @return int
    *   The comparison result for uasort().
+   *
+   * @see static::sortByKeyString()
    */
   public static function sortByTitleElement($a, $b) {
     return static::sortByKeyString($a, $b, 'title');
   }
 
   /**
-   * Sorts a structured array by '#title' property.
+   * Sorts a structured array by '#title' property using natural case insensitive sort.
    *
    * Callback for uasort().
    *
    * @param array $a
-   *   First item for comparison. The compared items should be associative arrays
-   *   that optionally include a '#title' key.
+   *   First item for comparison. The compared items should be associative
+   *   arrays that optionally include a '#title' key. For items without a '#title'
+   *   key, an empty string will be used.
    * @param array $b
    *   Second item for comparison.
    *
    * @return int
    *   The comparison result for uasort().
+   *
+   * @see static::sortByKeyString()
    */
   public static function sortByTitleProperty($a, $b) {
     return static::sortByKeyString($a, $b, '#title');
   }
 
   /**
-   * Sorts a string array item by an arbitrary key.
+   * Sorts a string array item by an arbitrary key using natural case insensitive sort.
    *
    * @param array $a
    *   First item for comparison.
@@ -106,7 +114,7 @@ class SortArray {
   }
 
   /**
-   * Sorts an integer array item by an arbitrary key.
+   * Sorts an integer array item by an arbitrary key in numeric ascending order.
    *
    * @param array $a
    *   First item for comparison.
@@ -117,6 +125,10 @@ class SortArray {
    *
    * @return int
    *   The comparison result for uasort().
+   *
+   *   Since this method will return zero if the value is not defined for the given
+   *   key, it ensures that items without the specified key are treated as having
+   *   a weight of zero.
    */
   public static function sortByKeyInt($a, $b, $key) {
     $a_weight = (is_array($a) && isset($a[$key])) ? $a[$key] : 0;
