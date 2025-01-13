@@ -12,6 +12,6 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 class PathAliasOverrideConstraint extends SymfonyConstraint {
 
-  public $message = 'The alias "%alias" matches an existing system path. Please try a different alias.';
+  public $message = 'The alias "%alias" matches an existing system path.';
 
 }
