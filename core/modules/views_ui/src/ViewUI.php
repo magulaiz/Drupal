@@ -630,14 +630,15 @@ class ViewUI implements ViewEntityInterface {
       if ($show_info || $show_query || $show_stats) {
         // Get information from the preview for display.
         if (!empty($executable->build_info['query'])) {
+          $connection = Database::getConnection();
+
           if ($show_query) {
             $query_string = $executable->build_info['query'];
             // Only the sql default class has a method getArguments.
             $quoted = [];
 
-            if ($executable->query instanceof Sql) {
+            if ($query_string instanceof Sql) {
               $quoted = $query_string->getArguments();
-              $connection = Database::getConnection();
               foreach ($quoted as $key => $val) {
                 if (is_array($val)) {
                   $quoted[$key] = implode(', ', array_map([$connection, 'quote'], $val));
@@ -662,6 +663,60 @@ class ViewUI implements ViewEntityInterface {
                 ],
               ],
             ];
+
+            $explain_output = '';
+
+            // Execute EXPLAIN
+            try {
+              $explain_results = $connection->query('EXPLAIN ' . $query_string, $query_string->getArguments())->fetchAll();
+
+              // Get headers from first row
+              if (!empty($explain_results)) {
+                $headers = array_keys((array) reset($explain_results));
+
+                // Format rows
+                $table_rows = [];
+                foreach ($explain_results as $row) {
+                  $table_rows[] = array_values((array) $row);
+                }
+
+                $explain_output = [
+                  '#theme' => 'table',
+                  '#header' => $headers,
+                  '#rows' => $table_rows,
+                  '#attributes' => [
+                    'class' => ['explain-query-table'],
+                  ],
+                ];
+              }
+              else {
+                $explain_output = [
+                  '#markup' => $this->t('No EXPLAIN results available.'),
+                ];
+              }
+            }
+            catch (\Exception $e) {
+              $explain_output = [
+                '#markup' => $this->t('Unable to execute EXPLAIN: @message', ['@message' => $e->getMessage()]),
+              ];
+            }
+
+            $rows['query'][] = [
+              [
+                'data' => [
+                  '#type' => 'inline_template',
+                  '#template' => "<strong>{% trans 'Explain' %}</strong>",
+                ],
+              ],
+              [
+                'data' => [
+                  '#type' => 'inline_template',
+                  '#template' => '<pre>{{ explain }}</pre>',
+                  '#context' => ['explain' => $explain_output ],
+                ],
+              ],
+            ];
+
             if (!empty($this->additionalQueries)) {
               $queries[] = [
                 '#prefix' => '<strong>',
