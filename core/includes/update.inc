@@ -53,7 +53,10 @@ function update_check_requirements() {
 
   // Check requirements of all loaded modules.
   $requirements = \Drupal::moduleHandler()->invokeAll('requirements', ['update']);
+  $update_requirements = \Drupal::moduleHandler()->invokeAll('requirements_check');
+  $requirements = array_merge($requirements, $update_requirements);
   \Drupal::moduleHandler()->alter('requirements', $requirements);
+  \Drupal::moduleHandler()->alter('requirements_check', $requirements);
   $requirements += update_system_schema_requirements();
   return $requirements;
 }
