@@ -15,4 +15,3 @@ class PathAliasOverrideConstraint extends SymfonyConstraint {
   public $message = 'The alias "%alias" matches an existing system path. Please try a different alias.';
 
 }
-

@@ -19,19 +19,26 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
-
 /**
  * Constraint validator to ensure that an alias doesn't clobber system routes.
  */
 class PathAliasOverrideConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * Creates a new PathAliasConstraintValidator instance.
+   * Constructs a new instance of the class.
    *
    * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
-   *   Current user.
-   * @param \Drupal\Core\Site\Settings $settings
-   *   Drupal settings.
+   *   The current user service.
+   * @param \Drupal\Core\Config\ImmutableConfig $settings
+   *   The settings configuration.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger service.
+   * @param \Symfony\Component\Routing\Router $router
+   *   The router service.
+   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
+   *   The alias manager service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager service.
    */
   public function __construct(
     protected AccountProxyInterface $currentUser,
@@ -46,7 +53,7 @@ class PathAliasOverrideConstraintValidator extends ConstraintValidator implement
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container) : PathAliasOverrideConstraintValidator {
     return new static(
       $container->get('current_user'),
       $container->get('settings'),
@@ -57,24 +64,22 @@ class PathAliasOverrideConstraintValidator extends ConstraintValidator implement
     );
   }
 
-
-
   /**
    * {@inheritdoc}
    */
   public function validate($value, Constraint $constraint) : void {
 
-      // If the user may override the url aliases, short-circuit the check.
-      // There's nothing more to do.
-      if ($this->currentUser->hasPermission('override url aliases')) {
-        return;
-      }
+    // If the user may override the url aliases, short-circuit the check.
+    // There's nothing more to do.
+    if ($this->currentUser->hasPermission('override url aliases')) {
+      return;
+    }
 
-      if ($value instanceof PathAlias) {
+    if ($value instanceof PathAlias) {
 
       $route_match = $this->checkPathForSystemRoute($value);
       if ($route_match) {
-        $this->context->addViolation($constraint->message, ["%alias" =>$value->getAlias()]);
+        $this->context->addViolation($constraint->message, ["%alias" => $value->getAlias()]);
       }
     }
 
@@ -111,17 +116,20 @@ class PathAliasOverrideConstraintValidator extends ConstraintValidator implement
         // exception is thrown, we know it matches a system route.
         $this->router->match($pathAlias->getAlias());
         $pathExists = TRUE;
-      } catch (ResourceNotFoundException|
-      MethodNotAllowedException $e) {
+      }
+      catch (ResourceNotFoundException |
+      MethodNotAllowedException) {
         // There's nothing to do with these exceptions
         // as they indicate that a URI doesn't map to an expected route.
-      } catch (ParamNotConvertedException $e) {
+      }
+      catch (ParamNotConvertedException) {
         // This exception means that Drupal has found a potentially matching route
         // i.e., "node/1701/edit", but that particular id doesn't exist yet. Since
         // it doesn't exist, but otherwise resolves to a route, we need to mark this
         // as reserved.
         $pathExists = TRUE;
-      } catch (\Exception $e) {
+      }
+      catch (\Exception $e) {
         // Any other exceptions at this point are unexpected, so we're just
         // going to log them and continue on as if the URI doesn't map to a
         // known route.
