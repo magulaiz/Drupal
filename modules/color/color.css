@@ -14,6 +14,27 @@
   right: 0; /* LTR */
 }
 
+@media only screen and (min-device-width : 1280px) {
+  .color-form{
+    max-width: 100%;
+    position: relative;
+    display: inline-block;
+  }
+}
+@media only screen and (min-device-width : 1280px) {
+  #placeholder{
+    position: absolute;
+    left: 35%;
+  }
+  .preview-title{
+    position: absolute;
+    top: -1.5em;
+    right: 0;
+    z-index: 1;
+    width: 45%;
+  }
+}
+
 /* Palette */
 .color-form .form-item {
   height: 2em;
@@ -82,4 +103,12 @@ html.js #preview {
   display: block;
   position: relative;
   float: left; /* LTR */
+}
+
+@media only screen and (min-device-width : 1280px) {
+  html.js #preview {
+    width: 45%;
+    position: absolute;
+    top: 0%;
+  }
 }
