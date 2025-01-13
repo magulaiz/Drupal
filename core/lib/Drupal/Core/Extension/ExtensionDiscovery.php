@@ -315,7 +315,7 @@ class ExtensionDiscovery {
       // If the extension does not belong to a profile, just apply the weight
       // of the originating directory.
       if (!str_starts_with($this->subPaths[$key] ?? '', 'profiles')) {
-        $origins[$key] = $weights[$this->origins[$key]];
+        $origins[$key] = ($this->origins[$key] ?? FALSE) ? $weights[$this->origins[$key]]: reset($weights);
         $profiles[$key] = NULL;
       }
       // If the extension belongs to a profile but no profile directories are
