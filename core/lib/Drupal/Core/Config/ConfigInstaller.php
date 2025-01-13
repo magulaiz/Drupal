@@ -779,7 +779,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
   }
 
   /**
-   * Get the database driver override configuration directory,
+   * Get the database driver override configuration directory.
    *
    * @param string $type
    *   Type of extension to install.
