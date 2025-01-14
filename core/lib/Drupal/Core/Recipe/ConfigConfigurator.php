@@ -8,12 +8,15 @@ use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
  * @internal
  *   This API is experimental.
  */
 final class ConfigConfigurator {
+
+  use DependencySerializationTrait;
 
   /**
    * The configuration directory for the recipe.

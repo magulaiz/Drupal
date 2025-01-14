@@ -185,8 +185,6 @@ class DefaultConfigTest extends KernelTestBase {
     // Add a deprecated module with config.
     $modules_keyed['deprecated_module'] = ['deprecated_module'];
 
-    return ['node' => ['node']];
-
     return $modules_keyed;
   }
 
@@ -241,13 +239,6 @@ class DefaultConfigTest extends KernelTestBase {
         }
         // ::assertConfigDiff will throw an exception if the configuration is
         // different.
-if ($config_name == 'views.view.content') {
-//  dump($override_config_storage);
-//  dump($default_config_storage);
-//  dump($active_config_storage);
-//  dump($result);
-}
-
         $this->assertNull($this->assertConfigDiff($result, $config_name, static::$skippedConfig));
       }
       else {
