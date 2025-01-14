@@ -7,7 +7,6 @@ namespace Drupal\Tests\migrate\Unit;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Select;
-use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
@@ -47,6 +46,8 @@ class SqlBaseTest extends UnitTestCase {
    *
    * @param array $configuration
    *   Source configuration.
+   * @param string $message
+   *   The expected exception message.
    *
    * @dataProvider sqlBaseConstructorTestProvider
    */
@@ -267,6 +268,8 @@ class SqlBaseTest extends UnitTestCase {
    *
    * @param array $configuration
    *   Source configuration.
+   * @param string $expected_result
+   *   The expected result.
    *
    * @dataProvider prepareQueryTestProvider
    */
