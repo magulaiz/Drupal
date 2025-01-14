@@ -929,12 +929,17 @@ class EntityFieldTest extends EntityKernelTestBase {
 
     /** @var \Drupal\entity_test\Plugin\Field\ComputedReferenceTestFieldItemList $field */
     $field = $entity->get('computed_reference_field');
-    /** @var \Drupal\Core\Entity\EntityInterface[] $referenced_entities */
-    $referenced_entities = $field->referencedEntities();
 
     // Check that ::referencedEntities() is working with computed fields.
+    /** @var \Drupal\Core\Entity\EntityInterface[] $referenced_entities */
+    $referenced_entities = $field->referencedEntities();
     $this->assertEquals($ref1->id(), $referenced_entities[0]->id());
     $this->assertEquals($ref2->id(), $referenced_entities[1]->id());
+
+    // Check that ::referencedIds() is working with computed fields.
+    $referenced_ids = $field->referencedIds();
+    $this->assertEquals($ref1->id(), $referenced_ids[0]);
+    $this->assertEquals($ref2->id(), $referenced_ids[1]);
   }
 
   /**
