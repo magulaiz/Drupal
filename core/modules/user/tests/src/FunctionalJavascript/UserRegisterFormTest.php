@@ -48,7 +48,7 @@ class UserRegisterFormTest extends WebDriverTestBase {
     $this->page->pressButton('edit-submit');
 
     // Test if localStorage is set now.
-    $this->assertJsCondition("localStorage.getItem('Drupal.visitor.name') === null", 10000, 'Written not strictly necessary Drupal.visitor.name to localStorage without consent.');
+    $this->assertJsCondition("localStorage.getItem('Drupal.visitor.name') === null", 10000, 'Failed to assert that the visitor name was not written to localStorage.');
 
   }
 
