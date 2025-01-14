@@ -116,6 +116,17 @@ final class ConfigConfigurator {
     $storages = [];
 
     if ($this->recipeConfigDirectory) {
+      $directories = explode('/', $this->recipeConfigDirectory);
+      array_pop($directories);
+      $key = array_pop($directories);
+
+      /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
+      $module_list = \Drupal::service('extension.list.module');
+      $database_override_path = $module_list->getPath($this->connection->getProvider()) . '/config/overrides/recipes/' . $key;
+      if (is_dir($database_override_path)) {
+        $storages[] = new FileStorage($database_override_path);
+      }
+
       // Config provided by the recipe should take priority over config from
       // extensions.
       $storages[] = new FileStorage($this->recipeConfigDirectory);
