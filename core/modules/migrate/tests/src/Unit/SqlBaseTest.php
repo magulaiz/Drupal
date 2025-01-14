@@ -285,11 +285,11 @@ class SqlBaseTest extends UnitTestCase {
     $connection->condition(Argument::any())->willReturn(new Condition('AND'));
     $connection->getKey()->willReturn('default');
     $connection->getTarget()->willReturn('default');
-    $connection->escapeField(Argument::any())->shouldBeCalled();
+    $connection->escapeField(Argument::any())->willReturnArgument(0);
     $connection->mapConditionOperator(Argument::any())->shouldBeCalled();
     $connection->makeComment(Argument::any())->shouldBeCalled();
-    $connection->escapeTable(Argument::any())->willReturn('users');
-    $connection->escapeAlias(Argument::any())->shouldBeCalled();
+    $connection->escapeTable(Argument::any())->willReturnArgument(0);
+    $connection->escapeAlias(Argument::any())->willReturnArgument(0);
     $connection->select(Argument::any(), Argument::any(), Argument::any())->willReturn(new Select($connection->reveal(), 'users', 'u'));
 
     $sql = new TestSqlBase($configuration, $this->pluginId, $this->pluginDefinition, $migration, $state);
@@ -313,7 +313,7 @@ class SqlBaseTest extends UnitTestCase {
             ],
           ],
         ],
-        'expected_result' => "SELECT \nFROM\n{users} \nWHERE > :db_condition_placeholder_0",
+        'expected_result' => "SELECT \nFROM\n{users} u\nWHERE nid > :db_condition_placeholder_0",
       ],
       'default operator condition' => [
         'configuration' => [
@@ -324,7 +324,7 @@ class SqlBaseTest extends UnitTestCase {
             ],
           ],
         ],
-        'expected_result' => "SELECT \nFROM\n{users} \nWHERE = :db_condition_placeholder_0",
+        'expected_result' => "SELECT \nFROM\n{users} u\nWHERE type = :db_condition_placeholder_0",
       ],
       'default value null condition' => [
         'configuration' => [
@@ -335,7 +335,7 @@ class SqlBaseTest extends UnitTestCase {
             ],
           ],
         ],
-        'expected_result' => "SELECT \nFROM\n{users} \nWHERE IS :db_condition_placeholder_0",
+        'expected_result' => "SELECT \nFROM\n{users} u\nWHERE langcode IS :db_condition_placeholder_0",
       ],
       'field value operator multiple condition' => [
         'configuration' => [
@@ -351,7 +351,7 @@ class SqlBaseTest extends UnitTestCase {
             ],
           ],
         ],
-        'expected_result' => "SELECT \nFROM\n{users} \nWHERE (> :db_condition_placeholder_0) AND (IS :db_condition_placeholder_1)",
+        'expected_result' => "SELECT \nFROM\n{users} u\nWHERE (nid > :db_condition_placeholder_0) AND (title IS :db_condition_placeholder_1)",
       ],
       'multiple sql conjunctions' => [
         'configuration' => [
@@ -374,7 +374,7 @@ class SqlBaseTest extends UnitTestCase {
           ],
           'distinct' => TRUE,
         ],
-        'expected_result' => "SELECT DISTINCT  AS \nFROM\n{users} \nINNER JOIN {users}  ON u.uid=n.uid\nWHERE (> :db_condition_placeholder_0) AND (IS :db_condition_placeholder_1)",
+        'expected_result' => "SELECT DISTINCT ud.data AS d\nFROM\n{users} u\nINNER JOIN {users_field_data} ud ON u.uid=n.uid\nWHERE (nid > :db_condition_placeholder_0) AND (title IS :db_condition_placeholder_1)",
       ],
     ];
   }
