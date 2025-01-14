@@ -126,6 +126,7 @@ interface DatabaseConnectionInterface {
    * Returns the prefix of the tables.
    *
    * @return string $prefix
+   *   The table prefix.
    */
   public function getPrefix(): string;
 
@@ -193,7 +194,7 @@ interface DatabaseConnectionInterface {
    *   for query_alter hook implementations.
    * @param string $alias
    *   (optional) The alias of the base table of this query.
-   * @param $options
+   * @param array $options
    *   An array of options on the query.
    *
    * @return \Drupal\Core\Database\Query\SelectInterface
@@ -400,6 +401,7 @@ interface DatabaseConnectionInterface {
    *   A list of database events to be disabled.
    *
    * @return \Drupal\Core\Database\Connection|static
+   *   The connection.
    */
   public function disableEvents(array $eventNames): DatabaseConnectionInterface|static;
 
@@ -416,6 +418,7 @@ interface DatabaseConnectionInterface {
    *   A list of database events to be enabled.
    *
    * @return \Drupal\Core\Database\Connection|static
+   *   The connection.
    */
   public function enableEvents(array $eventNames): DatabaseConnectionInterface|static;
 
