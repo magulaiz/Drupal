@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\migrate\MemoryManager;
@@ -57,7 +59,7 @@ class MemoryManagerTest extends MigrateTestCase {
    *
    * @dataProvider providerTestEnsureMemory
    */
-  public function testEnsureMemory($reclaim_threshold, $memory_threshold, $memory_limit, $memory_usage, $cleared_memory_usage, $expected_ensure_memory, $will_reclaim) {
+  public function testEnsureMemory($reclaim_threshold, $memory_threshold, $memory_limit, $memory_usage, $cleared_memory_usage, $expected_ensure_memory, $will_reclaim): void {
     if ($will_reclaim) {
       $this->eventDispatcher
         ->expects($this->exactly(2))
@@ -72,7 +74,7 @@ class MemoryManagerTest extends MigrateTestCase {
   /**
    * Provides data for testEnsureMemory.
    */
-  public static function providerTestEnsureMemory() {
+  public static function providerTestEnsureMemory(): array {
     return [
       // Tests memoryExceeded method when a new batch is needed.
       'MemoryExceededNewBatch' => [
@@ -127,7 +129,7 @@ class MemoryManagerTest extends MigrateTestCase {
    *
    * @dataProvider providerTestGetUsageInBytes
    */
-  public function testGetUsageInBytes($memory_usage, $expected_usage) {
+  public function testGetUsageInBytes($memory_usage, $expected_usage): void {
     $memory_manager = new TestMemoryManager($this->eventDispatcher, 0.9, 0.85, 1000000);
     $memory_manager->setMemoryUsage($memory_usage);
     $result = $memory_manager->getUsageInBytes();
@@ -137,7 +139,7 @@ class MemoryManagerTest extends MigrateTestCase {
   /**
    * Provides data for testGetUsageInBytes.
    */
-  public static function providerTestGetUsageInBytes() {
+  public static function providerTestGetUsageInBytes(): array {
     return [
       'Null' => [
         'memory_usage' => 0,
@@ -168,7 +170,7 @@ class MemoryManagerTest extends MigrateTestCase {
    *
    * @dataProvider providerIsLimitExceeded
    */
-  public function testIsLimitExceeded($reclaim_threshold, $memory_threshold, $memory_limit, $memory_usage, $multiplier, $memory_exceeded) {
+  public function testIsLimitExceeded($reclaim_threshold, $memory_threshold, $memory_limit, $memory_usage, $multiplier, $memory_exceeded): void {
     $memory_manager = new TestMemoryManager($this->eventDispatcher, $reclaim_threshold, $memory_threshold, $memory_limit);
     $memory_manager->setMemoryUsage($memory_usage);
     $result = $memory_manager->isLimitExceeded($multiplier);
@@ -178,7 +180,7 @@ class MemoryManagerTest extends MigrateTestCase {
   /**
    * Provides data for testIsLimitExceeded.
    */
-  public function providerIsLimitExceeded() {
+  public static function providerIsLimitExceeded(): array {
     return [
       'Not exceeded' => [
         'reclaim_threshold' => 0.9,
@@ -237,7 +239,7 @@ class TestMemoryManager extends MemoryManager {
   /**
    * Reclaim memory.
    */
-  public function reclaim() {
+  public function reclaim(): static {
     $this->memoryUsage = $this->clearedMemoryUsage;
     return $this;
   }
@@ -250,7 +252,7 @@ class TestMemoryManager extends MemoryManager {
    * @param int $cleared_memory_usage
    *   (optional) The fake cleared memory value.
    */
-  public function setMemoryUsage(int $memory_usage, int $cleared_memory_usage = 0) {
+  public function setMemoryUsage(int $memory_usage, int $cleared_memory_usage = 0): void {
     $this->memoryUsage = $memory_usage;
     $this->clearedMemoryUsage = $cleared_memory_usage;
   }

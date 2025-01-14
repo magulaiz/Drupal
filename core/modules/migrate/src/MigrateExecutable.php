@@ -87,7 +87,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * @param \Drupal\Migrate\MemoryManagerInterface|null $memoryManager
    *   (optional) The memory manager.
    */
-  public function __construct(MigrationInterface $migration, MigrateMessageInterface $message = NULL, ?EventDispatcherInterface $event_dispatcher = NULL, protected ?MemoryManagerInterface $memoryManager = NULL) {
+  public function __construct(MigrationInterface $migration, ?MigrateMessageInterface $message = NULL, ?EventDispatcherInterface $event_dispatcher = NULL, protected ?MemoryManagerInterface $memoryManager = NULL) {
     $this->migration = $migration;
     $this->message = $message ?: new MigrateMessage();
     $this->getIdMap()->setMessage($this->message);

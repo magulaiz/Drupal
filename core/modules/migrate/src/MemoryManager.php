@@ -38,7 +38,7 @@ class MemoryManager implements MemoryManagerInterface {
     protected float $memoryReclaimThreshold,
     protected float $memoryThreshold,
     mixed $memory_limit = NULL,
-) {
+  ) {
     if ($memory_limit === NULL) {
       // Auto detect memory limit.
       $memory_limit = trim(ini_get('memory_limit'));
