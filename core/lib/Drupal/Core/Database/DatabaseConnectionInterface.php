@@ -125,7 +125,7 @@ interface DatabaseConnectionInterface {
   /**
    * Returns the prefix of the tables.
    *
-   * @return string $prefix
+   * @return string
    *   The table prefix.
    */
   public function getPrefix(): string;
