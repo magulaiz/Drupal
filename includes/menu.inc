@@ -704,8 +704,11 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
         $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
       }
     }
-    elseif ($callback && function_exists($callback)) {
-      if (empty($item['title_arguments'])) {
+    elseif ($callback) {
+      if (!function_exists($callback)) {
+        watchdog('menu', 'The %callback title callback does not exist or is an invalid function name.', array('%callback' => $callback), WATCHDOG_ALERT);
+      }
+      elseif (empty($item['title_arguments'])) {
         $item['title'] = $callback($item['title']);
       }
       else {

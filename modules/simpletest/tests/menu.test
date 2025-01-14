@@ -150,6 +150,14 @@ class MenuRouterTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test undefined title callback.
+   */
+  function testUndefinedTitleCallback() {
+    $this->drupalGet('menu_undefined_title_callback');
+    $this->assertResponse(200);
+  }
+
+  /**
    * Tests page title of MENU_CALLBACKs.
    */
   function testTitleMenuCallback() {
