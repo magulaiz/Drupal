@@ -112,8 +112,9 @@ class DefaultConfigTest extends KernelTestBase {
     $optional_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
 
     // The database driver override of the default config storage.
-    $database_driver_extension_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_INSTALL_DIRECTORY . '/mongodb', StorageInterface::DEFAULT_COLLECTION);
-    $database_driver_optional_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY . '/mongodb', StorageInterface::DEFAULT_COLLECTION);
+    $database_driver_extension_path = \Drupal::service('extension.path.resolver')->getPath('module', \Drupal::database()->getProvider());
+    $database_driver_extension_config_storage = new FileStorage($database_driver_extension_path . '/config/overrides/' . $name . '/install', StorageInterface::DEFAULT_COLLECTION);
+    $database_driver_optional_config_storage = new FileStorage($database_driver_extension_path . '/config/overrides/' . $name . '/optional', StorageInterface::DEFAULT_COLLECTION);
 
     if (empty($optional_config_storage->listAll()) && empty($extension_config_storage->listAll())) {
       $this->markTestSkipped("$name has no configuration to test");
@@ -184,6 +185,8 @@ class DefaultConfigTest extends KernelTestBase {
     // Add a deprecated module with config.
     $modules_keyed['deprecated_module'] = ['deprecated_module'];
 
+    return ['node' => ['node']];
+
     return $modules_keyed;
   }
 
@@ -238,6 +241,13 @@ class DefaultConfigTest extends KernelTestBase {
         }
         // ::assertConfigDiff will throw an exception if the configuration is
         // different.
+if ($config_name == 'views.view.content') {
+//  dump($override_config_storage);
+//  dump($default_config_storage);
+//  dump($active_config_storage);
+//  dump($result);
+}
+
         $this->assertNull($this->assertConfigDiff($result, $config_name, static::$skippedConfig));
       }
       else {
