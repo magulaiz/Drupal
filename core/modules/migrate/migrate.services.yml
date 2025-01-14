@@ -49,3 +49,12 @@ services:
     class: Drupal\migrate\MigrateStub
     arguments: ['@plugin.manager.migration']
   Drupal\migrate\MigrateStubInterface: '@migrate.stub'
+  Drupal\migrate\MemoryManagerInterface: '@migrate.memory_manager'
+  migrate.memory_manager:
+    class: Drupal\migrate\MemoryManager
+    arguments: ['@event_dispatcher', '0.9', '0.85']
+  migrate.memory_limit_exceeded:
+    class: Drupal\migrate\EventSubscriber\MemoryLimitExceeded
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@entity_type.manager']
