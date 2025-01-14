@@ -166,11 +166,21 @@ final class RecipeConfigStorageWrapper implements StorageInterface {
    * {@inheritdoc}
    */
   public function createCollection($collection): static {
+    if ($this->storageDatabaseOverrideA && $this->storageDatabaseOverrideB) {
+      return new static(
+        $this->storageA->createCollection($collection),
+        $this->storageB->createCollection($collection),
+        $this->storageDatabaseOverrideA->createCollection($collection),
+        $this->storageDatabaseOverrideB->createCollection($collection),
+        $collection
+      );
+    }
+
     return new static(
       $this->storageA->createCollection($collection),
       $this->storageB->createCollection($collection),
-      $this->storageDatabaseOverrideA->createCollection($collection) ?? NULL,
-      $this->storageDatabaseOverrideB->createCollection($collection) ?? NULL,
+      NULL,
+      NULL,
       $collection
     );
   }
