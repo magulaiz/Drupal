@@ -38,8 +38,8 @@ class MemoryLimitExceeded implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[MigrateEvents::MEMORY_LIMIT][] = 'reclaim';
-    $events[MigrateEvents::MEMORY_LIMIT][] = 'notify';
+    $events[MigrateEvents::MEMORY_LIMIT][] = ['reclaim', 0];
+    $events[MigrateEvents::MEMORY_LIMIT][] = ['notify', 0];
     return $events;
   }
 
