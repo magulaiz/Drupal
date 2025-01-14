@@ -40,12 +40,12 @@ class SqlBaseTest extends UnitTestCase {
   /**
    * Tests that source conditions are recognized.
    *
-   * @param array|string $conditions
+   * @param array $conditions
    *   Source conditions.
    *
    * @dataProvider sqlBaseConstructorTestProvider
    */
-  public function testConstructor($conditions) {
+  public function testConstructor(array $conditions): void {
     $configuration = [
       'conditions' => $conditions,
     ];
@@ -67,7 +67,7 @@ class SqlBaseTest extends UnitTestCase {
   /**
    * The data provider for testConstructor.
    */
-  public function sqlBaseConstructorTestProvider() {
+  public static function sqlBaseConstructorTestProvider(): array {
     return [
       'not array' => [
         'conditions' => '',
@@ -156,7 +156,7 @@ class SqlBaseTest extends UnitTestCase {
    * @return array
    *   An array of data per test run.
    */
-  public static function sqlBaseTestProvider() {
+  public static function sqlBaseTestProvider(): array {
     return [
       // Source ids are empty so mapJoinable() is false.
       [
@@ -216,7 +216,7 @@ class SqlBaseTest extends UnitTestCase {
    *
    * @dataProvider prepareQueryTestProvider
    */
-  public function testPrepareQuery($conditions) {
+  public function testPrepareQuery(array $conditions): void {
     $migration = $this->getMockBuilder(MigrationInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -228,6 +228,7 @@ class SqlBaseTest extends UnitTestCase {
     $configuration['conditions'] = $conditions['condition'];
     $expected_result = $conditions['expected_result'];
 
+    $result = [];
     foreach ($configuration['conditions'] as $condition) {
       $result[] = [$condition['field'], $condition['value'] ?? NULL, $condition['operator'] ?? '='];
     }
@@ -239,25 +240,25 @@ class SqlBaseTest extends UnitTestCase {
   /**
    * The data provider for testPrepareQuery.
    */
-  public function prepareQueryTestProvider() {
+  public static function prepareQueryTestProvider(): array {
     return [
       'field value operator condition' => [
         'data' => [
-           'condition' => [
+          'condition' => [
             [
               'field' => 'nid',
               'value' => '3',
               'operator' => '>',
             ],
           ],
-           'expected_result' => [
+          'expected_result' => [
             ['nid', '3', '>'],
           ],
-       ],
+        ],
       ],
       'default operator condition' => [
         'data' => [
-         'condition' => [
+          'condition' => [
             [
               'field' => 'type',
               'value' => 'article',
@@ -266,7 +267,7 @@ class SqlBaseTest extends UnitTestCase {
           'expected_result' => [
             ['type', 'article', '='],
           ],
-         ],
+        ],
       ],
       'default value null condition' => [
         'data' => [
@@ -279,11 +280,11 @@ class SqlBaseTest extends UnitTestCase {
           'expected_result' => [
             ['langcode', NULL, 'IS'],
           ],
-         ],
+        ],
       ],
       'field value operator multiple condition' => [
         'data' => [
-           'condition' => [
+          'condition' => [
             [
               'field' => 'nid',
               'value' => '3',
@@ -294,11 +295,11 @@ class SqlBaseTest extends UnitTestCase {
               'operator' => 'IS',
             ],
           ],
-           'expected_result' => [
+          'expected_result' => [
             ['nid', '3', '>'],
             ['title', NULL, 'IS'],
           ],
-       ],
+        ],
       ],
     ];
   }
