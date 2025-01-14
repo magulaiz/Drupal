@@ -22,6 +22,7 @@ interface DatabaseConnectionInterface {
    * Returns the name of the database engine accessed by this driver.
    *
    * @return string
+   *   The database engine name.
    */
   public function databaseType();
 
@@ -62,6 +63,7 @@ interface DatabaseConnectionInterface {
    * override this method.
    *
    * @return string
+   *   The version of the database server.
    */
   public function version();
 
@@ -72,6 +74,7 @@ interface DatabaseConnectionInterface {
    * override this method.
    *
    * @return string
+   *   The version of the database client.
    */
   public function clientVersion();
 
