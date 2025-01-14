@@ -124,7 +124,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
   public function install(array $theme_list, $install_dependencies = TRUE) {
     $extension_config = $this->configFactory->getEditable('core.extension');
 
-    $theme_data = $this->themeHandler->rebuildThemeData();
+    $theme_data = $this->themeExtensionList->reset()->getList();
     $installed_themes = $extension_config->get('theme') ?: [];
 
     if ($install_dependencies) {
