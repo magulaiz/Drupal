@@ -13,8 +13,8 @@ use Drupal\views\Views;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Entity\View;
 use Drupal\views\ViewEntityInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
@@ -524,6 +524,55 @@ class ViewUI implements ViewEntityInterface {
     $this->additionalQueries = $queries;
   }
 
+  /**
+   * Gets the EXPLAIN output for a query.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
+   * @param string|\Drupal\views\Plugin\views\query\Sql $query_string
+   *   The query string or SQL query object.
+   *
+   * @return array
+   *   Renderable array containing the explain output.
+   */
+  protected function getExplainOutput($connection, $query_string) {
+    $args = [];
+    if ($query_string instanceof SelectInterface) {
+      $args = $query_string->getArguments();
+    }
+
+    try {
+      $explain_results = $connection->query('EXPLAIN ' . $query_string, $args)->fetchAll();
+    }
+    catch (\Exception $e) {
+      return [
+        '#markup' => t('Unable to execute EXPLAIN: @message', ['@message' => $e->getMessage()]),
+      ];
+    }
+    if (empty($explain_results)) {
+      return [
+        '#markup' => t('No EXPLAIN results available.'),
+      ];
+    }
+
+    $headers = array_keys((array) $explain_results[0]);
+
+    // Format rows
+    $table_rows = [];
+    foreach ($explain_results as $row) {
+      $table_rows[] = array_values((array) $row);
+    }
+
+    return [
+      '#theme' => 'table',
+      '#header' => $headers,
+      '#rows' => $table_rows,
+      '#attributes' => [
+        'class' => ['explain-query-table'],
+      ],
+    ];
+  }
+
   public function renderPreview($display_id, $args = []) {
     // Save the current path so it can be restored before returning from this function.
     $request_stack = \Drupal::requestStack();
@@ -634,10 +683,11 @@ class ViewUI implements ViewEntityInterface {
 
           if ($show_query) {
             $query_string = $executable->build_info['query'];
+
             // Only the sql default class has a method getArguments.
             $quoted = [];
 
-            if ($query_string instanceof Sql) {
+            if ($query_string instanceof SelectInterface) {
               $quoted = $query_string->getArguments();
               foreach ($quoted as $key => $val) {
                 if (is_array($val)) {
@@ -664,42 +714,7 @@ class ViewUI implements ViewEntityInterface {
               ],
             ];
 
-            $explain_output = '';
-
-            // Execute EXPLAIN
-            try {
-              $explain_results = $connection->query('EXPLAIN ' . $query_string, $query_string->getArguments())->fetchAll();
-
-              // Get headers from first row
-              if (!empty($explain_results)) {
-                $headers = array_keys((array) reset($explain_results));
-
-                // Format rows
-                $table_rows = [];
-                foreach ($explain_results as $row) {
-                  $table_rows[] = array_values((array) $row);
-                }
-
-                $explain_output = [
-                  '#theme' => 'table',
-                  '#header' => $headers,
-                  '#rows' => $table_rows,
-                  '#attributes' => [
-                    'class' => ['explain-query-table'],
-                  ],
-                ];
-              }
-              else {
-                $explain_output = [
-                  '#markup' => $this->t('No EXPLAIN results available.'),
-                ];
-              }
-            }
-            catch (\Exception $e) {
-              $explain_output = [
-                '#markup' => $this->t('Unable to execute EXPLAIN: @message', ['@message' => $e->getMessage()]),
-              ];
-            }
+            $explain_output = $this->getExplainOutput($connection, $query_string);
 
             $rows['query'][] = [
               [
