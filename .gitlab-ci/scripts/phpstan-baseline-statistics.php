@@ -31,7 +31,11 @@ file_put_contents('phpstan-metrics.txt', 'phpstan-baseline ' . $stats['__total']
 unset($stats['__total']);
 arsort($stats);
 
+array_pop($stats);
+
+$stats['new.stat'] = 100;
+
 foreach ($stats as $identifier => $stat) {
   echo sprintf("%6d %s\n", $stat, $identifier);
-  file_put_contents('phpstan-metrics.txt', 'phpstan-baseline.' . $identifier . ' ' . $stat . PHP_EOL, FILE_APPEND);
+  file_put_contents('phpstan-metrics.txt', 'phpstan-baseline.' . $identifier . ' ' . ($stat + random_int(0,3)) . PHP_EOL, FILE_APPEND);
 }
