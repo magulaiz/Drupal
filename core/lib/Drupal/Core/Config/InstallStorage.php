@@ -225,10 +225,10 @@ class InstallStorage extends FileStorage {
         }
 
         // Let a config item be overridden by a database driver one.
-        // if ($this->hasBaseDatabaseDriverOverrideDirectory()) {
-        // $database_driver_override_directory = $this->getDatabaseDriverOverrideDirectory($directory, $extension_object);
-        if ($this->getDatabaseDriver()) {
-          $database_driver_override_directory = $directory . '/' . $this->getDatabaseDriver();
+        // if ($this->getDatabaseDriver()) {
+        // $database_driver_override_directory = $directory . '/' . $this->getDatabaseDriver();
+        if ($this->hasBaseDatabaseDriverOverrideDirectory()) {
+          $database_driver_override_directory = $this->getDatabaseDriverOverrideDirectory($directory, $extension_object);
           if (is_dir($database_driver_override_directory)) {
             $database_driver_override_files = scandir($database_driver_override_directory);
             foreach ($database_driver_override_files as $database_driver_override_file) {

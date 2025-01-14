@@ -7,6 +7,7 @@ namespace Drupal\Core\Recipe;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Database\Connection;
 
 /**
  * @internal
@@ -31,8 +32,9 @@ final class ConfigConfigurator {
    *   The path to the recipe.
    * @param \Drupal\Core\Config\StorageInterface $active_configuration
    *   The active configuration storage.
+   * @param \Drupal\Core\Database\Connection $connection
    */
-  public function __construct(public readonly array $config, string $recipe_directory, StorageInterface $active_configuration) {
+  public function __construct(public readonly array $config, string $recipe_directory, StorageInterface $active_configuration, protected Connection $connection) {
     $this->recipeConfigDirectory = is_dir($recipe_directory . '/config') ? $recipe_directory . '/config' : NULL;
     // @todo Consider defaulting this to FALSE in https://drupal.org/i/3478669.
     $this->strict = $config['strict'] ?? TRUE;
@@ -123,10 +125,25 @@ final class ConfigConfigurator {
           default => throw new \RuntimeException("$extension is not a theme or module")
         };
 
-        $storage = new RecipeConfigStorageWrapper(
-          new FileStorage($path . '/config/install'),
-          new FileStorage($path . '/config/optional'),
-        );
+        // Config item can be overridden by the current database driver. Those
+        // overridden config items are stored in the module of the current
+        // database driver in the "config/override" directory.
+        $database_override_path = $module_list->getPath($this->connection->getProvider()) . '/config/overrides/' . $extension;
+        if (is_dir($database_override_path)) {
+          $storage = new RecipeConfigStorageWrapper(
+            new FileStorage($path . '/config/install'),
+            new FileStorage($path . '/config/optional'),
+            new FileStorage($database_override_path . '/install'),
+            new FileStorage($database_override_path . '/optional'),
+          );
+        }
+        else {
+          $storage = new RecipeConfigStorageWrapper(
+            new FileStorage($path . '/config/install'),
+            new FileStorage($path . '/config/optional'),
+          );
+        }
+
         // If we get here, $names is either '*', or a list of config names
         // provided by the current extension. In the latter case, we only want
         // to import the config that is in the list, so use an
