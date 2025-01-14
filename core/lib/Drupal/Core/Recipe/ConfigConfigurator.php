@@ -26,6 +26,13 @@ final class ConfigConfigurator {
   private readonly bool|array $strict;
 
   /**
+   * The database connection
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected Connection $connection;
+
+  /**
    * @param array $config
    *   Config options for a recipe.
    * @param string $recipe_directory
@@ -34,10 +41,11 @@ final class ConfigConfigurator {
    *   The active configuration storage.
    * @param \Drupal\Core\Database\Connection $connection
    */
-  public function __construct(public readonly array $config, string $recipe_directory, StorageInterface $active_configuration, protected Connection $connection) {
+  public function __construct(public readonly array $config, string $recipe_directory, StorageInterface $active_configuration, Connection $connection) {
     $this->recipeConfigDirectory = is_dir($recipe_directory . '/config') ? $recipe_directory . '/config' : NULL;
     // @todo Consider defaulting this to FALSE in https://drupal.org/i/3478669.
     $this->strict = $config['strict'] ?? TRUE;
+    $this->connection = $connection;
 
     $recipe_storage = $this->getConfigStorage();
     if ($this->strict === TRUE) {
