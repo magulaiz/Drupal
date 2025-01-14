@@ -53,8 +53,7 @@ services:
   migrate.memory_manager:
     class: Drupal\migrate\MemoryManager
     arguments: ['@event_dispatcher', '0.9', '0.85']
+  Drupal\migrate\EventSubscriber\MemoryLimitExceeded: '@migrate.memory_limit_exceeded'
   migrate.memory_limit_exceeded:
     class: Drupal\migrate\EventSubscriber\MemoryLimitExceeded
-    tags:
-      - { name: event_subscriber }
     arguments: ['@entity_type.manager']
