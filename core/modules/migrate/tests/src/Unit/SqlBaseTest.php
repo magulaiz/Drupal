@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Database\Query\Select;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
 
 /**
  * Tests the SqlBase class.
@@ -40,15 +45,12 @@ class SqlBaseTest extends UnitTestCase {
   /**
    * Tests that source conditions are recognized.
    *
-   * @param array|string $conditions
-   *   Source conditions.
+   * @param array $configuration
+   *   Source configuration.
    *
    * @dataProvider sqlBaseConstructorTestProvider
    */
-  public function testConstructor(mixed $conditions): void {
-    $configuration = [
-      'conditions' => $conditions,
-    ];
+  public function testConstructor(array $configuration, string $message): void {
     // Setup the migration interface.
     $migration = $this->getMockBuilder(MigrationInterface::class)
       ->disableOriginalConstructor()
@@ -61,6 +63,7 @@ class SqlBaseTest extends UnitTestCase {
 
     // Test with an invalid process pipeline.
     $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage($message);
     new TestSqlBase($configuration, $this->pluginId, $this->pluginDefinition, $migration, $state);
   }
 
@@ -70,13 +73,64 @@ class SqlBaseTest extends UnitTestCase {
   public static function sqlBaseConstructorTestProvider(): array {
     return [
       'not array' => [
-        'conditions' => '',
+        'configuration' => [
+          'conditions' => [''],
+        ],
+        'message' => 'Each \'conditions\' array item must be an array including field, value (optional), and operator (optional) keys.',
       ],
       'not multidimensional array' => [
-        'conditions' => [''],
+        'configuration' => [
+          'conditions' => [''],
+        ],
+        'message' => 'Each \'conditions\' array item must be an array including field, value (optional), and operator (optional) keys.',
       ],
-      'field not specified' => [
-        'conditions' => [['']],
+      'condition field not specified' => [
+        'configuration' => [
+          'conditions' => [
+            ['value' => 'John', 'operator' => '='],
+          ],
+        ],
+        'message' => 'Each \'conditions\' array item must be an array including field, value (optional), and operator (optional) keys.',
+      ],
+      'join table not specified' => [
+        'configuration' => [
+          'joins' => [
+            ['alias' => 'u', 'condition' => 'u.uid=n.uid'],
+          ],
+        ],
+        'message' => 'Each \'joins\' array item must be an array including table, alias, condition, and type (optional) keys.',
+      ],
+      'join alias not specified' => [
+        'configuration' => [
+          'joins' => [
+            ['table' => 'users_field_data', 'condition' => 'u.uid=n.uid'],
+          ],
+        ],
+        'message' => 'Each \'joins\' array item must be an array including table, alias, condition, and type (optional) keys.',
+      ],
+      'join condition not specified' => [
+        'configuration' => [
+          'joins' => [
+            ['alias' => 'u', 'table' => 'users_field_data'],
+          ],
+        ],
+        'message' => 'Each \'joins\' array item must be an array including table, alias, condition, and type (optional) keys.',
+      ],
+      'fields table_alias not specified' => [
+        'configuration' => [
+          'fields' => [
+            ['field' => 'uid'],
+          ],
+        ],
+        'message' => 'Each \'fields\' array item must be an array including table_alias, field, alias (optional) keys.',
+      ],
+      'fields field not specified' => [
+        'configuration' => [
+          'fields' => [
+            ['table_alias' => 'u'],
+          ],
+        ],
+        'message' => 'Each \'fields\' array item must be an array including table_alias, field, alias (optional) keys.',
       ],
     ];
   }
@@ -211,12 +265,12 @@ class SqlBaseTest extends UnitTestCase {
   /**
    * Test prepare query for valid condition.
    *
-   * @param array $conditions
-   *   Source conditions.
+   * @param array $configuration
+   *   Source configuration.
    *
    * @dataProvider prepareQueryTestProvider
    */
-  public function testPrepareQuery(array $conditions): void {
+  public function testPrepareQuery(array $configuration, string $expected_result): void {
     $migration = $this->getMockBuilder(MigrationInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -224,17 +278,21 @@ class SqlBaseTest extends UnitTestCase {
     $state = $this->getMockBuilder(StateInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
+    $connection = $this->prophesize(Connection::class);
+    $connection->condition(Argument::any())->willReturn(new Condition('AND'));
+    $connection->getKey()->willReturn('default');
+    $connection->getTarget()->willReturn('default');
+    $connection->escapeField(Argument::any())->shouldBeCalled();
+    $connection->mapConditionOperator(Argument::any())->shouldBeCalled();
+    $connection->makeComment(Argument::any())->shouldBeCalled();
+    $connection->escapeTable(Argument::any())->willReturn('users');
+    $connection->escapeAlias(Argument::any())->shouldBeCalled();
+    $connection->select(Argument::any(), Argument::any(), Argument::any())->willReturn(new Select($connection->reveal(), 'users', 'u'));
 
-    $configuration['conditions'] = $conditions['condition'];
-    $expected_result = $conditions['expected_result'];
+    $sql = new TestSqlBase($configuration, $this->pluginId, $this->pluginDefinition, $migration, $state);
+    $sql->setDatabase($connection->reveal());
 
-    $result = [];
-    foreach ($configuration['conditions'] as $condition) {
-      $result[] = [$condition['field'], $condition['value'] ?? NULL, $condition['operator'] ?? '='];
-    }
-    // For multiple result.
-    $this->assertEquals($expected_result, $result);
-    new TestSqlBase($configuration, $this->pluginId, $this->pluginDefinition, $migration, $state);
+    $this->assertEquals($expected_result, $sql->__toString());
   }
 
   /**
@@ -243,48 +301,42 @@ class SqlBaseTest extends UnitTestCase {
   public static function prepareQueryTestProvider(): array {
     return [
       'field value operator condition' => [
-        'data' => [
-          'condition' => [
+        'configuration' => [
+          'conditions' => [
             [
               'field' => 'nid',
               'value' => '3',
               'operator' => '>',
             ],
           ],
-          'expected_result' => [
-            ['nid', '3', '>'],
-          ],
         ],
+        'expected_result' => "SELECT \nFROM\n{users} \nWHERE > :db_condition_placeholder_0",
       ],
       'default operator condition' => [
-        'data' => [
-          'condition' => [
+        'configuration' => [
+          'conditions' => [
             [
               'field' => 'type',
               'value' => 'article',
             ],
           ],
-          'expected_result' => [
-            ['type', 'article', '='],
-          ],
         ],
+        'expected_result' => "SELECT \nFROM\n{users} \nWHERE = :db_condition_placeholder_0",
       ],
       'default value null condition' => [
-        'data' => [
-          'condition' => [
+        'configuration' => [
+          'conditions' => [
             [
               'field' => 'langcode',
               'operator' => 'IS',
             ],
           ],
-          'expected_result' => [
-            ['langcode', NULL, 'IS'],
-          ],
         ],
+        'expected_result' => "SELECT \nFROM\n{users} \nWHERE IS :db_condition_placeholder_0",
       ],
       'field value operator multiple condition' => [
-        'data' => [
-          'condition' => [
+        'configuration' => [
+          'conditions' => [
             [
               'field' => 'nid',
               'value' => '3',
@@ -295,11 +347,31 @@ class SqlBaseTest extends UnitTestCase {
               'operator' => 'IS',
             ],
           ],
-          'expected_result' => [
-            ['nid', '3', '>'],
-            ['title', NULL, 'IS'],
-          ],
         ],
+        'expected_result' => "SELECT \nFROM\n{users} \nWHERE (> :db_condition_placeholder_0) AND (IS :db_condition_placeholder_1)",
+      ],
+      'multiple sql conjunctions' => [
+        'configuration' => [
+          'conditions' => [
+            [
+              'field' => 'nid',
+              'value' => '3',
+              'operator' => '>',
+            ],
+            [
+              'field' => 'title',
+              'operator' => 'IS',
+            ],
+          ],
+          'fields' => [
+            ['table_alias' => 'ud', 'field' => 'data', 'alias' => 'd'],
+          ],
+          'joins' => [
+            ['table' => 'users_field_data', 'alias' => 'ud', 'condition' => 'u.uid=n.uid'],
+          ],
+          'distinct' => TRUE,
+        ],
+        'expected_result' => "SELECT DISTINCT  AS \nFROM\n{users} \nINNER JOIN {users}  ON u.uid=n.uid\nWHERE (> :db_condition_placeholder_0) AND (IS :db_condition_placeholder_1)",
       ],
     ];
   }
@@ -387,7 +459,11 @@ class TestSqlBase extends SqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    throw new \RuntimeException(__METHOD__ . " not implemented for " . __CLASS__);
+    return $this->select('users', 'u');
+  }
+
+  public function __toString() {
+    return $this->prepareQuery()->__toString();
   }
 
   /**

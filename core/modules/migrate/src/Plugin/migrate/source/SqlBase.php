@@ -41,7 +41,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   Typically, it can be used to add some conditions by Field API values, which
  *   are located in separate database tables. This value should be in array
  *   format with each array item providing values for table, alias, condition,
- *   and join type (optional, defaults to INNER). Defaults to an empty array.
+ *   and type (optional, defaults to INNER). Defaults to an empty array.
  *   For more documentation refer to
  *   \Drupal\Core\Database\Query\SelectInterface::addJoin().
  * - fields: (optional) Add extra fields to the query. This is useful when using
@@ -350,10 +350,10 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   }
 
   /**
-   * Adds tags, metadata, and configured conditions and joins to the query.
+   * Adds tags, metadata, and configured sql to the query.
    *
    * @return \Drupal\Core\Database\Query\SelectInterface
-   *   The query with additional tags, metadata, and configured conditions and joins.
+   *   The query.
    */
   protected function prepareQuery() {
     $this->query = clone $this->query();
@@ -371,7 +371,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       $this->query->addJoin($join['type'] ?? 'INNER', $join['table'], $join['alias'], $join['condition']);
     }
 
-    // Add any configured joins.
+    // Add any configured fields.
     foreach ($this->configuration['fields'] as $field) {
       $this->query->addField($field['table_alias'], $field['field'], $field['alias'] ?? NULL);
     }
