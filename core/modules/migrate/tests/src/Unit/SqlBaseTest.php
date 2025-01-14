@@ -40,12 +40,12 @@ class SqlBaseTest extends UnitTestCase {
   /**
    * Tests that source conditions are recognized.
    *
-   * @param array $conditions
+   * @param array|string $conditions
    *   Source conditions.
    *
    * @dataProvider sqlBaseConstructorTestProvider
    */
-  public function testConstructor(array $conditions): void {
+  public function testConstructor(mixed $conditions): void {
     $configuration = [
       'conditions' => $conditions,
     ];
@@ -156,7 +156,7 @@ class SqlBaseTest extends UnitTestCase {
    * @return array
    *   An array of data per test run.
    */
-  public static function sqlBaseTestProvider(): array {
+  public static function sqlBaseTestProvider() {
     return [
       // Source ids are empty so mapJoinable() is false.
       [
@@ -324,13 +324,6 @@ class TestSqlBase extends SqlBase {
    * @var array
    */
   protected $ids;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state);
-  }
 
   /**
    * Allows us to set the database during tests.

@@ -223,12 +223,12 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       }
     }
     foreach ($this->configuration['joins'] as $join) {
-      if (!is_array($join) || !isset($join['table']) || !isset($join['alias']) || !isset($join['condition'])) {
+      if (!isset($join['table'], $join['alias'], $join['condition']) || !is_array($join)) {
         throw new \InvalidArgumentException("Each 'joins' array item must be an array including table, alias, condition, and type (optional) keys.");
       }
     }
     foreach ($this->configuration['fields'] as $field) {
-      if (!is_array($field) || !isset($field['table_alias']) || !isset($field['field'])) {
+      if (!isset($field['table_alias'], $field['field']) || !is_array($field)) {
         throw new \InvalidArgumentException("Each 'fields' array item must be an array including table_alias, field, alias (optional) keys.");
       }
     }
