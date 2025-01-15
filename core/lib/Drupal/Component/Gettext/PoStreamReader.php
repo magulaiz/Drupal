@@ -401,14 +401,14 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
         }
 
         // Ensure the plurality is terminated.
-        if (strpos($line, ']') === FALSE) {
+        if (!str_contains($line, ']')) {
           $this->errors[] = new FormattableMarkup('The translation stream %uri contains an error: invalid format for "msgstr[]" on line %line.', $log_vars);
           return FALSE;
         }
 
         // Extract the plurality.
-        $frombracket = strstr($line, '[');
-        $this->currentPluralIndex = substr($frombracket, 1, strpos($frombracket, ']') - 1);
+        $from_bracket = strstr($line, '[');
+        $this->currentPluralIndex = substr($from_bracket, 1, strpos($from_bracket, ']') - 1);
 
         // Skip to the next whitespace and trim away any further whitespace,
         // bringing $line to the message text only.
@@ -541,7 +541,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
   /**
    * Parses a string in quotes.
    *
-   * @param $string
+   * @param string $string
    *   A string specified with enclosing quotes.
    *
    * @return bool|string
@@ -572,7 +572,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
   /**
    * Generates a short, one-string version of the passed comment array.
    *
-   * @param $comment
+   * @param string[] $comment
    *   An array of strings containing a comment.
    *
    * @return string

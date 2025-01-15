@@ -35,22 +35,17 @@
   background-position: right center;
   background-size: 2.5rem;
 }
-
 @media (forced-colors: active) {
   .system-status-counter__status-icon::before {
     background-color: canvastext;
     background-image: none;
-    -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
-    -webkit-mask-position: right center;
     mask-position: right center;
-    -webkit-mask-size: 2.5rem;
     mask-size: 2.5rem;
   }
 }
-[dir="rtl"] .system-status-counter__status-icon {
-  border-inline-end: 1px solid #e6e4df;
-  border-inline-start: 0;
+[dir="rtl"] .system-status-counter__status-icon::before {
+  background-position: left center;
 }
 .system-status-counter__status-icon--error::before {
   background-image: var(--system-status-counter-status-icon-error);
@@ -61,20 +56,16 @@
 .system-status-counter__status-icon--checked::before {
   background-image: var(--system-status-counter-status-icon-checked);
 }
-
 @media (forced-colors: active) {
-  .system-status-counter__status-icon--error:before {
-    -webkit-mask-image: var(--system-status-counter-status-icon-error);
+  .system-status-counter__status-icon--error::before {
     mask-image: var(--system-status-counter-status-icon-error);
   }
 
-  .system-status-counter__status-icon--warning:before {
-    -webkit-mask-image: var(--system-status-counter-status-icon-warning);
+  .system-status-counter__status-icon--warning::before {
     mask-image: var(--system-status-counter-status-icon-warning);
   }
 
-  .system-status-counter__status-icon--checked:before {
-    -webkit-mask-image: var(--system-status-counter-status-icon-checked);
+  .system-status-counter__status-icon--checked::before {
     mask-image: var(--system-status-counter-status-icon-checked);
   }
 }
@@ -97,7 +88,6 @@
   font-weight: normal;
   line-height: 1.5;
 }
-
 @media screen and (min-width: 61rem) {
   .system-status-report-counters__item {
     padding-block: var(--space-s);

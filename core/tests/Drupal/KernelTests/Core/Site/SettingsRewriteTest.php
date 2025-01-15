@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Site;
 
 use Drupal\Core\Site\Settings;
@@ -10,15 +12,13 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests the SettingsEditor::rewrite() function.
  *
  * @group system
- *
- * @covers \Drupal\Core\Site\SettingsEditor::rewrite()
  */
 class SettingsRewriteTest extends KernelTestBase {
 
   /**
-   * Tests the SettingsEditor::rewrite() function.
+   * @covers \Drupal\Core\Site\SettingsEditor::rewrite
    */
-  public function testDrupalRewriteSettings() {
+  public function testDrupalRewriteSettings(): void {
     include_once $this->root . '/core/includes/install.inc';
     $site_path = $this->container->getParameter('site.path');
     $tests = [

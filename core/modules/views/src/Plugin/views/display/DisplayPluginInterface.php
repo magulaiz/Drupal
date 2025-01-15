@@ -42,7 +42,7 @@ interface DisplayPluginInterface {
    * @param array $options
    *   (optional) The options for the display plugin. Defaults to NULL.
    */
-  public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL);
+  public function initDisplay(ViewExecutable $view, array &$display, ?array &$options = NULL);
 
   /**
    * Destroys the display's components and the display itself.
@@ -427,7 +427,7 @@ interface DisplayPluginInterface {
   /**
    * Determines if the user has access to this display of the view.
    */
-  public function access(AccountInterface $account = NULL);
+  public function access(?AccountInterface $account = NULL);
 
   /**
    * Sets up any variables on the view prior to execution.
@@ -588,7 +588,7 @@ interface DisplayPluginInterface {
    *     where you can configure what should be done if the argument does not
    *     exist.
    *   - description: A description about how arguments are passed
-   *     to the display. For example blocks can't get arguments from url.
+   *     to the display. For example blocks can't get arguments from URL.
    */
   public function getArgumentText();
 
