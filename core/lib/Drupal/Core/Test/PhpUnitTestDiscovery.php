@@ -7,6 +7,7 @@ namespace Drupal\Core\Test;
 use Drupal\Core\Test\Exception\MissingGroupException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestCase;
 use PHPUnit\TextUI\Configuration\Builder;
 use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
 
@@ -205,7 +206,7 @@ class PhpUnitTestDiscovery {
    * @param string $testSuite
    *   The test suite of this test class.
    *
-   * @return array<'name'|'description'|'group'|'groups'|'type'|'file',string|array>
+   * @return array<'name'|'description'|'group'|'groups'|'type'|'file'|'tests_count',string|array>
    *   The test class information.
    */
   private function getTestClassInfo(Test $testClass, string $testSuite): array {
@@ -243,6 +244,19 @@ class PhpUnitTestDiscovery {
       $description = TestDiscovery::parseTestClassSummary($docComment);
     }
 
+    // Find the test cases count.
+    $count = 0;
+    foreach ($testClass->tests() as $testCase) {
+      if ($testCase instanceof TestCase) {
+        // If it's a straight test method, counts 1.
+        $count++;
+      }
+      else {
+        // It's a data provider test suite, count 1 per data set provided.
+        $count += count($testCase->tests());
+      }
+    }
+
     return [
       'name' => $testClass->name(),
       'group' => $groups[0],
@@ -250,6 +264,7 @@ class PhpUnitTestDiscovery {
       'type' => $testSuite,
       'description' => $description,
       'file' => $reflection->getFileName(),
+      'tests_count' => $count,
     ];
   }
 
