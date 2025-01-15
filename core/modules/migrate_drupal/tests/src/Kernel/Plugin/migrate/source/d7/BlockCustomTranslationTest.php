@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\block_content\Kernel\Plugin\migrate\source\d7;
+namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
@@ -11,7 +11,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 /**
  * Tests i18n content block translations source plugin.
  *
- * @covers \Drupal\block_content\Plugin\migrate\source\d7\BlockCustomTranslation
+ * @covers \Drupal\migrate_drupal\Plugin\migrate\source\d7\BlockCustomTranslation
  *
  * @group content_translation
  */
@@ -20,7 +20,7 @@ class BlockCustomTranslationTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block_content', 'migrate_drupal'];
+  protected static $modules = ['migrate_drupal'];
 
   /**
    * {@inheritdoc}

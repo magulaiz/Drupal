@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7;
+namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source\d7;
 
 // cspell:ignore ltlanguage objectid objectindex plid tdlanguage tsid
+use Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7\TermTest;
 
 /**
  * Tests D7 i18n term localized source plugin.
  *
- * @covers \Drupal\taxonomy\Plugin\migrate\source\d7\TermLocalizedTranslation
+ * @covers \Drupal\migrate_drupal\Plugin\migrate\source\d7\TermLocalizedTranslation
  * @group taxonomy
  */
 class TermLocalizedTranslationTest extends TermTest {
@@ -17,7 +18,7 @@ class TermLocalizedTranslationTest extends TermTest {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['taxonomy', 'migrate_drupal'];
+  protected static $modules = ['migrate_drupal'];
 
   /**
    * {@inheritdoc}

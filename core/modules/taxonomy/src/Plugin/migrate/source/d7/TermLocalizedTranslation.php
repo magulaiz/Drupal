@@ -2,101 +2,34 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
-use Drupal\content_translation\Plugin\migrate\source\I18nQueryTrait;
-use Drupal\migrate\Row;
-
-// cspell:ignore ltlanguage objectid
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\State\StateInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate_drupal\Plugin\migrate\source\d7\TermLocalizedTranslation as MigrateDrupalD7TermLocalizedTranslation;
 
 /**
  * Drupal 7 i18n taxonomy terms source from database.
  *
  * For available configuration keys, refer to the parent classes.
  *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\migrate_drupal\Plugin\migrate\source\d7\TermLocalizedTranslation
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3439256
+ *
  * @see \Drupal\taxonomy\Plugin\migrate\source\d7\Term
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_term_localized_translation",
- *   source_module = "i18n_taxonomy"
- * )
  */
-class TermLocalizedTranslation extends Term {
-
-  use I18nQueryTrait;
+class TermLocalizedTranslation extends MigrateDrupalD7TermLocalizedTranslation {
 
   /**
    * {@inheritdoc}
    */
-  public function query() {
-    // Ideally, the query would return rows for each language for each taxonomy
-    // term with the translations for both the name and description or just the
-    // name translation or just the description translation. That query quickly
-    // became complex and would be difficult to maintain.
-    // Therefore, build a query based on i18nstrings table where each row has
-    // the translation for only one property, either name or description. The
-    // method prepareRow() is then used to obtain the translation for the other
-    // property.
-    $query = parent::query();
-    $query->addField('td', 'language', 'td.language');
-
-    // Add in the property, which is either name or description.
-    // Cast td.tid as char for PostgreSQL compatibility.
-    $query->leftJoin('i18n_string', 'i18n', 'CAST([td].[tid] AS CHAR(255)) = [i18n].[objectid]');
-    $query->condition('i18n.type', 'term');
-    $query->addField('i18n', 'lid');
-    $query->addField('i18n', 'property');
-
-    // Add in the translation for the property.
-    $query->innerJoin('locales_target', 'lt', '[i18n].[lid] = [lt].[lid]');
-    $query->addField('lt', 'language', 'lt.language');
-    $query->addField('lt', 'translation');
-    return $query;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function prepareRow(Row $row) {
-    if (!parent::prepareRow($row)) {
-      return FALSE;
-    }
-
-    // Override language with ltlanguage.
-    $language = $row->getSourceProperty('ltlanguage');
-    $row->setSourceProperty('language', $language);
-
-    // Set the i18n string table for use in I18nQueryTrait.
-    $this->i18nStringTable = 'i18n_string';
-
-    // Save the translation for the property already in the row.
-    $property_in_row = $row->getSourceProperty('property');
-
-    // Get the translation for the property not already in the row and save it
-    // in the row.
-    $property_not_in_row = ($property_in_row == 'name') ? 'description' : 'name';
-    return $this->getPropertyNotInRowTranslation($row, $property_not_in_row, 'tid', $this->idMap);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fields() {
-    $fields = [
-      'language' => $this->t('Language for this term.'),
-      'name_translated' => $this->t('Term name translation.'),
-      'description_translated' => $this->t('Term description translation.'),
-    ];
-    return parent::fields() + $fields;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getIds() {
-    $ids['language']['type'] = 'string';
-    $ids['language']['alias'] = 'lt';
-    return parent::getIds() + $ids;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityTypeManagerInterface $entity_type_manager) {
+    @trigger_error('\Drupal\taxonomy\Plugin\migrate\source\d7\TermLocalizedTranslation is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\source\d7\TermLocalizedTranslation instead. See https://www.drupal.org/node/3439256', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state, $entity_type_manager);
   }
 
 }

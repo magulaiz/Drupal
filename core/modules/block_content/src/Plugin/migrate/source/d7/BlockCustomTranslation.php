@@ -2,104 +2,50 @@
 
 namespace Drupal\block_content\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Row;
-use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
-use Drupal\content_translation\Plugin\migrate\source\I18nQueryTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\State\StateInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate_drupal\Plugin\migrate\source\d7\BlockCustomTranslation as MigrateDrupalD7BlockCustomTranslation;
 
 /**
  * Drupal 7 i18n content block translations source from database.
  *
  * For available configuration keys, refer to the parent classes.
  *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\migrate_drupal\Plugin\migrate\source\d7\BlockCustomTranslation
+ *   instead.
+ * @see https://www.drupal.org/node/3439256
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_block_custom_translation",
- *   source_module = "i18n_block"
- * )
  */
-class BlockCustomTranslation extends DrupalSqlBase {
-
-  use I18nQueryTrait;
+class BlockCustomTranslation extends MigrateDrupalD7BlockCustomTranslation {
 
   /**
-   * Drupal 7 table names.
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\migrate_drupal\Plugin\migrate\source\d7\BlockCustomTranslation::CUSTOM_BLOCK_TABLE
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3439256
    */
   const CUSTOM_BLOCK_TABLE = 'block_custom';
+
+  /**
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\migrate_drupal\Plugin\migrate\source\d7\BlockCustomTranslation::I18N_STRING_TABLE
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3439256
+   */
   const I18N_STRING_TABLE = 'i18n_string';
 
   /**
    * {@inheritdoc}
    */
-  public function query() {
-    // Build a query based on blockCustomTable table where each row has the
-    // translation for only one property, either title or description. The
-    // method prepareRow() is then used to obtain the translation for the
-    // other property.
-    $query = $this->select(static::CUSTOM_BLOCK_TABLE, 'b')
-      ->fields('b', ['bid', 'format', 'body'])
-      ->fields('i18n', ['property'])
-      ->fields('lt', ['lid', 'translation', 'language'])
-      ->orderBy('b.bid');
-
-    // Use 'title' for the info field to match the property name in
-    // i18nStringTable.
-    $query->addField('b', 'info', 'title');
-
-    // Add in the property, which is either title or body. Cast the bid to text
-    // so PostgreSQL can make the join.
-    $query->leftJoin(static::I18N_STRING_TABLE, 'i18n', '[i18n].[objectid] = CAST([b].[bid] AS CHAR(255))');
-    $query->condition('i18n.type', 'block');
-
-    // Add in the translation for the property.
-    $query->innerJoin('locales_target', 'lt', '[lt].[lid] = [i18n].[lid]');
-    return $query;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function prepareRow(Row $row) {
-    if (!parent::prepareRow($row)) {
-      return FALSE;
-    }
-    // Set the i18n string table for use in I18nQueryTrait.
-    $this->i18nStringTable = static::I18N_STRING_TABLE;
-    // Save the translation for this property.
-    $property_in_row = $row->getSourceProperty('property');
-    // Get the translation for the property not already in the row and save it
-    // in the row.
-    $property_not_in_row = ($property_in_row === 'title') ? 'body' : 'title';
-    return $this->getPropertyNotInRowTranslation($row, $property_not_in_row, 'bid', $this->idMap);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fields() {
-    return [
-      'bid' => $this->t('The block numeric identifier.'),
-      'format' => $this->t('Input format of the content block/box content.'),
-      'lid' => $this->t('i18n_string table id'),
-      'language' => $this->t('Language for this field.'),
-      'property' => $this->t('Block property'),
-      'translation' => $this->t('The translation of the value of "property".'),
-      'title' => $this->t('Block title.'),
-      'title_translated' => $this->t('Block title translation.'),
-      'body' => $this->t('Block body.'),
-      'body_translated' => $this->t('Block body translation.'),
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getIds() {
-    $ids['bid']['type'] = 'integer';
-    $ids['bid']['alias'] = 'b';
-    $ids['language']['type'] = 'string';
-    return $ids;
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityTypeManagerInterface $entity_type_manager) {
+    @trigger_error('\Drupal\block_content\Plugin\migrate\source\d7\BlockCustomTranslation is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\source\d7\BlockCustomTranslation instead. See https://www.drupal.org/node/3439256', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state, $entity_type_manager);
   }
 
 }
