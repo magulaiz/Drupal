@@ -53,9 +53,8 @@ $display['third_party_settings']['layout_builder']['sections'][] = [
         'another_key' => 'another_value',
       ],
       'third_party_settings' => [
-        'my_module' => [
-          'my_key' => 'my_value',
-          'my_other_key' => 'my_other_value',
+        'layout_builder_defaults_test' => [
+          'harold' => 'maude',
         ],
       ],
     ],
