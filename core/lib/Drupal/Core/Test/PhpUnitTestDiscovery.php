@@ -45,7 +45,7 @@ class PhpUnitTestDiscovery {
   private array $warnings = [];
 
   public function __construct(
-    private string $root, $class_loader
+    private string $root,
   ) {
     $this->reverseMap = array_flip($this->map);
   }
