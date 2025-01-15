@@ -44,7 +44,7 @@ class MemoryManager implements MemoryManagerInterface {
       $memory_limit = trim(ini_get('memory_limit'));
     }
     // Record the memory limit in bytes.
-    $this->memoryLimit = ($memory_limit == -1)
+    $this->memoryLimit = ($memory_limit === -1)
       ? PHP_INT_MAX
       : (int) Bytes::toNumber($memory_limit);
   }
@@ -59,12 +59,9 @@ class MemoryManager implements MemoryManagerInterface {
     $this->dispatchEvent(self::PRE_RECLAIMED);
     // Re-check the reclaim threshold to ensure we reclaimed enough to
     // continue.
-    if ($this->isLimitExceeded($this->memoryReclaimThreshold)) {
-      $this->dispatchEvent(self::STILL_EXCEEDED);
-      return FALSE;
-    }
-    $this->dispatchEvent(self::REDUCED_ENOUGH_TO_CONTINUE);
-    return TRUE;
+    $limit_exceeded = $this->isLimitExceeded($this->memoryReclaimThreshold);
+    $this->dispatchEvent($limit_exceeded ? self::STILL_EXCEEDED : self::REDUCED_ENOUGH_TO_CONTINUE);
+    return !$limit_exceeded;
   }
 
   /**

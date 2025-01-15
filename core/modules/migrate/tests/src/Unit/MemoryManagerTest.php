@@ -45,26 +45,23 @@ class MemoryManagerTest extends MigrateTestCase {
    *   The ratio of the memory limit which will trigger a failed reclaim.
    * @param float $memory_threshold
    *   The ratio of the memory limit at which an operation will be interrupted.
-   * @param int|null $memory_limit
+   * @param int $memory_limit
    *   The memory limit.
-   * @param int|null $memory_usage
+   * @param int $memory_usage
    *   The first memory usage value.
-   * @param int|null $cleared_memory_usage
+   * @param int $cleared_memory_usage
    *   The fake amount of memory usage reported after memory reclaim.
    * @param bool $expected_ensure_memory
    *   Indicates that the desired memory threshold will be exceeded after
    *   reclamation.
-   * @param bool $will_reclaim
-   *   Indicates that the manager will attempt to reclaim memory.
    *
    * @dataProvider providerTestEnsureMemory
    */
-  public function testEnsureMemory($reclaim_threshold, $memory_threshold, $memory_limit, $memory_usage, $cleared_memory_usage, $expected_ensure_memory, $will_reclaim): void {
-    if ($will_reclaim) {
-      $this->eventDispatcher
-        ->expects($this->exactly(2))
-        ->method('dispatch');
-    }
+  public function testEnsureMemory(float $reclaim_threshold, float $memory_threshold, int $memory_limit, int $memory_usage, int $cleared_memory_usage, bool $expected_ensure_memory): void {
+    $limit_exceeded = $memory_threshold && $memory_usage / $memory_limit > $memory_threshold;
+    $this->eventDispatcher
+      ->expects($this->exactly($limit_exceeded ? 2 : 0))
+      ->method('dispatch');
     $memory_manager = new TestMemoryManager($this->eventDispatcher, $reclaim_threshold, $memory_threshold, $memory_limit);
     $memory_manager->setMemoryUsage($memory_usage, $cleared_memory_usage);
     $result = $memory_manager->ensureMemory();
@@ -84,7 +81,6 @@ class MemoryManagerTest extends MigrateTestCase {
         'memory_usage' => 0,
         'cleared_memory_usage' => 0,
         'expected_ensure_memory' => TRUE,
-        'will_reclaim' => FALSE,
       ],
       // Tests memoryExceeded method when enough is cleared.
       'testMemoryExceededClearedEnough' => [
@@ -94,7 +90,6 @@ class MemoryManagerTest extends MigrateTestCase {
         'memory_usage' => 10000000,
         'cleared_memory_usage' => (int) (10000000 * 0.75),
         'expected_ensure_memory' => TRUE,
-        'will_reclaim' => TRUE,
       ],
       // Tests memoryExceeded when memory usage is not exceeded.
       'testMemoryNotExceeded' => [
@@ -104,7 +99,6 @@ class MemoryManagerTest extends MigrateTestCase {
         'memory_usage' => (int) floor(10000000 * 0.85) - 1,
         'cleared_memory_usage' => 0,
         'expected_ensure_memory' => TRUE,
-        'will_reclaim' => FALSE,
       ],
       // Tests memoryExceeded method when not enough is cleared.
       'testMemoryExceededNotCleared' => [
@@ -114,7 +108,6 @@ class MemoryManagerTest extends MigrateTestCase {
         'memory_usage' => 10000000,
         'cleared_memory_usage' => (int) (10000000 * .95),
         'expected_ensure_memory' => FALSE,
-        'will_reclaim' => TRUE,
       ],
     ];
   }
@@ -237,14 +230,6 @@ class TestMemoryManager extends MemoryManager {
   }
 
   /**
-   * Reclaim memory.
-   */
-  public function reclaim(): static {
-    $this->memoryUsage = $this->clearedMemoryUsage;
-    return $this;
-  }
-
-  /**
    * Sets the fake memory usage.
    *
    * @param int $memory_usage
@@ -263,7 +248,7 @@ class TestMemoryManager extends MemoryManager {
   protected function dispatchEvent(string $phase): void {
     parent::dispatchEvent($phase);
     if ($phase === self::PRE_RECLAIMED && $this->clearedMemoryUsage) {
-      $this->reclaim();
+      $this->memoryUsage = $this->clearedMemoryUsage;
     }
   }
 
