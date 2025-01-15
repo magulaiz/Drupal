@@ -40,7 +40,7 @@
 {{ attach_library('olivero/tags') }}
 <div{{ attributes.addClass(classes) }}>
   {% if not label_hidden %}
-    <div {{ title_attributes.addClass(title_classes) }}>{{ label }}</div>
+    <div{{ title_attributes.addClass(title_classes) }}>{{ label }}</div>
   {% endif %}
   <ul class="links field__items field--tags__items">
     {% for item in items %}
