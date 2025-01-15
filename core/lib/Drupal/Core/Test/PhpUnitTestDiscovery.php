@@ -7,7 +7,6 @@ namespace Drupal\Core\Test;
 use Drupal\Core\Test\Exception\MissingGroupException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Test;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\TextUI\Configuration\Builder;
 use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
 
@@ -244,19 +243,13 @@ class PhpUnitTestDiscovery {
       $description = TestDiscovery::parseTestClassSummary($docComment);
     }
 
-    // Find a test case for which we can retrieve the value object.
-    $testCase = $testClass->tests()[0];
-    while (!$testCase instanceof TestCase) {
-      $testCase = $testCase->tests()[0];
-    }
-
     return [
       'name' => $testClass->name(),
       'group' => $groups[0],
       'groups' => $groups,
       'type' => $testSuite,
       'description' => $description,
-      'file' => $testCase->valueObjectForEvents()->file(),
+      'file' => $reflection->getFileName(),
     ];
   }
 
