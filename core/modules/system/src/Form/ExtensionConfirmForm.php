@@ -296,7 +296,7 @@ class ExtensionConfirmForm extends ConfirmFormBase {
           $admin_theme = $config->get('admin');
           if (!empty($admin_theme) && $admin_theme !== $theme) {
             $this->messenger()
-              ->addStatus($this->t('Please note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', [
+              ->addStatus($this->t('Note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', [
                 '%admin_theme' => $themes[$admin_theme]->info['name'],
                 '%selected_theme' => $themes[$theme]->info['name'],
               ]));
