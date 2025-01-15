@@ -17,6 +17,11 @@ class ThirdPartySectionComponentUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $modules = ['layout_builder_defaults_test'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-10.3.0.bare.standard.php.gz',
