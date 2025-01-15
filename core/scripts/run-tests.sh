@@ -946,33 +946,34 @@ function simpletest_script_get_test_list() {
     // Ensure that tests marked explicitly as @group #slow are run at the
     // beginning of each job.
     if (key($groups) === '#slow') {
-      $slow_tests = array_keys(array_shift($groups));
+      $slow_tests = array_shift($groups);
     }
     $not_slow_tests = [];
     foreach ($groups as $group => $tests) {
-      $not_slow_tests = array_merge($not_slow_tests, array_keys($tests));
+      $not_slow_tests = array_merge($not_slow_tests, $tests);
     }
     // Filter slow tests out of the not slow tests and ensure a unique list
     // since tests may appear in more than one group.
-    $not_slow_tests = array_unique(array_diff($not_slow_tests, $slow_tests));
+    $not_slow_tests = array_diff_key($not_slow_tests, $slow_tests);
 
     // If the tests are not being run in parallel, then ensure slow tests run
     // all together first.
     if ((int) $args['ci-parallel-node-total'] <= 1 ) {
       sort_tests_by_type_and_methods($slow_tests);
       sort_tests_by_type_and_methods($not_slow_tests);
-      $test_list = array_merge($slow_tests, $not_slow_tests);
+      $test_list = array_keys(array_merge($slow_tests, $not_slow_tests));
     }
     else {
-      // Sort all tests by the number of public methods on the test class.
-      // This is a proxy for the approximate time taken to run the test,
-      // which is used in combination with @group #slow to start the slowest tests
-      // first and distribute tests between test runners.
+      // Sort all tests by the number of test cases on the test class.
+      // This is used in combination with @group #slow to start the slowest
+      // tests first and distribute tests between test runners.
       sort_tests_by_public_method_count($slow_tests);
       sort_tests_by_public_method_count($not_slow_tests);
 
       // Now set up a bin per test runner.
       $bin_count = (int) $args['ci-parallel-node-total'];
+      $slow_tests = array_keys($slow_tests);
+      $not_slow_tests = array_keys($not_slow_tests);
 
       // Now loop over the slow tests and add them to a bin one by one, this
       // distributes the tests evenly across the bins.
@@ -1066,11 +1067,11 @@ function simpletest_script_get_test_list() {
  * Sort tests by test type and number of public methods.
  */
 function sort_tests_by_type_and_methods(array &$tests) {
-  usort($tests, function ($a, $b) {
-    if (get_test_type_weight($a) === get_test_type_weight($b)) {
-      return get_test_class_method_count($b) <=> get_test_class_method_count($a);
+  uasort($tests, function ($a, $b) {
+    if (get_test_type_weight($a['name']) === get_test_type_weight($b['name'])) {
+      return $b['tests_count'] <=> $a['tests_count'];
     }
-    return get_test_type_weight($b) <=> get_test_type_weight($a);
+    return get_test_type_weight($b['name']) <=> get_test_type_weight($a['name']);
   });
 }
 
@@ -1087,8 +1088,8 @@ function sort_tests_by_type_and_methods(array &$tests) {
  *   An array of test class names.
  */
 function sort_tests_by_public_method_count(array &$tests): void {
-  usort($tests, function ($a, $b) {
-    return get_test_class_method_count($b) <=> get_test_class_method_count($a);
+  uasort($tests, function ($a, $b) {
+    return $b['tests_count'] <=> $a['tests_count'];
   });
 }
 
@@ -1106,31 +1107,6 @@ function get_test_type_weight(string $class): int {
     is_subclass_of($class, KernelTestBase::class) => 1,
     default => 0,
   };
-}
-
-/**
- * Get an approximate test method count for a test class.
- *
- * @param string $class
- *   The test class name.
- */
-function get_test_class_method_count(string $class): int {
-  $reflection = new \ReflectionClass($class);
-  $count = 0;
-  foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-    // If a method uses a dataProvider, increase the count by 20 since data
-    // providers result in a single method running multiple times.
-    $comments = $method->getDocComment();
-    preg_match_all('#@(.*?)\n#s', $comments, $annotations);
-    foreach ($annotations[1] as $annotation) {
-      if (str_starts_with($annotation, 'dataProvider')) {
-        $count = $count + 20;
-        continue;
-      }
-    }
-    $count++;
-  }
-  return $count;
 }
 
 /**
