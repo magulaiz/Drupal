@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\workspaces\Kernel;
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler;
 use Drupal\workspaces\Entity\Workspace;
 
 /**
@@ -68,6 +72,13 @@ trait WorkspaceTestTrait {
     // Switch the test runner's context to the specified workspace.
     $workspace = $this->entityTypeManager->getStorage('workspace')->load($workspace_id);
     \Drupal::service('workspaces.manager')->setActiveWorkspace($workspace);
+  }
+
+  /**
+   * Switches the test runner's context to Live.
+   */
+  protected function switchToLive(): void {
+    \Drupal::service('workspaces.manager')->switchToLive();
   }
 
   /**
@@ -138,6 +149,39 @@ trait WorkspaceTestTrait {
     }
 
     return $query->execute();
+  }
+
+  /**
+   * Marks an entity type as ignored in a workspace.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   */
+  protected function ignoreEntityType(string $entity_type_id): void {
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+    $entity_type->setHandlerClass('workspace', IgnoredWorkspaceHandler::class);
+    \Drupal::state()->set("$entity_type_id.entity_type", $entity_type);
+    \Drupal::entityTypeManager()->clearCachedDefinitions();
+  }
+
+  /**
+   * Creates an entity.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   * @param array $values
+   *   An array of values for the entity.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The created entity.
+   */
+  protected function createEntity(string $entity_type_id, array $values = []): EntityInterface {
+    $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
+
+    $entity = $storage->create($values);
+    $entity->save();
+
+    return $entity;
   }
 
 }
