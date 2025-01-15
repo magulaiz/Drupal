@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\layout_builder\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
-use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the update path for section components.
