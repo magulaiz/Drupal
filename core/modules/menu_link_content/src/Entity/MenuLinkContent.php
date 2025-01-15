@@ -443,6 +443,9 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
     if (!$this->link->isEmpty()) {
       // If the source link is internal we don't allow the translation.
       $link_definition = $this->getFieldDefinition('link');
+      if (!$link_definition->isTranslatable()) {
+        return;
+      }
 
       if (!$this->getUrlObject()->isExternal()) {
         $link_definition->setTranslatable(FALSE);
