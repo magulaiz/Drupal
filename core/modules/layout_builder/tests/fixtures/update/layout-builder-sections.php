@@ -52,6 +52,12 @@ $display['third_party_settings']['layout_builder']['sections'][] = [
         'key' => 'value',
         'another_key' => 'another_value',
       ],
+      'third_party_settings' => [
+        'my_module' => [
+          'my_key' => 'my_value',
+          'my_other_key' => 'my_other_value',
+        ],
+      ],
     ],
     '2b3961a0-1c6f-4264-b01f-525a23e8c2b6' => [
       'uuid' => '2b3961a0-1c6f-4264-b01f-525a23e8c2b6',
