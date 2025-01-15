@@ -63,7 +63,7 @@ $display['third_party_settings']['layout_builder']['sections'][] = [
           'entity' => 'layout_builder.entity',
         ],
         'formatter' => [
-          'format' => 'text_default',
+          'type' => 'text_default',
           'label' => 'hidden',
           'settings' => [],
           'third_party_settings' => [],
