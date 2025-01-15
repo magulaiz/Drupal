@@ -45,7 +45,7 @@ class ThirdPartySectionComponentUpdateTest extends UpdatePathTestBase {
     $this->assertEmpty($section['components']['2b3961a0-1c6f-4264-b01f-525a23e8c2b6']['additional']);
     $this->assertNotEmpty($section['components']['92bf8983-64cc-4f7d-b8c5-1ff9c6a5d7dc']['additional']);
     $this->assertEmpty($section['components']['2b3961a0-1c6f-4264-b01f-525a23e8c2b6']['third_party_settings']);
-    $this->assertEquals($section['components']['92bf8983-64cc-4f7d-b8c5-1ff9c6a5d7dc'], $section['components']['92bf8983-64cc-4f7d-b8c5-1ff9c6a5d7dc']['third_party_settings']);
+    $this->assertEquals($section['components']['92bf8983-64cc-4f7d-b8c5-1ff9c6a5d7dc']['additional'], $section['components']['92bf8983-64cc-4f7d-b8c5-1ff9c6a5d7dc']['third_party_settings']);
   }
 
 }
