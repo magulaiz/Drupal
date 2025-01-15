@@ -9,9 +9,10 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests the update path for section components.
+ *
+ * @group layout_builder
+ * @group legacy
  */
-#[Group('layout_builder')]
-#[Group('legacy')]
 class ThirdPartySectionComponentUpdateTest extends UpdatePathTestBase {
 
   /**
