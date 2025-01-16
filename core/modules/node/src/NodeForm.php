@@ -7,7 +7,6 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
@@ -42,13 +41,6 @@ class NodeForm extends ContentEntityForm {
   protected $dateFormatter;
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * Constructs a NodeForm object.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
@@ -63,8 +55,6 @@ class NodeForm extends ContentEntityForm {
    *   The current user.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface|null $language_manager
-   *   The language manager.
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
@@ -73,17 +63,11 @@ class NodeForm extends ContentEntityForm {
     TimeInterface $time,
     AccountInterface $current_user,
     DateFormatterInterface $date_formatter,
-    ?LanguageManagerInterface $language_manager = NULL,
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     $this->tempStoreFactory = $temp_store_factory;
     $this->currentUser = $current_user;
     $this->dateFormatter = $date_formatter;
-    if ($language_manager === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $language_manager argument is deprecated in drupal:10.4.0 and will be required in drupal:11.1.0. See https://www.drupal.org/node/3438992', E_USER_DEPRECATED);
-      $this->languageManager = \Drupal::service('language_manager');
-    }
-    $this->languageManager = $language_manager;
   }
 
   /**
@@ -96,8 +80,7 @@ class NodeForm extends ContentEntityForm {
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time'),
       $container->get('current_user'),
-      $container->get('date.formatter'),
-      $container->get('language_manager')
+      $container->get('date.formatter')
     );
   }
 
@@ -312,15 +295,11 @@ class NodeForm extends ContentEntityForm {
     if ($node->id()) {
       $form_state->setValue('nid', $node->id());
       $form_state->set('nid', $node->id());
-      $options = [];
-      if ($form_state->get('langcode')) {
-        $options['language'] = $this->languageManager->getLanguage($form_state->get('langcode'));
-      }
       if ($node->access('view')) {
         $form_state->setRedirect(
           'entity.node.canonical',
           ['node' => $node->id()],
-          $options
+          ['language' => $node->language()]
         );
       }
       else {
