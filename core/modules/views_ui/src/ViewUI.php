@@ -727,7 +727,7 @@ class ViewUI implements ViewEntityInterface {
                 'data' => [
                   '#type' => 'inline_template',
                   '#template' => '<pre>{{ explain }}</pre>',
-                  '#context' => ['explain' => $explain_output ],
+                  '#context' => ['explain' => $explain_output],
                 ],
               ],
             ];
