@@ -117,7 +117,16 @@ class ConfigInstaller implements ConfigInstallerInterface {
       $default_install_path = $this->getDefaultConfigDirectory($type, $name);
       if (is_dir($default_install_path)) {
         if (!$this->isSyncing()) {
+//dump('$default_install_path1');
+//dump($default_install_path);
           $storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);
+
+          $database_driver_override_config_directory = $this->extensionPathResolver->getPath('module', \Drupal::database()->getProvider()) . '/config/overrides/' . $name . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
+          $database_driver_override_storage = NULL;
+          if (is_dir($database_driver_override_config_directory)) {
+             $database_driver_override_storage = new FileStorage($database_driver_override_config_directory, StorageInterface::DEFAULT_COLLECTION);
+          }
+
           $prefix = '';
         }
         else {
@@ -185,6 +194,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
         $optional_install_path = $extension_path . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
         if (is_dir($optional_install_path)) {
           // Install any optional config the module provides.
+//dump('$optional_install_path2');
+//dump($optional_install_path);
           $storage = new FileStorage($optional_install_path, StorageInterface::DEFAULT_COLLECTION);
           $this->installOptionalConfig($storage, '');
         }
@@ -228,6 +239,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
     elseif (!empty($profile)) {
       // Creates a profile storage to search for overrides.
       $profile_install_path = $this->extensionPathResolver->getPath('module', $profile) . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
+//dump('$profile_install_path3');
+//dump($profile_install_path);
       $profile_storage = new FileStorage($profile_install_path, StorageInterface::DEFAULT_COLLECTION);
     }
     else {
@@ -562,7 +575,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
       if (!is_dir($config_install_path)) {
         continue;
       }
-
+//dump('$config_install_path4');
+//dump($config_install_path);
       $storage = new FileStorage($config_install_path, StorageInterface::DEFAULT_COLLECTION);
 
       // Gets profile storages to search for overrides if necessary.
@@ -754,8 +768,14 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $profile_storages = [];
     if ($profile && $profile != $installing_name) {
       $profile_path = $this->extensionPathResolver->getPath('module', $profile);
+      $database_driver_override_config_directory = $this->extensionPathResolver->getPath('module', \Drupal::database()->getProvider()) . '/config/overrides/';
       foreach ([InstallStorage::CONFIG_INSTALL_DIRECTORY, InstallStorage::CONFIG_OPTIONAL_DIRECTORY] as $directory) {
         if (is_dir($profile_path . '/' . $directory)) {
+          $sub_directory = substr($directory, 6);
+          if (is_dir($database_driver_override_config_directory . $profile . $sub_directory)) {
+            $profile_storages[] = new FileStorage($database_driver_override_config_directory . $profile . $sub_directory, StorageInterface::DEFAULT_COLLECTION);
+          }
+
           $profile_storages[] = new FileStorage($profile_path . '/' . $directory, StorageInterface::DEFAULT_COLLECTION);
         }
       }
@@ -775,21 +795,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   The extension's default configuration directory.
    */
   protected function getDefaultConfigDirectory($type, $name) {
-    return $this->extensionPathResolver->getPath($type, $name) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
-  }
-
-  /**
-   * Get the database driver override configuration directory.
-   *
-   * @param string $type
-   *   Type of extension to install.
-   * @param string $name
-   *   Name of extension to install.
-   *
-   * @return string
-   *   The database driver override configuration directory.
-   */
-  protected function getDatabaseDriverOverrideConfigDirectory($type, $name): string {
     return $this->extensionPathResolver->getPath($type, $name) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
   }
 
