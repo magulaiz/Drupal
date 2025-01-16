@@ -47,10 +47,11 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
     $internalList = array_filter($internalList);
     // 2. Remove TestDiscovery '##no-group-annotations' group.
     unset($internalList['##no-group-annotations']);
-    // 3. Remove 'file' keys from PHPUnit results.
+    // 3. Remove 'file' and 'tests_count' keys from PHPUnit results.
     foreach ($phpUnitList as &$group) {
       foreach ($group as &$testClass) {
         unset($testClass['file']);
+        unset($testClass['tests_count']);
       }
     }
     // 4. Remove from PHPUnit results groups not found by TestDiscovery.
