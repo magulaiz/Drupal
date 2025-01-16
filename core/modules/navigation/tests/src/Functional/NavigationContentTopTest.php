@@ -66,4 +66,5 @@ class NavigationContentTopTest extends BrowserTestBase {
       ['content_footer_top', '.admin-toolbar__content-footer-top', 'foobarbaz', 'baznew bar'],
     ];
   }
+
 }

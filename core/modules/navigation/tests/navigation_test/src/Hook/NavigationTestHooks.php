@@ -80,7 +80,7 @@ class NavigationTestHooks {
    * @return array
    *   An associative array of renderable elements.
    */
-  public function generateContentTopItems(string $hookKey): array  {
+  public function generateContentTopItems(string $hookKey): array {
     if (\Drupal::keyValue('navigation_test')->get($hookKey)) {
       $items = [
         'navigation_foo' => [
