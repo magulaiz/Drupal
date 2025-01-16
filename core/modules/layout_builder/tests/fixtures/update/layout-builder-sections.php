@@ -85,3 +85,18 @@ $connection->update('config')
   ->condition('collection', '')
   ->condition('name', 'core.entity_view_display.node.article.teaser')
   ->execute();
+
+// Update core.extension.
+$extensions = $connection->select('config')
+  ->fields('config', ['data'])
+  ->condition('collection', '')
+  ->condition('name', 'core.extension')
+  ->execute()
+  ->fetchField();
+$extensions = unserialize($extensions);
+$extensions['module']['layout_builder_defaults_test'] = 0;
+$connection->update('config')
+  ->fields(['data' => serialize($extensions)])
+  ->condition('collection', '')
+  ->condition('name', 'core.extension')
+  ->execute();
