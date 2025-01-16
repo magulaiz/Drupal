@@ -1057,10 +1057,11 @@ function simpletest_script_get_test_list() {
       }
       // Merge the tests from the groups together.
       foreach ($args['test_names'] as $group_name) {
-        $test_list = array_merge($test_list, array_keys($groups[$group_name]));
+        $test_list = array_merge($test_list, $groups[$group_name]);
       }
+      dump_sorted_tests($test_list, $args);
       // Ensure our list of tests contains only one entry for each test.
-      $test_list = array_unique($test_list);
+      $test_list = array_keys($test_list);
     }
   }
 
