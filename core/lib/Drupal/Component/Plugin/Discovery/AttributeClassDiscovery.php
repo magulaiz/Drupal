@@ -145,8 +145,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
    * @throws \Error
    */
   protected function parseClass(string $class, \SplFileInfo $fileinfo): array {
-    // Use PHPParser to check class does not have any missing dependencies. This
-    // is to check that the plugin class does not have any missing dependencies
+    // Use PHPParser to check class does not have any missing dependencies
     // (extended class, implemented interfaces, or used traits) which would
     // make reflection throw exceptions or cause a fatal error.
     if (!($static_parsed_class = $this->getStaticParsedClass($fileinfo))) {

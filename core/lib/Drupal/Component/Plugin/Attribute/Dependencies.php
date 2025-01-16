@@ -9,7 +9,7 @@ namespace Drupal\Component\Plugin\Attribute;
  * plugin type and the dependencies declared in the .info.yml of the module
  * the plugin class is defined in. Examples include MigrateSource plugins, where
  * the plugin type is provided by the migrate module, but a source plugin that
- * is in another module like taxonomy extends the DrupalSqBase class in
+ * is in another module like taxonomy extends the DrupalSqlBase class in
  * migrate_drupal.
  *
  * In order to prevent fatal errors or exceptions being thrown on discovery,
