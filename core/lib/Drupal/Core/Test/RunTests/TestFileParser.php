@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * Parses class names from PHP files without loading them.
  *
+ * @deprecated
+ *
  * @internal
  */
 class TestFileParser {
