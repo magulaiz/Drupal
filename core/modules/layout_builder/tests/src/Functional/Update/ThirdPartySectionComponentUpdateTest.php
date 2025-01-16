@@ -41,7 +41,7 @@ class ThirdPartySectionComponentUpdateTest extends UpdatePathTestBase {
 
     $this->runUpdates();
 
-    $display = \Drupal::entityTypeManager()->getStorage('entity_view_display')->load('article.teaser')->toArray();
+    $display = \Drupal::entityTypeManager()->getStorage('entity_view_display')->load('node.article.teaser')->toArray();
     $after_section = $display['third_party_settings']['layout_builder']['sections'][0]->toArray();
     $this->assertEmpty($after_section['components']['2b3961a0-1c6f-4264-b01f-525a23e8c2b6']['additional']);
     $this->assertNotEmpty($after_section['components']['92bf8983-64cc-4f7d-b8c5-1ff9c6a5d7dc']['additional']);
