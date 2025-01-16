@@ -119,7 +119,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
         if (!$this->isSyncing()) {
           $storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);
 
-          $database_driver_override_config_directory = $this->extensionPathResolver->getPath('module', \Drupal::database()->getProvider()) . '/config/overrides/' . $name . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
+          // $database_driver_override_config_directory = $this->extensionPathResolver->getPath('module', \Drupal::database()->getProvider()) . '/config/overrides/' . $name . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
           // $database_driver_override_storage = NULL;
           // if (is_dir($database_driver_override_config_directory)) {
           // $database_driver_override_storage = new FileStorage($database_driver_override_config_directory, StorageInterface::DEFAULT_COLLECTION);
