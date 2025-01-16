@@ -347,6 +347,11 @@ All arguments are long options.
 
               The index of the job in the job set.
 
+  --debug-discovery
+
+              If provided, dumps detailed information on the tests selected
+              for execution, before the execution starts.
+
   <test1>[,<test2>[,<test3> ...]]
 
               One or more tests to be run. By default, these are interpreted
@@ -419,6 +424,7 @@ function simpletest_script_parse_args() {
     'non-html' => FALSE,
     'ci-parallel-node-index' => 1,
     'ci-parallel-node-total' => 1,
+    'debug-discovery' => FALSE,
   ];
 
   // Override with set values.
@@ -961,7 +967,9 @@ function simpletest_script_get_test_list() {
     if ((int) $args['ci-parallel-node-total'] <= 1 ) {
       sort_tests_by_type_and_methods($slow_tests);
       sort_tests_by_type_and_methods($not_slow_tests);
-      $test_list = array_keys(array_merge($slow_tests, $not_slow_tests));
+      $all_tests = array_merge($slow_tests, $not_slow_tests);
+      dump_sorted_tests($all_tests, $args);
+      $test_list = array_keys($all_tests);
     }
     else {
       // Sort all tests by the number of test cases on the test class.
@@ -969,6 +977,7 @@ function simpletest_script_get_test_list() {
       // tests first and distribute tests between test runners.
       sort_tests_by_public_method_count($slow_tests);
       sort_tests_by_public_method_count($not_slow_tests);
+      dump_sorted_tests(array_merge($slow_tests, $not_slow_tests), $args);
 
       // Now set up a bin per test runner.
       $bin_count = (int) $args['ci-parallel-node-total'];
@@ -1107,6 +1116,27 @@ function get_test_type_weight(string $class): int {
     is_subclass_of($class, KernelTestBase::class) => 1,
     default => 0,
   };
+}
+
+/**
+ * Dumps the list of tests in order of execution after sorting.
+ *
+ * @param array $tests
+ *   The array of test class info.
+ * @param array $args
+ *   The command line arguments.
+ */
+function dump_sorted_tests(array $tests, array $args): void {
+  if ($args['debug-discovery'] === FALSE) {
+    return;
+  }
+  echo "Order of test execution\n";
+  echo "-----------------------\n\n";
+  echo sprintf("Slow?  %20s  Cnt %s\n", "Group", "Class");
+  echo "-----------------------------------------\n";
+  foreach ($tests as $testInfo) {
+    echo sprintf("%5s  %20s %4d %s\n", in_array('#slow', $testInfo['groups']) ? '#slow' : '', substr($testInfo['group'], 0, 20), $testInfo['tests_count'], $testInfo['name']);
+  }
 }
 
 /**
