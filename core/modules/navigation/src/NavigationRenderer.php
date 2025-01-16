@@ -23,6 +23,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -162,6 +163,7 @@ final class NavigationRenderer {
     $build[0] = NestedArray::mergeDeepArray([$build[0], $defaults]);
 
     $build[0]['content_top'] = $this->getContentTop();
+    $build[0]['footer_top'] = $this->getFooterTop();
 
     if ($logo_provider === self::LOGO_PROVIDER_CUSTOM) {
       $logo_path = $logo_settings->get('logo.path');
@@ -179,30 +181,55 @@ final class NavigationRenderer {
   }
 
   /**
-   * Gets the content for content_top section.
+   * Gets the content for a specified section.
+   *
+   * @param string $hook
+   *   The hook to invoke for the section.
+   * @param string $theme
+   *   The theme to use for the section.
    *
    * @return array
-   *   The content_top section content.
+   *   The section content.
    */
-  protected function getContentTop(): array {
-    $content_top = [
-      '#theme' => 'navigation_content_top',
+  protected function getSectionContent(string $hook, string $theme): array {
+    $section_content = [
+      '#theme' => $theme,
     ];
-    $content_top_items = $this->moduleHandler->invokeAll('navigation_content_top');
-    $this->moduleHandler->alter('navigation_content_top', $content_top_items);
-    uasort($content_top_items, [SortArray::class, 'sortByWeightElement']);
+    $items = $this->moduleHandler->invokeAll($hook);
+    $this->moduleHandler->alter($hook, $items);
+    uasort($items, [SortArray::class, 'sortByWeightElement']);
     // Filter out empty items, taking care to merge any cacheability metadata.
     $cacheability = new CacheableMetadata();
-    $content_top_items = array_filter($content_top_items, function ($item) use (&$cacheability) {
+    $items = array_filter($items, function ($item) use (&$cacheability) {
       if (Element::isEmpty($item)) {
         $cacheability = $cacheability->merge(CacheableMetadata::createFromRenderArray($item));
         return FALSE;
       }
       return TRUE;
     });
-    $cacheability->applyTo($content_top);
-    $content_top['#items'] = $content_top_items;
-    return $content_top;
+    $cacheability->applyTo($section_content);
+    $section_content['#items'] = $items;
+    return $section_content;
+  }
+
+  /**
+   * Gets the content for footer_top section.
+   *
+   * @return array
+   *   The footer_top section content.
+   */
+  public function getFooterTop(): array {
+    return $this->getSectionContent('navigation_content_footer_top', 'navigation_content_footer_top');
+  }
+
+  /**
+   * Gets the content for content_top section.
+   *
+   * @return array
+   *   The content_top section content.
+   */
+  protected function getContentTop(): array {
+    return $this->getSectionContent('navigation_content_top', 'navigation_content_top');
   }
 
   /**

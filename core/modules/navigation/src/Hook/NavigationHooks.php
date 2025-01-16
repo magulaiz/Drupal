@@ -107,6 +107,11 @@ class NavigationHooks {
         'items' => [],
       ],
     ];
+    $items['navigation_content_footer_top'] = [
+      'variables' => [
+        'items' => [],
+      ],
+    ];
     return $items;
   }
 

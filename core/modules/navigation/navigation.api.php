@@ -53,5 +53,36 @@ function hook_navigation_content_top_alter(array &$content_top): void {
 }
 
 /**
+ * Provide content for Navigation content_footer_top section.
+ *
+ * @return array
+ *   An associative array of renderable elements.
+ *
+ * @see hook_navigation_content_footer_top_alter()
+ */
+function hook_navigation_content_footer_top(): array {
+  return [
+    'navigation_foo' => [
+      '#markup' => t('Help'),
+    ],
+    'navigation_bar' => [
+      '#markup' => t('Bar'),
+    ],
+  ];
+}
+
+/**
+ * Alter navigation content_footer_top items.
+ *
+ * @param array $content_footer_top
+ *   An associative array of content returned by hook_navigation_content_footer_top().
+ *
+ * @see hook_navigation_content_footer_top()
+ */
+function hook_navigation_content_footer_top_alter(array &$content_footer_top) {
+  $content_footer_top['navigation_bar']['#weight'] = '-100';
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
