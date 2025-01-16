@@ -2,9 +2,9 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Component\Utility\Html as HtmlUtility;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
-use Drupal\Component\Utility\Html as HtmlUtility;
 
 /**
  * Provides a form element for a set of radio buttons.
@@ -67,16 +67,15 @@ class Radios extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#process' => [
-        [$class, 'processRadios'],
+        [static::class, 'processRadios'],
       ],
       '#theme_wrappers' => ['radios'],
       '#pre_render' => [
-        [$class, 'preRenderCompositeFormElement'],
-        [$class, 'preRenderRadiosFormElement'],
+        [static::class, 'preRenderCompositeFormElement'],
+        [static::class, 'preRenderRadiosFormElement'],
       ],
     ];
   }
