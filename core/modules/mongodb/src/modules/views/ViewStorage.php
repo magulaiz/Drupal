@@ -21,6 +21,9 @@ class ViewStorage extends ConfigEntityStorage {
    *   An array with view entity config data for a MongoDB database.
    */
   protected function updateViewForMongodb($values) {
+    // Disable the updating of a relational database view for MongoDB.
+    return $values;
+
     // @todo Remove reverse relationships and associated fields. MongoDB does
     // not need or support them.
     // @see Drupal\Tests\field\Kernel\EntityReference\Views\EntityReferenceRelationshipTest.

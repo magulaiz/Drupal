@@ -117,8 +117,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
       $default_install_path = $this->getDefaultConfigDirectory($type, $name);
       if (is_dir($default_install_path)) {
         if (!$this->isSyncing()) {
-//dump('$default_install_path1');
-//dump($default_install_path);
           $storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);
 
           $database_driver_override_config_directory = $this->extensionPathResolver->getPath('module', \Drupal::database()->getProvider()) . '/config/overrides/' . $name . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
@@ -194,8 +192,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
         $optional_install_path = $extension_path . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
         if (is_dir($optional_install_path)) {
           // Install any optional config the module provides.
-//dump('$optional_install_path2');
-//dump($optional_install_path);
           $storage = new FileStorage($optional_install_path, StorageInterface::DEFAULT_COLLECTION);
           $this->installOptionalConfig($storage, '');
         }
@@ -239,8 +235,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
     elseif (!empty($profile)) {
       // Creates a profile storage to search for overrides.
       $profile_install_path = $this->extensionPathResolver->getPath('module', $profile) . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
-//dump('$profile_install_path3');
-//dump($profile_install_path);
       $profile_storage = new FileStorage($profile_install_path, StorageInterface::DEFAULT_COLLECTION);
     }
     else {
@@ -575,8 +569,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
       if (!is_dir($config_install_path)) {
         continue;
       }
-//dump('$config_install_path4');
-//dump($config_install_path);
       $storage = new FileStorage($config_install_path, StorageInterface::DEFAULT_COLLECTION);
 
       // Gets profile storages to search for overrides if necessary.
