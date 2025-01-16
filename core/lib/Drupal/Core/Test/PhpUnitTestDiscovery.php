@@ -117,21 +117,42 @@ class PhpUnitTestDiscovery {
 
     if ($directory !== NULL) {
       $list = [];
-      foreach ($phpUnitTestSuite->tests() as $testClass) {
-        if ($extension !== NULL && !str_starts_with($testClass->name(), "Drupal\\Tests\\{$extension}\\")) {
-          continue;
-        }
+      if ($phpUnitTestSuite->isForTestClass()) {
+        do {
+          if ($extension !== NULL && !str_starts_with($phpUnitTestSuite->name(), "Drupal\\Tests\\{$extension}\\")) {
+            continue;
+          }
 
-        // Take the test suite name from the class namespace.
-        $testSuite = 'PHPUnit-' . TestDiscovery::getPhpunitTestSuite($testClass->name());
-        if (!empty($types) && !in_array($testSuite, $types, TRUE)) {
-          continue;
-        }
+          // Take the test suite name from the class namespace.
+          $testSuite = 'PHPUnit-' . TestDiscovery::getPhpunitTestSuite($phpUnitTestSuite->name());
+          if (!empty($types) && !in_array($testSuite, $types, TRUE)) {
+            continue;
+          }
 
-        $item = $this->getTestClassInfo($testClass, $testSuite);
+          $item = $this->getTestClassInfo($phpUnitTestSuite, $testSuite);
 
-        foreach ($item['groups'] as $group) {
-          $list[$group][$item['name']] = $item;
+          foreach ($item['groups'] as $group) {
+            $list[$group][$item['name']] = $item;
+          }
+        } while (FALSE);
+      }
+      else {
+        foreach ($phpUnitTestSuite->tests() as $testClass) {
+          if ($extension !== NULL && !str_starts_with($testClass->name(), "Drupal\\Tests\\{$extension}\\")) {
+            continue;
+          }
+
+          // Take the test suite name from the class namespace.
+          $testSuite = 'PHPUnit-' . TestDiscovery::getPhpunitTestSuite($testClass->name());
+          if (!empty($types) && !in_array($testSuite, $types, TRUE)) {
+            continue;
+          }
+
+          $item = $this->getTestClassInfo($testClass, $testSuite);
+
+          foreach ($item['groups'] as $group) {
+            $list[$group][$item['name']] = $item;
+          }
         }
       }
     }

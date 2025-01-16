@@ -20,7 +20,6 @@ use Drupal\Core\Test\EnvironmentCleaner;
 use Drupal\Core\Test\PhpUnitTestDiscovery;
 use Drupal\Core\Test\PhpUnitTestRunner;
 use Drupal\Core\Test\SimpletestTestRunResultsStorage;
-use Drupal\Core\Test\RunTests\TestFileParser;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestRunnerKernel;
@@ -968,7 +967,7 @@ function simpletest_script_get_test_list() {
       sort_tests_by_type_and_methods($slow_tests);
       sort_tests_by_type_and_methods($not_slow_tests);
       $all_tests = array_merge($slow_tests, $not_slow_tests);
-      dump_sorted_tests($all_tests, $args);
+      dump_tests_sequence($all_tests, $args);
       $test_list = array_keys($all_tests);
     }
     else {
@@ -977,7 +976,7 @@ function simpletest_script_get_test_list() {
       // tests first and distribute tests between test runners.
       sort_tests_by_public_method_count($slow_tests);
       sort_tests_by_public_method_count($not_slow_tests);
-      dump_sorted_tests(array_merge($slow_tests, $not_slow_tests), $args);
+      dump_tests_sequence(array_merge($slow_tests, $not_slow_tests), $args);
 
       // Now set up a bin per test runner.
       $bin_count = (int) $args['ci-parallel-node-total'];
@@ -1026,14 +1025,16 @@ function simpletest_script_get_test_list() {
     }
     elseif ($args['file']) {
       // Extract test case class names from specified files.
-      $parser = new TestFileParser();
       foreach ($args['test_names'] as $file) {
-        if (!file_exists($file)) {
+        if (!file_exists($file) || is_dir($file)) {
           simpletest_script_print_error('File not found: ' . $file);
           exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
         }
-        $test_list = array_merge($test_list, $parser->getTestListFromFile($file));
+        $fileTests = current($test_discovery->getTestClasses(NULL, [], $file));
+        $test_list = array_merge($test_list, $fileTests);
       }
+      dump_tests_sequence($test_list, $args);
+      $test_list = array_keys($test_list);
     }
     else {
       try {
@@ -1059,7 +1060,7 @@ function simpletest_script_get_test_list() {
       foreach ($args['test_names'] as $group_name) {
         $test_list = array_merge($test_list, $groups[$group_name]);
       }
-      dump_sorted_tests($test_list, $args);
+      dump_tests_sequence($test_list, $args);
       // Ensure our list of tests contains only one entry for each test.
       $test_list = array_keys($test_list);
     }
@@ -1127,7 +1128,7 @@ function get_test_type_weight(string $class): int {
  * @param array $args
  *   The command line arguments.
  */
-function dump_sorted_tests(array $tests, array $args): void {
+function dump_tests_sequence(array $tests, array $args): void {
   if ($args['debug-discovery'] === FALSE) {
     return;
   }
