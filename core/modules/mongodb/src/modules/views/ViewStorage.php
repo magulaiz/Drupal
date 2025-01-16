@@ -21,9 +21,6 @@ class ViewStorage extends ConfigEntityStorage {
    *   An array with view entity config data for a MongoDB database.
    */
   protected function updateViewForMongodb($values) {
-    // Disable the updating of a relational database view for MongoDB.
-    return $values;
-
     // @todo Remove reverse relationships and associated fields. MongoDB does
     // not need or support them.
     // @see Drupal\Tests\field\Kernel\EntityReference\Views\EntityReferenceRelationshipTest.
@@ -185,9 +182,9 @@ class ViewStorage extends ConfigEntityStorage {
    */
   protected function mapFromStorageRecords(array $records) {
     // Update the records so that they are ready for the MongoDB backend.
-    foreach ($records as &$record) {
-      $record = $this->updateViewForMongodb($record);
-    }
+    // foreach ($records as &$record) {
+    // $record = $this->updateViewForMongodb($record);
+    // }
 
     return parent::mapFromStorageRecords($records);
   }
@@ -285,7 +282,7 @@ class ViewStorage extends ConfigEntityStorage {
    */
   protected function doCreate(array $values) {
     // Update the values so that they are ready for the MongoDB backend.
-    $values = $this->updateViewForMongodb($values);
+    // $values = $this->updateViewForMongodb($values);
 
     // Set default language to current language if not provided.
     $values += [$this->langcodeKey => $this->languageManager->getCurrentLanguage()->getId()];
