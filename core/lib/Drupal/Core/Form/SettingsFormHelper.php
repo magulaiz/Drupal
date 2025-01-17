@@ -29,7 +29,7 @@ class SettingsFormHelper implements ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('logger.factory')->get('file system'),
       $container->get('file_system')
