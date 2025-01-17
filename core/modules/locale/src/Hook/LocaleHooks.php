@@ -2,6 +2,7 @@
 
 namespace Drupal\locale\Hook;
 
+use Drupal\Core\Form\SettingsFormHelper;
 use Drupal\Core\Link;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -340,9 +341,7 @@ class LocaleHooks {
       '#maxlength' => 255,
       '#description' => t('A local file system path where interface translation files will be stored.'),
       '#required' => TRUE,
-      '#after_build' => [
-        'system_check_directory',
-      ],
+      '#after_build' => [[SettingsFormHelper::class, 'checkDirectory']],
       '#weight' => 10,
     ];
     if ($form['file_default_scheme']) {
