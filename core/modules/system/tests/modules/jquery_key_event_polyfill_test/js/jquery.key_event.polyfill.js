@@ -32,15 +32,15 @@
       button !== undefined &&
       mouseEventRegex.test(event.type)
     ) {
-      if (button && 1) {
+      if (button & 1) {
         return 1;
       }
 
-      if (button && 2) {
+      if (button & 2) {
         return 3;
       }
 
-      if (button && 4) {
+      if (button & 4) {
         return 2;
       }
 
