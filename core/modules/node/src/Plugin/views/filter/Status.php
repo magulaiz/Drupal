@@ -14,14 +14,26 @@ use Drupal\views\Plugin\views\filter\FilterPluginBase;
 #[ViewsFilter("node_status")]
 class Status extends FilterPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function adminSummary() {}
 
+  /**
+   * {@inheritdoc}
+   */
   protected function operatorForm(&$form, FormStateInterface $form_state) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public function canExpose() {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     if ($this->moduleHandler->hasImplementations('node_grants')) {
       return;
