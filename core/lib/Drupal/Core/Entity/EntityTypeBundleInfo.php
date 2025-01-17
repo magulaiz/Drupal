@@ -8,6 +8,8 @@ use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
+use Drupal\Core\Entity\Exception\BundleClassInheritanceException;
+use Drupal\Core\Entity\Exception\MissingBundleClassException;
 
 /**
  * Provides discovery and retrieval of entity type bundles.
@@ -91,8 +93,10 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
         $this->bundleInfo = $cache->data;
       }
       else {
+        $entity_types = $this->entityTypeManager->getDefinitions();
+
         $this->bundleInfo = $this->moduleHandler->invokeAll('entity_bundle_info');
-        foreach ($this->entityTypeManager->getDefinitions() as $type => $entity_type) {
+        foreach ($entity_types as $type => $entity_type) {
           // First look for entity types that act as bundles for others, load them
           // and add them as bundles.
           if ($bundle_entity_type = $entity_type->getBundleEntityType()) {
@@ -108,6 +112,25 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
           }
         }
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
+
+        // Verify bundle classes after hook_entity_bundle_info_alter() has been
+        // invoked.
+        foreach ($this->bundleInfo as $entity_type_id => $bundles) {
+          $entity_class = $entity_types[$entity_type_id]->getClass();
+
+          foreach ($this->bundleInfo[$entity_type_id] as $bundle_info) {
+            if (isset($bundle_info['class'])) {
+              $bundle_class = $bundle_info['class'];
+              if (!class_exists($bundle_class)) {
+                throw new MissingBundleClassException($bundle_class);
+              }
+              // Bundle classes should extend the main entity class.
+              if (!is_subclass_of($bundle_class, $entity_class)) {
+                throw new BundleClassInheritanceException($bundle_class, $entity_class);
+              }
+            }
+          }
+        }
         $this->cacheSet("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, ['entity_types', 'entity_bundles']);
       }
     }
