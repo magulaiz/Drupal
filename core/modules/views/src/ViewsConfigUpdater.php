@@ -7,6 +7,7 @@ use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -259,6 +260,49 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     }
 
     return $changed;
+  }
+
+  /**
+   * Updates the timestamp fields settings by adding description for time diff.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function needsTimestampFormatterTimeDiffDescriptionUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, FALSE, function (array &$handler, string $handler_type): bool {
+      return $this->processTimestampFormatterTimeDiffDescriptionUpdateHandler($handler, $handler_type);
+    });
+  }
+
+  /**
+   * Processes timestamp fields settings by adding description for time diff.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  protected function processTimestampFormatterTimeDiffDescriptionUpdateHandler(array &$handler, string $handler_type): bool {
+    if ($handler_type === 'field' && isset($handler['type'])) {
+      $plugin_definition = $this->formatterPluginManager->getDefinition($handler['type'], FALSE);
+      // Check also potential plugins extending TimestampFormatter.
+      if (!$plugin_definition || !is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
+        return FALSE;
+      }
+
+      if (!isset($handler['settings']['time_diff']['description'])) {
+        // Existing timestamp formatters don't have description for time diff.
+        $handler['settings']['time_diff']['description'] = '';
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
 }

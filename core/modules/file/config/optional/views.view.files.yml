@@ -341,6 +341,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
         changed:
           id: changed
           table: file_managed
@@ -406,6 +407,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
         count:
           id: count
           table: file_usage

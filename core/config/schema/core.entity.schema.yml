@@ -398,6 +398,9 @@ field.formatter.settings.timestamp:
         refresh:
           type: integer
           label: 'Refresh interval in seconds'
+        description:
+          type: string
+          label: 'Description'
 
 field.formatter.settings.timestamp_ago:
   type: mapping

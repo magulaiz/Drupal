@@ -189,6 +189,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
       pager:
         type: mini
         options:
