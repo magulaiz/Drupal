@@ -5,6 +5,7 @@ namespace Drupal\Core\Config;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Installer\InstallerKernel;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -75,6 +76,13 @@ class ConfigInstaller implements ConfigInstallerInterface {
   protected $extensionPathResolver;
 
   /**
+   * The database override directory.
+   *
+   * @var string
+   */
+  protected $databaseDriverOverrideDirectory;
+
+  /**
    * Constructs the configuration installer.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -100,6 +108,34 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $this->eventDispatcher = $event_dispatcher;
     $this->installProfile = $install_profile;
     $this->extensionPathResolver = $extension_path_resolver;
+
+    // Init the base database driver override directory. We do this here to do
+    // it only once.
+    $this->initBaseDatabaseDriverOverrideDirectory();
+  }
+
+  /**
+   * Initiate the base database driver override directory.
+   */
+  protected function initBaseDatabaseDriverOverrideDirectory(): void {
+    if (Database::isActiveConnection()) {
+      $database_driver_override_directory = $this->extensionPathResolver->getPath('module', \Drupal::database()->getProvider()) . InstallStorage::CONFIG_OVERRIDES_DIRECTORY;
+      if (is_dir($database_driver_override_directory)) {
+        // Only set the base database driver when the module providing the
+        // database driver has one.
+        $this->databaseDriverOverrideDirectory = $database_driver_override_directory;
+      }
+    }
+  }
+
+  /**
+   * Check whether the database driver has a config override directory.
+   *
+   * @return bool
+   *   Return TRUE when the database driver has the config override directory.
+   */
+  protected function hasBaseDatabaseDriverOverrideDirectory(): bool {
+    return (bool) $this->databaseDriverOverrideDirectory;
   }
 
   /**
@@ -118,13 +154,6 @@ class ConfigInstaller implements ConfigInstallerInterface {
       if (is_dir($default_install_path)) {
         if (!$this->isSyncing()) {
           $storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);
-
-          // $database_driver_override_config_directory = $this->extensionPathResolver->getPath('module', \Drupal::database()->getProvider()) . '/config/overrides/' . $name . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
-          // $database_driver_override_storage = NULL;
-          // if (is_dir($database_driver_override_config_directory)) {
-          // $database_driver_override_storage = new FileStorage($database_driver_override_config_directory, StorageInterface::DEFAULT_COLLECTION);
-          // }
-
           $prefix = '';
         }
         else {
@@ -134,6 +163,14 @@ class ConfigInstaller implements ConfigInstallerInterface {
           // configuration is created when the extension is installed.
           $storage = $this->getSourceStorage();
           $prefix = $name . '.';
+        }
+
+        $database_driver_override_storage = NULL;
+        if ($this->hasBaseDatabaseDriverOverrideDirectory()) {
+          $database_driver_override_config_directory = $this->databaseDriverOverrideDirectory . '/' . $name . '/install';
+          if (is_dir($database_driver_override_config_directory)) {
+            $database_driver_override_storage = new FileStorage($database_driver_override_config_directory, StorageInterface::DEFAULT_COLLECTION);
+          }
         }
 
         // Gets profile storages to search for overrides if necessary.
@@ -150,7 +187,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
         }
 
         foreach ($collections as $collection) {
-          $config_to_create = $this->getConfigToCreate($storage, $collection, $prefix, $profile_storages);
+          $config_to_create = $this->getConfigToCreate($storage, $collection, $database_driver_override_storage, $prefix, $profile_storages);
 
           if ($collection === StorageInterface::DEFAULT_COLLECTION && ($mode === DefaultConfigMode::InstallEntities || $mode === DefaultConfigMode::InstallSimple)) {
             // Filter out config depending on the mode. The mode can be used to
@@ -193,7 +230,16 @@ class ConfigInstaller implements ConfigInstallerInterface {
         if (is_dir($optional_install_path)) {
           // Install any optional config the module provides.
           $storage = new FileStorage($optional_install_path, StorageInterface::DEFAULT_COLLECTION);
-          $this->installOptionalConfig($storage, '');
+
+          $database_driver_override_storage = NULL;
+          if ($this->hasBaseDatabaseDriverOverrideDirectory()) {
+            $database_driver_override_config_directory = $this->databaseDriverOverrideDirectory . '/' . $name . '/optional';
+            if (is_dir($database_driver_override_config_directory)) {
+              $database_driver_override_storage = new FileStorage($database_driver_override_config_directory, StorageInterface::DEFAULT_COLLECTION);
+            }
+          }
+
+          $this->installOptionalConfig($storage, '', $database_driver_override_storage);
         }
       }
     }
@@ -220,7 +266,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
   /**
    * {@inheritdoc}
    */
-  public function installOptionalConfig(?StorageInterface $storage = NULL, $dependency = []) {
+  public function installOptionalConfig(?StorageInterface $storage = NULL, $dependency = [], ?StorageInterface $database_driver_override_storage = NULL) {
     $profile = $this->drupalGetProfile();
     $enabled_extensions = $this->getEnabledExtensions();
     $existing_config = $this->getActiveStorages()->listAll();
@@ -264,7 +310,18 @@ class ConfigInstaller implements ConfigInstallerInterface {
 
     $all_config = array_merge($existing_config, $list);
     $all_config = array_combine($all_config, $all_config);
-    $config_to_create = $storage->readMultiple($list);
+
+    // Get the config items from the database driver override directory first.
+    // Get the other config items from the normal storage directory.
+    if ($database_driver_override_storage) {
+      $override_list = $database_driver_override_storage->listAll();
+      $config_to_create = $database_driver_override_storage->readMultiple($override_list);
+      $list = array_diff($list, $override_list);
+      $config_to_create += $storage->readMultiple($list);
+    }
+    else {
+      $config_to_create = $storage->readMultiple($list);
+    }
     // Check to see if the corresponding override storage has any overrides or
     // new configuration that can be installed.
     if ($profile_storage) {
@@ -311,6 +368,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   The configuration storage to read configuration from.
    * @param string $collection
    *   The configuration collection to use.
+   * @param StorageInterface|null $storage
+   *   (optional) The database driver override configuration storage to read
+   *   configuration from.
    * @param string $prefix
    *   (optional) Limit to configuration starting with the provided string.
    * @param \Drupal\Core\Config\StorageInterface[] $profile_storages
@@ -321,11 +381,21 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   An array of configuration data read from the source storage keyed by the
    *   configuration object name.
    */
-  protected function getConfigToCreate(StorageInterface $storage, $collection, $prefix = '', array $profile_storages = []) {
+  protected function getConfigToCreate(StorageInterface $storage, $collection, ?StorageInterface $database_driver_override_storage = NULL, $prefix = '', array $profile_storages = []) {
     if ($storage->getCollectionName() != $collection) {
       $storage = $storage->createCollection($collection);
     }
-    $data = $storage->readMultiple($storage->listAll($prefix));
+
+    // Get the config items from the database driver override directory first.
+    // Get the other config items from the normal storage directory.
+    if ($database_driver_override_storage) {
+      $names = $database_driver_override_storage->listAll($prefix);
+      $data = $database_driver_override_storage->readMultiple($names);
+      $data = array_merge($data, $storage->readMultiple(array_diff($storage->listAll($prefix), $names)));
+    }
+    else {
+      $data = $storage->readMultiple($storage->listAll($prefix));
+    }
 
     // Check to see if configuration provided by the install profile has any
     // overrides.
@@ -524,6 +594,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
    *   The storage containing the default configuration.
+   * @param \Drupal\Core\Config\StorageInterface|null $storage
+   *   The database driver override storage containing the default
+   *   configuration.
    * @param $previous_config_names
    *   An array of configuration names that have previously been checked.
    *
@@ -531,13 +604,13 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   Array of configuration object names that already exist keyed by
    *   collection.
    */
-  protected function findPreExistingConfiguration(StorageInterface $storage, array $previous_config_names = []) {
+  protected function findPreExistingConfiguration(StorageInterface $storage, ?StorageInterface $database_driver_override_storage = NULL, array $previous_config_names = []) {
     $existing_configuration = [];
     // Gather information about all the supported collections.
     $collection_info = $this->configManager->getConfigCollectionInfo();
 
     foreach ($collection_info->getCollectionNames() as $collection) {
-      $config_to_create = array_keys($this->getConfigToCreate($storage, $collection));
+      $config_to_create = array_keys($this->getConfigToCreate($storage, $collection, $database_driver_override_storage));
       $active_storage = $this->getActiveStorages($collection);
       foreach ($config_to_create as $config_name) {
         if ($active_storage->exists($config_name) || array_search($config_name, $previous_config_names[$collection] ?? [], TRUE) !== FALSE) {
@@ -571,6 +644,14 @@ class ConfigInstaller implements ConfigInstallerInterface {
       }
       $storage = new FileStorage($config_install_path, StorageInterface::DEFAULT_COLLECTION);
 
+      $database_driver_override_storage = NULL;
+      if ($this->hasBaseDatabaseDriverOverrideDirectory()) {
+        $database_driver_override_config_directory = $this->databaseDriverOverrideDirectory . '/' . $name . '/install';
+        if (is_dir($database_driver_override_config_directory)) {
+          $database_driver_override_storage = new FileStorage($database_driver_override_config_directory, StorageInterface::DEFAULT_COLLECTION);
+        }
+      }
+
       // Gets profile storages to search for overrides if necessary.
       $profile_storages = $this->getProfileStorages($name);
 
@@ -578,7 +659,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       [
         $invalid_default_config,
         $missing_dependencies,
-      ] = $this->findDefaultConfigWithUnmetDependencies($storage, $enabled_extensions, $profile_storages, $previous_config_names);
+      ] = $this->findDefaultConfigWithUnmetDependencies($storage, $database_driver_override_storage, $enabled_extensions, $profile_storages, $previous_config_names);
       if (!empty($invalid_default_config)) {
         throw UnmetDependenciesException::create($name, array_unique($missing_dependencies, SORT_REGULAR));
       }
@@ -589,7 +670,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
         // Throw an exception if the module being installed contains configuration
         // that already exists. Additionally, can not continue installing more
         // modules because those may depend on the current module being installed.
-        $existing_configuration = $this->findPreExistingConfiguration($storage, $previous_config_names);
+        $existing_configuration = $this->findPreExistingConfiguration($storage, $database_driver_override_storage, $previous_config_names);
         if (!empty($existing_configuration)) {
           throw PreExistingConfigException::create($name, $existing_configuration);
         }
@@ -598,7 +679,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       // Store the config names for the checked module in order to add them to
       // the list of active configuration for the next module.
       foreach ($this->configManager->getConfigCollectionInfo()->getCollectionNames() as $collection) {
-        $config_to_create = array_keys($this->getConfigToCreate($storage, $collection));
+        $config_to_create = array_keys($this->getConfigToCreate($storage, $collection, $database_driver_override_storage));
         if (!isset($previous_config_names[$collection])) {
           $previous_config_names[$collection] = $config_to_create;
         }
@@ -614,6 +695,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
    *   The storage containing the default configuration.
+   * @param \Drupal\Core\Config\StorageInterface|null $storage
+   *   (optional) The database driver override storage containing the default
+   *   configuration.
    * @param array $enabled_extensions
    *   A list of all the currently enabled modules and themes.
    * @param \Drupal\Core\Config\StorageInterface[] $profile_storages
@@ -628,9 +712,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *     - An array that will be filled with the missing dependency names, keyed
    *       by the dependents' names.
    */
-  protected function findDefaultConfigWithUnmetDependencies(StorageInterface $storage, array $enabled_extensions, array $profile_storages = [], array $previously_checked_config = []) {
+  protected function findDefaultConfigWithUnmetDependencies(StorageInterface $storage, ?StorageInterface $database_driver_override_storage, array $enabled_extensions, array $profile_storages = [], array $previously_checked_config = []) {
     $missing_dependencies = [];
-    $config_to_create = $this->getConfigToCreate($storage, StorageInterface::DEFAULT_COLLECTION, '', $profile_storages);
+    $config_to_create = $this->getConfigToCreate($storage, StorageInterface::DEFAULT_COLLECTION, $database_driver_override_storage, '', $profile_storages);
     $all_config = array_merge($this->configFactory->listAll(), array_keys($config_to_create), $previously_checked_config[StorageInterface::DEFAULT_COLLECTION] ?? []);
     foreach ($config_to_create as $config_name => $config) {
       if ($missing = $this->getMissingDependencies($config_name, $config, $enabled_extensions, $all_config)) {
@@ -760,12 +844,13 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $profile_storages = [];
     if ($profile && $profile != $installing_name) {
       $profile_path = $this->extensionPathResolver->getPath('module', $profile);
-      $database_driver_override_config_directory = $this->extensionPathResolver->getPath('module', \Drupal::database()->getProvider()) . '/config/overrides/';
       foreach ([InstallStorage::CONFIG_INSTALL_DIRECTORY, InstallStorage::CONFIG_OPTIONAL_DIRECTORY] as $directory) {
         if (is_dir($profile_path . '/' . $directory)) {
-          $sub_directory = substr($directory, 6);
-          if (is_dir($database_driver_override_config_directory . $profile . $sub_directory)) {
-            $profile_storages[] = new FileStorage($database_driver_override_config_directory . $profile . $sub_directory, StorageInterface::DEFAULT_COLLECTION);
+          if ($this->hasBaseDatabaseDriverOverrideDirectory()) {
+            $database_driver_override_config_directory = $this->databaseDriverOverrideDirectory . $profile . substr($directory, 6);
+            if (is_dir($database_driver_override_config_directory)) {
+              $profile_storages[] = new FileStorage($database_driver_override_config_directory, StorageInterface::DEFAULT_COLLECTION);
+            }
           }
 
           $profile_storages[] = new FileStorage($profile_path . '/' . $directory, StorageInterface::DEFAULT_COLLECTION);
