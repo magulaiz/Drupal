@@ -92,7 +92,8 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
    * Uses an inline style tag for any CSS files that are flagged as critical.
    *
    * To make use of this, add {attributes: {critical: true} to CSS files in
-   * your theme or module's libraries.yml file.
+   * your theme or module's libraries.yml file. Be sure to mark the files as
+   * preprocess: false too so they're not aggregated.
    *
    * @param array $elements
    *   Existing CSS elements.
