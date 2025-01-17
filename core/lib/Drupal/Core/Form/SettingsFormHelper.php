@@ -14,31 +14,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SettingsFormHelper implements ContainerInjectionInterface {
 
   /**
-   * The logger.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The file system.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
    * SettingsFormHelper constructor.
    *
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system.
    */
-  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system) {
-    $this->logger = $logger;
-    $this->fileSystem = $file_system;
-  }
+  public function __construct(
+    protected LoggerInterface $logger,
+    protected FileSystemInterface $fileSystem,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -63,7 +49,7 @@ class SettingsFormHelper implements ContainerInjectionInterface {
    * @return array
    *   The form element.
    */
-  public static function checkDirectory(array $form_element, FormStateInterface $form_state) {
+  public static function checkDirectory(array $form_element, FormStateInterface $form_state): array {
     return \Drupal::classResolver()->getInstanceFromDefinition(self::class)->doCheckDirectory($form_element, $form_state);
   }
 
@@ -78,9 +64,9 @@ class SettingsFormHelper implements ContainerInjectionInterface {
    * @return array
    *   The form element.
    */
-  protected function doCheckDirectory(array $form_element, FormStateInterface $form_state) {
+  protected function doCheckDirectory(array $form_element, FormStateInterface $form_state): array {
     $directory = $form_element['#value'];
-    if (strlen($directory) == 0) {
+    if ($directory === '') {
       return $form_element;
     }
 
@@ -96,7 +82,7 @@ class SettingsFormHelper implements ContainerInjectionInterface {
       $this->logger->error('The directory %directory exists but is not writable and could not be made writable.', ['%directory' => $directory]);
     }
     elseif (is_dir($directory)) {
-      if ($form_element['#name'] == 'file_public_path') {
+      if ($form_element['#name'] === 'file_public_path') {
         // Create public .htaccess file.
         FileSecurity::writeHtaccess($directory, FALSE);
       }
