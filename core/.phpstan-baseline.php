@@ -61289,13 +61289,13 @@ $ignoreErrors[] = [
 in drupal\\:11\\.2\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use ResourceTypeBuildEvent\\:\\:setCollectionSizeMemberName\\(\\\\\'count\\\\\'\\) as a replacement\\.$#',
 	'identifier' => 'property.deprecated',
 	'count' => 2,
-	'path' => __DIR__ . '//build/core/modules/jsonapi/src/JsonApiResource/Data.php',
+	'path' => __DIR__ . '/build/core/modules/jsonapi/src/JsonApiResource/Data.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Anonymous class extends @internal class Drupal\\\\jsonapi\\\\JsonApiResource\\\\Data\\.$#',
 	'identifier' => 'classExtendsInternalClass.classExtendsInternalClass',
 	'count' => 1,
-	'path' => __DIR__ . '//build/core/modules/jsonapi/tests/src/Unit/JsonApiResource/DataTest.php',
+	'path' => __DIR__ . '/build/core/modules/jsonapi/tests/src/Unit/JsonApiResource/DataTest.php',
 ];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];
