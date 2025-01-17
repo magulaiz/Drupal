@@ -659,7 +659,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       [
         $invalid_default_config,
         $missing_dependencies,
-      ] = $this->findDefaultConfigWithUnmetDependencies($storage, $database_driver_override_storage, $enabled_extensions, $profile_storages, $previous_config_names);
+      ] = $this->findDefaultConfigWithUnmetDependencies($storage, $enabled_extensions, $database_driver_override_storage, $profile_storages, $previous_config_names);
       if (!empty($invalid_default_config)) {
         throw UnmetDependenciesException::create($name, array_unique($missing_dependencies, SORT_REGULAR));
       }
@@ -695,11 +695,11 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
    *   The storage containing the default configuration.
+   * @param array $enabled_extensions
+   *   A list of all the currently enabled modules and themes.
    * @param \Drupal\Core\Config\StorageInterface|null $database_driver_override_storage
    *   (optional) The database driver override storage containing the default
    *   configuration.
-   * @param array $enabled_extensions
-   *   A list of all the currently enabled modules and themes.
    * @param \Drupal\Core\Config\StorageInterface[] $profile_storages
    *   An array of storage interfaces containing profile configuration to check
    *   for overrides.
@@ -712,7 +712,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *     - An array that will be filled with the missing dependency names, keyed
    *       by the dependents' names.
    */
-  protected function findDefaultConfigWithUnmetDependencies(StorageInterface $storage, ?StorageInterface $database_driver_override_storage = NULL, array $enabled_extensions, array $profile_storages = [], array $previously_checked_config = []) {
+  protected function findDefaultConfigWithUnmetDependencies(StorageInterface $storage, array $enabled_extensions, ?StorageInterface $database_driver_override_storage = NULL, array $profile_storages = [], array $previously_checked_config = []) {
     $missing_dependencies = [];
     $config_to_create = $this->getConfigToCreate($storage, StorageInterface::DEFAULT_COLLECTION, $database_driver_override_storage, '', $profile_storages);
     $all_config = array_merge($this->configFactory->listAll(), array_keys($config_to_create), $previously_checked_config[StorageInterface::DEFAULT_COLLECTION] ?? []);
