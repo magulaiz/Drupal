@@ -6,6 +6,8 @@ namespace Drupal\Tests\link\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
 
+// cspell:ignore Fragm Butto
+
 /**
  * Tests the default 'link' field formatter.
  *
