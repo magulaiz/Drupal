@@ -45,6 +45,8 @@ class LoggerChannel implements LoggerChannelInterface {
    * Map of PSR3 log constants to RFC 5424 log constants.
    *
    * @var array
+   *
+   * @todo deprecate this.
    */
   protected $levelTranslation = [
     LogLevel::EMERGENCY => RfcLogLevel::EMERGENCY,
@@ -120,11 +122,11 @@ class LoggerChannel implements LoggerChannelInterface {
 
     if (is_string($level)) {
       // Convert to integer equivalent for consistency with RFC 5424.
-      $level = $this->levelTranslation[$level];
+      $level = RfcLogLevelEnum::fromPsr3($level);
     }
     // Call all available loggers.
     foreach ($this->sortLoggers() as $logger) {
-      $logger->log($level, $message, $context);
+      $logger->log($level->value, $message, $context);
     }
 
     $this->callDepth--;

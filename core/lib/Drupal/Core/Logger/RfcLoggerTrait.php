@@ -18,56 +18,56 @@ trait RfcLoggerTrait {
    * {@inheritdoc}
    */
   public function emergency(string|\Stringable $message, array $context = []): void {
-    $this->log(RfcLogLevel::EMERGENCY, $message, $context);
+    $this->log(RfcLogLevelEnum::Emergency->value, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
   public function alert(string|\Stringable $message, array $context = []): void {
-    $this->log(RfcLogLevel::ALERT, $message, $context);
+    $this->log(RfcLogLevelEnum::Alert->value, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
   public function critical(string|\Stringable $message, array $context = []): void {
-    $this->log(RfcLogLevel::CRITICAL, $message, $context);
+    $this->log(RfcLogLevelEnum::Critical->value, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
   public function error(string|\Stringable $message, array $context = []): void {
-    $this->log(RfcLogLevel::ERROR, $message, $context);
+    $this->log(RfcLogLevelEnum::Error->value, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
   public function warning(string|\Stringable $message, array $context = []): void {
-    $this->log(RfcLogLevel::WARNING, $message, $context);
+    $this->log(RfcLogLevelEnum::Warning->value, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
   public function notice(string|\Stringable $message, array $context = []): void {
-    $this->log(RfcLogLevel::NOTICE, $message, $context);
+    $this->log(RfcLogLevelEnum::Notice->value, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
   public function info(string|\Stringable $message, array $context = []): void {
-    $this->log(RfcLogLevel::INFO, $message, $context);
+    $this->log(RfcLogLevelEnum::Info->value, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
   public function debug(string|\Stringable $message, array $context = []): void {
-    $this->log(RfcLogLevel::DEBUG, $message, $context);
+    $this->log(RfcLogLevelEnum::Debug->value, $message, $context);
   }
 
   /**

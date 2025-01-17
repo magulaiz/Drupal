@@ -29,6 +29,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Defines various logging severity levels.
  *
  * @ingroup logging_severity_levels
+ *
+ * @todo add deprecations.
  */
 class RfcLogLevel {
 
@@ -49,6 +51,8 @@ class RfcLogLevel {
 
   /**
    * Log message severity -- Error conditions.
+   *
+   * @todo lots of usages of this and remaining levels to update.
    */
   const ERROR = 3;
 
@@ -89,20 +93,7 @@ class RfcLogLevel {
    * @ingroup logging_severity_levels
    */
   public static function getLevels() {
-    if (!static::$levels) {
-      static::$levels = [
-        static::EMERGENCY => new TranslatableMarkup('Emergency'),
-        static::ALERT => new TranslatableMarkup('Alert'),
-        static::CRITICAL => new TranslatableMarkup('Critical'),
-        static::ERROR => new TranslatableMarkup('Error'),
-        static::WARNING => new TranslatableMarkup('Warning'),
-        static::NOTICE => new TranslatableMarkup('Notice'),
-        static::INFO => new TranslatableMarkup('Info'),
-        static::DEBUG => new TranslatableMarkup('Debug'),
-      ];
-    }
-
-    return static::$levels;
+    return RfcLogLevelEnum::getLevels();
   }
 
 }
