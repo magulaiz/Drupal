@@ -89,7 +89,7 @@ class ThemeUiTest extends BrowserTestBase {
    * @param string[] $base_theme_module_names
    *   Machine names of the modules required by $base_theme_to_uninstall.
    * @param string[] $all_dependent_modules
-   *    Machine names of every module the theme depends on.
+   *   Machine names of every module the theme depends on.
    *
    * @dataProvider providerTestThemeInstallWithModuleDependencies
    */

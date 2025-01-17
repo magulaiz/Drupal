@@ -15,7 +15,6 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\system\Form\ExtensionFormTrait;
 use Drupal\system\Form\ExtensionConfirmForm;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -86,23 +85,23 @@ class ThemeController extends ControllerBase {
    * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
    *   The module extension list.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, ThemeExtensionList $theme_list, ConfigFactoryInterface $config_factory, ThemeInstallerInterface $theme_installer, ModuleHandlerInterface $module_handler = NULL, ModuleInstallerInterface $module_installer = NULL, ModuleExtensionList $module_extension_list = NULL) {
+  public function __construct(ThemeHandlerInterface $theme_handler, ThemeExtensionList $theme_list, ConfigFactoryInterface $config_factory, ThemeInstallerInterface $theme_installer, ?ModuleHandlerInterface $module_handler = NULL, ?ModuleInstallerInterface $module_installer = NULL, ?ModuleExtensionList $module_extension_list = NULL) {
     $this->themeHandler = $theme_handler;
     $this->themeList = $theme_list;
     $this->configFactory = $config_factory;
     $this->themeInstaller = $theme_installer;
     if ($module_handler === NULL) {
-      @trigger_error('The module_handler service must be passed to ' . __NAMESPACE__ . '\SystemController::__construct. It was added in drupal 11.2.0 and will be required before drupal 12.0.0. See https://www.drupal.org/node/3188195', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __NAMESPACE__ . '\SystemController::__construct without the module_handler argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3188195', E_USER_DEPRECATED);
       $module_handler = \Drupal::service('module_handler');
     }
     $this->moduleHandler = $module_handler;
     if ($module_installer === NULL) {
-      @trigger_error('The module_installer service must be passed to ' . __NAMESPACE__ . '\SystemController::__construct. It was added in drupal 11.2.0 and will be required before drupal 12.0.0. See https://www.drupal.org/node/3188195', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __NAMESPACE__ . '\SystemController::__construct without the module_installer argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3188195', E_USER_DEPRECATED);
       $module_installer = \Drupal::service('module_installer');
     }
     $this->moduleInstaller = $module_installer;
     if ($module_extension_list === NULL) {
-      @trigger_error('The extension.list.module service must be passed to ' . __NAMESPACE__ . '\SystemController::__construct. It was added in drupal 11.2.0 and will be required before drupal 12.0.0. See https://www.drupal.org/node/3188195', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __NAMESPACE__ . '\SystemController::__construct without the extension.list.module argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3188195', E_USER_DEPRECATED);
       $module_extension_list = \Drupal::service('extension.list.module');
     }
     $this->moduleExtensionList = $module_extension_list;
