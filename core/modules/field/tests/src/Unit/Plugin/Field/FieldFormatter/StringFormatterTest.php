@@ -115,7 +115,7 @@ final class StringFormatterTest extends UnitTestCase {
    * Checks that an entity link links to the entity in the current language if the entity has no language.
    *
    * @param string $entityLanguageCode
-   *   The language code that will have the test entity.
+   *   The language code that the test entity will be given.
    *
    * @dataProvider providerTestLinkToEntityPointsToCurrentLanguage
    */
@@ -139,7 +139,7 @@ final class StringFormatterTest extends UnitTestCase {
     $entityType->hasLinkTemplate('canonical')->willReturn(TRUE)->shouldBeCalledTimes(1);
     $entityType->hasLinkTemplate('revision')->willReturn(FALSE)->shouldBeCalledTimes(1);
 
-    // Mock an entity with its own language, different from the current language.
+    // Mock an entity with its own language which is also different from the current language.
     $entityLanguage = $this->prophesize(LanguageInterface::class);
     $entityLanguage->getId()->willReturn($entityLanguageCode);
     $entity = $this->prophesize(EntityInterface::class);
@@ -175,7 +175,7 @@ final class StringFormatterTest extends UnitTestCase {
     $items->current()->willReturn($item);
     $items->key()->willReturn(0);
 
-    // Build a render array with the string formatter producing a link to the entity.
+    // Build a render array using the string formatter in order to produce a link to the entity.
     $fieldDefinition = $this->prophesize(FieldDefinitionInterface::class);
     $fieldFormatter = new StringFormatter('foobar', [], $fieldDefinition->reveal(), [], 'TestLabel', 'default', [], $entityTypeManager->reveal(), $languageManager->reveal());
     $fieldFormatter->setSetting('link_to_entity', TRUE);
