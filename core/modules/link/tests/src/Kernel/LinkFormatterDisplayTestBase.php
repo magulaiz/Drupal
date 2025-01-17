@@ -48,7 +48,7 @@ abstract class LinkFormatterDisplayTestBase extends FieldKernelTestBase {
   }
 
   /**
-   * Field values, and expected results.
+   * Link field values use for test.
    *
    * @return array
    *   Values to use at link field setter.
@@ -56,11 +56,11 @@ abstract class LinkFormatterDisplayTestBase extends FieldKernelTestBase {
   abstract protected function getTestValues(): array;
 
   /**
-   * Provides an array of link field display settings and expected results.
+   * Provides case name, link field display settings and expected results.
    *
-   * @return array
+   * @return \Generator
    *   Test cases.
    */
-  abstract protected function getTestCases(): array;
+  abstract protected function getTestCases(): \Generator;
 
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Kernel;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\entity_test\Entity\EntityTest;
 
 /**
@@ -29,20 +28,23 @@ class LinkFormatterDisplayTest extends LinkFormatterDisplayTestBase {
 
     foreach ($this->getTestCases() as $case_name => $case_options) {
       [$display_settings, $expected_results] = array_values($case_options);
+      $this->assertEquals(count($this->getTestValues()), count($expected_results), "Each field delta have expected result. Case name: '$case_name'");
 
       // Render link field with default 'link' formatter and custom
-      // display settings.
-      $render_array = $entity->field_test->view(['settings' => $display_settings]);
+      // display settings. Hide field label.
+      $render_array = $entity->field_test->view([
+        'label' => 'hidden',
+        'settings' => $display_settings,
+      ]);
       $output = (string) \Drupal::service('renderer')->renderRoot($render_array);
+      // Convert each field delta value to separate array item.
+      $field_deltas_display = explode("\n", trim($output));
 
       // Check results.
-      foreach ($expected_results as $expected_result) {
-        $this->assertStringContainsString($expected_result, $output, 'Test case failed: ' . $case_name);
-
-        // With url_plain should be no links.
-        if (!empty($display_settings['url_only']) && !empty($display_settings['url_plain'])) {
-          $this->assertStringNotContainsString('<a href="', $output, 'Test case failed: ' . $case_name);
-        }
+      foreach ($expected_results as $delta => $expected_result) {
+        $rendered_delta = trim($field_deltas_display[$delta]);
+        $message = "Test case failed. Case name: '$case_name'. Delta: '$delta'. Uri: '{$this->getTestValues()[$delta]['uri']}'";
+        $this->assertEquals($expected_result, $rendered_delta, $message);
       }
     }
   }
@@ -52,141 +54,218 @@ class LinkFormatterDisplayTest extends LinkFormatterDisplayTestBase {
    */
   protected function getTestValues(): array {
     return [
-      // From doTestLinkFormatter().
-      [
-        'uri'             => 'http://www.example.com/content/articles/archive?author=John&year=2012#com',
-        '#expected_href'  => 'http://www.example.com/content/articles/archive?author=John&amp;year=2012#com',
+      // External links.
+      0 => [
+        'uri' => 'http://www.example.com/content/articles/archive?author=John&year=2012#com',
         // Note that title is empty.
-        'title'           => '',
-        '#expected_title' => 'http://www.example.com/content/articles/archive?author=John&amp;year=2012#com',
+        'title' => '',
       ],
-      [
-        'uri'             => 'http://www.example.org/content/articles/archive?author=John&year=2012#org',
-        '#expected_href'  => 'http://www.example.org/content/articles/archive?author=John&amp;year=2012#org',
-        'title'           => 'A very long & strange example title that could break the nice layout of the site',
-        '#expected_title' => 'A very long &amp; strange example title that could break the nice layout of the site',
+      1 => [
+        'uri' => 'http://www.example.org/content/articles/archive?author=John&year=2012#org',
+        'title' => 'A very long & strange example title that could break the nice layout of the site',
       ],
-      [
-        'uri'             => 'internal:#net',
-        '#expected_href'  => '#net',
-        'title'           => 'Fragment only',
-        '#expected_title' => 'Fragment only',
+      2 => [
+        'uri' => 'internal:#net',
+        'title' => 'Fragment only',
       ],
 
-      // From testLinkFormatterQueryParametersDuplication().
-      [
-        'uri' => 'internal:?a[]=1&a[]=2',
-        // Result link: '?a[0]=1&a[1]=2'.
-        '#expected_href'  => '?a%5B0%5D=1&amp;a%5B1%5D=2',
-        '#expected_title' => '?a%5B0%5D=1&amp;a%5B1%5D=2',
-      ],
-      [
-        'uri' => 'internal:?b[0]=1&b[1]=2',
-        // Result link: '?b[0]=1&b[1]=2'.
-        '#expected_href'  => '?b%5B0%5D=1&amp;b%5B1%5D=2',
-        '#expected_title' => '?b%5B0%5D=1&amp;b%5B1%5D=2',
-      ],
+      // Complex internal links.
+      // Result link: '?a[0]=1&a[1]=2'.
+      3 => ['uri' => 'internal:?a[]=1&a[]=2'],
+      // Result link: '?b[0]=1&b[1]=2'.
+      4 => ['uri' => 'internal:?b[0]=1&b[1]=2'],
       // UrlHelper::buildQuery will change order of params.
-      [
-        'uri' => 'internal:?c[]=1&d=3&c[]=2',
-        // Result link: '?c[0]=1&c[1]=2&d=3'.
-        '#expected_href'  => '?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3',
-        '#expected_title' => '?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3',
-      ],
-      [
-        'uri' => 'internal:?e[f][g]=h',
-        // Result link: '?e[f][g]=h'.
-        '#expected_href'  => '?e%5Bf%5D%5Bg%5D=h',
-        '#expected_title' => '?e%5Bf%5D%5Bg%5D=h',
-      ],
-      [
-        'uri' => 'internal:?i[j[k]]=l',
-        // Result link: '?i[j[k]]=l'.
-        '#expected_href'  => '?i%5Bj%5Bk%5D=l',
-        '#expected_title' => '?i%5Bj%5Bk%5D=l',
-      ],
+      // Result link: '?c[0]=1&c[1]=2&d=3'.
+      5 => ['uri' => 'internal:?c[]=1&d=3&c[]=2'],
+      // Result link: '?e[f][g]=h'.
+      6 => ['uri' => 'internal:?e[f][g]=h'],
+      // Result link: '?i[j[k]]=l'.
+      7 => ['uri' => 'internal:?i[j[k]]=l'],
 
       // Query string replace value.
-      [
-        'uri' => 'internal:?x=1&x=2',
-        '#expected_href'  => '?x=2',
-        '#expected_title' => '?x=2',
-      ],
-      [
-        'uri' => 'internal:?z[0]=1&z[0]=2',
-        // Result link: '?z[0]=2'.
-        '#expected_href'  => '?z%5B0%5D=2',
-        '#expected_title' => '?z%5B0%5D=2',
-      ],
+      8 => ['uri' => 'internal:?x=1&x=2'],
+      // Result link: '?z[0]=2'.
+      9 => ['uri' => 'internal:?z[0]=1&z[0]=2'],
+
+      // Special empty links.
+      10 => ['uri' => 'route:<none>'],
+      11 => ['uri' => 'route:<none>', 'title' => 'None title'],
+      12 => ['uri' => 'route:<nolink>'],
+      13 => ['uri' => 'route:<nolink>', 'title' => 'No link title'],
+      14 => ['uri' => 'route:<button>'],
+      15 => ['uri' => 'route:<button>', 'title' => 'Button title'],
+
     ];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getTestCases(): array {
-    $cases = [];
-    $defaultExpectedResults = array_map(function ($values) {
-      return '<div><a href="' . $values['#expected_href'] . '">' . $values['#expected_title'] . '</a></div>';
-    }, $this->getTestValues());
+  public function getTestCases(): \Generator {
+    $default = [
+      0 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012#com</a></div>',
+      1 => '<div><a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org">A very long &amp; strange example title that could break the nice layout of the site</a></div>',
+      2 => '<div><a href="#net">Fragment only</a></div>',
+      3 => '<div><a href="?a%5B0%5D=1&amp;a%5B1%5D=2">?a%5B0%5D=1&amp;a%5B1%5D=2</a></div>',
+      4 => '<div><a href="?b%5B0%5D=1&amp;b%5B1%5D=2">?b%5B0%5D=1&amp;b%5B1%5D=2</a></div>',
+      5 => '<div><a href="?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3">?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3</a></div>',
+      6 => '<div><a href="?e%5Bf%5D%5Bg%5D=h">?e%5Bf%5D%5Bg%5D=h</a></div>',
+      7 => '<div><a href="?i%5Bj%5Bk%5D=l">?i%5Bj%5Bk%5D=l</a></div>',
+      8 => '<div><a href="?x=2">?x=2</a></div>',
+      9 => '<div><a href="?z%5B0%5D=2">?z%5B0%5D=2</a></div>',
+      10 => '<div><a href=""></a></div>',
+      11 => '<div><a href="">None title</a></div>',
+      12 => '<div><span></span></div>',
+      13 => '<div><span>No link title</span></div>',
+      14 => '<div><button type="button"></button></div>',
+      15 => '<div><button type="button">Button title</button></div>',
+    ];
 
-    $cases['default settings'] = [
+    yield 'default settings' => [
       'display settings' => [],
-      'expected_results' => $defaultExpectedResults,
-    ];
-    $cases['trim_length=null'] = [
-      'display_settings' => ['trim_length' => NULL],
-      'expected_results' => $defaultExpectedResults,
-    ];
-    $cases['trim_length=6'] = [
-      'display settings' => ['trim_length' => 6],
-      'expected_results' => array_map(function ($values) {
-        $title = Unicode::truncate($values['#expected_title'], 6, FALSE, TRUE);
-        return '<div><a href="' . $values['#expected_href'] . '">' . $title . '</a></div>';
-      }, $this->getTestValues()),
-    ];
-    $cases['attribute rel=null'] = [
-      'display_settings' => ['rel' => NULL],
-      'expected_results' => $defaultExpectedResults,
-    ];
-    $cases['attribute rel=nofollow'] = [
-      'display_settings' => ['rel' => 'nofollow'],
-      'expected_results' => array_map(function ($values) {
-        return '<div><a href="' . $values['#expected_href'] . '" rel="nofollow">' . $values['#expected_title'] . '</a></div>';
-      }, $this->getTestValues()),
-    ];
-    $cases['attribute target=null'] = [
-      'display_settings' => ['target' => NULL],
-      'expected_results' => $defaultExpectedResults,
-    ];
-    $cases['attribute target=_blank'] = [
-      'display_settings' => ['target' => '_blank'],
-      'expected_results' => array_map(function ($values) {
-        return '<div><a href="' . $values['#expected_href'] . '" target="_blank">' . $values['#expected_title'] . '</a></div>';
-      }, $this->getTestValues()),
-    ];
-    $cases['url_only=false'] = [
-      'display_settings' => ['url_only' => FALSE],
-      'expected_results' => $defaultExpectedResults,
-    ];
-    $cases['url_only=true'] = [
-      'display_settings' => ['url_only' => TRUE],
-      'expected_results' => array_map(function ($values) {
-        return '<div><a href="' . $values['#expected_href'] . '">' . $values['#expected_href'] . '</a></div>';
-      }, $this->getTestValues()),
-    ];
-    $cases['url_only=false, url_plain=true'] = [
-      'display_settings' => ['url_only' => FALSE, 'url_plain' => TRUE],
-      'expected_results' => $defaultExpectedResults,
-    ];
-    $cases['url_only=true, url_plain=true'] = [
-      'display_settings' => ['url_only' => TRUE, 'url_plain' => TRUE],
-      'expected_results' => array_map(function ($values) {
-        return '<div>' . $values['#expected_href'] . '</div>';
-      }, $this->getTestValues()),
+      'expected_results' => $default,
     ];
 
-    return $cases;
+    yield 'trim_length=null' => [
+      'display_settings' => ['trim_length' => NULL],
+      'expected_results' => $default,
+    ];
+
+    yield 'trim_length=6' => [
+      'display settings' => ['trim_length' => 6],
+      'expected_results' => [
+        0 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012#com">http:…</a></div>',
+        1 => '<div><a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org">A ver…</a></div>',
+        2 => '<div><a href="#net">Fragm…</a></div>',
+        3 => '<div><a href="?a%5B0%5D=1&amp;a%5B1%5D=2">?a%5B…</a></div>',
+        4 => '<div><a href="?b%5B0%5D=1&amp;b%5B1%5D=2">?b%5B…</a></div>',
+        5 => '<div><a href="?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3">?c%5B…</a></div>',
+        6 => '<div><a href="?e%5Bf%5D%5Bg%5D=h">?e%5B…</a></div>',
+        7 => '<div><a href="?i%5Bj%5Bk%5D=l">?i%5B…</a></div>',
+        8 => '<div><a href="?x=2">?x=2</a></div>',
+        9 => '<div><a href="?z%5B0%5D=2">?z%5B…</a></div>',
+        10 => '<div><a href=""></a></div>',
+        11 => '<div><a href="">None …</a></div>',
+        12 => '<div><span></span></div>',
+        13 => '<div><span>No li…</span></div>',
+        14 => '<div><button type="button"></button></div>',
+        15 => '<div><button type="button">Butto…</button></div>',
+      ],
+    ];
+
+    yield 'attribute rel=null' => [
+      'display_settings' => ['rel' => NULL],
+      'expected_results' => $default,
+    ];
+
+    yield 'attribute rel=nofollow' => [
+      'display_settings' => ['rel' => 'nofollow'],
+      'expected_results' => [
+        0 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012#com" rel="nofollow">http://www.example.com/content/articles/archive?author=John&amp;year=2012#com</a></div>',
+        1 => '<div><a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org" rel="nofollow">A very long &amp; strange example title that could break the nice layout of the site</a></div>',
+        2 => '<div><a href="#net" rel="nofollow">Fragment only</a></div>',
+        3 => '<div><a href="?a%5B0%5D=1&amp;a%5B1%5D=2" rel="nofollow">?a%5B0%5D=1&amp;a%5B1%5D=2</a></div>',
+        4 => '<div><a href="?b%5B0%5D=1&amp;b%5B1%5D=2" rel="nofollow">?b%5B0%5D=1&amp;b%5B1%5D=2</a></div>',
+        5 => '<div><a href="?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3" rel="nofollow">?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3</a></div>',
+        6 => '<div><a href="?e%5Bf%5D%5Bg%5D=h" rel="nofollow">?e%5Bf%5D%5Bg%5D=h</a></div>',
+        7 => '<div><a href="?i%5Bj%5Bk%5D=l" rel="nofollow">?i%5Bj%5Bk%5D=l</a></div>',
+        8 => '<div><a href="?x=2" rel="nofollow">?x=2</a></div>',
+        9 => '<div><a href="?z%5B0%5D=2" rel="nofollow">?z%5B0%5D=2</a></div>',
+        10 => '<div><a href="" rel="nofollow"></a></div>',
+        11 => '<div><a href="" rel="nofollow">None title</a></div>',
+        12 => '<div><span rel="nofollow"></span></div>',
+        13 => '<div><span rel="nofollow">No link title</span></div>',
+        14 => '<div><button rel="nofollow" type="button"></button></div>',
+        15 => '<div><button rel="nofollow" type="button">Button title</button></div>',
+      ],
+    ];
+
+    yield 'attribute target=null' => [
+      'display_settings' => ['target' => NULL],
+      'expected_results' => $default,
+    ];
+
+    yield 'attribute target=_blank' => [
+      'display_settings' => ['target' => '_blank'],
+      'expected_results' => [
+        0 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012#com" target="_blank">http://www.example.com/content/articles/archive?author=John&amp;year=2012#com</a></div>',
+        1 => '<div><a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org" target="_blank">A very long &amp; strange example title that could break the nice layout of the site</a></div>',
+        2 => '<div><a href="#net" target="_blank">Fragment only</a></div>',
+        3 => '<div><a href="?a%5B0%5D=1&amp;a%5B1%5D=2" target="_blank">?a%5B0%5D=1&amp;a%5B1%5D=2</a></div>',
+        4 => '<div><a href="?b%5B0%5D=1&amp;b%5B1%5D=2" target="_blank">?b%5B0%5D=1&amp;b%5B1%5D=2</a></div>',
+        5 => '<div><a href="?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3" target="_blank">?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3</a></div>',
+        6 => '<div><a href="?e%5Bf%5D%5Bg%5D=h" target="_blank">?e%5Bf%5D%5Bg%5D=h</a></div>',
+        7 => '<div><a href="?i%5Bj%5Bk%5D=l" target="_blank">?i%5Bj%5Bk%5D=l</a></div>',
+        8 => '<div><a href="?x=2" target="_blank">?x=2</a></div>',
+        9 => '<div><a href="?z%5B0%5D=2" target="_blank">?z%5B0%5D=2</a></div>',
+        10 => '<div><a href="" target="_blank"></a></div>',
+        11 => '<div><a href="" target="_blank">None title</a></div>',
+        12 => '<div><span target="_blank"></span></div>',
+        13 => '<div><span target="_blank">No link title</span></div>',
+        14 => '<div><button target="_blank" type="button"></button></div>',
+        15 => '<div><button target="_blank" type="button">Button title</button></div>',
+      ],
+    ];
+
+    yield 'url_only=false' => [
+      'display_settings' => ['url_only' => FALSE],
+      'expected_results' => $default,
+    ];
+
+    yield 'url_only=true' => [
+      'display_settings' => ['url_only' => TRUE],
+      'expected_results' => [
+        0 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012#com</a></div>',
+        1 => '<div><a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org">http://www.example.org/content/articles/archive?author=John&amp;year=2012#org</a></div>',
+        2 => '<div><a href="#net">#net</a></div>',
+        3 => '<div><a href="?a%5B0%5D=1&amp;a%5B1%5D=2">?a%5B0%5D=1&amp;a%5B1%5D=2</a></div>',
+        4 => '<div><a href="?b%5B0%5D=1&amp;b%5B1%5D=2">?b%5B0%5D=1&amp;b%5B1%5D=2</a></div>',
+        5 => '<div><a href="?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3">?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3</a></div>',
+        6 => '<div><a href="?e%5Bf%5D%5Bg%5D=h">?e%5Bf%5D%5Bg%5D=h</a></div>',
+        7 => '<div><a href="?i%5Bj%5Bk%5D=l">?i%5Bj%5Bk%5D=l</a></div>',
+        8 => '<div><a href="?x=2">?x=2</a></div>',
+        9 => '<div><a href="?z%5B0%5D=2">?z%5B0%5D=2</a></div>',
+        10 => '<div><a href=""></a></div>',
+        11 => '<div><a href=""></a></div>',
+        12 => '<div><span></span></div>',
+        13 => '<div><span></span></div>',
+        14 => '<div><button type="button"></button></div>',
+        15 => '<div><button type="button"></button></div>',
+      ],
+    ];
+
+    yield 'url_only=false, url_plain=true' => [
+      'display_settings' => [
+        'url_only' => FALSE,
+        'url_plain' => TRUE,
+      ],
+      'expected_results' => $default,
+    ];
+
+    yield 'url_only=true, url_plain=true' => [
+      'display_settings' => [
+        'url_only' => TRUE,
+        'url_plain' => TRUE,
+      ],
+      'expected_results' => [
+        0 => '<div>http://www.example.com/content/articles/archive?author=John&amp;year=2012#com</div>',
+        1 => '<div>http://www.example.org/content/articles/archive?author=John&amp;year=2012#org</div>',
+        2 => '<div>#net</div>',
+        3 => '<div>?a%5B0%5D=1&amp;a%5B1%5D=2</div>',
+        4 => '<div>?b%5B0%5D=1&amp;b%5B1%5D=2</div>',
+        5 => '<div>?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3</div>',
+        6 => '<div>?e%5Bf%5D%5Bg%5D=h</div>',
+        7 => '<div>?i%5Bj%5Bk%5D=l</div>',
+        8 => '<div>?x=2</div>',
+        9 => '<div>?z%5B0%5D=2</div>',
+        10 => '<div></div>',
+        11 => '<div></div>',
+        12 => '<div></div>',
+        13 => '<div></div>',
+        14 => '<div></div>',
+        15 => '<div></div>',
+      ],
+    ];
   }
 
 }
