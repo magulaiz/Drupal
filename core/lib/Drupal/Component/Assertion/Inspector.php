@@ -39,12 +39,7 @@ class Inspector {
    */
   public static function assertAll(callable $callable, $traversable) {
     if (is_iterable($traversable)) {
-      foreach ($traversable as $member) {
-        if (!$callable($member)) {
-          return FALSE;
-        }
-      }
-      return TRUE;
+      return \array_all($traversable, fn ($value) => $callable($value));
     }
     return FALSE;
   }
@@ -76,15 +71,7 @@ class Inspector {
    *   objects with __toString().
    */
   public static function assertAllStringable($traversable) {
-    if (is_iterable($traversable)) {
-      foreach ($traversable as $member) {
-        if (!static::assertStringable($member)) {
-          return FALSE;
-        }
-      }
-      return TRUE;
-    }
-    return FALSE;
+    return static::assertAll(static::assertStringable(...), $traversable);
   }
 
   /**
@@ -133,18 +120,7 @@ class Inspector {
    * @see http://php.net/manual/language.types.array.php
    */
   public static function assertStrictArray($array) {
-    if (!is_array($array)) {
-      return FALSE;
-    }
-    $i = 0;
-
-    foreach (array_keys($array) as $key) {
-      if ($i !== $key) {
-        return FALSE;
-      }
-      $i++;
-    }
-    return TRUE;
+    return is_array($array) && array_is_list($array);
   }
 
   /**
@@ -194,17 +170,13 @@ class Inspector {
     $args = func_get_args();
     unset($args[0]);
 
-    if (is_iterable($traversable)) {
-      foreach ($traversable as $member) {
-        foreach ($args as $key) {
-          if (!array_key_exists($key, $member)) {
-            return FALSE;
-          }
-        }
-      }
-      return TRUE;
-    }
-    return FALSE;
+    return static::assertAll(
+      fn ($member) => \array_all(
+        $args,
+        fn ($key) => array_key_exists($key, $member),
+      ),
+      $traversable,
+    );
   }
 
   /**
@@ -257,15 +229,7 @@ class Inspector {
    *   TRUE if $traversable can be traversed and all members not empty.
    */
   public static function assertAllNotEmpty($traversable) {
-    if (is_iterable($traversable)) {
-      foreach ($traversable as $member) {
-        if (empty($member)) {
-          return FALSE;
-        }
-      }
-      return TRUE;
-    }
-    return FALSE;
+    return static::assertAll(fn ($value) => !empty($value), $traversable);
   }
 
   /**
@@ -298,24 +262,11 @@ class Inspector {
    *   containing $pattern.
    */
   public static function assertAllMatch($pattern, $traversable, $case_sensitive = FALSE) {
-    if (is_iterable($traversable)) {
-      if ($case_sensitive) {
-        foreach ($traversable as $member) {
-          if (!(is_string($member) && strstr($member, $pattern))) {
-            return FALSE;
-          }
-        }
-      }
-      else {
-        foreach ($traversable as $member) {
-          if (!(is_string($member) && stristr($member, $pattern))) {
-            return FALSE;
-          }
-        }
-      }
-      return TRUE;
-    }
-    return FALSE;
+    $callable = $case_sensitive ? 'strstr' : 'stristr';
+    return static::assertAll(
+      fn ($value) => is_string($value) && $callable($value, $pattern) !== FALSE,
+      $traversable,
+    );
   }
 
   /**
@@ -331,19 +282,10 @@ class Inspector {
    *   matching $pattern.
    */
   public static function assertAllRegularExpressionMatch($pattern, $traversable) {
-    if (is_iterable($traversable)) {
-      foreach ($traversable as $member) {
-        if (!is_string($member)) {
-          return FALSE;
-        }
-
-        if (!preg_match($pattern, $member)) {
-          return FALSE;
-        }
-      }
-      return TRUE;
-    }
-    return FALSE;
+    return static::assertAll(
+      fn ($value) => is_string($value) && preg_match($pattern, $value),
+      $traversable,
+    );
   }
 
   /**
@@ -381,25 +323,12 @@ class Inspector {
     $args = func_get_args();
     unset($args[0]);
 
-    if (is_iterable($traversable)) {
-      foreach ($traversable as $member) {
-        if (count($args) > 0) {
-          foreach ($args as $instance) {
-            if ($member instanceof $instance) {
-              // We're continuing to the next member on the outer loop.
-              // @see http://php.net/continue
-              continue 2;
-            }
-          }
-          return FALSE;
-        }
-        elseif (!is_object($member)) {
-          return FALSE;
-        }
+    return static::assertAll(function ($member) use ($args) {
+      if (count($args) > 0) {
+        return \array_any($args, fn($instance) => $member instanceof $instance);
       }
-      return TRUE;
-    }
-    return FALSE;
+      return \is_object($member);
+    }, $traversable);
   }
 
 }
