@@ -185,7 +185,7 @@ class ResourceTypeBuildEvent extends Event {
    *   The name of a `meta` member that holds a collection size.
    *   Excludes the member in case of `null`.
    */
-  public function setCollectionSizeMemberName(string $name = NULL): void {
+  public function setCollectionSizeMemberName(?string $name = NULL): void {
     $this->collectionSizeMemberName = $name;
   }
 

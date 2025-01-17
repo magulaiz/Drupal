@@ -631,7 +631,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
    * @group legacy
    */
   public function testReadLegacy(): void {
-    $this->expectDeprecation("The Drupal\jsonapi_test_collection_count\ResourceType\CountableResourceType::includeCount() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use ResourceTypeBuildEvent::setCollectionSizeMemberName('count') as a replacement.");
+    $this->expectDeprecation("The Drupal\jsonapi_test_collection_count\ResourceType\CountableResourceType::includeCount() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ResourceTypeBuildEvent::setCollectionSizeMemberName('count') as a replacement.");
     $this->createDefaultContent(61, 5, TRUE, TRUE, static::IS_NOT_MULTILINGUAL, FALSE);
 
     $this->container->get('module_installer')->install(['jsonapi_test_collection_count']);

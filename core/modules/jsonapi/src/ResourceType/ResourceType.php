@@ -274,7 +274,7 @@ class ResourceType {
    */
   public function getCollectionSizeMemberName(): ?string {
     if (method_exists($this, 'includeCount')) {
-      @trigger_error(sprintf('The %s::includeCount() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use ResourceTypeBuildEvent::setCollectionSizeMemberName(\'count\') as a replacement. See https://www.drupal.org/node/3246951', static::class), E_USER_DEPRECATED);
+      @trigger_error(sprintf('The %s::includeCount() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ResourceTypeBuildEvent::setCollectionSizeMemberName(\'count\') as a replacement. See https://www.drupal.org/node/3246951', static::class), E_USER_DEPRECATED);
 
       // If `includeCount()` returns `true`, the method is overridden and
       // we must use the former name for the collection size member.
@@ -479,13 +479,13 @@ class ResourceType {
    *
    * @return mixed
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use ResourceTypeBuildEvent::setCollectionSizeMemberName(\'count\') as a replacement.
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ResourceTypeBuildEvent::setCollectionSizeMemberName(\'count\') as a replacement.
    *
    * @see https://www.drupal.org/node/3246951
    */
   public function __call(string $name, array $args): mixed {
     if ($name === 'includeCount') {
-      @trigger_error(sprintf('The %s::includeCount() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use ResourceTypeBuildEvent::setCollectionSizeMemberName(\'count\') as a replacement. See https://www.drupal.org/node/3246951', static::class), E_USER_DEPRECATED);
+      @trigger_error(sprintf('The %s::includeCount() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ResourceTypeBuildEvent::setCollectionSizeMemberName(\'count\') as a replacement. See https://www.drupal.org/node/3246951', static::class), E_USER_DEPRECATED);
       return FALSE;
     }
     throw new \BadMethodCallException("Method $name does not exist");
