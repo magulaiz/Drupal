@@ -95,7 +95,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
    * your theme or module's libraries.yml file. Be sure to mark the files as
    * preprocess: false too so they're not aggregated.
    *
-   * @param array $elements
+   * @param array $assets
    *   Existing CSS elements.
    *
    * @return array
