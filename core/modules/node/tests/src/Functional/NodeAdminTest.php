@@ -17,6 +17,8 @@ use Drupal\user\RoleInterface;
  */
 class NodeAdminTest extends NodeTestBase {
 
+  use NodeAccessTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -242,7 +244,7 @@ class NodeAdminTest extends NodeTestBase {
    */
   public function testContentAdminPageWithLimitedContentViewer(): void {
     \Drupal::service('module_installer')->install(['node_access_test']);
-    node_access_test_add_field(NodeType::load('page'));
+    $this->addPrivateField(NodeType::load('page'));
     node_access_rebuild();
 
     $role_id = $this->drupalCreateRole([
