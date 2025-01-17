@@ -7,7 +7,6 @@ namespace Drupal\Tests\jsonapi\Functional;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\jsonapi\Query\OffsetPage;
-use Drupal\jsonapi_test_collection_count\ResourceType\CountableResourceType;
 use Drupal\node\Entity\Node;
 
 /**
