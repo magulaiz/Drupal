@@ -8,6 +8,7 @@ use Drupal\Core\Database\Database;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\user\RoleInterface;
 
 /**
