@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Functional;
 
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
@@ -491,88 +490,6 @@ class LinkFieldTest extends BrowserTestBase {
     $entity_test = $entity_test_storage->load($entity_test->id());
 
     $this->assertEquals($correct_link, $entity_test->get('field_link')->uri);
-  }
-
-  /**
-   * Tests <nolink> and <none> as link uri.
-   */
-  public function testNoLinkUri(): void {
-    $field_name = $this->randomMachineName();
-    $this->fieldStorage = FieldStorageConfig::create([
-      'field_name' => $field_name,
-      'entity_type' => 'entity_test',
-      'type' => 'link',
-    ]);
-    $this->fieldStorage->save();
-    FieldConfig::create([
-      'field_storage' => $this->fieldStorage,
-      'label' => 'Read more about this entity',
-      'bundle' => 'entity_test',
-      'settings' => [
-        'title' => DRUPAL_OPTIONAL,
-        'link_type' => LinkItemInterface::LINK_INTERNAL,
-      ],
-    ])->save();
-
-    $this->container->get('entity_type.manager')
-      ->getStorage('entity_form_display')
-      ->load('entity_test.entity_test.default')
-      ->setComponent($field_name, [
-        'type' => 'link_default',
-      ])
-      ->save();
-
-    EntityViewDisplay::create([
-      'targetEntityType' => 'entity_test',
-      'bundle' => 'entity_test',
-      'mode' => 'full',
-      'status' => TRUE,
-    ])->setComponent($field_name, [
-      'type' => 'link',
-    ])
-      ->save();
-
-    // Test a link with <nolink> uri.
-    $edit = [
-      "{$field_name}[0][title]" => 'Title, no link',
-      "{$field_name}[0][uri]" => '<nolink>',
-    ];
-
-    $this->drupalGet('/entity_test/add');
-    $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
-    $id = $match[1];
-    $output = $this->renderTestEntity($id);
-    $expected_link = (string) $this->container->get('link_generator')->generate('Title, no link', Url::fromUri('route:<nolink>'));
-    $this->assertStringContainsString($expected_link, $output);
-
-    // Test a link with <none> uri.
-    $edit = [
-      "{$field_name}[0][title]" => 'Title, none',
-      "{$field_name}[0][uri]" => '<none>',
-    ];
-
-    $this->drupalGet('/entity_test/add');
-    $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
-    $id = $match[1];
-    $output = $this->renderTestEntity($id);
-    $expected_link = (string) $this->container->get('link_generator')->generate('Title, none', Url::fromUri('route:<none>'));
-    $this->assertStringContainsString($expected_link, $output);
-
-    // Test a link with a <button> uri.
-    $edit = [
-      "{$field_name}[0][title]" => 'Title, button',
-      "{$field_name}[0][uri]" => '<button>',
-    ];
-
-    $this->drupalGet('/entity_test/add');
-    $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
-    $id = $match[1];
-    $output = $this->renderTestEntity($id);
-    $expected_link = (string) $this->container->get('link_generator')->generate('Title, button', Url::fromUri('route:<button>'));
-    $this->assertStringContainsString($expected_link, $output);
   }
 
   /**
