@@ -114,7 +114,7 @@ class MigrateDrupalHooks {
         $source_connection = $source_plugin->getDatabase();
         $version = NodeMigrateType::getLegacyDrupalVersion($source_connection);
       }
-      catch (RequirementsException $e) {
+      catch (RequirementsException) {
         // This code currently runs whenever the definitions are being loaded
         // and if you have a Drupal 8+ source site then the requirements will
         // not be met for the system_site migration since the 'variables'
