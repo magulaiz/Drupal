@@ -20,9 +20,12 @@ class LocaleNonInteractiveDevInstallTest extends LocaleNonInteractiveInstallTest
    * {@inheritdoc}
    */
   protected function getVersionStringToTest(): string {
-    include_once $this->root . '/core/includes/install.core.inc';
-    $version = _install_get_version_info(\Drupal::VERSION);
-    return $version['major'] . '.' . $version['minor'] . '.x';
+    // Split the Drupal version string into parts.
+    $version_parts = explode('.', \Drupal::VERSION);
+    $major = $version_parts[0];
+    $minor = $version_parts[1] ?? '0';
+    // Return the major and minor version followed by '.x'.
+    return $major . '.' . $minor . '.x';
   }
 
 }

@@ -1499,8 +1499,14 @@ function install_check_localization_server($uri) {
  *   - (optional) extra: Extra version info (e.g., "alpha2").
  *   - (optional) extra_text: The text part of "extra" (e.g., "alpha").
  *   - (optional) extra_number: The number part of "extra" (e.g., "2").
+ *
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use explode() instead.
+ *
+ * @see https://www.drupal.org/node/3476950
  */
 function _install_get_version_info($version) {
+  @trigger_error('The ' . __FUNCTION__ . '() function is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Use explode() instead. See https://www.drupal.org/node/3476950', E_USER_DEPRECATED);
+
   preg_match('/
     (
       (?P<major>[0-9]+)    # Major release number.
@@ -1827,7 +1833,14 @@ function _install_prepare_import($langcodes, $server_pattern) {
       // Get the version information. Custom translation files may not have a
       // version number.
       if (isset($matches[1]) && $version = $matches[1]) {
-        $info = _install_get_version_info($version);
+        // Use explode() to get major and minor version information.
+        $version_parts = explode('.', $version);
+
+        $info = [
+          'major' => $version_parts[0],
+          'minor' => $version_parts[1] ?? NULL,
+        ];
+
         // Picking the first file does not necessarily result in the right file. So
         // we check if at least the major version number is available.
         if ($info['major']) {
