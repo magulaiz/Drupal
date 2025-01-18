@@ -77,8 +77,7 @@ class UpdateHooks {
           $verbose = TRUE;
           break;
       }
-      \Drupal::moduleHandler()->loadInclude('update', 'install');
-      $status = update_requirements('runtime');
+      $status = \Drupal::moduleHandler()->invoke('update', 'runtime_requirements');
       foreach (['core', 'contrib'] as $report_type) {
         $type = 'update_' . $report_type;
         // hook_requirements() supports render arrays therefore we need to
