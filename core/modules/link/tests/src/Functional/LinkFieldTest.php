@@ -32,7 +32,6 @@ class LinkFieldTest extends BrowserTestBase {
     'entity_test',
     'link',
     'node',
-    'link_test_base_field',
   ];
 
   /**
@@ -89,7 +88,7 @@ class LinkFieldTest extends BrowserTestBase {
       'entity_type' => 'entity_test',
       'type' => 'link',
       // Show enough field widget for this test.
-      'cardinality' => 30,
+      'cardinality' => 33,
     ]);
     $this->fieldStorage->save();
     $this->field = FieldConfig::create([
@@ -127,8 +126,11 @@ class LinkFieldTest extends BrowserTestBase {
 
     // Create a node to test the link widget.
     $node = $this->drupalCreateNode();
+    $this->drupalCreateNode(['status' => NodeInterface::NOT_PUBLISHED]);
 
-    $restricted_node = $this->drupalCreateNode(['status' => NodeInterface::NOT_PUBLISHED]);
+    // Create an entity_test to test the link widget autocomplete.
+    EntityTest::create(['name' => 'Entity test label'])->save();
+    EntityTest::create(['name' => 'forbid_access'])->save();
 
     // Define some valid URLs (keys are the entered values, values are the
     // strings displayed to the user).
@@ -139,6 +141,8 @@ class LinkFieldTest extends BrowserTestBase {
       // Numbers within parenthesis without leading space char.
       'http://www.example.com/numbers_(9999)' => 'http://www.example.com/numbers_(9999)',
     ];
+    // When adding new item to array $valid_internal_entries, change
+    // field's "cardinality" as well.
     $valid_internal_entries = [
       '/entity_test/add' => '/entity_test/add',
       '/a/path/alias' => '/a/path/alias',
@@ -170,20 +174,25 @@ class LinkFieldTest extends BrowserTestBase {
 
       // Complex query string.
       // @see \Drupal\Tests\link\Kernel\LinkItemUrlDisplayTest::getTestingUrls()
-      '?a[]=1&a[]=2' => '?a[]=1&a[]=2',
-      '?b[0]=1&b[1]=2' => '?b[0]=1&b[1]=2',
+      '?a[]=1&a[]=2'     => '?a[]=1&a[]=2',
+      '?b[0]=1&b[1]=2'   => '?b[0]=1&b[1]=2',
       '?c[]=1&d=3&c[]=2' => '?c[]=1&d=3&c[]=2',
-      '?e[f][g]=h' => '?e[f][g]=h',
-      '?i[j[k]]=l' => '?i[j[k]]=l',
-      '?x=1&x=2' => '?x=1&x=2',
-      '?z[0]=1&z[0]=2' => '?z[0]=1&z[0]=2',
+      '?e[f][g]=h'       => '?e[f][g]=h',
+      '?i[j[k]]=l'       => '?i[j[k]]=l',
+      '?x=1&x=2'         => '?x=1&x=2',
+      '?z[0]=1&z[0]=2'   => '?z[0]=1&z[0]=2',
 
       // Entity reference autocomplete value.
       $node->label() . ' (1)' => $node->label() . ' (1)',
       // Entity URI displayed as ER autocomplete value when displayed in a form.
       'entity:node/1' => $node->label() . ' (1)',
       // URI for an entity that exists, but is not accessible by the user.
-      'entity:node/' . $restricted_node->id() => '- Restricted access - (' . $restricted_node->id() . ')',
+      'entity:node/2' => '- Restricted access - (2)',
+      // Autocomplete support only nodes for now.
+      // @todo Update test, when other entities will support autocomplete.
+      //   https://www.drupal.org/node/2423093.
+      'entity:entity_test/1' => 'entity:entity_test/1',
+      'entity:entity_test/2' => 'entity:entity_test/2',
       // URI for an entity that doesn't exist, but with a valid ID.
       'entity:user/999999' => 'entity:user/999999',
     ];
@@ -493,7 +502,6 @@ class LinkFieldTest extends BrowserTestBase {
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ]);
     $this->fieldStorage->save();
     FieldConfig::create([
