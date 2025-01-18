@@ -6,7 +6,7 @@ namespace Drupal\Tests\link\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
 
-// cspell:ignore Fragm Butto
+// cspell:ignore Fragm
 
 /**
  * Tests the default 'link' field formatter.
@@ -91,11 +91,11 @@ class LinkFormatterDisplayTest extends LinkFormatterDisplayTestBase {
 
       // Special empty links.
       10 => ['uri' => 'route:<none>'],
-      11 => ['uri' => 'route:<none>', 'title' => 'None title'],
+      11 => ['uri' => 'route:<none>', 'title' => 'Title, no link'],
       12 => ['uri' => 'route:<nolink>'],
-      13 => ['uri' => 'route:<nolink>', 'title' => 'No link title'],
+      13 => ['uri' => 'route:<nolink>', 'title' => 'Title, no link'],
       14 => ['uri' => 'route:<button>'],
-      15 => ['uri' => 'route:<button>', 'title' => 'Button title'],
+      15 => ['uri' => 'route:<button>', 'title' => 'Title, button'],
 
     ];
   }
@@ -116,11 +116,11 @@ class LinkFormatterDisplayTest extends LinkFormatterDisplayTestBase {
       8 => '<div><a href="?x=2">?x=2</a></div>',
       9 => '<div><a href="?z%5B0%5D=2">?z%5B0%5D=2</a></div>',
       10 => '<div><a href=""></a></div>',
-      11 => '<div><a href="">None title</a></div>',
+      11 => '<div><a href="">Title, no link</a></div>',
       12 => '<div><span></span></div>',
-      13 => '<div><span>No link title</span></div>',
+      13 => '<div><span>Title, no link</span></div>',
       14 => '<div><button type="button"></button></div>',
-      15 => '<div><button type="button">Button title</button></div>',
+      15 => '<div><button type="button">Title, button</button></div>',
     ];
 
     yield 'default settings' => [
@@ -147,11 +147,11 @@ class LinkFormatterDisplayTest extends LinkFormatterDisplayTestBase {
         8 => '<div><a href="?x=2">?x=2</a></div>',
         9 => '<div><a href="?z%5B0%5D=2">?z%5B…</a></div>',
         10 => '<div><a href=""></a></div>',
-        11 => '<div><a href="">None …</a></div>',
+        11 => '<div><a href="">Title…</a></div>',
         12 => '<div><span></span></div>',
-        13 => '<div><span>No li…</span></div>',
+        13 => '<div><span>Title…</span></div>',
         14 => '<div><button type="button"></button></div>',
-        15 => '<div><button type="button">Butto…</button></div>',
+        15 => '<div><button type="button">Title…</button></div>',
       ],
     ];
 
@@ -174,11 +174,11 @@ class LinkFormatterDisplayTest extends LinkFormatterDisplayTestBase {
         8 => '<div><a href="?x=2" rel="nofollow">?x=2</a></div>',
         9 => '<div><a href="?z%5B0%5D=2" rel="nofollow">?z%5B0%5D=2</a></div>',
         10 => '<div><a href="" rel="nofollow"></a></div>',
-        11 => '<div><a href="" rel="nofollow">None title</a></div>',
+        11 => '<div><a href="" rel="nofollow">Title, no link</a></div>',
         12 => '<div><span rel="nofollow"></span></div>',
-        13 => '<div><span rel="nofollow">No link title</span></div>',
+        13 => '<div><span rel="nofollow">Title, no link</span></div>',
         14 => '<div><button rel="nofollow" type="button"></button></div>',
-        15 => '<div><button rel="nofollow" type="button">Button title</button></div>',
+        15 => '<div><button rel="nofollow" type="button">Title, button</button></div>',
       ],
     ];
 
@@ -201,11 +201,11 @@ class LinkFormatterDisplayTest extends LinkFormatterDisplayTestBase {
         8 => '<div><a href="?x=2" target="_blank">?x=2</a></div>',
         9 => '<div><a href="?z%5B0%5D=2" target="_blank">?z%5B0%5D=2</a></div>',
         10 => '<div><a href="" target="_blank"></a></div>',
-        11 => '<div><a href="" target="_blank">None title</a></div>',
+        11 => '<div><a href="" target="_blank">Title, no link</a></div>',
         12 => '<div><span target="_blank"></span></div>',
-        13 => '<div><span target="_blank">No link title</span></div>',
+        13 => '<div><span target="_blank">Title, no link</span></div>',
         14 => '<div><button target="_blank" type="button"></button></div>',
-        15 => '<div><button target="_blank" type="button">Button title</button></div>',
+        15 => '<div><button target="_blank" type="button">Title, button</button></div>',
       ],
     ];
 

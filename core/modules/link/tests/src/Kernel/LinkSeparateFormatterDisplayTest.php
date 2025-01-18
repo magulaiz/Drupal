@@ -6,7 +6,7 @@ namespace Drupal\Tests\link\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
 
-// cspell:ignore Fragm Butto
+// cspell:ignore Fragm
 
 /**
  * Tests the 'link_separate' field formatter.
@@ -89,11 +89,11 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
 
       // Special empty links.
       10 => ['uri' => 'route:<none>'],
-      11 => ['uri' => 'route:<none>', 'title' => 'None title'],
+      11 => ['uri' => 'route:<none>', 'title' => 'Title, no link'],
       12 => ['uri' => 'route:<nolink>'],
-      13 => ['uri' => 'route:<nolink>', 'title' => 'No link title'],
+      13 => ['uri' => 'route:<nolink>', 'title' => 'Title, no link'],
       14 => ['uri' => 'route:<button>'],
-      15 => ['uri' => 'route:<button>', 'title' => 'Button title'],
+      15 => ['uri' => 'route:<button>', 'title' => 'Title, button'],
 
     ];
   }
@@ -136,19 +136,19 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
       10 => '<div>
 <a href=""></a>
 </div>',
-      11 => '<div>None title
+      11 => '<div>Title, no link
 <a href=""></a>
 </div>',
       12 => '<div>
 <span></span>
 </div>',
-      13 => '<div>No link title
+      13 => '<div>Title, no link
 <span></span>
 </div>',
       14 => '<div>
 <button type="button"></button>
 </div>',
-      15 => '<div>Button title
+      15 => '<div>Title, button
 <button type="button"></button>
 </div>',
     ];
@@ -199,19 +199,19 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
         10 => '<div>
 <a href=""></a>
 </div>',
-        11 => '<div>None …
+        11 => '<div>Title…
 <a href=""></a>
 </div>',
         12 => '<div>
 <span></span>
 </div>',
-        13 => '<div>No li…
+        13 => '<div>Title…
 <span></span>
 </div>',
         14 => '<div>
 <button type="button"></button>
 </div>',
-        15 => '<div>Butto…
+        15 => '<div>Title…
 <button type="button"></button>
 </div>',
       ],
@@ -257,19 +257,19 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
         10 => '<div>
 <a href="" rel="nofollow"></a>
 </div>',
-        11 => '<div>None title
+        11 => '<div>Title, no link
 <a href="" rel="nofollow"></a>
 </div>',
         12 => '<div>
 <span rel="nofollow"></span>
 </div>',
-        13 => '<div>No link title
+        13 => '<div>Title, no link
 <span rel="nofollow"></span>
 </div>',
         14 => '<div>
 <button rel="nofollow" type="button"></button>
 </div>',
-        15 => '<div>Button title
+        15 => '<div>Title, button
 <button rel="nofollow" type="button"></button>
 </div>',
       ],
@@ -314,19 +314,19 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
         10 => '<div>
 <a href="" target="_blank"></a>
 </div>',
-        11 => '<div>None title
+        11 => '<div>Title, no link
 <a href="" target="_blank"></a>
 </div>',
         12 => '<div>
 <span target="_blank"></span>
 </div>',
-        13 => '<div>No link title
+        13 => '<div>Title, no link
 <span target="_blank"></span>
 </div>',
         14 => '<div>
 <button target="_blank" type="button"></button>
 </div>',
-        15 => '<div>Button title
+        15 => '<div>Title, button
 <button target="_blank" type="button"></button>
 </div>',
       ],
