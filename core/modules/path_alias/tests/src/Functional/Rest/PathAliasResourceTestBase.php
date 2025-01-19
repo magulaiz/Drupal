@@ -53,8 +53,8 @@ abstract class PathAliasResourceTestBase extends EntityResourceTestBase {
       'path' => '/<front>',
       'alias' => '/frontpage1',
     ]);
-    $path_alias->save();
     $path_alias->setChangedTime(123456789);
+    $path_alias->save();
 
     return $path_alias;
   }
