@@ -206,6 +206,9 @@ class BooleanOperator extends FilterPluginBase implements FilterOperatorsInterfa
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $form['value'] = [];
 

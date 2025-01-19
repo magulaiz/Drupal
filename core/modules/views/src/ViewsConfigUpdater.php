@@ -96,7 +96,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     TypedConfigManagerInterface $typed_config_manager,
     ViewsData $views_data,
     PluginManagerInterface $formatter_plugin_manager,
-    ViewsHandlerManager $filter_plugin_manager
+    ViewsHandlerManager $filter_plugin_manager,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
@@ -140,7 +140,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   Whether the view was updated.
    */
   public function updateAll(ViewEntityInterface $view) {
-    return $this->processDisplayHandlers($view, FALSE, function(&$handler, $handler_type, $key, $display_id) use ($view) {
+    return $this->processDisplayHandlers($view, FALSE, function (&$handler, $handler_type, $key, $display_id) use ($view) {
       $changed = FALSE;
       if ($this->processEntityArgumentUpdate($view)) {
         $changed = TRUE;
