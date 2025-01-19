@@ -9,6 +9,8 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\views\Plugin\views\filter\BooleanOperator;
+use Drupal\views\Plugin\ViewsHandlerManager;
 
 /**
  * Provides a BC layer for modules providing old configurations.
@@ -74,6 +76,13 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
   protected $triggeredDeprecations = [];
 
   /**
+   * The Views filter plugin manager service.
+   *
+   * @var \Drupal\views\Plugin\ViewsHandlerManager
+   */
+  protected $filterPluginManager;
+
+  /**
    * ViewsConfigUpdater constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -86,19 +95,23 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   The views data service.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $formatter_plugin_manager
    *   The formatter plugin manager service.
+   * @param \Drupal\views\Plugin\ViewsHandlerManager $filter_plugin_manager
+   *   The Views filter plugin manager service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     EntityFieldManagerInterface $entity_field_manager,
     TypedConfigManagerInterface $typed_config_manager,
     ViewsData $views_data,
-    PluginManagerInterface $formatter_plugin_manager
+    PluginManagerInterface $formatter_plugin_manager,
+    ViewsHandlerManager $filter_plugin_manager
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->typedConfigManager = $typed_config_manager;
     $this->viewsData = $views_data;
     $this->formatterPluginManager = $formatter_plugin_manager;
+    $this->filterPluginManager = $filter_plugin_manager;
   }
 
   /**
@@ -110,7 +123,8 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       $container->get('entity_field.manager'),
       $container->get('config.typed'),
       $container->get('views.views_data'),
-      $container->get('plugin.manager.field.formatter')
+      $container->get('plugin.manager.field.formatter'),
+      $container->get('plugin.manager.views.filter')
     );
   }
 
@@ -134,7 +148,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   Whether the view was updated.
    */
   public function updateAll(ViewEntityInterface $view) {
-    return $this->processDisplayHandlers($view, FALSE, function (&$handler, $handler_type, $key, $display_id) use ($view) {
+    return $this->processDisplayHandlers($view, FALSE, function(&$handler, $handler_type, $key, $display_id) use ($view) {
       $changed = FALSE;
       if ($this->processResponsiveImageLazyLoadFieldHandler($handler, $handler_type, $view)) {
         $changed = TRUE;
@@ -159,7 +173,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   Whether the view was updated.
    */
   public function needsResponsiveImageLazyLoadFieldUpdate(ViewEntityInterface $view): bool {
-    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+    return $this->processDisplayHandlers($view, TRUE, function(&$handler, $handler_type) use ($view) {
       return $this->processResponsiveImageLazyLoadFieldHandler($handler, $handler_type, $view);
     });
   }
@@ -235,6 +249,59 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
   }
 
   /**
+   * Update boolean filter settings.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function needsBooleanFilterAcceptNullUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (array &$handler, string $handler_type) use ($view) {
+      return $this->processBooleanFilterAcceptNull($handler, $handler_type, $view);
+    });
+  }
+
+  /**
+   * Processes the boolean filter settings to accept null.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   *   If the filter plugin instance cannot be created.
+   */
+  protected function processBooleanFilterAcceptNull(array &$handler, string $handler_type, ViewEntityInterface $view): bool {
+    $changed = FALSE;
+    $displays = $view->get('display');
+    foreach ($displays as &$display) {
+      if (isset($display['display_options']['filters'])) {
+        foreach ($display['display_options']['filters'] as &$filter) {
+          // Any of the children of the modified classes will also be inheriting
+          // the new settings.
+          $filter_instance = $this->filterPluginManager->getHandler($filter);
+          if (($filter_instance instanceof BooleanOperator) && !isset($filter['accept_null'])) {
+            $filter['accept_null'] = FALSE;
+            $changed = TRUE;
+          }
+        }
+      }
+    }
+    if ($changed) {
+      $view->set('display', $displays);
+    }
+    return $changed;
+  }
+
+  /**
    * Add eager load option to all oembed type field configurations.
    *
    * @param \Drupal\views\ViewEntityInterface $view
@@ -244,7 +311,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   Whether the view was updated.
    */
   public function needsOembedEagerLoadFieldUpdate(ViewEntityInterface $view) {
-    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+    return $this->processDisplayHandlers($view, TRUE, function(&$handler, $handler_type) use ($view) {
       return $this->processOembedEagerLoadFieldHandler($handler, $handler_type, $view);
     });
   }
@@ -294,7 +361,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   Whether the view was updated.
    */
   public function needsTimestampFormatterTimeDiffUpdate(ViewEntityInterface $view): bool {
-    return $this->processDisplayHandlers($view, TRUE, function (array &$handler, string $handler_type): bool {
+    return $this->processDisplayHandlers($view, TRUE, function(array &$handler, string $handler_type): bool {
       return $this->processTimestampFormatterTimeDiffUpdateHandler($handler, $handler_type);
     });
   }
@@ -407,7 +474,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   TRUE if the view has any displays that needed to be updated.
    */
   public function needsRevisionFieldHyphenFix(ViewEntityInterface $view): bool {
-    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+    return $this->processDisplayHandlers($view, TRUE, function(&$handler, $handler_type) use ($view) {
       return $this->processRevisionFieldHyphenFix($view);
     });
   }
