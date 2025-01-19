@@ -33,7 +33,6 @@ class WorkspaceContentTranslationTest extends KernelTestBase {
     'content_translation',
     'entity_test',
     'language',
-    'path_alias',
     'user',
     'workspaces',
   ];
@@ -66,7 +65,7 @@ class WorkspaceContentTranslationTest extends KernelTestBase {
   /**
    * Tests translations created in a workspace.
    *
-   * @covers \Drupal\workspaces\EntityOperations::entityTranslationInsert
+   * @covers \Drupal\workspaces\Hook\EntityOperations::entityTranslationInsert
    */
   public function testTranslations(): void {
     $storage = $this->entityTypeManager->getStorage('entity_test_mulrevpub');

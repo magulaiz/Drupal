@@ -11,6 +11,7 @@ use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
  *
  * @group OpenTelemetry
  * @group #slow
+ * @requires extension apcu
  */
 class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
 
@@ -44,14 +45,22 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(4, $performance_data->getQueryCount());
-    $this->assertSame(45, $performance_data->getCacheGetCount());
-    $this->assertSame(0, $performance_data->getCacheSetCount());
-    $this->assertSame(0, $performance_data->getCacheDeleteCount());
-    $this->assertSame(0, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(13, $performance_data->getCacheTagIsValidCount());
-    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
-    $this->assertSame(2, $performance_data->getCacheTagLookupQueryCount());
+
+    $expected = [
+      'QueryCount' => 4,
+      'CacheGetCount' => 40,
+      'CacheSetCount' => 0,
+      'CacheDeleteCount' => 0,
+      'CacheTagChecksumCount' => 0,
+      'CacheTagIsValidCount' => 11,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 2,
+      'ScriptCount' => 1,
+      'ScriptBytes' => 123850,
+      'StylesheetCount' => 2,
+      'StylesheetBytes' => 43600,
+    ];
+    $this->assertMetrics($expected, $performance_data);
   }
 
 }

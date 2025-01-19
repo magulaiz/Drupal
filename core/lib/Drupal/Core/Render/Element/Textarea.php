@@ -17,10 +17,10 @@ use Drupal\Core\Render\Attribute\FormElement;
  *
  * Usage example:
  * @code
- * $form['text'] = array(
+ * $form['text'] = [
  *   '#type' => 'textarea',
  *   '#title' => $this->t('Text'),
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textfield
@@ -33,18 +33,17 @@ class Textarea extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#cols' => 60,
       '#rows' => 5,
       '#resizable' => 'vertical',
       '#process' => [
-        [$class, 'processAjaxForm'],
-        [$class, 'processGroup'],
+        [static::class, 'processAjaxForm'],
+        [static::class, 'processGroup'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderGroup'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'textarea',
       '#theme_wrappers' => ['form_element'],

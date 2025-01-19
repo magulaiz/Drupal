@@ -15,12 +15,12 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  *
  * Usage example:
  * @code
- * $form['settings']['active'] = array(
+ * $form['settings']['active'] = [
  *   '#type' => 'radios',
  *   '#title' => $this->t('Poll status'),
  *   '#default_value' => 1,
- *   '#options' => array(0 => $this->t('Closed'), 1 => $this->t('Active')),
- * );
+ *   '#options' => [0 => $this->t('Closed'), 1 => $this->t('Active')],
+ * ];
  * @endcode
  *
  * Element properties may be set on single option items as follows.
@@ -42,15 +42,14 @@ class Radios extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#process' => [
-        [$class, 'processRadios'],
+        [static::class, 'processRadios'],
       ],
       '#theme_wrappers' => ['radios'],
       '#pre_render' => [
-        [$class, 'preRenderCompositeFormElement'],
+        [static::class, 'preRenderCompositeFormElement'],
       ],
     ];
   }
