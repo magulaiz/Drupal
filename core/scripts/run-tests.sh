@@ -172,7 +172,7 @@ echo "\n";
 echo "Drupal test run\n\n";
 echo sprintf("Drupal Version:  %s\n", \Drupal::VERSION);
 echo sprintf("PHP Version:     %s\n", \PHP_VERSION);
-echo sprintf("PHP Binary:      %s\n", $php);
+echo sprintf("PHP Binary:      %s\n", $php ?? getenv('_'));
 echo sprintf("PHPUnit Version: %s\n", Version::id());
 echo "-------------------------------\n";
 echo "\n";
@@ -975,8 +975,8 @@ function simpletest_script_get_test_list() {
     if ((int) $args['ci-parallel-node-total'] <= 1 ) {
       sort_tests_by_type_and_methods($slow_tests);
       sort_tests_by_type_and_methods($not_slow_tests);
-      $all_tests = array_merge($slow_tests, $not_slow_tests);
-      dump_tests_sequence($all_tests, $args);
+      $all_tests_list = array_merge($slow_tests, $not_slow_tests);
+      dump_tests_sequence($all_tests_list, $args);
       $test_list = array_keys($all_tests);
     }
     else {
@@ -985,7 +985,8 @@ function simpletest_script_get_test_list() {
       // tests first and distribute tests between test runners.
       sort_tests_by_public_method_count($slow_tests);
       sort_tests_by_public_method_count($not_slow_tests);
-      dump_tests_sequence(array_merge($slow_tests, $not_slow_tests), $args);
+      $all_tests_list = array_merge($slow_tests, $not_slow_tests);
+      dump_tests_sequence($all_tests_list, $args);
 
       // Now set up a bin per test runner.
       $bin_count = (int) $args['ci-parallel-node-total'];
@@ -1001,6 +1002,7 @@ function simpletest_script_get_test_list() {
       $binned_other_tests = place_tests_into_bins($not_slow_tests, $bin_count);
       $other_tests_for_job = $binned_other_tests[$args['ci-parallel-node-index'] - 1];
       $test_list = array_merge($slow_tests_for_job, $other_tests_for_job);
+      dump_bin_tests_sequence($args['ci-parallel-node-index'], $test_list, $args);
     }
   }
   else {
@@ -1184,6 +1186,35 @@ function place_tests_into_bins(array $tests, int $bin_count) {
     $bins[($key % $bin_count)][] = $test;
   }
   return $bins;
+}
+
+/**
+ * Dumps the list of tests in order of execution for a bin.
+ *
+ * @param int $bin
+ *   The bin.
+ * @param array $tests
+ *   The list of test class to run for this bin.
+ * @param array $args
+ *   The command line arguments.
+ */
+function dump_bin_tests_sequence(int $bin, array $tests, array $args): void {
+  if ($args['debug-discovery'] === FALSE) {
+    return;
+  }
+  echo "Test execution sequence for this PARALLEL BIN #{$bin}\n";
+  echo "-------------------------------------------------\n\n";
+  echo sprintf(" Seq %s\n", "Class");
+  echo "-------------------------------------------------\n";
+  $i = 0;
+  foreach ($tests as $testClass) {
+    echo sprintf(
+      "%4d %s\n",
+      ++$i,
+      trim_with_ellipsis($testClass, 80, \STR_PAD_LEFT),
+    );
+  }
+  echo "-------------------------------------------------\n\n";
 }
 
 /**
