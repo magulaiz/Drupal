@@ -1062,6 +1062,14 @@ function template_preprocess_maintenance_task_list(&$variables): void {
  * details.
  */
 function template_preprocess(&$variables, $hook, $info) {
+  $count = [];
+
+  // Track run count for each hook to provide zebra striping. See
+  // "template_preprocess_block()" which provides the same feature specific to
+  // blocks.
+  $count[$hook] = isset($count[$hook]) && is_int($count[$hook]) ? $count[$hook] : 1;
+  $variables['zebra'] = ($count[$hook] % 2) ? 'odd' : 'even';
+
   // Merge in variables that don't depend on hook and don't change during a
   // single page request.
   // Use the advanced drupal_static() pattern, since this is called very often.
