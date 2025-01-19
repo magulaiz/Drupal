@@ -72,8 +72,8 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
       // Complex internal links.
       // Result link: '?a[0]=1&a[1]=2'.
       3 => ['uri' => 'internal:?a[]=1&a[]=2'],
-      // Result link: '?b[0]=1&b[1]=2'.
-      4 => ['uri' => 'internal:?b[0]=1&b[1]=2'],
+      // Result link: '?b[1]=1&b[0]=2'.
+      4 => ['uri' => 'internal:?b[1]=1&b[0]=2'],
       // UrlHelper::buildQuery will change order of params.
       // Result link: '?c[0]=1&c[1]=2&d=3'.
       5 => ['uri' => 'internal:?c[]=1&d=3&c[]=2'],
@@ -116,7 +116,7 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
 <a href="?a%5B0%5D=1&amp;a%5B1%5D=2">?a%5B0%5D=1&amp;a%5B1%5D=2</a>
 </div>',
       4 => '<div>
-<a href="?b%5B0%5D=1&amp;b%5B1%5D=2">?b%5B0%5D=1&amp;b%5B1%5D=2</a>
+<a href="?b%5B1%5D=1&amp;b%5B0%5D=2">?b%5B1%5D=1&amp;b%5B0%5D=2</a>
 </div>',
       5 => '<div>
 <a href="?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3">?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3</a>
@@ -179,7 +179,7 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
 <a href="?a%5B0%5D=1&amp;a%5B1%5D=2">?a%5B…</a>
 </div>',
         4 => '<div>
-<a href="?b%5B0%5D=1&amp;b%5B1%5D=2">?b%5B…</a>
+<a href="?b%5B1%5D=1&amp;b%5B0%5D=2">?b%5B…</a>
 </div>',
         5 => '<div>
 <a href="?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3">?c%5B…</a>
@@ -237,7 +237,7 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
 <a href="?a%5B0%5D=1&amp;a%5B1%5D=2" rel="nofollow">?a%5B0%5D=1&amp;a%5B1%5D=2</a>
 </div>',
         4 => '<div>
-<a href="?b%5B0%5D=1&amp;b%5B1%5D=2" rel="nofollow">?b%5B0%5D=1&amp;b%5B1%5D=2</a>
+<a href="?b%5B1%5D=1&amp;b%5B0%5D=2" rel="nofollow">?b%5B1%5D=1&amp;b%5B0%5D=2</a>
 </div>',
         5 => '<div>
 <a href="?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3" rel="nofollow">?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3</a>
@@ -294,7 +294,7 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
 <a href="?a%5B0%5D=1&amp;a%5B1%5D=2" target="_blank">?a%5B0%5D=1&amp;a%5B1%5D=2</a>
 </div>',
         4 => '<div>
-<a href="?b%5B0%5D=1&amp;b%5B1%5D=2" target="_blank">?b%5B0%5D=1&amp;b%5B1%5D=2</a>
+<a href="?b%5B1%5D=1&amp;b%5B0%5D=2" target="_blank">?b%5B1%5D=1&amp;b%5B0%5D=2</a>
 </div>',
         5 => '<div>
 <a href="?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3" target="_blank">?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3</a>
