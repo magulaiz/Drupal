@@ -218,7 +218,7 @@ class BooleanOperator extends FilterPluginBase {
       $filter_form_type = 'radios';
     }
 
-    $value_type = 'all';
+    $display_options = 'all';
     $source = '';
     if (!empty($form['operator'])) {
       $source = ':input[name="options[operator]"]';
@@ -228,14 +228,14 @@ class BooleanOperator extends FilterPluginBase {
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
         // If the operator is locked and not exposed.
-        $value_type = in_array($this->operator, $this->operatorValues(1)) ? 'value' : 'none';
+        $display_options = in_array($this->operator, $this->operatorValues(1)) ? 'value' : 'none';
       }
       else {
         $source = ':input[name="' . $this->options['expose']['operator_id'] . '"]';
       }
     }
 
-    if ($value_type === 'all' || $value_type === 'value') {
+    if ($display_options === 'all' || $display_options === 'value') {
       $form['value'] = [
         '#type' => $filter_form_type,
         '#title' => $this->value_value,
@@ -252,7 +252,7 @@ class BooleanOperator extends FilterPluginBase {
         $form['value']['#options'] = ['All' => $this->t('- Any -')] + $form['value']['#options'];
       }
 
-      if ($value_type === 'all') {
+      if ($display_options === 'all') {
         // Setup #states for operators with a value.
         foreach ($this->operatorValues(1) as $operator) {
           $form['value']['#states']['visible'][] = [
