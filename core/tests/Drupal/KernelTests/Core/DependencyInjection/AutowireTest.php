@@ -184,4 +184,57 @@ class AutowireTest extends KernelTestBase {
     $this->assertEmpty($autowire, 'The following core controllers can be autowired. Remove the create() method:' . PHP_EOL . implode(PHP_EOL, $autowire));
   }
 
+  /**
+   * Tests that core services are autowired where possible.
+   */
+  public function testCoreAutowiring(): void {
+    $services = [];
+    $aliases = [];
+    foreach (Yaml::decode(file_get_contents('core/core.services.yml'))['services'] as $id => $service) {
+      if (is_string($service)) {
+        $aliases[$id] = substr($service, 1);
+      }
+      elseif (isset($service['class']) && isset($service['arguments'])) {
+        $services[$id] = $service;
+      }
+    }
+
+    $autowire = [];
+    foreach ($services as $id => $service) {
+      $ignored = [
+        'cache_tags.invalidator.checksum',
+        'cache.backend.database',
+        'lock',
+      ];
+      if (in_array($id, $ignored)) {
+        // @todo Autowiring these breaks ServiceProviderTest and
+        // DrupalKernelTest, because ServiceProviderTestServiceProvider and
+        // ContainerRebuildTestServiceProvider tries to get instances of
+        // services during the compiler's ModifyServiceDefinitionsPass, before
+        // autowire pass populates the constructor parameters.
+        continue;
+      }
+
+      if (!method_exists($service['class'], '__construct')) {
+        continue;
+      }
+
+      $constructor = new \ReflectionMethod($service['class'], '__construct');
+      foreach ($constructor->getParameters() as $pos => $parameter) {
+        $interface = (string) $parameter->getType();
+        if (!isset($aliases[$interface])) {
+          // There is no service to autowire.
+          continue 2;
+        }
+        if ($aliases[$interface] !== substr($service['arguments'][$pos], 1)) {
+          // The service is different.
+          continue 2;
+        }
+      }
+      $autowire[] = $id;
+    }
+
+    $this->assertEmpty($autowire, 'The following core services can be autowired. Remove their arguments from the services.yml file:' . PHP_EOL . implode(PHP_EOL, $autowire));
+  }
+
 }
