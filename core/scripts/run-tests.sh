@@ -990,8 +990,6 @@ function simpletest_script_get_test_list() {
 
       // Now set up a bin per test runner.
       $bin_count = (int) $args['ci-parallel-node-total'];
-      $slow_tests = array_keys($slow_tests);
-      $not_slow_tests = array_keys($not_slow_tests);
 
       // Now loop over the slow tests and add them to a bin one by one, this
       // distributes the tests evenly across the bins.
@@ -1002,7 +1000,8 @@ function simpletest_script_get_test_list() {
       $binned_other_tests = place_tests_into_bins($not_slow_tests, $bin_count);
       $other_tests_for_job = $binned_other_tests[$args['ci-parallel-node-index'] - 1];
       $test_list = array_merge($slow_tests_for_job, $other_tests_for_job);
-      dump_bin_tests_sequence($args['ci-parallel-node-index'], $test_list, $args);
+      dump_bin_tests_sequence($args['ci-parallel-node-index'], $all_tests_list, $test_list, $args);
+      $test_list = array_keys($test_list);
     }
   }
   else {
@@ -1145,13 +1144,13 @@ function dump_tests_sequence(array &$tests, array $args): void {
   }
   echo "Test execution sequence\n";
   echo "-----------------------\n\n";
-  echo sprintf(" Seq Slow?  %15s  Cnt %s\n", "Group", "Class");
+  echo " Seq Slow? Group            Cnt Class\n";
   echo "-----------------------------------------\n";
   $i = 0;
   foreach ($tests as &$testInfo) {
     $testInfo['sequence'] = ++$i;
     echo sprintf(
-      "%4d %5s  %15s %4d %s\n",
+      "%4d %5s %15s %4d %s\n",
       $testInfo['sequence'],
       in_array('#slow', $testInfo['groups']) ? '#slow' : '',
       trim_with_ellipsis($testInfo['group'], 15, \STR_PAD_RIGHT),
@@ -1182,8 +1181,9 @@ function place_tests_into_bins(array $tests, int $bin_count) {
   // Create a bin corresponding to each parallel test job.
   $bins = array_fill(0, $bin_count, []);
   // Go through each test and add them to one bin at a time.
+  $i = 0;
   foreach ($tests as $key => $test) {
-    $bins[($key % $bin_count)][] = $test;
+    $bins[($i++ % $bin_count)][$key] = $test;
   }
   return $bins;
 }
@@ -1193,25 +1193,29 @@ function place_tests_into_bins(array $tests, int $bin_count) {
  *
  * @param int $bin
  *   The bin.
+ * @param array $allTests
+ *   The list of all test classes discovered.
  * @param array $tests
  *   The list of test class to run for this bin.
  * @param array $args
  *   The command line arguments.
  */
-function dump_bin_tests_sequence(int $bin, array $tests, array $args): void {
+function dump_bin_tests_sequence(int $bin, array $allTests, array $tests, array $args): void {
   if ($args['debug-discovery'] === FALSE) {
     return;
   }
   echo "Test execution sequence for this PARALLEL BIN #{$bin}\n";
   echo "-------------------------------------------------\n\n";
-  echo sprintf(" Seq %s\n", "Class");
-  echo "-------------------------------------------------\n";
-  $i = 0;
-  foreach ($tests as $testClass) {
+  echo " Seq Slow? Group            Cnt Class\n";
+  echo "-----------------------------------------\n";
+  foreach ($tests as $testInfo) {
     echo sprintf(
-      "%4d %s\n",
-      ++$i,
-      trim_with_ellipsis($testClass, 80, \STR_PAD_LEFT),
+      "%4d %5s %15s %4d %s\n",
+      $allTests[$testInfo['name']]['sequence'],
+      in_array('#slow', $testInfo['groups']) ? '#slow' : '',
+      trim_with_ellipsis($testInfo['group'], 15, \STR_PAD_RIGHT),
+      $testInfo['tests_count'],
+      trim_with_ellipsis($testInfo['name'], 60, \STR_PAD_LEFT),
     );
   }
   echo "-------------------------------------------------\n\n";
