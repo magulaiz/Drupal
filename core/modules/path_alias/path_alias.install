@@ -10,7 +10,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 /**
  * Add created field.
  */
-function path_alias_update_8001() {
+function path_alias_update_8001(): void {
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
 
   $storage_definition = BaseFieldDefinition::create('changed')
