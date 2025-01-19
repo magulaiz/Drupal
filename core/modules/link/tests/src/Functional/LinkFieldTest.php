@@ -80,7 +80,7 @@ class LinkFieldTest extends BrowserTestBase {
    * Tests link field URL validation.
    */
   protected function doTestUrlValidation(): void {
-    $field_name = $this->randomMachineName();
+    $field_name = 'test_url_validation';
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
@@ -107,11 +107,6 @@ class LinkFieldTest extends BrowserTestBase {
         'settings' => [
           'placeholder_url' => 'http://example.com',
         ],
-      ])
-      ->save();
-    $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
-      ->setComponent($field_name, [
-        'type' => 'link',
       ])
       ->save();
 
@@ -195,32 +190,28 @@ class LinkFieldTest extends BrowserTestBase {
       // URI for an entity that doesn't exist, but with a valid ID.
       'entity:user/999999' => 'entity:user/999999',
     ];
-    // Valid internal values for LinkItemInterface::LINK_EXTERNAL test. Use
-    // only 3 items because ::assertInvalidEntries() make request on each item.
-    $link_external__valid_internal_entries = [
-      '/entity_test/add' => '/entity_test/add',
-      '/#example' => '<front>#example',
-      'entity:user/999999' => 'entity:user/999999',
-    ];
 
     // Define some invalid URLs.
-    $validation_error_1 = "The path '@link_path' is invalid.";
-    $validation_error_2 = 'Manually entered paths should start with one of the following characters: / ? #';
-    $validation_error_3 = "The path '@link_path' is inaccessible.";
     $invalid_external_entries = [
-      // Invalid protocol
-      'invalid://not-a-valid-protocol' => $validation_error_1,
-      // Missing host name
-      'http://' => $validation_error_1,
+      // Invalid protocol.
+      'invalid://not-a-valid-protocol' => "The path 'invalid://not-a-valid-protocol' is invalid.",
+      // Missing host name.
+      'http://' => "The path 'http://' is invalid.",
     ];
     $invalid_internal_entries = [
-      'no-leading-slash' => $validation_error_2,
-      'entity:non_existing_entity_type/yar' => $validation_error_1,
+      'entity:non_existing_entity_type/yar' => "The path 'entity:user/invalid-parameter' is invalid.",
       // URI for an entity that doesn't exist, with an invalid ID.
-      'entity:user/invalid-parameter' => $validation_error_1,
+      'entity:user/invalid-parameter' => "The path 'entity:user/invalid-parameter' is invalid.",
+    ];
+    // This error can't be combined with other errors. Because element "uri"
+    // validation mutes all other error messages.
+    $invalid_internal_manually_entered_paths = [
+      'no-leading-slash' => 'Manually entered paths should start with one of the following characters: / ? #',
+      '<test>' => 'Manually entered paths should start with one of the following characters: / ? #',
     ];
 
-    // Test external and internal URLs for 'link_type' = LinkItemInterface::LINK_GENERIC.
+    // 'link_type' = LinkItemInterface::LINK_GENERIC.
+    // Test external and internal URLs for that 'link_type'.
     $this->assertValidEntries($field_name, $valid_external_entries + $valid_internal_entries);
     $this->assertInvalidEntries($field_name, $invalid_external_entries + $invalid_internal_entries);
 
@@ -228,21 +219,30 @@ class LinkFieldTest extends BrowserTestBase {
     $this->field->setSetting('link_type', LinkItemInterface::LINK_EXTERNAL);
     $this->field->save();
     $this->assertValidEntries($field_name, $valid_external_entries);
-    $this->assertInvalidEntries($field_name, $link_external__valid_internal_entries + $invalid_external_entries);
+    $this->assertInvalidEntries($field_name, array_map(static fn ($value) => "The path '$value' is invalid.", $valid_internal_entries) + $invalid_external_entries);
 
     // Test external URLs for 'link_type' = LinkItemInterface::LINK_INTERNAL.
     $this->field->setSetting('link_type', LinkItemInterface::LINK_INTERNAL);
     $this->field->save();
     $this->assertValidEntries($field_name, $valid_internal_entries);
-    $this->assertInvalidEntries($field_name, $valid_external_entries + $invalid_internal_entries);
-
+    $this->assertInvalidEntries($field_name, array_map(static fn ($value) => "The path '$value' is invalid.", $valid_external_entries) + $invalid_internal_entries);
+    $this->assertInvalidEntries($field_name, $invalid_internal_manually_entered_paths);
     // Ensure that users with 'link to any page', don't apply access checking.
     $this->drupalLogin($this->drupalCreateUser([
       'view test entity',
       'administer entity_test content',
     ]));
     $this->assertValidEntries($field_name, ['/entity_test/add' => '/entity_test/add']);
-    $this->assertInValidEntries($field_name, ['/admin' => $validation_error_3]);
+    $this->assertInvalidEntries($field_name, ['/admin' => "The path '/admin' is inaccessible."]);
+
+    // Remove field from field widget form and entity display, so it's not
+    // affected on later "doTest..." methods.
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
+      ->removeComponent($field_name)
+      ->save();
+    $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
+      ->removeComponent($field_name)
+      ->save();
   }
 
   /**
@@ -258,12 +258,12 @@ class LinkFieldTest extends BrowserTestBase {
   protected function assertValidEntries(string $field_name, array $valid_entries): void {
     $edit = [];
     $expected_values = [];
-    $i = 0;
+    $delta = 0;
     foreach ($valid_entries as $uri => $expected_field_value) {
-      $field_delta_name = "{$field_name}[$i][uri]";
+      $field_delta_name = "{$field_name}[$delta][uri]";
       $edit[$field_delta_name] = $uri;
       $expected_values[$field_delta_name] = $expected_field_value;
-      $i++;
+      $delta++;
     }
 
     // Create new entity and save all field values.
@@ -273,18 +273,18 @@ class LinkFieldTest extends BrowserTestBase {
     $id = $match[1];
     $this->assertSession()->statusMessageContains('entity_test ' . $id . ' has been created.', 'status');
 
-    // Check each field value.
+    // Check each field delta value.
     foreach ($expected_values as $field_delta_name => $expected_field_value) {
-      $field_value = $this->assertSession()->fieldExists($field_delta_name)->getAttribute('value');
-      $this->assertEquals($expected_field_value, $field_value);
+      $this->assertSession()->fieldValueEquals($field_delta_name, $expected_field_value);
     }
   }
 
   /**
    * Asserts that invalid URLs cannot be submitted.
    *
-   * This is slow method, because for each item at $invalid_entries it makes
-   * separate request, to get separate validation error message.
+   * Error "Manually entered paths should start with one of the following
+   * characters: / ? #" can't be combined with different errors. Because this
+   * mute all others error message.
    *
    * @param string $field_name
    *   The field name.
@@ -294,14 +294,25 @@ class LinkFieldTest extends BrowserTestBase {
    * @internal
    */
   protected function assertInvalidEntries(string $field_name, array $invalid_entries): void {
-    $this->assertLessThan(7, count($invalid_entries), 'Use less then 7 invalid entries. ' . __METHOD__ . '. is slow method.');
+    $edit = [];
+    $delta = 0;
+    // Use array keys.
+    foreach (array_keys($invalid_entries) as $invalid_value) {
+      $edit["{$field_name}[$delta][uri]"] = $invalid_value;
+      $delta++;
+    }
+
+    $this->drupalGet('entity_test/add');
+    $this->submitForm($edit, 'Save');
+    $delta = 0;
     foreach ($invalid_entries as $invalid_value => $error_message) {
-      $edit = [
-        "{$field_name}[0][uri]" => $invalid_value,
-      ];
-      $this->drupalGet('entity_test/add');
-      $this->submitForm($edit, 'Save');
-      $this->assertSession()->statusMessageContains(strtr($error_message, ['@link_path' => $invalid_value]), 'error');
+      // Find status error.
+      $this->assertSession()->statusMessageContains($error_message, 'error');
+      // Input field has class "error". Entered value not changed.
+      $field_delta = $this->assertSession()->fieldExists("{$field_name}[$delta][uri]");
+      $this->assertTrue($field_delta->hasClass('error'));
+      $this->assertEquals($field_delta->getAttribute('value'), $invalid_value);
+      $delta++;
     }
   }
 
@@ -309,7 +320,7 @@ class LinkFieldTest extends BrowserTestBase {
    * Tests the link title settings of a link field.
    */
   protected function doTestLinkTitle(): void {
-    $field_name = $this->randomMachineName();
+    $field_name = 'test_link_title';
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
@@ -320,7 +331,7 @@ class LinkFieldTest extends BrowserTestBase {
     $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
-      'label' => 'Read more about this entity',
+      'label' => 'Read more about this entity (doTestLinkTitle)',
       'settings' => [
         'title' => DRUPAL_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
@@ -354,7 +365,7 @@ class LinkFieldTest extends BrowserTestBase {
       // Display creation form.
       $this->drupalGet('entity_test/add');
       // Assert label is shown.
-      $this->assertSession()->pageTextContains('Read more about this entity');
+      $this->assertSession()->pageTextContains('Read more about this entity (doTestLinkTitle)');
       $this->assertSession()->fieldValueEquals("{$field_name}[0][uri]", '');
       $this->assertSession()->responseContains('placeholder="http://example.com"');
 
@@ -428,16 +439,21 @@ class LinkFieldTest extends BrowserTestBase {
     $output = $this->renderTestEntity($id);
     $expected_link = (string) Link::fromTextAndUrl($title, Url::fromUri($value))->toString();
     $this->assertStringContainsString($expected_link, $output);
+
+    // Remove field from widget form and entity display, so it's not
+    // affected on later "doTest..." methods.
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
+      ->removeComponent($field_name)
+      ->save();
+    $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
+      ->removeComponent($field_name)
+      ->save();
   }
 
   /**
    * Tests editing a link to a non-node entity.
    */
   protected function doTestEditNonNodeEntityLink(): void {
-
-    $entity_type_manager = \Drupal::entityTypeManager();
-    $entity_test_storage = $entity_type_manager->getStorage('entity_test');
-
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => 'field_link',
@@ -448,16 +464,15 @@ class LinkFieldTest extends BrowserTestBase {
     $this->fieldStorage->save();
     FieldConfig::create([
       'field_storage' => $this->fieldStorage,
-      'label' => 'Read more about this entity',
+      'label' => 'Read more about this entity (doTestEditNonNodeEntityLink)',
       'bundle' => 'entity_test',
       'settings' => [
         'title' => DRUPAL_OPTIONAL,
       ],
     ])->save();
 
-    $entity_type_manager
-      ->getStorage('entity_form_display')
-      ->load('entity_test.entity_test.default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('entity_test', 'entity_test')
       ->setComponent('field_link', [
         'type' => 'link_default',
       ])
@@ -465,7 +480,7 @@ class LinkFieldTest extends BrowserTestBase {
 
     // Create a node and a test entity to have a possibly valid reference for
     // both. Create another test entity that references the first test entity.
-    $entity_test_link = $entity_test_storage->create(['name' => 'correct link target']);
+    $entity_test_link = EntityTest::create(['name' => 'correct link target']);
     $entity_test_link->save();
 
     // Create a node with the same ID as the test entity to ensure that the link
@@ -473,7 +488,7 @@ class LinkFieldTest extends BrowserTestBase {
     $this->drupalCreateNode(['title' => 'wrong link target']);
 
     $correct_link = 'entity:entity_test/' . $entity_test_link->id();
-    $entity_test = $entity_test_storage->create([
+    $entity_test = EntityTest::create([
       'name' => 'correct link target',
       'field_link' => $correct_link,
     ]);
@@ -486,8 +501,9 @@ class LinkFieldTest extends BrowserTestBase {
     $this->assertSession()->fieldValueEquals('field_link[0][uri]', $correct_link);
     $this->submitForm([], 'Save');
 
-    $entity_test_storage->resetCache();
-    $entity_test = $entity_test_storage->load($entity_test->id());
+    \Drupal::entityTypeManager()->getStorage('entity_test')
+      ->resetCache([$entity_test->id()]);
+    $entity_test = EntityTest::load($entity_test->id());
 
     $this->assertEquals($correct_link, $entity_test->get('field_link')->uri);
   }
@@ -508,7 +524,7 @@ class LinkFieldTest extends BrowserTestBase {
    */
   protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE): string {
     if ($reset) {
-      $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
+      \Drupal::entityTypeManager()->getStorage('entity_test')->resetCache([$id]);
     }
     $entity = EntityTest::load($id);
     $display = \Drupal::service('entity_display.repository')
@@ -522,7 +538,7 @@ class LinkFieldTest extends BrowserTestBase {
    * Test link widget exception handled if link uri value is invalid.
    */
   public function testLinkWidgetCaughtExceptionEditingInvalidUrl(): void {
-    $field_name = $this->randomMachineName();
+    $field_name = 'caught_exception';
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -540,25 +556,10 @@ class LinkFieldTest extends BrowserTestBase {
       ],
     ])->save();
 
-    $entityTypeManager = $this->container->get('entity_type.manager');
-    $entityTypeManager
-      ->getStorage('entity_form_display')
-      ->load('entity_test.entity_test.default')
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('entity_test', 'entity_test')
       ->setComponent($field_name, [
         'type' => 'link_default',
-      ])
-      ->save();
-
-    $entityTypeManager
-      ->getStorage('entity_view_display')
-      ->create([
-        'targetEntityType' => 'entity_test',
-        'bundle' => 'entity_test',
-        'mode' => 'full',
-        'status' => TRUE,
-      ])
-      ->setComponent($field_name, [
-        'type' => 'link',
       ])
       ->save();
 
@@ -566,12 +567,10 @@ class LinkFieldTest extends BrowserTestBase {
     // Link fields may contain invalid uris such as external URLs without
     // scheme.
     $invalidUri = 'www.example.com';
-    $invalidLinkUrlEntity = $entityTypeManager
-      ->getStorage('entity_test')
-      ->create([
-        'name' => 'Test entity with invalid link URL',
-        $field_name => ['uri' => $invalidUri],
-      ]);
+    $invalidLinkUrlEntity = EntityTest::create([
+      'name' => 'Test entity with invalid link URL',
+      $field_name => ['uri' => $invalidUri],
+    ]);
     $invalidLinkUrlEntity->save();
 
     // If a user without 'link to any page' permission edits an entity, widget
