@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\responsive_image\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -21,9 +23,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',
@@ -59,7 +59,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
-    $type_name = strtolower($this->randomMachineName(8)) . '_test';
+    $type_name = $this->randomMachineName(8) . '_test';
     $type = $this->drupalCreateContentType([
       'name' => $type_name,
       'type' => $type_name,
@@ -70,7 +70,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
   /**
    * Tests formatter settings.
    */
-  public function testResponsiveImageFormatterUi() {
+  public function testResponsiveImageFormatterUi(): void {
     $manage = 'admin/structure/types/manage/' . $this->type;
     $manage_display = $manage . '/display';
     /** @var \Drupal\FunctionalJavascriptTests\JSWebAssert $assert_session */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\pager_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -39,7 +41,7 @@ class PagerTestController extends ControllerBase implements TrustedCallbackInter
   }
 
   /**
-   * Builds a render array for a pageable test table.
+   * Builds a render array for a multi-page test table.
    *
    * @param int $element
    *   The pager element to be used for paging.

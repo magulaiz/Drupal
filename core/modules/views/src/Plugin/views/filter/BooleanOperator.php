@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -21,10 +22,9 @@ use Drupal\views\ViewExecutable;
  *   This might be helpful for performance reasons.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("boolean")
  */
-class BooleanOperator extends FilterPluginBase {
+#[ViewsFilter("boolean")]
+class BooleanOperator extends FilterPluginBase implements FilterOperatorsInterface {
 
   /**
    * The equal query operator.
@@ -52,11 +52,13 @@ class BooleanOperator extends FilterPluginBase {
    *
    * @var bool
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $accept_null = FALSE;
 
   /**
    * The value title.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public string $value_value;
 
   /**
@@ -77,11 +79,9 @@ class BooleanOperator extends FilterPluginBase {
   }
 
   /**
-   * Returns an array of operator information.
-   *
-   * @return array
+   * {@inheritdoc}
    */
-  protected function operators() {
+  public function operators() {
     $operators = [
       '=' => [
         'title' => $this->t('Is equal to'),
@@ -116,14 +116,13 @@ class BooleanOperator extends FilterPluginBase {
         ],
       ];
     }
-
     return $operators;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
     $this->value_value = $this->t('True');
@@ -177,8 +176,13 @@ class BooleanOperator extends FilterPluginBase {
     if (!isset($this->valueOptions)) {
       $this->valueOptions = [1 => $this->t('True'), 0 => $this->t('False')];
     }
+
+    return $this->valueOptions;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -225,6 +229,22 @@ class BooleanOperator extends FilterPluginBase {
     }
     if ($exposed) {
       $identifier = $this->options['expose']['identifier'];
+      if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
+        $display_options = in_array($this->operator, $this->operatorValues(1)) ? 'value' : 'none';
+      }
+      else {
+        $source = ':input[name="' . $this->options['expose']['operator_id'] . '"]';
+      }
+    }
+
+    if ($display_options === 'all' || $display_options === 'value') {
+      $form['value'] = [
+        '#type' => $filter_form_type,
+        '#title' => $this->value_value,
+        '#options' => $this->valueOptions,
+        '#default_value' => $this->value,
+      ];
+      $identifier = $this->options['expose']['identifier'];
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
         // If the operator is locked and not exposed.
@@ -243,7 +263,7 @@ class BooleanOperator extends FilterPluginBase {
         '#default_value' => $this->value,
       ];
       $user_input = $form_state->getUserInput();
-      if ($exposed && !isset($user_input[$identifier])) {
+      if ($exposed && isset($identifier) && !isset($user_input[$identifier])) {
         $user_input[$identifier] = $this->value;
         $form_state->setUserInput($user_input);
       }
@@ -268,12 +288,18 @@ class BooleanOperator extends FilterPluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function valueValidate($form, FormStateInterface $form_state) {
     if ($form_state->getValue(['options', 'value']) == 'All' && !$form_state->isValueEmpty(['options', 'expose', 'required'])) {
       $form_state->setErrorByName('value', $this->t('You must select a value unless this is an non-required exposed filter.'));
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function adminSummary() {
     if ($this->isAGroup()) {
       return $this->t('grouped');
@@ -293,8 +319,21 @@ class BooleanOperator extends FilterPluginBase {
 
       return $this->operator;
     }
+    if (in_array($this->operator, $this->operatorValues(1), TRUE)) {
+      $this->getValueOptions();
+      // Now that we have the valid options for this filter, just return the
+      // human-readable label based on the current value.  The valueOptions
+      // array is keyed with either 0 or 1, so if the current value is not
+      // empty, use the label for 1, and if it's empty, use the label for 0.
+      return $this->operator . ' ' . $this->valueOptions[!empty($this->value)];
+    }
+
+    return $this->operator;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function defaultExposeOptions() {
     parent::defaultExposeOptions();
     $this->options['expose']['operator_id'] = '';
@@ -311,7 +350,7 @@ class BooleanOperator extends FilterPluginBase {
 
     $info = $this->operators();
     if (!empty($info[$this->operator]['method'])) {
-      call_user_func([$this, $info[$this->operator]['method']], $field, $info[$this->operator]['query_operator'] ?? NULL);
+      $this->{$info[$this->operator]['method']}($field, $info[$this->operator]['query_operator'] ?? NULL);
     }
   }
 
@@ -361,39 +400,38 @@ class BooleanOperator extends FilterPluginBase {
   }
 
   /**
-   * Filters by the empty (NULL) operator.
+   * Filters by operator empty.
    *
    * @param string $field
-   *   The expression pointing to the queries field, for example "foo.bar".
+   *   The views field.
    */
-  protected function opEmpty($field) {
+  protected function opEmpty(string $field): void {
     if ($this->operator === 'empty') {
-      $operator = 'IS NULL';
+      $operator = "IS NULL";
     }
     else {
-      $operator = 'IS NOT NULL';
+      $operator = "IS NOT NULL";
     }
 
     $this->query->addWhere($this->options['group'], $field, NULL, $operator);
   }
 
   /**
-   * Returns the current operator values.
+   * Returns operators for values.
    *
    * @param int $values
-   *   The operator value.
+   *   The values filter value.
    *
-   * @return array
-   *   The supported operators.
+   * @return string[]
+   *   A filtered list of operators.
    */
-  protected function operatorValues($values = 1) {
+  protected function operatorValues(int $values = 1): array {
     $options = [];
     foreach ($this->operators() as $id => $info) {
-      if (isset($info['values']) && $info['values'] == $values) {
+      if (isset($info['values']) && $info['values'] === $values) {
         $options[] = $id;
       }
     }
-
     return $options;
   }
 
