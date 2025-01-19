@@ -2,7 +2,6 @@
 
 namespace Drupal\locale\Hook;
 
-use Drupal\Core\Form\SettingsFormHelper;
 use Drupal\Core\Link;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -325,29 +324,6 @@ class LocaleHooks {
       ];
       $form['actions']['submit']['#submit'][] = 'locale_form_language_admin_edit_form_alter_submit';
     }
-  }
-
-  /**
-   * Implements hook_form_FORM_ID_alter() for system_file_system_settings().
-   *
-   * Add interface translation directory setting to directories configuration.
-   */
-  #[Hook('form_system_file_system_settings_alter')]
-  public function formSystemFileSystemSettingsAlter(&$form, FormStateInterface $form_state) : void {
-    $form['translation_path'] = [
-      '#type' => 'textfield',
-      '#title' => t('Interface translations directory'),
-      '#default_value' => \Drupal::configFactory()->getEditable('locale.settings')->get('translation.path'),
-      '#maxlength' => 255,
-      '#description' => t('A local file system path where interface translation files will be stored.'),
-      '#required' => TRUE,
-      '#after_build' => [[SettingsFormHelper::class, 'checkDirectory']],
-      '#weight' => 10,
-    ];
-    if ($form['file_default_scheme']) {
-      $form['file_default_scheme']['#weight'] = 20;
-    }
-    $form['#submit'][] = 'locale_system_file_system_settings_submit';
   }
 
 }
