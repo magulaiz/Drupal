@@ -33,6 +33,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   any stub entities.
  * - no_stub: (optional) Prevents the creation of a stub entity when no
  *   relationship is found in the migration map.
+ * - create_only_valid: (Optional) Will only create a stub if the referenced
+ *   source row exists. Defaults to FALSE.
  *
  * Examples:
  *
@@ -235,7 +237,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
 
     if (!$destination_ids && ($self || isset($this->configuration['stub_id']) || count($lookup_migration_ids) == 1)) {
       // If the lookup didn't succeed, figure out which migration will do the
-      // stubbing.
+      // stubbing. "$stub_migration" is the ID of a migration.
       if ($self) {
         $stub_migration = $this->migration->id();
       }
@@ -248,14 +250,18 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       // Rethrow any exception as a MigrateException so the executable can shut
       // down the migration.
       try {
-        $destination_ids = $this->migrateStub->createStub($stub_migration, $source_id_values[$stub_migration], [], FALSE);
+        $create_only_valid = (bool) ($this->configuration['create_only_valid'] ?? FALSE);
+        $destination_ids = $this->migrateStub->createStub($stub_migration, $source_id_values[$stub_migration], [], FALSE, $create_only_valid);
       }
       catch (\LogicException) {
         // For BC reasons, we must allow attempting to stub a derived migration.
+        // This also catches LogicExceptions thrown in
+        // MigrateStub::doCreateStub().
       }
       catch (PluginNotFoundException) {
         // For BC reasons, we must allow attempting to stub a non-existent
-        // migration.
+        // migration. This also catches PluginNotFoundExceptions thrown in
+        // MigrateStub::doCreateStub().
       }
       catch (MigrateException $e) {
         throw $e;

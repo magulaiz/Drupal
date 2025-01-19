@@ -4,6 +4,7 @@ namespace Drupal\migrate;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 
@@ -52,6 +53,9 @@ class MigrateStub implements MigrateStubInterface {
    *   generally index all return arrays for consistency and to provide as much
    *   information as possible, but this parameter is added for backwards
    *   compatibility to allow accessing the original array.
+   * @param bool $create_only_valid
+   *   (optional) Create stub only if the provided source IDs can be found in
+   *   the source of the given migration. Defaults to FALSE.
    *
    * @return array|false
    *   An array of destination ids for the new stub, keyed by destination id
@@ -60,8 +64,9 @@ class MigrateStub implements MigrateStubInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\migrate\MigrateException
+   * @throws \LogicException
    */
-  public function createStub($migration_id, array $source_ids, array $default_values = [], $key_by_destination_ids = NULL) {
+  public function createStub($migration_id, array $source_ids, array $default_values = [], $key_by_destination_ids = NULL, bool $create_only_valid = FALSE) {
     $migrations = $this->migrationPluginManager->createInstances([$migration_id]);
     if (!$migrations) {
       throw new PluginNotFoundException($migration_id);
@@ -70,7 +75,9 @@ class MigrateStub implements MigrateStubInterface {
       throw new \LogicException(sprintf('Cannot stub derivable migration "%s".  You must specify the id of a specific derivative to stub.', $migration_id));
     }
     $migration = reset($migrations);
-    $source_id_keys = array_keys($migration->getSourcePlugin()->getIds());
+
+    $source_plugin = $migration->getSourcePlugin();
+    $source_id_keys = array_keys($source_plugin->getIds());
     if (count($source_id_keys) !== count($source_ids)) {
       throw new \InvalidArgumentException('Expected and provided source id counts do not match.');
     }
@@ -85,6 +92,22 @@ class MigrateStub implements MigrateStubInterface {
     if (($key_by_destination_ids !== FALSE) && array_keys($stub) === range(0, count($stub) - 1)) {
       $stub = array_combine(array_keys($migration->getDestinationPlugin()->getIds()), $stub);
     }
+    // Check the existence of a source that matches the source IDs before
+    // creating a stub, if applicable.
+    if ($create_only_valid) {
+      if ($source_plugin instanceof MigrateSourceIdCheckInterface) {
+        $stub_should_be_created = $source_plugin->hasSourceIds($source_ids);
+      }
+      else {
+        // Fallback to checking each source ID.
+        $stub_should_be_created = $this->hasSourceIdsFallback($source_plugin, $source_ids);
+      }
+
+      if (!$stub_should_be_created) {
+        return FALSE;
+      }
+    }
+
     return $stub;
   }
 
@@ -125,6 +148,39 @@ class MigrateStub implements MigrateStubInterface {
       return $destination_ids;
     }
     return FALSE;
+  }
+
+  /**
+   * Fallback for source plugins that don't implement MigrateSourceIdCheckInterface.
+   *
+   * See \Drupal\migrate\MigrateSourceIdCheckInterface::hasSourceIds().
+   *
+   * @param \Drupal\migrate\Plugin\MigrateSourceInterface $source_plugin
+   *   The source plugin.
+   * @param array $source_ids
+   *   An array of source ids.
+   *
+   * @return bool
+   */
+  protected function hasSourceIdsFallback(MigrateSourceInterface $source_plugin, array $source_ids) {
+    try {
+      $stub_should_be_created = FALSE;
+      foreach ($source_plugin as $row) {
+        assert($row instanceof Row);
+        $id_values = [];
+        foreach (array_keys($source_ids) as $source_id_key) {
+          $id_values[$source_id_key] = $row->getSourceProperty($source_id_key);
+        }
+        $id_values = array_filter($id_values);
+        if ($stub_should_be_created = $id_values === $source_ids) {
+          break 1;
+        }
+      }
+    }
+    catch (\Exception) {
+    }
+
+    return $stub_should_be_created;
   }
 
 }

@@ -5,10 +5,12 @@ namespace Drupal\migrate\Plugin\migrate\source;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
+use Drupal\migrate\MigrateSourceIdCheckInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\id_map\Sql;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -66,7 +68,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see https://www.drupal.org/docs/drupal-apis/database-api
  * @see \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase
  */
-abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface, RequirementsInterface {
+abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface, RequirementsInterface, MigrateSourceIdCheckInterface {
 
   /**
    * The query string.
@@ -471,6 +473,27 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    */
   public function __sleep(): array {
     return array_diff(parent::__sleep(), ['database']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasSourceIds(array $source_ids): bool {
+    $source_plugin_query = $this->query();
+
+    try {
+      foreach ($source_ids as $source_id => $source_id_value) {
+        $source_plugin_query->condition($source_id, $source_id_value);
+      }
+
+      return (bool) $source_plugin_query
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+    }
+    catch (DatabaseExceptionWrapper) {
+      return FALSE;
+    }
   }
 
 }
