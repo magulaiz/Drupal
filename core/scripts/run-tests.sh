@@ -977,7 +977,7 @@ function simpletest_script_get_test_list() {
       sort_tests_by_type_and_methods($not_slow_tests);
       $all_tests_list = array_merge($slow_tests, $not_slow_tests);
       dump_tests_sequence($all_tests_list, $args);
-      $test_list = array_keys($all_tests);
+      $test_list = array_keys($all_tests_list);
     }
     else {
       // Sort all tests by the number of test cases on the test class.
