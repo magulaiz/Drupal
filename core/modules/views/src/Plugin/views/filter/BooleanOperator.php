@@ -195,7 +195,7 @@ class BooleanOperator extends FilterPluginBase implements FilterOperatorsInterfa
   /**
    * {@inheritdoc}
    */
-  protected function operatorForm(&$form, FormStateInterface $form_state) {
+  protected function operatorForm(&$form, FormStateInterface $form_state): void {
     parent::operatorForm($form, $form_state);
 
     $form['accept_null'] = [
