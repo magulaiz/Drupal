@@ -11,6 +11,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
 
+// phpcs:disable Drupal.Semantics.FunctionT.NotLiteralString
+
 /**
  * Tests the validation of translation strings and search results.
  *
@@ -27,6 +29,11 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected bool $useOneTimeLoginLinks = FALSE;
 
   /**
    * Enable interface translation to English.
