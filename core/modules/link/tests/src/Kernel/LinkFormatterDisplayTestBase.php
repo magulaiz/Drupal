@@ -68,7 +68,7 @@ abstract class LinkFormatterDisplayTestBase extends FieldKernelTestBase {
       // Complex internal links.
       // Result link: '?a[0]=1&a[1]=2'.
       3 => ['uri' => 'internal:?a[]=1&a[]=2'],
-      4 => ['uri' => 'internal:?b[1]=1&b[0]=2'],
+      4 => ['uri' => 'internal:?b[0]=1&b[1]=2'],
       // Injecting new test value in the middle of array.
       16 => ['uri' => 'internal:?b[0]=9&b[1]=8'],
       // UrlHelper::buildQuery will change order of params.

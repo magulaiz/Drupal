@@ -166,7 +166,7 @@ class LinkFieldTest extends BrowserTestBase {
 
       // Complex query string. Similar to facet links.
       '?a[]=1&a[]=2'     => '?a[]=1&amp;a[]=2',
-      '?b[1]=1&b[0]=2'   => '?b[1]=1&amp;b[0]=2',
+      '?b[0]=1&b[1]=2'   => '?b[0]=1&amp;b[1]=2',
       '?c[]=1&d=3&c[]=2' => '?c[]=1&amp;d=3&amp;c[]=2',
       '?e[f][g]=h'       => '?e[f][g]=h',
       '?i[j[k]]=l'       => '?i[j[k]]=l',

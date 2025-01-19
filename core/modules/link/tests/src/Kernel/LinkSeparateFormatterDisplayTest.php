@@ -69,7 +69,7 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
 <a href="?a%5B0%5D=1&amp;a%5B1%5D=2">?a%5B0%5D=1&amp;a%5B1%5D=2</a>
 </div>',
       4 => '<div>
-<a href="?b%5B1%5D=1&amp;b%5B0%5D=2">?b%5B1%5D=1&amp;b%5B0%5D=2</a>
+<a href="?b%5B0%5D=1&amp;b%5B1%5D=2">?b%5B0%5D=1&amp;b%5B1%5D=2</a>
 </div>',
       16 => '<div>
 <a href="?b%5B0%5D=9&amp;b%5B1%5D=8">?b%5B0%5D=9&amp;b%5B1%5D=8</a>
@@ -135,7 +135,7 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
 <a href="?a%5B0%5D=1&amp;a%5B1%5D=2">?a%5B…</a>
 </div>',
         4 => '<div>
-<a href="?b%5B1%5D=1&amp;b%5B0%5D=2">?b%5B…</a>
+<a href="?b%5B0%5D=1&amp;b%5B1%5D=2">?b%5B…</a>
 </div>',
         16 => '<div>
 <a href="?b%5B0%5D=9&amp;b%5B1%5D=8">?b%5B…</a>
@@ -196,7 +196,7 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
 <a href="?a%5B0%5D=1&amp;a%5B1%5D=2" rel="nofollow">?a%5B0%5D=1&amp;a%5B1%5D=2</a>
 </div>',
         4 => '<div>
-<a href="?b%5B1%5D=1&amp;b%5B0%5D=2" rel="nofollow">?b%5B1%5D=1&amp;b%5B0%5D=2</a>
+<a href="?b%5B0%5D=1&amp;b%5B1%5D=2" rel="nofollow">?b%5B0%5D=1&amp;b%5B1%5D=2</a>
 </div>',
         16 => '<div>
 <a href="?b%5B0%5D=9&amp;b%5B1%5D=8" rel="nofollow">?b%5B0%5D=9&amp;b%5B1%5D=8</a>
@@ -256,7 +256,7 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
 <a href="?a%5B0%5D=1&amp;a%5B1%5D=2" target="_blank">?a%5B0%5D=1&amp;a%5B1%5D=2</a>
 </div>',
         4 => '<div>
-<a href="?b%5B1%5D=1&amp;b%5B0%5D=2" target="_blank">?b%5B1%5D=1&amp;b%5B0%5D=2</a>
+<a href="?b%5B0%5D=1&amp;b%5B1%5D=2" target="_blank">?b%5B0%5D=1&amp;b%5B1%5D=2</a>
 </div>',
         16 => '<div>
 <a href="?b%5B0%5D=9&amp;b%5B1%5D=8" target="_blank">?b%5B0%5D=9&amp;b%5B1%5D=8</a>
