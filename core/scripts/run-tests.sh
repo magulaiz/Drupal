@@ -168,6 +168,15 @@ if (!Composer::upgradePHPUnitCheck(Version::id())) {
   exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
 }
 
+echo "\n";
+echo "Drupal test run\n\n";
+echo sprintf("Drupal Version:  %s\n", \Drupal::VERSION);
+echo sprintf("PHP Version:     %s\n", \PHP_VERSION);
+echo sprintf("PHP Binary:      %s\n", $php);
+echo sprintf("PHPUnit Version: %s\n", Version::id());
+echo "-------------------------------\n";
+echo "\n";
+
 $test_list = simpletest_script_get_test_list();
 
 // Try to allocate unlimited time to run the tests.
@@ -1128,17 +1137,27 @@ function get_test_type_weight(string $class): int {
  * @param array $args
  *   The command line arguments.
  */
-function dump_tests_sequence(array $tests, array $args): void {
+function dump_tests_sequence(array &$tests, array $args): void {
   if ($args['debug-discovery'] === FALSE) {
     return;
   }
-  echo "Order of test execution\n";
+  echo "Test execution sequence\n";
   echo "-----------------------\n\n";
-  echo sprintf("Slow?  %20s  Cnt %s\n", "Group", "Class");
+  echo sprintf(" Seq Slow?  %15s  Cnt %s\n", "Group", "Class");
   echo "-----------------------------------------\n";
-  foreach ($tests as $testInfo) {
-    echo sprintf("%5s  %20s %4d %s\n", in_array('#slow', $testInfo['groups']) ? '#slow' : '', substr($testInfo['group'], 0, 20), $testInfo['tests_count'], $testInfo['name']);
+  $i = 0;
+  foreach ($tests as &$testInfo) {
+    $testInfo['sequence'] = ++$i;
+    echo sprintf(
+      "%4d %5s  %15s %4d %s\n",
+      $testInfo['sequence'],
+      in_array('#slow', $testInfo['groups']) ? '#slow' : '',
+      trim_with_ellipsis($testInfo['group'], 15, \STR_PAD_RIGHT),
+      $testInfo['tests_count'],
+      trim_with_ellipsis($testInfo['name'], 60, \STR_PAD_LEFT),
+    );
   }
+  echo "-----------------------------------------\n\n";
 }
 
 /**
@@ -1178,12 +1197,6 @@ function simpletest_script_reporter_init() {
     'fail' => 'Fail',
     'exception' => 'Exception',
   ];
-
-  echo "\n";
-  echo "Drupal test run\n";
-  echo "Using PHP Binary: $php\n";
-  echo "---------------\n";
-  echo "\n";
 
   // Tell the user about what tests are to be run.
   if ($args['all']) {
@@ -1520,4 +1533,30 @@ function simpletest_script_load_messages_by_test_id(TestRunResultsStorageInterfa
   }
 
   return $results;
+}
+
+/**
+ * Trims a string adding a leading or trailing ellipsis.
+ *
+ * @param string $input
+ *   The input string.
+ * @param int $length
+ *   The exact trimmed string length.
+ * @param int $side
+ *   Leading or trailing ellipsis.
+ *
+ * @return string
+ *   The trimmed string.
+ */
+function trim_with_ellipsis(string $input, int $length, int $side): string {
+  if (strlen($input) < $length) {
+      return str_pad($input, $length, ' ', \STR_PAD_RIGHT);
+  }
+  elseif (strlen($input) > $length) {
+      return match($side) {
+        \STR_PAD_RIGHT => substr($input, 0, $length - 3) . '...',
+        default => '...' . substr($input, -$length + 3),
+      };
+  }
+  return $input;
 }
