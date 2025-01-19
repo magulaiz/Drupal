@@ -70,7 +70,7 @@ class EntityTranslationPublishTest extends BrowserTestBase {
   /**
    * Creates an unpublished node and checks there's no access to it.
    */
-  public function testUnpublishedNodeAccess() {
+  public function testUnpublishedNodeAccess(): void {
     $this->drupalLogin($this->adminUser);
     $this->drupalLogout();
     $this->drupalGet('node/' . $this->node1->id());
@@ -80,7 +80,7 @@ class EntityTranslationPublishTest extends BrowserTestBase {
   /**
    * Creates a published node and checks there's access to it.
    */
-  public function testPublishedNodeAccess() {
+  public function testPublishedNodeAccess(): void {
     $this->drupalLogin($this->adminUser);
     $this->node1->set('status', 1);
     $this->node1->set('title', 'Published node');
@@ -95,7 +95,7 @@ class EntityTranslationPublishTest extends BrowserTestBase {
    * @throws \Behat\Mink\Exception\ResponseTextException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testUnpublishedTranslationAccess() {
+  public function testUnpublishedTranslationAccess(): void {
     $this->drupalLogin($this->adminUser);
     ConfigurableLanguage::createFromLangcode('fr')->save();
     ConfigurableLanguage::createFromLangcode('es')->save();
