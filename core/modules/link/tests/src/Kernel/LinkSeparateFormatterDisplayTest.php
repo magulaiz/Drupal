@@ -22,6 +22,9 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
    * Tests that links are rendered correctly.
    *
    * Run tests without dataProvider to improve speed.
+   *
+   * @see \Drupal\Tests\link\Kernel\LinkFormatterDisplayTestBase::getTestValues()
+   * @see self::getTestCases()
    */
   public function testLinkSeparateFormatter(): void {
     // Create an entity with link field values provided.
