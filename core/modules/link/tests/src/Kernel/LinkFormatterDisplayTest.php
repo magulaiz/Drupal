@@ -74,17 +74,15 @@ class LinkFormatterDisplayTest extends LinkFormatterDisplayTestBase {
       // Complex internal links.
       // Result link: '?a[0]=1&a[1]=2'.
       3 => ['uri' => 'internal:?a[]=1&a[]=2'],
-      // Result link: '?b[0]=1&b[1]=2'.
       4 => ['uri' => 'internal:?b[0]=1&b[1]=2'],
       // UrlHelper::buildQuery will change order of params.
       // Result link: '?c[0]=1&c[1]=2&d=3'.
       5 => ['uri' => 'internal:?c[]=1&d=3&c[]=2'],
-      // Result link: '?e[f][g]=h'.
       6 => ['uri' => 'internal:?e[f][g]=h'],
-      // Result link: '?i[j[k]]=l'.
       7 => ['uri' => 'internal:?i[j[k]]=l'],
 
       // Query string replace value.
+      // Result link: '?x=1&x=2'.
       8 => ['uri' => 'internal:?x=1&x=2'],
       // Result link: '?z[0]=2'.
       9 => ['uri' => 'internal:?z[0]=1&z[0]=2'],
