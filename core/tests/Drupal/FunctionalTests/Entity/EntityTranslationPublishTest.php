@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\FunctionalTests\Core\Entity;
+namespace Drupal\FunctionalTests\Entity;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
