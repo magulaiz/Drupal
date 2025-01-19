@@ -54,7 +54,7 @@ abstract class LinkFormatterDisplayTestBase extends FieldKernelTestBase {
    *   Values to use at link field setter.
    */
   protected function getTestValues(): array {
-    return [
+    $test_values = [
       // External links.
       0 => [
         'uri' => 'http://www.example.com/content/articles/archive?author=John&year=2012#com',
@@ -69,6 +69,8 @@ abstract class LinkFormatterDisplayTestBase extends FieldKernelTestBase {
       // Result link: '?a[0]=1&a[1]=2'.
       3 => ['uri' => 'internal:?a[]=1&a[]=2'],
       4 => ['uri' => 'internal:?b[1]=1&b[0]=2'],
+      // Injecting new test value in the middle of array.
+      16 => ['uri' => 'internal:?b[0]=9&b[1]=8'],
       // UrlHelper::buildQuery will change order of params.
       // Result link: '?c[0]=1&c[1]=2&d=3'.
       5 => ['uri' => 'internal:?c[]=1&d=3&c[]=2'],
@@ -90,6 +92,9 @@ abstract class LinkFormatterDisplayTestBase extends FieldKernelTestBase {
       15 => ['uri' => 'route:<button>', 'title' => 'Title, button'],
 
     ];
+    // Sort by keys, to be able to inject new test anywhere in the array.
+    ksort($test_values, SORT_NUMERIC);
+    return $test_values;
   }
 
   /**
