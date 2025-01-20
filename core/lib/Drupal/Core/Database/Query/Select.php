@@ -30,26 +30,26 @@ class Select extends Query implements SelectInterface {
   /**
    * The tables against which to JOIN.
    *
+   * @var array
    * This property is a nested array. Each entry is an array representing
    * a single table against which to join. The structure of each entry is:
    *
-   * array(
+   * @code
+   * [
    *   'type' => $join_type (one of INNER, LEFT OUTER, RIGHT OUTER),
    *   'table' => $table,
    *   'alias' => $alias_of_the_table,
    *   'condition' => $join_condition (string or Condition object),
    *   'arguments' => $array_of_arguments_for_placeholders_in_the condition.
    *   'all_fields' => TRUE to SELECT $alias.*, FALSE or NULL otherwise.
-   * )
-   *
+   * ]
+   * @endcode
    * If $table is a string, it is taken as the name of a table. If it is
    * a Select query object, it is taken as a subquery.
    *
    * If $join_condition is a Condition object, any arguments should be
    * incorporated into the object; a separate array of arguments does not
    * need to be provided.
-   *
-   * @var array
    */
   protected $tables = [];
 
@@ -107,6 +107,7 @@ class Select extends Query implements SelectInterface {
 
   /**
    * Indicates if preExecute() has already been called.
+   *
    * @var bool
    */
   protected $prepared = FALSE;
@@ -437,7 +438,7 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function getArguments(PlaceholderInterface $queryPlaceholder = NULL) {
+  public function getArguments(?PlaceholderInterface $queryPlaceholder = NULL) {
     if (!isset($queryPlaceholder)) {
       $queryPlaceholder = $this;
     }
@@ -455,7 +456,7 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function preExecute(SelectInterface $query = NULL) {
+  public function preExecute(?SelectInterface $query = NULL) {
     // If no query object is passed in, use $this.
     if (!isset($query)) {
       $query = $this;
@@ -475,10 +476,9 @@ class Select extends Query implements SelectInterface {
       // taxonomy_term_access to its queries. Provide backwards compatibility
       // by adding both tags here instead of attempting to fix all contrib
       // modules in a coordinated effort.
-      // TODO:
-      // - Extract this mechanism into a hook as part of a public (non-security)
-      //   issue.
-      // - Emit E_USER_DEPRECATED if term_access is used.
+      // @todo Extract this mechanism into a hook as part of a public
+      //   (non-security) issue.
+      // @todo Emit E_USER_DEPRECATED if term_access is used.
       //   https://www.drupal.org/node/2575081
       $term_access_tags = ['term_access' => 1, 'taxonomy_term_access' => 1];
       if (array_intersect_key($this->alterTags, $term_access_tags)) {
