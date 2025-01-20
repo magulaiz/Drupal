@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the system module.
  */
 
+use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\FileSystem\FileSystem as FileSystemComponent;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
@@ -14,6 +15,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionLifecycle;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Utility\PhpRequirements;
@@ -714,6 +716,32 @@ function system_requirements($phase): array {
         ];
       }
     }
+  }
+
+  // Check presence of a CSP-header on SVG-files.
+  if ($phase == 'runtime') {
+    // Verify the CSP-header on svg-files.
+    $fileSystem = Drupal::service('file_system');
+    $fileUrlGenerator = \Drupal::service("file_url_generator");
+
+    // Create a temporary svg-file.
+    $filename = 'public://' . uniqid('svg-csp-test-') . '.svg';
+    $fileSystem->saveData('', $filename, FileExists::Replace);
+    $url = $fileUrlGenerator->generateAbsoluteString($filename);
+
+    // Try to fetch the svg-file, so we can verify the presence of csp-header.
+    $response = \Drupal::httpClient()->head($url, ['headers' => ['Accept' => 'text/plain']]);
+    if (!$response->hasHeader('Content-Security-Policy')) {
+      $requirements['svg_csp_protection'] = [
+        'title' => new TranslatableMarkup('SVG Content-Security-Policy'),
+        'value' => t('Header missing'),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => t('SVG-files can contain embedded scripts, which can pose a security risk. To avoid this, SVG-files should be served with a Content-Security-Policy header that blocks execution of inline scripts. See <a href=":url">:url</a> for more information.', [':url' => 'https://www.drupal.org/node/3493998']),
+      ];
+    }
+
+    // Remove the temporary svg-file.
+    $fileSystem->delete($filename);
   }
 
   // Report cron status.
@@ -1757,6 +1785,17 @@ function system_update_11102(): TranslatableMarkup|null {
     ->getEquivalentUpdate();
   if ($equivalent_update instanceof EquivalentUpdate) {
     return $equivalent_update->toSkipMessage();
+  }
+  return NULL;
+}
+
+/**
+ * Update .htaccess-files to add a CSP-header for image/svg+xml.
+ */
+function system_update_11103(): TranslatableMarkup|null {
+  $htaccessWriter = \Drupal::service('file.htaccess_writer');
+  foreach ($htaccessWriter->defaultProtectedDirs() as $dir) {
+    FileSecurity::writeHtaccess($dir->getPath(), $dir->isPrivate(), TRUE);
   }
   return NULL;
 }
