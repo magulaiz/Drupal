@@ -158,7 +158,7 @@ class ExtensionConfirmForm extends ConfirmFormBase {
    * @param array $form
    *   The form being updated.
    */
-  protected function experimentalModulesFormElements(array &$form) {
+  protected function experimentalModulesFormElements(array &$form): void {
     $this->messenger()->addWarning($this->t('<a href=":url">Experimental modules</a> are provided for testing purposes only. Use at your own risk.', [':url' => 'https://www.drupal.org/core/experimental']));
     $items[] = $this->t('The following modules are experimental: @modules', ['@modules' => implode(', ', array_values($this->modules['experimental']))]);
     $form['message']['#items'][] = $this->t('The following modules are experimental: @modules', ['@modules' => implode(', ', array_values($this->modules['experimental']))]);
@@ -170,7 +170,7 @@ class ExtensionConfirmForm extends ConfirmFormBase {
    * @param array $form
    *   The form being updated.
    */
-  protected function dependentModulesFormElements(array &$form) {
+  protected function dependentModulesFormElements(array &$form): void {
     foreach ($this->modules['dependencies'] as $module => $dependencies) {
       $form['message']['#items'][] = $this->formatPlural(count($dependencies), 'You must enable the @required module to install @module.', 'You must enable the @required modules to install @module.', [
         '@module' => $this->modules['install'][$module],
@@ -259,7 +259,7 @@ class ExtensionConfirmForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     if (!empty($this->modules)) {
       if ($this->currentUser()->hasPermission('administer modules')) {
         $this->installModules($this->modules, TRUE);
@@ -280,7 +280,7 @@ class ExtensionConfirmForm extends ConfirmFormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  protected function submitThemeInstall(FormStateInterface $form_state) {
+  protected function submitThemeInstall(FormStateInterface $form_state): void {
     $themes = $this->themeList->getList();
     $config = $this->configFactory()->getEditable('system.theme');
     try {

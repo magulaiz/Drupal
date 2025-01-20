@@ -91,7 +91,7 @@ trait ExtensionFormTrait {
    * @param bool $reset_messenger
    *   If true, the messenger service is null before adding completion messages.
    */
-  protected function installModules(array $modules, $reset_messenger = FALSE) {
+  protected function installModules(array $modules, $reset_messenger = FALSE): void {
     if (!empty($modules['install'])) {
       try {
         $this->moduleInstaller->install(array_keys($modules['install']));

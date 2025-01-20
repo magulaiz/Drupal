@@ -407,7 +407,7 @@ class ThemeUiTest extends BrowserTestBase {
    *
    * @dataProvider providerTestThemeInstallWithConfirmationForm
    */
-  public function testThemeInstallWithConfirmationForm($theme_name, array $dependent_modules, $question, array $messages, array $form_content, array $after_install_messages, $set_default) {
+  public function testThemeInstallWithConfirmationForm($theme_name, array $dependent_modules, $question, array $messages, array $form_content, array $after_install_messages, $set_default): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->drupalGet('admin/appearance');
@@ -456,7 +456,7 @@ class ThemeUiTest extends BrowserTestBase {
    *   An array of arrays. Details on the specific elements can be found in the
    *   function body.
    */
-  public function providerTestThemeInstallWithConfirmationForm() {
+  public static function providerTestThemeInstallWithConfirmationForm() {
     // Data provider values with the following keys:
     // -'theme_name': The name of the theme being tested.
     // -'dependent_modules': Array of module machine names the theme depends on.
