@@ -6,11 +6,8 @@ use Drupal\Component\Plugin\Attribute\AttributeInterface;
 use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\FileCache\FileCacheInterface;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\NodeFinder;
-use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitor\NameResolver;
-use PhpParser\ParserFactory;
+use Drupal\Component\Utility\ClassDependenciesParser;
+use Drupal\Component\Utility\ClassDependenciesParserInterface;
 
 /**
  * Defines a discovery mechanism to find plugins with attributes.
@@ -18,6 +15,8 @@ use PhpParser\ParserFactory;
 class AttributeClassDiscovery implements DiscoveryInterface {
 
   use DiscoveryTrait;
+
+  protected const CLASS_DEPENDENCIES_PARSER_CLASS = ClassDependenciesParser::class;
 
   /**
    * The file cache object.
@@ -77,7 +76,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               if ($cached = $this->fileCache->get($fileinfo->getPathName())) {
                 if (isset($cached['id'])) {
                   $dependencies = !empty($cached['dependencies']) ? unserialize($cached['dependencies']) : [];
-                  if (!is_array($dependencies) || !$this->hasMissingClassDependencies($dependencies)) {
+                  if (!is_array($dependencies) || !static::CLASS_DEPENDENCIES_PARSER_CLASS::hasMissingDependencies($dependencies)) {
                     // Explicitly unserialize this to create a new object instance.
                     $definitions[$cached['id']] = unserialize($cached['content']);
                   }
@@ -148,11 +147,13 @@ class AttributeClassDiscovery implements DiscoveryInterface {
     // Use PHPParser to check class does not have any missing dependencies
     // (extended class, implemented interfaces, or used traits) which would
     // make reflection throw exceptions or cause a fatal error.
-    if (!($static_parsed_class = $this->getStaticParsedClass($fileinfo))) {
-      return ['id' => NULL, 'content' => NULL, 'dependencies' => NULL];
+    $dependenciesParser = $this->getClassDependenciesParser($fileinfo);
+    if (!$dependenciesParser->hasClassAttribute($this->pluginDefinitionAttributeName)) {
+      return ['id' => NULL, 'content' => NULL, 'dependencies' => []];
     }
-    if (($dependencies = $this->getClassDependencies($static_parsed_class)) &&
-         $this->hasMissingClassDependencies($dependencies)) {
+
+    if (($dependencies = $dependenciesParser->getClassDependencies()) &&
+         static::CLASS_DEPENDENCIES_PARSER_CLASS::hasMissingDependencies($dependencies)) {
       return ['id' => NULL, 'content' => NULL, 'dependencies' => $dependencies];
     }
 
@@ -195,108 +196,17 @@ class AttributeClassDiscovery implements DiscoveryInterface {
   }
 
   /**
-   * Get the dependencies for the class.
-   *
-   * @param \PhpParser\Node\Stmt\Class_ $static_parsed_class
-   *   The plugin class as a statically parsed object.
-   *
-   * @return string[][]
-   *   The dependencies for the class, if any, as a two-dimensional array of
-   *   dependency names indexed by the type, such as 'class' or 'interface' or
-   *   'trait'.
-   */
-  protected function getClassDependencies(Class_ $static_parsed_class): array {
-    // Get lists of interface, class, and trait dependencies. Note that this
-    // list will be filtered by providers in the Core subclass method
-    // AttributeClassDiscovery::getClassDependencies().
-    $interfaces = [];
-    foreach ($static_parsed_class->implements as $interface) {
-      $interfaces[] = (string) $interface;
-    }
-    $extends = [];
-    if ($static_parsed_class->extends) {
-      $extends[] = (string) $static_parsed_class->extends;
-    }
-    $traits = [];
-    foreach ($static_parsed_class->getTraitUses() as $trait_use) {
-      foreach ($trait_use->traits as $trait) {
-        $traits[] = (string) $trait;
-      }
-      foreach ($trait_use->adaptations as $adaptation) {
-        if ($adaptation->trait) {
-          $traits[] = (string) $adaptation->trait;
-        }
-      }
-    }
-
-    return [
-      'class' => $extends,
-      'interface' => $interfaces,
-      'trait' => $traits,
-    ];
-  }
-
-  /**
-   * Get the class parsed by PhpParser, with namespaces resolved.
+   * Gets the class dependencies parser for the plugin file.
    *
    * @param \SplFileInfo $fileinfo
-   *   File info for the class file.
+   *   The SPL file information for the class.
    *
-   * @return \PhpParser\Node\Stmt\Class_|null
-   *   The parsed class object.
+   * @return \Drupal\Component\Utility\ClassDependenciesParserInterface
+   *   Parser that gets the dependencies for the plugin class.
    */
-  protected function getStaticParsedClass(\SplFileInfo $fileinfo): ?Class_ {
-    $parser = (new ParserFactory())->createForHostVersion();
-    $stmts = $parser->parse(file_get_contents($fileinfo->getPathname()));
-    $nameResolver = new NameResolver();
-    $nodeTraverser = new NodeTraverser();
-    $nodeTraverser->addVisitor($nameResolver);
-    $stmts = $nodeTraverser->traverse($stmts);
-    $nodeFinder = new NodeFinder();
-    return $nodeFinder->findFirstInstanceOf($stmts, Class_::class);
-  }
-
-  /**
-   * Whether any of the dependencies in the list are missing.
-   *
-   * @param string[][] $dependencies
-   *   A two-dimensional array of dependency names indexed by the type, such as
-   *   'class' or 'interface' or 'trait'.
-   *
-   * @return bool
-   *   TRUE if any of the dependencies are not found.
-   */
-  protected function hasMissingClassDependencies(array $dependencies): bool {
-    foreach ($dependencies as $type => $names) {
-      if (!in_array($type, ['class', 'interface', 'trait'])) {
-        continue;
-      }
-      foreach ($names as $name) {
-        // Doing *_exists() checks here on the identified dependencies does run
-        // a risk that additional dependencies in the hierarchies of the
-        // dependencies are missing, resulting in an exception or fatal error.
-        // The rationale behind running these checks is that that risk is lower
-        // than the risk of the identified dependencies themselves being missing
-        // and causing a thrown exception or fatal error on reflection of the
-        // plugin class. In the case that an exception or fatal error does
-        // result here, then the Drupal\Component\Plugin\Attribute\Dependencies
-        // attribute should be added to the plugin class to explicitly define
-        // the missing providers.
-        try {
-          if (!call_user_func($type . '_exists', $name)) {
-            return TRUE;
-          }
-        }
-        catch (\Error) {
-          // Error exception thrown when there if the dependency extends a
-          // missing class or implements a missing interface somewhere in its
-          // hierarchy.
-          return TRUE;
-        }
-      }
-    }
-
-    return FALSE;
+  protected function getClassDependenciesParser(\SplFileInfo $fileinfo): ClassDependenciesParserInterface {
+    $class = static::CLASS_DEPENDENCIES_PARSER_CLASS;
+    return new $class($fileinfo);
   }
 
 }

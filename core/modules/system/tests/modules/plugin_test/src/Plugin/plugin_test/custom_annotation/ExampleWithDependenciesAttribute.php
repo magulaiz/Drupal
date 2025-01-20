@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\plugin_test\Plugin\plugin_test\custom_annotation;
 
-use Drupal\Component\Plugin\Attribute\Dependencies;
+use Drupal\Core\Attribute\Dependencies;
 use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\plugin_test\Plugin\Attribute\PluginExample;
 
