@@ -134,7 +134,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 41,
-      'CacheGetCount' => 125,
+      'CacheGetCount' => 124,
       'CacheSetCount' => 47,
       'CacheDeleteCount' => 0,
       'CacheTagChecksumCount' => 39,
@@ -169,7 +169,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertCountBetween(39, 40, $performance_data->getCacheTagIsValidCount());
     $expected = [
       'QueryCount' => 10,
-      'CacheGetCount' => 93,
+      'CacheGetCount' => 92,
       'CacheSetCount' => 16,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
@@ -205,7 +205,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 14,
-      'CacheGetCount' => 78,
+      'CacheGetCount' => 77,
       'CacheSetCount' => 17,
       'CacheDeleteCount' => 0,
       'CacheTagChecksumCount' => 23,
@@ -261,7 +261,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 17,
-      'CacheGetCount' => 84,
+      'CacheGetCount' => 82,
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
       'CacheTagChecksumCount' => 1,
@@ -318,7 +318,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 18,
-      'CacheGetCount' => 105,
+      'CacheGetCount' => 103,
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
       'CacheTagChecksumCount' => 1,
