@@ -13,7 +13,7 @@ interface PluginPropertyInterface {
    * Gets the class name of the plugin associated with the attribute.
    *
    * @return class-string
-   *   The class name of the plugin associated with the attribute. 
+   *   The class name of the plugin associated with the attribute.
    */
   public function getPluginClass(): string;
 
