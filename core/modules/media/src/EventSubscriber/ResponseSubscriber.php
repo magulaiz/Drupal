@@ -19,7 +19,7 @@ class ResponseSubscriber implements EventSubscriberInterface {
    * ResponseSubscriber constructor.
    */
   public function __construct(
-    protected ConfigFactoryInterface $configFactory
+    protected ConfigFactoryInterface $configFactory,
   ) {
   }
 
