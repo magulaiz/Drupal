@@ -77,7 +77,6 @@ trait AssertConfigTrait {
           if ($op->closing[0] === '_core:') {
             break;
           }
-
           foreach ($op->closing as $closing) {
             // The UUIDs don't exist in the default config.
             if (str_starts_with($closing, 'uuid: ')) {
