@@ -170,11 +170,11 @@ class ViewsViewsHooks {
     if ($entity_type_manager->hasDefinition('field_storage_config')) {
       /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
       foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
-        if (_views_field_get_entity_type_storage($field_storage)) {
+        if (\Drupal::service('views.field_data_provider')->getSqlStorageForField($field_storage)) {
           $provider = $field_storage->getTypeProvider();
           $result = (array) $module_handler->invoke($provider === 'core' ? 'views' : $provider, 'field_views_data', [$field_storage]);
           if (empty($result)) {
-            $result = views_field_default_views_data($field_storage);
+            $result = \Drupal::service('views.field_data_provider')->defaultFieldImplementation($field_storage);
           }
           $module_handler->alter('field_views_data', $result, $field_storage);
           if (is_array($result)) {
@@ -202,7 +202,7 @@ class ViewsViewsHooks {
     }
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
-      if (_views_field_get_entity_type_storage($field_storage)) {
+      if (\Drupal::service('views.field_data_provider')->getSqlStorageForField($field_storage)) {
         \Drupal::moduleHandler()->invoke($field_storage->getTypeProvider(), 'field_views_data_views_data_alter', [&$data, $field_storage]);
       }
     }
@@ -219,7 +219,7 @@ class ViewsViewsHooks {
   #[Hook('field_views_data')]
   public function fieldViewsData(FieldStorageConfigInterface $field_storage): array {
     $driver = \Drupal::database()->driver();
-    $data = views_field_default_views_data($field_storage);
+    $data = \Drupal::service('views.field_data_provider')->defaultFieldImplementation($field_storage);
     // The code below only deals with the Entity reference field type.
     if ($field_storage->getType() != 'entity_reference') {
       return $data;
@@ -234,7 +234,7 @@ class ViewsViewsHooks {
       $target_entity_type = $entity_type_manager->getDefinition($target_entity_type_id);
       $entity_type_id = $field_storage->getTargetEntityTypeId();
       $entity_type = $entity_type_manager->getDefinition($entity_type_id);
-      if ($driver == 'mongodb') {
+      if ($driver === 'mongodb') {
         $target_base_table = $target_entity_type->getBaseTable();
       }
       else {
@@ -243,7 +243,7 @@ class ViewsViewsHooks {
       $field_name = $field_storage->getName();
 
       $relationship_field = $field_name . '_target_id';
-      if (($driver == 'mongodb') && isset($table_data[$field_name]['field']['real field'])) {
+      if (($driver === 'mongodb') && isset($table_data[$field_name]['field']['real field'])) {
         $relationship_field = $table_data[$field_name]['field']['real field'];
       }
 
