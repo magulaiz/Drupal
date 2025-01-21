@@ -133,31 +133,54 @@ class UpdateManagerUpdate extends FormBase {
         $project_name .= ' ' . $this->t('(Theme)');
       }
 
+      // Drupal core needs to be upgraded manually.
+      $needs_manual = $project['project_type'] == 'core';
+
       if (empty($project['recommended'])) {
-        // If we don't know what to recommend they upgrade to, we should skip
-        // the project entirely.
-        continue;
+        // If we don't know what to recommend they upgrade to, display this
+        // project along with the manual updates.
+        $needs_manual = TRUE;
+        // Display the reason for the project being unsupported in a similar
+        // way as template_preprocess_update_project_status() does.
+        $recommended_version = [
+          '#prefix' => '<em>',
+          '#suffix' => '</em>',
+        ];
+        if (!empty($project['extra'])) {
+          foreach ($project['extra'] as $value) {
+            $recommended_version[] = [
+              '#prefix' => isset($recommended_version[0]) ? ' ' : '',
+              '#markup' => $value['data'],
+            ];
+          }
+        }
+        else {
+          // Use fallback text similar to what
+          // update_calculate_project_update_status() typically uses.
+          $recommended_version[] = ['#markup' => $this->t('There are no available releases for this project. Uninstalling everything included by this project is strongly recommended!')];
+        }
       }
+      else {
+        $recommended_release = ProjectRelease::createFromArray($project['releases'][$project['recommended']]);
+        $recommended_version = 'Upgrade to {{ release_version }} (<a href="{{ release_link }}" title="{{ project_title }}">{{ release_notes }}</a>)';
+        $recommended_version_parser = ExtensionVersion::createFromVersionString($recommended_release->getVersion());
+        if ($recommended_version_parser->getMajorVersion() != $project['existing_major']) {
+          $recommended_version .= '<div title="{{ major_update_warning_title }}" class="update-major-version-warning">{{ major_update_warning_text }}</div>';
+        }
 
-      $recommended_release = ProjectRelease::createFromArray($project['releases'][$project['recommended']]);
-      $recommended_version = '{{ release_version }} (<a href="{{ release_link }}" title="{{ project_title }}">{{ release_notes }}</a>)';
-      $recommended_version_parser = ExtensionVersion::createFromVersionString($recommended_release->getVersion());
-      if ($recommended_version_parser->getMajorVersion() != $project['existing_major']) {
-        $recommended_version .= '<div title="{{ major_update_warning_title }}" class="update-major-version-warning">{{ major_update_warning_text }}</div>';
+        $recommended_version = [
+          '#type' => 'inline_template',
+          '#template' => $recommended_version,
+          '#context' => [
+            'release_version' => $recommended_release->getVersion(),
+            'release_link' => $recommended_release->getReleaseUrl(),
+            'project_title' => $this->t('Release notes for @project_title', ['@project_title' => $project['title']]),
+            'major_update_warning_title' => $this->t('Major upgrade warning'),
+            'major_update_warning_text' => $this->t('This update is a major version update which means that it may not be backwards compatible with your currently running version. It is recommended that you read the release notes and proceed at your own risk.'),
+            'release_notes' => $this->t('Release notes'),
+          ],
+        ];
       }
-
-      $recommended_version = [
-        '#type' => 'inline_template',
-        '#template' => $recommended_version,
-        '#context' => [
-          'release_version' => $recommended_release->getVersion(),
-          'release_link' => $recommended_release->getReleaseUrl(),
-          'project_title' => $this->t('Release notes for @project_title', ['@project_title' => $project['title']]),
-          'major_update_warning_title' => $this->t('Major upgrade warning'),
-          'major_update_warning_text' => $this->t('This update is a major version update which means that it may not be backwards compatible with your currently running version. It is recommended that you read the release notes and proceed at your own risk.'),
-          'release_notes' => $this->t('Release notes'),
-        ],
-      ];
 
       // Create an entry for this project.
       $entry = [
@@ -201,15 +224,15 @@ class UpdateManagerUpdate extends FormBase {
       ];
       $entry['#attributes'] = ['class' => ['update-' . $type]];
 
-      // Drupal core needs to be upgraded manually.
-      $needs_manual = $project['project_type'] == 'core';
-
       // If the recommended release for a contributed project is not compatible
       // with the currently installed version of core, list that project in a
       // separate table. If core compatibility is not defined, it means we can't determine
       // compatibility requirements (or we're looking at core), so we assume it
       // is compatible.
-      $compatible = $recommended_release->isCoreCompatible() ?? TRUE;
+      $compatible = FALSE;
+      if (isset($recommended_release)) {
+        $compatible = $recommended_release->isCoreCompatible() ?? TRUE;
+      }
 
       if ($needs_manual) {
         $this->removeCheckboxFromRow($entry);
@@ -218,34 +241,35 @@ class UpdateManagerUpdate extends FormBase {
       elseif (!$compatible) {
         $this->removeCheckboxFromRow($entry);
         // If the release has a core_compatibility_message, inject it.
-        if ($core_compatibility_message = $recommended_release->getCoreCompatibilityMessage()) {
-          // @todo In https://www.drupal.org/project/drupal/issues/3121769
-          //   refactor this into something theme-friendly so we don't have a
-          //   classless <div> here.
-          $entry['data']['recommended_version']['data']['#template'] .= ' <div>{{ core_compatibility_message }}</div>';
-          $entry['data']['recommended_version']['data']['#context']['core_compatibility_message'] = $core_compatibility_message;
+        if (isset($recommended_release)) {
+          if ($core_compatibility_message = $recommended_release->getCoreCompatibilityMessage()) {
+            // @todo In https://www.drupal.org/project/drupal/issues/3121769
+            //   refactor this into something theme-friendly so we don't have a
+            //   classless <div> here.
+            $entry['data']['recommended_version']['data']['#template'] .= ' <div>{{ core_compatibility_message }}</div>';
+            $entry['data']['recommended_version']['data']['#context']['core_compatibility_message'] = $core_compatibility_message;
+          }
         }
         $projects['not-compatible'][$name] = $entry;
       }
       else {
-        $form['project_downloads'][$name] = [
-          '#type' => 'value',
-          '#value' => $recommended_release->getDownloadUrl(),
-        ];
-
-        // Based on what kind of project this is, save the entry into the
-        // appropriate subarray.
-        switch ($project['project_type']) {
-          case 'module':
-          case 'theme':
-            $projects['installed'][$name] = $entry;
-            break;
-
-          case 'module-uninstalled':
-          case 'theme-uninstalled':
-            $projects['uninstalled'][$name] = $entry;
-            break;
+        if (isset($recommended_release)) {
+          $form['project_downloads'][$name] = [
+            '#type' => 'value',
+            '#value' => $recommended_release->getDownloadUrl(),
+          ];
         }
+      }
+      // Based on what kind of project this is, save the entry into the
+      // appropriate subarray.
+      if ($needs_manual) {
+        $projects['manual'][$name] = $entry;
+      }
+      elseif ($project['project_type'] == 'module' || $project['project_type'] == 'theme') {
+        $projects['enabled'][$name] = $entry;
+      }
+      elseif ($project['project_type'] == 'module-disabled' || $project['project_type'] == 'theme-disabled') {
+        $projects['disabled'][$name] = $entry;
       }
     }
 
@@ -267,7 +291,7 @@ class UpdateManagerUpdate extends FormBase {
         'class' => ['update-project-name'],
       ],
       'installed_version' => $this->t('Site version'),
-      'recommended_version' => $this->t('Recommended version'),
+      'recommended_version' => $this->t('Recommended action'),
     ];
 
     if (!empty($projects['installed'])) {
@@ -302,8 +326,10 @@ class UpdateManagerUpdate extends FormBase {
     }
 
     if (!empty($projects['manual'])) {
-      $prefix = '<h2>' . $this->t('Manual updates required') . '</h2>';
-      $prefix .= '<p>' . $this->t('Automatic updates of Drupal core are not supported at this time.') . '</p>';
+      $prefix = '<h2>' . $this->t('Manual action required') . '</h2>';
+      if (isset($projects['manual']['drupal'])) {
+        $prefix .= '<p>' . $this->t('Automatic updates of Drupal core are not supported at this time.') . '</p>';
+      }
       $form['manual_updates'] = [
         '#type' => 'table',
         '#header' => $headers,
