@@ -55,10 +55,9 @@ class TestDiscovery {
    *
    * @param string $root
    *   The app root.
-   * @param $class_loader
+   * @param class-string $class_loader
    *   The class loader. Normally Composer's ClassLoader, as included by the
-   *   front controller, but may also be decorated; e.g.,
-   *   \Symfony\Component\ClassLoader\ApcClassLoader.
+   *   front controller, but may also be decorated.
    */
   public function __construct($root, $class_loader) {
     $this->root = $root;
@@ -106,6 +105,15 @@ class TestDiscovery {
       $this->testNamespaces["Drupal\\Tests\\$name\\"][] = "$base_path/tests/src";
     }
 
+    // Expose tests provided by core recipes.
+    $base_path = $this->root . '/core/recipes';
+    if (@opendir($base_path)) {
+      while (($recipe = readdir()) !== FALSE) {
+        $this->testNamespaces["Drupal\\FunctionalTests\\Recipe\\Core\\$recipe\\"][] = "$base_path/$recipe/tests/src/Functional";
+      }
+      closedir();
+    }
+
     foreach ($this->testNamespaces as $prefix => $paths) {
       $this->classLoader->addPsr4($prefix, $paths);
     }
@@ -129,14 +137,14 @@ class TestDiscovery {
    *   to.
    *
    * @code
-   *     $groups['block'] => array(
-   *       'Drupal\Tests\block\Functional\BlockTest' => array(
+   *     $groups['block'] => [
+   *       'Drupal\Tests\block\Functional\BlockTest' => [
    *         'name' => 'Drupal\Tests\block\Functional\BlockTest',
    *         'description' => 'Tests block UI CRUD functionality.',
    *         'group' => 'block',
    *         'groups' => ['block', 'group2', 'group3'],
-   *       ),
-   *     );
+   *       ],
+   *     ];
    * @endcode
    *
    * @todo Remove singular grouping; retain list of groups in 'group' key.

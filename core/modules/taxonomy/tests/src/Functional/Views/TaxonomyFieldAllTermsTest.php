@@ -29,7 +29,7 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
   /**
    * Tests the "all terms" field handler.
    */
-  public function testViewsHandlerAllTermsField() {
+  public function testViewsHandlerAllTermsField(): void {
     $this->term1->setName('<em>Markup</em>')->save();
     $view = Views::getView('taxonomy_all_terms_test');
     $this->executeView($view);
@@ -54,8 +54,7 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
   /**
    * Tests token replacement in the "all terms" field handler.
    */
-  public function testViewsHandlerAllTermsWithTokens() {
-    $view = Views::getView('taxonomy_all_terms_test');
+  public function testViewsHandlerAllTermsWithTokens(): void {
     $this->drupalGet('taxonomy_all_terms_token_test');
 
     // Term itself: {{ term_node_tid }}

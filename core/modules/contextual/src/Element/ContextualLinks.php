@@ -18,10 +18,9 @@ class ContextualLinks extends RenderElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#pre_render' => [
-        [$class, 'preRenderLinks'],
+        [static::class, 'preRenderLinks'],
       ],
       '#theme' => 'links__contextual',
       '#links' => [],
@@ -46,14 +45,14 @@ class ContextualLinks extends RenderElementBase {
    *   - route_parameters: The route parameters passed to the URL generator.
    *   - metadata: Any additional data needed in order to alter the link.
    *   @code
-   *     array('#contextual_links' => array(
-   *       'block' => array(
-   *         'route_parameters' => array('block' => 'system.menu-tools'),
-   *       ),
-   *       'menu' => array(
-   *         'route_parameters' => array('menu' => 'tools'),
-   *       ),
-   *     ))
+   *     ['#contextual_links' => [
+   *       'block' => [
+   *         'route_parameters' => ['block' => 'system.menu-tools'],
+   *       ],
+   *       'menu' => [
+   *         'route_parameters' => ['menu' => 'tools'],
+   *       ],
+   *     ]]
    *   @endcode
    *
    * @return array
