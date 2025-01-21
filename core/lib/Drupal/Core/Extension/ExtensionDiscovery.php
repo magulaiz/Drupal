@@ -64,20 +64,6 @@ class ExtensionDiscovery {
   protected static $files = [];
 
   /**
-   * List of installation profile directories to additionally scan.
-   *
-   * @var array
-   */
-  protected $profileDirectories;
-
-  /**
-   * The app root for the current operation.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * The file cache object.
    *
    * @var \Drupal\Component\FileCache\FileCacheInterface
@@ -85,29 +71,31 @@ class ExtensionDiscovery {
   protected $fileCache;
 
   /**
-   * The site path.
+   * Contains the name of the folder for each extension.
    *
-   * @var string
+   * @var array
+   *
+   * @see \RecursiveDirectoryIterator::getSubPath
    */
-  protected $sitePath;
+  protected $subPaths;
+
+  /**
+   * Contains the path for each extension.
+   *
+   * @var array
+   */
+  protected $origins;
 
   /**
    * Constructs a new ExtensionDiscovery object.
-   *
-   * @param string $root
-   *   The app root.
-   * @param bool $use_file_cache
-   *   Whether file cache should be used.
-   * @param string[] $profile_directories
-   *   The available profile directories
-   * @param string $site_path
-   *   The path to the site.
    */
-  public function __construct(string $root, $use_file_cache = TRUE, ?array $profile_directories = NULL, ?string $site_path = NULL) {
-    $this->root = $root;
+  public function __construct(
+    protected string $root,
+    protected $use_file_cache = TRUE,
+    protected ?array $profileDirectories = NULL,
+    protected ?string $sitePath = NULL,
+  ) {
     $this->fileCache = $use_file_cache ? FileCacheFactory::get('extension_discovery') : NULL;
-    $this->profileDirectories = $profile_directories;
-    $this->sitePath = $site_path;
   }
 
   /**
@@ -290,8 +278,8 @@ class ExtensionDiscovery {
       return $all_files;
     }
 
-    $all_files = array_filter($all_files, function ($file) {
-      if (!str_starts_with($file->subpath, 'profiles')) {
+    $all_files = array_filter($all_files, function ($file, $key) {
+      if (!str_starts_with($this->subPaths[$key] ?? '', 'profiles')) {
         // This extension doesn't belong to a profile, ignore it.
         return TRUE;
       }
@@ -304,7 +292,7 @@ class ExtensionDiscovery {
       }
 
       return FALSE;
-    });
+    }, ARRAY_FILTER_USE_BOTH);
 
     return $all_files;
   }
@@ -326,8 +314,8 @@ class ExtensionDiscovery {
     foreach ($all_files as $key => $file) {
       // If the extension does not belong to a profile, just apply the weight
       // of the originating directory.
-      if (!str_starts_with($file->subpath, 'profiles')) {
-        $origins[$key] = $weights[$file->origin];
+      if (!str_starts_with($this->subPaths[$key] ?? '', 'profiles')) {
+        $origins[$key] = ($this->origins[$key] ?? FALSE) ? $weights[$this->origins[$key]] : reset($weights);
         $profiles[$key] = NULL;
       }
       // If the extension belongs to a profile but no profile directories are
@@ -499,8 +487,8 @@ class ExtensionDiscovery {
       $extension = new Extension($this->root, $extension_arguments['type'], $extension_arguments['pathname'], $extension_arguments['filename']);
 
       // Track the originating directory for sorting purposes.
-      $extension->subpath = $extension_arguments['subpath'];
-      $extension->origin = $dir;
+      $this->subPaths[$key] = $extension_arguments['subpath'];
+      $this->origins[$key] = $dir;
 
       $files[$extension_arguments['type']][$key] = $extension;
     }
