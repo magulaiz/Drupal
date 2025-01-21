@@ -8,7 +8,7 @@ use Drupal\Core\Database\Query\Truncate as QueryTruncate;
  * SQLite implementation of \Drupal\Core\Database\Query\Truncate.
  *
  * SQLite doesn't support TRUNCATE, but a DELETE query with no condition has
- * exactly the effect (it is implemented by dropping the table).
+ * exactly the effect (it is implemented by DROPing the table).
  */
 class Truncate extends QueryTruncate {
 
