@@ -3,6 +3,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Extension\ModuleInstallerInterface;
@@ -13,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -48,56 +50,30 @@ class ExtensionConfirmForm extends ConfirmFormBase {
   protected $cancelRoute;
 
   /**
-   * The module installer.
+   * The experimental theme.
    *
-   * @var \Drupal\Core\Extension\ModuleInstallerInterface
+   * @var string
    */
-  protected $moduleInstaller;
+  protected $experimentalTheme;
 
-  /**
-   * An extension discovery instance.
+   /**
+   * The default theme.
    *
-   * @var \Drupal\Core\Extension\ThemeExtensionList
+   * @var string
    */
-  protected $themeList;
+  protected $setDefaultTheme;
 
-  /**
-   * The theme installer service.
-   *
-   * @var \Drupal\Core\Extension\ThemeInstallerInterface
-   */
-  protected $themeInstaller;
-
-  /**
-   * The expirable key value store.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
-   */
-  protected $keyValueExpirable;
-
-  /**
-   * Constructs a ThemeExperimentalConfirmForm object.
-   *
-   * @param \Drupal\Core\Extension\ThemeExtensionList $theme_list
-   *   The theme extension list.
-   * @param \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer
-   *   The theme installer.
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable
-   *   The key value expirable factory.
-   * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
-   *   The module installer.
-   */
-  public function __construct(ThemeExtensionList $theme_list, ThemeInstallerInterface $theme_installer, KeyValueStoreExpirableInterface $key_value_expirable, ModuleInstallerInterface $module_installer) {
-    $this->themeList = $theme_list;
-    $this->themeInstaller = $theme_installer;
-    $this->keyValueExpirable = $key_value_expirable;
-    $this->moduleInstaller = $module_installer;
-  }
+  public function __construct(
+    protected ThemeExtensionList $themeList,
+    protected ThemeInstallerInterface $themeInstaller,
+    protected KeyValueStoreExpirableInterface $keyValueExpirable,
+    protected ModuleInstallerInterface $moduleInstaller
+  ) {}
 
   /**
    * {@inheritdoc}
    */
-  public function getConfirmText() {
+  public function getConfirmText(): TranslatableMarkup {
     return $this->t('Continue');
   }
 
@@ -119,7 +95,7 @@ class ExtensionConfirmForm extends ConfirmFormBase {
    * @param array $form
    *   The form being updated.
    */
-  protected function experimentalThemeFormElements(array &$form) {
+  protected function experimentalThemeFormElements(array &$form): void {
     $all_themes = $this->themeList->getList();
     $this->messenger()->addWarning($this->t('Experimental themes are provided for testing purposes only. Use at your own risk.'));
 
@@ -184,7 +160,7 @@ class ExtensionConfirmForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     $this->cancelRoute = !empty($form_state->getBuildInfo()['args'][0]) ? $form_state->getBuildInfo()['args'][0] : NULL;
     // If the build args are not empty, this was requested by ThemeController.
     // Populate instance variables from $form_state->getBuildInfo().
@@ -227,7 +203,7 @@ class ExtensionConfirmForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getQuestion() {
+  public function getQuestion(): string {
     $questions = [];
     if (!empty($this->modules['dependencies'])) {
       $questions[] = $this->t('Some required modules must be enabled.');
@@ -245,14 +221,14 @@ class ExtensionConfirmForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelUrl() {
+  public function getCancelUrl(): Url {
     return new Url($this->cancelRoute);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'extension_confirm_form';
   }
 
@@ -340,7 +316,7 @@ class ExtensionConfirmForm extends ConfirmFormBase {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(AccountInterface $account) {
+  public function access(AccountInterface $account): AccessResultInterface {
     // Users with either the administer themes or administer modules may access
     // this form. Additional checks for specific permissions occur before this
     // form attempts to actually install a module or theme.
