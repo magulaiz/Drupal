@@ -19,9 +19,11 @@ class ThemeCommonElements {
     return [
       'html' => [
         'render element' => 'html',
+        'initial preprocess' => ThemePreprocess::class . ':preprocessHtml',
       ],
       'page' => [
         'render element' => 'page',
+        'initial preprocess' => ThemePreprocess::class . ':preprocessPage',
       ],
       'page_title' => [
         'variables' => [
@@ -37,12 +39,15 @@ class ThemeCommonElements {
           'text' => NULL,
           'attributes' => [],
         ],
+        'initial preprocess' => ThemePreprocess::class . ':preprocessTime',
       ],
       'datetime_form' => [
         'render element' => 'element',
+        'initial preprocess' => ThemePreprocess::class . ':preprocessDatetimeForm',
       ],
       'datetime_wrapper' => [
         'render element' => 'element',
+        'initial preprocess' => ThemePreprocess::class . ':preprocessDatetimeWrapper',
       ],
       'status_messages' => [
         'variables' => [
@@ -59,6 +64,7 @@ class ThemeCommonElements {
           'heading' => [],
           'set_active_class' => FALSE,
         ],
+        'initial preprocess' => ThemePreprocess::class . ':preprocessLinks',
       ],
       'dropbutton_wrapper' => [
         'variables' => [
@@ -227,6 +233,7 @@ class ThemeCommonElements {
       ],
       'container' => [
         'render element' => 'element',
+        'initial preprocess' => ThemePreprocess::class . ':preprocessContainer',
       ],
       // From field system.
       'field' => [
