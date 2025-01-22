@@ -29,7 +29,7 @@ class TableFormatter extends DescriptionAwareFileFormatterBase {
       $header = [$this->t('Attachment'), $this->t('Size')];
       $rows = [];
       foreach ($files as $file) {
-        $item = $file->_referringItem;
+        $item = $file->getTemporaryData('_referringItem');
         $rows[] = [
           [
             'data' => [

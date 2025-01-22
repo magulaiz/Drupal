@@ -38,7 +38,7 @@ abstract class ImageFormatterBase extends FileFormatterBase {
           '_loaded' => TRUE,
           '_is_default' => TRUE,
         ]);
-        $file->_referringItem = $items[0];
+        $file->setTemporaryData('_referringItem', $items[0]);
       }
     }
 

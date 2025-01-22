@@ -60,6 +60,13 @@ abstract class EntityBase implements EntityInterface {
   protected ?EntityInterface $originalEntity = NULL;
 
   /**
+   * Temporary data.
+   *
+   * @var array
+   */
+  protected array $temporaryData = [];
+
+  /**
    * Constructs an Entity object.
    *
    * @param array $values
@@ -740,6 +747,29 @@ abstract class EntityBase implements EntityInterface {
       return;
     }
     unset($this->$name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTemporaryData($key, $value): static {
+    $this->temporaryData[$key] = $value;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTemporaryData($key): mixed {
+    return $this->temporaryData[$key] ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearTemporaryData($key): static {
+    unset($this->temporaryData[$key]);
+    return $this;
   }
 
 }

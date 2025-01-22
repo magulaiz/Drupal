@@ -25,7 +25,7 @@ class GenericFileFormatter extends DescriptionAwareFileFormatterBase {
     $elements = [];
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
-      $item = $file->_referringItem;
+      $item = $file->getTemporaryData('_referringItem');
       $elements[$delta] = [
         '#theme' => 'file_link',
         '#file' => $file,

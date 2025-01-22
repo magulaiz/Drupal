@@ -1395,4 +1395,27 @@ class ViewUI implements ViewEntityInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setTemporaryData($key, $value): static {
+    $this->storage->setTemporaryData($key, $value);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTemporaryData($key): mixed {
+    return $this->storage->getTemporaryData($key);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearTemporaryData($key): static {
+    $this->storage->clearTemporaryData($key);
+    return $this;
+  }
+
 }

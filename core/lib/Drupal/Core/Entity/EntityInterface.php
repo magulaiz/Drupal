@@ -471,4 +471,10 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    */
   public function setOriginal(?EntityInterface $original): static;
 
+  public function setTemporaryData($key, $value): static;
+
+  public function getTemporaryData($key): mixed;
+
+  public function clearTemporaryData($key): static;
+
 }

@@ -266,7 +266,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       }
       // Extract field item attributes for the theme function, and unset them
       // from the $item so that the field template does not re-render them.
-      $item = $file->_referringItem;
+      $item = $file->getTemporaryData('_referringItem');
       $item_attributes = $item->_attributes;
       unset($item->_attributes);
 
