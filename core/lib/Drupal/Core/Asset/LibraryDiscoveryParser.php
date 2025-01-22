@@ -106,6 +106,8 @@ class LibraryDiscoveryParser {
    *   The theme manager.
    * @param \Drupal\Core\Theme\ThemeHandlerInterface $theme_handler
    *   The theme handler.
+   * @param \Drupal\Core\Extension\InfoParserInterface $info_parser
+   *   The info parser.
    * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
    *   The stream wrapper manager.
    * @param \Drupal\Core\Asset\LibrariesDirectoryFileFinder $libraries_directory_file_finder
@@ -114,9 +116,6 @@ class LibraryDiscoveryParser {
    *   The extension path resolver.
    * @param \Drupal\Core\Theme\ComponentPluginManager $component_plugin_manager
    *   The component plugin manager.
-   *
-   * @var \Drupal\Core\Extension\InfoParserInterface $info_parser
-   *   The info parser.
    */
   public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, ThemeHandlerInterface $theme_handler, InfoParserInterface $info_parser, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder, ExtensionPathResolver $extension_path_resolver, ?ComponentPluginManager $component_plugin_manager = NULL) {
     $this->root = $root;
