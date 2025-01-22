@@ -20,6 +20,7 @@ trait DateTimeRangeTrait {
     return [
       'from_to' => DateTimeRangeConstantsInterface::BOTH,
       'separator' => '-',
+      'hideday' => FALSE,
     ];
   }
 
@@ -29,6 +30,7 @@ trait DateTimeRangeTrait {
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
     $separator = $this->getSetting('separator');
+    $hideday = $this->getSetting('hideday');
 
     foreach ($items as $delta => $item) {
       if (!empty($item->start_date) && !empty($item->end_date)) {
@@ -84,6 +86,12 @@ trait DateTimeRangeTrait {
           'select[name="fields[' . $field_name . '][settings_edit_form][settings][from_to]"]' => ['value' => DateTimeRangeConstantsInterface::BOTH],
         ],
       ],
+    ];
+
+    $form['hideday'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Hide day if the date range has the same day but different times'),
+      '#default_value' => $this->getSetting('hideday'),
     ];
 
     return $form;
@@ -198,15 +206,44 @@ trait DateTimeRangeTrait {
    *   A renderable array for a single date time range.
    */
   protected function renderStartEndWithIsoAttribute(DrupalDateTime $start_date, string $separator, DrupalDateTime $end_date): array {
+    $hideday = $this->getSetting('hideday');
     $element = [];
-    if ($this->startDateIsDisplayed()) {
-      $element[DateTimeRangeConstantsInterface::START_DATE] = $this->buildDateWithIsoAttribute($start_date);
-    }
-    if ($this->startDateIsDisplayed() && $this->endDateIsDisplayed()) {
-      $element['separator'] = ['#plain_text' => ' ' . $separator . ' '];
-    }
-    if ($this->endDateIsDisplayed()) {
-      $element[DateTimeRangeConstantsInterface::END_DATE] = $this->buildDateWithIsoAttribute($end_date);
+    if($hideday == 1){
+      $this->setTimeZone($start_date);
+      $start_date_formatted = $start_date->format('Y-m-d');
+      $end_date_formatted = $end_date->format('Y-m-d');
+
+      if ($start_date_formatted == $end_date_formatted) {
+        if ($this->startDateIsDisplayed()) {
+          $element[DateTimeRangeConstantsInterface::START_DATE] = $this->buildDateWithIsoAttribute($start_date);
+        }
+        if ($this->startDateIsDisplayed() && $this->endDateIsDisplayed()) {
+          $element['separator'] = ['#plain_text' => ' ' . $separator . ' '];
+        }
+        if ($this->endDateIsDisplayed()) {
+          $element[DateTimeRangeConstantsInterface::END_DATE] = $this->hideDay($end_date);
+        }
+      } else {
+        if ($this->startDateIsDisplayed()) {
+          $element[DateTimeRangeConstantsInterface::START_DATE] = $this->buildDateWithIsoAttribute($start_date);
+        }
+        if ($this->startDateIsDisplayed() && $this->endDateIsDisplayed()) {
+          $element['separator'] = ['#plain_text' => ' ' . $separator . ' '];
+        }
+        if ($this->endDateIsDisplayed()) {
+          $element[DateTimeRangeConstantsInterface::END_DATE] = $this->buildDateWithIsoAttribute($end_date);
+        }
+      }
+    }else{
+      if ($this->startDateIsDisplayed()) {
+        $element[DateTimeRangeConstantsInterface::START_DATE] = $this->buildDateWithIsoAttribute($start_date);
+      }
+      if ($this->startDateIsDisplayed() && $this->endDateIsDisplayed()) {
+        $element['separator'] = ['#plain_text' => ' ' . $separator . ' '];
+      }
+      if ($this->endDateIsDisplayed()) {
+        $element[DateTimeRangeConstantsInterface::END_DATE] = $this->buildDateWithIsoAttribute($end_date);
+      }
     }
     return $element;
   }
