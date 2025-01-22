@@ -178,7 +178,7 @@ EOD;
   /**
    * Provides data for testInitializeRequestGlobals().
    */
-  public function initializeRequestGlobalsProvider(): array {
+  public static function initializeRequestGlobalsProvider(): array {
     return [
       ['', 'http://localhost', 'http://localhost', '/', 'http://localhost'],
       ['/drupal',
