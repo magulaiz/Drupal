@@ -9,7 +9,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 /**
  * Test Hook attribute named arguments.
  */
-#[Hook(hook: 'cache_flush', method: 'flush', module: 'hook_collector_hook_attribute')]
+#[Hook(hook: 'cache_flush', method: 'flush')]
 class HookAttributeNamedArgumentsHook {
 
   /**
