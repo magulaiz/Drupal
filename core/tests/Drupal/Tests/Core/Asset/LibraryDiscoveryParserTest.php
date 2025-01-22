@@ -115,8 +115,8 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
 
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->themeManager = $this->createMock(ThemeManagerInterface::class);
-    $this->themeHandler = $this->getMock('Drupal\Core\Extension\ThemeHandlerInterface');
-    $this->infoParser = $this->getMock('\Drupal\Core\Extension\InfoParser');
+    $this->themeHandler = $this->createMock('Drupal\Core\Extension\ThemeHandlerInterface');
+    $this->infoParser = $this->createMock('\Drupal\Core\Extension\InfoParser');
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -158,10 +158,10 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('getModule')
       ->with('example_module')
-      ->will($this->returnValue($mockExtension));
+      ->willReturn($mockExtension);
     $this->infoParser->expects($this->atLeastOnce())
       ->method('parse')
-      ->will($this->returnValue(['version' => 'VERSION']));
+      ->willReturn(['version' => 'VERSION']);
     $path = __DIR__ . '/library_test_files';
     $path = substr($path, strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
@@ -312,21 +312,21 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with('versions_module')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $mockExtension = $this->getMockBuilder('Drupal\Core\Extension\Extension')
       ->disableOriginalConstructor()
       ->getMock();
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('getModule')
       ->with('versions_module')
-      ->will($this->returnValue($mockExtension));
+      ->willReturn($mockExtension);
     $mockExtension->expects($this->atLeastOnce())
       ->method('getPathname')
-      ->will($this->returnValue($path . '/versions_module.info.yml'));
+      ->willReturn($path . '/versions_module.info.yml');
     $this->infoParser->expects($this->atLeastOnce())
       ->method('parse')
       ->with($this->equalTo($path . '/versions_module.info.yml'))
-      ->will($this->returnValue(['version' => '8.x-1.2']));
+      ->willReturn(['version' => '8.x-1.2']);
 
     $this->libraryDiscoveryParser->setPaths('module', 'versions_module', $path);
 
@@ -357,22 +357,21 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with('versions_theme')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $mockExtension = $this->getMockBuilder('Drupal\Core\Extension\Extension')
       ->disableOriginalConstructor()
       ->getMock();
     $this->themeHandler->expects($this->atLeastOnce())
       ->method('getTheme')
       ->with('versions_theme')
-      ->will($this->returnValue($mockExtension));
+      ->willReturn($mockExtension);
     $mockExtension->expects($this->atLeastOnce())
       ->method('getPathname')
-      ->will($this->returnValue($path . '/versions_theme.info.yml'));
+      ->willReturn($path . '/versions_theme.info.yml');
     $this->infoParser->expects($this->atLeastOnce())
       ->method('parse')
       ->with($this->equalTo($path . '/versions_theme.info.yml'))
-      ->will($this->returnValue(['version' => '8.x-2.1']));
-
+      ->willReturn(['version' => '8.x-2.1']);
     $this->libraryDiscoveryParser->setPaths('theme', 'versions_theme', $path);
 
     $libraries = $this->libraryDiscoveryParser->buildByExtension('versions_theme');
@@ -749,7 +748,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->willReturn($path);
     $this->componentPluginManager = $this->createMock(ComponentPluginManager::class);
 
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->themeHandler, $this->infoParser, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager);
 
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
@@ -803,7 +802,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->with('module', 'deprecated')
       ->willReturn($path);
     $this->componentPluginManager = $this->createMock(ComponentPluginManager::class);
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->themeHandler, $this->infoParser, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager);
 
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
