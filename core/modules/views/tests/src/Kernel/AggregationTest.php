@@ -14,9 +14,7 @@ use Drupal\views\Views;
 class AggregationTest extends ViewsKernelTestBase {
 
   /**
-   * Views used by this test.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   public static $testViews = ['views.view.test_aggregation'];
 
