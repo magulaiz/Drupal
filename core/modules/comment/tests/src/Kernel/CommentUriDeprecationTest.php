@@ -7,7 +7,6 @@ namespace Drupal\Tests\comment\Kernel;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
-use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\user\UserInterface;
 
 /**
@@ -17,7 +16,6 @@ use Drupal\user\UserInterface;
  */
 class CommentUriDeprecationTest extends EntityKernelTestBase {
   use CommentTestTrait;
-  use EntityReferenceFieldCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -52,7 +50,7 @@ class CommentUriDeprecationTest extends EntityKernelTestBase {
       'target_entity_type_id' => 'node',
     ])->save();
 
-    // Add comment and entity reference comment fields.
+    // Add comment field to the page content type.
     $this->addDefaultCommentField('node', 'page', 'comment');
     // Create user to add comments.
     $this->commentUser = $this->drupalCreateUser([
