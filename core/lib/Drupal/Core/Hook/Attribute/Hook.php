@@ -12,7 +12,7 @@ namespace Drupal\Core\Hook\Attribute;
  * - On a method, use this attribute with the hook name:
  *   @code
  *   #[Hook('user_cancel')]
- *   function userCancel(...) {}
+ *   public function userCancel(...) {}
  *   @endcode
  * - On a class, specifying the method name:
  *   @code

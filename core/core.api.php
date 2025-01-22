@@ -1632,7 +1632,7 @@
  * - On a method, use the attribute with the hook name:
  *   @code
  *   #[Hook('user_cancel')]
- *   function userCancel(...) {}
+ *   public function userCancel(...) {}
  *   @endcode
  * - On a class, specify the method name as well as the hook name:
  *   @code
