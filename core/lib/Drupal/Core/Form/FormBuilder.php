@@ -9,6 +9,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
+use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -29,6 +30,8 @@ use Symfony\Component\HttpFoundation\Response;
  * @ingroup form_api
  */
 class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface, FormCacheInterface, TrustedCallbackInterface {
+
+  use AjaxHelperTrait;
 
   /**
    * The module handler.
@@ -570,14 +573,18 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     $unprocessed_form = $form;
     $form = $this->doBuildForm($form_id, $form, $form_state);
 
-    // Allow an Ajax callback while the form is operating in GET mode. For
-    // example, when using HOOK_form_views_exposed_form_alter.
-    if ($form_state->isMethodType('get')) {
-      $triggering_element_name = $this->requestStack->getCurrentRequest()->request->get('_triggering_element_name');
+    // If this is being processed as a normal non-AJAX form request in GET mode,
+    // interrupt the form rendering callback. For example, when using
+    // HOOK_form_views_exposed_form_alter().
+    // Only do this when the form ID matches or it's not specified, since there
+    // is no guarantee that it's an AJAX request for this particular form.
+    if ($form_state->isMethodType('get') && !$this->isAjax()) {
+      $request = $this->requestStack->getCurrentRequest()->request;
+      $triggering_element_name = $request->get('_triggering_element_name');
       $triggering_element = $form_state->getTriggeringElement();
-      if (isset($triggering_element['#name'])
-        && $triggering_element['#name'] == $triggering_element_name
-        && isset($triggering_element['#ajax'])) {
+      if (isset($triggering_element['#name'], $triggering_element['#ajax'])
+        && (!$request->get('form_id') || $request->get('form_id') == $form_id)
+        && $triggering_element['#name'] == $triggering_element_name) {
         throw new FormAjaxException($form, $form_state);
       }
     }
@@ -1407,6 +1414,17 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    */
   protected function getFileUploadMaxSize(): int {
     return Environment::getUploadMaxSize();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getRequestWrapperFormat(): string {
+    $current_request = $this->requestStack->getCurrentRequest();
+    if ($current_request) {
+      return $current_request->get(MainContentViewSubscriber::WRAPPER_FORMAT) ?? '';
+    }
+    return '';
   }
 
   /**
