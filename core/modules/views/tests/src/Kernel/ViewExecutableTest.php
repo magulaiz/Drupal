@@ -47,6 +47,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     'filter',
     'field',
     'text',
+    'search',
   ];
 
   /**
@@ -97,6 +98,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
     $this->installSchema('comment', ['comment_entity_statistics']);
+    $this->installSchema('search', ['search_dataset', 'search_index', 'search_total']);
     $this->installConfig(['system', 'field', 'node', 'comment']);
 
     NodeType::create([
