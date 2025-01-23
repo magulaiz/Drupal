@@ -8,8 +8,8 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\Core\Logger\LoggerChannelInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Hook implementations for locale.
@@ -22,27 +22,22 @@ class LocaleFileSystemSettingsFormAlter {
   protected Config $editableLocaleSettings;
 
   /**
-   * The file system logger channel.
-   */
-  protected LoggerChannelInterface $fileSystemLogger;
-
-  /**
    * Constructor for the hook implementation.
    *
    * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system service.
+   * @param \Psr\Log\LoggerInterface $fileSystemLogger
+   *   The file system logger channel.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory service.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
-   *   The logger channel factory service.
    */
   public function __construct(
     protected FileSystemInterface $fileSystem,
+    #[Autowire(service: 'logger.channel.file_system')]
+    protected LoggerInterface $fileSystemLogger,
     ConfigFactoryInterface $configFactory,
-    LoggerChannelFactoryInterface $loggerFactory,
   ) {
     $this->editableLocaleSettings = $configFactory->getEditable('locale.settings');
-    $this->fileSystemLogger = $loggerFactory->get('file system');
   }
 
   /**
