@@ -9,6 +9,7 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\NodeFinder;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
+use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
 /**
@@ -21,6 +22,18 @@ use PhpParser\ParserFactory;
  * whether they are missing.
  */
 class ClassDependenciesParser implements ClassDependenciesParserInterface {
+
+  /**
+   * PHP Parser object.
+   *
+   * Instantiating a parser is an expensive operation, and it can be reused
+   * over multiple files, so instantiate once as a static property.
+   *
+   * @var \PhpParser\Parser
+   *
+   * @see https://github.com/nikic/PHP-Parser/blob/master/doc/component/Performance.markdown#object-reuse
+   */
+  protected static Parser $parser;
 
   /**
    * Whether the class has been parsed.
@@ -36,6 +49,23 @@ class ClassDependenciesParser implements ClassDependenciesParserInterface {
    */
   protected ?Class_ $parsedClass = NULL;
 
+  /**
+   * Parsed class attributes.
+   *
+   * @var \PhpParser\Node\Attribute[]
+   */
+  protected array $classAttributes;
+
+  /**
+   * The dependencies for the class.
+   *
+   * Two-dimensional array of dependency names indexed by the type, such as
+   * 'class' or 'interface' or 'trait'.
+   *
+   * @var string[][]
+   */
+  protected array $classDependencies;
+
   public function __construct(protected readonly \SplFileInfo $fileInfo) {}
 
   /**
@@ -46,7 +76,7 @@ class ClassDependenciesParser implements ClassDependenciesParserInterface {
       return;
     }
 
-    $parser = (new ParserFactory())->createForHostVersion();
+    $parser = static::getParser();
     $stmts = $parser->parse(file_get_contents($this->fileInfo->getPathname()));
 
     // Resolve all references to fully qualified names.
@@ -64,14 +94,7 @@ class ClassDependenciesParser implements ClassDependenciesParserInterface {
    * {@inheritdoc}
    */
   public function hasClassAttribute(string $attribute): bool {
-    $this->parse();
-    if (!$this->parsedClass) {
-      return FALSE;
-    }
-
-    $nodeFinder = new NodeFinder();
-    $classAttributes = $nodeFinder->findInstanceOf($this->parsedClass->attrGroups, Attribute::class);
-    foreach ($classAttributes as $classAttribute) {
+    foreach ($this->getClassAttributes() as $classAttribute) {
       if (is_a((string) $classAttribute->name, $attribute, TRUE)) {
         return TRUE;
       }
@@ -83,6 +106,10 @@ class ClassDependenciesParser implements ClassDependenciesParserInterface {
    * {@inheritdoc}
    */
   public function getClassDependencies(): array {
+    if (isset($this->classDependencies)) {
+      return $this->classDependencies;
+    }
+
     $this->parse();
     if (!$this->parsedClass) {
       return [];
@@ -109,11 +136,12 @@ class ClassDependenciesParser implements ClassDependenciesParserInterface {
       }
     }
 
-    return [
+    $this->classDependencies = [
       'class' => $extends,
       'interface' => $interfaces,
       'trait' => $traits,
     ];
+    return $this->classDependencies;
   }
 
   /**
@@ -147,6 +175,42 @@ class ClassDependenciesParser implements ClassDependenciesParserInterface {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Gets the PHP Parser object.
+   *
+   * @return \PhpParser\Parser
+   *   The PHP Parser.
+   */
+  public static function getParser(): Parser {
+    if (isset(static::$parser)) {
+      return static::$parser;
+    }
+
+    static::$parser = (new ParserFactory())->createForHostVersion();
+    return static::$parser;
+  }
+
+  /**
+   * Gets the attribute objects parsed from the class.
+   *
+   * @return \PhpParser\Node\Attribute[]
+   *   The parsed attributes.
+   */
+  protected function getClassAttributes(): array {
+    if (isset($this->classAttributes)) {
+      return $this->classAttributes;
+    }
+
+    $this->parse();
+    if (!$this->parsedClass) {
+      $this->classAttributes = [];
+      return $this->classAttributes;
+    }
+
+    $this->classAttributes = (new NodeFinder())->findInstanceOf($this->parsedClass->attrGroups, Attribute::class);
+    return $this->classAttributes;
   }
 
 }

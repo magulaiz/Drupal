@@ -8,9 +8,7 @@ use Drupal\Component\Utility\ClassDependenciesParser as ComponentClassDependenci
 use Drupal\Core\Attribute\Dependencies;
 use PhpParser\ConstExprEvaluationException;
 use PhpParser\ConstExprEvaluator;
-use PhpParser\Node\Attribute;
 use PhpParser\Node\Expr\Array_;
-use PhpParser\NodeFinder;
 
 /**
  * Extends component ClassDependenciesParser.
@@ -43,13 +41,11 @@ class ClassDependenciesParser extends ComponentClassDependenciesParser {
 
     // Include modules identified in the Dependencies attribute as dependencies.
     $modules = [];
-    $nodeFinder = new NodeFinder();
-    $attributes = $nodeFinder->findInstanceOf($this->parsedClass->attrGroups, Attribute::class);
-    foreach ($attributes as $attribute) {
-      if (((string) $attribute->name === Dependencies::class) &&
-        !empty($attribute->args)) {
+    foreach ($this->getClassAttributes() as $classAttribute) {
+      if (((string) $classAttribute->name === Dependencies::class) &&
+          !empty($classAttribute->args)) {
         // Dependencies attribute has only one argument.
-        $arg = reset($attribute->args);
+        $arg = reset($classAttribute->args);
         if ($arg->value instanceof Array_) {
           try {
             $modules = (new ConstExprEvaluator())->evaluateSilently($arg->value);
