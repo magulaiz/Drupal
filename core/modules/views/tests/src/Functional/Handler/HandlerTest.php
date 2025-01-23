@@ -30,9 +30,7 @@ class HandlerTest extends ViewTestBase {
   public static $testViews = ['test_view', 'test_view_handler_weight', 'test_handler_relationships', 'test_handler_test_access', 'test_filter_in_operator_ui'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views_ui', 'comment', 'node'];
 
@@ -335,6 +333,12 @@ class HandlerTest extends ViewTestBase {
    * @see \Drupal\views\Plugin\views\HandlerBase::placeholder()
    */
   public function testPlaceholder(): void {
+    // Change the test view to use the test field plugin which has the
+    // additional get placeholder method.
+    $config = $this->config('views.view.test_view');
+    $config->set('display.default.display_options.fields.name.plugin_id', 'test_field');
+    $config->save();
+
     $view = Views::getView('test_view');
     $view->initHandlers();
     $view->initQuery();

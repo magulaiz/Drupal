@@ -12,6 +12,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Runs a browser test using a driver that supports JavaScript.
  *
+ * Module tests extending WebDriverTestBase must exist in the
+ * Drupal\Tests\your_module\FunctionalJavascript namespace and live in the
+ * modules/your_module/tests/src/FunctionalJavascript directory.
+ *
+ * Tests for core/lib/Drupal classes extending WebDriverTestBase must exist in
+ * the \Drupal\FunctionalJavascriptTests\Core namespace and live in the
+ * core/tests/Drupal/FunctionalJavascriptTests directory.
+ *
  * Base class for testing browser interaction implemented in JavaScript.
  *
  * @ingroup testing
@@ -72,7 +80,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
     self::$modules = [
       'js_testing_ajax_request_test',
       'js_testing_log_test',
-      'jquery_keyevent_polyfill_test',
+      'jquery_key_event_polyfill_test',
     ];
     if ($this->disableCssAnimations) {
       self::$modules[] = 'css_disable_transitions_test';
