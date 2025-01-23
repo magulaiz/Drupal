@@ -328,8 +328,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->with($this->equalTo($path . '/versions_module.info.yml'))
       ->willReturn(['version' => '8.x-1.2']);
 
-    $this->libraryDiscoveryParser->setPaths('module', 'versions_module', $path);
-
     $libraries = $this->libraryDiscoveryParser->buildByExtension('versions_module');
 
     $this->assertFalse(array_key_exists('version', $libraries['versionless']));
@@ -372,7 +370,6 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->method('parse')
       ->with($this->equalTo($path . '/versions_theme.info.yml'))
       ->willReturn(['version' => '8.x-2.1']);
-    $this->libraryDiscoveryParser->setPaths('theme', 'versions_theme', $path);
 
     $libraries = $this->libraryDiscoveryParser->buildByExtension('versions_theme');
 
