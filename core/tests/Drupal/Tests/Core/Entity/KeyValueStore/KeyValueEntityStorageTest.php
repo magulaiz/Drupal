@@ -14,9 +14,10 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage
@@ -60,6 +61,8 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   protected $languageManager;
 
   /**
+   * The entity storage.
+   *
    * @var \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage
    */
   protected $entityStorage;
@@ -101,7 +104,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @param string $uuid_key
    *   (optional) The entity key used for the UUID. Defaults to 'uuid'.
    */
-  protected function setUpKeyValueEntityStorage($uuid_key = 'uuid') {
+  protected function setUpKeyValueEntityStorage($uuid_key = 'uuid'): void {
     $this->entityType->expects($this->atLeastOnce())
       ->method('getKey')
       ->willReturnMap([
@@ -604,17 +607,17 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * Creates an entity with specific methods mocked.
    *
    * @param string $class
-   *   (optional) The concrete entity class to mock. Defaults to
-   *   'Drupal\Core\Entity\EntityBase'.
+   *   (optional) The concrete entity class to mock. Defaults to a stub of
+   *   \Drupal\Core\Entity\EntityBase defined for test purposes.
    * @param array $arguments
    *   (optional) Arguments to pass to the constructor. An empty set of values
    *   and an entity type ID will be provided.
    * @param array $methods
    *   (optional) The methods to mock.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @return \Drupal\Core\Entity\EntityInterface&\PHPUnit\Framework\MockObject\MockObject
    */
-  public function getMockEntity($class = EntityBaseTest::class, array $arguments = [], $methods = []) {
+  protected function getMockEntity(string $class = EntityBaseTest::class, array $arguments = [], array $methods = []): EntityInterface&MockObject {
     // Ensure the entity is passed at least an array of values and an entity
     // type ID
     if (!isset($arguments[0])) {
@@ -623,16 +626,39 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     if (!isset($arguments[1])) {
       $arguments[1] = 'test_entity_type';
     }
-    return $this->getMockForAbstractClass($class, $arguments, '', TRUE, TRUE, TRUE, $methods);
+    return $this->getMockBuilder($class)
+      ->setConstructorArgs($arguments)
+      ->onlyMethods($methods)
+      ->getMock();
   }
 
 }
 
 class EntityBaseTest extends EntityBase {
+
+  /**
+   * The entity ID.
+   */
   public $id;
+
+  /**
+   * The language code for the entity.
+   */
   public $langcode;
+
+  /**
+   * The entity UUID.
+   */
   public $uuid;
+
+  /**
+   * The entity label.
+   */
   public $label;
+
+  /**
+   * The original, or NULL if the entity cannot be loaded.
+   */
   public $original;
 
 }

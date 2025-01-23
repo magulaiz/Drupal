@@ -55,7 +55,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests image formatters on node display.
    */
-  public function _testImageFieldFormatters($scheme) {
+  public function _testImageFieldFormatters($scheme): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
@@ -100,7 +100,6 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Save node.
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $alt);
-    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
 
     // Test that the default formatter is being used.
@@ -288,7 +287,6 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Verify that the attached image is being previewed using the 'medium'
     // style.
-    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $file = $node->{$field_name}->entity;
 
@@ -405,7 +403,6 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Save node.
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $alt);
-    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
 
     // Test that the default image loading attribute is being used.
@@ -535,7 +532,6 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Upload the 'image-test.gif' file.
     $nid = $this->uploadNodeImage($images[2], $field_name, 'article', $alt);
-    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $file = $node->{$field_name}->entity;
     $image = [
