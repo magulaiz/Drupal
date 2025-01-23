@@ -2,70 +2,32 @@
 
 namespace Drupal\comment\Hook;
 
-use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
-use Drupal\Core\Entity\Entity\EntityViewMode;
-use Drupal\user\UserInterface;
-use Drupal\user\RoleInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\node\NodeInterface;
-use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\FieldConfigInterface;
-use Drupal\comment\Entity\CommentType;
-use Drupal\Core\Url;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\node\NodeInterface;
+use Drupal\user\RoleInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Hook implementations for comment.
  */
 class CommentHooks {
 
-  /**
-   * Implements hook_help().
-   */
-  #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
-    switch ($route_name) {
-      case 'help.page.comment':
-        $output = '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Comment module allows users to comment on site content, set commenting defaults and permissions, and moderate comments. For more information, see the <a href=":comment">online documentation for the Comment module</a>.', [':comment' => 'https://www.drupal.org/documentation/modules/comment']) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
-        $output .= '<dl>';
-        $output .= '<dt>' . t('Enabling commenting') . '</dt>';
-        $output .= '<dd>' . t('Comment functionality can be enabled for any entity sub-type (for example, a <a href=":content-type">content type</a>) by adding a <em>Comments</em> field on its <em>Manage fields page</em>. Adding or removing commenting for an entity through the user interface requires the <a href=":field_ui">Field UI</a> module to be installed, even though the commenting functionality works without it. For more information on fields and entities, see the <a href=":field">Field module help page</a>.', [
-          ':content-type' => \Drupal::moduleHandler()->moduleExists('node') ? Url::fromRoute('entity.node_type.collection')->toString() : '#',
-          ':field' => Url::fromRoute('help.page', [
-            'name' => 'field',
-          ])->toString(),
-          ':field_ui' => \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', [
-            'name' => 'field_ui',
-          ])->toString() : '#',
-        ]) . '</dd>';
-        $output .= '<dt>' . t('Configuring commenting settings') . '</dt>';
-        $output .= '<dd>' . t('Commenting settings can be configured by editing the <em>Comments</em> field on the <em>Manage fields page</em> of an entity type if the <em>Field UI module</em> is installed. Configuration includes the label of the comments field, the number of comments to be displayed, and whether they are shown in threaded list. Commenting can be configured as: <em>Open</em> to allow new comments, <em>Closed</em> to view existing comments, but prevent new comments, or <em>Hidden</em> to hide existing comments and prevent new comments. Changing this configuration for an entity type will not change existing entity items.') . '</dd>';
-        $output .= '<dt>' . t('Overriding default settings') . '</dt>';
-        $output .= '<dd>' . t('Users with the appropriate permissions can override the default commenting settings of an entity type when they create an item of that type.') . '</dd>';
-        $output .= '<dt>' . t('Adding comment types') . '</dt>';
-        $output .= '<dd>' . t('Additional <em>comment types</em> can be created per entity sub-type and added on the <a href=":field">Comment types page</a>. If there are multiple comment types available you can select the appropriate one after adding a <em>Comments field</em>.', [
-          ':field' => Url::fromRoute('entity.comment_type.collection')->toString(),
-        ]) . '</dd>';
-        $output .= '<dt>' . t('Approving and managing comments') . '</dt>';
-        $output .= '<dd>' . t('Comments from users who have the <em>Skip comment approval</em> permission are published immediately. All other comments are placed in the <a href=":comment-approval">Unapproved comments</a> queue, until a user who has permission to <em>Administer comments and comment settings</em> publishes or deletes them. Published comments can be bulk managed on the <a href=":admin-comment">Published comments</a> administration page. When a comment has no replies, it remains editable by its author, as long as the author has <em>Edit own comments</em> permission.', [
-          ':comment-approval' => Url::fromRoute('comment.admin_approval')->toString(),
-          ':admin-comment' => Url::fromRoute('comment.admin')->toString(),
-        ]) . '</dd>';
-        $output .= '</dl>';
-        return $output;
-
-      case 'entity.comment_type.collection':
-        $output = '<p>' . t('This page provides a list of all comment types on the site and allows you to manage the fields, form and display settings for each.') . '</p>';
-        return $output;
-    }
-  }
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {}
 
   /**
    * Implements hook_entity_extra_field_info().
@@ -270,7 +232,7 @@ class CommentHooks {
   #[Hook('entity_storage_load')]
   public function entityStorageLoad($entities, $entity_type) {
     // Comments can only be attached to content entities, so skip others.
-    if (!\Drupal::entityTypeManager()->getDefinition($entity_type)->entityClassImplements(FieldableEntityInterface::class)) {
+    if (!$this->entityTypeManager->getDefinition($entity_type)->entityClassImplements(FieldableEntityInterface::class)) {
       return;
     }
     if (!\Drupal::service('comment.manager')->getFields($entity_type)) {
