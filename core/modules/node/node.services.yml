@@ -40,12 +40,3 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: 'context_provider' }
-
-  # BC layers.
-  # @todo remove this in https://www.drupal.org/node/3086648 before Drupal 12.0.0.
-  node.deprecated_route_processor:
-    class: Drupal\node\RouteProcessor\NodeDeprecatedRouteProcessor
-    arguments: ['@router.route_provider']
-    public: false
-    tags:
-      - { name: route_processor_outbound }

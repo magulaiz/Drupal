@@ -14,13 +14,19 @@ entity.node.delete_multiple_form:
   requirements:
     _entity_delete_multiple_access: 'node'
 
-# BC layers.
-# @todo remove these in https://www.drupal.org/node/3086648 before Drupal 12.0.0.
 node.add_page:
-  path: ''
+  alias: 'entity.node.add_page'
+  deprecated:
+    package: 'drupal/core'
+    version: '11.2.0'
+    message: 'The "%alias_id%" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "entity.node.add_page" route instead. See https://www.drupal.org/node/2940083'
 
 node.add:
-  path: '{node_type}'
+  alias: 'entity.node.add_form'
+  deprecated:
+    package: 'drupal/core'
+    version: '11.2.0'
+    message: 'The "%alias_id%" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "entity.node.add_form" route instead. See https://www.drupal.org/node/2940083'
 
 entity.node.preview:
   path: '/node/preview/{node_preview}/{view_mode_id}'

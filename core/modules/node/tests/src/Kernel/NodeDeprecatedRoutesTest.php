@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @group node
  * @group legacy
  */
-class NodeDeprecatedRouteProcessorTest extends KernelTestBase {
+class NodeDeprecatedRoutesTest extends KernelTestBase {
 
   use ExpectDeprecationTrait;
 
@@ -33,7 +33,7 @@ class NodeDeprecatedRouteProcessorTest extends KernelTestBase {
    * Test URL generation using 'node.add_page' generates deprecated warning.
    */
   public function testNodeAddPageDeprecatedRoute(): void {
-    $this->expectDeprecation("The 'node.add_page' route is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. Use the 'entity.node.add_page' route instead. See https://www.drupal.org/node/2940083");
+    $this->expectDeprecation('The "node.add_page" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "entity.node.add_page" route instead. See https://www.drupal.org/node/2940083');
     $url_for_current_route = Url::fromRoute('entity.node.add_page')->toString(TRUE)->getGeneratedUrl();
     $url_for_bc_route = Url::fromRoute('node.add_page')->toString(TRUE)->getGeneratedUrl();
     $this->assertSame($url_for_current_route, $url_for_bc_route);
@@ -43,7 +43,7 @@ class NodeDeprecatedRouteProcessorTest extends KernelTestBase {
    * Test URL generation using 'node.add' generates deprecated warning.
    */
   public function testNodeAddDeprecatedRoute(): void {
-    $this->expectDeprecation("The 'node.add' route is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. Use the 'entity.node.add_form' route instead. See https://www.drupal.org/node/2940083");
+    $this->expectDeprecation('The "node.add" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "entity.node.add_form" route instead. See https://www.drupal.org/node/2940083');
     $url_for_current_route = Url::fromRoute('entity.node.add_form', ['node_type' => 'page'])->toString(TRUE)->getGeneratedUrl();
     $url_for_bc_route = Url::fromRoute('node.add', ['node_type' => 'page'])->toString(TRUE)->getGeneratedUrl();
     $this->assertSame($url_for_current_route, $url_for_bc_route);
@@ -53,7 +53,7 @@ class NodeDeprecatedRouteProcessorTest extends KernelTestBase {
    * Test route matcher generates deprecated warning for 'node.add_page' route.
    */
   public function testNodeAddPageDeprecatedRouteMatcher(): void {
-    $this->expectDeprecation("The 'node.add_page' route is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. Use the 'entity.node.add_page' route instead. See https://www.drupal.org/node/2940083");
+    $this->expectDeprecation('The "node.add_page" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "entity.node.add_page" route instead. See https://www.drupal.org/node/2940083');
     $url_for_current_route = Url::fromRoute('entity.node.add_page')->toString(TRUE)->getGeneratedUrl();
     $sub_request = new Request();
     $sub_request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'node.add_page');
@@ -68,7 +68,7 @@ class NodeDeprecatedRouteProcessorTest extends KernelTestBase {
    * Test route matcher generates deprecated warning for 'node.add' route.
    */
   public function testNodeAddDeprecatedRouteMatcher(): void {
-    $this->expectDeprecation("The 'node.add' route is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. Use the 'entity.node.add_form' route instead. See https://www.drupal.org/node/2940083");
+    $this->expectDeprecation('The "node.add" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "entity.node.add_form" route instead. See https://www.drupal.org/node/2940083');
     $url_for_current_route = Url::fromRoute('entity.node.add_form', ['node_type' => 'page'])->toString(TRUE)->getGeneratedUrl();
     $sub_request = new Request();
     $sub_request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'node.add');
