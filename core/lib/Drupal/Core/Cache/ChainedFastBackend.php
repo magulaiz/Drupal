@@ -300,7 +300,7 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
     // multiple times during a request.
     $compare = round(microtime(TRUE) + .001, 3);
     if ($compare > $this->getLastWriteTimestamp()) {
-      $now = round(microtime(TRUE) + .50, 3);
+      $now = round(microtime(TRUE) + .050, 3);
       $this->lastWriteTimestamp = $now;
       $this->consistentBackend->set(self::LAST_WRITE_TIMESTAMP_PREFIX . $this->bin, $this->lastWriteTimestamp);
     }
