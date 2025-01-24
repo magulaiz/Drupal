@@ -119,7 +119,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    */
   protected function initBaseDatabaseDriverOverrideDirectory(): void {
     if (Database::isActiveConnection()) {
-      $database_driver_override_directory = $this->extensionPathResolver->getPath('module', \Drupal::database()->getProvider()) . InstallStorage::CONFIG_OVERRIDES_DIRECTORY;
+      $database_driver_override_directory = $this->extensionPathResolver->getPath('module', \Drupal::database()->getProvider()) . '/' . InstallStorage::CONFIG_OVERRIDES_DIRECTORY;
       if (is_dir($database_driver_override_directory)) {
         // Only set the base database driver when the module providing the
         // database driver has one.
