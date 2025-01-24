@@ -74,7 +74,7 @@ class Tasks extends InstallTasks {
    * {@inheritdoc}
    */
   public function name() {
-    return t('MongoDB (Experimental)');
+    return t('MongoDB');
   }
 
   /**
