@@ -2,7 +2,6 @@
 
 namespace Drupal\taxonomy\Hook;
 
-use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
