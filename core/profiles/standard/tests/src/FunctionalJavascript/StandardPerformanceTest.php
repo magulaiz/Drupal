@@ -133,6 +133,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheTagChecksumCount' => 37,
       'CacheTagIsValidCount' => 43,
       'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 20,
       'StylesheetCount' => 1,
       'StylesheetBytes' => 3450,
     ];
@@ -166,6 +167,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 16,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
+      'tCacheTagLookupQueryCount',
       'StylesheetCount' => 1,
       'StylesheetBytes' => 3150,
     ];
@@ -204,6 +206,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheTagChecksumCount' => 23,
       'CacheTagIsValidCount' => 32,
       'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 16,
       'StylesheetCount' => 1,
       'StylesheetBytes' => 3150,
     ];
@@ -260,6 +263,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheTagChecksumCount' => 1,
       'CacheTagIsValidCount' => 37,
       'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 3,
     ];
     $this->assertMetrics($expected, $performance_data);
     $this->drupalLogout();
@@ -317,6 +321,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheTagChecksumCount' => 1,
       'CacheTagIsValidCount' => 43,
       'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 18,
     ];
     $this->assertMetrics($expected, $performance_data);
   }

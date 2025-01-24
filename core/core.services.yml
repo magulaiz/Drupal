@@ -228,6 +228,8 @@ services:
   cache_tags.invalidator.checksum:
     class: Drupal\Core\Cache\DatabaseCacheTagsChecksum
     arguments: ['@database']
+    calls:
+      - [setEventDispatcher, ['@event_dispatcher']]
     tags:
       - { name: cache_tags_invalidator}
       - { name: backend_overridable }
@@ -337,6 +339,10 @@ services:
       - '@datetime.time'
   cache_router_rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\CacheRouterRebuildSubscriber
+  common_cache_tags.event_subscriber:
+    class: Drupal\Core\EventSubscriber\CommonCacheTagsEventSubscriber
+  entity.common_cache_tags.event_subscriber:
+    class: Drupal\Core\Entity\EventSubscriber\EntityCommonCacheTagsEventSubscriber
   page_cache_request_policy:
     class: Drupal\Core\PageCache\DefaultRequestPolicy
     arguments: ['@session_configuration']

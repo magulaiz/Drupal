@@ -4,6 +4,7 @@ namespace Drupal\Core\Cache;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Cache tags invalidations checksum implementation that uses the database.
@@ -18,6 +19,13 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
+
+  /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
 
   /**
    * Constructs a DatabaseCacheTagsChecksum object.
@@ -122,6 +130,23 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
    */
   public function getDatabaseConnection() {
     return $this->connection;
+  }
+
+  /**
+   * Sets the event dispatcher.
+   *
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
+   */
+  public function setEventDispatcher(EventDispatcherInterface $event_dispatcher) {
+    return $this->eventDispatcher = $event_dispatcher;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEventDispatcher() {
+    return $this->eventDispatcher;
   }
 
 }

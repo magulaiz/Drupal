@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Core\Cache\Event\CommonCacheTagsEvent;
+
 /**
  * A trait for cache tag checksum implementations.
  *
@@ -24,6 +26,13 @@ trait CacheTagsChecksumTrait {
    * @var string[]
    */
   protected $delayedTags = [];
+
+  /**
+   * The set of common cache tags.
+   *
+   * @var string[]
+   */
+  protected $commonTags;
 
   /**
    * Contains already loaded tag invalidation counts from the storage.
@@ -132,12 +141,19 @@ trait CacheTagsChecksumTrait {
   protected function calculateChecksum(array $tags) {
     $checksum = 0;
     // If there are no cache tags, then there is no cache tag to checksum,
-    // so return early..
+    // so return early.
     if (empty($tags)) {
       return $checksum;
     }
 
-    $query_tags = array_diff($tags, array_keys($this->tagCache));
+    // Merge in the common cache tags the very first time we look anything up.
+    if (empty($this->tagCache)) {
+      $query_tags = array_merge($tags, $this->getCommonCacheTags());
+    }
+    else {
+      $query_tags = array_diff($tags, array_keys($this->tagCache));
+    }
+
     if ($query_tags) {
       $tag_invalidations = $this->getTagInvalidationCounts($query_tags);
       $this->tagCache += $tag_invalidations;
@@ -150,6 +166,22 @@ trait CacheTagsChecksumTrait {
     }
 
     return $checksum;
+  }
+
+  /**
+   * Returns a list of common cache tags.
+   *
+   * @return string[]
+   *   The list of common cache tags.
+   */
+  protected function getCommonCacheTags(): array {
+    // @todo Perhaps store in persistent cache?
+    if (!isset($this->commonTags)) {
+      $event = new CommonCacheTagsEvent();
+      $this->getEventDispatcher()->dispatch($event);
+      $this->commonTags = $event->getCacheTags();
+    }
+    return $this->commonTags;
   }
 
   /**
@@ -182,6 +214,14 @@ trait CacheTagsChecksumTrait {
    *   The database connection.
    */
   abstract protected function getDatabaseConnection();
+
+  /**
+   * Returns the event dispatcher.
+   *
+   * @return \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   *   The event dispatcher.
+   */
+  abstract protected function getEventDispatcher();
 
   /**
    * Marks cache items with any of the specified tags as invalid.
