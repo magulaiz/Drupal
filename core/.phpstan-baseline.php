@@ -41705,9 +41705,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\taxonomy\\\\Hook\\\\TaxonomyHooks\\:\\:taxonomyTermDelete\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\taxonomy\\\\Hook\\\\TaxonomyEntityHooks\\:\\:taxonomyTermDelete\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/Hook/TaxonomyHooks.php',
+	'path' => __DIR__ . '/modules/taxonomy/src/Hook/TaxonomyEntityHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
