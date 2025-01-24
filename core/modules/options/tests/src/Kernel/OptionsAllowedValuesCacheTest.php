@@ -57,26 +57,21 @@ class OptionsAllowedValuesCacheTest extends FieldKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Create a test entity type.
     $this->installEntitySchema('entity_test_with_bundle');
 
-    // Create two bundles of the entity type.
-    // Create the first bundle.
+    // Create two bundles.
     $bundle1 = EntityTestBundle::create([
       'id' => 'bundle1',
       'label' => 'Test Bundle 1',
     ]);
-    // Save the first bundle.
     $bundle1->save();
-    // Create the second bundle.
     $bundle2 = EntityTestBundle::create([
       'id' => 'bundle2',
       'label' => 'Test Bundle 2',
     ]);
-    // Save the second bundle.
     $bundle2->save();
 
-    // Create a field storage definition for the entity type.
+    // Create a common field storage.
     $this->fieldStorageDefinition = [
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test_with_bundle',
@@ -91,71 +86,59 @@ class OptionsAllowedValuesCacheTest extends FieldKernelTestBase {
       ],
     ];
     $this->fieldStorage = FieldStorageConfig::create($this->fieldStorageDefinition);
-    // Save the field to the test entity type.
     $this->fieldStorage->save();
 
-    // Create two field instances from the entity type field, one for each bundle.
-    // Create a field instance for the first bundle.
+    // Create two field instances, one for each bundle.
     $this->bundle1Field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'bundle1',
     ]);
-    // Save the field to the bundle.
     $this->bundle1Field->save();
-    // Create a field instance for the second bundle.
     $this->bundle2Field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'bundle2',
     ]);
-    // Save the field instance to the bundle.
     $this->bundle2Field->save();
 
   }
 
   /**
-   * Tests that the allowed values cache is correctly set for both the bundles.
+   * Tests that the allowed values cache is correctly set per bundle.
    */
   public function testOptionsAllowedValuesIsCachedPerBundle(): void {
 
     // Create two entities, one for each bundle.
-    // Create the first entity.
     $entity1 = EntityTestWithBundle::create([
       'type' => 'bundle1',
       'name' => 'Test entity bundle1',
     ]);
-    // Save the first entity.
     $entity1->save();
-    // Create the second entity.
     $entity2 = EntityTestWithBundle::create([
       'type' => 'bundle2',
       'name' => 'Test entity bundle2',
     ]);
-    // Save the second entity.
     $entity2->save();
 
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager */
     $entityFieldManager = \Drupal::service('entity_field.manager');
 
-    // Load the field definitions for each of the two bundles.
+    // Load the field definitions for each bundle.
     $bundle1FieldDefinition = $entityFieldManager
       ->getFieldDefinitions('entity_test_with_bundle', 'bundle1')[$this->fieldName];
     $bundle2FieldDefinition = $entityFieldManager
       ->getFieldDefinitions('entity_test_with_bundle', 'bundle2')[$this->fieldName];
 
     // Get the allowed values for each bundle.
-    // Set the allowed values for the first bundle.
     $bundle1AllowedValues = options_allowed_values(
       $bundle1FieldDefinition->getFieldStorageDefinition(),
       $entity1
     );
-    // Set the allowed values for the second bundle.
     $bundle2AllowedValues = options_allowed_values(
       $bundle2FieldDefinition->getFieldStorageDefinition(),
       $entity2
     );
 
     // Check that the allowed values are correct.
-    // Check that the allowed values are correct for the first bundle.
     $this->assertEquals(
       [
         'value1' => 'Value 1',
@@ -163,7 +146,6 @@ class OptionsAllowedValuesCacheTest extends FieldKernelTestBase {
       $bundle1AllowedValues,
       'The allowed values for bundle1 match the configured values.'
     );
-    // Check that the allowed values are correct for the second bundle.
     $this->assertEquals(
       [
         'value2' => 'Value 2',
