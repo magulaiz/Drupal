@@ -143,12 +143,12 @@ class OptionsAllowedValuesCacheTest extends FieldKernelTestBase {
       ->getFieldDefinitions('entity_test_with_bundle', 'bundle2')[$this->fieldName];
 
     // Get the allowed values for each bundle.
-    // Get the allowed values for the first bundle.
+    // Set the allowed values for the first bundle.
     $bundle1AllowedValues = options_allowed_values(
       $bundle1FieldDefinition->getFieldStorageDefinition(),
       $entity1
     );
-    // Get the allowed values for the second bundle.
+    // Set the allowed values for the second bundle.
     $bundle2AllowedValues = options_allowed_values(
       $bundle2FieldDefinition->getFieldStorageDefinition(),
       $entity2
