@@ -85,7 +85,7 @@ class SectionComponent implements ThirdPartySettingsInterface {
    *   (optional) Any third party settings.
    *
    * @todo Remove $additional argument in
-   *   https://www.drupal.org/project/drupal/issues/3160644 in drupal:11.0.x.
+   *   https://www.drupal.org/project/drupal/issues/3160644 in drupal:12.0.x.
    */
   public function __construct($uuid, $region, array $configuration = [], array $additional = [], array $third_party_settings = []) {
     $this->uuid = $uuid;
@@ -357,7 +357,7 @@ class SectionComponent implements ThirdPartySettingsInterface {
       'uuid' => '',
       'region' => '',
       'configuration' => [],
-      // @todo Remove below key/value when the drupal:11.0.x branch is opened.
+      // @todo Remove below key/value when the drupal:12.0.x branch is opened.
       // @see https://www.drupal.org/project/drupal/issues/3160644
       'additional' => [],
       'third_party_settings' => [],
@@ -366,7 +366,7 @@ class SectionComponent implements ThirdPartySettingsInterface {
       $component['uuid'],
       $component['region'],
       $component['configuration'],
-      // @todo Remove below argument when the drupal:11.0.x branch is opened.
+      // @todo Remove below argument when the drupal:12.0.x branch is opened.
       // @see https://www.drupal.org/project/drupal/issues/3160644
       $component['additional'],
       $component['third_party_settings']
