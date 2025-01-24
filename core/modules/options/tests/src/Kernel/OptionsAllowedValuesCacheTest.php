@@ -59,7 +59,7 @@ class OptionsAllowedValuesCacheTest extends FieldKernelTestBase {
 
     $this->installEntitySchema('entity_test_with_bundle');
 
-    // Create two bundles.
+    // Create two bundles of the entity type.
     $bundle1 = EntityTestBundle::create([
       'id' => 'bundle1',
       'label' => 'Test Bundle 1',
@@ -71,7 +71,7 @@ class OptionsAllowedValuesCacheTest extends FieldKernelTestBase {
     ]);
     $bundle2->save();
 
-    // Create a common field storage.
+    // Create a field storage that will be shared by both fields.
     $this->fieldStorageDefinition = [
       'field_name' => $this->fieldName,
       'entity_type' => 'entity_test_with_bundle',
@@ -138,7 +138,7 @@ class OptionsAllowedValuesCacheTest extends FieldKernelTestBase {
       $entity2
     );
 
-    // Check that the allowed values are correct.
+    // Check that the allowed values are correct for each bundle.
     $this->assertEquals(
       [
         'value1' => 'Value 1',
