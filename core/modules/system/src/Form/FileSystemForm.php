@@ -58,12 +58,20 @@ class FileSystemForm extends ConfigFormBase {
    *   The stream wrapper manager.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system.
+   * @param string|null $appRoot
+   *   Drupal root directory.
+   *
+   * @see https://www.drupal.org/node/3341696
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, DateFormatterInterface $date_formatter, StreamWrapperManagerInterface $stream_wrapper_manager, FileSystemInterface $file_system) {
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, DateFormatterInterface $date_formatter, StreamWrapperManagerInterface $stream_wrapper_manager, FileSystemInterface $file_system, protected ?string $appRoot = NULL) {
     parent::__construct($config_factory, $typedConfigManager);
     $this->dateFormatter = $date_formatter;
     $this->streamWrapperManager = $stream_wrapper_manager;
     $this->fileSystem = $file_system;
+    if ($this->appRoot === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $root argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3341696', E_USER_DEPRECATED);
+      $this->appRoot = \Drupal::root();
+    }
   }
 
   /**
@@ -75,7 +83,8 @@ class FileSystemForm extends ConfigFormBase {
       $container->get('config.typed'),
       $container->get('date.formatter'),
       $container->get('stream_wrapper_manager'),
-      $container->get('file_system')
+      $container->get('file_system'),
+      $container->getParameter('app.root')
     );
   }
 
@@ -90,10 +99,17 @@ class FileSystemForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $form['app_root'] = [
+      '#type' => 'item',
+      '#title' => $this->t('Application root directory'),
+      '#markup' => $this->appRoot,
+      '#description' => $this->t('The top level directory of the Drupal installation. Relative paths shown below are relative to this location.'),
+    ];
+
     $form['file_public_path'] = [
       '#type' => 'item',
       '#title' => $this->t('Public file system path'),
-      '#markup' => PublicStream::basePath(),
+      '#markup' => $this->resolveAbsolutePath(PublicStream::basePath()) ?? PublicStream::basePath(),
       '#description' => $this->t('A local file system path where public files will be stored. This directory must exist and be writable by Drupal. This directory must be relative to the Drupal installation directory and be accessible over the web. This must be changed in settings.php'),
     ];
 
@@ -107,21 +123,21 @@ class FileSystemForm extends ConfigFormBase {
     $form['file_assets_path'] = [
       '#type' => 'item',
       '#title' => $this->t('Optimized assets file system path'),
-      '#markup' => AssetsStream::basePath(),
+      '#markup' => $this->resolveAbsolutePath(AssetsStream::basePath()) ?? (string) $this->t('Not set'),
       '#description' => $this->t('A local file system path where optimized assets files will be stored. This directory must exist and be writable by Drupal. This directory must be relative to the Drupal installation directory and be accessible over the web. This must be changed in settings.php'),
     ];
 
     $form['file_private_path'] = [
       '#type' => 'item',
       '#title' => $this->t('Private file system path'),
-      '#markup' => (PrivateStream::basePath() ? PrivateStream::basePath() : $this->t('Not set')),
+      '#markup' => $this->resolveAbsolutePath(PrivateStream::basePath()) ?? PrivateStream::basePath() ?? (string) $this->t('Not set'),
       '#description' => $this->t('An existing local file system path for storing private files. It should be writable by Drupal and not accessible over the web. This must be changed in settings.php'),
     ];
 
     $form['file_temporary_path'] = [
       '#type' => 'item',
       '#title' => $this->t('Temporary directory'),
-      '#markup' => $this->fileSystem->getTempDirectory(),
+      '#markup' => $this->resolveAbsolutePath($this->fileSystem->getTempDirectory()) ?? $this->fileSystem->getTempDirectory(),
       '#description' => $this->t('A local file system path where temporary files will be stored. This directory should not be accessible over the web. This must be changed in settings.php.'),
     ];
     // Any visible, writable wrapper can potentially be used for the files
@@ -150,6 +166,29 @@ class FileSystemForm extends ConfigFormBase {
     ];
 
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * Absolute path resolver.
+   *
+   * @param string|null $path
+   *   A given path.
+   *
+   * @return null|string
+   *   Resolved absolute path, null otherwise.
+   */
+  private function resolveAbsolutePath(?string $path): ?string {
+    if (!$path || str_starts_with($path, '/') || str_contains($path, '://')) {
+      return NULL;
+    }
+    $realpath = $this->fileSystem->realpath($this->appRoot . '/' . $path);
+    if (!$realpath) {
+      $this->messenger()->addWarning($this->t(
+        "The path '@uri' is inaccessible.",
+        ['@uri' => $path]
+      ));
+    }
+    return $realpath ?: NULL;
   }
 
 }
