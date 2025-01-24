@@ -7,9 +7,9 @@ namespace Drupal\Tests\content_translation\Functional;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\content_translation_test\Entity\EntityTestTranslatableNoUISkip;
+use Drupal\entity_test\Entity\EntityTestMul;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests whether canonical link tags are present for content entities.
@@ -121,6 +121,17 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
       foreach ($urls as $langcode_alternate => $url_alternate) {
         $this->assertSession()->elementAttributeContains('xpath', "head/link[@rel='alternate' and @hreflang='$langcode_alternate']", 'href', $url_alternate->toString());
       }
+    }
+
+    // Test request with query string.
+    $this->drupalGet($entity->toUrl('canonical'), ['query' => ['foo' => 'bar']]);
+    foreach ($entity->getTranslationLanguages() as $language) {
+      $args = [
+        ':href' => $entity->toUrl('canonical')->setOption('language', $language)->setOption('query', ['foo' => 'bar'])->setAbsolute()->toString(),
+        ':hreflang' => $language->getId(),
+      ];
+      $links = $this->xpath('head/link[@rel = "alternate" and @href = :href and @hreflang = :hreflang]', $args);
+      $this->assertArrayHasKey(0, $links);
     }
 
     // Configure entity path as a front page.
