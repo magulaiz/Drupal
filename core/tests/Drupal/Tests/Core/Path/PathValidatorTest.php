@@ -445,7 +445,7 @@ class PathValidatorTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getUrlIfValidWithoutAccessCheck() method with an invalid path.
+   * Tests the behaviour of the getUrlIfValidWithoutAccessCheck() method when it receives invalid path parameters.
    *
    * @covers ::getUrlIfValidWithoutAccessCheck
    * @covers ::getUrl
