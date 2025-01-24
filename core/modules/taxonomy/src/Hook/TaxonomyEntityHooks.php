@@ -84,4 +84,15 @@ class TaxonomyEntityHooks {
     taxonomy_delete_node_index($node);
   }
 
+  /**
+   * Implements hook_ENTITY_TYPE_delete() for taxonomy_term entities.
+   */
+  #[Hook('taxonomy_term_delete')]
+  public function taxonomyTermDelete(Term $term) {
+    if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
+      // Clean up the {taxonomy_index} table when terms are deleted.
+      \Drupal::database()->delete('taxonomy_index')->condition('tid', $term->id())->execute();
+    }
+  }
+
 }
