@@ -32,7 +32,3 @@
 # Symfony 7.2
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_length" option is deprecated and will be ignored in Symfony 8.0.%
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_bits_per_character" option is deprecated and will be ignored in Symfony 8.0.%
-
-# Removed node routes.
-%The "node.add_page" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "entity.node.add_page" route instead. See https://www.drupal.org/node/2940083%
-%The "node.add" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "entity.node.add_form" route instead. See https://www.drupal.org/node/2940083%
