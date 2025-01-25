@@ -2,19 +2,23 @@
 
 namespace Drupal\navigation\Hook;
 
-use Drupal\navigation\RenderCallbacks;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
+use Drupal\navigation\RenderCallbacks;
+use Drupal\navigation\TopBarItemManagerInterface;
 
 /**
  * Hook implementations for navigation.
  */
 class NavigationHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_help().
@@ -44,7 +48,7 @@ class NavigationHooks {
    * Implements hook_page_top().
    */
   #[Hook('page_top')]
-  public function pageTop(array &$page_top) {
+  public function pageTop(array &$page_top): void {
     if (!\Drupal::currentUser()->hasPermission('access navigation')) {
       return;
     }
@@ -76,9 +80,9 @@ class NavigationHooks {
    */
   #[Hook('theme')]
   public function theme($existing, $type, $theme, $path) : array {
-    $items['top_bar'] = ['variables' => ['local_tasks' => []]];
-    $items['top_bar_local_tasks'] = ['variables' => ['local_tasks' => []]];
-    $items['top_bar_local_task'] = ['variables' => ['link' => []]];
+    $items['top_bar'] = ['render element' => 'element'];
+    $items['top_bar_page_actions'] = ['variables' => ['page_actions' => [], 'featured_page_actions' => []]];
+    $items['top_bar_page_action'] = ['variables' => ['link' => []]];
     $items['big_pipe_interface_preview__navigation_shortcut_lazy_builder_lazyLinks__Shortcuts'] = [
       'variables' => [
         'callback' => NULL,
@@ -98,6 +102,11 @@ class NavigationHooks {
       ],
     ];
     $items['menu_region__footer'] = ['variables' => ['items' => [], 'title' => NULL, 'menu_name' => NULL]];
+    $items['navigation_content_top'] = [
+      'variables' => [
+        'items' => [],
+      ],
+    ];
     return $items;
   }
 
@@ -120,7 +129,11 @@ class NavigationHooks {
   public function blockBuildLocalTasksBlockAlter(array &$build, BlockPluginInterface $block): void {
     $navigation_renderer = \Drupal::service('navigation.renderer');
     assert($navigation_renderer instanceof NavigationRenderer);
-    $navigation_renderer->removeLocalTasks($build, $block);
+    if (\Drupal::currentUser()->hasPermission('access navigation') &&
+      array_key_exists('page_actions', \Drupal::service(TopBarItemManagerInterface::class)->getDefinitions())
+    ) {
+      $navigation_renderer->removeLocalTasks($build, $block);
+    }
   }
 
   /**
@@ -185,6 +198,42 @@ class NavigationHooks {
     if (array_key_exists('layout_builder', $info)) {
       $info['layout_builder']['#pre_render'][] = [RenderCallbacks::class, 'alterLayoutBuilder'];
     }
+  }
+
+  /**
+   * Implements hook_navigation_content_top().
+   */
+  #[Hook('navigation_content_top')]
+  public function navigationWorkspaces(): array {
+    // This navigation item requires the Workspaces UI module.
+    if (!\Drupal::moduleHandler()->moduleExists('workspaces_ui')) {
+      return [];
+    }
+
+    $current_user = \Drupal::currentUser();
+    if (!$current_user->hasPermission('administer workspaces')
+      && !$current_user->hasPermission('view own workspace')
+      && !$current_user->hasPermission('view any workspace')
+    ) {
+      return [];
+    }
+
+    return [
+      'workspace' => [
+        // @phpstan-ignore-next-line
+        '#lazy_builder' => ['navigation.workspaces_lazy_builders:renderNavigationLinks', []],
+        '#create_placeholder' => TRUE,
+        '#lazy_builder_preview' => [
+          '#type' => 'component',
+          '#component' => 'navigation:toolbar-button',
+          '#props' => [
+            'html_tag' => 'a',
+            'text' => $this->t('Workspace'),
+          ],
+        ],
+        '#weight' => -1000,
+      ],
+    ];
   }
 
 }
