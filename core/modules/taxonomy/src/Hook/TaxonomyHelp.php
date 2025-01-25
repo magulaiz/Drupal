@@ -15,7 +15,8 @@ class TaxonomyHelp {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.taxonomy':
         $field_ui_url = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
@@ -59,12 +60,11 @@ class TaxonomyHelp {
         $output .= '</ul>';
         $output .= '</dd>';
         $output .= '</dl>';
-        return $output;
 
       case 'entity.taxonomy_vocabulary.collection':
         $output = '<p>' . t('Taxonomy is for categorizing content. Terms are grouped into vocabularies. For example, a vocabulary called "Fruit" would contain the terms "Apple" and "Banana".') . '</p>';
-        return $output;
     }
+    return $output;
   }
 
 }
