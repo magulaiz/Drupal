@@ -59,7 +59,6 @@ window.Drupal = { behaviors: {}, locale: {} };
       document.getElementById('previous').click();
     }
   });
-  
   /**
    * Helper to rethrow errors asynchronously.
    *
