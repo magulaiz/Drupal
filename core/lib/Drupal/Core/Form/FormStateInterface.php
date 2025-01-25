@@ -1112,6 +1112,32 @@ interface FormStateInterface {
   public function isValidationComplete();
 
   /**
+   * Sets that validation has been halted.
+   *
+   * Halt a form's validation process to prevent further validation functions
+   * from running. For example, you might set setValidationHalted(TRUE) if a
+   * CSRF token is not valid, because it does not make sense to perform any
+   * further validation (and it might be a security risk to do so).
+   *
+   * @param bool $haltValidation
+   *   TRUE if validation is halted, FALSE otherwise.
+   *
+   * @return $this
+   */
+  public function setValidationHalted(bool $haltValidation = TRUE): self;
+
+  /**
+   * Determines if validation has been halted.
+   *
+   * A form's validation is only halted if it doesn't make sense to run any
+   * further validation functions, e.g.: if a CSRF token is not valid.
+   *
+   * @return bool
+   *   TRUE if validation is halted, FALSE otherwise.
+   */
+  public function isValidationHalted(): bool;
+
+  /**
    * Gets the keys of the form values that will be cleaned.
    *
    * @return array

@@ -415,6 +415,21 @@ abstract class FormStateDecoratorBase implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
+  public function setValidationHalted($haltValidation = TRUE): self {
+    $this->decoratedFormState->setValidationHalted($haltValidation);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isValidationHalted(): bool {
+    return $this->decoratedFormState->isValidationHalted();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function loadInclude($module, $type, $name = NULL) {
     return $this->decoratedFormState->loadInclude($module, $type, $name);
   }

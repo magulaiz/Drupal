@@ -80,6 +80,9 @@ class FormValidator implements FormValidatorInterface {
 
     foreach ($handlers as $callback) {
       call_user_func_array($form_state->prepareCallback($callback), [&$form, &$form_state]);
+      if ($form_state->isValidationHalted()) {
+        break;
+      }
     }
   }
 
@@ -109,8 +112,7 @@ class FormValidator implements FormValidatorInterface {
         // Stop here and don't run any further validation handlers, because they
         // could invoke non-safe operations which opens the door for CSRF
         // vulnerabilities.
-        $this->finalizeValidation($form, $form_state, $form_id);
-        return;
+        $this->haltValidation($form, $form_state, $form_id);
       }
     }
 
@@ -142,6 +144,11 @@ class FormValidator implements FormValidatorInterface {
    *   The unique string identifying the form.
    */
   protected function handleErrorsWithLimitedValidation(&$form, FormStateInterface &$form_state, $form_id) {
+    // Do not perform any further validation if form validation has been halted.
+    if ($form_state->isValidationHalted()) {
+      return;
+    }
+
     // If validation errors are limited then remove any non validated form values,
     // so that only values that passed validation are left for submit callbacks.
     $triggering_element = $form_state->getTriggeringElement();
@@ -195,10 +202,31 @@ class FormValidator implements FormValidatorInterface {
    *   The unique string identifying the form.
    */
   protected function finalizeValidation(&$form, FormStateInterface &$form_state, $form_id) {
+    // Display error messages attached to the elements that they occurred in.
+    $this->formErrorHandler->handleFormErrors($form, $form_state);
+
+    // Mark this form as validated if not halted.
+    if (!$form_state->isValidationHalted()) {
+      $form_state->setValidationComplete();
+    }
+  }
+
+  /**
+   * Halts validation.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param string $form_id
+   *   The unique string identifying the form.
+   */
+  protected function haltValidation(&$form, FormStateInterface &$form_state, $form_id) {
     // Delegate handling of form errors to a service.
     $this->formErrorHandler->handleFormErrors($form, $form_state);
 
-    // Mark this form as validated.
+    // Mark this form as halted.
+    $form_state->setValidationHalted();
     $form_state->setValidationComplete();
   }
 
@@ -228,6 +256,11 @@ class FormValidator implements FormValidatorInterface {
    *   and not on recursive calls.
    */
   protected function doValidateForm(&$elements, FormStateInterface &$form_state, $form_id = NULL) {
+    // Do not perform any further validation if form validation has been halted.
+    if ($form_state->isValidationHalted()) {
+      return;
+    }
+
     // Recurse through all children, sorting the elements so that the order of
     // error messages displayed to the user matches the order of elements in
     // the form. Use a copy of $elements so that it is not modified by the

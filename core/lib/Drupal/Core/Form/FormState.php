@@ -497,6 +497,13 @@ class FormState implements FormStateInterface {
   protected $submit_handlers = [];
 
   /**
+   * Tracks if the form validation has been halted.
+   *
+   * @var bool
+   */
+  protected bool $haltValidation = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function setFormState(array $form_state_additions) {
@@ -898,6 +905,21 @@ class FormState implements FormStateInterface {
    */
   public function isValidationComplete() {
     return $this->validation_complete;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValidationHalted(bool $haltValidation = TRUE): self {
+    $this->haltValidation = $haltValidation;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isValidationHalted(): bool {
+    return $this->haltValidation;
   }
 
   /**

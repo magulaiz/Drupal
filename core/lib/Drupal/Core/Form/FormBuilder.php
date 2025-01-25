@@ -892,6 +892,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * {@inheritdoc}
    */
   public function executeSubmitHandlers(&$form, FormStateInterface &$form_state) {
+    // Abort if the validation was halted by any of the form (re)build or
+    // validate steps.
+    if ($form_state->isValidationHalted()) {
+      return;
+    }
+
     $this->formSubmitter->executeSubmitHandlers($form, $form_state);
   }
 

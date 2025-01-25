@@ -123,7 +123,7 @@ class FormValidatorTest extends UnitTestCase {
       ->setConstructorArgs([$request_stack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
       ->onlyMethods(['doValidateForm'])
       ->getMock();
-    $form_validator->expects($this->never())
+    $form_validator->expects($this->once())
       ->method('doValidateForm');
 
     $form['#token'] = 'test_form_id';
@@ -136,6 +136,7 @@ class FormValidatorTest extends UnitTestCase {
     $form_state->setValue('form_token', 'some_random_token');
     $form_validator->validateForm('test_form_id', $form, $form_state);
     $this->assertTrue($form_state->isValidationComplete());
+    $this->assertTrue($form_state->isValidationHalted());
   }
 
   /**
@@ -163,6 +164,7 @@ class FormValidatorTest extends UnitTestCase {
     $form_state->setValue('form_token', 'some_random_token');
     $form_validator->validateForm('test_form_id', $form, $form_state);
     $this->assertTrue($form_state->isValidationComplete());
+    $this->assertFalse($form_state->isValidationHalted());
   }
 
   /**
@@ -365,6 +367,51 @@ class FormValidatorTest extends UnitTestCase {
     ];
     $form_state = new FormState();
     $form_validator->validateForm('test_form_id', $form, $form_state);
+  }
+
+  /**
+   * If form token is invalid, it should halt and stop all further validation.
+   */
+  public function testHaltingValidationDoesNotRunElementValidation(): void {
+    $request_stack = new RequestStack();
+    $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/test/example?foo=bar']);
+    $request_stack->push($request);
+    $this->csrfToken->expects($this->once())
+      ->method('validate')
+      ->willReturn(FALSE);
+
+    $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
+      ->setConstructorArgs([$request_stack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
+      ->onlyMethods(['executeValidateHandlers'])
+      ->getMock();
+    $form_validator->expects($this->never())
+      ->method('executeValidateHandlers');
+    $mock = $this->getMockBuilder(FormValidatorTestMockInterface::class)
+      ->onlyMethods(['validate_handler', 'hash_validate', 'element_validate'])
+      ->getMock();
+    $mock->expects($this->never())
+      ->method('element_validate')
+      ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'), NULL);
+
+    $form = [];
+    $form['test'] = [
+      '#type' => 'textfield',
+      '#title' => 'Test',
+      '#parents' => ['test'],
+      '#element_validate' => [[$mock, 'element_validate']],
+    ];
+    $form['#token'] = 'test_form_id';
+    $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
+      ->onlyMethods(['setErrorByName'])
+      ->getMock();
+    $form_state->expects($this->once())
+      ->method('setErrorByName')
+      ->with('form_token', 'The form has become outdated. Press the back button, copy any unsaved work in the form, and then reload the page.');
+
+    $form_state->setValue('form_token', 'some_random_token');
+    $form_validator->validateForm('test_form_id', $form, $form_state);
+    $this->assertTrue($form_state->isValidationComplete());
+    $this->assertTrue($form_state->isValidationHalted());
   }
 
   /**
