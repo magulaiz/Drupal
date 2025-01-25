@@ -117,7 +117,6 @@ class ThemeHook {
         'template' => 'entity-add-list',
       ],
       'system_security_advisories_fetch_error_message' => [
-        'file' => 'system.theme.inc',
         'variables' => [
           'error_message' => [],
         ],
