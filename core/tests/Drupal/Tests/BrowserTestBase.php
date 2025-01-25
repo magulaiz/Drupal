@@ -461,7 +461,9 @@ abstract class BrowserTestBase extends TestCase {
    * {@inheritdoc}
    */
   public static function tearDownAfterClass(): void {
-    self::$mink->stopSessions();
+    if (isset(self::$mink)) {
+      self::$mink->stopSessions();
+    }
   }
 
   /**
