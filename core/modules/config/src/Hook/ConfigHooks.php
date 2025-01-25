@@ -87,6 +87,6 @@ class ConfigHooks {
       }
       return -1;
     }
+    return NULL;
   }
-
 }

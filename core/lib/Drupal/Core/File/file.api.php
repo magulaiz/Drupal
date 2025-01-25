@@ -40,6 +40,7 @@ function hook_file_download($uri) {
       'Content-disposition' => 'attachment; filename="config.tar.gz"',
     ];
   }
+  return null;
 }
 
 /**
