@@ -7,7 +7,6 @@ namespace Drupal\Tests\Core\Ajax;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\MockObject\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -100,10 +99,11 @@ class AjaxResponseTest extends UnitTestCase {
   }
 
   /**
-   *  Tests the mergeWith() method.
+   * Tests the mergeWith() method.
    *
    * @see \Drupal\Core\Ajax\AjaxResponse::mergeWith()
-   * @throws Exception
+   *
+   * @throws \PHPUnit\Framework\MockObject\Exception
    */
   public function testMergeWithOtherAjaxResponse(): void {
     $response = new AjaxResponse([]);
@@ -121,17 +121,24 @@ class AjaxResponseTest extends UnitTestCase {
     $response2->addCommand($command_three);
 
     $result = $response->mergeWith($response2);
-    self::assertEquals(['library' => ['jquery', 'drupal', 'jquery', 'ajax'],
-      'drupalSettings' => ['definitelyNotASetting']], $result->getAttachments());
-    // TODO: attached settings simply get overwritten by the second response :/
-    // so 1->mergeWith(2) is not the same as 2->mergeWith(1)
-
-
+    self::assertEquals([
+      'library' => ['jquery', 'drupal', 'jquery', 'ajax'],
+      'drupalSettings' => ['definitelyNotASetting'],
+    ], $result->getAttachments());
     self::assertEquals([['command' => 'one'], ['command' => 'two'], ['command' => 'three']], $result->getCommands());
   }
 
+  /**
+   * Creates a mock of a provided subclass of CommandInterface.
+   *
+   * Adds given settings and libraries to assets mock
+   * that is attached to the command mock.
+   */
   private function createCommandMockWithSettingsAndLibrariesAttachments(
-    string $command_class_name, array|null $settings, array|null $libraries, string $command_name
+    string $command_class_name,
+    array|null $settings,
+    array|null $libraries,
+    string $command_name,
   ) {
     $command = $this->createMock($command_class_name);
     $command->expects($this->once())
@@ -148,7 +155,9 @@ class AjaxResponseTest extends UnitTestCase {
   }
 
   /**
-   * @throws Exception
+   * Creates a mock of the Drupal\Core\Ajax\CommandInterface.
+   *
+   * @throws \PHPUnit\Framework\MockObject\Exception
    */
   private function createCommandMock(string $command_name) {
     $command = $this->createMock('Drupal\Core\Ajax\CommandInterface');
@@ -158,4 +167,5 @@ class AjaxResponseTest extends UnitTestCase {
 
     return $command;
   }
+
 }
