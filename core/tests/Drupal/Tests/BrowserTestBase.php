@@ -164,7 +164,7 @@ abstract class BrowserTestBase extends TestCase {
    *
    * @var \Behat\Mink\Mink|null
    */
-  protected $mink;
+  protected static $mink;
 
   /**
    * The base URL.
@@ -189,14 +189,6 @@ abstract class BrowserTestBase extends TestCase {
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $originalContainer;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(string $name) {
-    parent::__construct($name);
-    $this->setRunTestInSeparateProcess(TRUE);
-  }
 
   /**
    * {@inheritdoc}
@@ -233,11 +225,16 @@ abstract class BrowserTestBase extends TestCase {
     $selectors_handler = new SelectorsHandler([
       'hidden_field_selector' => new HiddenFieldSelector(),
     ]);
-    $session = new Session($driver, $selectors_handler);
-    $this->mink = new Mink();
-    $this->mink->registerSession('default', $session);
-    $this->mink->setDefaultSessionName('default');
-    $this->registerSessions();
+    if (!isset(self::$mink) || !self::$mink->hasSession('default')) {
+      $session = new Session($driver, $selectors_handler);
+      self::$mink = new Mink();
+      self::$mink->registerSession('default', $session);
+      self::$mink->setDefaultSessionName('default');
+      $this->registerSessions();
+    }
+    else {
+      $session = self::$mink->getSession('default');
+    }
 
     $this->initFrontPage();
 
@@ -423,10 +420,8 @@ abstract class BrowserTestBase extends TestCase {
    * {@inheritdoc}
    */
   protected function tearDown(): void {
-    // Close any mink sessions as early as possible to free a new browser
-    // session up for the next test method or test.
-    if ($this->mink) {
-      $this->mink->stopSessions();
+    if (self::$mink) {
+      self::$mink->resetSessions();
     }
     parent::tearDown();
 
@@ -464,7 +459,7 @@ abstract class BrowserTestBase extends TestCase {
    *   The active Mink session object.
    */
   public function getSession($name = NULL) {
-    return $this->mink->getSession($name);
+    return self::$mink->getSession($name);
   }
 
   /**

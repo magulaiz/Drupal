@@ -60,7 +60,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       return parent::initMink();
     }
     catch (\Exception $e) {
-      $this->mink = NULL;
+      self::$mink = NULL;
       throw $e;
     }
   }
@@ -94,7 +94,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected function tearDown(): void {
-    if ($this->mink) {
+    if (self::$mink) {
       // Wait for all requests to finish. It is possible that an AJAX request is
       // still on-going.
       $result = $this->getSession()->wait(5000, 'window.drupalActiveXhrCount === 0 || typeof window.drupalActiveXhrCount === "undefined"');
