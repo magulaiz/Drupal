@@ -458,6 +458,13 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function tearDownAfterClass(): void {
+    self::$mink->stopSessions();
+  }
+
+  /**
    * Returns Mink session.
    *
    * @param string $name
