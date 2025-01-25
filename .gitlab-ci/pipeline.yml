@@ -140,8 +140,8 @@ variables:
   parallel: 16
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 16
-    KUBERNETES_CPU_REQUEST: "30"
+    CONCURRENCY: 4
+    KUBERNETES_CPU_REQUEST: "4"
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
