@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Action;
 
 use Drupal\Core\Action\Plugin\Action\Derivative\EntityDeleteActionDeriver;
@@ -13,6 +15,9 @@ use Drupal\user\Entity\User;
  */
 class DeleteActionTest extends KernelTestBase {
 
+  /**
+   * The test user.
+   */
   protected $testUser;
 
   /**
@@ -27,7 +32,6 @@ class DeleteActionTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('entity_test_mulrevpub');
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
 
     $this->testUser = User::create([
       'name' => 'foobar',
@@ -40,7 +44,7 @@ class DeleteActionTest extends KernelTestBase {
   /**
    * @covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityDeleteActionDeriver::getDerivativeDefinitions
    */
-  public function testGetDerivativeDefinitions() {
+  public function testGetDerivativeDefinitions(): void {
     $deriver = new EntityDeleteActionDeriver(\Drupal::entityTypeManager(), \Drupal::translation());
     $this->assertEquals([
       'entity_test_mulrevpub' => [
@@ -69,7 +73,7 @@ class DeleteActionTest extends KernelTestBase {
   /**
    * @covers \Drupal\Core\Action\Plugin\Action\DeleteAction::execute
    */
-  public function testDeleteAction() {
+  public function testDeleteAction(): void {
     $entity = EntityTestMulRevPub::create(['name' => 'test']);
     $entity->save();
 

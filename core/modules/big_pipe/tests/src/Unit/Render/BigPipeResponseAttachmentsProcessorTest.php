@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\big_pipe\Unit\Render;
 
 use Drupal\big_pipe\Render\BigPipeResponse;
@@ -18,6 +20,7 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\Random;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -31,7 +34,7 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
    *
    * @dataProvider nonHtmlResponseProvider
    */
-  public function testNonHtmlResponse($response_class) {
+  public function testNonHtmlResponse($response_class): void {
     $big_pipe_response_attachments_processor = $this->createBigPipeResponseAttachmentsProcessor($this->prophesize(AttachmentsResponseProcessorInterface::class));
 
     $non_html_response = new $response_class();
@@ -39,10 +42,10 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
     $big_pipe_response_attachments_processor->processAttachments($non_html_response);
   }
 
-  public function nonHtmlResponseProvider() {
+  public static function nonHtmlResponseProvider() {
     return [
       'AjaxResponse, which implements AttachmentsInterface' => [AjaxResponse::class],
-      'A dummy that implements AttachmentsInterface' => [get_class($this->prophesize(AttachmentsInterface::class)->reveal())],
+      'A dummy that implements AttachmentsInterface' => [get_class((new Prophet())->prophesize(AttachmentsInterface::class)->reveal())],
     ];
   }
 
@@ -51,7 +54,7 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
    *
    * @dataProvider attachmentsProvider
    */
-  public function testHtmlResponse(array $attachments) {
+  public function testHtmlResponse(array $attachments): void {
     $big_pipe_response = new BigPipeResponse(new HtmlResponse('original'));
     $big_pipe_response->setAttachments($attachments);
 

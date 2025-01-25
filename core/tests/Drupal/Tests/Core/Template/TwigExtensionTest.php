@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Template;
 
 // cspell:ignore mila
@@ -10,11 +12,13 @@ use Drupal\Core\GeneratedLink;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigExtension;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Prophet;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\FilesystemLoader;
@@ -92,7 +96,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @dataProvider providerTestEscaping
    */
-  public function testEscaping($template, $expected) {
+  public function testEscaping($template, $expected): void {
     $loader = new FilesystemLoader();
     $twig = new Environment($loader, [
       'debug' => TRUE,
@@ -106,7 +110,7 @@ class TwigExtensionTest extends UnitTestCase {
     $nodes = $twig->parse($twig->tokenize(new Source($template, $name)));
 
     $this->assertSame($expected, $nodes->getNode('body')
-      ->getNode(0)
+      ->getNode('0')
       ->getNode('expr') instanceof FilterExpression);
   }
 
@@ -117,7 +121,7 @@ class TwigExtensionTest extends UnitTestCase {
    *   An array of test data each containing of a twig template string and
    *   a boolean expecting whether the path will be safe.
    */
-  public function providerTestEscaping() {
+  public static function providerTestEscaping() {
     return [
       ['{{ path("foo") }}', FALSE],
       ['{{ path("foo", {}) }}', FALSE],
@@ -144,7 +148,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Tests the active_theme function.
    */
-  public function testActiveTheme() {
+  public function testActiveTheme(): void {
     $active_theme = $this->getMockBuilder('\Drupal\Core\Theme\ActiveTheme')
       ->disableOriginalConstructor()
       ->getMock();
@@ -165,7 +169,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Tests the format_date filter.
    */
-  public function testFormatDate() {
+  public function testFormatDate(): void {
     $this->dateFormatter->expects($this->exactly(1))
       ->method('format')
       ->willReturnCallback(function ($timestamp) {
@@ -183,7 +187,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Tests the file_url filter.
    */
-  public function testFileUrl() {
+  public function testFileUrl(): void {
     $this->fileUrlGenerator->expects($this->once())
       ->method('generateString')
       ->with('public://picture.jpg')
@@ -199,7 +203,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Tests the active_theme_path function.
    */
-  public function testActiveThemePath() {
+  public function testActiveThemePath(): void {
     $active_theme = $this->getMockBuilder('\Drupal\Core\Theme\ActiveTheme')
       ->disableOriginalConstructor()
       ->getMock();
@@ -223,7 +227,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @covers ::escapeFilter
    */
-  public function testSafeStringEscaping() {
+  public function testSafeStringEscaping(): void {
     $loader = new FilesystemLoader();
     $twig = new Environment($loader, [
       'debug' => TRUE,
@@ -245,7 +249,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * @covers ::safeJoin
    */
-  public function testSafeJoin() {
+  public function testSafeJoin(): void {
     $this->renderer->expects($this->any())
       ->method('render')
       ->with(['#markup' => '<strong>will be rendered</strong>', '#printed' => FALSE])
@@ -284,7 +288,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * @dataProvider providerTestRenderVar
    */
-  public function testRenderVar($result, $input) {
+  public function testRenderVar($result, $input): void {
     $this->renderer->expects($this->any())
       ->method('render')
       ->with($result += ['#printed' => FALSE])
@@ -293,10 +297,10 @@ class TwigExtensionTest extends UnitTestCase {
     $this->assertEquals('Rendered output', $this->systemUnderTest->renderVar($input));
   }
 
-  public function providerTestRenderVar() {
+  public static function providerTestRenderVar() {
     $data = [];
 
-    $renderable = $this->prophesize(RenderableInterface::class);
+    $renderable = (new Prophet())->prophesize(RenderableInterface::class);
     $render_array = ['#type' => 'test', '#var' => 'giraffe'];
     $renderable->toRenderable()->willReturn($render_array);
     $data['renderable'] = [$render_array, $renderable->reveal()];
@@ -308,7 +312,7 @@ class TwigExtensionTest extends UnitTestCase {
    * @covers ::escapeFilter
    * @covers ::bubbleArgMetadata
    */
-  public function testEscapeWithGeneratedLink() {
+  public function testEscapeWithGeneratedLink(): void {
     $loader = new FilesystemLoader();
     $twig = new Environment($loader, [
       'debug' => TRUE,
@@ -341,7 +345,7 @@ class TwigExtensionTest extends UnitTestCase {
    * @covers ::renderVar
    * @covers ::bubbleArgMetadata
    */
-  public function testRenderVarWithGeneratedLink() {
+  public function testRenderVarWithGeneratedLink(): void {
     $link = new GeneratedLink();
     $link->setGeneratedLink('<a href="http://example.com"></a>');
     $link->addCacheTags(['foo']);
@@ -365,7 +369,7 @@ class TwigExtensionTest extends UnitTestCase {
    * @covers ::renderVar
    * @dataProvider providerTestRenderVarEarlyReturn
    */
-  public function testRenderVarEarlyReturn($expected, $input) {
+  public function testRenderVarEarlyReturn($expected, $input): void {
     $result = $this->systemUnderTest->renderVar($input);
     $this->assertSame($expected, $result);
   }
@@ -373,7 +377,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Data provider for ::testRenderVarEarlyReturn().
    */
-  public function providerTestRenderVarEarlyReturn() {
+  public static function providerTestRenderVarEarlyReturn() {
     return [
       'null' => ['', NULL],
       'empty array' => ['', []],
@@ -393,7 +397,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @covers ::createAttribute
    */
-  public function testCreateAttribute() {
+  public function testCreateAttribute(): void {
     $name = '__string_template_test_1__';
     $loader = new ArrayLoader([$name => "{% for iteration in iterations %}<div{{ create_attribute(iteration) }}></div>{% endfor %}"]);
     $twig = new Environment($loader);
@@ -403,9 +407,10 @@ class TwigExtensionTest extends UnitTestCase {
       ['class' => ['kittens'], 'data-toggle' => 'modal', 'data-lang' => 'es'],
       ['id' => 'puppies', 'data-value' => 'foo', 'data-lang' => 'en'],
       [],
+      new Attribute(),
     ];
     $result = $twig->render($name, ['iterations' => $iterations]);
-    $expected = '<div class="kittens" data-toggle="modal" data-lang="es"></div><div id="puppies" data-value="foo" data-lang="en"></div><div></div>';
+    $expected = '<div class="kittens" data-toggle="modal" data-lang="es"></div><div id="puppies" data-value="foo" data-lang="en"></div><div></div><div></div>';
     $this->assertEquals($expected, $result);
 
     // Test default creation of empty attribute object and using its method.
@@ -420,7 +425,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * @covers ::getLink
    */
-  public function testLinkWithOverriddenAttributes() {
+  public function testLinkWithOverriddenAttributes(): void {
     $url = Url::fromRoute('<front>', [], ['attributes' => ['class' => ['foo']]]);
 
     $build = $this->systemUnderTest->getLink('test', $url, ['class' => ['bar']]);
@@ -434,7 +439,7 @@ class TwigExtensionTest extends UnitTestCase {
    * @covers ::suggestThemeHook
    * @dataProvider providerTestTwigAddSuggestionFilter
    */
-  public function testTwigAddSuggestionFilter($original_render_array, $suggestion, $expected_render_array) {
+  public function testTwigAddSuggestionFilter($original_render_array, $suggestion, $expected_render_array): void {
     $processed_render_array = $this->systemUnderTest->suggestThemeHook($original_render_array, $suggestion);
     $this->assertEquals($expected_render_array, $processed_render_array);
   }
@@ -444,7 +449,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @return \Iterator
    */
-  public function providerTestTwigAddSuggestionFilter(): \Iterator {
+  public static function providerTestTwigAddSuggestionFilter(): \Iterator {
     yield 'suggestion should be added' => [
       [
         '#theme' => 'kitten',
@@ -550,7 +555,7 @@ class TwigExtensionTest extends UnitTestCase {
    * @covers ::addClass
    * @dataProvider providerTestTwigAddClass
    */
-  public function testTwigAddClass($element, $classes, $expected_result) {
+  public function testTwigAddClass($element, $classes, $expected_result): void {
     $processed = $this->systemUnderTest->addClass($element, $classes);
     $this->assertEquals($expected_result, $processed);
   }
@@ -560,7 +565,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @return \Iterator
    */
-  public function providerTestTwigAddClass(): \Iterator {
+  public static function providerTestTwigAddClass(): \Iterator {
     yield 'should add a class on element' => [
       ['#type' => 'container'],
       'my-class',
@@ -600,7 +605,7 @@ class TwigExtensionTest extends UnitTestCase {
    * @covers ::setAttribute
    * @dataProvider providerTestTwigSetAttribute
    */
-  public function testTwigSetAttribute($element, $key, $value, $expected_result) {
+  public function testTwigSetAttribute($element, $key, $value, $expected_result): void {
     $processed = $this->systemUnderTest->setAttribute($element, $key, $value);
     $this->assertEquals($expected_result, $processed);
   }
@@ -610,7 +615,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @return \Iterator
    */
-  public function providerTestTwigSetAttribute(): \Iterator {
+  public static function providerTestTwigSetAttribute(): \Iterator {
     yield 'should add attributes on element' => [
       ['#theme' => 'image'],
       'title',
@@ -672,6 +677,9 @@ class TwigExtensionTest extends UnitTestCase {
 
 class TwigExtensionTestString {
 
+  /**
+   * The test string.
+   */
   protected $string;
 
   public function __construct($string) {
