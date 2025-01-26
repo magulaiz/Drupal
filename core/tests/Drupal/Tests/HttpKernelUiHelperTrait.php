@@ -36,8 +36,8 @@ trait HttpKernelUiHelperTrait {
    * There is no logged in user. Use \Drupal\Tests\user\Traits\UserCreationTrait
    * to set a current user.
    *
-   * There is no theme. To place blocks, a test must first install a theme and
-   * set it as active.
+   * There is no active theme. To place blocks, a test must first install a
+   * theme and then set it as active.
    *
    * @param string|\Drupal\Core\Url $path
    *   Drupal path or URL to load into Mink controlled browser.
