@@ -52,20 +52,26 @@ trait HttpKernelUiHelperTrait {
    *   testing REST APIs it is recommended to obtain a separate HTTP client
    *   using getHttpClient() and performing requests that way.
    *
+   * @return string
+   *   The retrieved HTML string.
+   *
    * @see \Drupal\Tests\BrowserTestBase::getHttpClient()
    */
-  protected function drupalGet($path, array $options = [], array $headers = []): void {
+  protected function drupalGet($path, array $options = [], array $headers = []): string {
     $session = $this->getSession();
 
     $session->visit($path);
 
+    $out = $session->getPage()->getContent();
+
     if ($this->htmlOutputEnabled) {
       $html_output = 'GET request to: ' . $path;
-      $out = $session->getPage()->getContent();
       $html_output .= '<hr />' . $out;
       $html_output .= $this->getHtmlOutputHeaders();
       $this->htmlOutput($html_output);
     }
+
+    return $out;
   }
 
   /**
