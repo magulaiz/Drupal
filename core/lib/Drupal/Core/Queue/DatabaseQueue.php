@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Queue;
 
-use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseConnectionInterface;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
@@ -21,31 +21,17 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
   const TABLE_NAME = 'queue';
 
   /**
-   * The name of the queue this instance is working with.
-   *
-   * @var string
-   */
-  protected $name;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a \Drupal\Core\Queue\DatabaseQueue object.
    *
    * @param string $name
    *   The name of the queue.
-   * @param \Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\DatabaseConnectionInterface $connection
    *   The Connection object containing the key-value tables.
    */
-  public function __construct($name, Connection $connection) {
-    $this->name = $name;
-    $this->connection = $connection;
-  }
+  public function __construct(
+    protected $name,
+    protected DatabaseConnectionInterface $connection,
+  ) {}
 
   /**
    * {@inheritdoc}

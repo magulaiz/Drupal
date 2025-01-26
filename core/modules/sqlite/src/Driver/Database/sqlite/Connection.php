@@ -94,6 +94,13 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
+  public function allowsConcurrentNonTransactionalConnection(): bool {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function open(array &$connection_options = []) {
     // Allow PDO options to be overridden.
     $connection_options += [

@@ -1,0 +1,9 @@
+# This file contains only service overrides for core services defined in
+# core.services.yml. Other overrides are specified in module services files,
+# e.g. workspaces.
+
+services:
+  pgsql.entity.query.sql:
+    class: Drupal\Core\Entity\Query\Sql\pgsql\QueryFactory
+    arguments: ['@database']
+    public: false

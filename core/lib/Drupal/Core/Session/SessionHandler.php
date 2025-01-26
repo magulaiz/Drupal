@@ -4,8 +4,9 @@ namespace Drupal\Core\Session;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseConnectionInterface;
 use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\NonTransactionalConnection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
@@ -22,16 +23,19 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\DatabaseConnectionInterface $connection
    *   The database connection.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
   public function __construct(
     protected RequestStack $requestStack,
-    protected Connection $connection,
+    protected DatabaseConnectionInterface $connection,
     protected TimeInterface $time,
   ) {
+    if (!($connection instanceof NonTransactionalConnection) && $connection->databaseType() !== 'sqlite') {
+      @trigger_error('Calling ' . __METHOD__ . '() with a transactional database connection is deprecated in drupal:10.4.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
+    }
   }
 
   /**

@@ -4,7 +4,7 @@ namespace Drupal\Core\Cache;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\ObjectAwareSerializationInterface;
-use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseConnectionInterface;
 use Drupal\Core\Site\Settings;
 
 class DatabaseBackendFactory implements CacheFactoryInterface {
@@ -40,7 +40,7 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
    * @throws \BadMethodCallException
    */
   public function __construct(
-    Connection $connection,
+    DatabaseConnectionInterface $connection,
     CacheTagsChecksumInterface $checksum_provider,
     protected Settings $settings,
     protected ObjectAwareSerializationInterface $serializer,

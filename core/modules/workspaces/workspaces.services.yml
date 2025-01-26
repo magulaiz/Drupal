@@ -73,7 +73,7 @@ services:
     tags:
       - { name: backend_overridable }
   pgsql.workspaces.entity.query.sql:
-    decorates: pgsql.entity.query.sql
+    decorates: entity.query.sql
     class: Drupal\workspaces\EntityQuery\PgsqlQueryFactory
     arguments: ['@database', '@workspaces.manager', '@workspaces.information']
     public: false

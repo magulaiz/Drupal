@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Cache;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Core\Cache\CacheCollectorHelper;
 use Drupal\TestTools\Random;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests DatabaseBackend cache tag implementation.
@@ -16,23 +14,6 @@ use Symfony\Component\DependencyInjection\Reference;
  * @group Cache
  */
 class CacheCollectorTest extends KernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function register(ContainerBuilder $container): void {
-    parent::register($container);
-    // Change container to database cache backends.
-    $container
-      ->register('cache_factory', 'Drupal\Core\Cache\CacheFactory')
-      ->addArgument(new Reference('settings'))
-      ->addMethodCall('setContainer', [new Reference('service_container')]);
-
-    // Change container to use database lock backends.
-    $container
-      ->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend')
-      ->addArgument(new Reference('database'));
-  }
 
   /**
    * Tests setting and invalidating.

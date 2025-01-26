@@ -1316,9 +1316,9 @@ class Sql extends QueryPluginBase {
    */
   public function getConnection() {
     // Set the replica target if the replica option is set for the view.
-    $target = empty($this->options['replica']) ? 'default' : 'replica';
+    $target = empty($this->options['replica']) ? Database::DEFAULT_TARGET : Database::REPLICA_TARGET;
     // Use an external database when the view configured to.
-    $key = $this->view->base_database ?? 'default';
+    $key = $this->view->base_database ?? Database::DEFAULT_KEY;
     return Database::getConnection($target, $key);
   }
 

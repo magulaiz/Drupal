@@ -16,6 +16,12 @@ use Drupal\Core\Cache\NullBackend;
  */
 abstract class Database {
 
+  public const DEFAULT_KEY = 'default';
+
+  public const DEFAULT_TARGET = 'default';
+
+  public const REPLICA_TARGET = 'replica';
+
   /**
    * A nested array of active connections, keyed by database name and target.
    *
@@ -58,6 +64,8 @@ abstract class Database {
    * @endcode
    */
   protected static $logs = [];
+
+  protected static array $nonTransactionalConnections = [];
 
   /**
    * Starts logging a given logging key on the specified connection.
@@ -126,11 +134,13 @@ abstract class Database {
    *   The database target name.
    * @param string $key
    *   The database connection key. Defaults to NULL which means the active key.
+   * @param bool $nonTransactional
+   *   Whether the connection should be a non-transactional version.
    *
    * @return \Drupal\Core\Database\Connection
    *   The corresponding connection object.
    */
-  final public static function getConnection($target = 'default', $key = NULL) {
+  final public static function getConnection($target = 'default', $key = NULL, bool $nonTransactional = FALSE) {
     if (!isset($key)) {
       // By default, we want the active connection, set in setActiveConnection.
       $key = self::$activeKey;
@@ -148,7 +158,47 @@ abstract class Database {
       // If necessary, a new connection is opened.
       self::$connections[$key][$target] = self::openConnection($key, $target);
     }
+    if ($nonTransactional) {
+      if (!(self::$nonTransactionalConnections[$key][$target] ?? NULL)) {
+        $nonTransactionalTarget = self::getUniqueTargetForKey($key, "auto_nontransactional_$target");
+        self::addConnectionInfo(
+          $key,
+          $nonTransactionalTarget,
+          self::getConnectionInfo($key)[$target],
+        );
+        self::$nonTransactionalConnections[$key][$target] = new NonTransactionalConnection(self::getConnection($nonTransactionalTarget, $key));
+      }
+      return self::$nonTransactionalConnections[$key][$target];
+    }
     return self::$connections[$key][$target];
+  }
+
+  /**
+   * Generate a unique target name for a given key and target combination.
+   *
+   * This method helps avoid conflicts with userspace targets.
+   *
+   * @param string $key
+   *   Database connection key.
+   * @param string $target
+   *   Database connection target.
+   *
+   * @return string
+   *   Unique target name.
+   */
+  protected static function getUniqueTargetForKey(string $key, string $target): string {
+    $uniqueTarget = '';
+    $attempts = 0;
+    while ($uniqueTarget === '') {
+      $candidate = $target . ($attempts > 0 ? "_$attempts" : '');
+      if (empty(self::$connections[$key][$candidate])) {
+        $uniqueTarget = $candidate;
+      }
+      else {
+        $attempts++;
+      }
+    }
+    return $uniqueTarget;
   }
 
   /**
@@ -452,6 +502,7 @@ abstract class Database {
         self::$connections[$key][$target]->commitAll();
       }
       unset(self::$connections[$key][$target]);
+      unset(self::$nonTransactionalConnections[$key][$target]);
     }
     elseif (isset(self::$connections[$key])) {
       foreach (self::$connections[$key] as $connection) {
@@ -460,6 +511,7 @@ abstract class Database {
         }
       }
       unset(self::$connections[$key]);
+      unset(self::$nonTransactionalConnections[$key]);
     }
 
     // When last connection for $key is closed, we also stop any active

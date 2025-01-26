@@ -5,6 +5,7 @@ namespace Drupal\Core\DependencyInjection\Compiler;
 use Drupal\Component\ProxyBuilder\ProxyBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -25,12 +26,22 @@ class ProxyServicesPass implements CompilerPassInterface {
           // Copy the existing definition to a new entry.
           $definition->setLazy(FALSE);
           // Ensure that the service is accessible.
+          $originally_public = $definition->isPublic();
           $definition->setPublic(TRUE);
           $new_service_id = 'drupal.proxy_original_service.' . $service_id;
           $container->setDefinition($new_service_id, $definition);
 
-          $container->register($service_id, $proxy_class)
+          $proxy_definition = (new Definition($proxy_class))
+            ->setPublic($originally_public)
             ->setArguments([new Reference('service_container'), $new_service_id]);
+          // Backend-overridable services are special-cased, as their tags
+          // are processed based on the original service ID in
+          // BackendCompilerPass.
+          if ($definition->hasTag('backend_overridable')) {
+            $proxy_definition->addTag('backend_overridable');
+            $definition->clearTag('backend_overridable');
+          }
+          $container->setDefinition($service_id, $proxy_definition);
         }
         else {
           $class_name = $definition->getClass();

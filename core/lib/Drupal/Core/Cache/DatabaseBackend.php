@@ -6,7 +6,7 @@ use Drupal\Component\Serialization\ObjectAwareSerializationInterface;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseConnectionInterface;
 use Drupal\Core\Database\DatabaseException;
 
 /**
@@ -86,7 +86,7 @@ class DatabaseBackend implements CacheBackendInterface {
    *   table.
    */
   public function __construct(
-    Connection $connection,
+    DatabaseConnectionInterface $connection,
     CacheTagsChecksumInterface $checksum_provider,
     $bin,
     protected ObjectAwareSerializationInterface $serializer,

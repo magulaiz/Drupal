@@ -6,6 +6,8 @@ namespace Drupal\KernelTests\Core\Cache;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\DatabaseBackend;
+use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Unit test of the database backend using the generic cache unit test base.
@@ -124,16 +126,27 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    * Test that the service "cache_tags.invalidator.checksum" is backend overridable.
    */
   public function testCacheTagsInvalidatorChecksumIsBackendOverridable(): void {
-    $definition = $this->container->getDefinition('cache_tags.invalidator.checksum');
-    $this->assertTrue($definition->hasTag('backend_overridable'));
+    $this->checkOverridableOrOverridden($this->container->getDefinition('cache_tags.invalidator.checksum'));
   }
 
   /**
    * Test that the service "cache.backend.database" is backend overridable.
+   *
+   * If it is overridden by the current driver,
    */
   public function testCacheBackendDatabaseIsBackendOverridable(): void {
-    $definition = $this->container->getDefinition('cache.backend.database');
-    $this->assertTrue($definition->hasTag('backend_overridable'));
+    $this->checkOverridableOrOverridden($this->container->getDefinition('cache.backend.database'));
+  }
+
+  /**
+   * Helper method to check override status of a definition.
+   *
+   * @param \Symfony\Component\DependencyInjection\Definition $definition
+   *   Definition to check.
+   */
+  protected function checkOverridableOrOverridden(Definition $definition): void {
+    $databaseType = $this->container->get('database')->databaseType();
+    $this->assertTrue($definition->hasTag('backend_overridable') || $definition->getTag(BackendCompilerPass::BACKEND_OVERRIDE_SERVICE_TAG)[0]['service'] ?? NULL === $databaseType);
   }
 
 }
