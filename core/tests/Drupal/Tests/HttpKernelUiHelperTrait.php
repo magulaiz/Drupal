@@ -39,6 +39,9 @@ trait HttpKernelUiHelperTrait {
    * There is no active theme. To place blocks, a test must first install a
    * theme and then set it as active.
    *
+   * Page caching modules will not function, because the
+   * CommandLineOrUnsafeMethod caching policy will deny caching.
+   *
    * @param string|\Drupal\Core\Url $path
    *   Drupal path or URL to load into Mink controlled browser.
    * @param array $options
