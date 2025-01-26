@@ -92,10 +92,11 @@ variables:
   variables:
     JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
     SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
-    SE_NODE_MAX_SESSIONS: "16"
+    SE_NODE_MAX_SESSIONS: "12"
+    SE_NODE_SESSION_TIMEOUT: "90"
     SE_SESSION_RETRY_INTERVAL: "1"
-    SE_SESSION_REQUEST_TIMEOUT: "10"
-    SE_START_XVFB: "false"
+    SE_SESSION_REQUEST_TIMEOUT: "120"
+    SE_START_XVFB: "true"
     SE_START_VNC: "false"
 
 .run-tests: &run-tests
@@ -138,11 +139,11 @@ variables:
 
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 3
+  parallel: 30
   variables:
-    TESTSUITE: PHPUnit-FunctionalJavascript
+    TESTSUITE: PHPUnit-FunctionalJavascript,PHPUnit-Functional
     CONCURRENCY: 5
-    KUBERNETES_CPU_REQUEST: "16"
+    KUBERNETES_CPU_REQUEST: "30"
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
@@ -169,16 +170,6 @@ variables:
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
     - cp /builds/chromedriver.log ./
-
-'🌐️️ PHPUnit Functional':
-  <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 8
-  variables:
-    TESTSUITE: PHPUnit-Functional
-    CONCURRENCY: "5"
-    KUBERNETES_CPU_REQUEST: "16"
-  services:
-    - <<: *with-database
 
 '⚙️️ PHPUnit Kernel':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
