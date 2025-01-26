@@ -141,8 +141,8 @@ variables:
   <<: [ *with-composer, *run-tests, *default-job-settings ]
   parallel: 24
   variables:
-    TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 4
+    TESTSUITE: PHPUnit-FunctionalJavascript,PHPUnit-Functional
+    CONCURRENCY: 5
     KUBERNETES_CPU_REQUEST: "30"
   services:
     - <<: *with-database
@@ -170,16 +170,6 @@ variables:
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
     - cp /builds/chromedriver.log ./
-
-'🌐️️ PHPUnit Functional':
-  <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 8
-  variables:
-    TESTSUITE: PHPUnit-Functional
-    CONCURRENCY: "5"
-    KUBERNETES_CPU_REQUEST: "16"
-  services:
-    - <<: *with-database
 
 '⚙️️ PHPUnit Kernel':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
