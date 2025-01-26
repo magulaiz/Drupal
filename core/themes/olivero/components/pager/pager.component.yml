@@ -1,4 +1,14 @@
-name: pager
+# This is so your IDE knows about the syntax for fixes and autocomplete.
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+
+# The human readable name.
+name: Pager
+
+# Status can be: "experimental", "stable", "deprecated", "obsolete".
+status: stable
+
+# Schema for the props. We support www.json-schema.org. Learn more about the
+# syntax there.
 props:
   type: object
   required:
@@ -8,9 +18,47 @@ props:
   properties:
     heading_id:
       type: string
+      title: Heading ID
+      description: A unique identifier for the heading element associated with the pager.
     items:
-      type: object
+      type: array
+      title: Pager items
+      description: A collection of items representing the pages in the pager.
+      properties:
+        first:
+          type: object
+          title: First page
+          description: Represents the first page in the pager, typically with a link to the first page.
+        previous:
+          type: object
+          title: Previous page
+          description: Represents the previous page relative to the current page, typically with a link to the preceding page in the pager.
+        pages:
+          type: object
+          title: Pages
+          description: An array of pages, each containing properties like href and attributes to define the page links in the pager.
+        next:
+          type: object
+          title: Next page
+          description: Represents the next page relative to the current page, typically with a link to the subsequent page in the pager.
+        last:
+          type: object
+          title: Last page
+          description: Represents the last page in the pager, typically with a link to the final page.
     ellipses:
       type: array
+      title: Ellipses
+      description: An array defining the ellipses to be displayed in the pager, used to indicate a gap between page ranges.
+      properties:
+        previous:
+          type: boolean
+          title: Previous ellipsis
+          description: Indicates whether an ellipsis should be added to represent additional pages before the current range.
+        next:
+          type: boolean
+          title: Next ellipsis
+          description: Indicates whether an ellipsis should be added to represent additional pages after the current range.
     current:
       type: integer
+      title: Current page
+      description: An integer indicating the currently active page.
