@@ -210,6 +210,7 @@ abstract class BrowserTestBase extends TestCase {
     if ($name === 'mink') {
       return self::$mink;
     }
+    return NULL;
   }
 
   /**
