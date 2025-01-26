@@ -206,6 +206,12 @@ abstract class BrowserTestBase extends TestCase {
     VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
   }
 
+  public function __get($name) {
+    if ($name === 'mink') {
+      return self::$mink;
+    }
+  }
+
   /**
    * Initializes Mink sessions.
    */
