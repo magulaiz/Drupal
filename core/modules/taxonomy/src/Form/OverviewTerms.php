@@ -22,6 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class OverviewTerms extends FormBase {
 
+  protected const MATCHING_TERM_INDICATOR = '⇒';
+
   /**
    * The module handler service.
    *
@@ -377,7 +379,7 @@ class OverviewTerms extends FormBase {
     ];
     $form['filter']['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Filter'),
+      '#value' => $this->t('Filter'),
       '#id' => 'filter-submit',
     ];
 
@@ -385,7 +387,7 @@ class OverviewTerms extends FormBase {
     if ($this->termFilter) {
       $form['filter']['reset'] = [
         '#type' => 'submit',
-        '#value' => t('Reset'),
+        '#value' => $this->t('Reset'),
         '#id' => 'filter-reset',
       ];
     }
@@ -422,7 +424,11 @@ class OverviewTerms extends FormBase {
         '#type' => 'html_tag',
         '#tag' => 'div',
         'child' => [
-          '#markup' => t('<span class="color-success">⇒</span> indicates matching terms. Parents of matching terms are also shown.'),
+          '#markup' => $this->t(
+            '<span class="color-success">@indicator</span> indicates matching terms. Parents of matching terms are also shown.', [
+              '@indicator' => self::MATCHING_TERM_INDICATOR,
+            ]
+          ),
         ],
       ];
     }
@@ -444,15 +450,15 @@ class OverviewTerms extends FormBase {
           '#type' => 'html_tag',
           '#tag' => 'span',
           'child' => [
-            '#markup' => '⇒',
+            '#markup' => self::MATCHING_TERM_INDICATOR,
           ],
         ];
         if (!empty($matchingTids) && in_array($term->id(), $matchingTids, FALSE)) {
-          $resultType['#attributes']['title'] = t('Matching term');
+          $resultType['#attributes']['title'] = $this->t('Matching term');
           $resultType['#attributes']['class'] = ['color-success'];
         }
         else {
-          $resultType['#attributes']['title'] = t('Non-matching term');
+          $resultType['#attributes']['title'] = $this->t('Non-matching term');
           $resultType['#attributes']['class'] = ['visually-hidden'];
         }
         $prefix[] = $resultType;
@@ -471,11 +477,11 @@ class OverviewTerms extends FormBase {
       ];
       if ($this->termFilter) {
         if (!empty($matchingTids) && in_array($term->id(), $matchingTids, FALSE)) {
-          $form['terms'][$key]['term']['#attributes']['aria-label'] = t('Matching term: @name', ['@name' => $term->getName()]);
+          $form['terms'][$key]['term']['#attributes']['aria-label'] = $this->t('Matching term: @name', ['@name' => $term->getName()]);
           $form['terms'][$key]['term']['#attributes']['class'][] = 'color-success';
         }
         else {
-          $form['terms'][$key]['term']['#attributes']['aria-label'] = t('Non-matching term: @name', ['@name' => $term->getName()]);
+          $form['terms'][$key]['term']['#attributes']['aria-label'] = $this->t('Non-matching term: @name', ['@name' => $term->getName()]);
         }
       }
       $form['terms'][$key]['status'] = [
