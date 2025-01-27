@@ -52,18 +52,6 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Setup some fields for the hooks to create.
-    $definitions['multivalued_base_field'] = BaseFieldDefinition::create('string')
-      ->setName('multivalued_base_field')
-      ->setTargetEntityTypeId('entity_test_mulrev')
-      ->setTargetBundle('entity_test_mulrev')
-      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
-      // Base fields are non-translatable and non-revisionable by default, but
-      // we explicitly set these values here for extra clarity.
-      ->setTranslatable(FALSE)
-      ->setRevisionable(FALSE);
-    $this->state->set('entity_test_mulrev.additional_base_field_definitions', $definitions);
-
     $this->tableMapping = $this->entityTypeManager->getStorage('entity_test_mulrev')->getTableMapping();
 
     // Ensure that the tables for the new field are created.
@@ -163,23 +151,19 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
    */
   #[Hook('entity_base_field_info')]
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
-    return \Drupal::state()->get($entity_type->id() . '.additional_base_field_definitions', []);
-  }
-
-  /**
-   * Implements hook_entity_field_storage_info().
-   */
-  #[Hook('entity_field_storage_info')]
-  public function entityFieldStorageInfo(EntityTypeInterface $entity_type): array {
-    return \Drupal::state()->get($entity_type->id() . '.additional_field_storage_definitions', []);
-  }
-
-  /**
-   * Implements hook_entity_bundle_field_info().
-   */
-  #[Hook('entity_bundle_field_info')]
-  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions): array {
-    return \Drupal::state()->get($entity_type->id() . '.' . $bundle . '.additional_bundle_field_definitions', []);
+    $definitions = [];
+    if ($entity_type->id() === 'entity_test_mulrev') {
+      $definitions['multivalued_base_field'] = BaseFieldDefinition::create('string')
+        ->setName('multivalued_base_field')
+        ->setTargetEntityTypeId('entity_test_mulrev')
+        ->setTargetBundle('entity_test_mulrev')
+        ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+        // Base fields are non-translatable and non-revisionable by default, but
+        // we explicitly set these values here for extra clarity.
+        ->setTranslatable(FALSE)
+        ->setRevisionable(FALSE);
+    }
+    return $definitions;
   }
 
 }
