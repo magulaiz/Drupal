@@ -134,9 +134,6 @@ RSS;
       ])
     );
 
-    $configMock = $this->createMock(Config::class);
-    $configMock->method('get')->willReturn('mocked_value');
-
     $configFactoryMock = $this->createMock(ConfigFactoryInterface::class);
     $configFactoryMock->method('get')->willReturn($configMock);
 
