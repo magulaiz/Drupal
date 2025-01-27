@@ -110,7 +110,6 @@ trait PerformanceTestTrait {
 
     $session = $this->getSession();
     $session->getDriver()->getWebDriverSession()->log('performance');
-    $collection = \Drupal::keyValue('performance_test');
     $collection->deleteAll();
     $return = $callable();
     $performance_data = $this->processChromeDriverPerformanceLogs($service_name);
@@ -376,7 +375,7 @@ trait PerformanceTestTrait {
     // 'encodedDataLength' for network requests, however in the case that the
     // file has already been requested by the browser, this will be the length
     // of a HEAD response for 304 not modified or similar. Additionally, core's
-    // aggregation adds the basepath to CSS aggregates, resulting in slightly
+    // aggregation adds the base path to CSS aggregates, resulting in slightly
     // different file sizes depending on whether tests run in a subdirectory or
     // not.
     foreach ($stylesheet_urls as $url) {
@@ -387,7 +386,7 @@ trait PerformanceTestTrait {
       }
       else {
         $filename = str_replace($GLOBALS['base_path'], '', parse_url($url, PHP_URL_PATH));
-        // Strip the basepath from the contents of the file so that tests
+        // Strip the base path from the contents of the file so that tests
         // running in a subdirectory get the same results.
         $stylesheet_bytes += strlen(str_replace($GLOBALS['base_path'], '/', file_get_contents($filename)));
       }
@@ -472,7 +471,7 @@ trait PerformanceTestTrait {
       ResourceAttributes::SERVICE_NAME => $service_name,
       ResourceAttributes::SERVICE_INSTANCE_ID => 1,
       ResourceAttributes::SERVICE_VERSION => \Drupal::VERSION,
-      ResourceAttributes::DEPLOYMENT_ENVIRONMENT => 'local',
+      ResourceAttributes::DEPLOYMENT_ENVIRONMENT_NAME => 'local',
     ])));
 
     $otel_collector_headers = getenv('OTEL_COLLECTOR_HEADERS') ?: [];
@@ -504,7 +503,7 @@ trait PerformanceTestTrait {
       $collection = \Drupal::keyValue('performance_test');
       $performance_test_data = $collection->get('performance_test_data');
       $query_events = $performance_test_data['database_events'] ?? [];
-      foreach ($query_events as $key => $event) {
+      foreach ($query_events as $event) {
         if (static::isDatabaseCache($event)) {
           continue;
         }
@@ -591,16 +590,21 @@ trait PerformanceTestTrait {
    *   Maximum value.
    * @param int $actual
    *   The number to assert against.
+   * @param string $message
+   *   The message to display.
    *
    * @return void
    *
    * @throws \PHPUnit\Framework\ExpectationFailedException
    */
-  protected function assertCountBetween(int $min, int $max, int $actual) {
+  protected function assertCountBetween(int $min, int $max, int $actual, string $message = '') {
+    if (!empty($message)) {
+      $message .= " ";
+    }
     static::assertThat(
       $actual,
       static::logicalAnd(static::greaterThanOrEqual($min), static::lessThanOrEqual($max)),
-      "$actual is greater or equal to $min and is smaller or equal to $max",
+      "$message$actual is greater or equal to $min and is smaller or equal to $max",
     );
   }
 
@@ -620,6 +624,61 @@ trait PerformanceTestTrait {
       return is_a($class, '\Drupal\Core\Cache\DatabaseBackend', TRUE) || is_a($class, '\Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE);
     }
     return FALSE;
+  }
+
+  /**
+   * Assert metrics from a performance data value object.
+   *
+   * @param array $expected
+   *   The expected metrics.
+   * @param \Drupal\Tests\PerformanceData $performance_data
+   *   An instance of the performance data value object.
+   *
+   * @return void
+   */
+  protected function assertMetrics(
+    array $expected,
+    PerformanceData $performance_data,
+  ): void {
+    // Allow those metrics to have a range of +/- 500 bytes, so small changes
+    // are not significant enough to break tests.
+    $assertRange = [
+      'ScriptBytes',
+      'StylesheetBytes',
+    ];
+    foreach ($expected as $name => $metric) {
+      if (in_array($name, $assertRange)) {
+        $this->assertCountBetween($metric - 500, $metric + 500, $performance_data->{"get$name"}(), "Asserting $name");
+      }
+      else {
+        $this->assertSame($metric, $performance_data->{"get$name"}(), "Asserting $name");
+      }
+    }
+  }
+
+  /**
+   * Get metrics from a performance data value object.
+   *
+   * @param \Drupal\Tests\PerformanceData $performance_data
+   *   An instance of the performance data value object.
+   *
+   * @return array
+   *   An array of metrics.
+   */
+  protected function getMetrics(PerformanceData $performance_data): array {
+    return [
+      'StylesheetCount' => $performance_data->getStylesheetCount(),
+      'ScriptCount' => $performance_data->getScriptCount(),
+      'StylesheetBytes' => $performance_data->getStylesheetBytes(),
+      'ScriptBytes' => $performance_data->getScriptBytes(),
+      'QueryCount' => $performance_data->getQueryCount(),
+      'CacheGetCount' => $performance_data->getCacheGetCount(),
+      'CacheSetCount' => $performance_data->getCacheSetCount(),
+      'CacheDeleteCount' => $performance_data->getCacheDeleteCount(),
+      'CacheTagChecksumCount' => $performance_data->getCacheTagChecksumCount(),
+      'CacheTagIsValidCount' => $performance_data->getCacheTagIsValidCount(),
+      'CacheTagInvalidationCount' => $performance_data->getCacheTagInvalidationCount(),
+    ];
   }
 
 }

@@ -42,9 +42,9 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * The maximum number of rows that this cache bin table is allowed to store.
    *
-   * @see ::MAXIMUM_NONE
-   *
    * @var int
+   *
+   * @see ::MAXIMUM_NONE
    */
   protected $maxRows;
 
@@ -458,7 +458,7 @@ class DatabaseBackend implements CacheBackendInterface {
    * yet the query failed, then the cache is stale and the exception needs to
    * propagate.
    *
-   * @param $e
+   * @param \Exception $e
    *   The exception.
    * @param string|null $table_name
    *   The table name. Defaults to $this->bin.
@@ -482,8 +482,11 @@ class DatabaseBackend implements CacheBackendInterface {
    */
   protected function normalizeCid($cid) {
     // Nothing to do if the ID is a US ASCII string of 255 characters or less.
+    // Additionally check for trailing spaces in the cache ID because MySQL
+    // may or may not take these into account when making comparisons.
+    // @see https://dev.mysql.com/doc/refman/9.0/en/char.html
     $cid_is_ascii = mb_check_encoding($cid, 'ASCII');
-    if (strlen($cid) <= 255 && $cid_is_ascii) {
+    if (strlen($cid) <= 255 && $cid_is_ascii && !str_ends_with($cid, ' ')) {
       return $cid;
     }
     // Return a string that uses as much as possible of the original cache ID
@@ -563,9 +566,10 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * The maximum number of rows that this cache bin table is allowed to store.
+   * Gets the maximum number of rows for this cache bin table.
    *
    * @return int
+   *   The maximum number of rows that this cache bin table is allowed to store.
    */
   public function getMaxRows() {
     return $this->maxRows;
