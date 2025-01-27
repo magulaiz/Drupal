@@ -79,7 +79,7 @@ class RouteNoneTest extends KernelTestBase {
       'SERVER_NAME' => 'http://www.example.com',
     ];
     $request = Request::create('/subdir/node/add', 'GET', [], [], [], $server);
-    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'node.add');
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'entity.node.add_form');
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/node/add'));
     $request->setSession(new Session(new MockArraySessionStorage()));
 
@@ -115,7 +115,7 @@ class RouteNoneTest extends KernelTestBase {
       'SERVER_NAME' => 'http://www.example.com',
     ];
     $request = Request::create('/node/add', 'GET', [], [], [], $server);
-    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'node.add');
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'entity.node.add_form');
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/node/add'));
     $request->setSession(new Session(new MockArraySessionStorage()));
 
