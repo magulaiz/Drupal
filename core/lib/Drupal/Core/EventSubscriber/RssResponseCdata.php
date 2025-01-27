@@ -2,7 +2,8 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Component\Utility\Xss;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -11,6 +12,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * Subscribes to wrap RSS descriptions in CDATA.
  */
 class RssResponseCdata implements EventSubscriberInterface {
+
+  public function __construct(
+    protected readonly ConfigFactoryInterface $configFactory,
+    protected readonly RendererInterface $renderer,
+  ) {}
 
   /**
    * Wraps RSS descriptions in CDATA.
@@ -49,13 +55,20 @@ class RssResponseCdata implements EventSubscriberInterface {
     if ($errors) {
       return $rss_markup;
     }
+    $config = $this->configFactory->get('system.rss');
+    $format = $config->get('items.text_format') ?: 'basic_html';
 
     foreach ($rss_dom->getElementsByTagName('item') as $item) {
       foreach ($item->getElementsByTagName('description') as $node) {
         $html_markup = $node->nodeValue;
         if (!empty($html_markup)) {
-          $html_markup = Xss::filter($html_markup, ['a', 'abbr', 'acronym', 'address', 'b', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'div', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img', 'ins', 'kbd', 'li', 'ol', 'p', 'pre', 'q', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'tt', 'ul', 'var']);
-          $new_node = $rss_dom->createCDATASection($html_markup);
+          $processed = [
+            '#type' => 'processed_text',
+            '#text' => $html_markup,
+            '#format' => $format,
+          ];
+          $markup = $this->renderer->renderInIsolation($processed);
+          $new_node = $rss_dom->createCDATASection($markup);
           $node->replaceChild($new_node, $node->firstChild);
         }
       }
