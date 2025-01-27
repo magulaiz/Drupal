@@ -133,7 +133,8 @@ RSS;
         'Content-Type' => 'application/rss+xml',
       ])
     );
-
+    
+    $configFactoryMock = $this->createMock(ConfigFactoryInterface::class);
     // Mock the RendererInterface.
     $rendererMock = $this->createMock(RendererInterface::class);
     $rendererMock->method('render')->willReturn('<rendered output>');
