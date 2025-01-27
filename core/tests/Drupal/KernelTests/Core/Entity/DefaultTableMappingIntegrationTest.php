@@ -6,8 +6,10 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 
 /**
@@ -31,11 +33,6 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
   protected $tableMapping;
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['entity_test_extra'];
-
-  /**
    * The entity field manager.
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
@@ -55,7 +52,7 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Setup some fields for entity_test_extra to create.
+    // Setup some fields for the hooks to create.
     $definitions['multivalued_base_field'] = BaseFieldDefinition::create('string')
       ->setName('multivalued_base_field')
       ->setTargetEntityTypeId('entity_test_mulrev')
@@ -159,6 +156,30 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
       $dedicated_revision_table,
     ];
     $this->assertEquals($expected, $this->tableMapping->getTableNames());
+  }
+
+  /**
+   * Implements hook_entity_base_field_info().
+   */
+  #[Hook('entity_base_field_info')]
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
+    return \Drupal::state()->get($entity_type->id() . '.additional_base_field_definitions', []);
+  }
+
+  /**
+   * Implements hook_entity_field_storage_info().
+   */
+  #[Hook('entity_field_storage_info')]
+  public function entityFieldStorageInfo(EntityTypeInterface $entity_type): array {
+    return \Drupal::state()->get($entity_type->id() . '.additional_field_storage_definitions', []);
+  }
+
+  /**
+   * Implements hook_entity_bundle_field_info().
+   */
+  #[Hook('entity_bundle_field_info')]
+  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions): array {
+    return \Drupal::state()->get($entity_type->id() . '.' . $bundle . '.additional_bundle_field_definitions', []);
   }
 
 }
