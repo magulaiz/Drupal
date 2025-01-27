@@ -217,8 +217,7 @@ class ImageItemTest extends FieldKernelTestBase {
    *   The expected starting string of the file URI (e.g., 'public://').
    */
   private function validateImageUriForDirectory($file_directory, $expected_start): void {
-    // Test that an empty file_directory results in a correct protocol. Use a
-    // mock field definition with no file directory.
+    // Mock the field definition with the specified file directory.
     $definition = $this->createMock(FieldDefinitionInterface::class);
     $definition->expects($this->any())
       ->method('getSettings')
@@ -236,7 +235,7 @@ class ImageItemTest extends FieldKernelTestBase {
     $file = File::load($fid);
     $fileUri = $file->getFileUri();
 
-    // Validate the file URI format.
+    // Verify the file URI starts with the expected protocol and structure.
     $this->assertStringStartsWith($expected_start, $fileUri);
     $this->assertMatchesRegularExpression('#^' . preg_quote($expected_start, '#') . '[^/]+#', $fileUri);
   }
