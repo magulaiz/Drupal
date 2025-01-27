@@ -134,9 +134,6 @@ RSS;
       ])
     );
 
-    $configFactoryMock = $this->createMock(ConfigFactoryInterface::class);
-    $configFactoryMock->method('get')->willReturn($configMock);
-
     // Mock the RendererInterface.
     $rendererMock = $this->createMock(RendererInterface::class);
     $rendererMock->method('render')->willReturn('<rendered output>');
