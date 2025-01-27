@@ -57,6 +57,7 @@ class AjaxResponse extends JsonResponse implements AttachmentsInterface {
 
   /**
    * Merges other ajax response with this one.
+   *
    * Adds commands and merges attachments from the other ajax response.
    *
    * @return $this
