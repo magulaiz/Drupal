@@ -32,9 +32,11 @@
  */
 #}
 
-{{ include('olivero:pager', {
-    heading_id,
-    items,
-    ellipses: ellipses|default([]),
-    current
-  }) }}
+{% include 'olivero:pager' with {
+  attributes,
+  heading_id,
+  pagination_heading_level,
+  items,
+  ellipses: ellipses|default([]),
+  current
+} only %}

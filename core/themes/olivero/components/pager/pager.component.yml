@@ -20,6 +20,10 @@ props:
       type: string
       title: Heading ID
       description: A unique identifier for the heading element associated with the pager.
+    pagination_heading_level:
+      type: string
+      title: Heading tag level
+      description: Specifies the heading tag level (e.g., "h1", "h2", etc.) used for the pagination heading to ensure proper document hierarchy and accessibility.
     items:
       type: array
       title: Pager items
