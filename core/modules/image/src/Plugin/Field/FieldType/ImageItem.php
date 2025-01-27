@@ -17,7 +17,6 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\Entity\File;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
-use Drupal\image\ImageFieldManagerInterface;
 
 /**
  * Plugin implementation of the 'image' field type.
@@ -60,6 +59,11 @@ use Drupal\image\ImageFieldManagerInterface;
 class ImageItem extends FileItem {
 
   use LoggerChannelTrait;
+
+  /**
+   * The default image directory.
+   */
+  public const string DEFAULT_IMAGE_DIRECTORY = 'default_images';
 
   /**
    * {@inheritdoc}
@@ -460,7 +464,7 @@ class ImageItem extends FileItem {
       '#title' => $this->t('Image'),
       '#description' => $this->t('Image to be shown if no image is uploaded.'),
       '#default_value' => $fids,
-      '#upload_location' => $settings['uri_scheme'] . '://' . ImageFieldManagerInterface::DEFAULT_IMAGE_DIRECTORY . '/',
+      '#upload_location' => $settings['uri_scheme'] . '://' . static::DEFAULT_IMAGE_DIRECTORY . '/',
       '#element_validate' => [
         '\Drupal\file\Element\ManagedFile::validateManagedFile',
         [static::class, 'validateDefaultImageForm'],
