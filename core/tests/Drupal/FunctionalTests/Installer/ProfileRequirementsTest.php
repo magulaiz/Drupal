@@ -9,7 +9,7 @@ namespace Drupal\FunctionalTests\Installer;
  *
  * @group Installer
  */
-class TestingProfileRequirements extends InstallerTestBase {
+class ProfileRequirementsTest extends InstallerTestBase {
 
   /**
    * {@inheritdoc}
