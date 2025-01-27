@@ -88,34 +88,6 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $this->doTestLanguageBlockAnonymous($block->label());
     $this->doTestLanguageBlock404($block->label(), 'system/404');
 
-    // Test Issue #3362713 with NULL result.
-    \Drupal::service('module_installer')->uninstall(['language_test']);
-    \Drupal::service('module_installer')->install(['language_switcher_test']);
-    $this->rebuildAll();
-    // Go to home page.
-    $this->DrupalGet('<front>');
-    // Check Status.
-    $this->assertSession()->statusCodeEquals(200);
-    // The language switcher block should not display.
-    $this->assertSession()->pageTextNotContains($block->label());
-    // Deactivate module.
-    \Drupal::service('module_installer')->uninstall(['language_switcher_test']);
-    $this->rebuildAll();
-
-    // Test Issue #3362713 with empty array result.
-    \Drupal::service('module_installer')->install(['language_switcher_test_empty_array']);
-    $this->rebuildAll();
-    // Go to home page.
-    $this->DrupalGet('<front>');
-    // Check Status.
-    $this->assertSession()->statusCodeEquals(200);
-    // The language switcher block should not display.
-    $this->assertSession()->pageTextNotContains($block->label());
-    // Deactivate module.
-    \Drupal::service('module_installer')->uninstall(['language_switcher_test_empty_array']);
-    \Drupal::service('module_installer')->install(['language_test']);
-    $this->rebuildAll();
-
     // Test 404s with big_pipe where the behavior is different for logged-in
     // users.
     \Drupal::service('module_installer')->install(['big_pipe']);
@@ -126,6 +98,33 @@ class LanguageSwitchingTest extends BrowserTestBase {
     //   enabled. This behavior is a bug will be fixed in
     //   https://www.drupal.org/project/drupal/issues/3349201.
     $this->doTestLanguageBlock404($block->label(), '<front>');
+
+    // Test that the language switcher is absent when the language switcher
+    // links are NULL.
+    \Drupal::service('module_installer')->uninstall(['language_test']);
+    // Set the links to NULL in language_switcher_test_links_alter.
+    \Drupal::service('module_installer')->install(['language_switcher_test']);
+    $this->rebuildAll();
+    // Go to home page.
+    $this->DrupalGet('<front>');
+    // Check Status.
+    $this->assertSession()->statusCodeEquals(200);
+    // The language switcher block should not display.
+    $this->assertSession()->pageTextNotContains($block->label());
+    // Uninstall 'language_switcher_test' module.
+    \Drupal::service('module_installer')->uninstall(['language_switcher_test']);
+    $this->rebuildAll();
+
+    // Test that the language switcher is absent when the language switcher
+    // links are an empty array.
+    \Drupal::service('module_installer')->install(['language_switcher_test_empty_array']);
+    $this->rebuildAll();
+    // Go to home page.
+    $this->DrupalGet('<front>');
+    // Check Status.
+    $this->assertSession()->statusCodeEquals(200);
+    // The language switcher block should not display.
+    $this->assertSession()->pageTextNotContains($block->label());
   }
 
   /**

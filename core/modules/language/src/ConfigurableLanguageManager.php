@@ -414,7 +414,6 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
             $this->moduleHandler->alter('language_switch_links', $result, $type, $url);
 
             if ((is_array($result)) && (count($result) > 0)) {
-
               $result = array_filter($result, function (array $link): bool {
                 $url = $link['url'] ?? NULL;
                 $language = $link['language'] ?? NULL;

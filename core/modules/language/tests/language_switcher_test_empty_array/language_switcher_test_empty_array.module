@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Test module for language switcher tests issue #3362713.
+ * Test module for testing the language switcher block.
  */
 
 declare(strict_types=1);
@@ -13,6 +13,6 @@ use Drupal\Core\Url;
  * Implements hook_language_switch_links_alter().
  */
 function language_switcher_test_empty_array_language_switch_links_alter(array &$links, string $type, Url $url): void {
-  // Return [] to hide block at all.
+  // Return an empty array which will hide the language switcher block.
   $links = [];
 }
