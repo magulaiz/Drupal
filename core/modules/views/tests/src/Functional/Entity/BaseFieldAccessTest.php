@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Functional\Entity;
 
 use Drupal\entity_test\Entity\EntityTest;
@@ -20,9 +22,7 @@ class BaseFieldAccessTest extends ViewTestBase {
   public static $testViews = ['test_entity_test_protected_access'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'views', 'views_test_config', 'entity_test', 'node', 'views_entity_test',
@@ -39,15 +39,6 @@ class BaseFieldAccessTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE, $modules = ['views_test_config', 'comment_test_views']): void {
     parent::setUp($import_test_views, $modules);
 
-    \Drupal::state()->set('entity_test.views_data', [
-      'entity_test' => [
-        'test_text_access' => [
-          'field' => [
-            'id' => 'standard',
-          ],
-        ],
-      ],
-    ]);
     $entity_1 = EntityTest::create([
       'test_text_access' => 'no access value',
     ]);
@@ -62,7 +53,7 @@ class BaseFieldAccessTest extends ViewTestBase {
   /**
    * Tests access to protected base fields.
    */
-  public function testProtectedField() {
+  public function testProtectedField(): void {
     $this->drupalGet('test-entity-protected-access');
     $this->assertSession()->pageTextContains('ok to see this one');
     $this->assertSession()->pageTextNotContains('no access value');

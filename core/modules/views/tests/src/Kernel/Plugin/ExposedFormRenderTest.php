@@ -1,10 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Path\CurrentPathStack;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\views\ExposedFormCache;
+use Drupal\views\Form\ViewsExposedForm;
 use Drupal\views\Views;
 
 /**
@@ -18,7 +24,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $testViews = ['test_exposed_form_buttons'];
+  public static $testViews = ['test_exposed_form_buttons', 'test_exposed_admin_ui'];
 
   /**
    * {@inheritdoc}
@@ -36,7 +42,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
   /**
    * Tests the exposed form markup.
    */
-  public function testExposedFormRender() {
+  public function testExposedFormRender(): void {
     $view = Views::getView('test_exposed_form_buttons');
     $this->executeView($view);
     $exposed_form = $view->display_handler->getPlugin('exposed_form');
@@ -56,89 +62,44 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
   /**
    * Tests the exposed form raw input.
    */
-  public function testExposedFormRawInput() {
-    $node_type = NodeType::create(['type' => 'article']);
-    $node_type->save();
+  public function testExposedFormRawInput(): void {
+    NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ])->save();
 
-    $view = Views::getView('test_exposed_form_buttons');
+    // Build the form state.
+    $form = [];
+    $view = Views::getView('test_exposed_admin_ui');
     $view->setDisplay();
-    $view->displayHandlers->get('default')->overrideOption('filters', [
-      'type' => [
-        'exposed' => TRUE,
-        'field' => 'type',
-        'id' => 'type',
-        'table' => 'node_field_data',
-        'plugin_id' => 'in_operator',
-        'entity_type' => 'node',
-        'entity_field' => 'type',
-        'expose' => [
-          'identifier' => 'type',
-          'label' => 'Content: Type',
-          'operator_id' => 'type_op',
-          'reduce' => FALSE,
-          'multiple' => FALSE,
-        ],
-      ],
-      'type_with_default_value' => [
-        'exposed' => TRUE,
-        'field' => 'type',
-        'id' => 'type_with_default_value',
-        'table' => 'node_field_data',
-        'plugin_id' => 'in_operator',
-        'entity_type' => 'node',
-        'entity_field' => 'type',
-        'value' => ['article', 'article'],
-        'expose' => [
-          'identifier' => 'type_with_default_value',
-          'label' => 'Content: Type with value',
-          'operator_id' => 'type_op',
-          'reduce' => FALSE,
-          'multiple' => FALSE,
-        ],
-      ],
-      'multiple_types' => [
-        'exposed' => TRUE,
-        'field' => 'type',
-        'id' => 'multiple_types',
-        'table' => 'node_field_data',
-        'plugin_id' => 'in_operator',
-        'entity_type' => 'node',
-        'entity_field' => 'type',
-        'expose' => [
-          'identifier' => 'multiple_types',
-          'label' => 'Content: Type (multiple)',
-          'operator_id' => 'type_op',
-          'reduce' => FALSE,
-          'multiple' => TRUE,
-        ],
-      ],
-      'multiple_types_with_default_value' => [
-        'exposed' => TRUE,
-        'field' => 'type',
-        'id' => 'multiple_types_with_default_value',
-        'table' => 'node_field_data',
-        'plugin_id' => 'in_operator',
-        'entity_type' => 'node',
-        'entity_field' => 'type',
-        'value' => ['article', 'article'],
-        'expose' => [
-          'identifier' => 'multiple_types_with_default_value',
-          'label' => 'Content: Type with default value (multiple)',
-          'operator_id' => 'type_op',
-          'reduce' => FALSE,
-          'multiple' => TRUE,
-        ],
-      ],
-    ]);
-    $view->save();
     $this->executeView($view);
 
+    $form_state = new FormState();
+    $form_state->set('view', $view);
+    $form_state->setValue('type', 'article');
+
+    // Mock the exposed form.
+    $exposed_form_cache = $this->createMock(ExposedFormCache::class);
+    $current_path_stack = $this->createMock(CurrentPathStack::class);
+    $exposed_form = new ViewsExposedForm($exposed_form_cache, $current_path_stack);
+    $exposed_form->submitForm($form, $form_state);
+    $updated_view = $form_state->get('view');
+
     $expected = [
-      'type' => 'All',
-      'type_with_default_value' => 'article',
-      'multiple_types_with_default_value' => ['article' => 'article'],
+      'type' => 'article',
     ];
-    $this->assertSame($view->exposed_raw_input, $expected);
+    $this->assertSame($updated_view->exposed_raw_input, $expected);
+
+    $form_state->setValue('type', ['article', 'page']);
+    $exposed_form->submitForm($form, $form_state);
+    $updated_view = $form_state->get('view');
+    $expected = [
+      'type' => [
+        'article',
+        'page',
+      ],
+    ];
+    $this->assertSame($updated_view->exposed_raw_input, $expected);
   }
 
 }
