@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\EventSubscriber;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\EventSubscriber\RssResponseCdata;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -132,7 +134,16 @@ RSS;
       ])
     );
 
-    $url_filter = new RssResponseCdata();
+    $configMock = $this->createMock(Config::class);
+    $configMock->method('get')->willReturn('mocked_value');
+
+    $configFactoryMock = $this->createMock(ConfigFactoryInterface::class);
+    $configFactoryMock->method('get')->willReturn($configMock);
+
+    // Mock the RendererInterface.
+    $rendererMock = $this->createMock(RendererInterface::class);
+    $rendererMock->method('render')->willReturn('<rendered output>');
+    $url_filter = new RssResponseCdata($configFactoryMock, $rendererMock);
     $url_filter->onResponse($event);
 
     $this->assertEquals($expected_content, $event->getResponse()->getContent());
