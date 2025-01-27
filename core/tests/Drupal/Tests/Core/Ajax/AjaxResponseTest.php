@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Ajax;
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\CommandInterface;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -139,7 +140,7 @@ class AjaxResponseTest extends UnitTestCase {
     array|null $settings,
     array|null $libraries,
     string $command_name,
-  ) {
+  ): CommandInterface {
     $command = $this->createMock($command_class_name);
     $command->expects($this->once())
       ->method('render')
@@ -159,7 +160,7 @@ class AjaxResponseTest extends UnitTestCase {
    *
    * @throws \PHPUnit\Framework\MockObject\Exception
    */
-  private function createCommandMock(string $command_name) {
+  private function createCommandMock(string $command_name): CommandInterface {
     $command = $this->createMock('Drupal\Core\Ajax\CommandInterface');
     $command->expects($this->once())
       ->method('render')
