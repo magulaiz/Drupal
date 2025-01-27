@@ -235,7 +235,7 @@ function _batch_progress_page() {
       // Adds JavaScript code and settings for clients where JavaScript is enabled.
       'drupalSettings' => [
         'batch' => [
-          'errorMessage' => \Drupal::service('renderer')->renderPlain($error_message),
+          'errorMessage' => \Drupal::service('renderer')->renderInIsolation($error_message),
           'initMessage' => $current_set['init_message'],
           'uri' => $url,
         ],
