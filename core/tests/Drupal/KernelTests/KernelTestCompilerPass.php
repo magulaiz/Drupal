@@ -26,7 +26,7 @@ class KernelTestCompilerPass implements CompilerPassInterface {
   /**
    * {@inheritdoc}
    */
-  public function process(ContainerBuilder $container) {
+  public function process(ContainerBuilder $container): void {
     $map = $container->getParameter('hook_implementations_map');
     // Check for #[Hook] on methods.
     $reflection_class = new \ReflectionClass($this->definition->getClass());
