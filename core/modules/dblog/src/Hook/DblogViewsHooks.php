@@ -8,16 +8,12 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for dblog.
  */
 class DblogViewsHooks {
-  /**
-   * @file
-   * Provide views data for dblog.module.
-   */
 
   /**
    * Implements hook_views_data().
    */
   #[Hook('views_data')]
-  public function viewsData() {
+  public function viewsData(): array {
     $data = [];
     $data['watchdog']['table']['group'] = t('Watchdog');
     $data['watchdog']['table']['wizard_id'] = 'watchdog';

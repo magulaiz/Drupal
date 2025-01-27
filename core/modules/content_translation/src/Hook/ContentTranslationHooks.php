@@ -206,7 +206,7 @@ class ContentTranslationHooks {
    */
   #[Hook('language_content_settings_update')]
   public function languageContentSettingsUpdate(ContentLanguageSettingsInterface $settings) {
-    $original_settings = $settings->original;
+    $original_settings = $settings->getOriginal();
     if ($settings->getThirdPartySetting('content_translation', 'enabled', FALSE) && !$original_settings->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
       _content_translation_install_field_storage_definitions($settings->getTargetEntityTypeId());
     }
@@ -238,7 +238,8 @@ class ContentTranslationHooks {
    * Implements hook_entity_base_field_info().
    */
   #[Hook('entity_base_field_info')]
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
+    $info = [];
     /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
     $manager = \Drupal::service('content_translation.manager');
     $entity_type_id = $entity_type->id();
@@ -253,9 +254,10 @@ class ContentTranslationHooks {
       //   enabled for translation.
       // @see https://www.drupal.org/node/2907777
       if ($manager->isEnabled($entity_type_id) || array_intersect_key($definitions, $installed_storage_definitions)) {
-        return $definitions;
+        $info = $definitions;
       }
     }
+    return $info;
   }
 
   /**
@@ -292,7 +294,7 @@ class ContentTranslationHooks {
    * Implements hook_entity_operation().
    */
   #[Hook('entity_operation')]
-  public function entityOperation(EntityInterface $entity) {
+  public function entityOperation(EntityInterface $entity): array {
     $operations = [];
     if ($entity->hasLinkTemplate('drupal:content-translation-overview') && content_translation_translate_access($entity)->isAllowed()) {
       $operations['translate'] = [
@@ -418,7 +420,7 @@ class ContentTranslationHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $extra = [];
     $bundle_info_service = \Drupal::service('entity_type.bundle.info');
     foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $info) {
@@ -470,14 +472,14 @@ class ContentTranslationHooks {
    */
   #[Hook('entity_presave')]
   public function entityPresave(EntityInterface $entity) {
-    if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && !$entity->isNew() && isset($entity->original)) {
+    if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && !$entity->isNew() && $entity->getOriginal()) {
       /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
       $manager = \Drupal::service('content_translation.manager');
       if (!$manager->isEnabled($entity->getEntityTypeId(), $entity->bundle())) {
         return;
       }
       $langcode = $entity->language()->getId();
-      $source_langcode = !$entity->original->hasTranslation($langcode) ? $manager->getTranslationMetadata($entity)->getSource() : NULL;
+      $source_langcode = !$entity->getOriginal()->hasTranslation($langcode) ? $manager->getTranslationMetadata($entity)->getSource() : NULL;
       \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $langcode, $source_langcode);
     }
   }
@@ -505,7 +507,7 @@ class ContentTranslationHooks {
    * Implements hook_page_attachments().
    */
   #[Hook('page_attachments')]
-  public function pageAttachments(&$page) {
+  public function pageAttachments(&$page): void {
     $cache = CacheableMetadata::createFromRenderArray($page);
     $route_match = \Drupal::routeMatch();
     // If the current route has no parameters, return.

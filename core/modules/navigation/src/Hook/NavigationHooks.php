@@ -2,19 +2,23 @@
 
 namespace Drupal\navigation\Hook;
 
-use Drupal\navigation\RenderCallbacks;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
+use Drupal\navigation\RenderCallbacks;
+use Drupal\navigation\TopBarItemManagerInterface;
 
 /**
  * Hook implementations for navigation.
  */
 class NavigationHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_help().
@@ -44,7 +48,7 @@ class NavigationHooks {
    * Implements hook_page_top().
    */
   #[Hook('page_top')]
-  public function pageTop(array &$page_top) {
+  public function pageTop(array &$page_top): void {
     if (!\Drupal::currentUser()->hasPermission('access navigation')) {
       return;
     }
@@ -76,9 +80,9 @@ class NavigationHooks {
    */
   #[Hook('theme')]
   public function theme($existing, $type, $theme, $path) : array {
-    $items['top_bar'] = ['variables' => ['local_tasks' => []]];
-    $items['top_bar_local_tasks'] = ['variables' => ['local_tasks' => []]];
-    $items['top_bar_local_task'] = ['variables' => ['link' => []]];
+    $items['top_bar'] = ['render element' => 'element'];
+    $items['top_bar_page_actions'] = ['variables' => ['page_actions' => [], 'featured_page_actions' => []]];
+    $items['top_bar_page_action'] = ['variables' => ['link' => []]];
     $items['big_pipe_interface_preview__navigation_shortcut_lazy_builder_lazyLinks__Shortcuts'] = [
       'variables' => [
         'callback' => NULL,
@@ -98,6 +102,11 @@ class NavigationHooks {
       ],
     ];
     $items['menu_region__footer'] = ['variables' => ['items' => [], 'title' => NULL, 'menu_name' => NULL]];
+    $items['navigation_content_top'] = [
+      'variables' => [
+        'items' => [],
+      ],
+    ];
     return $items;
   }
 
@@ -120,7 +129,11 @@ class NavigationHooks {
   public function blockBuildLocalTasksBlockAlter(array &$build, BlockPluginInterface $block): void {
     $navigation_renderer = \Drupal::service('navigation.renderer');
     assert($navigation_renderer instanceof NavigationRenderer);
-    $navigation_renderer->removeLocalTasks($build, $block);
+    if (\Drupal::currentUser()->hasPermission('access navigation') &&
+      array_key_exists('page_actions', \Drupal::service(TopBarItemManagerInterface::class)->getDefinitions())
+    ) {
+      $navigation_renderer->removeLocalTasks($build, $block);
+    }
   }
 
   /**
@@ -131,12 +144,10 @@ class NavigationHooks {
   #[Hook('plugin_filter_block__layout_builder_alter')]
   public function pluginFilterBlockLayoutBuilderAlter(array &$definitions, array $extra): void {
     if (($extra['section_storage'] ?? NULL) instanceof NavigationSectionStorage) {
-      // Remove all blocks other than the ones we support.
-      $navigation_safe = ['navigation_user', 'navigation_shortcuts', 'navigation_menu'];
-      $definitions = array_filter($definitions, static function (array $definition, string $plugin_id) use ($navigation_safe) : bool {
-          [$base_plugin_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin_id);
-          return in_array($base_plugin_id, $navigation_safe, TRUE);
-      }, ARRAY_FILTER_USE_BOTH);
+      // Include only blocks explicitly indicated as Navigation allowed.
+      $definitions = array_filter($definitions,
+        fn (array $definition): bool => ($definition['allow_in_navigation'] ?? FALSE) === TRUE
+      );
     }
   }
 
@@ -156,12 +167,27 @@ class NavigationHooks {
    */
   #[Hook('block_alter')]
   public function blockAlter(&$definitions) : void {
-    $hidden = ['navigation_user', 'navigation_shortcuts', 'navigation_menu', 'navigation_link'];
-    foreach ($hidden as $block_id) {
-      if (isset($definitions[$block_id])) {
-        $definitions[$block_id]['_block_ui_hidden'] = TRUE;
+    array_walk($definitions, function (&$definition, $block_id) {
+      [$base_plugin_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $block_id);
+
+      // Add the allow_in_navigation attribute to those blocks valid for Navigation.
+      // @todo Refactor to use actual block Attribute once
+      //   https://www.drupal.org/project/drupal/issues/3443882 is merged.
+      $allow_in_navigation = [
+        'navigation_user',
+        'navigation_shortcuts',
+        'navigation_menu',
+      ];
+      if (in_array($base_plugin_id, $allow_in_navigation, TRUE)) {
+        $definition['allow_in_navigation'] = TRUE;
       }
-    }
+
+      // Hide Navigation specific blocks from the generic UI.
+      $hidden = ['navigation_user', 'navigation_shortcuts', 'navigation_menu', 'navigation_link'];
+      if (in_array($base_plugin_id, $hidden, TRUE)) {
+        $definition['_block_ui_hidden'] = TRUE;
+      }
+    });
   }
 
   /**
@@ -172,6 +198,42 @@ class NavigationHooks {
     if (array_key_exists('layout_builder', $info)) {
       $info['layout_builder']['#pre_render'][] = [RenderCallbacks::class, 'alterLayoutBuilder'];
     }
+  }
+
+  /**
+   * Implements hook_navigation_content_top().
+   */
+  #[Hook('navigation_content_top')]
+  public function navigationWorkspaces(): array {
+    // This navigation item requires the Workspaces UI module.
+    if (!\Drupal::moduleHandler()->moduleExists('workspaces_ui')) {
+      return [];
+    }
+
+    $current_user = \Drupal::currentUser();
+    if (!$current_user->hasPermission('administer workspaces')
+      && !$current_user->hasPermission('view own workspace')
+      && !$current_user->hasPermission('view any workspace')
+    ) {
+      return [];
+    }
+
+    return [
+      'workspace' => [
+        // @phpstan-ignore-next-line
+        '#lazy_builder' => ['navigation.workspaces_lazy_builders:renderNavigationLinks', []],
+        '#create_placeholder' => TRUE,
+        '#lazy_builder_preview' => [
+          '#type' => 'component',
+          '#component' => 'navigation:toolbar-button',
+          '#props' => [
+            'html_tag' => 'a',
+            'text' => $this->t('Workspace'),
+          ],
+        ],
+        '#weight' => -1000,
+      ],
+    ];
   }
 
 }

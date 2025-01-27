@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\contact_storage_test\Hook;
 
+use Drupal\contact\ContactFormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -18,12 +19,12 @@ class ContactStorageTestHooks {
    * Implements hook_entity_base_field_info().
    */
   #[Hook('entity_base_field_info')]
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
+    $fields = [];
     if ($entity_type->id() == 'contact_message') {
-      $fields = [];
       $fields['id'] = BaseFieldDefinition::create('integer')->setLabel(t('Message ID'))->setDescription(t('The message ID.'))->setReadOnly(TRUE)->setSetting('unsigned', TRUE);
-      return $fields;
     }
+    return $fields;
   }
 
   /**
@@ -54,7 +55,16 @@ class ContactStorageTestHooks {
       '#description' => t('Enable to send an additional email with a free pony voucher to anyone who submits the form.'),
       '#default_value' => $contact_form->getThirdPartySetting('contact_storage_test', 'send_a_pony', FALSE),
     ];
-    $form['#entity_builders'][] = 'contact_storage_test_contact_form_form_builder';
+    $form['#entity_builders'][] = [$this, 'contactFormBuilder'];
+  }
+
+  /**
+   * Entity builder for the contact form edit form with third party options.
+   *
+   * @see contact_storage_test_form_contact_form_edit_form_alter()
+   */
+  public function contactFormBuilder($entity_type, ContactFormInterface $contact_form, &$form, FormStateInterface $form_state): void {
+    $contact_form->setThirdPartySetting('contact_storage_test', 'send_a_pony', $form_state->getValue('send_a_pony'));
   }
 
 }
