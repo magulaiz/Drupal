@@ -173,7 +173,8 @@ class ImageItemTest extends FieldKernelTestBase {
     $this->assertEquals('800', $imageItem['width']);
     $this->assertEquals('800', $imageItem['height']);
 
-    // Create a mock field definition with no file directory.
+    // Test that an empty file_directory results in a correct protocol. Use a
+    // mock field definition with no file directory.
     $definition = $this->createMock(FieldDefinitionInterface::class);
     $definition->expects($this->any())
       ->method('getSettings')
