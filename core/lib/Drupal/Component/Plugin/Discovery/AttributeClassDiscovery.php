@@ -63,9 +63,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
     foreach ($this->getPluginNamespaces() as $namespace => $dirs) {
       foreach ($dirs as $dir) {
         if (file_exists($dir)) {
-          $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS)
-          );
+          $iterator = new \DirectoryIterator($dir);
           foreach ($iterator as $fileinfo) {
             assert($fileinfo instanceof \SplFileInfo);
             if ($fileinfo->getExtension() === 'php') {
