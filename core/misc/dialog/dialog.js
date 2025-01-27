@@ -5,17 +5,13 @@
  * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
 
-(function (Drupal) {
-  if (!Drupal.DialogEvent) {
-    Drupal.DialogEvent = class extends Event {
-      constructor(type, dialog, settings = null) {
-        super(`dialog:${type}`, { bubbles: true });
-        this.dialog = dialog;
-        this.settings = settings;
-      }
-    };
+class DrupalDialogEvent extends Event {
+  constructor(type, dialog, settings = null) {
+    super(`dialog:${type}`, { bubbles: true });
+    this.dialog = dialog;
+    this.settings = settings;
   }
-})(Drupal || (Drupal = {}));
+}
 
 (function ($, Drupal, drupalSettings, bodyScrollLock) {
   /**
@@ -90,7 +86,7 @@
       }
 
       // Trigger a global event to allow scripts to bind events to the dialog.
-      const event = new Drupal.DialogEvent('beforecreate', dialog, settings);
+      const event = new DrupalDialogEvent('beforecreate', dialog, settings);
       domElement.dispatchEvent(event);
       $element.dialog(event.settings);
       dialog.open = true;
@@ -102,12 +98,12 @@
       }
 
       domElement.dispatchEvent(
-        new Drupal.DialogEvent('aftercreate', dialog, event.settings),
+        new DrupalDialogEvent('aftercreate', dialog, event.settings),
       );
     }
 
     function closeDialog(value) {
-      domElement.dispatchEvent(new Drupal.DialogEvent('beforeclose', dialog));
+      domElement.dispatchEvent(new DrupalDialogEvent('beforeclose', dialog));
 
       // Unlocks the body when the dialog closes.
       bodyScrollLock.clearBodyLocks();
@@ -116,7 +112,7 @@
       dialog.returnValue = value;
       dialog.open = false;
 
-      domElement.dispatchEvent(new Drupal.DialogEvent('afterclose', dialog));
+      domElement.dispatchEvent(new DrupalDialogEvent('afterclose', dialog));
     }
 
     dialog.show = () => {
