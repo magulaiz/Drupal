@@ -173,24 +173,13 @@ class ImageItemTest extends FieldKernelTestBase {
     $this->assertEquals('800', $imageItem['width']);
     $this->assertEquals('800', $imageItem['height']);
 
-    // Test that an empty file_directory results in a correct protocol. Use a
-    // mock field definition with no file directory.
-    $definition = $this->createMock(FieldDefinitionInterface::class);
-    $definition->expects($this->any())
-      ->method('getSettings')
-      ->willReturn([
-        'file_extensions' => 'jpg',
-        'file_directory' => '',
-        'uri_scheme' => 'public',
-      ]);
-    // Generate sample value and check the URI format.
-    $value = ImageItem::generateSampleValue($definition);
-    $this->assertNotEmpty($value);
-    $file = File::load($value['target_id']);
-    $fileUri = $file->getFileUri();
-
-    // Confirm there are only two forward slashes.
-    $this->assertMatchesRegularExpression('#^public://[^/]#', $fileUri);
+    // Test file URIs for image items with empty and custom directories.
+    $this->validateImageUriForDirectory(
+      '', 'public://'
+    );
+    $this->validateImageUriForDirectory(
+      'custom_directory/subdir', 'public://custom_directory/subdir/'
+    );
   }
 
   /**
@@ -217,6 +206,39 @@ class ImageItemTest extends FieldKernelTestBase {
     $this->assertEquals(serialize($arguments), $logged);
     $this->assertEmpty($entity->image_test->width);
     $this->assertEmpty($entity->image_test->height);
+  }
+
+  /**
+   * Validates the image file URI generated for a given file directory.
+   *
+   * @param string $file_directory
+   *   The file directory to test (e.g., empty or 'custom_directory/subdir').
+   * @param string $expected_start
+   *   The expected starting string of the file URI (e.g., 'public://').
+   */
+  private function validateImageUriForDirectory($file_directory, $expected_start): void {
+    // Test that an empty file_directory results in a correct protocol. Use a
+    // mock field definition with no file directory.
+    $definition = $this->createMock(FieldDefinitionInterface::class);
+    $definition->expects($this->any())
+      ->method('getSettings')
+      ->willReturn([
+        'file_extensions' => 'jpg',
+        'file_directory' => $file_directory,
+        'uri_scheme' => 'public',
+      ]);
+    // Generate sample value and check the URI format.
+    $value = ImageItem::generateSampleValue($definition);
+    $this->assertNotEmpty($value);
+
+    // Load the file entity and get its URI.
+    $fid = $value['target_id'];
+    $file = File::load($fid);
+    $fileUri = $file->getFileUri();
+
+    // Validate the file URI format.
+    $this->assertStringStartsWith($expected_start, $fileUri);
+    $this->assertMatchesRegularExpression('#^' . preg_quote($expected_start, '#') . '[^/]+#', $fileUri);
   }
 
 }
