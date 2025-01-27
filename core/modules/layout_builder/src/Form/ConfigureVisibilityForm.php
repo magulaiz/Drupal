@@ -102,6 +102,13 @@ class ConfigureVisibilityForm extends FormBase {
   protected $configuration;
 
   /**
+   * The class resolver.
+   *
+   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
+   */
+  protected $classResolver;
+
+  /**
    * Constructs a ConfigureVisibilityForm object.
    *
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
