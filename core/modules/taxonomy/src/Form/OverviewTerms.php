@@ -174,7 +174,7 @@ class OverviewTerms extends FormBase {
     $tree_index = 0;
     $complete_tree = NULL;
 
-    // Filter tree preserving each complete parent of matching terms.
+    // Filter tree preserving all parents of each matching term.
     $this->termFilter = $form_state->getValue('filter');
     if ($this->termFilter) {
 
