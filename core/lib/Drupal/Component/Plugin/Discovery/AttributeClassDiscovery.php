@@ -22,7 +22,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
   /**
    * An array of classes to skip.
    */
-  protected array $skipClasses = [];
+  static protected array $skipClasses = [];
 
   /**
    * Constructs a new instance.
@@ -103,19 +103,19 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               // find something. Because the classloader will result in the
               // class being successfully autoloaded, store an array of classes
               // to skip if this method is called again.
-              if (array_key_exists($class, $this->skipClasses)) {
+              if (array_key_exists($class, self::$skipClasses)) {
                 continue;
               }
               try {
                 $class_exists = \class_exists($class, TRUE);
                 if (!$class_exists || $autoloader->hasMissingClass()) {
-                  $this->skipClasses[$class] = TRUE;
+                  self::$skipClasses[$class] = TRUE;
                   $autoloader->reset();
                   continue;
                 }
               }
               catch (\Error $e) {
-                $this->skipClasses[$class] = TRUE;
+                self::$skipClasses[$class] = TRUE;
                 $autoloader->reset();
                 if (!preg_match('/(Class|Interface) .* not found$/', $e->getMessage())) {
                   throw $e;
