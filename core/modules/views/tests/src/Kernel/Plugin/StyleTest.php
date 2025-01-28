@@ -112,6 +112,7 @@ class StyleTest extends ViewsKernelTestBase {
         'field' => 'name',
         'relationship' => 'none',
         'label' => 'Name',
+        'element_label_colon' => TRUE,
       ],
       'job' => [
         'id' => 'job',
@@ -119,6 +120,7 @@ class StyleTest extends ViewsKernelTestBase {
         'field' => 'job',
         'relationship' => 'none',
         'label' => 'Job',
+        'element_label_colon' => TRUE,
       ],
       'age' => [
         'id' => 'age',
@@ -126,6 +128,7 @@ class StyleTest extends ViewsKernelTestBase {
         'field' => 'age',
         'relationship' => 'none',
         'label' => 'Age',
+        'element_label_colon' => TRUE,
       ],
     ];
     $view->displayHandlers->get('default')->overrideOption('fields', $fields);

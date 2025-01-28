@@ -117,7 +117,7 @@ class ExposedFormTest extends ViewTestBase {
         'field' => 'type',
         'id' => 'type',
         'table' => (Database::getConnection()->driver() == 'mongodb' ? 'node' : 'node_field_data'),
-        'plugin_id' => 'in_operator',
+        'plugin_id' => 'bundle',
         'entity_type' => 'node',
         'entity_field' => 'type',
         'expose' => [

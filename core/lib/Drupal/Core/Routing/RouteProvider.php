@@ -13,6 +13,7 @@ use Drupal\Core\State\StateInterface;
 use Drupal\mongodb\Driver\Database\mongodb\Statement;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Alias;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
 use Drupal\Core\Database\Connection;
@@ -212,7 +213,16 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       throw new RouteNotFoundException(sprintf('Route "%s" does not exist.', $name));
     }
 
-    return reset($routes);
+    $result = reset($routes);
+    if ($result instanceof Alias) {
+      $alias = $result->getId();
+      if ($result->isDeprecated()) {
+        $deprecation = $result->getDeprecation($name);
+        @trigger_error($deprecation['message'], E_USER_DEPRECATED);
+      }
+      return $this->getRouteByName($alias);
+    }
+    return $result;
   }
 
   /**
@@ -436,7 +446,8 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    */
   public function getAllRoutes() {
     $select = $this->connection->select($this->tableName, 'router')
-      ->fields('router', ['name', 'route']);
+      ->fields('router', ['name', 'route'])
+      ->isNull('alias');
     $routes = $select->execute()->fetchAllKeyed();
 
     $result = [];
@@ -558,6 +569,18 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     // \Drupal\path_alias\AliasManager::getPathByAlias().
     // @todo Update this if necessary in https://www.drupal.org/node/1125428.
     return $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRouteAliases(string $route_name): iterable {
+    $alias_route_names = $this->connection->select($this->tableName, 'router')
+      ->fields('router', ['name'])
+      ->condition('alias', $route_name)
+      ->execute()->fetchCol();
+
+    return $this->getRoutesByNames($alias_route_names);
   }
 
 }
