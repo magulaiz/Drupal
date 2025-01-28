@@ -7,7 +7,7 @@ namespace Drupal\Tests\user\Functional\Views;
 use Drupal\Tests\views\Functional\ViewTestBase;
 
 /**
- * Tests filtering to ensure correct results with the role filter added twice.
+ * Tests the Roles filter.
  *
  * @group user
  */
@@ -40,7 +40,7 @@ class DuplicateRoleFilterTest extends ViewTestBase {
   }
 
   /**
-   * Tests filtering to ensure correct results with the role filter added twice.
+   * Tests filtering when the Roles filter is added twice.
    */
   public function testUserRolesFilter(): void {
     // Add two roles.
@@ -61,7 +61,8 @@ class DuplicateRoleFilterTest extends ViewTestBase {
       'access user profiles',
     ]));
 
-    // Navigate to the view filter settings for roles and select the roles to filter.
+    // Navigate to the view filter settings for roles and select the roles to
+    // filter.
     $this->drupalGet('admin/structure/views/nojs/handler/duplicate_role_filter/page_1/filter/roles_target_id');
     $edit = [
       'options[value][]' => ['test_role_1', 'test_role_2'],
@@ -69,7 +70,8 @@ class DuplicateRoleFilterTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/nojs/handler/duplicate_role_filter/page_1/filter/roles_target_id');
     $this->submitForm($edit, 'Apply');
 
-    // Navigate to the duplicate role exposed filter in the view settings and apply the same roles.
+    // Navigate to the duplicate role exposed filter in the view settings and
+    // apply the same roles.
     $this->drupalGet('admin/structure/views/nojs/handler/duplicate_role_filter/page_1/filter/roles_target_id_1');
     $this->submitForm($edit, 'Apply');
     $this->drupalGet('admin/structure/views/view/duplicate_role_filter/edit/page_1');
