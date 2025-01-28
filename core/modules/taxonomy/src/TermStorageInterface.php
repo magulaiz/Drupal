@@ -2,37 +2,12 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
 
 /**
  * Defines an interface for taxonomy_term entity storage classes.
  */
 interface TermStorageInterface extends ContentEntityStorageInterface {
-
-  /**
-   * Removed reference to terms from term_hierarchy.
-   *
-   * @param array $tids
-   *   Array of terms that need to be removed from hierarchy.
-   *
-   * @todo Remove this method in Drupal 9.0.x. Now the parent references are
-   *   automatically cleared when deleting a taxonomy term.
-   *   https://www.drupal.org/node/2785693
-   */
-  public function deleteTermHierarchy($tids);
-
-  /**
-   * Updates terms hierarchy information with the hierarchy trail of it.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $term
-   *   Term entity that needs to be added to term hierarchy information.
-   *
-   * @todo remove this method Drupal 9.0.x. Now the parent references are
-   *   automatically updates when a taxonomy term is added/updated.
-   *   https://www.drupal.org/node/2785693
-   */
-  public function updateTermHierarchy(EntityInterface $term);
 
   /**
    * Finds all parents of a given term ID.
@@ -116,16 +91,16 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    *
    * @param array $nids
    *   Node IDs to retrieve terms for.
-   * @param array $vocabs
-   *   (optional) A vocabularies array to restrict the term search. Defaults to
-   *   empty array.
+   * @param array $vids
+   *   (optional) an array of vocabulary IDs to restrict the term search.
+   *   Defaults to empty array.
    * @param string $langcode
    *   (optional) A language code to restrict the term search. Defaults to NULL.
    *
    * @return array
    *   An array of nids and the term entities they were tagged with.
    */
-  public function getNodeTerms(array $nids, array $vocabs = [], $langcode = NULL);
+  public function getNodeTerms(array $nids, array $vids = [], $langcode = NULL);
 
   /**
    * Returns the hierarchy type for a specific vocabulary ID.

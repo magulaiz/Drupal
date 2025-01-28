@@ -2,14 +2,18 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
-use Drupal\Core\Database\DatabaseNotFoundException;
+use Drupal\Component\Utility\FilterArray;
 use Drupal\Core\Database\Connection as DatabaseConnection;
+use Drupal\Core\Database\DatabaseNotFoundException;
+use Drupal\Core\Database\ExceptionHandler;
 use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Database\SupportsTemporaryTablesInterface;
+use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Connection.
  */
-class Connection extends DatabaseConnection {
+class Connection extends DatabaseConnection implements SupportsTemporaryTablesInterface {
 
   /**
    * Error code for "Unable to open database file" error.
@@ -19,24 +23,14 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  protected $statementClass = NULL;
-
-  /**
-   * {@inheritdoc}
-   */
   protected $statementWrapperClass = NULL;
-
-  /**
-   * Whether or not the active transaction (if any) will be rolled back.
-   *
-   * @var bool
-   */
-  protected $willRollback;
 
   /**
    * A map of condition operators to SQLite operators.
    *
    * We don't want to override any of the defaults.
+   *
+   * @var string[][]
    */
   protected static $sqliteConditionOperatorMap = [
     'LIKE' => ['postfix' => " ESCAPE '\\'"],
@@ -84,21 +78,17 @@ class Connection extends DatabaseConnection {
   public function __construct(\PDO $connection, array $connection_options) {
     parent::__construct($connection, $connection_options);
 
-    // Attach one database for each registered prefix.
-    $prefixes = $this->prefixes;
-    foreach ($prefixes as &$prefix) {
-      // Empty prefix means query the main database -- no need to attach
-      // anything.
-      if ($prefix !== '') {
-        $this->attachDatabase($prefix);
-        // Add a ., so queries become prefix.table, which is proper syntax for
-        // querying an attached database.
-        $prefix .= '.';
-      }
+    // Empty prefix means query the main database -- no need to attach anything.
+    $prefix = $this->connectionOptions['prefix'] ?? '';
+    if ($prefix !== '') {
+      $this->attachDatabase($prefix);
+      // Add a ., so queries become prefix.table, which is proper syntax for
+      // querying an attached database.
+      $prefix .= '.';
     }
 
-    // Regenerate the prefixes replacement table.
-    $this->setPrefix($prefixes);
+    // Regenerate the prefix.
+    $this->setPrefix($prefix);
   }
 
   /**
@@ -116,7 +106,7 @@ class Connection extends DatabaseConnection {
     ];
 
     try {
-      $pdo = new \PDO('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
+      $pdo = new PDOConnection('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
     }
     catch (\PDOException $e) {
       if ($e->getCode() == static::DATABASE_NOT_FOUND) {
@@ -191,7 +181,7 @@ class Connection extends DatabaseConnection {
             unlink($this->connectionOptions['database'] . '-' . $prefix);
           }
         }
-        catch (\Exception $e) {
+        catch (\Exception) {
           // Ignore the exception and continue. There is nothing we can do here
           // to report the error or fail safe.
         }
@@ -257,7 +247,7 @@ class Connection extends DatabaseConnection {
    */
   public static function sqlFunctionLeast() {
     // Remove all NULL, FALSE and empty strings values but leaves 0 (zero) values.
-    $values = array_filter(func_get_args(), 'strlen');
+    $values = FilterArray::removeEmptyStrings(func_get_args());
 
     return count($values) < 1 ? NULL : min($values);
   }
@@ -360,29 +350,6 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function prepare($statement, array $driver_options = []) {
-    @trigger_error('Connection::prepare() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should instantiate \PDOStatement objects by calling \PDO::prepare in their Connection::prepareStatement method instead. \PDO::prepare should not be called outside of driver code. See https://www.drupal.org/node/3137786', E_USER_DEPRECATED);
-    return new Statement($this->connection, $this, $statement, $driver_options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
-    // The database schema might be changed by another process in between the
-    // time that the statement was prepared and the time the statement was run
-    // (e.g. usually happens when running tests). In this case, we need to
-    // re-run the query.
-    // @see http://www.sqlite.org/faq.html#q15
-    // @see http://www.sqlite.org/rescode.html#schema
-    if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 17) {
-      @trigger_error('Connection::handleQueryException() is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Get a handler through $this->exceptionHandler() instead, and use one of its methods. See https://www.drupal.org/node/3187222', E_USER_DEPRECATED);
-      return $this->query($query, $args, $options);
-    }
-
-    parent::handleQueryException($e, $query, $args, $options);
-  }
-
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
   }
@@ -391,22 +358,28 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function queryTemporary($query, array $args = [], array $options = []) {
-    @trigger_error('Connection::queryTemporary() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781', E_USER_DEPRECATED);
-    // Generate a new temporary table name and protect it from prefixing.
-    // SQLite requires that temporary tables to be non-qualified.
-    $tablename = $this->generateTemporaryTableName();
-    $prefixes = $this->prefixes;
-    $prefixes[$tablename] = '';
-    $this->setPrefix($prefixes);
+    $tablename = 'db_temporary_' . uniqid();
 
     $this->query('CREATE TEMPORARY TABLE ' . $tablename . ' AS ' . $query, $args, $options);
-    return $tablename;
+
+    // Temporary tables always live in the temp database, which means that
+    // they cannot be fully qualified table names since they do not live
+    // in the main SQLite database. We provide the fully-qualified name
+    // ourselves to prevent Drupal from applying prefixes.
+    // @see https://www.sqlite.org/lang_createtable.html
+    return 'temp.' . $tablename;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function driver() {
     return 'sqlite';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function databaseType() {
     return 'sqlite';
   }
@@ -427,6 +400,9 @@ class Connection extends DatabaseConnection {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function mapConditionOperator($operator) {
     return static::$sqliteConditionOperatorMap[$operator] ?? NULL;
   }
@@ -435,9 +411,7 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
-    if (isset($options['return'])) {
-      @trigger_error('Passing "return" option to ' . __METHOD__ . '() is deprecated in drupal:9.4.0 and is removed in drupal:11.0.0. For data manipulation operations, use dynamic queries instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
-    }
+    assert(!isset($options['return']), 'Passing "return" option to prepareStatement() has no effect. See https://www.drupal.org/node/3185520');
 
     try {
       $query = $this->preprocessStatement($query, $options);
@@ -449,35 +423,11 @@ class Connection extends DatabaseConnection {
     return $statement;
   }
 
-  public function nextId($existing_id = 0) {
-    $this->startTransaction();
-    // We can safely use literal queries here instead of the slower query
-    // builder because if a given database breaks here then it can simply
-    // override nextId. However, this is unlikely as we deal with short strings
-    // and integers and no known databases require special handling for those
-    // simple cases. If another transaction wants to write the same row, it will
-    // wait until this transaction commits.
-    $stmt = $this->prepareStatement('UPDATE {sequences} SET [value] = GREATEST([value], :existing_id) + 1', [], TRUE);
-    $args = [':existing_id' => $existing_id];
-    try {
-      $stmt->execute($args);
-    }
-    catch (\Exception $e) {
-      $this->exceptionHandler()->handleExecutionException($e, $stmt, $args, []);
-    }
-    if ($stmt->rowCount() === 0) {
-      $this->query('INSERT INTO {sequences} ([value]) VALUES (:existing_id + 1)', $args);
-    }
-    // The transaction gets committed when the transaction object gets destroyed
-    // because it gets out of scope.
-    return $this->query('SELECT [value] FROM {sequences}')->fetchField();
-  }
-
   /**
    * {@inheritdoc}
    */
   public function getFullQualifiedTableName($table) {
-    $prefix = $this->tablePrefix($table);
+    $prefix = $this->getPrefix();
 
     // Don't include the SQLite database file name as part of the table name.
     return $prefix . $table;
@@ -527,6 +477,58 @@ class Connection extends DatabaseConnection {
     }
 
     return $db_url;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function exceptionHandler() {
+    return new ExceptionHandler();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function select($table, $alias = NULL, array $options = []) {
+    return new Select($this, $table, $alias, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function insert($table, array $options = []) {
+    return new Insert($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function upsert($table, array $options = []) {
+    return new Upsert($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function truncate($table, array $options = []) {
+    return new Truncate($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function schema() {
+    if (empty($this->schema)) {
+      $this->schema = new Schema($this);
+    }
+    return $this->schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function driverTransactionManager(): TransactionManagerInterface {
+    return new TransactionManager($this);
   }
 
 }

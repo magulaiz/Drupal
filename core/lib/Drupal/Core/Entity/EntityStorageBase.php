@@ -20,12 +20,12 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   /**
    * Information about the entity type.
    *
+   * @var \Drupal\Core\Entity\EntityTypeInterface
+   *
    * The following code returns the same object:
    * @code
    * \Drupal::entityTypeManager()->getDefinition($this->entityTypeId)
    * @endcode
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityType;
 
@@ -116,40 +116,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   }
 
   /**
-   * Warns subclasses not to directly access the deprecated entityClass property.
-   *
-   * @param string $name
-   *   The name of the property to get.
-   *
-   * @todo Remove this in Drupal 10.
-   * @see https://www.drupal.org/project/drupal/issues/3244802
-   */
-  public function __get($name) {
-    if ($name === 'entityClass') {
-      @trigger_error('Accessing the entityClass property directly is deprecated in drupal:9.3.0. Use ::getEntityClass() instead. See https://www.drupal.org/node/3191609', E_USER_DEPRECATED);
-      return $this->getEntityClass();
-    }
-  }
-
-  /**
-   * Warns subclasses not to directly set the deprecated entityClass property.
-   *
-   * @param string $name
-   *   The name of the property to set.
-   * @param mixed $value
-   *   The value to use.
-   *
-   * @todo Remove this in Drupal 10.
-   * @see https://www.drupal.org/project/drupal/issues/3244802
-   */
-  public function __set(string $name, $value): void {
-    if ($name === 'entityClass') {
-      @trigger_error('Setting the entityClass property directly is deprecated in drupal:9.3.0 and has no effect in drupal:10.0.0. See https://www.drupal.org/node/3191609', E_USER_DEPRECATED);
-      $this->baseEntityClass = $value;
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getEntityTypeId() {
@@ -187,7 +153,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   /**
    * {@inheritdoc}
    */
-  public function resetCache(array $ids = NULL) {
+  public function resetCache(?array $ids = NULL) {
     if ($this->entityType->isStaticallyCacheable() && isset($ids)) {
       foreach ($ids as $id) {
         $this->memoryCache->delete($this->buildCacheId($id));
@@ -282,6 +248,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    *   An array of values to set, keyed by property name.
    *
    * @return \Drupal\Core\Entity\EntityInterface
+   *   The created entity.
    */
   protected function doCreate(array $values) {
     $entity_class = $this->getEntityClass();
@@ -300,7 +267,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   /**
    * {@inheritdoc}
    */
-  public function loadMultiple(array $ids = NULL) {
+  public function loadMultiple(?array $ids = NULL) {
     $entities = [];
     $preloaded_entities = [];
 
@@ -381,7 +348,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @return \Drupal\Core\Entity\EntityInterface[]
    *   Associative array of entities, keyed on the entity ID.
    */
-  abstract protected function doLoadMultiple(array $ids = NULL);
+  abstract protected function doLoadMultiple(?array $ids = NULL);
 
   /**
    * Gathers entities from a 'preload' step.
@@ -393,7 +360,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @return \Drupal\Core\Entity\EntityInterface[]
    *   Associative array of entities, keyed by the entity ID.
    */
-  protected function preLoad(array &$ids = NULL) {
+  protected function preLoad(?array &$ids = NULL) {
     return [];
   }
 
@@ -531,8 +498,8 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The saved entity.
    *
-   * @return int|string
-   *   The processed entity identifier.
+   * @return int|string|null
+   *   The processed entity identifier, or null for new entities.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   If the entity identifier is invalid.
@@ -554,8 +521,8 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     }
 
     // Load the original entity, if any.
-    if ($id_exists && !isset($entity->original)) {
-      $entity->original = $this->loadUnchanged($id);
+    if ($id_exists && !$entity->getOriginal()) {
+      $entity->setOriginal($this->loadUnchanged($id));
     }
 
     // Allow code to run before saving.
@@ -602,7 +569,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     // correctly identify the original entity.
     $entity->setOriginalId($entity->id());
 
-    unset($entity->original);
+    $entity->setOriginal(NULL);
   }
 
   /**
@@ -619,8 +586,9 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @param \Drupal\Core\Entity\Query\QueryInterface $entity_query
    *   EntityQuery instance.
    * @param array $values
-   *   An associative array of properties of the entity, where the keys are the
-   *   property names and the values are the values those properties must have.
+   *   An associative array where the keys are the property names and the
+   *   values are the values those properties must have. If a property takes
+   *   multiple values, passing an array of values will produce an IN condition.
    */
   protected function buildPropertyQuery(QueryInterface $entity_query, array $values) {
     foreach ($values as $name => $value) {

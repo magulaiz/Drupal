@@ -2,6 +2,7 @@
 
 namespace Drupal\content_translation\Controller;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\content_translation\ContentTranslationManager;
 use Drupal\content_translation\ContentTranslationManagerInterface;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -20,30 +21,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContentTranslationController extends ControllerBase {
 
   /**
-   * The content translation manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationManagerInterface
-   */
-  protected $manager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
    * Initializes a content translation controller.
    *
    * @param \Drupal\content_translation\ContentTranslationManagerInterface $manager
    *   A content translation manager instance.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct(ContentTranslationManagerInterface $manager, EntityFieldManagerInterface $entity_field_manager) {
-    $this->manager = $manager;
-    $this->entityFieldManager = $entity_field_manager;
+  public function __construct(
+    protected ContentTranslationManagerInterface $manager,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected TimeInterface $time,
+  ) {
   }
 
   /**
@@ -52,7 +43,8 @@ class ContentTranslationController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('content_translation.manager'),
-      $container->get('entity_field.manager')
+      $container->get('entity_field.manager'),
+      $container->get('datetime.time'),
     );
   }
 
@@ -68,6 +60,33 @@ class ContentTranslationController extends ControllerBase {
    */
   public function prepareTranslation(ContentEntityInterface $entity, LanguageInterface $source, LanguageInterface $target) {
     $source_langcode = $source->getId();
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = $this->entityTypeManager()->getStorage($entity->getEntityTypeId());
+
+    // Once translations from the default revision are added, there may be
+    // additional draft translations that don't exist in the default revision.
+    // Add those translations too so that they aren't deleted when the new
+    // translation is saved.
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $default_revision */
+    $default_revision = $storage->load($entity->id());
+    // Check the entity isn't missing any translations.
+    $languages = $this->languageManager()->getLanguages();
+    foreach ($languages as $language) {
+      $langcode = $language->getId();
+      if ($entity->hasTranslation($langcode) || $target->getId() === $langcode) {
+        continue;
+      }
+      $latest_revision_id = $storage->getLatestTranslationAffectedRevisionId($entity->id(), $langcode);
+      if ($latest_revision_id) {
+        if ($default_revision->hasTranslation($langcode)) {
+          $existing_translation = $default_revision->getTranslation($langcode);
+          $existing_translation->setNewRevision(FALSE);
+          $existing_translation->isDefaultRevision(FALSE);
+          $existing_translation->setRevisionTranslationAffected(FALSE);
+          $entity->addTranslation($langcode, $existing_translation->toArray());
+        }
+      }
+    }
     /** @var \Drupal\Core\Entity\ContentEntityInterface $source_translation */
     $source_translation = $entity->getTranslation($source_langcode);
     $target_translation = $entity->addTranslation($target->getId(), $source_translation->toArray());
@@ -84,7 +103,7 @@ class ContentTranslationController extends ControllerBase {
     // Update the translation author to current user, as well the translation
     // creation time.
     $metadata->setAuthor($user);
-    $metadata->setCreatedTime(REQUEST_TIME);
+    $metadata->setCreatedTime($this->time->getRequestTime());
     $metadata->setSource($source_langcode);
   }
 

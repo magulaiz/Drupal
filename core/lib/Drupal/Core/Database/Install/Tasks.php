@@ -8,7 +8,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Database installer structure.
  *
- * Defines basic Drupal requirements for databases.
+ * Defines basic Drupal requirements for databases connecting via PDO.
+ * Every database driver implementation must provide a concrete implementation
+ * of it to support special handling required by that database.
  */
 abstract class Tasks {
 
@@ -67,6 +69,10 @@ abstract class Tasks {
         'Drupal can use DROP TABLE database commands.',
         'Failed to <strong>DROP</strong> a test table from your database server. We tried dropping a table with the command %query and the server reported the following error %error.',
       ],
+    ],
+    [
+      'function'    => 'checkJsonSupport',
+      'arguments'   => [],
     ],
   ];
 
@@ -200,9 +206,11 @@ abstract class Tasks {
   protected function runTestQuery($query, $pass, $fail, $fatal = FALSE) {
     try {
       Database::getConnection()->query($query);
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $this->pass(t($pass));
     }
     catch (\Exception $e) {
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $this->fail(t($fail, ['%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name()]));
       return !$fatal;
     }
@@ -291,8 +299,6 @@ abstract class Tasks {
     ];
 
     global $install_state;
-    // @todo https://www.drupal.org/project/drupal/issues/3110839 remove PHP 7.4
-    //   work around and add a better message for the migrate UI.
     $profile = $install_state['parameters']['profile'] ?? NULL;
     $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
     $form['advanced_options']['prefix'] = [
@@ -309,7 +315,7 @@ abstract class Tasks {
       '#title' => t('Host'),
       '#default_value' => empty($database['host']) ? 'localhost' : $database['host'],
       '#size' => 45,
-      // Hostnames can be 255 characters long.
+      // Host names can be 255 characters long.
       '#maxlength' => 255,
       '#required' => TRUE,
     ];
@@ -364,6 +370,7 @@ abstract class Tasks {
    * @see \Drupal\Core\StringTranslation\TranslatableMarkup::__construct()
    */
   protected function t($string, array $args = [], array $options = []) {
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     return new TranslatableMarkup($string, $args, $options);
   }
 
@@ -386,6 +393,18 @@ abstract class Tasks {
    */
   protected function getConnection() {
     return Database::getConnection();
+  }
+
+  /**
+   * Checks the database json support.
+   */
+  protected function checkJsonSupport() {
+    if ($this->getConnection()->hasJson()) {
+      $this->pass(t('Database connection supports the JSON type.'));
+    }
+    else {
+      $this->fail(t('<a href="https://www.drupal.org/docs/system-requirements">Database connection does not support JSON.</a>'));
+    }
   }
 
 }

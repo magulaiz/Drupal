@@ -41,6 +41,12 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
   protected $argument;
 
   /**
+   * The option name.
+   */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
+  public string $option_name;
+
+  /**
    * Sets the parent argument this plugin is associated with.
    *
    * @param \Drupal\views\Plugin\views\argument\ArgumentPluginBase $argument
@@ -117,7 +123,9 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
    *   A context definition that represents the argument or NULL if that is
    *   not possible.
    */
-  public function getContextDefinition() {}
+  public function getContextDefinition() {
+    return NULL;
+  }
 
 }
 

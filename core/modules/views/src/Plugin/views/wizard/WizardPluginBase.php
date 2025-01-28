@@ -42,6 +42,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @var string
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected $base_table;
 
   /**
@@ -66,6 +67,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @var array
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected $validated_views = [];
 
   /**
@@ -104,6 +106,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @var array
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected $filter_defaults = [
     'id' => NULL,
     'expose' => ['operator' => FALSE],
@@ -140,16 +143,12 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Constructs a WizardPluginBase object.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeBundleInfoInterface $bundle_info_service, MenuParentFormSelectorInterface $parent_form_selector = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeBundleInfoInterface $bundle_info_service, MenuParentFormSelectorInterface $parent_form_selector) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->bundleInfoService = $bundle_info_service;
     $this->base_table = $this->definition['base_table'];
 
-    if (!$parent_form_selector) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $parent_form_selector argument is deprecated in drupal:9.3.0 and the $parent_form_selector argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3027559', E_USER_DEPRECATED);
-      $parent_form_selector = \Drupal::service('menu.parent_form_selector');
-    }
     $this->parentFormSelector = $parent_form_selector;
 
     $entity_types = \Drupal::entityTypeManager()->getDefinitions();
@@ -503,22 +502,22 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param $parents
+   * @param array $parents
    *   An array of parent keys that point to the part of the submitted form
    *   values that are expected to contain the element's value (in the case where
    *   this form element was actually submitted). In a simple case (assuming
    *   #tree is TRUE throughout the form), if the select element is located in
    *   $form['wrapper']['select'], so that the submitted form values would
-   *   normally be found in $form_state->getValue(array('wrapper', 'select')),
-   *   you would pass array('wrapper', 'select') for this parameter.
-   * @param $default_value
+   *   normally be found in $form_state->getValue(['wrapper', 'select']),
+   *   you would pass ['wrapper', 'select'] for this parameter.
+   * @param array|string $default_value
    *   The default value to return if the #select element does not currently have
    *   a proper value set based on the submitted input.
-   * @param $element
+   * @param array $element
    *   An array representing the current version of the #select element within
    *   the form.
    *
-   * @return
+   * @return array|string
    *   The current value of the #select element. A common use for this is to feed
    *   it back into $element['#default_value'] so that the form will be rendered
    *   with the correct value selected.
@@ -1048,7 +1047,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
           'entity_type' => $data['table']['entity type'] ?? NULL,
           'entity_field' => $data[$column]['entity field'] ?? NULL,
           'plugin_id' => $data[$column]['sort']['id'],
-       ];
+        ];
       }
     }
 

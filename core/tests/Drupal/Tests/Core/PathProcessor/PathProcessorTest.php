@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\PathProcessor;
 
 use Drupal\Core\Language\Language;
@@ -35,7 +37,11 @@ class PathProcessorTest extends UnitTestCase {
    */
   protected $languageManager;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
+    parent::setUp();
 
     // Set up some languages to be used by the language-based path processor.
     $languages = [];
@@ -45,26 +51,18 @@ class PathProcessorTest extends UnitTestCase {
     }
     $this->languages = $languages;
 
-    // Create a stub configuration.
-    $language_prefixes = array_keys($this->languages);
-    $config = [
-      'url' => [
-        'prefixes' => array_combine($language_prefixes, $language_prefixes),
-      ],
-    ];
-
     // Create a language manager stub.
     $language_manager = $this->getMockBuilder('Drupal\language\ConfigurableLanguageManagerInterface')
       ->getMock();
     $language_manager->expects($this->any())
       ->method('getCurrentLanguage')
-      ->will($this->returnValue($languages['en']));
+      ->willReturn($languages['en']);
     $language_manager->expects($this->any())
       ->method('getLanguages')
-      ->will($this->returnValue($this->languages));
+      ->willReturn($this->languages);
     $language_manager->expects($this->any())
       ->method('getLanguageTypes')
-      ->will($this->returnValue([LanguageInterface::TYPE_INTERFACE]));
+      ->willReturn([LanguageInterface::TYPE_INTERFACE]);
 
     $this->languageManager = $language_manager;
   }
@@ -72,7 +70,7 @@ class PathProcessorTest extends UnitTestCase {
   /**
    * Tests resolving the inbound path to the system path.
    */
-  public function testProcessInbound() {
+  public function testProcessInbound(): void {
 
     // Create an alias manager stub.
     $alias_manager = $this->getMockBuilder(AliasManager::class)
@@ -113,18 +111,18 @@ class PathProcessorTest extends UnitTestCase {
       ->getMock();
     $negotiator->expects($this->any())
       ->method('getNegotiationMethods')
-      ->will($this->returnValue([
+      ->willReturn([
         LanguageNegotiationUrl::METHOD_ID => [
           'class' => 'Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl',
           'weight' => 9,
         ],
-      ]));
+      ]);
     $method = new LanguageNegotiationUrl();
     $method->setConfig($config_factory_stub);
     $method->setLanguageManager($this->languageManager);
     $negotiator->expects($this->any())
       ->method('getNegotiationMethodInstance')
-      ->will($this->returnValue($method));
+      ->willReturn($method);
 
     // Create a user stub.
     $current_user = $this->getMockBuilder('Drupal\Core\Session\AccountInterface')

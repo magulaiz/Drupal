@@ -96,7 +96,7 @@ class ScaffoldFileCollection implements \IteratorAggregate {
   /**
    * Scans through a list of scaffold files and determines if any has contents.
    *
-   * @param Drupal\Composer\Plugin\Scaffold\ScaffoldFileInfo[] $scaffold_files
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFileInfo[] $scaffold_files
    *   List of scaffold files, path: ScaffoldFileInfo
    *
    * @return bool
@@ -115,8 +115,7 @@ class ScaffoldFileCollection implements \IteratorAggregate {
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function getIterator() {
+  public function getIterator(): \ArrayIterator {
     return new \ArrayIterator($this->scaffoldFilesByProject);
   }
 

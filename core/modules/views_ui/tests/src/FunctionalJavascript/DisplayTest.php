@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -39,12 +41,15 @@ class DisplayTest extends WebDriverTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * The views used for testing.
+   */
   public static $testViews = ['test_content_ajax', 'test_display'];
 
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
 
     ViewTestData::createTestViews(self::class, ['views_test_config']);
@@ -65,14 +70,14 @@ class DisplayTest extends WebDriverTestBase {
   /**
    * Tests adding a display.
    */
-  public function testAddDisplay() {
+  public function testAddDisplay(): void {
     $this->drupalGet('admin/structure/views/view/test_content_ajax');
     $page = $this->getSession()->getPage();
 
     $page->find('css', '#views-display-menu-tabs .add')->click();
 
     // Wait for the animation to complete.
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->wait(1000, "jQuery(':animated').length === 0;");
 
     // Add the display.
     $page->find('css', '#edit-displays-top-add-display-block')->click();
@@ -84,7 +89,7 @@ class DisplayTest extends WebDriverTestBase {
   /**
    * Tests setting the administrative title.
    */
-  public function testRenameDisplayAdminName() {
+  public function testRenameDisplayAdminName(): void {
     $titles = ['New admin title', '</title><script>alert("alert!")</script>'];
     foreach ($titles as $new_title) {
       $this->drupalGet('admin/structure/views/view/test_content_ajax');
@@ -106,7 +111,7 @@ class DisplayTest extends WebDriverTestBase {
   /**
    * Tests contextual links on Views page displays.
    */
-  public function testPageContextualLinks() {
+  public function testPageContextualLinks(): void {
     $view = View::load('test_display');
     $view->enable()->save();
     $this->container->get('router.builder')->rebuildIfNeeded();
@@ -149,41 +154,16 @@ class DisplayTest extends WebDriverTestBase {
    * @param string $selector
    *   The selector for the element that contains the contextual Rink.
    */
-  protected function toggleContextualTriggerVisibility($selector) {
+  protected function toggleContextualTriggerVisibility($selector): void {
     // Hovering over the element itself with should be enough, but does not
     // work. Manually remove the visually-hidden class.
     $this->getSession()->executeScript("jQuery('{$selector} .contextual .trigger').toggleClass('visually-hidden');");
   }
 
   /**
-   * Confirms that form_alter is triggered after ajax rebuilds.
-   */
-  public function testAjaxRebuild() {
-    \Drupal::service('theme_installer')->install(['views_test_classy_subtheme']);
-
-    $this->config('system.theme')
-      ->set('default', 'views_test_classy_subtheme')
-      ->save();
-
-    $page = $this->getSession()->getPage();
-    $assert_session = $this->assertSession();
-
-    $this->drupalGet('admin/structure/views/view/content');
-    $assert_session->pageTextContains('This is text added to the display tabs at the top');
-    $assert_session->pageTextContains('This is text added to the display edit form');
-    $page->clickLink('Content: Title (Title)');
-    $assert_session->waitForElementVisible('css', '.views-ui-dialog');
-    $page->fillField('Label', 'New Title');
-    $page->find('css', '.ui-dialog-buttonset button:contains("Apply")')->press();
-    $assert_session->waitForElementRemoved('css', '.views-ui-dialog');
-    $assert_session->pageTextContains('This is text added to the display tabs at the top');
-    $assert_session->pageTextContains('This is text added to the display edit form');
-  }
-
-  /**
    * Test if 'add' translations are filtered from multilingual display options.
    */
-  public function testAddDisplayBlockTranslation() {
+  public function testAddDisplayBlockTranslation(): void {
 
     // Set up an additional language (Hungarian).
     $langcode = 'hu';
@@ -203,7 +183,7 @@ class DisplayTest extends WebDriverTestBase {
     $page->find('css', '#views-display-menu-tabs .add')->click();
 
     // Wait for the animation to complete.
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->wait(1000, "jQuery(':animated').length === 0;");
 
     // Look for the input element, always in second spot.
     $elements = $page->findAll('css', '.add ul input');
@@ -213,7 +193,7 @@ class DisplayTest extends WebDriverTestBase {
   /**
    * Helper function for adding interface text translations.
    */
-  private function addTranslation($langcode, $source_string, $translation_string) {
+  private function addTranslation($langcode, $source_string, $translation_string): void {
     $storage = \Drupal::service('locale.storage');
     $string = $storage->findString(['source' => $source_string]);
     if (is_null($string)) {

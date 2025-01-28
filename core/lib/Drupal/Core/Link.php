@@ -46,7 +46,7 @@ class Link implements RenderableInterface {
    *   the output of \Drupal\Component\Utility\Xss::filter() or
    *   \Drupal\Component\Render\FormattableMarkup.
    * @param \Drupal\Core\Url $url
-   *   The url object.
+   *   The \Drupal\Core\Url object.
    */
   public function __construct($text, Url $url) {
     $this->text = $text;
@@ -129,6 +129,7 @@ class Link implements RenderableInterface {
    * Returns the URL of the link.
    *
    * @return \Drupal\Core\Url
+   *   The URL object.
    */
   public function getUrl() {
     return $this->url;
@@ -161,7 +162,7 @@ class Link implements RenderableInterface {
    * @see \Drupal\Core\Link::toRenderable()
    */
   public function toString() {
-    return $this->getLinkGenerator()->generateFromLink($this);
+    return $this->getLinkGenerator()->generate($this->text, $this->url);
   }
 
   /**

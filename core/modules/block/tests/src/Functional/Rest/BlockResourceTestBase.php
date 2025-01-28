@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Functional\Rest;
 
 use Drupal\block\Entity\Block;
@@ -80,7 +82,7 @@ abstract class BlockResourceTestBase extends ConfigEntityResourceTestBase {
     $normalization = [
       'uuid' => $this->entity->uuid(),
       'id' => 'llama',
-      'weight' => NULL,
+      'weight' => 0,
       'langcode' => 'en',
       'status' => TRUE,
       'dependencies' => [
@@ -109,6 +111,7 @@ abstract class BlockResourceTestBase extends ConfigEntityResourceTestBase {
    */
   protected function getNormalizedPostEntity() {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
   /**

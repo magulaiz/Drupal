@@ -147,7 +147,6 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
           'rel' => 'canonical',
           'href' => $url->toString(),
         ],
-        TRUE,
       ];
 
       // Set the non-aliased canonical path as a default shortlink.
@@ -156,7 +155,6 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
           'rel' => 'shortlink',
           'href' => $url->setOption('alias', TRUE)->toString(),
         ],
-        TRUE,
       ];
 
       // Since this generates absolute URLs, it can only be cached "per site".
@@ -171,24 +169,6 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
    */
   public static function trustedCallbacks() {
     return ['buildTitle'];
-  }
-
-  /**
-   * Provides a page to render a single entity revision.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $_entity_revision
-   *   The Entity to be rendered. Note this variable is named $_entity_revision
-   *   rather than $entity to prevent collisions with other named placeholders
-   *   in the route.
-   * @param string $view_mode
-   *   (optional) The view mode that should be used to display the entity.
-   *   Defaults to 'full'.
-   *
-   * @return array
-   *   A render array.
-   */
-  public function viewRevision(EntityInterface $_entity_revision, $view_mode = 'full') {
-    return $this->view($_entity_revision, $view_mode);
   }
 
 }

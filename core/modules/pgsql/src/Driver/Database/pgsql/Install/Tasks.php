@@ -6,6 +6,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\Tasks as InstallTasks;
 use Drupal\Core\Database\DatabaseNotFoundException;
 
+// cspell:ignore proname trgm
+
 /**
  * Specifies installation tasks for PostgreSQL databases.
  */
@@ -16,9 +18,9 @@ class Tasks extends InstallTasks {
    *
    * The contrib extension pg_trgm is supposed to be installed.
    *
-   * @see https://www.postgresql.org/docs/10/pgtrgm.html
+   * @see https://www.postgresql.org/docs/16/pgtrgm.html
    */
-  const PGSQL_MINIMUM_VERSION = '10';
+  const PGSQL_MINIMUM_VERSION = '16';
 
   /**
    * {@inheritdoc}
@@ -39,6 +41,10 @@ class Tasks extends InstallTasks {
     ];
     $this->tasks[] = [
       'function' => 'checkStandardConformingStrings',
+      'arguments' => [],
+    ];
+    $this->tasks[] = [
+      'function' => 'checkExtensions',
       'arguments' => [],
     ];
     $this->tasks[] = [
@@ -131,7 +137,7 @@ class Tasks extends InstallTasks {
         ]));
       }
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->fail(t('Drupal could not determine the encoding of the database was set to UTF-8'));
     }
   }
@@ -155,7 +161,7 @@ class Tasks extends InstallTasks {
       try {
         $database_connection->query($query);
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
         // Ignore possible errors when the user doesn't have the necessary
         // privileges to ALTER the database.
       }
@@ -207,7 +213,7 @@ class Tasks extends InstallTasks {
       try {
         $database_connection->query($query);
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
         // Ignore possible errors when the user doesn't have the necessary
         // privileges to ALTER the database.
       }
@@ -236,6 +242,30 @@ class Tasks extends InstallTasks {
   protected function checkStandardConformingStringsSuccess() {
     $standard_conforming_strings = Database::getConnection()->query("SHOW standard_conforming_strings")->fetchField();
     return ($standard_conforming_strings == 'on');
+  }
+
+  /**
+   * Generic function to check postgresql extensions.
+   */
+  public function checkExtensions() {
+    $connection = Database::getConnection();
+    try {
+      // Enable pg_trgm for PostgreSQL 13 or higher.
+      $connection->query('CREATE EXTENSION IF NOT EXISTS pg_trgm');
+
+      if ($connection->schema()->extensionExists('pg_trgm')) {
+        $this->pass(t('PostgreSQL has the pg_trgm extension enabled.'));
+      }
+      else {
+        $this->fail(t('The <a href=":pg_trgm">pg_trgm</a> PostgreSQL extension is not present. The extension is required by Drupal 10 to improve performance when using PostgreSQL. See <a href=":requirements">Drupal database server requirements</a> for more information.', [
+          ':pg_trgm' => 'https://www.postgresql.org/docs/current/pgtrgm.html',
+          ':requirements' => 'https://www.drupal.org/docs/system-requirements/database-server-requirements',
+        ]));
+      }
+    }
+    catch (\Exception $e) {
+      $this->fail(t('Drupal could not check for the pg_trgm extension: @error.', ['@error' => $e->getMessage()]));
+    }
   }
 
   /**
