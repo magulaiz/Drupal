@@ -32,7 +32,15 @@ class RSSXSSTest extends NodeTestBase {
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,
-      'filters' => [],
+      'filters' => [
+        // A filter of the FilterInterface::TYPE_HTML_RESTRICTOR type.
+        'filter_html' => [
+          'status' => 1,
+          'settings' => [
+            'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a> <embed>',
+          ],
+        ],
+      ],
     ]);
     $full_html_format->save();
     $web_user = $this->drupalCreateUser([
