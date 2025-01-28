@@ -6,6 +6,7 @@ namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormState;
+use Drupal\mongodb\Plugin\views\filter\BooleanOperator as MongodbBooleanOperator;
 use Drupal\views\Plugin\views\area\Broken as BrokenArea;
 use Drupal\views\Plugin\views\field\Broken as BrokenField;
 use Drupal\views\Plugin\views\filter\BooleanOperator;
@@ -117,7 +118,12 @@ class ModuleTest extends ViewsKernelTestBase {
     $test_view_config = $this->config('views.view.test_redirect_view');
     $item = $test_view_config->get('display.default.display_options.filters.status');
     $handler = $this->container->get('plugin.manager.views.filter')->getHandler($item);
-    $this->assertSame(BooleanOperator::class, get_class($handler));
+    if (\Drupal::database()->driver() === 'mongodb') {
+      $this->assertSame(MongodbBooleanOperator::class, get_class($handler));
+    }
+    else {
+      $this->assertSame(BooleanOperator::class, get_class($handler));
+    }
   }
 
   /**

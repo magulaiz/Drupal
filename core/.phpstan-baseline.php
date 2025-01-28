@@ -29120,18 +29120,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mongodb/mongodb.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function mongodb_entity_type_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_field_info_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Function mongodb_query_entity_reference_alter\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29664,6 +29652,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/QueryAggregate.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\mongodb\\\\Hook\\\\MongodbHooks\\:\\:help\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Hook/MongodbHooks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\mongodb\\\\Menu\\\\MenuTreeStorage\\:\\:moveChildren\\(\\) has no return type specified\\.$#',
