@@ -100,7 +100,9 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               // Additionally, PHP handles missing traits as an unrecoverable
               // error. Register a special classloader that prevents a missing
               // trait from causing an error, but stores that it was unable to
-              // find something.
+              // find something. Because the classloader will result in the
+              // class being successfully autoloaded, store an array of classes
+              // to skip if this method is called again.
               if (array_key_exists($class, $this->skipClasses)) {
                 continue;
               }
