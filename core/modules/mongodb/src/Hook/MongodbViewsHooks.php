@@ -3,6 +3,7 @@
 namespace Drupal\mongodb\Hook;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\field\FieldStorageConfigInterface;
 
