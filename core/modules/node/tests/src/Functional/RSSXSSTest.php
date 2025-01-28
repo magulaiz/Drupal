@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 
 /**
@@ -24,16 +26,34 @@ class RSSXSSTest extends NodeTestBase {
   protected static $modules = ['filter', 'editor', 'node', 'views'];
 
   /**
-   * Tests XSS functionality with a node entity.
+   * Tests XSS functionality with a node entity in the RSS feed.
    */
   public function testNodeTitleXSS(): void {
-    // Prepare a user to do the stuff.
+    $field_storage = [
+      'field_name' => 'test_field',
+      'entity_type' => 'node',
+      'type' => 'text',
+    ];
+    FieldStorageConfig::create($field_storage)->save();
+    $field = [
+      'field_name' => $field_storage['field_name'],
+      'entity_type' => 'node',
+      'bundle' => 'article',
+    ];
+    FieldConfig::create($field)->save();
+
+    // Assign display properties for the 'rss' view mode.
+    \Drupal::service('entity_display.repository')
+      ->getViewDisplay('node', 'article', 'rss')
+      ->setComponent($field_storage['field_name'])
+      ->setComponent('body')
+      ->save();
+
     $full_html_format = FilterFormat::create([
       'format' => 'full_html',
       'name' => 'Full HTML',
       'weight' => 1,
       'filters' => [
-        // A filter of the FilterInterface::TYPE_HTML_RESTRICTOR type.
         'filter_html' => [
           'status' => 1,
           'settings' => [
@@ -49,25 +69,33 @@ class RSSXSSTest extends NodeTestBase {
       'use text format full_html',
     ]);
     $this->drupalLogin($web_user);
-    // Change formatter for 'default' mode, check that the field is displayed
-    // accordingly in 'rss' mode.
 
+    // Dangerous script tag.
     $xss = '<script>alert("xss")</script>';
+    $title = $xss . 'Confirm title.';
     $body = $xss . 'Confirm body text.';
+    $plain_text = $xss . 'Confirm plain text.';
 
     $settings = [
       'type' => 'article',
+      'title' => $title,
       'body' => [
         'value' => $body,
         'format' => 'full_html',
       ],
+      'test_field' => [
+        'value' => $plain_text,
+      ],
     ];
-    $node = $this->drupalCreateNode($settings);
+    $this->drupalCreateNode($settings);
 
     $this->drupalGet('rss.xml');
-    $res = $this->getSession()->getPage()->getContent();
+    // Ensure XSS was filtered appropriately upstream.
     $this->assertSession()->responseNotContains($xss);
-    $this->assertSession()->responseContains('Confirm body text');
+    // Ensure the created page loads with content.
+    $this->assertSession()->responseContains('Confirm title.');
+    $this->assertSession()->responseContains('Confirm body text.');
+    $this->assertSession()->responseContains('Confirm plain text.');
   }
 
 }
