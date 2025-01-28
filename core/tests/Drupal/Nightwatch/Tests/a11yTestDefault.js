@@ -26,7 +26,7 @@ const testCases = [
     options: {
       rules: {
         region: { enabled: false },
-        'link-in-text-block':  { enabled: false },
+        'link-in-text-block': { enabled: false },
       },
     },
   },
