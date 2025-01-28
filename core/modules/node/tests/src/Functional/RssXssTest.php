@@ -13,7 +13,7 @@ use Drupal\filter\Entity\FilterFormat;
  *
  * @group node
  */
-class RSSXSSTest extends NodeTestBase {
+class RssXssTest extends NodeTestBase {
 
   /**
    * {@inheritdoc}
