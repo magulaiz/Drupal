@@ -124,7 +124,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
   /**
    * Tests getting a FALSE when requesting a corrupt cache item.
    */
-  public function testCorruptCacheReturnsFalse() {
+  public function testCorruptCacheReturnsFalse(): void {
     $corrupt_backend = $this->getCacheBackend('corrupt');
     // Gets the CacheTagsChecksum tag validator.
     $cache_tags_checksum = $this->container->get('cache_tags.invalidator.checksum');
