@@ -20,6 +20,11 @@ class AttributeClassDiscovery implements DiscoveryInterface {
   protected FileCacheInterface $fileCache;
 
   /**
+   * An array of classes to skip.
+   */
+  protected array $skipClasses = [];
+
+  /**
    * Constructs a new instance.
    *
    * @param string[] $pluginNamespaces
@@ -60,7 +65,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
     $definitions = [];
 
     $autoloader = new TraitSafeClassLoader();
-    spl_autoload_register([$autoloader, 'loadClass'], TRUE);
+    spl_autoload_register([$autoloader, 'loadClass']);
 
     // Search for classes within all PSR-4 namespace locations.
     foreach ($this->getPluginNamespaces() as $namespace => $dirs) {
@@ -96,17 +101,23 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               // error. Register a special classloader that prevents a missing
               // trait from causing an error, but stores that it was unable to
               // find something.
+              if (array_key_exists($class, $this->skipClasses)) {
+                continue;
+              }
               try {
-                \class_exists($class, TRUE);
+                $class_exists = \class_exists($class, TRUE);
+                if (!$class_exists || $autoloader->hasMissingClass()) {
+                  $this->skipClasses[$class] = TRUE;
+                  $autoloader->reset();
+                  continue;
+                }
               }
               catch (\Error $e) {
+                $this->skipClasses[$class] = TRUE;
+                $autoloader->reset();
                 if (!preg_match('/(Class|Interface) .* not found$/', $e->getMessage())) {
                   throw $e;
                 }
-                continue;
-              }
-              if ($autoloader->hasMissingClass()) {
-                $autoloader->reset();
                 continue;
               }
               ['id' => $id, 'content' => $content] = $this->parseClass($class, $fileinfo);
@@ -123,8 +134,8 @@ class AttributeClassDiscovery implements DiscoveryInterface {
           }
         }
       }
-      spl_autoload_unregister([$autoloader, 'loadClass']);
     }
+    spl_autoload_unregister([$autoloader, 'loadClass']);
 
     // Plugin discovery is a memory expensive process due to reflection and the
     // number of files involved. Collect cycles at the end of discovery to be as

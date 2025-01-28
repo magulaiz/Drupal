@@ -16,12 +16,11 @@ class TraitSafeClassLoader {
 
   protected bool $missingClass = FALSE;
 
-  public function loadClass($class): false {
+  public function loadClass($class): void {
     if (str_ends_with($class, 'Trait')) {
+      $this->missingClass = TRUE;
       class_alias(StubTrait::class, $class, TRUE);
     }
-    $this->missingClass = TRUE;
-    return FALSE;
   }
 
   public function hasMissingClass(): bool {
