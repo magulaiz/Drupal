@@ -215,23 +215,21 @@ class SqlBaseTest extends MigrateTestBase {
         'destination' => ['plugin' => 'entity:entity_test'],
       ]);
 
-    // One item should be excluded by condition defined in the source plugin.
-    // See \Drupal\migrate_sql_prepare_query_test\Plugin\migrate\source\TestSqlSource.
+    // One item is excluded by the condition defined in the source plugin.
+    // @see \Drupal\migrate_sql_prepare_query_test\Plugin\migrate\source\TestSqlSource
     $count = $migration->getSourcePlugin()->count();
     $this->assertEquals(2, $count);
 
-    // Run the migration and verify that amount of migrated items matches the
-    // initial source count.
+    // Run the migration and verify that the number of migrated items matches
+    // the initial source count.
     (new MigrateExecutable($migration, new MigrateMessage()))->import();
-    $id_map = $migration->getIdMap();
-    $this->assertEquals($count, $id_map->processedCount());
+    $this->assertEquals(2, $migration->getIdMap()->processedCount());
   }
 
   /**
    * Creates a custom source table and some sample data.
    */
   protected function prepareSourceData(): void {
-    // Create a custom source table and some sample data.
     $this->sourceDatabase->schema()->createTable('migrate_source_test', [
       'fields' => [
         'id' => ['type' => 'int'],
@@ -239,20 +237,13 @@ class SqlBaseTest extends MigrateTestBase {
       ],
     ]);
 
-    $data = [
-      ['id' => 1, 'name' => 'foo'],
-      ['id' => 2, 'name' => 'bar'],
-      ['id' => 3, 'name' => 'baz'],
-    ];
-
     // Add some data in the table.
-    $query = $this->sourceDatabase->insert('migrate_source_test')->fields([
-      'id', 'name',
-    ]);
-    foreach ($data as $row) {
-      $query->values($row);
-    }
-    $query->execute();
+    $this->sourceDatabase->insert('migrate_source_test')
+      ->fields(['id', 'name'])
+      ->values(['id' => 1, 'name' => 'foo'])
+      ->values(['id' => 2, 'name' => 'bar'])
+      ->values(['id' => 3, 'name' => 'baz'])
+      ->execute();
   }
 
 }
