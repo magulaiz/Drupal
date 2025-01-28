@@ -29114,24 +29114,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mongodb/mongodb.install',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function _mongodb_block_content_has_reusable_condition\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_query_entity_reference_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_search_plugin_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Condition\\:\\:compile\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29655,6 +29637,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\mongodb\\\\Hook\\\\MongodbHooks\\:\\:help\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Hook/MongodbHooks.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\mongodb\\\\Hook\\\\MongodbHooks\\:\\:mongodb_block_content_has_reusable_condition\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/mongodb/src/Hook/MongodbHooks.php',

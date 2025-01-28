@@ -3,6 +3,9 @@
 namespace Drupal\mongodb\Hook;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\ConditionInterface;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 
@@ -78,6 +81,68 @@ class MongodbHooks {
       $info['timestamp']['class'] = 'Drupal\mongodb\Plugin\Field\FieldType\TimestampItem';
       $info['timestamp']['provider'] = 'mongodb';
     }
+  }
+
+  /**
+   * Implements hook_search_plugin_alter().
+   */
+  #[Hook('search_plugin_alter')]
+  public function searchPluginAlter(array &$plugins): void {
+    if (isset($plugins['help_search'])) {
+      $plugins['help_search']['class'] = 'Drupal\mongodb\Plugin\Search\HelpSearch';
+      $plugins['help_search']['provider'] = 'mongodb';
+    }
+    if (isset($plugins['node_search'])) {
+      $plugins['node_search']['class'] = 'Drupal\mongodb\Plugin\Search\NodeSearch';
+      $plugins['node_search']['provider'] = 'mongodb';
+    }
+    if (isset($plugins['user_search'])) {
+      $plugins['user_search']['class'] = 'Drupal\mongodb\Plugin\Search\UserSearch';
+      $plugins['user_search']['provider'] = 'mongodb';
+    }
+  }
+
+  /**
+   * Implements hook_query_TAG_alter().
+   */
+  #[Hook('query_entity_reference_alter')]
+  public function queryEntityReferenceAlter(AlterableInterface $query): void {
+    if (\Drupal::moduleHandler()->moduleExists('block_content')) {
+      if ($query instanceof SelectInterface && $query->getMetaData('entity_type') === 'block_content' && $query->hasTag('block_content_access')) {
+        if (!$this->mongodb_block_content_has_reusable_condition($query->conditions(), $query->getTables())) {
+          $query->condition('block_content_current_revision.reusable', TRUE);
+        }
+      }
+    }
+  }
+
+  /**
+   * Utility function is the MongoDB version of _block_content_has_reusable_condition.
+   */
+  protected function mongodb_block_content_has_reusable_condition(array $condition, array $tables) {
+    // If this is a condition group call this function recursively for each nested
+    // condition until a condition is found that return TRUE.
+    if (isset($condition['#conjunction'])) {
+      foreach (array_filter($condition, 'is_array') as $nested_condition) {
+        if ($this->mongodb_block_content_has_reusable_condition($nested_condition, $tables)) {
+          return TRUE;
+        }
+      }
+      return FALSE;
+    }
+    if (isset($condition['field'])) {
+      $field = $condition['field'];
+      if (is_object($field) && $field instanceof ConditionInterface) {
+        return $this->mongodb_block_content_has_reusable_condition($field->conditions(), $tables);
+      }
+      $base_table = \Drupal::entityTypeManager()->getDefinition('block_content')->getBaseTable();
+      foreach ($tables as $table) {
+        if ($table['table'] === $base_table && $field === 'block_content_current_revision.reusable') {
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
   }
 
 }
