@@ -44,7 +44,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
       }
       // Adding this to the parameters means it will get merged into the query
       // string when the route is compiled.
-      if (!$bubbleable_metadata || $this->requestStack->getCurrentRequest()->getRequestFormat() != 'html') {
+      if (!$bubbleable_metadata || $this->requestStack->getCurrentRequest()->getRequestFormat() !== 'html') {
         $parameters['token'] = $this->csrfToken->get($path);
       }
       else {
