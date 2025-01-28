@@ -25,8 +25,8 @@ const testCases = [
     // @todo remove the disabled 'region' rule in https://drupal.org/i/3318396.
     options: {
       rules: {
-        'region': { enabled: false },
-        'link-in-text-block':  { enabled: false }
+        region: { enabled: false },
+        'link-in-text-block':  { enabled: false },
       },
     },
   },
@@ -36,7 +36,7 @@ const testCases = [
     // @todo remove the disabled 'region' rule in https://drupal.org/i/3318396.
     options: {
       rules: {
-        'region': { enabled: false },
+        region: { enabled: false },
       },
     },
   },

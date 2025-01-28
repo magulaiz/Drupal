@@ -6,10 +6,7 @@ const adminTest = {
   before(browser) {
     browser.drupalInstall({ installProfile: 'standard' });
     // If an admin theme other than Claro is being used for testing, install it.
-    if (
-      argv.adminTheme &&
-      argv.adminTheme !== browser.globals.adminTheme
-    ) {
+    if (argv.adminTheme && argv.adminTheme !== browser.globals.adminTheme) {
       browser.drupalEnableTheme(argv.adminTheme, true);
     }
   },
@@ -34,7 +31,7 @@ const testCases = [
     // @todo remove the disabled 'region' rule in https://drupal.org/i/3318396.
     options: {
       rules: {
-        'region': { enabled: false },
+        region: { enabled: false },
       },
     },
   },
@@ -44,7 +41,7 @@ const testCases = [
     // @todo remove the disabled 'region' rule in https://drupal.org/i/3318396.
     options: {
       rules: {
-        'region': { enabled: false },
+        region: { enabled: false },
       },
     },
   },
@@ -56,7 +53,7 @@ const testCases = [
       rules: {
         'empty-table-header': { enabled: false },
         'landmark-unique': { enabled: false },
-        'region': { enabled: false },
+        region: { enabled: false },
       },
     },
   },
@@ -67,7 +64,7 @@ const testCases = [
     options: {
       rules: {
         'landmark-unique': { enabled: false },
-        'region': { enabled: false },
+        region: { enabled: false },
       },
     },
   },
@@ -78,7 +75,7 @@ const testCases = [
     options: {
       rules: {
         'landmark-unique': { enabled: false },
-        'region': { enabled: false },
+        region: { enabled: false },
       },
     },
   },
@@ -90,7 +87,7 @@ const testCases = [
       rules: {
         'empty-table-header': { enabled: false },
         'landmark-unique': { enabled: false },
-        'region': { enabled: false },
+        region: { enabled: false },
       },
     },
   },
@@ -104,7 +101,7 @@ const testCases = [
         'color-contrast': { enabled: false },
         'duplicate-id-active': { enabled: false },
         'landmark-unique': { enabled: false },
-        'region': { enabled: false },
+        region: { enabled: false },
       },
     },
   },
