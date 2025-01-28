@@ -9,7 +9,6 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Access\RouteProcessorCsrf;
-use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
@@ -19,8 +18,6 @@ use Symfony\Component\Routing\Route;
  * @group Access
  */
 class RouteProcessorCsrfTest extends UnitTestCase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * The mock CSRF token generator.
