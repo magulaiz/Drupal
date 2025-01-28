@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\node\Functional;
+namespace Drupal\FunctionalTests\Test;
 
+use Drupal\Tests\BrowserTestBase;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
@@ -13,7 +14,7 @@ use Drupal\filter\Entity\FilterFormat;
  *
  * @group node
  */
-class RssXssTest extends NodeTestBase {
+class RssXssTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
@@ -28,7 +29,8 @@ class RssXssTest extends NodeTestBase {
   /**
    * Tests XSS functionality with a node entity in the RSS feed.
    */
-  public function testNodeTitleXSS(): void {
+  public function testRssXss(): void {
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     $field_storage = [
       'field_name' => 'test_field',
       'entity_type' => 'node',
