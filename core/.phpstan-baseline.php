@@ -29144,72 +29144,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mongodb/mongodb.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function mongodb_field_views_data_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_views_data_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_views_data_mongodb_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_views_plugins_argument_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_views_plugins_field_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_views_plugins_filter_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_views_plugins_join_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_views_plugins_query_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_views_plugins_relationship_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_views_plugins_row_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function mongodb_views_plugins_sort_alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Condition\\:\\:compile\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29730,6 +29664,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/QueryAggregate.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\$type of anonymous function has invalid type Drupal\\\\mongodb\\\\Hook\\\\EntityTypeInterface\\.$#',
+	'identifier' => 'class.notFound',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Hook/MongodbViewsHooks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\mongodb\\\\Menu\\\\MenuTreeStorage\\:\\:moveChildren\\(\\) has no return type specified\\.$#',
