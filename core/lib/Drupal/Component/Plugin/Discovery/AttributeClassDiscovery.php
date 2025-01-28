@@ -59,6 +59,9 @@ class AttributeClassDiscovery implements DiscoveryInterface {
   public function getDefinitions() {
     $definitions = [];
 
+    $autoloader = new TraitSafeClassLoader();
+    spl_autoload_register([$autoloader, 'loadClass'], TRUE);
+
     // Search for classes within all PSR-4 namespace locations.
     foreach ($this->getPluginNamespaces() as $namespace => $dirs) {
       foreach ($dirs as $dir) {
@@ -81,18 +84,6 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               $sub_path = $iterator->getSubIterator()->getSubPath();
               $sub_path = $sub_path ? str_replace(DIRECTORY_SEPARATOR, '\\', $sub_path) . '\\' : '';
               $class = $namespace . '\\' . $sub_path . $fileinfo->getBasename('.php');
-              try {
-                ['id' => $id, 'content' => $content] = $this->parseClass($class, $fileinfo);
-                if ($id) {
-                  $definitions[$id] = $content;
-                  // Explicitly serialize this to create a new object instance.
-                  $this->fileCache->set($fileinfo->getPathName(), ['id' => $id, 'content' => serialize($content)]);
-                }
-                else {
-                  // Store a NULL object, so that the file is not parsed again.
-                  $this->fileCache->set($fileinfo->getPathName(), [NULL]);
-                }
-              }
               // Plugins may rely on Attribute classes defined by modules that
               // are not installed. In such a case, a 'class not found' error
               // may be thrown from reflection. However, this is an unavoidable
@@ -101,15 +92,38 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               // so that it is scanned each time. This ensures that the plugin
               // definition will be found if the module it requires is
               // enabled.
+              // Additionally, PHP handles missing traits as an unrecoverable
+              // error. Register a special classloader that prevents a missing
+              // trait from causing an error, but stores that it was unable to
+              // find something.
+              try {
+                \class_exists($class, TRUE);
+              }
               catch (\Error $e) {
                 if (!preg_match('/(Class|Interface) .* not found$/', $e->getMessage())) {
                   throw $e;
                 }
+                continue;
+              }
+              if ($autoloader->hasMissingClass()) {
+                $autoloader->reset();
+                continue;
+              }
+              ['id' => $id, 'content' => $content] = $this->parseClass($class, $fileinfo);
+              if ($id) {
+                $definitions[$id] = $content;
+                // Explicitly serialize this to create a new object instance.
+                $this->fileCache->set($fileinfo->getPathName(), ['id' => $id, 'content' => serialize($content)]);
+              }
+              else {
+                // Store a NULL object, so that the file is not parsed again.
+                $this->fileCache->set($fileinfo->getPathName(), [NULL]);
               }
             }
           }
         }
       }
+      spl_autoload_unregister([$autoloader, 'loadClass']);
     }
 
     // Plugin discovery is a memory expensive process due to reflection and the
