@@ -22,7 +22,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
   /**
    * An array of classes to skip.
    */
-  static protected array $skipClasses = [];
+  protected static array $skipClasses = [];
 
   /**
    * Constructs a new instance.
