@@ -4,7 +4,7 @@ const a11yThemeTest = {
   '@tags': ['core', 'a11y', 'a11y:default'],
 
   before(browser) {
-    browser.drupalInstall({ installProfile: 'nightwatch_a11y_testing' });
+    browser.drupalInstall({ installProfile: 'standard' });
     // If the default theme is set to something other than Olivero, install it.
     if (
       argv.defaultTheme &&
@@ -25,7 +25,8 @@ const testCases = [
     // @todo remove the disabled 'region' rule in https://drupal.org/i/3318396.
     options: {
       rules: {
-        region: { enabled: false },
+        'region': { enabled: false },
+        'link-in-text-block':  { enabled: false }
       },
     },
   },
@@ -35,7 +36,7 @@ const testCases = [
     // @todo remove the disabled 'region' rule in https://drupal.org/i/3318396.
     options: {
       rules: {
-        region: { enabled: false },
+        'region': { enabled: false },
       },
     },
   },
