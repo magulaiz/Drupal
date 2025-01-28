@@ -29666,12 +29666,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/QueryAggregate.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\$type of anonymous function has invalid type Drupal\\\\mongodb\\\\Hook\\\\EntityTypeInterface\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/Hook/MongodbViewsHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\mongodb\\\\Menu\\\\MenuTreeStorage\\:\\:moveChildren\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
