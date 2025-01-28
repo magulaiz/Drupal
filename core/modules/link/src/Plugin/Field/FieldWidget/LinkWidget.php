@@ -192,7 +192,7 @@ class LinkWidget extends WidgetBase {
           $display_uri = static::getUriAsDisplayableString($item->uri);
         }
       }
-      catch (\InvalidArgumentException $e) {
+      catch (\InvalidArgumentException) {
         // If $item->uri is invalid, show value as is, so the user can see what
         // to edit.
         // @todo Add logging here in https://www.drupal.org/project/drupal/issues/3348020
@@ -234,12 +234,12 @@ class LinkWidget extends WidgetBase {
     // If the field is configured to allow both internal and external links,
     // show a useful description.
     elseif ($this->supportsExternalLinks() && $this->supportsInternalLinks()) {
-      $element['uri']['#description'] = $this->t('Start typing the title of a piece of content to select it. You can also enter an internal path such as %add-node or an external URL such as %url. Enter %front to link to the front page. Enter %nolink to display link text only. Enter %button to display keyboard-accessible link text only.', ['%front' => '<front>', '%add-node' => '/node/add', '%url' => 'http://example.com', '%nolink' => '<nolink>', '%button' => '<button>']);
+      $element['uri']['#description'] = $this->t('Start typing the title of a piece of content to select it. You can also enter an internal path such as %add-node or an external URL such as %url. Enter %front to link to the front page. Enter %nolink to display link text only. Enter %button to display keyboard-accessible link text only.', ['%front' => '<front>', '%add-node' => '/node/add', '%url' => 'https://example.com', '%nolink' => '<nolink>', '%button' => '<button>']);
     }
     // If the field is configured to allow only external links, show a useful
     // description.
     elseif ($this->supportsExternalLinks() && !$this->supportsInternalLinks()) {
-      $element['uri']['#description'] = $this->t('This must be an external URL such as %url.', ['%url' => 'http://example.com']);
+      $element['uri']['#description'] = $this->t('This must be an external URL such as %url.', ['%url' => 'https://example.com']);
     }
 
     // Make uri required on the front-end when title filled-in.
@@ -445,6 +445,7 @@ class LinkWidget extends WidgetBase {
       if (isset($parameters['@uri'])) {
         $parameters['@uri'] = static::getUriAsDisplayableString($parameters['@uri']);
         $violations->set($offset, new ConstraintViolation(
+          // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
           $this->t($violation->getMessageTemplate(), $parameters),
           $violation->getMessageTemplate(),
           $parameters,

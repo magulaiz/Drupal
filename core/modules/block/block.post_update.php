@@ -11,7 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 /**
  * Implements hook_removed_post_updates().
  */
-function block_removed_post_updates() {
+function block_removed_post_updates(): array {
   return [
     'block_post_update_disable_blocks_with_missing_contexts' => '9.0.0',
     'block_post_update_disabled_region_update' => '9.0.0',
@@ -21,15 +21,14 @@ function block_removed_post_updates() {
 }
 
 /**
- * Add 'base_route_title' setting for page title blocks.
+ * Ensures that all block weights are integers.
  */
-function block_post_update_add_base_route_title_page_title(&$sandbox = NULL): void {
+function block_post_update_make_weight_integer(array &$sandbox = []): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)
-    ->update($sandbox, 'block', function (BlockInterface $block) {
-      if ($block->get('plugin') === 'page_title_block') {
-        $settings = $block->get('settings');
-        $settings['base_route_title'] = $block->get('theme') === 'claro';
-        $block->set('settings', $settings);
+    ->update($sandbox, 'block', function (BlockInterface $block): bool {
+      $weight = $block->getWeight();
+      if (!is_int($weight)) {
+        $block->setWeight($weight);
         return TRUE;
       }
       return FALSE;

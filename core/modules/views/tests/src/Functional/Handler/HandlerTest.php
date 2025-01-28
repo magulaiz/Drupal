@@ -30,9 +30,7 @@ class HandlerTest extends ViewTestBase {
   public static $testViews = ['test_view', 'test_view_handler_weight', 'test_handler_relationships', 'test_handler_test_access', 'test_filter_in_operator_ui'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views_ui', 'comment', 'node'];
 
@@ -78,7 +76,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the breakString method.
    */
-  public function testBreakString() {
+  public function testBreakString(): void {
     // Check defaults.
     $this->assertEquals((object) ['value' => [], 'operator' => NULL], HandlerBase::breakString(''));
 
@@ -205,7 +203,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the order of handlers is the same before and after saving.
    */
-  public function testHandlerWeights() {
+  public function testHandlerWeights(): void {
     $handler_types = ['fields', 'filters', 'sorts'];
 
     $view = Views::getView('test_view_handler_weight');
@@ -231,7 +229,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the relationship ui for field/filter/argument/relationship.
    */
-  public function testRelationshipUI() {
+  public function testRelationshipUI(): void {
     $views_admin = $this->drupalCreateUser(['administer views']);
     $this->drupalLogin($views_admin);
 
@@ -295,7 +293,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the relationship method on the base class.
    */
-  public function testSetRelationship() {
+  public function testSetRelationship(): void {
     $view = Views::getView('test_handler_relationships');
     $view->setDisplay();
     // Setup a broken relationship.
@@ -334,7 +332,13 @@ class HandlerTest extends ViewTestBase {
    *
    * @see \Drupal\views\Plugin\views\HandlerBase::placeholder()
    */
-  public function testPlaceholder() {
+  public function testPlaceholder(): void {
+    // Change the test view to use the test field plugin which has the
+    // additional get placeholder method.
+    $config = $this->config('views.view.test_view');
+    $config->set('display.default.display_options.fields.name.plugin_id', 'test_field');
+    $config->save();
+
     $view = Views::getView('test_view');
     $view->initHandlers();
     $view->initQuery();
@@ -344,7 +348,7 @@ class HandlerTest extends ViewTestBase {
     $field = $handler->field;
     $string = ':' . $table . '_' . $field;
 
-    // Make sure the placeholder variables are like expected.
+    // Make sure the placeholder variables contain the expected values.
     $this->assertEquals($string, $handler->getPlaceholder());
     $this->assertEquals($string . 1, $handler->getPlaceholder());
     $this->assertEquals($string . 2, $handler->getPlaceholder());
@@ -366,12 +370,12 @@ class HandlerTest extends ViewTestBase {
    *
    * @see views_test_data_handler_test_access_callback
    */
-  public function testAccess() {
+  public function testAccess(): void {
     $view = Views::getView('test_handler_test_access');
     $views_data = $this->viewsData();
     $views_data = $views_data['views_test_data'];
 
-    // Enable access to callback only field and deny for callback + arguments.
+    // Enable access only to the callback field and deny access for the callback and the arguments.
     $this->config('views_test_data.tests')->set('handler_access_callback', TRUE)->save();
     $this->config('views_test_data.tests')->set('handler_access_callback_argument', FALSE)->save();
     $view->initDisplay();
@@ -384,7 +388,7 @@ class HandlerTest extends ViewTestBase {
       }
     }
 
-    // Enable access to the callback + argument handlers and deny for callback.
+    // Enable access to the callback and the argument handlers and deny access for the callback.
     $this->config('views_test_data.tests')->set('handler_access_callback', FALSE)->save();
     $this->config('views_test_data.tests')->set('handler_access_callback_argument', TRUE)->save();
     $view->destroy();
