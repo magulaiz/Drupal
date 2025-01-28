@@ -21,8 +21,8 @@ class MongodbHooks {
         $output = '';
         $output .= '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The MongoDB module provides the connection between Drupal and a MongoDB database. For more information, see the <a href=":mongodb">online documentation for the MongoDB module</a>.', [
-            ':mongodb' => 'https://git.drupalcode.org/project/mongodb/-/tree/3.x?ref_type=heads',
-          ]) . '</p>';
+          ':mongodb' => 'https://git.drupalcode.org/project/mongodb/-/tree/3.x?ref_type=heads',
+        ]) . '</p>';
         return $output;
     }
   }
@@ -79,6 +79,5 @@ class MongodbHooks {
       $info['timestamp']['provider'] = 'mongodb';
     }
   }
-
 
 }
