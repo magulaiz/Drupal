@@ -527,13 +527,18 @@ function install_begin_request($class_loader, &$install_state) {
   // Verify the last completed task in the database, if there is one.
   $task = install_verify_completed_task();
 
-  // Ensure that the active configuration is empty before installation starts.
+  // Ensure that the active configuration is empty and
+  // the configuration 'system.install' doesn't exist
+  // before installation starts.
   if ($install_state['config_verified'] && empty($task)) {
-    if (count($kernel->getConfigStorage()->listAll())) {
+    if (count($kernel->getConfigStorage()->listAll()) && !$kernel->getConfigStorage()->exists('system.install')) {
       $task = NULL;
       throw new AlreadyInstalledException($container->get('string_translation'));
     }
   }
+
+  // Create a new config storage for the installer.
+  $kernel->getConfigStorage()->write('system.install', []);
 
   // Modify the installation state as appropriate.
   $install_state['completed_task'] = $task;
@@ -1922,6 +1927,9 @@ function install_finished(&$install_state) {
     '@drupal' => drupal_install_profile_distribution_name(),
   ]);
   \Drupal::messenger()->addStatus($success_message);
+
+  // Remove the installer config.
+  \Drupal::configFactory()->getEditable('system.install')->delete();
 
   // Record when this install ran.
   \Drupal::state()->set('install_time', \Drupal::time()->getRequestTime());

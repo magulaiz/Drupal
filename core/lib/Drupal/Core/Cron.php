@@ -6,6 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\DelayableQueueInterface;
 use Drupal\Core\Queue\DelayedRequeueException;
@@ -38,7 +39,7 @@ class Cron implements CronInterface {
    * Constructs a cron object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler
+   *   The module handler.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock service.
    * @param \Drupal\Core\Queue\QueueFactory $queueFactory
@@ -76,6 +77,12 @@ class Cron implements CronInterface {
    * {@inheritdoc}
    */
   public function run() {
+    // We can only run cron if the installation is not running.
+    if (InstallerKernel::installationAttempted()) {
+      $this->logger->warning('Attempting to run cron while the website is not fully installed.');
+      return FALSE;
+    }
+
     // Allow execution to continue even if the request gets cancelled.
     @ignore_user_abort(TRUE);
 
@@ -107,7 +114,7 @@ class Cron implements CronInterface {
       // Add watchdog message.
       $this->logger->info('Cron run completed.');
 
-      // Return TRUE so other functions can check if it did run successfully
+      // Return TRUE so other functions can check if it did run successfully.
       $return = TRUE;
     }
 
