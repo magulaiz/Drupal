@@ -138,7 +138,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
     \Drupal::database()->insert('cache_corrupt')->fields([
       'cid' => $cid,
       'created' => round(microtime(TRUE), 3),
-      'data' => substr(serialize($this->randomObject()), 0, -5), // Corrupting the serialized data.
+      'data' => substr(serialize($this->randomObject()), 0, -5),
       'expire' => CacheBackendInterface::CACHE_PERMANENT,
       'tags' => '',
       'serialized' => 1,
@@ -146,7 +146,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
     ])->execute();
 
     $this->assertFalse($corrupt_backend->get($cid), "Returns FALSE when requesting the corrupt object.");
-}
+  }
 
   /**
    * Test the service "cache_tags.invalidator.checksum" is backend overridable.
