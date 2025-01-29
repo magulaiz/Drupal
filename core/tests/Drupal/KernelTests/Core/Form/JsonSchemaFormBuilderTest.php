@@ -28,7 +28,7 @@ class JsonSchemaFormBuilderTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installConfig('system');
@@ -39,7 +39,7 @@ class JsonSchemaFormBuilderTest extends KernelTestBase {
   /**
    * @dataProvider providerTestJsonSchemaForms
    */
-  public function testJsonSchemaForms($form_arg, $expected) {
+  public function testJsonSchemaForms($form_arg, $expected): void {
     $form = \Drupal::formBuilder()->getForm($form_arg);
     $actual = $this->formBuilder->build($form);
 
@@ -55,7 +55,7 @@ class JsonSchemaFormBuilderTest extends KernelTestBase {
   /**
    * Provides test data for ::testJsonSchemaForms().
    */
-  public function providerTestJsonSchemaForms() {
+  public static function providerTestJsonSchemaForms(): array {
     $data = [];
     $data[] = [
       TestForm::class,

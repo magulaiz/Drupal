@@ -2,14 +2,14 @@
 
 namespace Drupal\Core\Routing\Enhancer;
 
-use Drupal\Core\Routing\Enhancer\RouteEnhancerInterface;
+use Drupal\Core\Routing\EnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
  * @todo.
  */
-class JsonSchemaFormRouteEnhancer implements RouteEnhancerInterface {
+class JsonSchemaFormRouteEnhancer implements EnhancerInterface {
 
   /**
    * {@inheritdoc}
