@@ -136,13 +136,13 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
 
     // Insert a corrupted cache item into the database.
     \Drupal::database()->insert('cache_corrupt')->fields([
-        'cid' => $cid,
-        'created' => round(microtime(TRUE), 3),
-        'data' => substr(serialize($this->randomObject()), 0, -5), // Corrupting the serialized data.
-        'expire' => CacheBackendInterface::CACHE_PERMANENT,
-        'tags' => '',
-        'serialized' => 1,
-        'checksum' => $cache_tags_checksum->getCurrentChecksum([]),
+      'cid' => $cid,
+      'created' => round(microtime(TRUE), 3),
+      'data' => substr(serialize($this->randomObject()), 0, -5), // Corrupting the serialized data.
+      'expire' => CacheBackendInterface::CACHE_PERMANENT,
+      'tags' => '',
+      'serialized' => 1,
+      'checksum' => $cache_tags_checksum->getCurrentChecksum([]),
     ])->execute();
 
     $this->assertFalse($corrupt_backend->get($cid), "Returns FALSE when requesting the corrupt object.");
