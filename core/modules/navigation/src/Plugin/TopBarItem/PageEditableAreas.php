@@ -19,14 +19,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   region: TopBarRegion::Tools,
   label: new TranslatableMarkup('Editable areas'),
 )]
-class PageEditableAreas extends TopBarItemBase implements ContainerFactoryPluginInterface  {
+class PageEditableAreas extends TopBarItemBase implements ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;
 
   public function __construct(
     array $configuration,
-          $plugin_id,
-          $plugin_definition,
+    $plugin_id,
+    $plugin_definition,
     private EntityRouteHelper $entityRouteHelper,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
