@@ -42023,18 +42023,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function taxonomy_build_node_index\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/taxonomy.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function taxonomy_delete_node_index\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/taxonomy.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function taxonomy_term_is_page\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/taxonomy.module',
