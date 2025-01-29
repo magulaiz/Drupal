@@ -514,11 +514,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->classLoader->setApcuPrefix($prefix);
     }
 
-    // @todo get this list from the container.
-    $moved_classes = [
-      'Drupal\Core\StringTranslation\TranslationWrapper' => 'Drupal\Core\StringTranslation\TranslatableMarkup',
-    ];
-    $bc_class_loader = new BackwardsCompatibilityClassLoader($moved_classes);
+    $bc_class_loader = new BackwardsCompatibilityClassLoader($this->container->getParameterBag());
     spl_autoload_register([$bc_class_loader, 'loadClass']);
 
     $this->booted = TRUE;
