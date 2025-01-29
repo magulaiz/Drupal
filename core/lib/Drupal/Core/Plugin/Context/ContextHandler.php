@@ -13,22 +13,9 @@ use Drupal\Core\Plugin\ContextAwarePluginInterface;
  */
 class ContextHandler implements ContextHandlerInterface {
 
-  /**
-   * The context repository.
-   *
-   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
-   */
-  protected $contextRepository;
-
-  /**
-   * Constructs a new ContextHandler.
-   *
-   * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
-   *   The context repository.
-   */
-  public function __construct(ContextRepositoryInterface $context_repository) {
-    $this->contextRepository = $context_repository;
-  }
+  public function __construct(
+    protected ContextRepositoryInterface $contextRepository,
+  ) {}
 
   /**
    * {@inheritdoc}

@@ -36,14 +36,14 @@ class ContextHandlerTest extends UnitTestCase {
    *
    * @var \Drupal\Core\Plugin\Context\ContextHandler
    */
-  protected $contextHandler;
+  protected ContextHandler $contextHandler;
 
   /**
    * The context repository.
    *
    * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
    */
-  protected $contextRepository;
+  protected ContextRepositoryInterface $contextRepository;
 
   /**
    * {@inheritdoc}
