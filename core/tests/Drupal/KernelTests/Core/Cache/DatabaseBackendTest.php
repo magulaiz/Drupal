@@ -55,21 +55,12 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
     // can test cache ID normalization.
     $cid_long = str_repeat('愛€', 500);
     $cached_value_long = $this->randomMachineName();
-    $backend->set($cid_long, $cached_value_long);
-    $this->assertSame(
-      $cached_value_long,
-      $backend->get($cid_long)->data,
-      "Backend contains the correct value for a long, non-ASCII cache ID."
-    );
+    $this->assertSame($cached_value_long, $backend->get($cid_long)->data, "Backend contains the correct value for long, non-ASCII cache id.");
 
     $cid_short = '愛1€';
     $cached_value_short = $this->randomMachineName();
     $backend->set($cid_short, $cached_value_short);
-    $this->assertSame(
-      $cached_value_short,
-      $backend->get($cid_short)->data,
-      "Backend contains the correct value for a short, non-ASCII cache ID."
-    );
+    $this->assertSame($cached_value_short, $backend->get($cid_short)->data, "Backend contains the correct value for short, non-ASCII cache id.");
 
     // Set multiple items to test exceeding the chunk size.
     $backend->deleteAll();
@@ -78,12 +69,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
       $items["test$i"]['data'] = $i;
     }
     $backend->setMultiple($items);
-
-    // Assert the correct number of rows in the cache table.
-    $this->assertSame(
-      DatabaseBackend::MAX_ITEMS_PER_CACHE_SET + 1,
-      $this->getNumRows()
-    );
+    $this->assertSame(DatabaseBackend::MAX_ITEMS_PER_CACHE_SET + 1, $this->getNumRows());
   }
 
   /**
@@ -139,26 +125,28 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    */
   public function testCorruptCacheReturnsFalse(): void {
     $corrupt_backend = $this->getCacheBackend('corrupt');
-    // Gets the CacheTagsChecksum tag validator.
     $cache_tags_checksum = $this->container->get('cache_tags.invalidator.checksum');
 
-    // All DatabaseBackend cache tables should be prefixed with 'cache_'. As
-    // specified on \Drupal\Core\Cache\DatabaseBackend::__construct.
     $cid = $this->randomMachineName();
+    $valid_data = $this->randomObject();
 
-    // We insert a corrupted cache item into the cache table.
+    $corrupt_backend->set($cid, $valid_data, CacheBackendInterface::CACHE_PERMANENT);
+
+    $this->assertEquals($valid_data, $corrupt_backend->get($cid)->data, "Valid cache item is correctly retrieved.");
+
+    // Insert a corrupted cache item into the database.
     \Drupal::database()->insert('cache_corrupt')->fields([
-      'cid' => $cid,
-      'created' => round(microtime(TRUE), 3),
-      'data' => substr(serialize($this->randomObject()), 0, -5),
-      'expire' => CacheBackendInterface::CACHE_PERMANENT,
-      'tags' => '',
-      'serialized' => 1,
-      'checksum' => $cache_tags_checksum->getCurrentChecksum([]),
+        'cid' => $cid,
+        'created' => round(microtime(TRUE), 3),
+        'data' => substr(serialize($this->randomObject()), 0, -5), // Corrupting the serialized data.
+        'expire' => CacheBackendInterface::CACHE_PERMANENT,
+        'tags' => '',
+        'serialized' => 1,
+        'checksum' => $cache_tags_checksum->getCurrentChecksum([]),
     ])->execute();
 
-    $this->assertFalse($corrupt_backend->get($cid), "Returns a FALSE when requesting the corrupt object.");
-  }
+    $this->assertFalse($corrupt_backend->get($cid), "Returns FALSE when requesting the corrupt object.");
+}
 
   /**
    * Test the service "cache_tags.invalidator.checksum" is backend overridable.
