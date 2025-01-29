@@ -109,6 +109,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
                 self::$skipClasses[$class] = TRUE;
                 $autoloader->reset();
                 if (!preg_match('/(Class|Interface) .* not found$/', $e->getMessage())) {
+                  spl_autoload_unregister([$autoloader, 'loadClass']);
                   throw $e;
                 }
                 continue;
