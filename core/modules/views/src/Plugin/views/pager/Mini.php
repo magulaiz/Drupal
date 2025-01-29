@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\views\Plugin\views\pager;
+
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Attribute\ViewsPager;
@@ -34,7 +35,8 @@ class Mini extends SqlBase {
 
     return $options;
   }
-/**
+
+  /**
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
@@ -69,6 +71,7 @@ class Mini extends SqlBase {
       '#default_value' => $this->options['tags']['next'],
     ];
   }
+
   /**
    * {@inheritdoc}
    */
@@ -78,7 +81,6 @@ class Mini extends SqlBase {
     }
     return $this->formatPlural($this->options['items_per_page'], 'Mini pager, @count item', 'Mini pager, @count items', ['@count' => $this->options['items_per_page']]);
   }
-
 
   /**
    * {@inheritdoc}
