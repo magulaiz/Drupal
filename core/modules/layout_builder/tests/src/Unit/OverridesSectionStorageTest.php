@@ -467,7 +467,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestSave
    */
-  public function testSave($is_revisionable, $has_bundle_entity_type, $is_revisionable_bundle, $should_create_revision, $should_save_revision) {
+  public function testSave($is_revisionable, $has_bundle_entity_type, $is_revisionable_bundle, $should_create_revision, $should_save_revision): void {
     $entity_type = $this->prophesize(EntityTypeInterface::class);
     $entity_type->isRevisionable()->willReturn($is_revisionable);
 
@@ -514,7 +514,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
   /**
    * Provides data for ::testSave().
    */
-  public function providerTestSave() {
+  public static function providerTestSave(): array {
     return [
       // The only case in which a new revision should be created is all
       // arguments to ::testSave() are TRUE.

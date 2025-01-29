@@ -539,7 +539,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
   /**
    * Tests that reverting the layout to defaults creates a new revision.
    */
-  public function testRevertingLayoutRevision() {
+  public function testRevertingLayoutRevision(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

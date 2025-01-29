@@ -3,7 +3,9 @@
 namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
 use Drupal\user\Entity\User;
 
 /**
@@ -13,24 +15,26 @@ use Drupal\user\Entity\User;
  */
 class RevisionsTest extends BrowserTestBase {
 
+  use EnableLayoutBuilderTrait;
+
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
     'layout_builder',
-    'block',
     'node',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
-
-    // @todo The Layout Builder UI relies on local tasks; fix in
-    //   https://www.drupal.org/project/drupal/issues/2917777.
-    $this->drupalPlaceBlock('local_tasks_block');
 
     // Create two content types.
     $this->createContentType(['type' => 'bundle_with_revisions', 'new_revision' => TRUE]);
@@ -40,23 +44,23 @@ class RevisionsTest extends BrowserTestBase {
   /**
    * Tests that default revision settings are respected.
    */
-  public function testRevisions() {
+  public function testRevisions(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
-      'administer node display',
-      'administer node fields',
-      'administer user display',
-      'administer user fields',
+      'access user profiles',
     ]));
-    $bundle_field_ui_prefixes = [
-      'admin/structure/types/manage/bundle_with_revisions',
-      'admin/structure/types/manage/bundle_without_revisions',
-      'admin/config/people/accounts',
-    ];
-    foreach ($bundle_field_ui_prefixes as $prefix) {
-      $this->drupalPostForm("$prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
-      $this->drupalPostForm("$prefix/display/default", ['layout[allow_custom]' => TRUE], 'Save');
-    }
+
+    $display = LayoutBuilderEntityViewDisplay::create([
+      'targetEntityType' => 'user',
+      'bundle' => 'user',
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+    $display->save();
+    $this->enableLayoutBuilder($display);
+    $this->enableLayoutBuilder(LayoutBuilderEntityViewDisplay::load('node.bundle_with_revisions.default'));
+    $this->enableLayoutBuilder(LayoutBuilderEntityViewDisplay::load('node.bundle_without_revisions.default'));
+
     // Create a node of the bundle that will have new revisions by default.
     $revision_node = $this->createNode([
       'type' => 'bundle_with_revisions',
@@ -104,9 +108,9 @@ class RevisionsTest extends BrowserTestBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    */
-  protected function saveLayoutOverride(EntityInterface $entity) {
-    $this->drupalGet($entity->toUrl()->toString() . "/layout");
-    $this->clickLink('Save Layout');
+  protected function saveLayoutOverride(EntityInterface $entity): void {
+    $this->drupalGet($entity->toUrl()->toString() . '/layout');
+    $this->getSession()->getPage()->pressButton('Save layout');
     $this->assertSession()->pageTextContains('The layout override has been saved.');
   }
 
