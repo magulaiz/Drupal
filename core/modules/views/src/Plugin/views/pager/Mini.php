@@ -1,7 +1,7 @@
 <?php
 
 namespace Drupal\views\Plugin\views\pager;
-
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Attribute\ViewsPager;
 
@@ -26,13 +26,49 @@ class Mini extends SqlBase {
    */
   public function defineOptions() {
     $options = parent::defineOptions();
+    $options['items_per_page'] = ['default' => 9];
+    $options['offset'] = ['default' => 0];
 
     $options['tags']['contains']['previous']['default'] = '‹‹';
     $options['tags']['contains']['next']['default'] = '››';
 
     return $options;
   }
+/**
+   * {@inheritdoc}
+   */
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
+    parent::buildOptionsForm($form, $form_state);
+    $pager_text = $this->displayHandler->getPagerText();
+    $form['items_per_page'] = [
+      '#title' => $pager_text['items per page title'],
+      '#type' => 'number',
+      '#required' => TRUE,
+      '#min' => 0,
+      '#description' => $pager_text['items per page description'],
+      '#default_value' => $this->options['items_per_page'],
+    ];
 
+    $form['offset'] = [
+      '#type' => 'number',
+      '#required' => TRUE,
+      '#min' => 0,
+      '#title' => $this->t('Offset (number of items to skip)'),
+      '#description' => $this->t('For example, set this to 3 and the first 3 items will not be displayed.'),
+      '#default_value' => $this->options['offset'],
+    ];
+    $form['tags']['previous'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Previous page link text'),
+      '#default_value' => $this->options['tags']['previous'],
+    ];
+
+    $form['tags']['next'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Next page link text'),
+      '#default_value' => $this->options['tags']['next'],
+    ];
+  }
   /**
    * {@inheritdoc}
    */
@@ -42,6 +78,7 @@ class Mini extends SqlBase {
     }
     return $this->formatPlural($this->options['items_per_page'], 'Mini pager, @count item', 'Mini pager, @count items', ['@count' => $this->options['items_per_page']]);
   }
+
 
   /**
    * {@inheritdoc}
