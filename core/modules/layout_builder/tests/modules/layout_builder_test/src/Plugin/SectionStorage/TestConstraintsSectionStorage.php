@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\layout_builder_test\Plugin\SectionStorage;
 
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
@@ -35,7 +37,7 @@ class TestConstraintsSectionStorage extends SectionStorageBase {
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {}
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE) {}
 
   /**
    * {@inheritdoc}
