@@ -37,7 +37,7 @@ class BackwardsCompatibilityClassLoaderTest extends KernelTestBase {
    */
   public function testModuleMovedClass():  void {
     // @phpstan-ignore class.notFound
-    $this->expectDeprecation('Class ' . Foo::class . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use Drupal\Component\Utility\Random instead.');
+    $this->expectDeprecation('Class ' . Foo::class . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. See Drupal\Component\Utility\Random.');
     // @phpstan-ignore class.notFound
     $object = new Foo();
     $this->assertInstanceOf(Random::class, $object);
