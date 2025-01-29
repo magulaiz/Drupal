@@ -170,8 +170,11 @@ class JsonSchemaFormBuilder {
       case 'operations':
       case 'html_tag':
       case 'inline_template':
+      case 'component':
+      case 'icon':
       case 'label':
       case 'more_link':
+      case 'break_lock_link':
       case 'system_compact_link':
       case 'page_title':
       case 'status_messages':
@@ -336,7 +339,7 @@ class JsonSchemaFormBuilder {
    * @return array
    *   The form data.
    */
-  protected function buildFormData(array $parent, array $result = []) {
+  protected function buildFormData(array $parent, $result = []) {
     foreach (Element::children($parent) as $key) {
       $element = $parent[$key];
 
