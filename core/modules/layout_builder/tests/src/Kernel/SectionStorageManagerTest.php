@@ -33,7 +33,7 @@ class SectionStorageManagerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->manager = $this->container->get('plugin.manager.layout_builder.section_storage');
@@ -42,7 +42,7 @@ class SectionStorageManagerTest extends KernelTestBase {
   /**
    * @covers ::load
    */
-  public function testLoad() {
+  public function testLoad(): void {
     // Provide a context value that does not meet the constraints.
     $contexts['value'] = new Context(new ContextDefinition('string'), 'Grit');
     $result = $this->manager->load('layout_builder_test_constraints', $contexts);
@@ -61,7 +61,7 @@ class SectionStorageManagerTest extends KernelTestBase {
    *
    * @see \Drupal\layout_builder_test\Plugin\SectionStorage\TestConstraintsSectionStorage
    */
-  public function testFindByContext() {
+  public function testFindByContext(): void {
     // Provide a context value that does not meet the constraints.
     $contexts['value'] = new Context(new ContextDefinition('string'), 'Grit');
     $result = $this->manager->findByContext($contexts, new CacheableMetadata());

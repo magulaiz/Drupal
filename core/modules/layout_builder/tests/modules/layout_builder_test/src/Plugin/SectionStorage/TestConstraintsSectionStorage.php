@@ -3,22 +3,25 @@
 namespace Drupal\layout_builder_test\Plugin\SectionStorage;
 
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\layout_builder\Attribute\SectionStorage;
 use Drupal\layout_builder\Plugin\SectionStorage\SectionStorageBase;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Provides a section storage that is always applicable but has constraints.
- *
- * @SectionStorage(
- *   id = "layout_builder_test_constraints",
- *   context_definitions = {
- *     "value" = @ContextDefinition("string", constraints = {
- *       "Length" = {"min" = 5},
- *     }),
- *   },
- * )
  */
+#[SectionStorage(id: "layout_builder_test_constraints", context_definitions: [
+  'value' => new ContextDefinition(
+    data_type: 'string',
+    constraints: [
+      "Length" => [
+        "min" => 5,
+      ],
+    ],
+  ),
+])]
 class TestConstraintsSectionStorage extends SectionStorageBase {
 
   /**
@@ -47,11 +50,6 @@ class TestConstraintsSectionStorage extends SectionStorageBase {
   /**
    * {@inheritdoc}
    */
-  public function getSectionListFromId($id) {}
-
-  /**
-   * {@inheritdoc}
-   */
   public function buildRoutes(RouteCollection $collection) {}
 
   /**
@@ -63,11 +61,6 @@ class TestConstraintsSectionStorage extends SectionStorageBase {
    * {@inheritdoc}
    */
   public function getLayoutBuilderUrl($rel = 'view') {}
-
-  /**
-   * {@inheritdoc}
-   */
-  public function extractIdFromRoute($value, $definition, $name, array $defaults) {}
 
   /**
    * {@inheritdoc}
