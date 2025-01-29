@@ -158,7 +158,7 @@ class ContextHandler implements ContextHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function applyRuntimeContext(ContextAwarePluginInterface $plugin) {
+  public function applyRuntimeContext(ContextAwarePluginInterface $plugin): void {
     $contexts = $this->contextRepository->getRuntimeContexts(array_values($plugin->getContextMapping()));
     $this->applyContextMapping($plugin, $contexts);
   }

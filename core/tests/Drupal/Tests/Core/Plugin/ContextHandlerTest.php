@@ -559,7 +559,7 @@ class ContextHandlerTest extends UnitTestCase {
    * @covers ::applyRuntimeContext
    * @covers ::applyContextMapping
    */
-  public function testApplyRuntimeContext() {
+  public function testApplyRuntimeContext(): void {
     $context = $this->prophesize(ContextInterface::class);
     $context->hasContextValue()->willReturn(TRUE);
 

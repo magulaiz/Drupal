@@ -89,6 +89,6 @@ interface ContextHandlerInterface {
    * @param \Drupal\Core\Plugin\ContextAwarePluginInterface $plugin
    *   A context-aware plugin.
    */
-  public function applyRuntimeContext(ContextAwarePluginInterface $plugin);
+  public function applyRuntimeContext(ContextAwarePluginInterface $plugin): void;
 
 }
