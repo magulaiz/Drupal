@@ -3,14 +3,106 @@
 namespace Drupal\taxonomy\Hook;
 
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Url;
 
 /**
  * Hook implementations for taxonomy.
  */
 class TaxonomyEntityHooks {
+
+  /**
+   * A config factory for retrieving required config settings.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * A config factory for retrieving required config settings.
+   *
+   * @property \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs TaxonomyEntityHooks.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The configuration factory.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   */
+  public function __construct(ConfigFactoryInterface $configFactory, EntityTypeManagerInterface $entityTypeManager) {
+    $this->configFactory = $configFactory;
+    $this->entityTypeManager = $entityTypeManager;
+  }
+
+  /**
+   * Builds and inserts taxonomy index entries for a given node.
+   *
+   * The index lists all terms that are related to a given node entity, and is
+   * therefore maintained at the entity level.
+   *
+   * @param \Drupal\node\Entity\Node $node
+   *   The node entity.
+   */
+  protected function build_node_index($node) {
+    // We maintain a denormalized table of term/node relationships, containing
+    // only data for current, published nodes.
+    if (!\Drupal::config('taxonomy.settings')->get('maintain_index_table') || !($this->entityTypeManager->getStorage('node') instanceof SqlContentEntityStorage)) {
+      return;
+    }
+
+    $status = $node->isPublished();
+    $sticky = (int) $node->isSticky();
+    // We only maintain the taxonomy index for published nodes.
+    if ($status && $node->isDefaultRevision()) {
+      // Collect a unique list of all the term IDs from all node fields.
+      $tid_all = [];
+      $entity_reference_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
+      foreach ($node->getFieldDefinitions() as $field) {
+        $field_name = $field->getName();
+        $class = $field->getItemDefinition()->getClass();
+        $is_entity_reference_class = ($class === $entity_reference_class) || is_subclass_of($class, $entity_reference_class);
+        if ($is_entity_reference_class && $field->getSetting('target_type') == 'taxonomy_term') {
+          foreach ($node->getTranslationLanguages() as $language) {
+            foreach ($node->getTranslation($language->getId())->$field_name as $item) {
+              if (!$item->isEmpty()) {
+                $tid_all[$item->target_id] = $item->target_id;
+              }
+            }
+          }
+        }
+      }
+      // Insert index entries for all the node's terms.
+      if (!empty($tid_all)) {
+        $connection = \Drupal::database();
+        foreach ($tid_all as $tid) {
+          $connection->merge('taxonomy_index')
+            ->keys(['nid' => $node->id(), 'tid' => $tid, 'status' => $node->isPublished()])
+            ->fields(['sticky' => $sticky, 'created' => $node->getCreatedTime()])
+            ->execute();
+        }
+      }
+    }
+  }
+
+  /**
+   * Deletes taxonomy index entries for a given node.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $node
+   *   The node entity.
+   */
+  protected function delete_node_index(EntityInterface $node) {
+    if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
+      \Drupal::database()->delete('taxonomy_index')->condition('nid', $node->id())->execute();
+    }
+  }
 
   /**
    * Implements hook_entity_operation().
@@ -58,7 +150,7 @@ class TaxonomyEntityHooks {
   #[Hook('node_insert')]
   public function nodeInsert(EntityInterface $node): void {
     // Add taxonomy index entries for the node.
-    taxonomy_build_node_index($node);
+    $this->build_node_index($node);
   }
 
   /**
@@ -71,8 +163,8 @@ class TaxonomyEntityHooks {
     if (!$node->isDefaultRevision()) {
       return;
     }
-    taxonomy_delete_node_index($node);
-    taxonomy_build_node_index($node);
+    $this->delete_node_index($node);
+    $this->build_node_index($node);
   }
 
   /**
@@ -81,7 +173,7 @@ class TaxonomyEntityHooks {
   #[Hook('node_predelete')]
   public function nodePredelete(EntityInterface $node): void {
     // Clean up the {taxonomy_index} table when nodes are deleted.
-    taxonomy_delete_node_index($node);
+    $this->delete_node_index($node);
   }
 
   /**
