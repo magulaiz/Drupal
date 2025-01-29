@@ -514,8 +514,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->classLoader->setApcuPrefix($prefix);
     }
 
-    $bc_class_loader = new BackwardsCompatibilityClassLoader($this->container->getParameterBag());
-    spl_autoload_register([$bc_class_loader, 'loadClass']);
+    if ($this->container->hasParameter('moved_classes')) {
+      $bc_class_loader = new BackwardsCompatibilityClassLoader($this->container->getParameter('moved_classes'));
+      spl_autoload_register([$bc_class_loader, 'loadClass']);
+    }
 
     $this->booted = TRUE;
 
