@@ -291,6 +291,10 @@
   --icon: url(./assets/eye.svg);
 }
 
+.toolbar-button--icon--close-preview {
+  --icon: url(./assets/eye-slash.svg);
+}
+
 .toolbar-button--icon--shortcuts {
   --icon: url(./assets/shortcuts.svg);
 }
