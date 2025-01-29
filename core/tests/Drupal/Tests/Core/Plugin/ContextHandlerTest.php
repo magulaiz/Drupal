@@ -560,10 +560,7 @@ class ContextHandlerTest extends UnitTestCase {
    * @covers ::applyContextMapping
    */
   public function testApplyRuntimeContext() {
-    $context_data = StringData::createInstance(DataDefinition::create('string'));
-    $context_data->setValue('foo');
     $context = $this->prophesize(ContextInterface::class);
-    $context->getContextData()->willReturn($context_data);
     $context->hasContextValue()->willReturn(TRUE);
 
     $contexts = [
@@ -579,7 +576,7 @@ class ContextHandlerTest extends UnitTestCase {
     $plugin->getContextMapping()->willReturn(['hit' => 'name']);
     $plugin->getContextDefinitions()->willReturn(['hit' => $context_definition]);
     $plugin->getContext('hit')->willReturn($plugin_context->reveal());
-    $plugin->setContextValue('hit', $context_data)->shouldBeCalled();
+    $plugin->setContext('hit', $context)->shouldBeCalled();
 
     $this->contextRepository->getRuntimeContexts(['name'])->willReturn($contexts)->shouldBeCalled();
 
