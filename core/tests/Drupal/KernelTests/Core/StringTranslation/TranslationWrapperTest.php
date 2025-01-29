@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Core\StringTranslation;
+namespace Drupal\KernelTests\Core\StringTranslation;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationWrapper;
-use Drupal\Tests\UnitTestCase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests the TranslationWrapper backward compatibility layer.
@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
  * @coversDefaultClass \Drupal\Core\StringTranslation\TranslationWrapper
  * @group StringTranslation
  */
-class TranslationWrapperTest extends UnitTestCase {
+class TranslationWrapperTest extends KernelTestBase {
 
   /**
    * @covers ::__construct
