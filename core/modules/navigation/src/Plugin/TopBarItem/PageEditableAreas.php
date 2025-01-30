@@ -43,7 +43,7 @@ class PageEditableAreas extends TopBarItemBase implements ContainerFactoryPlugin
       $plugin_id,
       $plugin_definition,
       $container->get(EntityRouteHelper::class),
-      $container->get('current_user'),
+      $container->get(AccountInterface::class),
     );
   }
 
@@ -72,11 +72,11 @@ class PageEditableAreas extends TopBarItemBase implements ContainerFactoryPlugin
         '#slots' => [
           'content' => (string) $this->t('Editable areas'),
         ],
-      ],
-    ];
-    $build['#attached'] = [
-      'library' => [
-        'contextual/drupal.contextual-toolbar',
+        '#attached' => [
+          'library' => [
+            'contextual/drupal.contextual-toolbar',
+          ],
+        ],
       ],
     ];
     return $build;
