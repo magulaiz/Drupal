@@ -20,6 +20,7 @@ use Drupal\workspaces\WorkspaceAccessControlHandler;
 use Drupal\workspaces\WorkspaceInterface;
 use Drupal\workspaces\WorkspaceListBuilder;
 use Drupal\workspaces\WorkspaceViewBuilder;
+use Drupal\user\Entity\Handler\BatchCancellationHandler;
 
 /**
  * The workspace entity class.
@@ -53,6 +54,7 @@ use Drupal\workspaces\WorkspaceViewBuilder;
       'delete' => WorkspaceDeleteForm::class,
       'activate' => WorkspaceActivateForm::class,
     ],
+    'user_cancel' => BatchCancellationHandler::class,
     'workspace' => IgnoredWorkspaceHandler::class,
   ],
   links: [

@@ -18,6 +18,8 @@ use Drupal\user\Entity\User;
  * Ensure that account cancellation methods work as expected.
  *
  * @group user
+ * @group #slow
+ * @group legacy
  */
 class UserCancelTest extends BrowserTestBase {
 

@@ -9,6 +9,7 @@ use Drupal\comment\CommentStorageSchema;
 use Drupal\comment\CommentTranslationHandler;
 use Drupal\comment\CommentViewBuilder;
 use Drupal\comment\CommentViewsData;
+use Drupal\comment\Entity\Handler\CancellationHandler;
 use Drupal\comment\Form\DeleteForm;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -25,6 +26,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\Entity\User;
 use Drupal\user\EntityOwnerTrait;
+use Drupal\user\Entity\Handler\BatchCancellationHandler;
 
 /**
  * Defines the comment entity class.
@@ -55,6 +57,7 @@ use Drupal\user\EntityOwnerTrait;
       'delete' => DeleteForm::class,
     ],
     'translation' => CommentTranslationHandler::class,
+    'user_cancel' => CancellationHandler::class,
   ],
   links: [
     'canonical' => '/comment/{comment}',
