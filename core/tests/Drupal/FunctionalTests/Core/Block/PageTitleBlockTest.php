@@ -56,22 +56,22 @@ class PageTitleBlockTest extends BrowserTestBase {
     // - the value for #title in the render array.
     $data = [];
     $data['no title manipulation'] = [
-      ['Test page', 'Test page'],
+      ['Test page'],
       NULL,
       NULL,
     ];
     $data['provide a top-level #title'] = [
-      ['render_array_title', 'Test page'],
+      ['Test page'],
       NULL,
       'render_array_title',
     ];
     $data['call setTitle() on the block'] = [
-      ['Test page', 'set_title'],
+      ['Test page'],
       'set_title',
       NULL,
     ];
     $data['call setTitle() on the block and provide a top-level #title'] = [
-      ['render_array_title', 'set_title'],
+      ['Test page'],
       'set_title',
       'render_array_title',
     ];
