@@ -357,17 +357,18 @@ class ManageFieldsTest extends WebDriverTestBase {
    * Tests the form validation for label field.
    */
   public function testLabelFieldFormValidation(): void {
-    $this->drupalGet('/admin/structure/types/manage/article/fields/add-field');
+    $this->drupalGet('/admin/structure/types/manage/article/fields');
     $page = $this->getSession()->getPage();
-
-    $page->findButton('Continue')->click();
+    $page->clickLink('Create a new field');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->clickLink('Plain text');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->pageTextContains('Label field is required.');
+    $this->assertSession()->pageTextContains('Machine-readable name field is required.');
     $this->assertSession()->pageTextContains('You need to select a field type.');
-
-    $this->assertNotEmpty($boolean_field = $page->find('xpath', '//*[text() = "Boolean (overridden by alter)"]')->getParent());
-    $boolean_field->click();
-    $page->findButton('Continue')->click();
-    $page->findButton('Continue')->click();
-    $this->assertSession()->pageTextContains('Add new field: you need to provide a label.');
   }
 
 }
