@@ -216,7 +216,7 @@ class SqlBaseTest extends MigrateTestBase {
       ]);
 
     // One item is excluded by the condition defined in the source plugin.
-    // @see \Drupal\migrate_sql_prepare_query_test\Plugin\migrate\source\TestSqlSource
+    // @see \Drupal\migrate_sql_prepare_query_test\Plugin\migrate\source\TestSqlPrepareQuery
     $count = $migration->getSourcePlugin()->count();
     $this->assertEquals(2, $count);
 

@@ -385,8 +385,8 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   /**
    * Prepares query object to retrieve data from the source database.
    *
-   * This method should not be called directly, but will be called
-   * automatically from SqlBase::prepareQuery().
+   * This method should not be called directly. It is called automatically from
+   * SqlBase::prepareQuery().
    *
    * @return \Drupal\Core\Database\Query\SelectInterface
    *   A Select query object with the source data.
