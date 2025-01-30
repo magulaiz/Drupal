@@ -24,9 +24,7 @@ class TermHierarchyTest extends KernelTestBase {
   use TaxonomyTestTrait;
 
   /**
-   * The modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',
