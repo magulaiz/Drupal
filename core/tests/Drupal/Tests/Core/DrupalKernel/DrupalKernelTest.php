@@ -20,9 +20,9 @@ class DrupalKernelTest extends UnitTestCase {
   /**
    * Back up and restore any global variables that may be changed by tests.
    *
-   * @var ?bool
+   * @var bool
    */
-  protected $backupGlobals = FALSE;
+  protected bool $backupGlobals = FALSE;
 
   /**
    * Tests hostname validation with settings.
@@ -157,10 +157,12 @@ EOD;
   }
 
   /**
+   * Test processing request by initializeRequestGlobals of Drupal kernel.
+   *
    * @covers ::initializeRequestGlobals
    * @dataProvider initializeRequestGlobalsProvider
    */
-  public function testInitializeRequestGlobals($path, $url, $expected_base_url, $expected_base_path, $expected_base_root): void {
+  public function testInitializeRequestGlobals(string $path, string $url, string $expected_base_url, string $expected_base_path, string $expected_base_root): void {
     global $base_url, $base_path, $base_root;
 
     $request = $this->prophesize(Request::class);
