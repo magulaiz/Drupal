@@ -63,6 +63,7 @@ class Some extends PagerPluginBase {
       '#description' => $this->t('For example, set this to 3 and the first 3 items will not be displayed.'),
       '#default_value' => $this->options['offset'],
     ];
+    return $form;
   }
 
   /**

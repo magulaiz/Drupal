@@ -81,6 +81,7 @@ class Full extends SqlBase {
       '#default_value' => $this->options['tags']['last'],
       '#weight' => 10,
     ];
+    return $form;
   }
 
   /**

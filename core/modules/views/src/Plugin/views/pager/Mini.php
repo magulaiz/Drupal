@@ -71,6 +71,7 @@ class Mini extends SqlBase {
       '#default_value' => $this->options['tags']['next'],
       '#weight' => 10,
     ];
+    return $form;
   }
 
   /**
