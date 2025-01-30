@@ -238,7 +238,8 @@ class ContentTranslationHooks {
    * Implements hook_entity_base_field_info().
    */
   #[Hook('entity_base_field_info')]
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
+    $info = [];
     /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
     $manager = \Drupal::service('content_translation.manager');
     $entity_type_id = $entity_type->id();
@@ -249,13 +250,13 @@ class ContentTranslationHooks {
       // or it was enabled before, so that we keep translation metadata around
       // when translation is disabled.
       // @todo Re-evaluate this approach and consider removing field storage
-      //   definitions and the related field data if the entity type has no bundle
-      //   enabled for translation.
-      // @see https://www.drupal.org/node/2907777
+      //   definitions and the related field data if the entity type has no
+      //   bundle enabled for translation. See https://www.drupal.org/i/2907777
       if ($manager->isEnabled($entity_type_id) || array_intersect_key($definitions, $installed_storage_definitions)) {
-        return $definitions;
+        $info = $definitions;
       }
     }
+    return $info;
   }
 
   /**
@@ -418,7 +419,7 @@ class ContentTranslationHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $extra = [];
     $bundle_info_service = \Drupal::service('entity_type.bundle.info');
     foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $info) {

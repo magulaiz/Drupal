@@ -134,7 +134,8 @@ class HookCollectorPass implements CompilerPassInterface {
    * @internal
    *   This method is only used by ModuleHandler.
    *
-   * * @todo Pass only $container when ModuleHandler->add is removed https://www.drupal.org/project/drupal/issues/3481778
+   * @todo Pass only $container when ModuleHandler->add is removed
+   *   https://www.drupal.org/project/drupal/issues/3481778
    */
   public static function collectAllHookImplementations(array $module_filenames, ?ContainerBuilder $container = NULL): static {
     $modules = array_map(fn ($x) => preg_quote($x, '/'), array_keys($module_filenames));
@@ -373,8 +374,8 @@ class HookCollectorPass implements CompilerPassInterface {
       'schema',
       'uninstall',
       'update_last_removed',
-      'hook_install_tasks',
-      'hook_install_tasks_alter',
+      'install_tasks',
+      'install_tasks_alter',
     ];
 
     if (in_array($hook->hook, $staticDenyHooks) || preg_match('/^(post_update_|preprocess_|update_\d+$)/', $hook->hook)) {
