@@ -37,6 +37,77 @@ class VariationCache implements VariationCacheInterface {
   }
 
   /**
+   * Retrieves multiple cached items and follows any redirects until resolution.
+   *
+   * Given an array of items—each defined by keys and cacheability—this method:
+   * 1. Generates initial cache IDs (CIDs) for each item.
+   * 2. Fetches them from the cache in batches.
+   * 3. If any fetched item indicates a redirect (via a CacheRedirect object),
+   *    updates the CID and repeats the process.
+   *
+   * Only items that ultimately resolve to a cached value are returned. Items that
+   * do not resolve (cache misses after following possible redirects) never appear
+   * in the returned array.
+   *
+   * @param array $items
+   *   An associative array keyed by arbitrary identifiers. Each value is:
+   *   [ (array) $keys, (CacheableDependencyInterface) $cacheability ].
+   *
+   *   Example:
+   *   $items = [
+   *     'item_a' => [ ['key1', 'key2'], $cacheability_a ],
+   *     'item_b' => [ ['another_key'], $cacheability_b ],
+   *   ];
+   *
+   * @return array
+   *   An associative array keyed by the same keys as $items, containing only
+   *   the items found in the cache. Items that never resolve are omitted.
+   */
+  public function getMultiple(array $items): array {
+    // Initialize processing with a map of CIDs to their associated item info.
+    $cids_to_process = [];
+    foreach ($items as $item_key => [$keys, $cacheability]) {
+      $cid = $this->createCacheIdFast($keys, $cacheability);
+      $cids_to_process[$cid] = [
+        'item_key' => $item_key,
+        'keys' => $keys,
+      ];
+    }
+
+    $results = [];
+
+    // Process CIDs until none remain. Each loop fetches all current CIDs, then:
+    // - Resolves final items.
+    // - Identifies redirects and prepares them for the next iteration.
+    while (!empty($cids_to_process)) {
+      $current_cids = array_keys($cids_to_process);
+      $fetched_items = $this->cacheBackend->getMultiple($current_cids);
+
+      $next_cids_to_process = [];
+
+      // Process each fetched item. Misses are simply absent from $fetched_items.
+      foreach ($fetched_items as $cid => $fetched_item) {
+        $info = $cids_to_process[$cid];
+
+        // If the item signals a redirect, we'll follow it in the next iteration.
+        if ($fetched_item->data instanceof CacheRedirect) {
+          $redirect_cid = $this->createCacheIdFast($info['keys'], $fetched_item->data);
+          $next_cids_to_process[$redirect_cid] = $info;
+          continue;
+        }
+
+        // Otherwise, we've reached a final cached item. Record it.
+        $results[$info['item_key']] = $fetched_item;
+      }
+
+      // Only process redirects in subsequent iterations.
+      $cids_to_process = $next_cids_to_process;
+    }
+
+    return $results;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function set(array $keys, $data, CacheableDependencyInterface $cacheability, CacheableDependencyInterface $initial_cacheability): void {
