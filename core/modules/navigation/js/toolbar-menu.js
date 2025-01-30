@@ -144,22 +144,37 @@
       attach: (context) => {
         const showText = Drupal.t('Editable areas');
         const hideText = Drupal.t('Hide editable areas');
-        const toggleContextualItems = (el) =>
-          el.classList.toggle('visually-hidden');
+
+        const toggleButtonState = (isEditing, btn) => {
+          btn.classList.toggle('toolbar-button--icon--preview', isEditing);
+          btn.classList.toggle(
+            'toolbar-button--icon--close-preview',
+            !isEditing,
+          );
+          btn.textContent = !isEditing ? hideText : showText;
+        };
+
         once(
           'preview-editable-areas',
           '.navigation-contextual-link',
           context,
-        ).forEach((link) => {
-          link.addEventListener('click', (e) => {
+        ).forEach((btn) => {
+          // Set initial state
+          toggleButtonState(
+            localStorage.getItem('Drupal.contextualToolbar.isViewing') === null,
+            btn,
+          );
+          // Listen to click event.
+          btn.addEventListener('click', (e) => {
+            toggleButtonState(
+              !Drupal.contextualToolbar.model.get('isViewing'),
+              btn,
+            );
+            Drupal.contextualToolbar.model.set(
+              'isViewing',
+              !Drupal.contextualToolbar.model.get('isViewing'),
+            );
             e.preventDefault();
-            link.classList.toggle('toolbar-button--icon--preview');
-            link.classList.toggle('toolbar-button--icon--close-preview');
-            link.textContent =
-              link.textContent === showText ? hideText : showText;
-            document
-              .querySelectorAll('.contextual button')
-              .forEach(toggleContextualItems);
           });
         });
       },

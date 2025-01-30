@@ -3,6 +3,7 @@
 namespace Drupal\navigation\Plugin\TopBarItem;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\navigation\Attribute\TopBarItem;
@@ -28,6 +29,7 @@ class PageEditableAreas extends TopBarItemBase implements ContainerFactoryPlugin
     $plugin_id,
     $plugin_definition,
     private EntityRouteHelper $entityRouteHelper,
+    private AccountInterface $currentUser,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -40,7 +42,8 @@ class PageEditableAreas extends TopBarItemBase implements ContainerFactoryPlugin
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get(EntityRouteHelper::class)
+      $container->get(EntityRouteHelper::class),
+      $container->get('current_user'),
     );
   }
 
@@ -50,11 +53,11 @@ class PageEditableAreas extends TopBarItemBase implements ContainerFactoryPlugin
   public function build(): array {
     $build = [
       '#cache' => [
-        'contexts' => ['route'],
+        'contexts' => ['user.permissions'],
       ],
     ];
 
-    if (!$this->entityRouteHelper->getContentEntityFromRoute()) {
+    if (!$this->currentUser->hasPermission('access contextual links')) {
       return $build;
     }
 
@@ -71,7 +74,11 @@ class PageEditableAreas extends TopBarItemBase implements ContainerFactoryPlugin
         ],
       ],
     ];
-
+    $build['#attached'] = [
+      'library' => [
+        'contextual/drupal.contextual-toolbar',
+      ],
+    ];
     return $build;
   }
 
