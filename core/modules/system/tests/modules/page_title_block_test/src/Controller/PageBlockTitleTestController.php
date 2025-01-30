@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\page_title_block_test\Controller;
 
 use Drupal\Component\Utility\Html;
@@ -12,7 +14,7 @@ class PageBlockTitleTestController {
   /**
    * Returns a page with the page title block embedded.
    */
-  public function testPage() {
+  public function testPage(): void {
     /** @var \Drupal\Core\Block\TitleBlockPluginInterface $block */
     $block = \Drupal::service('plugin.manager.block')->createInstance('page_title_block');
 

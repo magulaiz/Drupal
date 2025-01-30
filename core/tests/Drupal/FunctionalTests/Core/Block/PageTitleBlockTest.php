@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Core\Block;
 
 use Behat\Mink\Element\NodeElement;
@@ -33,7 +35,7 @@ class PageTitleBlockTest extends BrowserTestBase {
    * @param string $render_array_title
    *   The value for #title in the render array.
    */
-  public function testBuild($expected, $set_title, $render_array_title) {
+  public function testBuild($expected, $set_title, $render_array_title): void {
     \Drupal::state()->set('page_title_block_test.set_title', $set_title);
     \Drupal::state()->set('page_title_block_test.render_array_title', $render_array_title);
 
@@ -47,7 +49,7 @@ class PageTitleBlockTest extends BrowserTestBase {
   /**
    * Provides test data for ::testBuild().
    */
-  public function providerTestBuild() {
+  public static function providerTestBuild(): array {
     // Data provider values are:
     // - the expected page titles, in order
     // - the value to call ::setTitle() with
