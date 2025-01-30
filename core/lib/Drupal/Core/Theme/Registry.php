@@ -167,7 +167,7 @@ class Registry implements DestructableInterface {
    *
    * @var array
    */
-  protected $preprocessForSuggestions;
+  protected array $preprocessForSuggestions;
 
   /**
    * Constructs a \Drupal\Core\Theme\Registry object.
