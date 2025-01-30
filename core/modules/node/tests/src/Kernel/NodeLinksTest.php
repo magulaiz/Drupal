@@ -24,9 +24,7 @@ class NodeLinksTest extends KernelTestBase {
   use NodeCreationTrait;
 
   /**
-   * The modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',
