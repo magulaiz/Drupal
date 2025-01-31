@@ -49,7 +49,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
       }
       else {
         // Generate a placeholder and a render array to replace it.
-        $placeholder = Crypt::hashBase64($path) . ':' . Crypt::randomBytesBase64(8);
+        $placeholder = Crypt::hashBase64($path) . '_' . Crypt::randomBytesBase64(8);
         $placeholder_render_array = [
           '#lazy_builder' => ['route_processor_csrf:renderPlaceholderCsrfToken', [$path]],
         ];
