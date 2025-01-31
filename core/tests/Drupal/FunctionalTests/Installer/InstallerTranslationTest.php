@@ -154,7 +154,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     // language edit link.
     $this->clickLink('Edit', 1);
     $this->assertSession()->fieldValueEquals('label', 'English de');
-    $this->submitForm([], t('Save language'));
+    $this->submitForm([], 'Save language');
 
     $english = ConfigurableLanguage::load('en');
     $this->assertEquals('de', $english->language()->getId(), 'The langcode of the english language is de.');
