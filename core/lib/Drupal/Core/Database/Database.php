@@ -518,6 +518,17 @@ abstract class Database {
     }
     $driverName = $matches[1];
 
+    // As MongoDB is a NoSQL database and therefore it works with multiple
+    // servers to create a single logical database. To make maintenance less
+    // complicated MongoDB supports a DNS-constructed seed list. Using DNS to
+    // construct the available servers list allows more flexibility of
+    // deployment and the ability to change the servers in rotation without
+    // reconfiguring clients.
+    if (strpos($driverName, '+') !== FALSE) {
+      $driverNameParts = explode('+', $driverName);
+      $driverName = $driverNameParts[0];
+    }
+
     // Determine if the database driver is provided by a module.
     // @todo https://www.drupal.org/project/drupal/issues/3250999. Refactor when
     // all database drivers are provided by modules.

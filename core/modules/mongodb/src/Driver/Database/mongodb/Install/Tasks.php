@@ -129,12 +129,20 @@ class Tasks extends InstallTasks {
     }
 
     // Add the replica set setting to the main options.
+    $form['srv'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Use the <a href="https://www.mongodb.com/docs/manual/reference/connection-string/#std-label-connections-dns-seedlist">SRV</a> connection format'),
+      '#description' => t('MongoDB supports a DNS-constructed seed list. Using DNS to construct the available servers list allows more flexibility of deployment and the ability to change the servers in rotation without reconfiguring clients.'),
+      '#default_value' => $database['srv'] ?? '',
+    ];
+
+    // Add the replica set setting to the main options.
     $form['replicaset'] = [
       '#type' => 'textfield',
       '#title' => t('Database replica set'),
+      '#description' => t('You can connect to a MongoDB database is different ways. When you connect to a replica set, you need to set this option and set the server names of the members of the replica set. For more information, see: <a href="https://www.mongodb.com/docs/manual/reference/connection-string/">Connecting to a MongoDB database</a>.'),
       '#default_value' => $replica_set,
       '#size' => 45,
-      '#required' => TRUE,
     ];
 
     // The primary host of the replica set.

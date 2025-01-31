@@ -103,16 +103,25 @@ class Connection extends DatabaseConnection {
       $connection_options['database'] = 'test';
     }
 
-    if (!empty($connection_options['username'])) {
-      if (!empty($connection_options['password'])) {
-        $uri = 'mongodb://' . $connection_options['username'] . ':' . $connection_options['password'] . '@';
-      }
-      else {
-        $uri = 'mongodb://' . $connection_options['username'] . '@';
-      }
+    // The SRV connection setting is for using MongoDBs DNS-constructed seed
+    // list. Using DNS to construct the available servers list allows more
+    // flexibility of deployment and the ability to change the servers in
+    // rotation without reconfiguring clients.
+    // @see https://www.mongodb.com/docs/manual/reference/connection-string/#srv-connection-format
+    if (!empty($connection_options['srv'])) {
+      $uri = 'mongodb+srv://';
     }
     else {
       $uri = 'mongodb://';
+    }
+
+    if (!empty($connection_options['username'])) {
+      if (!empty($connection_options['password'])) {
+        $uri .= $connection_options['username'] . ':' . $connection_options['password'] . '@';
+      }
+      else {
+        $uri .= $connection_options['username'] . '@';
+      }
     }
 
     // MongoDB uses multiple hosts when connection to a replica set. Therefor
@@ -169,6 +178,16 @@ class Connection extends DatabaseConnection {
 
     // Add the query variables to the connection options.
     $options += $query;
+
+    // Remove the '+srv' from the driver name and set the SRV option.
+    if (strpos($options['driver'], '+') !== FALSE) {
+      $driver_parts = explode('+', $options['driver']);
+      $options['driver'] = $driver_parts[0];
+      $options['srv'] = TRUE;
+    }
+    else {
+      $options['srv'] = FALSE;
+    }
 
     // The MongoDB connection string uses the key "replicaSet" and Drupal has
     // all form keys in lowercase.
@@ -245,12 +264,17 @@ class Connection extends DatabaseConnection {
       $hosts = 'localhost';
     }
 
-    $db_url = $connection_options['driver'] . '://' . $user . $hosts;
+    if (isset($connection_options['srv']) && $connection_options['srv']) {
+      $db_url = 'mongodb+srv://' . $user . $hosts;
+    }
+    else {
+      $db_url = 'mongodb://' . $user . $hosts;
+    }
 
     $db_url .= '/' . $connection_options['database'];
 
     // Add the module when the driver is provided by a module.
-    if (isset($connection_options['module'])) {
+    if (isset($connection_options['module']) && mb_strtolower($connection_options['module']) !== 'mongodb') {
       $db_url .= '?module=' . $connection_options['module'];
     }
 
@@ -259,7 +283,12 @@ class Connection extends DatabaseConnection {
       $connection_options['replicaSet'] = $connection_options['replicaset'];
     }
     if (isset($connection_options['replicaSet'])) {
-      $separator = isset($connection_options['module']) ? '&' : '?';
+      if (strpos($db_url, '?') !== FALSE) {
+        $separator = '&';
+      }
+      else {
+        $separator = '?';
+      }
       $db_url .= $separator . 'replicaSet=' . $connection_options['replicaSet'];
     }
 
