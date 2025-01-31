@@ -80,7 +80,7 @@ class RecipeUnpackTest extends BuildTestBase {
       $package_type = $this->getPackageType($package);
       $this->assertNotNull($package_type);
 
-      // When the package is unpacked, the unpacked depedencies should be logged
+      // When the package is unpacked, the unpacked dependencies should be logged
       // in the stdout.
       $this->assertStringContainsString("Package $package of type $package_type was unpacked successfully.", $stdout);
 
