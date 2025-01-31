@@ -629,7 +629,7 @@ function olivero_form_views_exposed_form_alter(&$form): void {
  */
 function olivero_preprocess_pager(&$variables): void {
   if (array_key_exists('items', $variables)) {
-    $variables['items'] = processPagerItems(
+    $variables['items'] = _olivero_process_pager_items(
       $variables['items'],
       $variables['current'] ?? null
     );
@@ -641,7 +641,7 @@ function olivero_preprocess_pager(&$variables): void {
  */
 function olivero_preprocess_views_mini_pager(&$variables): void {
   if (array_key_exists('items', $variables)) {
-    $variables['items'] = processPagerItems(
+    $variables['items'] = _olivero_process_pager_items(
       $variables['items'],
       $variables['current'] ?? null,
       true
@@ -662,7 +662,7 @@ function olivero_preprocess_views_mini_pager(&$variables): void {
  * @return array
  *   The processed pager items.
  */
-function processPagerItems(array $items, ?int $current, bool $isMiniPager = false): array {
+function _olivero_process_pager_items(array $items, ?int $current, bool $isMiniPager = false): array {
   $processedItems = _olivero_get_navigation_pager_elements($items);
   $page_label = (string)t('Goto page ');
   if (!empty($items['pages'])) {
