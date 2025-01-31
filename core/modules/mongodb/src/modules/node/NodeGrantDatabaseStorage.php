@@ -218,7 +218,7 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
   public function count() {
     $prefixed_table = $this->database->getPrefix() . 'node_access';
 
-    return (string) $this->database->getConnection()->($prefixed_table)->count([], ['session' => $this->database->getMongodbSession()]);
+    return (string) $this->database->getConnection()->selectCollection($prefixed_table)->count([], ['session' => $this->database->getMongodbSession()]);
   }
 
   /**
