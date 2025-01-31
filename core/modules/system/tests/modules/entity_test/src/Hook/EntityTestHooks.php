@@ -21,6 +21,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\entity_test\EntityTestHelper;
 
 /**
  * Hook implementations for entity_test.
@@ -36,7 +37,7 @@ class EntityTestHooks {
   public function entityTypeAlter(array &$entity_types) : void {
     $state = \Drupal::state();
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
       // Optionally specify a translation handler for testing translations.
       if ($state->get('entity_test.translation')) {
         $translation = $entity_types[$entity_type]->get('translation');
@@ -65,7 +66,7 @@ class EntityTestHooks {
    * Implements hook_entity_base_field_info().
    */
   #[Hook('entity_base_field_info')]
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
     $fields = [];
     if ($entity_type->id() === 'entity_test' && \Drupal::state()->get('entity_test.internal_field')) {
       $fields['internal_string_field'] = BaseFieldDefinition::create('string')->setLabel('Internal field')->setInternal(TRUE);
@@ -112,8 +113,8 @@ class EntityTestHooks {
     if ($entity_type->id() == 'entity_test' && $state->get('entity_test.remove_name_field')) {
       unset($fields['name']);
     }
-    // In 8001 we are assuming that a new definition with multiple cardinality has
-    // been deployed.
+    // In 8001 we are assuming that a new definition with multiple cardinality
+    // has been deployed.
     // @todo Remove this if we end up using state definitions at runtime. See
     //   https://www.drupal.org/node/2554235.
     if ($entity_type->id() == 'entity_test' && $state->get('entity_test.db_updates.entity_definition_updates') == 8001) {
@@ -125,7 +126,7 @@ class EntityTestHooks {
    * Implements hook_entity_bundle_info().
    */
   #[Hook('entity_bundle_info')]
-  public function entityBundleInfo() {
+  public function entityBundleInfo(): array {
     $bundles = [];
     $entity_types = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entity_types as $entity_type_id => $entity_type) {
@@ -208,7 +209,7 @@ class EntityTestHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $extra['entity_test']['bundle_with_extra_fields'] = [
       'display' => [
               // Note: those extra fields do not currently display anything, they are
