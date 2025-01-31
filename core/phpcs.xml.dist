@@ -70,6 +70,7 @@
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
   <rule ref="Drupal.Commenting.FunctionComment.Missing">
+    <include-pattern>core/modules/*/Plugin/views/argument/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/filter/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/access/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/cache/*</include-pattern>
@@ -108,11 +109,6 @@
   <rule ref="Drupal.Commenting.VariableComment">
     <!-- Sniff for: DuplicateVar, EmptyVar, IncorrectVarType, InlineVariableName, WrongStyle -->
     <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
-  </rule>
-  <rule ref="Drupal.Commenting.VariableComment.Missing">
-    <exclude-pattern>./core/tests/*</exclude-pattern>
-    <exclude-pattern>./core/*/tests/*</exclude-pattern>
-    <include-pattern>core/modules/*/tests/modules/*</include-pattern>
   </rule>
   <rule ref="Drupal.ControlStructures.ControlSignature"/>
   <rule ref="Drupal.ControlStructures.ElseIf"/>
@@ -190,6 +186,10 @@
     <include-pattern>*/Plugin/*</include-pattern>
     <include-pattern>*/ListBuilder/*</include-pattern>
     <include-pattern>*/tests/*/Form/*</include-pattern>
+    <include-pattern>*/modules/system/tests/modules/*</include-pattern>
+    <include-pattern>*/Kernel*/*</include-pattern>
+    <include-pattern>*/tests/*/Functional*/*</include-pattern>
+    <include-pattern>./core/lib/*</include-pattern>
   </rule>
 
   <!-- Generic sniffs -->
