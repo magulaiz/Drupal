@@ -11,9 +11,6 @@ namespace Drupal\Tests;
  */
 class StreamCapturer extends \php_user_filter {
 
-  /**
-   * The cache data.
-   */
   public static $cache = '';
 
   public function filter($in, $out, &$consumed, $closing): int {

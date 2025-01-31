@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\entity_test\EntityTestHelper;
-
 /**
  * Tests creation, saving, and loading of entity UUIDs.
  *
@@ -19,7 +17,7 @@ class EntityUUIDTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    foreach (EntityTestHelper::getEntityTypes() as $entity_type_id) {
+    foreach (entity_test_entity_types() as $entity_type_id) {
       // The entity_test schema is installed by the parent.
       if ($entity_type_id != 'entity_test') {
         $this->installEntitySchema($entity_type_id);
@@ -32,7 +30,7 @@ class EntityUUIDTest extends EntityKernelTestBase {
    */
   public function testCRUD(): void {
     // All entity variations have to have the same results.
-    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
+    foreach (entity_test_entity_types() as $entity_type) {
       $this->assertCRUD($entity_type);
     }
   }

@@ -61,7 +61,6 @@ EOS;
     $info_d = <<<'EOS'
 type: theme
 name: Theme D
-core_version_requirement: '*'
 EOS;
 
     $module_a = <<<'EOS'
@@ -638,7 +637,6 @@ EOS;
     $info_d = <<<'EOS'
 type: theme
 name: Theme D
-core_version_requirement: '*'
 EOS;
 
     $module_a = <<<'EOS'

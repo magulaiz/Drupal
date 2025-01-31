@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Kernel;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Exception\StageEventException;
 use Drupal\package_manager\ValidationResult;
 
@@ -15,8 +14,6 @@ use Drupal\package_manager\ValidationResult;
  */
 class ComposerMinimumStabilityValidatorTest extends PackageManagerKernelTestBase {
 
-  use StringTranslationTrait;
-
   /**
    * Tests error if requested version is less stable than the minimum: stable.
    */
@@ -24,7 +21,7 @@ class ComposerMinimumStabilityValidatorTest extends PackageManagerKernelTestBase
     $stage = $this->createStage();
     $stage->create();
     $result = ValidationResult::createError([
-      $this->t("<code>drupal/core</code>'s requested version 9.8.1-beta1 is less stable (beta) than the minimum stability (stable) required in <PROJECT_ROOT>/composer.json."),
+      t("<code>drupal/core</code>'s requested version 9.8.1-beta1 is less stable (beta) than the minimum stability (stable) required in <PROJECT_ROOT>/composer.json."),
     ]);
     try {
       $stage->require(['drupal/core:9.8.1-beta1']);
@@ -43,7 +40,7 @@ class ComposerMinimumStabilityValidatorTest extends PackageManagerKernelTestBase
     // Dev packages are also checked.
     $stage->create();
     $result = ValidationResult::createError([
-      $this->t("<code>drupal/core-dev</code>'s requested version 9.8.x-dev is less stable (dev) than the minimum stability (stable) required in <PROJECT_ROOT>/composer.json."),
+      t("<code>drupal/core-dev</code>'s requested version 9.8.x-dev is less stable (dev) than the minimum stability (stable) required in <PROJECT_ROOT>/composer.json."),
     ]);
     try {
       $stage->require([], ['drupal/core-dev:9.8.x-dev']);

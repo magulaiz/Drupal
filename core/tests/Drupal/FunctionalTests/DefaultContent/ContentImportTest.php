@@ -72,9 +72,6 @@ class ContentImportTest extends BrowserTestBase {
     'user',
   ];
 
-  /**
-   * The directory with the source data.
-   */
   private readonly string $contentDir;
 
   /**

@@ -550,9 +550,6 @@ class UserContextAccessPolicy extends AccessPolicyBase {
 
 class CacheItem {
 
-  /**
-   * The cache data.
-   */
   public $data;
 
   public function __construct($data) {

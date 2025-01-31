@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the standard profile.
+ * Install, update and uninstall functions for the standard installation profile.
  */
 
 use Drupal\shortcut\Entity\Shortcut;

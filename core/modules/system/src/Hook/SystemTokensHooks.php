@@ -16,7 +16,7 @@ class SystemTokensHooks {
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
-  public function tokenInfo(): array {
+  public function tokenInfo() {
     $types['site'] = [
       'name' => t("Site information"),
       'description' => t("Tokens for site-wide settings and other global information."),
@@ -98,7 +98,7 @@ class SystemTokensHooks {
    * Implements hook_tokens().
    */
   #[Hook('tokens')]
-  public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata): array {
+  public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
     $token_service = \Drupal::token();
     $url_options = ['absolute' => TRUE];
     if (isset($options['langcode'])) {

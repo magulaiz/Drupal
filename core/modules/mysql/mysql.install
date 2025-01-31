@@ -11,7 +11,7 @@ use Drupal\Core\Render\Markup;
 /**
  * Implements hook_requirements().
  */
-function mysql_requirements($phase): array {
+function mysql_requirements($phase) {
   $requirements = [];
 
   if ($phase === 'runtime') {

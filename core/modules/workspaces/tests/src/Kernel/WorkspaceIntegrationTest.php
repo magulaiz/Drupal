@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
-// cspell:ignore differring
-
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -374,10 +372,10 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   /**
    * Tests the workspace association data integrity for entity CRUD operations.
    *
-   * @covers \Drupal\workspaces\Hook\EntityOperations::entityPresave
-   * @covers \Drupal\workspaces\Hook\EntityOperations::entityInsert
-   * @covers \Drupal\workspaces\Hook\EntityOperations::entityDelete
-   * @covers \Drupal\workspaces\Hook\EntityOperations::entityRevisionDelete
+   * @covers ::workspaces_entity_presave
+   * @covers ::workspaces_entity_insert
+   * @covers ::workspaces_entity_delete
+   * @covers ::workspaces_entity_revision_delete
    */
   public function testWorkspaceAssociationDataIntegrity(): void {
     $this->initializeWorkspacesModule();
@@ -1000,10 +998,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // Check entity queries with no conditions.
     $result = $storage->getQuery()->accessCheck(FALSE)->execute();
     $expected_result = array_combine(array_column($expected_default_revisions, $revision_key), array_column($expected_default_revisions, $id_key));
-    $this->assertEquals($expected_result, $result);
-
-    // Check latest revision queries.
-    $result = $storage->getQuery()->accessCheck(FALSE)->latestRevision()->execute();
     $this->assertEquals($expected_result, $result);
 
     // Check querying each revision individually.

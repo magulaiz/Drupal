@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\package_manager\Kernel;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PostApplyEvent;
 use Drupal\package_manager\Event\PostCreateEvent;
 use Drupal\package_manager\Event\PostRequireEvent;
@@ -28,8 +27,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * @internal
  */
 class StageEventsTest extends PackageManagerKernelTestBase implements EventSubscriberInterface {
-
-  use StringTranslationTrait;
 
   /**
    * The events that were fired, in the order they were fired.
@@ -137,7 +134,7 @@ class StageEventsTest extends PackageManagerKernelTestBase implements EventSubsc
    * @dataProvider providerValidationResults
    */
   public function testValidationResults(string $event_class): void {
-    $error_messages = [$this->t('Burn, baby, burn')];
+    $error_messages = [t('Burn, baby, burn')];
     // Set up an event listener which will only flag an error for the event
     // class under test.
     $handler = function (StageEvent $event) use ($event_class, $error_messages): void {
@@ -160,10 +157,10 @@ class StageEventsTest extends PackageManagerKernelTestBase implements EventSubsc
     $stage = $this->createStage();
 
     $error = ValidationResult::createError([
-      $this->t('Burn, baby, burn!'),
+      t('Burn, baby, burn!'),
     ]);
     $warning = ValidationResult::createWarning([
-      $this->t('The path ahead is scary...'),
+      t('The path ahead is scary...'),
     ]);
     $excluded_paths = $this->createMock(PathListInterface::class);
 

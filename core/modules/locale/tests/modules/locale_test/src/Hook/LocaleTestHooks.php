@@ -174,7 +174,7 @@ class LocaleTestHooks {
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
-  public function tokenInfo(): array {
+  public function tokenInfo() {
     $info = [];
     $info['types']['locale_test'] = ['name' => t('Locale test'), 'description' => t('Locale test')];
     $info['tokens']['locale_test']['security_test1'] = ['type' => 'text', 'name' => t('Security test 1')];
@@ -186,7 +186,7 @@ class LocaleTestHooks {
    * Implements hook_tokens().
    */
   #[Hook('tokens')]
-  public function tokens($type, $tokens, array $data = [], array $options = []): array {
+  public function tokens($type, $tokens, array $data = [], array $options = []) {
     $return = [];
     if ($type == 'locale_test') {
       foreach ($tokens as $name => $original) {

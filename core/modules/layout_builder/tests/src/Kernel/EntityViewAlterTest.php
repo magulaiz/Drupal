@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Route;
 use Drupal\layout_builder\Hook\LayoutBuilderHooks;
 
 /**
- * @covers \Drupal\layout_builder\Hook\LayoutBuilderHooks::entityViewAlter
+ * @covers layout_builder_entity_view_alter
  *
  * @group layout_builder
  */

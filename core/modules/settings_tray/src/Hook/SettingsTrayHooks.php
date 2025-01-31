@@ -89,7 +89,7 @@ class SettingsTrayHooks {
    * Implements hook_entity_type_build().
    */
   #[Hook('entity_type_build')]
-  public function entityTypeBuild(array &$entity_types): void {
+  public function entityTypeBuild(array &$entity_types) {
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
     $entity_types['block']->setFormClass('settings_tray', BlockEntitySettingTrayForm::class)->setLinkTemplate('settings_tray-form', '/admin/structure/block/manage/{block}/settings-tray');
   }
@@ -112,8 +112,7 @@ class SettingsTrayHooks {
       $items['contextual']['#weight'] = -1000;
       $items['contextual']['#attached']['library'][] = 'settings_tray/drupal.settings_tray';
       $items['contextual']['tab']['#attributes']['data-drupal-settingstray'] = 'toggle';
-      // Set a class on items to mark whether they should be active in edit
-      // mode.
+      // Set a class on items to mark whether they should be active in edit mode.
       // @todo Create a dynamic method for modules to set their own items.
       //   https://www.drupal.org/node/2784589.
       $edit_mode_items = ['contextual'];

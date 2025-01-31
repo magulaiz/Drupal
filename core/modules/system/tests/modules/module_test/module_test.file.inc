@@ -2,10 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the module_test module.
- *
- * Provides a hook to test \Drupal::moduleHandler()->getImplementationInfo()
- * loading includes.
+ * A file to test \Drupal::moduleHandler()->getImplementationInfo() loading includes.
  */
 
 declare(strict_types=1);

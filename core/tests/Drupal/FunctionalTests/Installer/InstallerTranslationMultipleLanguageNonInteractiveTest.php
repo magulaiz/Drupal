@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Tests\BrowserTestBase;
 
 // cspell:ignore montag
@@ -15,8 +14,6 @@ use Drupal\Tests\BrowserTestBase;
  * @group Installer
  */
 class InstallerTranslationMultipleLanguageNonInteractiveTest extends BrowserTestBase {
-
-  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -127,7 +124,7 @@ PO;
     $this->assertEquals('Anonymous es', $override_es->get('anonymous'));
 
     // Test translation from locale_test module.
-    $this->assertEquals('Montag', $this->t('Monday', [], ['langcode' => 'de']));
+    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']));
   }
 
   /**

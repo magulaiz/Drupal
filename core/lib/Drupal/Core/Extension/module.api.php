@@ -64,15 +64,17 @@ use Drupal\Core\Utility\UpdateException;
  *
  * Only procedural implementations are supported for this hook.
  *
- * Support for this hook will be removed in Drupal 12.0.0.
- * This hook has intentionally not been deprecated since removing
- * implementations will break modules with code in $module.$group.inc files.
+ * Normally hooks do not need to be explicitly defined. However, by declaring a
+ * hook explicitly, a module may define a "group" for it. Modules that implement
+ * a hook may then place their implementation in either $module.module or in
+ * $module.$group.inc. If the hook is located in $module.$group.inc, then that
+ * file will be automatically loaded when needed.
+ * In general, hooks that are rarely invoked and/or are very large should be
+ * placed in a separate include file, while hooks that are very short or very
+ * frequently called should be left in the main module file so that they are
+ * always available.
  *
- * $module.$group.inc themselves have been deprecated, so modules supporting
- * drupal 12.0.0 will have removed all code from $module.$group.inc files.
- *
- * Once a module requires 12.0.0 as a minimum version of Drupal the module can
- * safely remove hook_hook_info() implementations.
+ * See system_hook_info() for all hook groups defined by Drupal core.
  *
  * @return array
  *   An associative array whose keys are hook names and whose values are an
@@ -81,7 +83,7 @@ use Drupal\Core\Utility\UpdateException;
  *     system will determine whether a file with the name $module.$group.inc
  *     exists, and automatically load it when required.
  */
-function hook_hook_info(): array {
+function hook_hook_info() {
   $hooks['token_info'] = [
     'group' => 'tokens',
   ];
@@ -109,11 +111,11 @@ function hook_hook_info(): array {
  * you will have to change the order of hook_form_alter() implementation in
  * hook_module_implements_alter().
  *
- * @param array $implementations
+ * @param $implementations
  *   An array keyed by the module's name. The value of each item corresponds
  *   to a $group, which is usually FALSE, unless the implementation is in a
  *   file named $module.$group.inc.
- * @param string $hook
+ * @param $hook
  *   The name of the module hook being implemented.
  */
 function hook_module_implements_alter(&$implementations, $hook) {
@@ -171,7 +173,7 @@ function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $
  *   should be made earlier and exported so during import there's no need to
  *   do them again.
  */
-function hook_module_preinstall($module, bool $is_syncing): void {
+function hook_module_preinstall($module, bool $is_syncing) {
   my_module_cache_clear();
 }
 
@@ -186,7 +188,7 @@ function hook_module_preinstall($module, bool $is_syncing): void {
  *
  * This hook should be implemented in a .module file, not in an .install file.
  *
- * @param string[] $modules
+ * @param $modules
  *   An array of the modules that were installed.
  * @param bool $is_syncing
  *   TRUE if the module is being installed as part of a configuration import. In
@@ -199,7 +201,7 @@ function hook_module_preinstall($module, bool $is_syncing): void {
  * @see \Drupal\Core\Extension\ModuleInstaller::install()
  * @see hook_install()
  */
-function hook_modules_installed($modules, $is_syncing): void {
+function hook_modules_installed($modules, $is_syncing) {
   if (in_array('lousy_module', $modules)) {
     \Drupal::state()->set('my_module.lousy_module_compatibility', TRUE);
   }
@@ -270,7 +272,7 @@ function hook_install($is_syncing): void {
  *   should be made earlier and exported so during import there's no need to
  *   do them again.
  */
-function hook_module_preuninstall($module, bool $is_syncing): void {
+function hook_module_preuninstall($module, bool $is_syncing) {
   my_module_cache_clear();
 }
 
@@ -284,7 +286,7 @@ function hook_module_preuninstall($module, bool $is_syncing): void {
  * It is recommended that you implement this hook if your module stores
  * data that may have been set by other modules.
  *
- * @param string[] $modules
+ * @param $modules
  *   An array of the modules that were uninstalled.
  * @param bool $is_syncing
  *   TRUE if the module is being uninstalled as part of a configuration import.
@@ -295,7 +297,7 @@ function hook_module_preuninstall($module, bool $is_syncing): void {
  *
  * @see hook_uninstall()
  */
-function hook_modules_uninstalled($modules, $is_syncing): void {
+function hook_modules_uninstalled($modules, $is_syncing) {
   if (in_array('lousy_module', $modules)) {
     \Drupal::state()->delete('my_module.lousy_module_compatibility');
   }
@@ -520,11 +522,11 @@ function hook_install_tasks(&$install_state) {
  *
  * This hook is invoked on the install profile in install_tasks().
  *
- * @param string[] $tasks
+ * @param $tasks
  *   An array of all available installation tasks, including those provided by
  *   Drupal core. You can modify this array to change or replace individual
  *   steps within the installation process.
- * @param array $install_state
+ * @param $install_state
  *   An array of information about the current installation state.
  *
  * @see hook_install_tasks()
@@ -1023,7 +1025,7 @@ function hook_update_last_removed(): int {
  * @see drupal_get_updaters()
  * @see hook_updater_info_alter()
  */
-function hook_updater_info(): array {
+function hook_updater_info() {
   return [
     'module' => [
       'class' => 'Drupal\Core\Updater\Module',
@@ -1094,7 +1096,7 @@ function hook_updater_info_alter(&$updaters) {
  * Moreover, any requirement with a severity of REQUIREMENT_ERROR severity will
  * result in a notice on the administration configuration page.
  *
- * @param string $phase
+ * @param $phase
  *   The phase in which requirements are checked:
  *   - install: The module is being installed.
  *   - update: The module is enabled and update.php is run.
@@ -1117,7 +1119,7 @@ function hook_updater_info_alter(&$updaters) {
  *     - REQUIREMENT_ERROR: The requirement failed with an error.
  *     Defaults to REQUIREMENT_OK when installing, REQUIREMENT_INFO otherwise.
  */
-function hook_requirements($phase): array {
+function hook_requirements($phase) {
   $requirements = [];
 
   // Report Drupal version
@@ -1175,154 +1177,6 @@ function hook_requirements($phase): array {
  * @see hook_requirements()
  */
 function hook_requirements_alter(array &$requirements): void {
-  // Change the title from 'PHP' to 'PHP version'.
-  $requirements['php']['title'] = t('PHP version');
-
-  // Decrease the 'update status' requirement severity from warning to info.
-  $requirements['update status']['severity'] = REQUIREMENT_INFO;
-
-  // Remove a requirements entry.
-  unset($requirements['foo']);
-}
-
-/**
- * Check runtime requirements and do status reporting.
- *
- * Requirements are displayed on the 'Status report' (/admin/reports/status).
- *
- * Runtime requirements do not impact installation or updates of modules that
- * define them. These requirements are only used to display information on the
- * status report but do not impact site behavior. They can be used for more
- * general status information like maintenance tasks and security issues.
- * The returned requirements will be listed on the status report in the
- * administration section, with an indication of the severity level.
- * Moreover, any requirement with a severity of REQUIREMENT_ERROR will result in
- * a notice on the 'Configuration' administration page (/admin/config).
- *
- * @return array
- *   An associative array where the keys are arbitrary but must be unique (it
- *   is suggested to use the module short name as a prefix) and the values are
- *   themselves associative arrays with the following elements:
- *   - title: The name of the requirement.
- *   - value: The current value (e.g., version, time, level, etc).
- *   - description: The description of the requirement/status.
- *   - severity: (optional) The requirement's severity level, one of:
- *     - REQUIREMENT_INFO: For info only.
- *     - REQUIREMENT_OK: The requirement is satisfied.
- *     - REQUIREMENT_WARNING: The requirement failed with a warning.
- *     - REQUIREMENT_ERROR: The requirement failed with an error.
- *     Defaults to REQUIREMENT_OK.
- */
-function hook_runtime_requirements(): array {
-  $requirements = [];
-
-  // Report Drupal version
-  $requirements['drupal'] = [
-    'title' => t('Drupal'),
-    'value' => \Drupal::VERSION,
-    'severity' => REQUIREMENT_INFO,
-  ];
-
-  // Test PHP version
-  $requirements['php'] = [
-    'title' => t('PHP'),
-    'value' => Link::fromTextAndUrl(phpversion(), Url::fromRoute('system.php'))->toString(),
-  ];
-  if (version_compare(phpversion(), \Drupal::MINIMUM_PHP) < 0) {
-    $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version.', ['%version' => \Drupal::MINIMUM_PHP]);
-    $requirements['php']['severity'] = REQUIREMENT_ERROR;
-  }
-
-  // Report cron status
-  $cron_last = \Drupal::state()->get('system.cron_last');
-  $requirements['cron']['title'] = t('Cron maintenance tasks');
-  if (is_numeric($cron_last)) {
-    $requirements['cron']['description'] = '';
-    $requirements['cron']['value'] = t('Last run @time ago', ['@time' => \Drupal::service('date.formatter')->formatTimeDiffSince($cron_last)]);
-  }
-  else {
-    $requirements['cron']['description'] = t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href=":url">configuring cron jobs</a>.', [':url' => 'https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks/cron-automated-tasks-overview']);
-    $requirements['cron']['value'] = t('Never run');
-    $requirements['cron']['severity'] = REQUIREMENT_ERROR;
-  }
-  $requirements['cron']['description'] .= ' ' . t('You can <a href=":cron">run cron manually</a>.', [':cron' => Url::fromRoute('system.run_cron')->toString()]);
-
-  return $requirements;
-}
-
-/**
- * Alters runtime requirements data.
- *
- * Implementations are able to alter the title, value, description or the
- * severity of certain requirements defined by hook_requirements() and
- * hook_runtime_requirements() implementations, or even remove such entries.
- *
- * @param array $requirements
- *   The requirements data to be altered.
- *
- * @see hook_runtime_requirements()
- */
-function hook_runtime_requirements_alter(array &$requirements): void {
-  // Change the title from 'PHP' to 'PHP version'.
-  $requirements['php']['title'] = t('PHP version');
-
-  // Decrease the 'update status' requirement severity from warning to info.
-  $requirements['update status']['severity'] = REQUIREMENT_INFO;
-
-  // Remove a requirements entry.
-  unset($requirements['foo']);
-}
-
-/**
- * Check requirements before running database updates.
- *
- * This hook is invoked when update.php is run and when database updates are
- * triggered via the CLI.
- *
- * @return array
- *   An associative array where the keys are arbitrary but must be unique (it
- *   is suggested to use the module short name as a prefix) and the values are
- *   themselves associative arrays with the following elements:
- *   - title: The name of the requirement.
- *   - value: The current value (e.g., version, time, level, etc).
- *   - description: The description of the requirement/status.
- *   - severity: (optional) The requirement's result/severity level, one of:
- *     - REQUIREMENT_INFO: Has no effect during updates.
- *     - REQUIREMENT_OK: Has no effect during updates.
- *     - REQUIREMENT_WARNING: Displays a warning, user can choose to continue.
- *     - REQUIREMENT_ERROR: Displays an error message, user cannot continue
- *       until the problem is resolved.
- *     Defaults to REQUIREMENT_OK.
- */
-function hook_update_requirements() {
-  $requirements = [];
-
-  // Test PHP version
-  $requirements['php'] = [
-    'title' => t('PHP'),
-    'value' => phpversion(),
-  ];
-  if (version_compare(phpversion(), \Drupal::MINIMUM_PHP) < 0) {
-    $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version.', ['%version' => \Drupal::MINIMUM_PHP]);
-    $requirements['php']['severity'] = REQUIREMENT_ERROR;
-  }
-
-  return $requirements;
-}
-
-/**
- * Alters update requirements data.
- *
- * Implementations are able to alter the title, value, description or the
- * severity of certain requirements defined by hook_requirements() and
- * hook_update_requirements() implementations, or even remove such entries.
- *
- * @param array $requirements
- *   The requirements data to be altered.
- *
- * @see hook_update_requirements()
- */
-function hook_update_requirements_alter(array &$requirements): void {
   // Change the title from 'PHP' to 'PHP version'.
   $requirements['php']['title'] = t('PHP version');
 

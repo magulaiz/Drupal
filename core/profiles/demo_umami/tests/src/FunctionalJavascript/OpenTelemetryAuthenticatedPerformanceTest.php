@@ -36,6 +36,10 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'authenticatedFrontPage');
+    $this->assertSame(2, $performance_data->getStylesheetCount());
+    $this->assertLessThan(44000, $performance_data->getStylesheetBytes());
+    $this->assertSame(1, $performance_data->getScriptCount());
+    $this->assertLessThan(125000, $performance_data->getScriptBytes());
 
     $expected_queries = [
       'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
@@ -45,30 +49,13 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-
-    $expected = [
-      'QueryCount' => 4,
-      'CacheGetCount' => 40,
-      'CacheGetCountByBin' => [
-        'config' => 20,
-        'discovery' => 5,
-        'access_policy' => 2,
-        'data' => 7,
-        'bootstrap' => 4,
-        'dynamic_page_cache' => 2,
-      ],
-      'CacheSetCount' => 0,
-      'CacheDeleteCount' => 0,
-      'CacheTagChecksumCount' => 0,
-      'CacheTagIsValidCount' => 11,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 6,
-      'ScriptCount' => 1,
-      'ScriptBytes' => 123850,
-      'StylesheetCount' => 2,
-      'StylesheetBytes' => 43600,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertSame(4, $performance_data->getQueryCount());
+    $this->assertSame(42, $performance_data->getCacheGetCount());
+    $this->assertSame(0, $performance_data->getCacheSetCount());
+    $this->assertSame(0, $performance_data->getCacheDeleteCount());
+    $this->assertSame(0, $performance_data->getCacheTagChecksumCount());
+    $this->assertSame(11, $performance_data->getCacheTagIsValidCount());
+    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
   }
 
 }

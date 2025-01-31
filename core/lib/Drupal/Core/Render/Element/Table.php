@@ -115,6 +115,7 @@ class Table extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#header' => [],
       '#rows' => [],
@@ -128,10 +129,10 @@ class Table extends FormElementBase {
       '#multiple' => TRUE,
       '#js_select' => TRUE,
       '#process' => [
-        [static::class, 'processTable'],
+        [$class, 'processTable'],
       ],
       '#element_validate' => [
-        [static::class, 'validateTable'],
+        [$class, 'validateTable'],
       ],
       // Properties for tabledrag support.
       // The value is a list of arrays that are passed to
@@ -141,7 +142,7 @@ class Table extends FormElementBase {
       '#tabledrag' => [],
       // Render properties.
       '#pre_render' => [
-        [static::class, 'preRenderTable'],
+        [$class, 'preRenderTable'],
       ],
       '#theme' => 'table',
     ];
@@ -261,9 +262,8 @@ class Table extends FormElementBase {
           $row['select'] += [
             '#type' => $element['#multiple'] ? 'checkbox' : 'radio',
             '#id' => HtmlUtility::getUniqueId('edit-' . implode('-', $element_parents)),
-            // @todo If rows happen to use numeric indexes instead of string
-            //   keys, this results in a first row with $key === 0, which is
-            //   always FALSE.
+            // @todo If rows happen to use numeric indexes instead of string keys,
+            //   this results in a first row with $key === 0, which is always FALSE.
             '#return_value' => $key,
             '#attributes' => $element['#attributes'],
             '#wrapper_attributes' => [
@@ -383,7 +383,6 @@ class Table extends FormElementBase {
    *     $options array.
    *
    * @return array
-   *   Associative array of rendered child elements for a table.
    *
    * @see template_preprocess_table()
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()

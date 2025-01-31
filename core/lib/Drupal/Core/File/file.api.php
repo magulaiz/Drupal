@@ -20,7 +20,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManager;
  * Drupal and returning the file from a public directory. Modules can also
  * provide headers to specify information like the file's name or MIME type.
  *
- * @param string $uri
+ * @param $uri
  *   The URI of the file.
  *
  * @return string[]|int
@@ -53,7 +53,7 @@ function hook_file_download($uri) {
  *
  * This function should alter the URI, if it wants to rewrite the file URL.
  *
- * @param string $uri
+ * @param $uri
  *   The URI to a file for which we need an external URL, or the path to a
  *   shipped file.
  */
@@ -113,7 +113,7 @@ function hook_file_url_alter(&$uri) {
  * used to allow modules to add to or modify the default mapping from
  * \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::$defaultMapping.
  *
- * @param array $mapping
+ * @param $mapping
  *   An array of mimetypes correlated to the extensions that relate to them.
  *   The array has 'mimetypes' and 'extensions' elements, each of which is an
  *   array.
@@ -133,12 +133,11 @@ function hook_file_mimetype_mapping_alter(&$mapping) {
 /**
  * Alter archiver information declared by other modules.
  *
- * @param array $info
- *   An associative array of archivers, keyed by archiver ID. Each value
- *   consists of the plugin definition for that archiver.
+ * See hook_archiver_info() for a description of archivers and the archiver
+ * information structure.
  *
- * @see \Drupal\Core\Archiver\ArchiverManager
- * @see \Drupal\Core\Archiver\Attribute\Archiver
+ * @param $info
+ *   Archiver information to alter (return values from hook_archiver_info()).
  */
 function hook_archiver_info_alter(&$info) {
   $info['tar']['extensions'][] = 'tgz';
@@ -173,7 +172,7 @@ function hook_archiver_info_alter(&$info) {
  * @see hook_filetransfer_info_alter()
  * @see drupal_get_filetransfer_info()
  */
-function hook_filetransfer_info(): array {
+function hook_filetransfer_info() {
   $info['sftp'] = [
     'title' => t('SFTP (Secure FTP)'),
     'class' => 'Drupal\Core\FileTransfer\SFTP',

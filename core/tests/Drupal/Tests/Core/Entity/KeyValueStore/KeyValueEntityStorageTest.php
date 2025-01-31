@@ -61,8 +61,6 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   protected $languageManager;
 
   /**
-   * The entity storage.
-   *
    * @var \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage
    */
   protected $entityStorage;
@@ -635,30 +633,10 @@ class KeyValueEntityStorageTest extends UnitTestCase {
 }
 
 class EntityBaseTest extends EntityBase {
-
-  /**
-   * The entity ID.
-   */
   public $id;
-
-  /**
-   * The language code for the entity.
-   */
   public $langcode;
-
-  /**
-   * The entity UUID.
-   */
   public $uuid;
-
-  /**
-   * The entity label.
-   */
   public $label;
-
-  /**
-   * The original, or NULL if the entity cannot be loaded.
-   */
   public $original;
 
 }

@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class VariationCacheTest extends UnitTestCase {
 
   /**
-   * The mock request stack.
+   * The prophesized request stack.
    *
    * @var \Symfony\Component\HttpFoundation\RequestStack|\Prophecy\Prophecy\ProphecyInterface
    */
@@ -36,7 +36,7 @@ class VariationCacheTest extends UnitTestCase {
   protected $memoryBackend;
 
   /**
-   * The mock cache contexts manager.
+   * The prophesized cache contexts manager.
    *
    * @var \Drupal\Core\Cache\Context\CacheContextsManager|\Prophecy\Prophecy\ProphecyInterface
    */

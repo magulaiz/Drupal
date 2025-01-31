@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Kernel;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\Exception\StageEventException;
 use Drupal\package_manager\ValidationResult;
@@ -15,8 +14,6 @@ use Drupal\package_manager\ValidationResult;
  * @internal
  */
 class PendingUpdatesValidatorTest extends PackageManagerKernelTestBase {
-
-  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -47,7 +44,7 @@ class PendingUpdatesValidatorTest extends PackageManagerKernelTestBase {
     require_once __DIR__ . '/../../fixtures/db_update.php';
 
     $result = ValidationResult::createError([
-      $this->t('Some modules have database updates pending. You should run the <a href="/update.php">database update script</a> immediately.'),
+      t('Some modules have database updates pending. You should run the <a href="/update.php">database update script</a> immediately.'),
     ]);
     $this->assertStatusCheckResults([$result]);
     $this->assertResults([$result], PreCreateEvent::class);
@@ -61,7 +58,7 @@ class PendingUpdatesValidatorTest extends PackageManagerKernelTestBase {
     // will think it's pending.
     require_once __DIR__ . '/../../fixtures/post_update.php';
     $result = ValidationResult::createError([
-      $this->t('Some modules have database updates pending. You should run the <a href="/update.php">database update script</a> immediately.'),
+      t('Some modules have database updates pending. You should run the <a href="/update.php">database update script</a> immediately.'),
     ]);
     $this->assertStatusCheckResults([$result]);
     $this->assertResults([$result], PreCreateEvent::class);
@@ -78,7 +75,7 @@ class PendingUpdatesValidatorTest extends PackageManagerKernelTestBase {
     // will think it's pending.
     require_once __DIR__ . '/../../fixtures/post_update.php';
     $result = ValidationResult::createError([
-      $this->t('Some modules have database updates pending. You should run the <a href="/update.php">database update script</a> immediately.'),
+      t('Some modules have database updates pending. You should run the <a href="/update.php">database update script</a> immediately.'),
     ]);
     try {
       $stage->apply();

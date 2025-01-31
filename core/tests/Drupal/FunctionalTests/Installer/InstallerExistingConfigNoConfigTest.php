@@ -16,9 +16,6 @@ class InstallerExistingConfigNoConfigTest extends InstallerConfigDirectoryTestBa
    */
   protected $defaultTheme = 'stark';
 
-  /**
-   * {@inheritdoc}
-   */
   protected $profile = 'no_config_profile';
 
   /**

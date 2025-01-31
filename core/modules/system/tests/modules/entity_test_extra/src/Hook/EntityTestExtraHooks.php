@@ -16,7 +16,7 @@ class EntityTestExtraHooks {
    * Implements hook_entity_base_field_info().
    */
   #[Hook('entity_base_field_info')]
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
     return \Drupal::state()->get($entity_type->id() . '.additional_base_field_definitions', []);
   }
 
@@ -24,7 +24,7 @@ class EntityTestExtraHooks {
    * Implements hook_entity_field_storage_info().
    */
   #[Hook('entity_field_storage_info')]
-  public function entityFieldStorageInfo(EntityTypeInterface $entity_type): array {
+  public function entityFieldStorageInfo(EntityTypeInterface $entity_type) {
     return \Drupal::state()->get($entity_type->id() . '.additional_field_storage_definitions', []);
   }
 
@@ -32,7 +32,7 @@ class EntityTestExtraHooks {
    * Implements hook_entity_bundle_field_info().
    */
   #[Hook('entity_bundle_field_info')]
-  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions): array {
+  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     return \Drupal::state()->get($entity_type->id() . '.' . $bundle . '.additional_bundle_field_definitions', []);
   }
 

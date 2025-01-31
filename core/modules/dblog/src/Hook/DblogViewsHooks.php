@@ -8,6 +8,10 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for dblog.
  */
 class DblogViewsHooks {
+  /**
+   * @file
+   * Provide views data for dblog.module.
+   */
 
   /**
    * Implements hook_views_data().

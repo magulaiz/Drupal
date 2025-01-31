@@ -33,9 +33,6 @@ class InputTest extends KernelTestBase {
    */
   protected static $modules = ['system', 'user'];
 
-  /**
-   * The recipe.
-   */
   private readonly Recipe $recipe;
 
   /**

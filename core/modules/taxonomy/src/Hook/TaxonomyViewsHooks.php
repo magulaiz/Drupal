@@ -59,7 +59,7 @@ class TaxonomyViewsHooks {
    * Views integration for entity reference fields which reference taxonomy terms.
    * Adds a term relationship to the default field data.
    *
-   * @see FieldViewsDataProvider::defaultFieldImplementation()
+   * @see views_field_default_views_data()
    */
   #[Hook('field_views_data_alter')]
   public function fieldViewsDataAlter(array &$data, FieldStorageConfigInterface $field_storage): void {

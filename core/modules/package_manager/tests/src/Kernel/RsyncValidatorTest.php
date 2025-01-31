@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\package_manager\Kernel;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreCreateEvent;
 use Drupal\package_manager\ValidationResult;
 use Drupal\package_manager\Validator\RsyncValidator;
@@ -20,8 +19,6 @@ use Symfony\Component\DependencyInjection\Reference;
  * @internal
  */
 class RsyncValidatorTest extends PackageManagerKernelTestBase {
-
-  use StringTranslationTrait;
 
   /**
    * The mocked executable finder.
@@ -64,14 +61,14 @@ class RsyncValidatorTest extends PackageManagerKernelTestBase {
     $this->executableFinder->find('rsync')->willThrow(new LogicException($message));
 
     $result = ValidationResult::createError([
-      $this->t('<code>rsync</code> is not available.'),
+      t('<code>rsync</code> is not available.'),
     ]);
     $this->assertResults([$result], PreCreateEvent::class);
 
     $this->enableModules(['help']);
 
     $result = ValidationResult::createError([
-      $this->t('<code>rsync</code> is not available. See the <a href="/admin/help/package_manager#package-manager-faq-rsync">Package Manager help</a> for more information on how to resolve this.'),
+      t('<code>rsync</code> is not available. See the <a href="/admin/help/package_manager#package-manager-faq-rsync">Package Manager help</a> for more information on how to resolve this.'),
     ]);
     $this->assertResults([$result], PreCreateEvent::class);
   }

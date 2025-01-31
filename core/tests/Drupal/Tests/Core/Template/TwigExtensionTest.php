@@ -677,9 +677,6 @@ class TwigExtensionTest extends UnitTestCase {
 
 class TwigExtensionTestString {
 
-  /**
-   * The test string.
-   */
   protected $string;
 
   public function __construct($string) {

@@ -15,9 +15,6 @@ use Drupal\user\Entity\User;
  */
 class DeleteActionTest extends KernelTestBase {
 
-  /**
-   * The test user.
-   */
   protected $testUser;
 
   /**

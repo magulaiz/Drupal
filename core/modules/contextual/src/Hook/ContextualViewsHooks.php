@@ -8,6 +8,10 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for contextual.
  */
 class ContextualViewsHooks {
+  /**
+   * @file
+   * Provide views data for contextual.module.
+   */
 
   /**
    * Implements hook_views_data_alter().

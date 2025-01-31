@@ -633,7 +633,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
-   * Tests an invalid scheme in SIMPLETEST_BASE_URL throws an exception.
+   * Test if setting an invalid scheme in SIMPLETEST_BASE_URL throws an exception.
    */
   public function testSimpleTestBaseUrlValidation(): void {
     putenv('SIMPLETEST_BASE_URL=mysql://user:pass@localhost/database');

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\package_manager\Kernel;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
@@ -30,8 +29,6 @@ use PhpTuf\ComposerStager\API\Core\StagerInterface;
  * @internal
  */
 class StageBaseTest extends PackageManagerKernelTestBase {
-
-  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -314,7 +311,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
     $stage = $this->createStage();
     $stage_id = $stage->create();
     $stage->require(['drupal/core:9.8.1']);
-    $stage->destroy(TRUE, $this->t('Force destroy stage.'));
+    $stage->destroy(TRUE, t('Force destroy stage.'));
 
     // Delete the tempstore message stored for the previously destroyed stage.
     $tempstore = $this->container->get('tempstore.shared');

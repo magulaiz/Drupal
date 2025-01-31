@@ -17,7 +17,7 @@ class TaxonomyTokensHooks {
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
-  public function tokenInfo(): array {
+  public function tokenInfo() {
     $types['term'] = [
       'name' => t("Taxonomy terms"),
       'description' => t("Tokens related to taxonomy terms."),
@@ -85,7 +85,7 @@ class TaxonomyTokensHooks {
    * Implements hook_tokens().
    */
   #[Hook('tokens')]
-  public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata): array {
+  public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
     $token_service = \Drupal::token();
     if (isset($options['langcode'])) {
       $url_options['language'] = \Drupal::languageManager()->getLanguage($options['langcode']);

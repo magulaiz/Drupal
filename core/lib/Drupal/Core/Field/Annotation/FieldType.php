@@ -89,7 +89,7 @@ class FieldType extends DataType {
   public $default_formatter;
 
   /**
-   * Indicates that fields of this type cannot be created through the UI.
+   * A boolean stating that fields of this type cannot be created through the UI.
    *
    * @var bool
    */

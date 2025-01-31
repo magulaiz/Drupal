@@ -20,17 +20,16 @@ class Log {
   /**
    * Cache of logged queries. This will only be used if the query logger is enabled.
    *
-   * @var array
    * The structure for the logging array is as follows:
    *
-   * @code
-   * [
-   *   $logging_key = [
-   *     ['query' => '', 'args' => [], 'caller' => '', 'target' => '', 'time' => 0, 'start' => 0],
-   *     ['query' => '', 'args' => [], 'caller' => '', 'target' => '', 'time' => 0, 'start' => 0],
-   *   ],
-   * ];
-   * @endcode
+   * array(
+   *   $logging_key = array(
+   *     array('query' => '', 'args' => array(), 'caller' => '', 'target' => '', 'time' => 0, 'start' => 0),
+   *     array('query' => '', 'args' => array(), 'caller' => '', 'target' => '', 'time' => 0, 'start' => 0),
+   *   ),
+   * );
+   *
+   * @var array
    */
   protected $queryLog = [];
 
@@ -44,7 +43,7 @@ class Log {
   /**
    * Constructor.
    *
-   * @param string $key
+   * @param $key
    *   The database connection key for which to enable logging.
    */
   public function __construct($key = 'default') {
@@ -56,7 +55,7 @@ class Log {
    *
    * If the specified logging key is already running this method does nothing.
    *
-   * @param string $logging_key
+   * @param $logging_key
    *   The identification key for this log request. By specifying different
    *   logging keys we are able to start and stop multiple logging runs
    *   simultaneously without them colliding.
@@ -70,7 +69,7 @@ class Log {
   /**
    * Retrieve the query log for the specified logging key so far.
    *
-   * @param string $logging_key
+   * @param $logging_key
    *   The logging key to fetch.
    *
    * @return array
@@ -86,7 +85,7 @@ class Log {
    * This method does not stop logging, it simply clears the log. To stop
    * logging, use the end() method.
    *
-   * @param string $logging_key
+   * @param $logging_key
    *   The logging key to empty.
    */
   public function clear($logging_key) {
@@ -96,7 +95,7 @@ class Log {
   /**
    * Stop logging for the specified logging key.
    *
-   * @param string $logging_key
+   * @param $logging_key
    *   The logging key to stop.
    */
   public function end($logging_key) {

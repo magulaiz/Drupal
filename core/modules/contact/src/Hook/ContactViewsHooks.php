@@ -8,6 +8,10 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for contact.
  */
 class ContactViewsHooks {
+  /**
+   * @file
+   * Provide views data for contact.module.
+   */
 
   /**
    * Implements hook_views_data_alter().

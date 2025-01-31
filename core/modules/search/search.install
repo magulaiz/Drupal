@@ -128,7 +128,7 @@ function search_schema(): array {
  *
  * For the Status Report, return information about search index status.
  */
-function search_requirements($phase): array {
+function search_requirements($phase) {
   $requirements = [];
 
   if ($phase == 'runtime') {
