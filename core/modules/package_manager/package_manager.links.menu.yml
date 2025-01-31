@@ -1,0 +1,5 @@
+package_manager.settings:
+  title: 'Package Manager'
+  parent: system.admin_config_development
+  description: 'Configure Package Manager settings.'
+  route_name: package_manager.settings

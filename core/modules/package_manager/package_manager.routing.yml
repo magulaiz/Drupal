@@ -1,0 +1,6 @@
+package_manager.settings:
+  path: '/admin/config/development/package-manager'
+  defaults:
+    _form: 'Drupal\package_manager\Form\SettingsForm'
+  requirements:
+    _permission: 'administer software updates'
