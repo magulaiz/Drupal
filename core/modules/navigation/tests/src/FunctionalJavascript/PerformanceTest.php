@@ -81,6 +81,7 @@ class PerformanceTest extends PerformanceTestBase {
         'bootstrap' => 6,
         'dynamic_page_cache' => 2,
         'render' => 23,
+        'discovery' => 10,
         'menu' => 1,
       ],
       'CacheSetCount' => 2,
