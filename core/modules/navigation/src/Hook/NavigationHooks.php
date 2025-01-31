@@ -99,6 +99,19 @@ class NavigationHooks {
         'items' => [],
       ],
     ];
+    $items['navigation__messages'] = [
+      'variables' => [
+        'message_list' => NULL,
+      ],
+    ];
+    $items['navigation__message'] = [
+      'variables' => [
+        'attributes' => [],
+        'url' => NULL,
+        'content' => NULL,
+        'type' => 'status',
+      ],
+    ];
     return $items;
   }
 
@@ -162,7 +175,8 @@ class NavigationHooks {
     array_walk($definitions, function (&$definition, $block_id) {
       [$base_plugin_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $block_id);
 
-      // Add the allow_in_navigation attribute to those blocks valid for Navigation.
+      // Add the allow_in_navigation attribute to those blocks valid for
+      // Navigation.
       // @todo Refactor to use actual block Attribute once
       //   https://www.drupal.org/project/drupal/issues/3443882 is merged.
       $allow_in_navigation = [
