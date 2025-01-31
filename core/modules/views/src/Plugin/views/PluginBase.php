@@ -348,9 +348,9 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    *
    * The resulting string will be sanitized with Xss::filterAdmin.
    *
-   * @param $text
+   * @param string $text
    *   Unsanitized string with possible tokens.
-   * @param $tokens
+   * @param array $tokens
    *   Array of token => replacement_value items.
    *
    * @return string
@@ -418,8 +418,8 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       ];
 
       // Currently you cannot attach assets to tokens with
-      // Renderer::renderInIsolation(). This may be unnecessarily limiting. Consider
-      // using Renderer::executeInRenderContext() instead.
+      // Renderer::renderInIsolation(). This may be unnecessarily limiting.
+      // Consider using Renderer::executeInRenderContext() instead.
       // @todo https://www.drupal.org/node/2566621
       return (string) $this->getRenderer()->renderInIsolation($build);
     }
@@ -581,6 +581,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       // translate it again.
       // @see Drupal\Core\Language::filterLanguages().
       if (!$name instanceof TranslatableMarkup) {
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         $name = $this->t($name);
       }
       $list[PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT] = $name;
