@@ -153,7 +153,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheTagChecksumCount' => 39,
       'CacheTagIsValidCount' => 42,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 29,
+      'CacheTagLookupQueryCount' => 30,
       'CacheTagGroupedLookups' => [
         ['route_match'],
         ['access_policies', 'config:user.role.anonymous'],
