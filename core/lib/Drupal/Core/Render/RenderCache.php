@@ -123,7 +123,6 @@ class RenderCache implements RenderCacheInterface {
     return $results;
   }
 
-
   /**
    * {@inheritdoc}
    */
