@@ -43,6 +43,7 @@ class DefaultConfigTest extends KernelTestBase {
    */
   public static $skippedConfig = [
     'locale.settings' => ['path: '],
+    'package_manager.settings' => ['composer: ', 'rsync: '],
     'syslog.settings' => ['facility: '],
   ];
 
