@@ -37,7 +37,7 @@ final class ConfigSubscriber implements EventSubscriberInterface {
     $storage = $event->getStorage();
 
     $settings = $storage->read('package_manager.settings');
-    $storage['executables'] = [
+    $settings['executables'] = [
       'composer' => NULL,
       'rsync' => NULL,
     ];
