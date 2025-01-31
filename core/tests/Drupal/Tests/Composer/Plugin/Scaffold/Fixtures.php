@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Composer\Plugin\Scaffold;
 
+use core\tests\Drupal\Tests\Composer\Plugin\FixturesBase;
 use Drupal\Composer\Plugin\Scaffold\Handler;
 use Drupal\Composer\Plugin\Scaffold\Interpolator;
 use Drupal\Composer\Plugin\Scaffold\Operations\AppendOp;
 use Drupal\Composer\Plugin\Scaffold\Operations\ReplaceOp;
 use Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath;
-use Drupal\Tests\Composer\Plugin\FixturesBase;
 
 /**
  * Convenience class for creating fixtures.
