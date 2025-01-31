@@ -1,0 +1,33 @@
+olivero:
+  label: "Olivero icons"
+  extractor: svg
+  config:
+    sources:
+      - images/icons/{icon_id}.svg
+  settings:
+    viewBox:
+      title: "ViewBox"
+      type: "string"
+      default: "0 0 50 50"
+    width:
+      title: "Width"
+      type: "integer"
+      default: 32
+    height:
+      title: "Height"
+      type: "integer"
+      default: 32
+    color:
+      title: "Color"
+      type: "string"
+      format: "color"
+  template: >-
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="{{ width|default('32') }}"
+      height="{{ height|default('32') }}"
+      fill="{{ color|default('currentColor') }}"
+      viewBox="{{ viewBox|default('0 0 50 50') }}"
+    >
+      {{ content }}
+    </svg>

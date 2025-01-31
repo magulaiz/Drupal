@@ -1,0 +1,40 @@
+<nav{{ attributes.addClass('pager').setAttribute('role', 'navigation').setAttribute('aria-labelledby', heading_id) }}>
+  <{{ pagination_heading_level }} id="{{ heading_id }}"
+  class="visually-hidden">{{ 'Pagination'|t }}</{{ pagination_heading_level }}>
+<ul class="pager__items js-pager__items">
+  {# If we are not on the first page, print the first item #}
+  {% if first %}
+    {{ first }}
+  {% endif %}
+
+  {# If we are not on the first page, print the previous item. #}
+  {% if previous %}
+    {{ previous }}
+  {% endif %}
+
+  {# If there are further previous pages, add an ellipsis . #}
+  {% if ellipses.previous %}
+    <li class="pager__item pager__item--ellipsis" role="presentation">&hellip;</li>
+  {% endif %}
+
+  {# Now generate the actual pager piece. #}
+  {% for key, item in pages %}
+    {{ item }}
+  {% endfor %}
+
+  {# If there are more next pages, add an ellipsis. #}
+  {% if ellipses.next %}
+    <li class="pager__item pager__item--ellipsis" role="presentation">&hellip;</li>
+  {% endif %}
+
+  {# If we are not on the last page, print the next item. #}
+  {% if next %}
+    {{ next }}
+  {% endif %}
+
+  {# If we are not on the last page, print the last item. #}
+  {% if last %}
+    {{ last }}
+  {% endif %}
+</ul>
+</nav>

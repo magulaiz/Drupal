@@ -1,0 +1,47 @@
+{% set classes = [
+  'pager__item',
+  'pager__item--' ~ itemType
+] %}
+
+{% set icon = false %}
+{% if itemType == 'first' or itemType == 'last' %}
+  {% set icon = 'pager-first' %}
+  {% set classes = classes|merge(['pager__item--control']) %}
+{% endif %}
+{% if itemType == 'previous' or itemType == 'next'  %}
+  {% set icon = 'pager-previous' %}
+  {% set classes = classes|merge(['pager__item--control']) %}
+{% endif %}
+{% if itemType == 'active' %}
+  {% set text = 'Current page'|t %}
+{% endif %}
+{% if itemType == 'page' %}
+  {% set ariaLabel = text ~ pageNumber %}
+{% endif %}
+
+{% set content %}
+  {% if text %}
+    <span class="visually-hidden">{{ text }}</span>
+  {% endif %}
+  {% if pageNumber %}
+    {{ pageNumber }}
+  {% endif %}
+  {% if icon %}
+    {{ include (componentMetadata.path ~ '/images/' ~ icon ~ '.svg') }}
+    {{ icon('olivero', icon, {width: 11, height: 16, viewBox: '0 0 11 16'}) }}
+  {% endif %}
+{% endset %}
+
+<li {{ attributes.addClass(classes) }}>
+  {% if itemType == 'active' %}
+    <span aria-current="true">
+      {{ content }}
+    </span>
+  {% elseif linkAttributes is not defined %}
+    <span>{{ content }}</span>
+  {% else %}
+    <a{{ linkAttributes }}>
+      {{ content }}
+    </a>
+  {% endif %}
+</li>

@@ -1,0 +1,35 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Pager Item
+description: Provides a pager component for navigation, supporting accessibility and customizable properties for handling multiple pages.
+group: Navigation
+status: stable
+props:
+  type: object
+  required:
+    - text
+    - itemType
+  properties:
+    linkAttributes:
+      type: Drupal\Core\Template\Attribute
+      title: Link Attributes
+      description: Attributes for link element
+    text:
+      type: string
+      title: The text
+      description: |
+        The text for the link. and for the attributes
+    pageNumber:
+      type: integer
+      title: The page number
+      description: The page number
+    itemType:
+      type: string
+      label: The item type
+      description: The item type, the options available are page, first, previous, active, next and last.
+      enum:
+        - page
+        - first
+        - previous
+        - next
+        - last
+        - active

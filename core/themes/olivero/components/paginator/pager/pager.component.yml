@@ -1,0 +1,47 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Pager
+description: Provides a pager component for navigation, supporting accessibility and customizable properties for handling multiple pages.
+group: Navigation
+status: stable
+props:
+  type: object
+  required:
+    - heading_id
+  properties:
+    heading_id:
+      type: string
+      title: Heading ID
+      description: A unique identifier for the heading element associated with the pager.
+    pagination_heading_level:
+      type: string
+      title: Heading tag level
+      description: Specifies the heading tag level (e.g., "h1", "h2", etc.) used for the pagination heading to ensure proper document hierarchy and accessibility.
+    ellipses:
+      type: array
+      title: Ellipses
+      description: An array defining the ellipses to be displayed in the pager, used to indicate a gap between page ranges.
+      properties:
+        previous:
+          type: boolean
+          title: Previous ellipsis
+          description: Indicates whether an ellipsis should be added to represent additional pages before the current range.
+        next:
+          type: boolean
+          title: Next ellipsis
+          description: Indicates whether an ellipsis should be added to represent additional pages after the current range.
+slots:
+  first:
+    title: First page
+    description: Represents the first page in the pager, typically with a link to the first page.
+  previous:
+    title: Previous page
+    description: Represents the previous page relative to the current page, typically with a link to the preceding page in the pager.
+  pages:
+    title: Pages
+    description: An array of pages, each containing properties like href and attributes to define the page links in the pager.
+  next:
+    title: Next page
+    description: Represents the next page relative to the current page, typically with a link to the subsequent page in the pager.
+  last:
+    title: Last page
+    description: Represents the last page in the pager, typically with a link to the final page.
