@@ -83,14 +83,6 @@ class NavigationHooks {
     $items['top_bar'] = ['render element' => 'element'];
     $items['top_bar_page_actions'] = ['variables' => ['page_actions' => [], 'featured_page_actions' => []]];
     $items['top_bar_page_action'] = ['variables' => ['link' => []]];
-    $items['big_pipe_interface_preview__navigation_shortcut_lazy_builder_lazyLinks__Shortcuts'] = [
-      'variables' => [
-        'callback' => NULL,
-        'arguments' => NULL,
-        'preview' => NULL,
-      ],
-      'base hook' => 'big_pipe_interface_preview',
-    ];
     $items['block__navigation'] = ['render element' => 'elements', 'base hook' => 'block'];
     $items['navigation_menu'] = [
       'base hook' => 'menu',
@@ -105,6 +97,19 @@ class NavigationHooks {
     $items['navigation_content_top'] = [
       'variables' => [
         'items' => [],
+      ],
+    ];
+    $items['navigation__messages'] = [
+      'variables' => [
+        'message_list' => NULL,
+      ],
+    ];
+    $items['navigation__message'] = [
+      'variables' => [
+        'attributes' => [],
+        'url' => NULL,
+        'content' => NULL,
+        'type' => 'status',
       ],
     ];
     return $items;
@@ -170,7 +175,8 @@ class NavigationHooks {
     array_walk($definitions, function (&$definition, $block_id) {
       [$base_plugin_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $block_id);
 
-      // Add the allow_in_navigation attribute to those blocks valid for Navigation.
+      // Add the allow_in_navigation attribute to those blocks valid for
+      // Navigation.
       // @todo Refactor to use actual block Attribute once
       //   https://www.drupal.org/project/drupal/issues/3443882 is merged.
       $allow_in_navigation = [
