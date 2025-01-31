@@ -1,0 +1,61 @@
+<?php
+
+namespace Drupal\Composer\Plugin\Unpack\Unpackers;
+
+use Composer\Composer;
+use Composer\IO\IOInterface;
+use Composer\Package\PackageInterface;
+use Drupal\Composer\Plugin\Unpack\RootComposer;
+use Drupal\Composer\Plugin\Unpack\UnpackCollection;
+
+/**
+ * Unpacker factory for dependency unpackers.
+ */
+final class UnpackerFactory {
+
+  public function __construct(
+    private readonly Composer $composer,
+    private readonly IOInterface $io,
+    private readonly UnpackCollection $unpackCollection,
+    private readonly RootComposer $rootComposer,
+  ) {}
+
+  /**
+   * Get an unpacker from a given package.
+   *
+   * @param \Composer\Package\PackageInterface $package
+   *   The package to unpack.
+   *
+   * @return \Drupal\Composer\Plugin\Unpack\Unpackers\UnpackerInterface|null
+   *   The unpacker or NULL if the package is not unpackable.
+   */
+  public function create(PackageInterface $package): ?UnpackerInterface {
+    $unpacker = match ($package->getType()) {
+      RecipeUnpacker::ID => new RecipeUnpacker($package, $this->composer, $this->io, $this->rootComposer, $this->unpackCollection),
+      default => NULL,
+    };
+
+    return $unpacker;
+  }
+
+  /**
+   * Determines if a package is eligible to be unpacked.
+   *
+   * This method checks the type of the given package to decide if it can be
+   * unpacked. Only specific types of packages are eligible for unpacking.
+   * For example, we do not unpack module or theme packages.
+   *
+   * This check is performed when a package is being installed, ensuring that
+   * only the appropriate package types are handled for unpacking.
+   *
+   * @param \Composer\Package\PackageInterface $package
+   *   The package to unpack.
+   *
+   * @return bool
+   *   TRUE if the package is unpackable, FALSE otherwise.
+   */
+  public function isUnpackable(PackageInterface $package): bool {
+    return $this->create($package) !== NULL;
+  }
+
+}
