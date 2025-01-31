@@ -148,8 +148,16 @@ class Connection extends DatabaseConnection {
     }
 
     try {
-      $client = new Client($uri);
-      $connection = $client->{$connection_options['database']};
+      $client = new Client($uri, [], [
+        // The following information is added to the connection for diagnostic
+        // purposes.
+        'driver' => [
+          'name' => 'Drupal',
+          'version' => \Drupal::VERSION,
+          'platform' => php_uname('s'),
+        ],
+      ]);
+      $connection = $client->selectDatabase($connection_options['database']);
     }
     catch (ConnectionException $e) {
       throw new DatabaseNotFoundException($e->getMessage(), $e->getCode(), $e);
