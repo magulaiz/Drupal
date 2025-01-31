@@ -19,7 +19,7 @@ class Delete extends QueryDelete {
 
     try {
       $prefixed_table = $this->connection->getPrefix() . $this->table;
-      $result = $this->connection->getConnection()->{$prefixed_table}->deleteMany(
+      $result = $this->connection->getConnection()->selectCollection($prefixed_table)->deleteMany(
         $this->condition->toMongoArray(),
         [
           'session' => $this->connection->getMongodbSession(),

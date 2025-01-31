@@ -142,7 +142,7 @@ class DatabaseBackend implements CacheBackendInterface {
     try {
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . $this->bin;
-        $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
           ['cid' => ['$in' => array_keys($cid_mapping)]],
           [
             'projection' => ['cid' => 1, 'data' => 1, 'created' => 1, 'expire' => 1, 'serialized' => 1, 'tags' => 1, 'checksum' => 1, '_id' => 0],

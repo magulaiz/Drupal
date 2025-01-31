@@ -82,7 +82,7 @@ class Insert extends QueryInsert {
       }
 
       try {
-        $this->connection->getConnection()->{$prefixed_table}->insertOne(
+        $this->connection->getConnection()->selectCollection($prefixed_table)->insertOne(
           $insert_document,
           [
             'session' => $this->connection->getMongodbSession(),

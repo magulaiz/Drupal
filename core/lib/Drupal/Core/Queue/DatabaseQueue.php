@@ -123,7 +123,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
     try {
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . static::TABLE_NAME;
-        return $this->connection->getConnection()->{$prefixed_table}->count(
+        return $this->connection->getConnection()->selectCollection($prefixed_table)->count(
           ['name' => ['$eq' => $this->name]],
           ['session' => $this->connection->getMongodbSession()]
         );

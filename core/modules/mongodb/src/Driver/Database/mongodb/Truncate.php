@@ -18,7 +18,7 @@ class Truncate extends QueryTruncate {
     try {
       // DeleteMany with an empty filter and limit set to zero truncates the
       // collection.
-      $result = $this->connection->getConnection()->{$prefixed_table}->deleteMany(
+      $result = $this->connection->getConnection()->selectCollection($prefixed_table)->deleteMany(
         [],
         [
           'session' => $this->connection->getMongodbSession(),

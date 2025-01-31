@@ -99,7 +99,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     // Change the changed time for node so that we can test ordering.
     if ($connection->driver() == 'mongodb') {
       $prefixed_table = $connection->getPrefix() . 'node';
-      $connection->getConnection()->{$prefixed_table}->updateMany(
+      $connection->getConnection()->selectCollection($prefixed_table)->updateMany(
         [],
         [
           '$set' =>
@@ -111,7 +111,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
           ],
         ]
       );
-      $connection->getConnection()->{$prefixed_table}->updateMany(
+      $connection->getConnection()->selectCollection($prefixed_table)->updateMany(
         [],
         [
           '$set' =>

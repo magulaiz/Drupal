@@ -245,7 +245,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           [],
           [
             'sort' => ['id' => -1],
@@ -266,7 +266,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           [],
           [
             'sort' => ['nid' => -1],
@@ -287,7 +287,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           [],
           [
             'sort' => ['wid' => -1],
@@ -319,7 +319,7 @@ class TranslateSql {
           $connection->dispatchEvent($startEvent);
         }
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           ['age' => ['$gt' => $age]],
           [
             'projection' => ['name' => 1, '_id' => 0],
@@ -349,7 +349,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           ['age' => ['$gt' => $age]],
           [
             'projection' => ['name' => 1, 'age' => 1, 'job' => 1, 'id' => 1, '_id' => 0],
@@ -369,7 +369,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           ['id' => ['$eq' => $id]],
           [
             'projection' => ['id' => 1, 'blob1' => 1, '_id' => 0],
@@ -389,7 +389,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           ['id' => ['$eq' => $id]],
           [
             'projection' => ['id' => 1, 'blob1' => 1, 'blob2' => 1, '_id' => 0],
@@ -409,7 +409,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           ['id' => ['$eq' => $id]],
           [
             'projection' => ['id' => 1, 'offset' => 1, 'function' => 1, '_id' => 0],
@@ -428,7 +428,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           [],
           [
             'projection' => ['name' => 1, '_id' => 0],
@@ -451,7 +451,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           ['uid' => ['$eq' => $uid]],
           [
             'projection' => ['vid' => 1, '_id' => 0],
@@ -473,7 +473,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           [],
           [
             'projection' => ['tid' => 1, '_id' => 0],
@@ -496,7 +496,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           ['expire' => ['$eq' => 0], 'name' => ['$eq' => $name]],
           [
             'projection' => ['data' => 1, 'created' => 1, 'item_id' => 1, '_id' => 0],
@@ -518,7 +518,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->aggregate(
           [
             [
               '$group' => [
@@ -549,7 +549,7 @@ class TranslateSql {
 
         // Execute the count query.
         // @todo Something is wrong with this query. Can we remove it?
-        $query_count = $connection->getConnection()->{$prefixed_table}->count(
+        $query_count = $connection->getConnection()->selectCollection($prefixed_table)->count(
           [],
           [
             [
@@ -574,7 +574,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           ['collection' => ['$eq' => $collection], 'expire' => ['$gt' => $now]],
           [
             'projection' => ['name' => 1, 'value' => 1, '_id' => 0],
@@ -598,7 +598,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->aggregate(
           [
             [
               '$project' => [
@@ -627,7 +627,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->aggregate(
           [
             ['$match' => ['age' => (int) $age]],
             [
@@ -658,7 +658,7 @@ class TranslateSql {
         $startEvent = $this->startEvent($connection, $query, $args);
 
         // Fake the query a bit until MongoDB supports concat_ws.
-        $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->aggregate(
           [
             [
               '$project' => [
@@ -687,7 +687,7 @@ class TranslateSql {
         $startEvent = $this->startEvent($connection, $query, $args);
 
         // Fake the query a bit until MongoDB supports concat_ws.
-        $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->aggregate(
           [
             ['$match' => ['age' => (int) $age]],
             [
@@ -714,7 +714,7 @@ class TranslateSql {
         $startEvent = $this->startEvent($connection, $query, $args);
 
         // Fake the query a bit until MongoDB supports concat_ws.
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           ['name' => ['$eq' => '[square]']],
           [
             'projection' => ['name' => 1, '_id' => 0],
@@ -735,7 +735,7 @@ class TranslateSql {
         $startEvent = $this->startEvent($connection, $query, $args);
 
         // Fake the query a bit until MongoDB supports concat_ws.
-        $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->aggregate(
           [
             [
               '$project' => [
@@ -766,7 +766,7 @@ class TranslateSql {
         $startEvent = $this->startEvent($connection, $query, $args);
 
         // Fake the query a bit until MongoDB supports concat_ws.
-        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
           // There is no record with the age being -1. The same result as 1 = 0.
           ['age' => ['$eq' => -1]],
           [
@@ -787,7 +787,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
+        $cursor = $connection->getConnection()->selectCollection($prefixed_table)->aggregate(
           [
             [
               '$group' => [
@@ -825,7 +825,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $result = $connection->getConnection()->{$prefixed_table}->updateMany(
+        $result = $connection->getConnection()->selectCollection($prefixed_table)->updateMany(
           ['id' => 1],
           ['$set' => ['uid' => 1]],
           ['session' => $connection->getMongodbSession()],
@@ -843,7 +843,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $result = $connection->getConnection()->{$prefixed_table}->updateMany(
+        $result = $connection->getConnection()->selectCollection($prefixed_table)->updateMany(
           ['id' => ['$ne' => 1]],
           ['$set' => ['uid' => 2]],
           ['session' => $connection->getMongodbSession()],
@@ -863,7 +863,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $result = $connection->getConnection()->{$prefixed_table}->updateMany(
+        $result = $connection->getConnection()->selectCollection($prefixed_table)->updateMany(
           ['id' => $id],
           ['$set' => ['uid' => $uid]],
           ['session' => $connection->getMongodbSession()],
@@ -884,7 +884,7 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $result = $connection->getConnection()->{$prefixed_table}->updateMany(
+        $result = $connection->getConnection()->selectCollection($prefixed_table)->updateMany(
           ['id' => ['$in' => [$first_id, $second_id]]],
           ['$set' => ['uid' => $uid]],
           ['session' => $connection->getMongodbSession()],
@@ -941,7 +941,7 @@ class TranslateSql {
             $startEvent = $this->startEvent($connection, $query, $args);
 
             // Execute the count query.
-            $count = $connection->getConnection()->{$prefixed_table}->count(
+            $count = $connection->getConnection()->selectCollection($prefixed_table)->count(
               $filter,
               $options
             );
@@ -962,7 +962,7 @@ class TranslateSql {
           $options['session'] = $connection->getMongodbSession();
 
           // Execute the query.
-          $cursor = $connection->getConnection()->{$prefixed_table}->find(
+          $cursor = $connection->getConnection()->selectCollection($prefixed_table)->find(
             $filter,
             $options
           );

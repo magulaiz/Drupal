@@ -129,7 +129,7 @@ function user_requirements($phase): array {
   $connection = \Drupal::database();
   if ($connection->driver() === 'mongodb') {
     $prefixed_table = $connection->getPrefix() . 'users';
-    $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
+    $cursor = $connection->getConnection()->selectCollection($prefixed_table)->aggregate(
       [
         [
           '$unwind' => ['path' => '$user_translations'],

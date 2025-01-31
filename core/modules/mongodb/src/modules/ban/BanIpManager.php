@@ -14,7 +14,7 @@ class BanIpManager extends CoreBanIpManager {
    */
   public function isBanned($ip) {
     $prefixed_table = $this->connection->getPrefix() . 'ban_ip';
-    return (bool) $this->connection->getConnection()->{$prefixed_table}->count(
+    return (bool) $this->connection->getConnection()->selectCollection($prefixed_table)->count(
       [
         'ip' => [
           '$eq' => (string) $ip,

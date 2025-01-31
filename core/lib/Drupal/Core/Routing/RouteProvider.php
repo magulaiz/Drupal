@@ -244,7 +244,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
         try {
           if ($this->connection->driver() == 'mongodb') {
             $prefixed_table = $this->connection->getPrefix() . $this->tableName;
-            $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+            $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
               ['name' => ['$in' => $routes_to_load]],
               [
                 'projection' => ['name' => 1, 'route' => 1, '_id' => 0],
@@ -395,7 +395,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     try {
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . $this->tableName;
-        $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
           ['pattern_outline' => ['$in' => $ancestors], 'number_parts' => ['$gte' => count($parts)]],
           [
             'projection' => ['name' => 1, 'route' => 1, 'fit' => 1, '_id' => 0],

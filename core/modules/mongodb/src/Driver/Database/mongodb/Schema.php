@@ -538,7 +538,7 @@ class Schema extends DatabaseSchema {
       // Remove the old table name from the full path.
       $embedded_full_path = preg_replace('/' . $table . '\.$/i', '', $embedded_full_path);
 
-      $this->connection->getConnection()->{$prefixInfo['table']}->updateMany(
+      $this->connection->getConnection()->selectCollection($prefixInfo['table'])->updateMany(
         [],
         ['$rename' => [$embedded_full_path . $table => $embedded_full_path . $new_name]],
         ['session' => $this->connection->getMongodbSession()],
@@ -574,7 +574,7 @@ class Schema extends DatabaseSchema {
         $is_first_table = (substr($index->getName(), 0, strlen($table . '.')) == $table . '.') ? TRUE : FALSE;
         if ($is_first_table || (strpos($index->getName(), '.' . $table . '.') !== FALSE)) {
           // Delete the old index.
-          $this->connection->getConnection()->{$prefixInfo['table']}->dropIndex(
+          $this->connection->getConnection()->selectCollection($prefixInfo['table'])->dropIndex(
             $index->getName(),
             [
               'session' => $this->connection->getMongodbSession(),
@@ -597,7 +597,7 @@ class Schema extends DatabaseSchema {
           else {
             $name = str_replace('.' . $table . '.', '.' . $new_name . '.', $index->getName());
           }
-          $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+          $this->connection->getConnection()->selectCollection($prefixInfo['table'])->createIndex(
             $key,
             [
               'name' => $name,
@@ -685,7 +685,7 @@ class Schema extends DatabaseSchema {
         // from the rest of the string by leading dot and trailing dot.
         if ((substr($index->getName(), 0, strlen($table . '.')) == $table . '.') || (strpos($index->getName(), '.' . $table . '.') !== FALSE)) {
           // Delete the old index.
-          $this->connection->getConnection()->{$prefixInfo['table']}->dropIndex(
+          $this->connection->getConnection()->selectCollection($prefixInfo['table'])->dropIndex(
             $index->getName(),
             [
               'session' => $this->connection->getMongodbSession(),
@@ -1078,7 +1078,7 @@ class Schema extends DatabaseSchema {
 
     $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($table);
     if (($field != $field_new) || (!empty($original_field_spec['type']) && !empty($spec['type']) && ($original_field_spec['type'] != $spec['type']))) {
-      $cursor = $this->connection->getConnection()->{$prefixInfo['table']}->find(
+      $cursor = $this->connection->getConnection()->selectCollection($prefixInfo['table'])->find(
         [
           $embedded_full_path . $field => ['$exists' => TRUE],
         ],
@@ -1103,7 +1103,7 @@ class Schema extends DatabaseSchema {
           $updates['$unset'] = [$embedded_full_path . $field => ''];
         }
 
-        $this->connection->getConnection()->{$prefixInfo['table']}->updateOne(
+        $this->connection->getConnection()->selectCollection($prefixInfo['table'])->updateOne(
           [
             '_id' => $row->_id,
           ],
@@ -1168,7 +1168,7 @@ class Schema extends DatabaseSchema {
   public function getTableIndexesFromDatabase($table) {
     $prefixInfo = $this->getPrefixInfo($table);
     $indexes = [];
-    foreach ($this->connection->getConnection()->{$prefixInfo['table']}->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
+    foreach ($this->connection->getConnection()->selectCollection($prefixInfo['table'])->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
       $indexes[] = $indexInfo;
     }
     return $indexes;
@@ -1225,7 +1225,7 @@ class Schema extends DatabaseSchema {
     }
     $index_name = $this->ensureIdentifiersLength($table, $name, $type);
     $prefixInfo = $this->getPrefixInfo($table);
-    foreach ($this->connection->getConnection()->{$prefixInfo['table']}->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
+    foreach ($this->connection->getConnection()->selectCollection($prefixInfo['table'])->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
       if ($indexInfo->getName() == $index_name) {
         return $indexInfo;
       }
@@ -1303,7 +1303,7 @@ class Schema extends DatabaseSchema {
     $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($table);
     $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path, 'pkey');
     $prefixInfo = $this->getPrefixInfo($base_table_name);
-    foreach ($this->connection->getConnection()->{$prefixInfo['table']}->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
+    foreach ($this->connection->getConnection()->selectCollection($prefixInfo['table'])->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
       if ($indexInfo->getName() == $index_name) {
         return TRUE;
       }
@@ -1339,7 +1339,7 @@ class Schema extends DatabaseSchema {
       $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path, 'pkey');
       $prefixInfo = $this->getPrefixInfo($base_table_name);
       if ($base_table_name == $table) {
-        $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+        $this->connection->getConnection()->selectCollection($prefixInfo['table'])->createIndex(
           $this->createKeyArray($fields),
           [
             'name' => $index_name,
@@ -1359,7 +1359,7 @@ class Schema extends DatabaseSchema {
         }
         $partial_filter_expression = ['$and' => $partial_filter_expression];
 
-        $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+        $this->connection->getConnection()->selectCollection($prefixInfo['table'])->createIndex(
           $embedded_fields,
           [
             'name' => $index_name,
@@ -1402,7 +1402,7 @@ class Schema extends DatabaseSchema {
 
     $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path, 'pkey');
     $prefixInfo = $this->getPrefixInfo($base_table_name);
-    $result = $this->connection->getConnection()->{$prefixInfo['table']}->dropIndex(
+    $result = $this->connection->getConnection()->selectCollection($prefixInfo['table'])->dropIndex(
       $index_name,
       [
         'session' => $this->connection->getMongodbSession(),
@@ -1424,7 +1424,7 @@ class Schema extends DatabaseSchema {
 
     if ($this->tableInformation->getTableBaseTable($table) == $table) {
       $prefixInfo = $this->getPrefixInfo($table);
-      foreach ($this->connection->getConnection()->{$prefixInfo['table']}->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
+      foreach ($this->connection->getConnection()->selectCollection($prefixInfo['table'])->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
         if (($indexInfo->getName() == '__pkey') && ($indexInfo instanceof IndexInfo)) {
           return array_keys($indexInfo->getKey());
         }
@@ -1450,7 +1450,7 @@ class Schema extends DatabaseSchema {
     $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($table);
     $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path . $name, 'key');
     $prefixInfo = $this->getPrefixInfo($base_table_name);
-    foreach ($this->connection->getConnection()->{$prefixInfo['table']}->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
+    foreach ($this->connection->getConnection()->selectCollection($prefixInfo['table'])->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
       if ($indexInfo->getName() == $index_name) {
         return TRUE;
       }
@@ -1485,7 +1485,7 @@ class Schema extends DatabaseSchema {
       $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path . $name, 'key');
       $prefixInfo = $this->getPrefixInfo($base_table_name);
       if ($table == $base_table_name) {
-        $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+        $this->connection->getConnection()->selectCollection($prefixInfo['table'])->createIndex(
           $this->createKeyArray($fields),
           [
             'name' => $index_name,
@@ -1505,7 +1505,7 @@ class Schema extends DatabaseSchema {
         }
         $partial_filter_expression = ['$and' => $partial_filter_expression];
 
-        $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+        $this->connection->getConnection()->selectCollection($prefixInfo['table'])->createIndex(
           $embedded_fields,
           [
             'name' => $index_name,
@@ -1548,7 +1548,7 @@ class Schema extends DatabaseSchema {
 
     $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path . $name, 'key');
     $prefixInfo = $this->getPrefixInfo($base_table_name);
-    $result = $this->connection->getConnection()->{$prefixInfo['table']}->dropIndex(
+    $result = $this->connection->getConnection()->selectCollection($prefixInfo['table'])->dropIndex(
       $index_name,
       [
         'session' => $this->connection->getMongodbSession(),
@@ -1573,7 +1573,7 @@ class Schema extends DatabaseSchema {
     $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($table);
     $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path . $name);
     $prefixInfo = $this->getPrefixInfo($base_table_name);
-    foreach ($this->connection->getConnection()->{$prefixInfo['table']}->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
+    foreach ($this->connection->getConnection()->selectCollection($prefixInfo['table'])->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
       if ($indexInfo->getName() == $index_name) {
         return TRUE;
       }
@@ -1608,7 +1608,7 @@ class Schema extends DatabaseSchema {
     try {
       $prefixInfo = $this->getPrefixInfo($base_table_name);
       if ($table == $base_table_name) {
-        $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+        $this->connection->getConnection()->selectCollection($prefixInfo['table'])->createIndex(
           $this->createKeyArray($fields),
           [
             'name' => $index_name,
@@ -1636,7 +1636,7 @@ class Schema extends DatabaseSchema {
         }
         $partial_filter_expression = ['$and' => $partial_filter_expression];
 
-        $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+        $this->connection->getConnection()->selectCollection($prefixInfo['table'])->createIndex(
           $embedded_fields,
           [
             'name' => $index_name,
@@ -1679,7 +1679,7 @@ class Schema extends DatabaseSchema {
     }
 
     $prefixInfo = $this->getPrefixInfo($base_table_name);
-    $result = $this->connection->getConnection()->{$prefixInfo['table']}->dropIndex(
+    $result = $this->connection->getConnection()->selectCollection($prefixInfo['table'])->dropIndex(
       $index_name,
       [
         'session' => $this->connection->getMongodbSession(),
@@ -1768,7 +1768,7 @@ class Schema extends DatabaseSchema {
     }
     $constraint_name = $this->ensureIdentifiersLength($table, $name, $type);
     $prefixInfo = $this->getPrefixInfo($table);
-    foreach ($this->connection->getConnection()->{$prefixInfo['table']}->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
+    foreach ($this->connection->getConnection()->selectCollection($prefixInfo['table'])->listIndexes(['session' => $this->connection->getMongodbSession()]) as $indexInfo) {
       if ($indexInfo->getName() == $constraint_name) {
         return TRUE;
       }

@@ -38,7 +38,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
       foreach ($tags as $tag) {
         if ($this->connection->driver() == 'mongodb') {
           $prefixed_table = $this->connection->getPrefix() . 'cachetags';
-          $this->connection->getConnection()->{$prefixed_table}->updateOne(
+          $this->connection->getConnection()->selectCollection($prefixed_table)->updateOne(
             ['tag' => $tag],
             ['$inc' => ['invalidations' => 1]],
             [
@@ -73,7 +73,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
     try {
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . 'cachetags';
-        $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
           ['tag' => ['$in' => array_values($tags)]],
           [
             'projection' => ['tag' => 1, 'invalidations' => 1, '_id' => 0],

@@ -67,7 +67,7 @@ class TableInformation {
     if (empty($this->tableInformation) || $reload) {
       $prefixed_table_information_table = $this->connection->getPrefix() . static::TABLE_NAME;
 
-      $result = $this->connection->getConnection()->{$prefixed_table_information_table}->findOne(
+      $result = $this->connection->getConnection()->selectCollection($prefixed_table_information_table)->findOne(
         ['_id' => $this->id],
         ['session' => $this->connection->getMongodbSession()],
       );
@@ -983,7 +983,7 @@ class TableInformation {
     if (!empty($set) || !empty($unset)) {
       $session = $this->connection->getMongodbSession();
       if (!empty($set) && !empty($unset)) {
-        $result = $this->connection->getConnection()->{$prefixed_table_information_table}->findOneAndUpdate(
+        $result = $this->connection->getConnection()->selectCollection($prefixed_table_information_table)->findOneAndUpdate(
           ['_id' => $this->id],
           ['$unset' => $unset, '$set' => $set],
           [
@@ -993,7 +993,7 @@ class TableInformation {
         );
       }
       elseif (!empty($set)) {
-        $result = $this->connection->getConnection()->{$prefixed_table_information_table}->findOneAndUpdate(
+        $result = $this->connection->getConnection()->selectCollection($prefixed_table_information_table)->findOneAndUpdate(
           ['_id' => $this->id],
           ['$set' => $set],
           [
@@ -1003,7 +1003,7 @@ class TableInformation {
         );
       }
       else {
-        $result = $this->connection->getConnection()->{$prefixed_table_information_table}->findOneAndUpdate(
+        $result = $this->connection->getConnection()->selectCollection($prefixed_table_information_table)->findOneAndUpdate(
           ['_id' => $this->id],
           [
             '$unset' => $unset,

@@ -46,7 +46,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   public function has($key) {
     if ($this->connection->driver() == 'mongodb') {
       $prefixed_table = $this->connection->getPrefix() . $this->table;
-      $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+      $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
         ['collection' => ['$eq' => $this->collection], 'expire' => ['$gt' => new UTCDateTime($this->time->getRequestTime() * 1000)], 'name' => ['$eq' => (string) $key]],
         [
           'projection' => ['_id' => 1],
@@ -84,7 +84,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
           $key = (string) $key;
         }
         $prefixed_table = $this->connection->getPrefix() . $this->table;
-        $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
           ['collection' => ['$eq' => $this->collection], 'expire' => ['$gt' => new UTCDateTime($this->time->getRequestTime() * 1000)], 'name' => ['$in' => $keys]],
           [
             'projection' => ['name' => 1, 'value' => 1, '_id' => 0],
@@ -123,7 +123,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
     try {
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . $this->table;
-        $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
           ['collection' => ['$eq' => (string) $this->collection], 'expire' => ['$gt' => new UTCDateTime($this->time->getRequestTime() * 1000)]],
           [
             'projection' => ['name' => 1, 'value' => 1, '_id' => 0],

@@ -186,7 +186,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
     $connection = Database::getConnection();
     if ($connection->driver() == 'mongodb') {
       $prefixed_table = $connection->getPrefix() . 'node';
-      $connection->getConnection()->{$prefixed_table}->updateMany(
+      $connection->getConnection()->selectCollection($prefixed_table)->updateMany(
         [],
         [
           '$set' =>

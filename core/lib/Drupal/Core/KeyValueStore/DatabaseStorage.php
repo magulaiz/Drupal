@@ -75,7 +75,7 @@ class DatabaseStorage extends StorageBase {
   public function has($key) {
     if ($this->connection->driver() == 'mongodb') {
       $prefixed_table = $this->connection->getPrefix() . $this->table;
-      $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+      $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
         ['collection' => ['$eq' => (string) $this->collection], 'name' => ['$eq' => (string) $key]],
         [
           'projection' => ['_id' => 1],
@@ -117,7 +117,7 @@ class DatabaseStorage extends StorageBase {
         assert(Inspector::assertAllStrings($keys), 'All keys must be strings.');
 
         $prefixed_table = $this->connection->getPrefix() . $this->table;
-        $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
           [
             'collection' => ['$eq' => (string) $this->collection],
             'name' => ['$in' => $keys],
@@ -156,7 +156,7 @@ class DatabaseStorage extends StorageBase {
     try {
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . $this->table;
-        $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
           ['collection' => ['$eq' => (string) $this->collection]],
           [
             'projection' => ['name' => 1, 'value' => 1, '_id' => 0],

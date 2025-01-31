@@ -380,7 +380,7 @@ class Update extends QueryUpdate {
 
     try {
       if (!empty($update_values)) {
-        $result = $this->connection->getConnection()->{$prefixed_table}->updateMany(
+        $result = $this->connection->getConnection()->selectCollection($prefixed_table)->updateMany(
           $this->condition->toMongoArray(),
           $update_values,
           [

@@ -61,7 +61,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
       // Read the session data from the database.
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . 'sessions';
-        $result = $this->connection->getConnection()->{$prefixed_table}->findOne(
+        $result = $this->connection->getConnection()->selectCollection($prefixed_table)->findOne(
           ['sid' => ['$eq' => Crypt::hashBase64($sid)]],
           [
             'projection' => ['session' => 1, '_id' => 0],

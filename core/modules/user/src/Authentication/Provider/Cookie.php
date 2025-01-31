@@ -95,7 +95,7 @@ class Cookie implements AuthenticationProviderInterface, EventSubscriberInterfac
     if ($uid = $session->get('uid')) {
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . 'users';
-        $result = $this->connection->getConnection()->{$prefixed_table}->findOne(
+        $result = $this->connection->getConnection()->selectCollection($prefixed_table)->findOne(
           ['uid' => ['$eq' => (int) $uid]],
           [
             'projection' => ['user_translations' => 1, '_id' => 0],

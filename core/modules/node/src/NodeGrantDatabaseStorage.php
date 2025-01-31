@@ -351,7 +351,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     if ($this->database->driver() == 'mongodb') {
       $prefixed_table = $this->database->getPrefix() . 'node_access';
 
-      return (string) $this->database->getConnection()->{$prefixed_table}->count([], ['session' => $this->database->getMongodbSession()]);
+      return (string) $this->database->getConnection()->selectCollection($prefixed_table)->count([], ['session' => $this->database->getMongodbSession()]);
     }
     else {
       return $this->database->query('SELECT COUNT(*) FROM {node_access}')->fetchField();

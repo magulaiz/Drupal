@@ -843,7 +843,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           $this->database->schema()->dropTable($dedicated_current_revision_table);
           $this->database->schema()->dropTable($dedicated_latest_revision_table);
 
-          $cursor = $this->database->getConnection()->{$prefixed_table}->find(
+          $cursor = $this->database->getConnection()->selectCollection($prefixed_table)->find(
             [
               "$all_revisions_table.$dedicated_all_revisions_table" => ['$exists' => TRUE],
             ],
@@ -887,7 +887,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
               }
             }
 
-            $this->database->getConnection()->{$prefixed_table}->updateMany(
+            $this->database->getConnection()->selectCollection($prefixed_table)->updateMany(
               [$id_key => $entity->{$id_key}],
               [
                 '$set' => [
@@ -908,7 +908,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           $this->database->schema()->createEmbeddedTable($translations_table, $dedicated_translations_new_table, $schema[$dedicated_translations_table]);
           $this->database->schema()->dropTable($dedicated_translations_table);
 
-          $cursor = $this->database->getConnection()->{$prefixed_table}->find(
+          $cursor = $this->database->getConnection()->selectCollection($prefixed_table)->find(
             ["$translations_table.$dedicated_translations_table" => ['$exists' => TRUE]],
             [
               'projection' => [
@@ -930,7 +930,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
               }
             }
 
-            $this->database->getConnection()->{$prefixed_table}->updateMany(
+            $this->database->getConnection()->selectCollection($prefixed_table)->updateMany(
               [$id_key => $entity->{$id_key}],
               [
                 '$set' => [

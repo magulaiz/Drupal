@@ -16,7 +16,7 @@ class DatabaseFileUsageBackend extends CoreDatabaseFileUsageBackend {
    */
   public function add(FileInterface $file, $module, $type, $id, $count = 1) {
     $prefixed_table = $this->connection->getPrefix() . $this->tableName;
-    $this->connection->getConnection()->{$prefixed_table}->updateMany(
+    $this->connection->getConnection()->selectCollection($prefixed_table)->updateMany(
       [
         'fid' => (int) $file->id(),
         'module' => $module,
@@ -64,7 +64,7 @@ class DatabaseFileUsageBackend extends CoreDatabaseFileUsageBackend {
         $conditions['id'] = (string) $id;
       }
       $prefixed_table = $this->connection->getPrefix() . $this->tableName;
-      $this->connection->getConnection()->{$prefixed_table}->updateMany(
+      $this->connection->getConnection()->selectCollection($prefixed_table)->updateMany(
         $conditions,
         [
           '$inc' => ['count' => ($count * -1)],

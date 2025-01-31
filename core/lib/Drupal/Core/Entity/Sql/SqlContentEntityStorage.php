@@ -1194,7 +1194,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $update_operations['$pull'] = [$this->jsonStorageAllRevisionsTable => [$this->revisionKey => $revision_id]];
 
       // Perform all update operations on the entity.
-      $this->database->getConnection()->{$prefixed_table}->updateMany(
+      $this->database->getConnection()->selectCollection($prefixed_table)->updateMany(
         [$this->idKey => $entity_id],
         $update_operations,
         ['session' => $this->database->getMongodbSession()],
@@ -1928,7 +1928,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
 
         $prefixed_table = $this->database->getPrefix() . $this->baseTable;
-        $entity_data = $this->database->getConnection()->{$prefixed_table}->findOne(
+        $entity_data = $this->database->getConnection()->selectCollection($prefixed_table)->findOne(
           [$this->idKey => ['$eq' => $entity_id]],
           [
             'projection' => [$this->jsonStorageAllRevisionsTable => 1, $this->jsonStorageCurrentRevisionTable => 1],
@@ -2030,7 +2030,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           // $this->entityKeys[$this->revisionKey] = $current_revision_id;
         }
 
-        $this->database->getConnection()->{$prefixed_table}->updateOne(
+        $this->database->getConnection()->selectCollection($prefixed_table)->updateOne(
           [$this->idKey => ['$eq' => $entity_id]],
           ['$set' => $set],
           ['session' => $this->database->getMongodbSession()],
@@ -2873,14 +2873,14 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         foreach ($dedicated_tables as $embedded_to_table => $dedicated_table) {
           $prefixed_table = $this->database->getPrefix() . $this->getBaseTable();
           if ($embedded_to_table == $this->getBaseTable()) {
-            $this->database->getConnection()->{$prefixed_table}->updateMany(
+            $this->database->getConnection()->selectCollection($prefixed_table)->updateMany(
               ["$dedicated_table" => ['$exists' => TRUE]],
               ['$set' => ["$dedicated_table.$[].deleted" => TRUE]],
               ['session' => $this->database->getMongodbSession()],
             );
           }
           else {
-            $this->database->getConnection()->{$prefixed_table}->updateMany(
+            $this->database->getConnection()->selectCollection($prefixed_table)->updateMany(
               ["$embedded_to_table.$[].$dedicated_table" => ['$exists' => TRUE]],
               ['$set' => ["$embedded_to_table.$[].$dedicated_table.$[].deleted" => TRUE]],
               ['session' => $this->database->getMongodbSession()],
@@ -2954,7 +2954,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $latest_revision_table = $this->getJsonStorageLatestRevisionTable();
           $dedicated_latest_revision_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $latest_revision_table);
 
-          $this->database->getConnection()->{$prefixed_table}->updateMany(
+          $this->database->getConnection()->selectCollection($prefixed_table)->updateMany(
             [
               "$current_revision_table.$dedicated_current_revision_table" => ['$exists' => TRUE],
             ],
@@ -2969,7 +2969,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             ],
           );
 
-          $this->database->getConnection()->{$prefixed_table}->updateMany(
+          $this->database->getConnection()->selectCollection($prefixed_table)->updateMany(
             [
               "$latest_revision_table.$dedicated_latest_revision_table" => ['$exists' => TRUE],
             ],
@@ -2984,7 +2984,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             ],
           );
 
-          $this->database->getConnection()->{$prefixed_table}->updateMany(
+          $this->database->getConnection()->selectCollection($prefixed_table)->updateMany(
             [],
             [
               '$set' => [
@@ -3003,7 +3003,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $translations_table = $this->getJsonStorageTranslationsTable();
           $dedicated_translations_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $translations_table);
 
-          $this->database->getConnection()->{$prefixed_table}->updateMany(
+          $this->database->getConnection()->selectCollection($prefixed_table)->updateMany(
             [
               "$translations_table.$dedicated_translations_table" => ['$exists' => TRUE],
             ],
@@ -3021,7 +3021,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         else {
           $base_table = $this->getBaseTable();
           $dedicated_base_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $base_table);
-          $this->database->getConnection()->{$prefixed_table}->updateMany(
+          $this->database->getConnection()->selectCollection($prefixed_table)->updateMany(
             [
               $dedicated_base_table => ['$exists' => TRUE],
             ],
@@ -3223,7 +3223,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $prefixed_table = $this->database->getPrefix() . $this->getBaseTable();
       foreach ($dedicated_tables as $embedded_to_table => $dedicated_table) {
         if ($embedded_to_table == $this->getBaseTable()) {
-          $this->database->getConnection()->{$prefixed_table}->updateMany(
+          $this->database->getConnection()->selectCollection($prefixed_table)->updateMany(
             [
               $dedicated_table => ['$exists' => TRUE],
               $id_key => $id,
@@ -3233,7 +3233,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           );
         }
         else {
-          $this->database->getConnection()->{$prefixed_table}->updateMany(
+          $this->database->getConnection()->selectCollection($prefixed_table)->updateMany(
             [
               "$embedded_to_table.$dedicated_table" => ['$exists' => TRUE],
               $id_key => $id,

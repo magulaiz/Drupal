@@ -66,7 +66,7 @@ class Upsert extends QueryUpsert {
 
         $result = NULL;
         if (!empty($insert_document) && !empty($unset_document)) {
-          $result = $this->connection->getConnection()->{$prefixed_table}->updateOne(
+          $result = $this->connection->getConnection()->selectCollection($prefixed_table)->updateOne(
             $insert_filter,
             [
               '$set' => $insert_document,
@@ -79,7 +79,7 @@ class Upsert extends QueryUpsert {
           );
         }
         elseif (!empty($insert_document)) {
-          $result = $this->connection->getConnection()->{$prefixed_table}->updateOne(
+          $result = $this->connection->getConnection()->selectCollection($prefixed_table)->updateOne(
             $insert_filter,
             [
               '$set' => $insert_document,
@@ -91,7 +91,7 @@ class Upsert extends QueryUpsert {
           );
         }
         elseif (!empty($unset_document)) {
-          $result = $this->connection->getConnection()->{$prefixed_table}->updateOne(
+          $result = $this->connection->getConnection()->selectCollection($prefixed_table)->updateOne(
             $insert_filter,
             [
               '$unset' => $unset_document,

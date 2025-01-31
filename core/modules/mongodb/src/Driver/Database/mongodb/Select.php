@@ -1305,7 +1305,7 @@ class Select extends QuerySelect {
           $this->connection->dispatchEvent($startEvent);
         }
 
-        $results = $this->connection->getConnection()->{$prefixed_table}->aggregate(
+        $results = $this->connection->getConnection()->selectCollection($prefixed_table)->aggregate(
           $pipeline,
           [
             'session' => $this->connection->getMongodbSession(),
@@ -1356,7 +1356,7 @@ class Select extends QuerySelect {
           $this->connection->dispatchEvent($startEvent);
         }
 
-        $cursor = $this->connection->getConnection()->{$prefixed_table}->aggregate(
+        $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->aggregate(
           $pipeline,
           [
             'useCursor' => TRUE,
@@ -1419,7 +1419,7 @@ class Select extends QuerySelect {
           $this->connection->dispatchEvent($startEvent);
         }
 
-        $count = count($this->connection->getConnection()->{$prefixed_table}->distinct($field['field'], $this->mongodbFilter), $options);
+        $count = count($this->connection->getConnection()->selectCollection($prefixed_table)->distinct($field['field'], $this->mongodbFilter), $options);
 
         if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
           $this->connection->dispatchEvent(new StatementExecutionEndEvent(
@@ -1458,7 +1458,7 @@ class Select extends QuerySelect {
           $this->connection->dispatchEvent($startEvent);
         }
 
-        $count = $this->connection->getConnection()->{$prefixed_table}->count($this->mongodbFilter, $options);
+        $count = $this->connection->getConnection()->selectCollection($prefixed_table)->count($this->mongodbFilter, $options);
 
         if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
           $this->connection->dispatchEvent(new StatementExecutionEndEvent(
@@ -1518,7 +1518,7 @@ class Select extends QuerySelect {
         $this->connection->dispatchEvent($startEvent);
       }
 
-      $cursor = $this->connection->getConnection()->{$prefixed_table}->find($this->mongodbFilter, $options);
+      $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find($this->mongodbFilter, $options);
 
       if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
         $this->connection->dispatchEvent(new StatementExecutionEndEvent(

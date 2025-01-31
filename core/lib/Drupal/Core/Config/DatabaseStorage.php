@@ -76,7 +76,7 @@ class DatabaseStorage implements StorageInterface {
   public function exists($name) {
     if ($this->connection->driver() == 'mongodb') {
       $prefixed_table = $this->connection->getPrefix() . $this->table;
-      $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+      $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
         [
           'collection' => ['$eq' => $this->collection],
           'name' => ['$eq' => $name],
@@ -119,7 +119,7 @@ class DatabaseStorage implements StorageInterface {
     try {
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . $this->table;
-        $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
           ['collection' => ['$eq' => $this->collection], 'name' => ['$eq' => $name]],
           ['projection' => ['data' => 1, '_id' => 0]]
         );
@@ -159,7 +159,7 @@ class DatabaseStorage implements StorageInterface {
     try {
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . $this->table;
-        $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+        $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
           ['collection' => ['$eq' => $this->collection], 'name' => ['$in' => $names]],
           [
             'projection' => ['name' => 1, 'data' => 1, '_id' => 0],
@@ -413,7 +413,7 @@ class DatabaseStorage implements StorageInterface {
     try {
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . $this->table;
-        $collections = $this->connection->getConnection()->{$prefixed_table}->distinct(
+        $collections = $this->connection->getConnection()->selectCollection($prefixed_table)->distinct(
           'collection',
           ['collection' => ['$ne' => StorageInterface::DEFAULT_COLLECTION]],
           ['session' => $this->connection->getMongodbSession()]

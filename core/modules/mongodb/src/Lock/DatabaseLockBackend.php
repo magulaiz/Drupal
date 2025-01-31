@@ -99,7 +99,7 @@ class DatabaseLockBackend extends CoreDatabaseLockBackend {
 
     try {
       $prefixed_table = $this->database->getPrefix() . 'semaphore';
-      $cursor = $this->database->getConnection()->{$prefixed_table}->find(
+      $cursor = $this->database->getConnection()->selectCollection($prefixed_table)->find(
         ['name' => ['$eq' => $name]],
         [
           'projection' => ['expire' => 1, 'value' => 1, '_id' => 0],

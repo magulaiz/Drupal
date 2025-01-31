@@ -46,7 +46,7 @@ class Sequences {
    */
   public function nextId($table) {
     // Update the sequence.
-    $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOneAndUpdate(
+    $result = $this->connection->getConnection()->selectCollection($this->getPrefixedSequencesTableName())->findOneAndUpdate(
       ['_id' => $table],
       ['$inc' => ['sequence' => 1]],
       ['new' => TRUE],
@@ -57,7 +57,7 @@ class Sequences {
     }
     else {
       // Create a new sequence and the sequences table if it does not exists.
-      $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->insertOne([
+      $result = $this->connection->getConnection()->selectCollection($this->getPrefixedSequencesTableName())->insertOne([
         '_id' => $table,
         'sequence' => 1,
         'sequence2' => 0,
@@ -94,7 +94,7 @@ class Sequences {
    */
   public function currentId($table): int {
     // Update the sequence.
-    $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOne(
+    $result = $this->connection->getConnection()->selectCollection($this->getPrefixedSequencesTableName())->findOne(
       ['_id' => $table],
       ['projection' => ['sequence' => 1]],
     );
@@ -104,7 +104,7 @@ class Sequences {
     }
     else {
       // Create a new sequence and the sequences table if it does not exists.
-      $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->insertOne([
+      $result = $this->connection->getConnection()->selectCollection($this->getPrefixedSequencesTableName())->insertOne([
         '_id' => $table,
         'sequence' => 1,
         'sequence2' => 0,
@@ -141,7 +141,7 @@ class Sequences {
    */
   public function setId($table, $value) {
     // Update the sequence.
-    $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOneAndUpdate(
+    $result = $this->connection->getConnection()->selectCollection($this->getPrefixedSequencesTableName())->findOneAndUpdate(
       ['_id' => $table],
       ['$set' => ['sequence' => intval($value)]],
       ['new' => TRUE],
@@ -149,7 +149,7 @@ class Sequences {
 
     if (!$result || !isset($result->sequence)) {
       // Create a new sequence and the sequences table when it does not exist.
-      $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->insertOne([
+      $result = $this->connection->getConnection()->selectCollection($this->getPrefixedSequencesTableName())->insertOne([
         '_id' => $table,
         'sequence' => intval($value),
         'sequence2' => 0,
@@ -180,7 +180,7 @@ class Sequences {
    */
   public function nextRevisionId($table): int {
     // Update the sequence.
-    $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOneAndUpdate(
+    $result = $this->connection->getConnection()->selectCollection($this->getPrefixedSequencesTableName())->findOneAndUpdate(
       ['_id' => $table],
       ['$inc' => ['sequence2' => 1]],
       ['new' => TRUE],
@@ -191,7 +191,7 @@ class Sequences {
     }
     else {
       // Create a new sequence and the sequences table if it does not exists.
-      $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->insertOne([
+      $result = $this->connection->getConnection()->selectCollection($this->getPrefixedSequencesTableName())->insertOne([
         '_id' => $table,
         'sequence' => 0,
         'sequence2' => 1,
@@ -217,7 +217,7 @@ class Sequences {
    */
   public function currentRevisionId($table): int {
     // Update the sequence.
-    $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOne(
+    $result = $this->connection->getConnection()->selectCollection($this->getPrefixedSequencesTableName())->findOne(
       ['_id' => $table],
       ['projection' => ['sequence2' => 1]],
     );
@@ -227,7 +227,7 @@ class Sequences {
     }
     else {
       // Create a new sequence and the sequences table if it does not exists.
-      $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->insertOne([
+      $result = $this->connection->getConnection()->selectCollection($this->getPrefixedSequencesTableName())->insertOne([
         '_id' => $table,
         'sequence' => 0,
         'sequence2' => 1,
@@ -251,7 +251,7 @@ class Sequences {
    */
   public function setRevisionId($table, $value) {
     // Update the sequence.
-    $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOneAndUpdate(
+    $result = $this->connection->getConnection()->selectCollection($this->getPrefixedSequencesTableName())->findOneAndUpdate(
       ['_id' => $table],
       ['$set' => ['sequence2' => intval($value)]],
       ['new' => TRUE],
@@ -259,7 +259,7 @@ class Sequences {
 
     if (!$result || !isset($result->sequence2)) {
       // Create a new sequence and the sequences table if it does not exists.
-      $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->insertOne([
+      $result = $this->connection->getConnection()->selectCollection($this->getPrefixedSequencesTableName())->insertOne([
         '_id' => $table,
         'sequence' => 0,
         'sequence2' => intval($value),

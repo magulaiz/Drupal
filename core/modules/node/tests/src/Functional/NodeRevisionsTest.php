@@ -206,7 +206,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $old_revision_date = \Drupal::time()->getRequestTime() - 86400;
     if ($connection->driver() == 'mongodb') {
       $prefixed_table = $connection->getPrefix() . 'node';
-      $connection->getConnection()->{$prefixed_table}->updateMany(
+      $connection->getConnection()->selectCollection($prefixed_table)->updateMany(
         [],
         [
           '$set' =>
