@@ -93,6 +93,16 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
   }
 
   /**
+   * Handles a 400 error for HTML.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
+   *   The event to process.
+   */
+  public function on400(ExceptionEvent $event): void {
+    throw $event->getThrowable();
+  }
+
+  /**
    * Handles a 401 error for HTML.
    *
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
@@ -190,7 +200,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
       // just log it. The DefaultExceptionSubscriber will catch the original
       // exception and handle it normally.
       $error = Error::decodeException($e);
-      $this->logger->log($error['severity_level'], '%type: @message in %function (line %line of %file).', $error);
+      $this->logger->log($error['severity_level'], Error::DEFAULT_ERROR_MESSAGE, $error);
     }
   }
 

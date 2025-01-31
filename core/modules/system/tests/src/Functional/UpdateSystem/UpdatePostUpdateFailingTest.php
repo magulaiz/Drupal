@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Core\Database\Database;
@@ -27,15 +29,7 @@ class UpdatePostUpdateFailingTest extends BrowserTestBase {
     $connection = Database::getConnection();
 
     // Set the schema version.
-    $connection->merge('key_value')
-      ->condition('collection', 'system.schema')
-      ->condition('name', 'update_test_failing')
-      ->fields([
-        'collection' => 'system.schema',
-        'name' => 'update_test_failing',
-        'value' => 'i:8000;',
-      ])
-      ->execute();
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion('update_test_failing', 8000);
 
     // Update core.extension.
     $extensions = $connection->select('config')
@@ -58,7 +52,7 @@ class UpdatePostUpdateFailingTest extends BrowserTestBase {
   /**
    * Tests hook_post_update_NAME().
    */
-  public function testPostUpdate() {
+  public function testPostUpdate(): void {
     // There are expected to be failed updates.
     $this->checkFailedUpdates = FALSE;
 
@@ -68,13 +62,13 @@ class UpdatePostUpdateFailingTest extends BrowserTestBase {
     $this->assertSame([], \Drupal::state()->get('post_update_test_execution', []));
 
     $key_value = \Drupal::keyValue('update__post_update');
-    $this->assertEqual([], $key_value->get('existing_updates', []));
+    $this->assertEquals([], $key_value->get('existing_updates', []));
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function doSelectionTest() {
+  protected function doSelectionTest(): void {
     // First update, should not be run since this module's update hooks fail.
     $this->assertSession()->responseContains('8001 - This update will fail.');
     $this->assertSession()->responseContains('8002 - A further update');

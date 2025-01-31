@@ -6,7 +6,7 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 
 /**
- * Taxonomy term source from database.
+ * Drupal 7 taxonomy term source from database.
  *
  * Available configuration keys:
  * - bundle: (optional) The taxonomy vocabulary (machine name) to filter terms
@@ -33,7 +33,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
  * In this example terms of 'tags' and 'forums' vocabularies are retrieved
  * from the source database.
  *
- * For additional configuration keys, refer to the parent classes:
+ * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
@@ -130,11 +131,6 @@ class Term extends FieldableEntity {
       ->execute()
       ->fetchCol();
     $row->setSourceProperty('parent', $parents);
-
-    // Determine if this is a forum container.
-    $forum_container_tids = $this->variableGet('forum_containers', []);
-    $current_tid = $row->getSourceProperty('tid');
-    $row->setSourceProperty('is_container', in_array($current_tid, $forum_container_tids));
 
     // If the term name or term description were replaced by real fields using
     // the Drupal 7 Title module, use the fields value instead of the term name

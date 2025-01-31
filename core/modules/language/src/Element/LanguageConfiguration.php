@@ -5,25 +5,24 @@ namespace Drupal\language\Element;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Render\Element\FormElement;
+use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Render\Element\FormElementBase;
 
 /**
  * Defines an element for language configuration for a single field.
- *
- * @FormElement("language_configuration")
  */
-class LanguageConfiguration extends FormElement {
+#[FormElement('language_configuration')]
+class LanguageConfiguration extends FormElementBase {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#tree' => TRUE,
       '#process' => [
-        [$class, 'processLanguageConfiguration'],
+        [static::class, 'processLanguageConfiguration'],
       ],
     ];
   }
@@ -32,7 +31,7 @@ class LanguageConfiguration extends FormElement {
    * Process handler for the language_configuration form element.
    */
   public static function processLanguageConfiguration(&$element, FormStateInterface $form_state, &$form) {
-    $options = isset($element['#options']) ? $element['#options'] : [];
+    $options = $element['#options'] ?? [];
     // Avoid validation failure since we are moving the '#options' key in the
     // nested 'language' select element.
     unset($element['#options']);

@@ -10,6 +10,7 @@ use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -118,7 +119,12 @@ class PathValidator implements PathValidatorInterface {
       return Url::fromUri($path);
     }
 
-    $request = Request::create('/' . $path);
+    try {
+      $request = Request::create('/' . $path);
+    }
+    catch (BadRequestException) {
+      return FALSE;
+    }
     $attributes = $this->getPathAttributes($path, $request, $access_check);
 
     if (!$attributes) {
@@ -143,7 +149,7 @@ class PathValidator implements PathValidatorInterface {
    *   valid.
    *
    * @return array|bool
-   *   An array of request attributes of FALSE if an exception was thrown.
+   *   An array of request attributes or FALSE if an exception was thrown.
    */
   protected function getPathAttributes($path, Request $request, $access_check) {
     if (!$access_check || $this->account->hasPermission('link to any page')) {
@@ -157,21 +163,22 @@ class PathValidator implements PathValidatorInterface {
     $path = $this->pathProcessor->processInbound('/' . $path, $request);
 
     try {
-      $request_context = new RequestContext();
-      $request_context->fromRequest($request);
-      $router->setContext($request_context);
+      $router->setContext((new RequestContext())->fromRequest($request));
       $result = $router->match($path);
     }
-    catch (ResourceNotFoundException $e) {
+    catch (ResourceNotFoundException) {
       $result = FALSE;
     }
-    catch (ParamNotConvertedException $e) {
+    catch (ParamNotConvertedException) {
       $result = FALSE;
     }
-    catch (AccessDeniedHttpException $e) {
+    catch (AccessDeniedHttpException) {
       $result = FALSE;
     }
-    catch (MethodNotAllowedException $e) {
+    catch (MethodNotAllowedException) {
+      $result = FALSE;
+    }
+    catch (BadRequestException) {
       $result = FALSE;
     }
 

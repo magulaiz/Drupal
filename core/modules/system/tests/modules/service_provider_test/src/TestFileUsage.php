@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\service_provider_test;
 
 use Drupal\file\FileInterface;
@@ -23,6 +25,7 @@ class TestFileUsage extends FileUsageBase {
    * {@inheritdoc}
    */
   public function listUsage(FileInterface $file) {
+    return [];
   }
 
 }

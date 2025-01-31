@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Kernel\Migrate\d7;
 
 use Drupal\Core\Field\FieldConfigInterface;
@@ -13,6 +15,9 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateUserPictureFieldInstanceTest extends MigrateDrupal7TestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['image', 'file'];
 
   /**
@@ -27,9 +32,9 @@ class MigrateUserPictureFieldInstanceTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Test the user picture field migration.
+   * Tests the user picture field migration.
    */
-  public function testUserPictureField() {
+  public function testUserPictureField(): void {
     /** @var \Drupal\field\FieldConfigInterface $field */
     $field = FieldConfig::load('user.user.user_picture');
     $this->assertInstanceOf(FieldConfigInterface::class, $field);

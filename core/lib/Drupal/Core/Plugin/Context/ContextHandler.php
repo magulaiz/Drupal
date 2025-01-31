@@ -81,7 +81,7 @@ class ContextHandler implements ContextHandlerInterface {
    * {@inheritdoc}
    */
   public function applyContextMapping(ContextAwarePluginInterface $plugin, $contexts, $mappings = []) {
-    /** @var $contexts \Drupal\Core\Plugin\Context\ContextInterface[] */
+    /** @var \Drupal\Core\Plugin\Context\ContextInterface[] $contexts */
     $mappings += $plugin->getContextMapping();
     // Loop through each of the expected contexts.
 
@@ -89,7 +89,7 @@ class ContextHandler implements ContextHandlerInterface {
 
     foreach ($plugin->getContextDefinitions() as $plugin_context_id => $plugin_context_definition) {
       // If this context was given a specific name, use that.
-      $context_id = isset($mappings[$plugin_context_id]) ? $mappings[$plugin_context_id] : $plugin_context_id;
+      $context_id = $mappings[$plugin_context_id] ?? $plugin_context_id;
       if (!empty($contexts[$context_id])) {
         // This assignment has been used, remove it.
         unset($mappings[$plugin_context_id]);
@@ -118,7 +118,7 @@ class ContextHandler implements ContextHandlerInterface {
       try {
         $context = $plugin->getContext($context_id);
       }
-      catch (ContextException $e) {
+      catch (ContextException) {
         $context = NULL;
       }
 

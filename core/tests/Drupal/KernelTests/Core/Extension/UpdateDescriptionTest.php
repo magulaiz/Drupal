@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Extension;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -21,9 +23,9 @@ class UpdateDescriptionTest extends KernelTestBase {
    *
    * @see update_get_update_list()
    */
-  public function testUpdateGetUpdateList() {
+  public function testUpdateGetUpdateList(): void {
     require_once $this->root . '/core/includes/update.inc';
-    drupal_set_installed_schema_version('update_test_description', 8000);
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion('update_test_description', 8000);
     \Drupal::moduleHandler()->loadInclude('update_test_description', 'install');
 
     $updates = update_get_update_list();

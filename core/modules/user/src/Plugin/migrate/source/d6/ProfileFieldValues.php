@@ -8,7 +8,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 6 profile fields values source from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
@@ -77,6 +78,7 @@ class ProfileFieldValues extends DrupalSqlBase {
     $query->fields('pf', ['name', 'title']);
     $results = $query->execute();
     foreach ($results as $profile) {
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $fields[$profile['name']] = $this->t($profile['title']);
     }
 

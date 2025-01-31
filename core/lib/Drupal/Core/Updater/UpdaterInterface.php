@@ -18,6 +18,7 @@ interface UpdaterInterface {
    * Checks if the project is installed.
    *
    * @return bool
+   *   Return TRUE if the project is installed, FALSE otherwise.
    */
   public function isInstalled();
 
@@ -49,6 +50,7 @@ interface UpdaterInterface {
    * Determines if the Updater can handle the project provided in $directory.
    *
    * @param string $directory
+   *   The directory.
    *
    * @return bool
    *   TRUE if the project is installed, FALSE if not.
@@ -57,6 +59,11 @@ interface UpdaterInterface {
 
   /**
    * Actions to run after an install has occurred.
+   *
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3461934
    */
   public function postInstall();
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\session_test\Session;
 
 /**
@@ -37,7 +39,7 @@ class TestSessionHandlerProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function open($save_path, $name) {
+  public function open($save_path, $name): bool {
     $trace = \Drupal::service('session_test.session_handler_proxy_trace');
     $trace[] = ['BEGIN', $this->optionalArgument, __FUNCTION__];
     $result = $this->sessionHandler->open($save_path, $name);
@@ -48,7 +50,7 @@ class TestSessionHandlerProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function close() {
+  public function close(): bool {
     $trace = \Drupal::service('session_test.session_handler_proxy_trace');
     $trace[] = ['BEGIN', $this->optionalArgument, __FUNCTION__];
     $result = $this->sessionHandler->close();
@@ -59,7 +61,7 @@ class TestSessionHandlerProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function read($session_id) {
+  public function read($session_id): string|FALSE {
     $trace = \Drupal::service('session_test.session_handler_proxy_trace');
     $trace[] = ['BEGIN', $this->optionalArgument, __FUNCTION__, $session_id];
     $result = $this->sessionHandler->read($session_id);
@@ -70,7 +72,7 @@ class TestSessionHandlerProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function write($session_id, $session_data) {
+  public function write($session_id, $session_data): bool {
     $trace = \Drupal::service('session_test.session_handler_proxy_trace');
     $trace[] = ['BEGIN', $this->optionalArgument, __FUNCTION__, $session_id];
     $result = $this->sessionHandler->write($session_id, $session_data);
@@ -81,14 +83,14 @@ class TestSessionHandlerProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function destroy($session_id) {
+  public function destroy($session_id): bool {
     return $this->sessionHandler->destroy($session_id);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function gc($max_lifetime) {
+  public function gc($max_lifetime): int|FALSE {
     return $this->sessionHandler->gc($max_lifetime);
   }
 

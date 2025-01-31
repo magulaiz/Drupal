@@ -2,6 +2,8 @@
 
 namespace Drupal\system\Controller;
 
+use Drupal\Core\Asset\AssetQueryStringInterface;
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -13,8 +15,8 @@ use Drupal\Core\State\StateInterface;
 use Drupal\Core\Update\UpdateRegistry;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller routines for database update routes.
@@ -96,8 +98,20 @@ class DbUpdateController extends ControllerBase {
    *   The bare HTML page renderer.
    * @param \Drupal\Core\Update\UpdateRegistry $post_update_registry
    *   The post update registry.
+   * @param \Drupal\Core\Asset\AssetQueryStringInterface $assetQueryString
+   *   The asset query string.
    */
-  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry) {
+  public function __construct(
+    $root,
+    KeyValueExpirableFactoryInterface $key_value_expirable_factory,
+    CacheBackendInterface $cache,
+    StateInterface $state,
+    ModuleHandlerInterface $module_handler,
+    AccountInterface $account,
+    BareHtmlPageRendererInterface $bare_html_page_renderer,
+    UpdateRegistry $post_update_registry,
+    protected AssetQueryStringInterface $assetQueryString,
+  ) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
@@ -120,7 +134,8 @@ class DbUpdateController extends ControllerBase {
       $container->get('module_handler'),
       $container->get('current_user'),
       $container->get('bare_html_page_renderer'),
-      $container->get('update.post_update_registry')
+      $container->get('update.post_update_registry'),
+      $container->get('asset.query_string')
     );
   }
 
@@ -137,7 +152,7 @@ class DbUpdateController extends ControllerBase {
    *   The current request object.
    *
    * @return \Symfony\Component\HttpFoundation\Response
-   *   A response object object.
+   *   A response object.
    */
   public function handle($op, Request $request) {
     require_once $this->root . '/core/includes/install.inc';
@@ -146,13 +161,13 @@ class DbUpdateController extends ControllerBase {
     drupal_load_updates();
 
     if ($request->query->get('continue')) {
-      $_SESSION['update_ignore_warnings'] = TRUE;
+      $request->getSession()->set('update_ignore_warnings', TRUE);
     }
 
     $regions = [];
     $requirements = update_check_requirements();
     $severity = drupal_requirements_severity($requirements);
-    if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && empty($_SESSION['update_ignore_warnings']))) {
+    if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && !$request->getSession()->has('update_ignore_warnings'))) {
       $regions['sidebar_first'] = $this->updateTasksList('requirements');
       $output = $this->requirements($severity, $requirements, $request);
     }
@@ -190,7 +205,7 @@ class DbUpdateController extends ControllerBase {
     if ($output instanceof Response) {
       return $output;
     }
-    $title = isset($output['#title']) ? $output['#title'] : $this->t('Drupal database update');
+    $title = $output['#title'] ?? $this->t('Drupal database update');
 
     return $this->bareHtmlPageRenderer->renderBarePage($output, $title, 'maintenance_page', $regions);
   }
@@ -206,13 +221,13 @@ class DbUpdateController extends ControllerBase {
    */
   protected function info(Request $request) {
     // Change query-strings on css/js files to enforce reload for all users.
-    _drupal_flush_css_js();
+    $this->assetQueryString->reset();
     // Flush the cache of all data for the update status module.
     $this->keyValueExpirableFactory->get('update')->deleteAll();
     $this->keyValueExpirableFactory->get('update_available_release')->deleteAll();
 
     $build['info_header'] = [
-      '#markup' => '<p>' . $this->t('Use this utility to update your database whenever a new release of Drupal or a module is installed.') . '</p><p>' . $this->t('For more detailed information, see the <a href="https://www.drupal.org/upgrade">upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.') . '</p>',
+      '#markup' => '<p>' . $this->t('Use this utility to update your database whenever a module, theme, or the core software is updated.') . '</p><p>' . $this->t('For more detailed information, see the <a href="https://www.drupal.org/upgrade">upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.') . '</p>',
     ];
 
     $info[] = $this->t("<strong>Back up your code</strong>. Hint: when backing up module code, do not leave that backup in the 'modules' or 'sites/*/modules' directories as this may confuse Drupal's auto-discovery mechanism.");
@@ -222,7 +237,7 @@ class DbUpdateController extends ControllerBase {
       ':url' => Url::fromRoute('system.site_maintenance_mode')->setOption('base_url', $base_url)->toString(TRUE)->getGeneratedUrl(),
     ]);
     $info[] = $this->t('<strong>Back up your database</strong>. This process will change your database values and in case of emergency you may need to revert to a backup.');
-    $info[] = $this->t('Install your new files in the appropriate location, as described in the handbook.');
+    $info[] = $this->t('Update your files (as described in the handbook page linked above).');
     $build['info'] = [
       '#theme' => 'item_list',
       '#list_type' => 'ol',
@@ -267,7 +282,7 @@ class DbUpdateController extends ControllerBase {
 
     $starting_updates = [];
     $incompatible_updates_exist = FALSE;
-    $updates_per_module = [];
+    $updates_per_extension = [];
     foreach (['update', 'post_update'] as $update_type) {
       switch ($update_type) {
         case 'update':
@@ -278,11 +293,11 @@ class DbUpdateController extends ControllerBase {
           $updates = $this->postUpdateRegistry->getPendingUpdateInformation();
           break;
       }
-      foreach ($updates as $module => $update) {
+      foreach ($updates as $extension => $update) {
         if (!isset($update['start'])) {
-          $build['start'][$module] = [
+          $build['start'][$extension] = [
             '#type' => 'item',
-            '#title' => $module . ' module',
+            '#title' => $extension . ($this->moduleHandler->moduleExists($extension) ? ' module' : ' theme'),
             '#markup' => $update['warning'],
             '#prefix' => '<div class="messages messages--warning">',
             '#suffix' => '</div>',
@@ -291,22 +306,22 @@ class DbUpdateController extends ControllerBase {
           continue;
         }
         if (!empty($update['pending'])) {
-          $updates_per_module += [$module => []];
-          $updates_per_module[$module] = array_merge($updates_per_module[$module], $update['pending']);
-          $build['start'][$module] = [
+          $updates_per_extension += [$extension => []];
+          $updates_per_extension[$extension] = array_merge($updates_per_extension[$extension], $update['pending']);
+          $build['start'][$extension] = [
             '#type' => 'hidden',
             '#value' => $update['start'],
           ];
           // Store the previous items in order to merge normal updates and
           // post_update functions together.
-          $build['start'][$module] = [
+          $build['start'][$extension] = [
             '#theme' => 'item_list',
-            '#items' => $updates_per_module[$module],
-            '#title' => $module . ' module',
+            '#items' => $updates_per_extension[$extension],
+            '#title' => $extension . ($this->moduleHandler->moduleExists($extension) ? ' module' : ' theme'),
           ];
 
           if ($update_type === 'update') {
-            $starting_updates[$module] = $update['start'];
+            $starting_updates[$extension] = $update['start'];
           }
         }
         if (isset($update['pending'])) {
@@ -396,6 +411,12 @@ class DbUpdateController extends ControllerBase {
     // @todo Simplify with https://www.drupal.org/node/2548095
     $base_url = str_replace('/update.php', '', $request->getBaseUrl());
 
+    // Retrieve and remove session information.
+    $session = $request->getSession();
+    $update_results = $session->remove('update_results');
+    $update_success = $session->remove('update_success');
+    $session->remove('update_ignore_warnings');
+
     // Report end result.
     $dblog_exists = $this->moduleHandler->moduleExists('dblog');
     if ($dblog_exists && $this->account->hasPermission('access site reports')) {
@@ -407,12 +428,13 @@ class DbUpdateController extends ControllerBase {
       $log_message = $this->t('All errors have been logged.');
     }
 
-    if (!empty($_SESSION['update_success'])) {
+    if ($update_success) {
       $message = '<p>' . $this->t('Updates were attempted. If you see no failures below, you may proceed happily back to your <a href=":url">site</a>. Otherwise, you may need to update your database manually.', [':url' => Url::fromRoute('<front>')->setOption('base_url', $base_url)->toString(TRUE)->getGeneratedUrl()]) . ' ' . $log_message . '</p>';
     }
     else {
-      $last = reset($_SESSION['updates_remaining']);
-      list($module, $version) = array_pop($last);
+      $last = $session->get('updates_remaining');
+      $last = reset($last);
+      [$module, $version] = array_pop($last);
       $message = '<p class="error">' . $this->t('The update process was aborted prematurely while running <strong>update #@version in @module.module</strong>.', [
         '@version' => $version,
         '@module' => $module,
@@ -436,11 +458,11 @@ class DbUpdateController extends ControllerBase {
     ];
 
     // Output a list of info messages.
-    if (!empty($_SESSION['update_results'])) {
+    if (!empty($update_results)) {
       $all_messages = [];
-      foreach ($_SESSION['update_results'] as $module => $updates) {
-        if ($module != '#abort') {
-          $module_has_message = FALSE;
+      foreach ($update_results as $extension => $updates) {
+        if ($extension != '#abort') {
+          $extension_has_message = FALSE;
           $info_messages = [];
           foreach ($updates as $name => $queries) {
             $messages = [];
@@ -465,7 +487,7 @@ class DbUpdateController extends ControllerBase {
             }
 
             if ($messages) {
-              $module_has_message = TRUE;
+              $extension_has_message = TRUE;
               if (is_numeric($name)) {
                 $title = $this->t('Update #@count', ['@count' => $name]);
               }
@@ -480,12 +502,15 @@ class DbUpdateController extends ControllerBase {
             }
           }
 
-          // If there were any messages then prefix them with the module name
+          // If there were any messages then prefix them with the extension name
           // and add it to the global message list.
-          if ($module_has_message) {
+          if ($extension_has_message) {
+            $header = $this->moduleHandler->moduleExists($extension) ?
+              $this->t('@module module', ['@module' => $extension]) :
+              $this->t('@theme theme', ['@theme' => $extension]);
             $all_messages[] = [
               '#type' => 'container',
-              '#prefix' => '<h3>' . $this->t('@module module', ['@module' => $module]) . '</h3>',
+              '#prefix' => '<h3>' . $header . '</h3>',
               '#children' => $info_messages,
             ];
           }
@@ -500,9 +525,6 @@ class DbUpdateController extends ControllerBase {
         ];
       }
     }
-    unset($_SESSION['update_results']);
-    unset($_SESSION['update_success']);
-    unset($_SESSION['update_ignore_warnings']);
 
     return $build;
   }
@@ -510,7 +532,7 @@ class DbUpdateController extends ControllerBase {
   /**
    * Renders a list of requirement errors or warnings.
    *
-   * @param $severity
+   * @param int $severity
    *   The severity of the message, as per RFC 3164.
    * @param array $requirements
    *   The array of requirement values.
@@ -575,14 +597,19 @@ class DbUpdateController extends ControllerBase {
     $maintenance_mode = $this->state->get('system.maintenance_mode', FALSE);
     // Store the current maintenance mode status in the session so that it can
     // be restored at the end of the batch.
-    $_SESSION['maintenance_mode'] = $maintenance_mode;
+    $request->getSession()->set('maintenance_mode', $maintenance_mode);
     // During the update, always put the site into maintenance mode so that
     // in-progress schema changes do not affect visiting users.
     if (empty($maintenance_mode)) {
       $this->state->set('system.maintenance_mode', TRUE);
     }
 
-    $operations = [];
+    /** @var \Drupal\Core\Batch\BatchBuilder $batch_builder */
+    $batch_builder = (new BatchBuilder())
+      ->setTitle($this->t('Updating'))
+      ->setInitMessage($this->t('Starting updates'))
+      ->setErrorMessage($this->t('An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.'))
+      ->setFinishCallback([DbUpdateController::class, 'batchFinished']);
 
     // Resolve any update dependencies to determine the actual updates that will
     // be run and the order they will be run in.
@@ -605,10 +632,10 @@ class DbUpdateController extends ControllerBase {
         // correct place. (The updates are already sorted, so we can simply base
         // this on the first one we come across in the above foreach loop.)
         if (isset($start[$update['module']])) {
-          drupal_set_installed_schema_version($update['module'], $update['number'] - 1);
+          \Drupal::service('update.update_hook_registry')->setInstalledVersion($update['module'], $update['number'] - 1);
           unset($start[$update['module']]);
         }
-        $operations[] = ['update_do_one', [$update['module'], $update['number'], $dependency_map[$function]]];
+        $batch_builder->addOperation('update_do_one', [$update['module'], $update['number'], $dependency_map[$function]]);
       }
     }
 
@@ -617,20 +644,13 @@ class DbUpdateController extends ControllerBase {
     if ($post_updates) {
       // Now we rebuild all caches and after that execute the hook_post_update()
       // functions.
-      $operations[] = ['drupal_flush_all_caches', []];
+      $batch_builder->addOperation('drupal_flush_all_caches', []);
       foreach ($post_updates as $function) {
-        $operations[] = ['update_invoke_post_update', [$function]];
+        $batch_builder->addOperation('update_invoke_post_update', [$function]);
       }
     }
 
-    $batch['operations'] = $operations;
-    $batch += [
-      'title' => $this->t('Updating'),
-      'init_message' => $this->t('Starting updates'),
-      'error_message' => $this->t('An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.'),
-      'finished' => ['\Drupal\system\Controller\DbUpdateController', 'batchFinished'],
-    ];
-    batch_set($batch);
+    batch_set($batch_builder->toArray());
 
     // @todo Revisit once https://www.drupal.org/node/2548095 is in.
     return batch_process(Url::fromUri('base://results'), Url::fromUri('base://start'));
@@ -644,7 +664,7 @@ class DbUpdateController extends ControllerBase {
    * page in update.php). Additionally, if the site was off-line, now that the
    * update process is completed, the site is set back online.
    *
-   * @param $success
+   * @param bool $success
    *   Indicate that the batch API tasks were all completed successfully.
    * @param array $results
    *   An array of all the results that were updated in update_do_one().
@@ -655,16 +675,16 @@ class DbUpdateController extends ControllerBase {
     // No updates to run, so caches won't get flushed later.  Clear them now.
     drupal_flush_all_caches();
 
-    $_SESSION['update_results'] = $results;
-    $_SESSION['update_success'] = $success;
-    $_SESSION['updates_remaining'] = $operations;
+    $session = \Drupal::request()->getSession();
+    $session->set('update_results', $results);
+    $session->set('update_success', $success);
+    $session->set('updates_remaining', $operations);
 
     // Now that the update is done, we can put the site back online if it was
     // previously not in maintenance mode.
-    if (empty($_SESSION['maintenance_mode'])) {
+    if (!$session->remove('maintenance_mode')) {
       \Drupal::state()->set('system.maintenance_mode', FALSE);
     }
-    unset($_SESSION['maintenance_mode']);
   }
 
   /**

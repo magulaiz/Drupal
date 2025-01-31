@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Kernel\Normalizer;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -11,6 +13,7 @@ use Drupal\jsonapi\JsonApiResource\Relationship;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\RelationshipNormalizer;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
+use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
@@ -59,6 +62,16 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
   ];
 
   /**
+   * Static UIDs for use in tests.
+   *
+   * @var string[]
+   */
+  protected static $userUids = [
+    10,
+    11,
+  ];
+
+  /**
    * Static UUIDs for use in tests.
    *
    * @var string[]
@@ -67,6 +80,64 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
     '71e67249-df4a-4616-9065-4cc2e812235b',
     'ce5093fc-417f-477d-932d-888407d5cbd5',
   ];
+  /**
+   * Static UUIDs for use in tests.
+   *
+   * @var string[]
+   */
+  protected static $imageUids = [
+    1,
+    2,
+  ];
+
+  /**
+   * A user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $user1;
+
+  /**
+   * A user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $user2;
+
+  /**
+   * An image.
+   *
+   * @var \Drupal\file\Entity\File
+   */
+  protected File $image1;
+
+  /**
+   * An image.
+   *
+   * @var \Drupal\file\Entity\File
+   */
+  protected File $image2;
+
+  /**
+   * A referencer node.
+   *
+   * @var \Drupal\node\Entity\Node
+   */
+  protected Node $referencer;
+
+  /**
+   * The node type.
+   *
+   * @var \Drupal\jsonapi\ResourceType\ResourceType
+   */
+  protected ResourceType $referencingResourceType;
+
+  /**
+   * The normalizer.
+   *
+   * @var \Drupal\jsonapi\Normalizer\RelationshipNormalizer
+   */
+  protected RelationshipNormalizer $normalizer;
 
   /**
    * {@inheritdoc}
@@ -81,11 +152,11 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
     $this->installEntitySchema('file');
 
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('file', ['file_usage']);
     NodeType::create([
       'type' => 'referencer',
+      'name' => 'Referencer',
     ])->save();
     $this->createEntityReferenceField('node', 'referencer', 'field_user', 'User', 'user', 'default', ['target_bundles' => NULL], 1);
     $this->createEntityReferenceField('node', 'referencer', 'field_users', 'Users', 'user', 'default', ['target_bundles' => NULL], FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
@@ -108,23 +179,27 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
       'name' => $this->randomMachineName(),
       'mail' => $this->randomMachineName() . '@example.com',
       'uuid' => static::$userIds[0],
+      'uid'  => static::$userUids[0],
     ]);
     $this->user1->save();
     $this->user2 = User::create([
       'name' => $this->randomMachineName(),
       'mail' => $this->randomMachineName() . '@example.com',
       'uuid' => static::$userIds[1],
+      'uid'  => static::$userUids[1],
     ]);
     $this->user2->save();
 
     $this->image1 = File::create([
       'uri' => 'public:/image1.png',
       'uuid' => static::$imageIds[0],
+      'uid'  => static::$imageUids[0],
     ]);
     $this->image1->save();
     $this->image2 = File::create([
       'uri' => 'public:/image2.png',
       'uuid' => static::$imageIds[1],
+      'uid'  => static::$imageUids[1],
     ]);
     $this->image2->save();
 
@@ -139,8 +214,9 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
     $this->referencer->save();
 
     // Set up the test dependencies.
-    $this->referencingResourceType = $this->container->get('jsonapi.resource_type.repository')->get('node', 'referencer');
-    $this->normalizer = new RelationshipNormalizer();
+    $resource_type_repository = $this->container->get('jsonapi.resource_type.repository');
+    $this->referencingResourceType = $resource_type_repository->get('node', 'referencer');
+    $this->normalizer = new RelationshipNormalizer($resource_type_repository);
     $this->normalizer->setSerializer($this->container->get('jsonapi.serializer'));
   }
 
@@ -148,7 +224,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
    * @covers ::normalize
    * @dataProvider normalizeProvider
    */
-  public function testNormalize($entity_property_names, $field_name, $expected) {
+  public function testNormalize($entity_property_names, $field_name, $expected): void {
     // Links cannot be generated in the test provider because the container
     // has not yet been set.
     $expected['links'] = [
@@ -188,20 +264,38 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
   /**
    * Data provider for testNormalize.
    */
-  public function normalizeProvider() {
+  public static function normalizeProvider() {
     return [
       'single cardinality' => [
         ['user1'],
         'field_user',
         [
-          'data' => ['type' => 'user--user', 'id' => static::$userIds[0]],
+          'data' => [
+            'type' => 'user--user',
+            'id' => static::$userIds[0],
+            'meta' => [
+              'drupal_internal__target_id' => static::$userUids[0],
+            ],
+          ],
         ],
       ],
       'multiple cardinality' => [
         ['user1', 'user2'], 'field_users', [
           'data' => [
-            ['type' => 'user--user', 'id' => static::$userIds[0]],
-            ['type' => 'user--user', 'id' => static::$userIds[1]],
+            [
+              'type' => 'user--user',
+              'id' => static::$userIds[0],
+              'meta' => [
+                'drupal_internal__target_id' => static::$userUids[0],
+              ],
+            ],
+            [
+              'type' => 'user--user',
+              'id' => static::$userIds[1],
+              'meta' => [
+                'drupal_internal__target_id' => static::$userUids[1],
+              ],
+            ],
           ],
         ],
       ],
@@ -211,12 +305,18 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
             [
               'type' => 'user--user',
               'id' => static::$userIds[0],
-              'meta' => ['arity' => 0],
+              'meta' => [
+                'arity' => 0,
+                'drupal_internal__target_id' => static::$userUids[0],
+              ],
             ],
             [
               'type' => 'user--user',
               'id' => static::$userIds[0],
-              'meta' => ['arity' => 1],
+              'meta' => [
+                'arity' => 1,
+                'drupal_internal__target_id' => static::$userUids[0],
+              ],
             ],
           ],
         ],
@@ -227,16 +327,25 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
             [
               'type' => 'user--user',
               'id' => static::$userIds[0],
-              'meta' => ['arity' => 0],
+              'meta' => [
+                'arity' => 0,
+                'drupal_internal__target_id' => static::$userUids[0],
+              ],
             ],
             [
               'type' => 'user--user',
               'id' => static::$userIds[1],
+              'meta' => [
+                'drupal_internal__target_id' => static::$userUids[1],
+              ],
             ],
             [
               'type' => 'user--user',
               'id' => static::$userIds[0],
-              'meta' => ['arity' => 1],
+              'meta' => [
+                'arity' => 1,
+                'drupal_internal__target_id' => static::$userUids[0],
+              ],
             ],
           ],
         ],
@@ -251,6 +360,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
               'title' => 'My spirit animal',
               'width' => NULL,
               'height' => NULL,
+              'drupal_internal__target_id' => static::$imageUids[0],
             ],
           ],
         ],
@@ -267,6 +377,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
                 'width' => NULL,
                 'height' => NULL,
                 'arity' => 0,
+                'drupal_internal__target_id' => static::$imageUids[0],
               ],
             ],
             [
@@ -278,6 +389,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
                 'width' => NULL,
                 'height' => NULL,
                 'arity' => 1,
+                'drupal_internal__target_id' => static::$imageUids[0],
               ],
             ],
           ],
@@ -295,6 +407,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
                 'width' => NULL,
                 'height' => NULL,
                 'arity' => 0,
+                'drupal_internal__target_id' => static::$imageUids[0],
               ],
             ],
             [
@@ -306,6 +419,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
                 'width' => NULL,
                 'height' => NULL,
                 'arity' => 1,
+                'drupal_internal__target_id' => static::$imageUids[0],
               ],
             ],
             [
@@ -317,6 +431,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
                 'width' => NULL,
                 'height' => NULL,
                 'arity' => 2,
+                'drupal_internal__target_id' => static::$imageUids[0],
               ],
             ],
           ],

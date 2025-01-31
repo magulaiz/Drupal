@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
@@ -16,10 +19,10 @@ use Drupal\Tests\BrowserTestBase;
  */
 class NodeTypeTranslationTest extends BrowserTestBase {
 
+  use StringTranslationTrait;
+
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',
@@ -54,11 +57,15 @@ class NodeTypeTranslationTest extends BrowserTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
     $admin_permissions = [
       'administer content types',
+      'bypass node access',
       'administer node fields',
       'administer languages',
       'administer site configuration',
@@ -98,8 +105,8 @@ class NodeTypeTranslationTest extends BrowserTestBase {
   /**
    * Tests the node type translation.
    */
-  public function testNodeTypeTranslation() {
-    $type = mb_strtolower($this->randomMachineName(16));
+  public function testNodeTypeTranslation(): void {
+    $type = $this->randomMachineName(16);
     $name = $this->randomString();
     $this->drupalLogin($this->adminUser);
     $this->drupalCreateContentType(['type' => $type, 'name' => $name]);
@@ -112,39 +119,43 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     ];
 
     // Edit the title label to avoid having an exception when we save the translation.
-    $this->drupalPostForm("admin/structure/types/manage/$type/translate/$langcode/add", $edit, 'Save translation');
+    $this->drupalGet("admin/structure/types/manage/{$type}/translate/{$langcode}/add");
+    $this->submitForm($edit, 'Save translation');
 
     // Check the name is translated without admin theme for editing.
-    $this->drupalPostForm('admin/appearance', ['use_admin_theme' => '0'], 'Save configuration');
+    $this->drupalGet('admin/appearance');
+    $this->submitForm(['use_admin_theme' => '0'], 'Save configuration');
     $this->drupalGet("$langcode/node/add/$type");
     // This is a Spanish page, so ensure the text asserted is translated in
     // Spanish and not French by adding the langcode option.
-    $this->assertRaw(t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
+    $this->assertSession()->responseContains($this->t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
 
     // Check the name is translated with admin theme for editing.
-    $this->drupalPostForm('admin/appearance', ['use_admin_theme' => '1'], 'Save configuration');
+    $this->drupalGet('admin/appearance');
+    $this->submitForm(['use_admin_theme' => '1'], 'Save configuration');
     $this->drupalGet("$langcode/node/add/$type");
     // This is a Spanish page, so ensure the text asserted is translated in
     // Spanish and not French by adding the langcode option.
-    $this->assertRaw(t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
+    $this->assertSession()->responseContains($this->t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
   }
 
   /**
    * Tests the node type title label translation.
    */
-  public function testNodeTypeTitleLabelTranslation() {
-    $type = mb_strtolower($this->randomMachineName(16));
+  public function testNodeTypeTitleLabelTranslation(): void {
+    $type = $this->randomMachineName(16);
     $name = $this->randomString();
     $this->drupalLogin($this->adminUser);
     $this->drupalCreateContentType(['type' => $type, 'name' => $name]);
     $langcode = $this->additionalLangcodes[0];
 
     // Edit the title label for it to be displayed on the translation form.
-    $this->drupalPostForm("admin/structure/types/manage/$type", ['title_label' => 'Edited title'], 'Save content type');
+    $this->drupalGet("admin/structure/types/manage/{$type}");
+    $this->submitForm(['title_label' => 'Edited title'], 'Save');
 
     // Assert that the title label is displayed on the translation form with the right value.
     $this->drupalGet("admin/structure/types/manage/$type/translate/$langcode/add");
-    $this->assertText('Edited title');
+    $this->assertSession()->pageTextContains('Edited title');
 
     // Translate the title label.
     $this->submitForm(["translation[config_names][core.base_field_override.node.$type.title][label]" => 'Translated title'], 'Save translation');
@@ -154,16 +165,23 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     // use t(). If t() were used then the correct langcodes would need to be
     // provided.
     $this->drupalGet("node/add/$type");
-    $this->assertText('Edited title');
+    $this->assertSession()->pageTextContains('Edited title');
     $this->drupalGet("$langcode/node/add/$type");
-    $this->assertText('Translated title');
+    $this->assertSession()->pageTextContains('Translated title');
 
-    // Add an e-mail field.
-    $this->drupalPostForm("admin/structure/types/manage/$type/fields/add-field", ['new_storage_type' => 'email', 'label' => 'Email', 'field_name' => 'email'], 'Save and continue');
-    $this->submitForm([], 'Save field settings');
+    // Add an email field.
+    $this->drupalGet("admin/structure/types/manage/{$type}/fields/add-field");
+    $this->submitForm([
+      'new_storage_type' => 'email',
+    ], 'Continue');
+    $this->submitForm([
+      'label' => 'Email',
+      'field_name' => 'email',
+    ], 'Continue');
+    $this->submitForm([], 'Update settings');
     $this->submitForm([], 'Save settings');
 
-    $type = mb_strtolower($this->randomMachineName(16));
+    $type = $this->randomMachineName(16);
     $name = $this->randomString();
     $this->drupalCreateContentType(['type' => $type, 'name' => $name]);
 
@@ -171,15 +189,16 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->drupalPlaceBlock('local_tasks_block', ['primary' => TRUE]);
 
     // Change default language.
-    $this->drupalPostForm('admin/config/regional/language', ['site_default_language' => 'es'], 'Save configuration');
+    $this->drupalGet('admin/config/regional/language');
+    $this->submitForm(['site_default_language' => 'es'], 'Save configuration');
 
     // Try re-using the email field.
-    $this->drupalGet("es/admin/structure/types/manage/$type/fields/add-field");
-    $this->submitForm(['existing_storage_name' => 'field_email', 'existing_storage_label' => 'Email'], 'Save and continue');
+    $this->drupalGet("es/admin/structure/types/manage/$type/fields/reuse");
+    $this->submitForm([], 'Re-use');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet("es/admin/structure/types/manage/$type/fields/node.$type.field_email/translate");
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText("The configuration objects have different language codes so they cannot be translated");
+    $this->assertSession()->pageTextContains("The configuration objects have different language codes so they cannot be translated");
   }
 
 }

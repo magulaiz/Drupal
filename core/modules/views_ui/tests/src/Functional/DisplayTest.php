@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\Functional;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
@@ -9,6 +12,7 @@ use Drupal\views\Views;
  * Tests the display UI.
  *
  * @group views_ui
+ * @group #slow
  */
 class DisplayTest extends UITestBase {
 
@@ -20,9 +24,7 @@ class DisplayTest extends UITestBase {
   public static $testViews = ['test_display'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['contextual'];
 
@@ -34,33 +36,35 @@ class DisplayTest extends UITestBase {
   /**
    * Tests adding a display.
    */
-  public function testAddDisplay() {
-    $view = $this->randomView();
-    $this->assertNoText('Block');
-    $this->assertNoText('Block 2');
+  public function testAddDisplay(): void {
+    $this->randomView();
+    $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-1"]');
+    $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-2"]');
+    $this->assertSession()->pageTextMatchesCount(0, '/Block name:/');
 
     $this->submitForm([], 'Add Block');
-    $this->assertText('Block');
-    $this->assertNoText('Block 2');
+    $this->assertSession()->elementTextContains('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-1"]', 'Block*');
+    $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-2"]');
+    $this->assertSession()->pageTextMatchesCount(1, '/Block name:/');
   }
 
   /**
    * Tests reordering of displays.
    */
-  public function testReorderDisplay() {
+  public function testReorderDisplay(): void {
     $view = [
       'block[create]' => TRUE,
     ];
     $view = $this->randomView($view);
 
-    $this->clickLink(t('Reorder displays'));
-    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
-    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');
-    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-block_1"]'), 'Make sure the block display appears on the reorder listing');
+    $this->clickLink('Reorder displays');
+    $this->assertSession()->elementExists('xpath', '//tr[@id="display-row-default"]');
+    $this->assertSession()->elementExists('xpath', '//tr[@id="display-row-page_1"]');
+    $this->assertSession()->elementExists('xpath', '//tr[@id="display-row-block_1"]');
 
     // Ensure the view displays are in the expected order in configuration.
     $expected_display_order = ['default', 'block_1', 'page_1'];
-    $this->assertEqual($expected_display_order, array_keys(Views::getView($view['id'])->storage->get('display')), 'The correct display names are present.');
+    $this->assertEquals($expected_display_order, array_keys(Views::getView($view['id'])->storage->get('display')), 'The correct display names are present.');
     // Put the block display in front of the page display.
     $edit = [
       'displays[page_1][weight]' => 2,
@@ -71,18 +75,18 @@ class DisplayTest extends UITestBase {
 
     $view = Views::getView($view['id']);
     $displays = $view->storage->get('display');
-    $this->assertEqual(0, $displays['default']['position'], 'Make sure the default display comes first.');
-    $this->assertEqual(1, $displays['block_1']['position'], 'Make sure the block display comes before the page display.');
-    $this->assertEqual(2, $displays['page_1']['position'], 'Make sure the page display comes after the block display.');
+    $this->assertEquals(0, $displays['default']['position'], 'Make sure the default display comes first.');
+    $this->assertEquals(1, $displays['block_1']['position'], 'Make sure the block display comes before the page display.');
+    $this->assertEquals(2, $displays['page_1']['position'], 'Make sure the page display comes after the block display.');
 
     // Ensure the view displays are in the expected order in configuration.
-    $this->assertEqual($expected_display_order, array_keys($view->storage->get('display')), 'The correct display names are present.');
+    $this->assertEquals($expected_display_order, array_keys($view->storage->get('display')), 'The correct display names are present.');
   }
 
   /**
    * Tests disabling of a display.
    */
-  public function testDisableDisplay() {
+  public function testDisableDisplay(): void {
     $view = $this->randomView();
     $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
 
@@ -109,7 +113,7 @@ class DisplayTest extends UITestBase {
   /**
    * Tests views_ui_views_plugins_display_alter is altering plugin definitions.
    */
-  public function testDisplayPluginsAlter() {
+  public function testDisplayPluginsAlter(): void {
     $definitions = Views::pluginManager('display')->getDefinitions();
 
     $expected = [
@@ -126,7 +130,7 @@ class DisplayTest extends UITestBase {
   /**
    * Tests display areas.
    */
-  public function testDisplayAreas() {
+  public function testDisplayAreas(): void {
     // Show the advanced column.
     $this->config('views.settings')->set('ui.show.advanced_column', TRUE)->save();
 
@@ -152,28 +156,32 @@ class DisplayTest extends UITestBase {
   /**
    * Tests the link-display setting.
    */
-  public function testLinkDisplay() {
+  public function testLinkDisplay(): void {
     // Test setting the link display in the UI form.
     $path = 'admin/structure/views/view/test_display/edit/block_1';
     $link_display_path = 'admin/structure/views/nojs/display/test_display/block_1/link_display';
 
     // Test the link text displays 'None' and not 'Block 1'
     $this->drupalGet($path);
-    $result = $this->xpath("//a[contains(@href, :path)]", [':path' => $link_display_path]);
-    $this->assertEqual(t('None'), $result[0]->getHtml(), 'Make sure that the link option summary shows "None" by default.');
+    $this->assertSession()->elementTextEquals('xpath', "//a[contains(@href, '{$link_display_path}')]", 'None');
 
     $this->drupalGet($link_display_path);
     $this->assertSession()->checkboxChecked('edit-link-display-0');
 
     // Test the default radio option on the link display form.
-    $this->drupalPostForm($link_display_path, ['link_display' => 'page_1'], 'Apply');
+    $this->drupalGet($link_display_path);
+    $this->submitForm(['link_display' => 'page_1'], 'Apply');
     // The form redirects to the default display.
     $this->drupalGet($path);
 
-    $result = $this->xpath("//a[contains(@href, :path)]", [':path' => $link_display_path]);
-    $this->assertEqual('Page', $result[0]->getHtml(), 'Make sure that the link option summary shows the right linked display.');
+    // Test that the link option summary shows the right linked display.
+    $this->assertSession()->elementTextEquals('xpath', "//a[contains(@href, '{$link_display_path}')]", 'Page');
 
-    $this->drupalPostForm($link_display_path, ['link_display' => 'custom_url', 'link_url' => 'a-custom-url'], 'Apply');
+    $this->drupalGet($link_display_path);
+    $this->submitForm([
+      'link_display' => 'custom_url',
+      'link_url' => 'a-custom-url',
+    ], 'Apply');
     // The form redirects to the default display.
     $this->drupalGet($path);
 
@@ -182,14 +190,14 @@ class DisplayTest extends UITestBase {
     // Test the default link_url value for new display
     $this->submitForm([], 'Add Block');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_display/edit/block_2');
-    $this->clickLink(t('Custom URL'));
+    $this->clickLink('Custom URL');
     $this->assertSession()->fieldValueEquals('link_url', 'a-custom-url');
   }
 
   /**
    * Tests that the view status is correctly reflected on the edit form.
    */
-  public function testViewStatus() {
+  public function testViewStatus(): void {
     $view = $this->randomView();
     $id = $view['id'];
 
@@ -208,7 +216,7 @@ class DisplayTest extends UITestBase {
   /**
    * Ensures that no XSS is possible for buttons.
    */
-  public function testDisplayTitleInButtonsXss() {
+  public function testDisplayTitleInButtonsXss(): void {
     $xss_markup = '"><script>alert(123)</script>';
     $view = $this->randomView();
     $view = View::load($view['id']);
@@ -220,34 +228,35 @@ class DisplayTest extends UITestBase {
       $view->save();
 
       $this->drupalGet("admin/structure/views/view/{$view->id()}");
-      $escaped = views_ui_truncate($input, 25);
+      $escaped = Unicode::truncate($input, 25, FALSE, TRUE);
       $this->assertSession()->assertEscaped($escaped);
-      $this->assertNoRaw($xss_markup);
+      $this->assertSession()->responseNotContains($xss_markup);
 
       $this->drupalGet("admin/structure/views/view/{$view->id()}/edit/page_1");
       $this->assertSession()->assertEscaped("View $escaped");
-      $this->assertNoRaw("View $xss_markup");
+      $this->assertSession()->responseNotContains("View $xss_markup");
       $this->assertSession()->assertEscaped("Duplicate $escaped");
-      $this->assertNoRaw("Duplicate $xss_markup");
+      $this->assertSession()->responseNotContains("Duplicate $xss_markup");
       $this->assertSession()->assertEscaped("Delete $escaped");
-      $this->assertNoRaw("Delete $xss_markup");
+      $this->assertSession()->responseNotContains("Delete $xss_markup");
     }
   }
 
   /**
    * Tests the action links on the edit display UI.
    */
-  public function testActionLinks() {
+  public function testActionLinks(): void {
     // Change the display title of a display so it contains characters that will
     // be escaped when rendered.
     $display_title = "'<test>'";
     $this->drupalGet('admin/structure/views/view/test_display');
     $display_title_path = 'admin/structure/views/nojs/display/test_display/block_1/display_title';
-    $this->drupalPostForm($display_title_path, ['display_title' => $display_title], 'Apply');
+    $this->drupalGet($display_title_path);
+    $this->submitForm(['display_title' => $display_title], 'Apply');
 
     // Ensure that the title is escaped as expected.
     $this->assertSession()->assertEscaped($display_title);
-    $this->assertNoRaw($display_title);
+    $this->assertSession()->responseNotContains($display_title);
 
     // Ensure that the dropdown buttons are displayed correctly.
     $this->assertSession()->buttonExists('Duplicate ' . $display_title);
@@ -262,35 +271,36 @@ class DisplayTest extends UITestBase {
 
     // Ensure that the title is escaped as expected.
     $this->assertSession()->assertEscaped($display_title);
-    $this->assertNoRaw($display_title);
+    $this->assertSession()->responseNotContains($display_title);
   }
 
   /**
    * Tests that the override option is hidden when it's not needed.
    */
-  public function testHideDisplayOverride() {
+  public function testHideDisplayOverride(): void {
     // Test that the override option appears with two displays.
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
-    $this->assertText('All displays');
+    $this->assertSession()->pageTextContains('All displays');
 
     // Remove a display and test if the override option is hidden.
-    $this->drupalPostForm('admin/structure/views/view/test_display/edit/block_1', [], 'Delete Block');
+    $this->drupalGet('admin/structure/views/view/test_display/edit/block_1');
+    $this->submitForm([], 'Delete Block');
     $this->submitForm([], 'Save');
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
-    $this->assertNoText('All displays');
+    $this->assertSession()->pageTextNotContains('All displays');
 
     // Test that the override option is shown when default display is on.
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.default_display', TRUE)->save();
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
-    $this->assertText('All displays');
+    $this->assertSession()->pageTextContains('All displays');
 
     // Test that the override option is shown if the current display is
     // overridden so that the option to revert is available.
     $this->submitForm(['override[dropdown]' => 'page_1'], 'Apply');
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.default_display', FALSE)->save();
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
-    $this->assertText('Revert to default');
+    $this->assertSession()->pageTextContains('Revert to default');
   }
 
 }

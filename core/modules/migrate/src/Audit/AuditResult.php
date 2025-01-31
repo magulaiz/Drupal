@@ -119,7 +119,7 @@ class AuditResult implements MarkupInterface, \Countable {
    *
    * @see \Drupal\Component\Render\MarkupInterface
    */
-  public function count() {
+  public function count(): int {
     return count($this->reasons);
   }
 
@@ -139,7 +139,7 @@ class AuditResult implements MarkupInterface, \Countable {
    *
    * @return string[]
    */
-  public function jsonSerialize() {
+  public function jsonSerialize(): string {
     return $this->reasons;
   }
 

@@ -36,7 +36,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   /**
    * A pager plugin that should be provided by the display.
    *
-   * @var views_plugin_pager
+   * @var \Drupal\views\Plugin\views\pager\PagerPluginBase|null
    */
   public $pager = NULL;
 
@@ -48,11 +48,22 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   protected $limit;
 
   /**
-   * Generate a query and a countquery from all of the information supplied
-   * to the object.
+   * The OFFSET on the query.
+   */
+  public int $offset;
+
+  /**
+   * Controls how the WHERE and HAVING groups are put together.
    *
-   * @param $get_count
-   *   Provide a countquery if this is true, otherwise provide a normal query.
+   * @var string
+   */
+  protected $groupOperator;
+
+  /**
+   * Generate a query and a countQuery from all of the information supplied.
+   *
+   * @param bool $get_count
+   *   Provide a countQuery if this is true, otherwise provide a normal query.
    */
   public function query($get_count = FALSE) {}
 
@@ -73,8 +84,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   public function build(ViewExecutable $view) {}
 
   /**
-   * Executes the query and fills the associated view object with according
-   * values.
+   * Executes query and fills associated view object with according values.
    *
    * Values to set: $view->result, $view->total_rows, $view->execute_time,
    * $view->pager['current_page'].
@@ -105,10 +115,19 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    */
   public function getAggregationInfo() {}
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public function summaryTitle() {
     return $this->t('Settings');
   }
@@ -119,7 +138,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   public function calculateDependencies() {
     $dependencies = [];
 
-    foreach ($this->getEntityTableInfo() as $entity_type => $info) {
+    foreach ($this->getEntityTableInfo() as $info) {
       if (!empty($info['provider'])) {
         $dependencies['module'][] = $info['provider'];
       }
@@ -152,15 +171,15 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   /**
    * Create a new grouping for the WHERE or HAVING clause.
    *
-   * @param $type
+   * @param string $type
    *   Either 'AND' or 'OR'. All items within this group will be added
    *   to the WHERE clause with this logical operator.
-   * @param $group
+   * @param string|null $group
    *   An ID to use for this group. If unspecified, an ID will be generated.
-   * @param $where
-   *   'where' or 'having'.
+   * @param string $where
+   *   The type of clause, either 'where' or 'having'.
    *
-   * @return
+   * @return int|string
    *   The group ID generated.
    */
   public function setWhereGroup($type = 'AND', $group = NULL, $where = 'where') {
@@ -183,7 +202,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   /**
    * Control how all WHERE and HAVING groups are put together.
    *
-   * @param $type
+   * @param string $type
    *   Either 'AND' or 'OR'
    */
   public function setGroupOperator($type = 'AND') {

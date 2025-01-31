@@ -1,36 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Kernel;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
 
 /**
- * Compares the default language from $GLOBALS against the dependency injected
- * language object.
+ * Tests that a language object can be injected.
  *
  * @group language
  */
 class LanguageDependencyInjectionTest extends LanguageTestBase {
 
   /**
-   * Test dependency injected languages against a new Language object.
+   * Tests dependency injected languages against a new Language object.
    *
    * @see \Drupal\Core\Language\LanguageInterface
    */
-  public function testDependencyInjectedNewLanguage() {
+  public function testDependencyInjectedNewLanguage(): void {
     $expected = $this->languageManager->getDefaultLanguage();
     $result = $this->languageManager->getCurrentLanguage();
     $this->assertSame($expected, $result);
   }
 
   /**
-   * Test dependency injected Language object against a new default language
-   * object.
+   * Tests dependency injected Language object.
    *
    * @see \Drupal\Core\Language\Language
    */
-  public function testDependencyInjectedNewDefaultLanguage() {
+  public function testDependencyInjectedNewDefaultLanguage(): void {
     $default_language = ConfigurableLanguage::load(\Drupal::languageManager()->getDefaultLanguage()->getId());
     // Change the language default object to different values.
     $fr = ConfigurableLanguage::createFromLangcode('fr');
@@ -47,7 +47,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
       $fr->delete();
       $this->fail('Expected DeleteDefaultLanguageException thrown.');
     }
-    catch (DeleteDefaultLanguageException $e) {
+    catch (DeleteDefaultLanguageException) {
       // Expected exception; just continue testing.
     }
 

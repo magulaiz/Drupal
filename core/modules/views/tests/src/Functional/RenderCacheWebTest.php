@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Functional;
 
 use Drupal\node\Entity\Node;
@@ -19,7 +21,7 @@ class RenderCacheWebTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * {@inheritdoc}
@@ -36,8 +38,8 @@ class RenderCacheWebTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
 
     $node_type = $this->drupalCreateContentType(['type' => 'test_type']);
     $node = Node::create([
@@ -58,28 +60,28 @@ class RenderCacheWebTest extends ViewTestBase {
   /**
    * Tests rendering caching of a views block with arguments.
    */
-  public function testEmptyView() {
+  public function testEmptyView(): void {
     $this->placeBlock('views_block:node_id_argument-block_1', ['region' => 'header']);
     $this->drupalGet('<front>');
-    $this->assertEqual([], $this->cssSelect('div.region-header div.views-field-title'));
+    $this->assertEquals([], $this->cssSelect('div.region-header div.views-field-title'));
 
     $this->drupalGet($this->nodes[0]->toUrl());
     $result = $this->cssSelect('div.region-header div.views-field-title')[0]->getText();
-    $this->assertEqual('test title 1', $result);
+    $this->assertEquals('test title 1', $result);
 
     $this->drupalGet($this->nodes[1]->toUrl());
     $result = $this->cssSelect('div.region-header div.views-field-title')[0]->getText();
-    $this->assertEqual('test title 2', $result);
+    $this->assertEquals('test title 2', $result);
 
     $this->drupalGet($this->nodes[0]->toUrl());
     $result = $this->cssSelect('div.region-header div.views-field-title')[0]->getText();
-    $this->assertEqual('test title 1', $result);
+    $this->assertEquals('test title 1', $result);
   }
 
   /**
    * Tests render caching for display rendered with different args on same page.
    */
-  public function testRepeatedDisplay() {
+  public function testRepeatedDisplay(): void {
     $this->drupalGet("views_test_render_cache/node_id_argument/block_1/{$this->nodes[0]->id()}/{$this->nodes[1]->id()}");
     // Confirm there are two displays.
     $displays = $this->cssSelect('.views-element-container .view-id-node_id_argument.view-display-id-block_1');

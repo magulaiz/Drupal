@@ -12,7 +12,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * migrated. The values of those fields will be migrated to the base fields they
  * were replacing.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
@@ -58,6 +59,7 @@ class Field extends DrupalSqlBase {
     return [
       'id' => $this->t('The field ID.'),
       'field_name' => $this->t('The field name.'),
+      'entity_type' => $this->t('Entity type'),
       'type' => $this->t('The field type.'),
       'module' => $this->t('The module that implements the field type.'),
       'active' => $this->t('The field status.'),

@@ -74,13 +74,14 @@ class Translation extends AnnotationBase {
    */
   public function __construct(array $values) {
     $string = $values['value'];
-    $arguments = isset($values['arguments']) ? $values['arguments'] : [];
+    $arguments = $values['arguments'] ?? [];
     $options = [];
     if (!empty($values['context'])) {
       $options = [
         'context' => $values['context'],
       ];
     }
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $this->translation = new TranslatableMarkup($string, $arguments, $options);
   }
 

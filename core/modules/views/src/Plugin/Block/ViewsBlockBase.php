@@ -51,7 +51,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
+   *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\views\ViewExecutableFactory $executable_factory
@@ -64,7 +64,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageInterface $storage, AccountInterface $user) {
     $this->pluginId = $plugin_id;
     $delta = $this->getDerivativeId();
-    list($name, $this->displayID) = explode('-', $delta, 2);
+    [$name, $this->displayID] = explode('-', $delta, 2);
     // Load the view.
     $view = $storage->load($name);
     $this->view = $executable_factory->get($view);

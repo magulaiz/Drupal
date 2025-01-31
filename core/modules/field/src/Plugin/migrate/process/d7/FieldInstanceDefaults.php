@@ -2,22 +2,19 @@
 
 namespace Drupal\field\Plugin\migrate\process\d7;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
-/**
- * @MigrateProcessPlugin(
- *   id = "d7_field_instance_defaults"
- * )
- */
+#[MigrateProcess('d7_field_instance_defaults')]
 class FieldInstanceDefaults extends ProcessPluginBase {
 
   /**
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($default_value, $widget_settings) = $value;
+    [$default_value, $widget_settings] = $value;
     $widget_type = $widget_settings['type'];
     $default_value = $default_value ?: [];
 

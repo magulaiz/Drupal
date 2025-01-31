@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\field\Entity\FieldConfig;
@@ -14,9 +16,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class EntityQueryAggregateTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [];
 
@@ -34,6 +34,9 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
    */
   protected $queryResult;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -108,9 +111,9 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test aggregation support.
+   * Tests aggregation support.
    */
-  public function testAggregation() {
+  public function testAggregation(): void {
     // Apply a simple groupby.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
@@ -139,7 +142,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       // We need to check that a character exists before and after the table,
       // column and alias identifiers. These would be the quote characters
       // specific for each database system.
-      $this->assertRegExp('/' . $aggregation_function . '\(.entity_test.\..id.\) AS .id_' . $aggregation_function . './', (string) $query, 'The argument to the aggregation function should be a quoted field.');
+      $this->assertMatchesRegularExpression('/' . $aggregation_function . '\(.*entity_test.\..id.\).* AS .id_' . $aggregation_function . './', (string) $query, 'The argument to the aggregation function should be a quoted field.');
       $this->assertEquals($expected, $this->queryResult);
     }
 
@@ -588,7 +591,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
   /**
    * Tests preparing a query and executing twice.
    */
-  public function testRepeatedExecution() {
+  public function testRepeatedExecution(): void {
     $query = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
       ->groupBy('user_id');
@@ -624,8 +627,12 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
    * @param array $expected
    *   An array of the expected results.
    * @param bool $sorted
+   *   (optiOnal) Whether the array keys of the expected are sorted, defaults to
+   *   FALSE.
+   *
+   * @internal
    */
-  protected function assertResults($expected, $sorted = FALSE) {
+  protected function assertResults(array $expected, bool $sorted = FALSE): void {
     $found = TRUE;
     $expected_keys = array_keys($expected);
     foreach ($this->queryResult as $key => $row) {
@@ -647,9 +654,11 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
    *
    * @param array $expected
    *   An array of the expected results.
+   *
+   * @internal
    */
-  protected function assertSortedResults($expected) {
-    return $this->assertResults($expected, TRUE);
+  protected function assertSortedResults(array $expected): void {
+    $this->assertResults($expected, TRUE);
   }
 
 }

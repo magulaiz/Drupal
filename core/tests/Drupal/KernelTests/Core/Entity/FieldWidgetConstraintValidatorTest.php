@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -15,6 +17,9 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class FieldWidgetConstraintValidatorTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'entity_test',
     'field',
@@ -36,7 +41,7 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests widget constraint validation.
    */
-  public function testValidation() {
+  public function testValidation(): void {
     $entity_type = 'entity_test_constraint_violation';
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
@@ -58,8 +63,8 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
     $display->validateFormValues($entity, $form, $form_state);
 
     $errors = $form_state->getErrors();
-    $this->assertEqual('Widget constraint has failed.', $errors['name'], 'Constraint violation at the field items list level is generated correctly');
-    $this->assertEqual('Widget constraint has failed.', $errors['test_field'], 'Constraint violation at the field items list level is generated correctly for an advanced widget');
+    $this->assertEquals('Widget constraint has failed.', $errors['name'], 'Constraint violation at the field items list level is generated correctly');
+    $this->assertEquals('Widget constraint has failed.', $errors['test_field'], 'Constraint violation at the field items list level is generated correctly for an advanced widget');
   }
 
   /**
@@ -104,7 +109,7 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests widget constraint validation with composite constraints.
    */
-  public function testValidationWithCompositeConstraint() {
+  public function testValidationWithCompositeConstraint(): void {
     // First provide a valid value, this should cause no validation.
     $entity = EntityTestCompositeConstraint::create([
       'name' => 'valid-value',
@@ -141,24 +146,24 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
     $errors = $this->getErrorsForEntity($entity, ['name']);
     $this->assertFalse(isset($errors['name']));
     $this->assertTrue(isset($errors['type']));
-    $this->assertEqual(new FormattableMarkup('The validation failed because the value conflicts with the value in %field_name, which you cannot access.', ['%field_name' => 'name']), $errors['type']);
+    $this->assertEquals(new FormattableMarkup('The validation failed because the value conflicts with the value in %field_name, which you cannot access.', ['%field_name' => 'name']), $errors['type']);
   }
 
   /**
    * Tests entity level constraint validation.
    */
-  public function testEntityLevelConstraintValidation() {
+  public function testEntityLevelConstraintValidation(): void {
     $entity = EntityTestCompositeConstraint::create([
       'name' => 'entity-level-violation',
     ]);
     $entity->save();
 
     $errors = $this->getErrorsForEntity($entity);
-    $this->assertEqual('Entity level validation', $errors['']);
+    $this->assertEquals('Entity level validation', $errors['']);
 
     $entity->name->value = 'entity-level-violation-with-path';
     $errors = $this->getErrorsForEntity($entity);
-    $this->assertEqual('Entity level validation', $errors['test][form][element']);
+    $this->assertEquals('Entity level validation', $errors['test][form][element']);
   }
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -12,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class FieldHelpTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field', 'help'];
 
@@ -28,20 +28,23 @@ class FieldHelpTest extends BrowserTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
     // Create the admin user.
     $this->adminUser = $this->drupalCreateUser([
-      'access administration pages',
+      'access help pages',
       'view the administration theme',
     ]);
   }
 
   /**
-   * Test the Field module's help page.
+   * Tests the Field module's help page.
    */
-  public function testFieldHelp() {
+  public function testFieldHelp(): void {
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
 
@@ -55,7 +58,7 @@ class FieldHelpTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Options', 0, 'Options module is listed on the Field help page.');
     // Verify that modules with field types that do not implement hook_help are
     // listed.
-    $this->assertText('Field API Test');
+    $this->assertSession()->pageTextContains('Field API Test');
     $this->assertSession()->linkNotExists('Field API Test', 'Modules with field types that do not implement hook_help are not linked.');
     $this->assertSession()->linkNotExists('Link', 'Modules that have not been installed, are not listed.');
   }

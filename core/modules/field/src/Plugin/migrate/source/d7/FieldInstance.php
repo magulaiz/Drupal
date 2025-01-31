@@ -5,6 +5,8 @@ namespace Drupal\field\Plugin\migrate\source\d7;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore localizable
+
 /**
  * Drupal 7 field instances source from database.
  *
@@ -41,7 +43,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * In this example field instances of page content type are retrieved from the
  * source database.
  *
- * For additional configuration keys, refer to the parent classes:
+ * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
@@ -148,10 +151,10 @@ class FieldInstance extends DrupalSqlBase {
     if ($row->getSourceProperty('entity_type') == 'node') {
       $language_content_type_bundle = (int) $this->variableGet('language_content_type_' . $row->getSourceProperty('bundle'), 0);
       // language_content_type_[bundle] may be
-      //   - 0: no language support
-      //   - 1: language assignment support
-      //   - 2: node translation support
-      //   - 4: entity translation support
+      // - 0: no language support
+      // - 1: language assignment support
+      // - 2: node translation support
+      // - 4: entity translation support
       if ($language_content_type_bundle === 2 || ($language_content_type_bundle === 4 && $row->getSourceProperty('translatable'))) {
         $translatable = TRUE;
       }
@@ -252,7 +255,7 @@ class FieldInstance extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function count($refresh = FALSE) {
+  protected function doCount() {
     return $this->initializeIterator()->count();
   }
 
