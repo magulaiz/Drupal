@@ -8,11 +8,13 @@ use Composer\Semver\VersionParser;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TempStore\SharedTempStore;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\Core\Utility\Error;
+use Drupal\package_manager\Attribute\AllowDirectWrite;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
 use Drupal\package_manager\Event\PostApplyEvent;
 use Drupal\package_manager\Event\PostCreateEvent;
@@ -169,6 +171,17 @@ abstract class StageBase implements LoggerAwareInterface {
    */
   protected string $type;
 
+  /**
+   * Whether this stage will change the active directory directly.
+   *
+   * This can only happen if direct-write is globally enabled by the
+   * `package_manager_allow_direct_write` setting, AND this class opts into it
+   * by adding the AllowDirectWrite attribute.
+   *
+   * @var bool
+   */
+  public readonly bool $directWrite;
+
   public function __construct(
     protected readonly PathLocator $pathLocator,
     protected readonly BeginnerInterface $beginner,
@@ -182,6 +195,11 @@ abstract class StageBase implements LoggerAwareInterface {
     protected readonly FailureMarker $failureMarker,
   ) {
     $this->tempStore = $tempStoreFactory->get('package_manager_stage');
+
+    $this->directWrite = (
+      Settings::get('package_manager_allow_direct_write', FALSE) &&
+      (new \ReflectionClass($this))->getAttributes(AllowDirectWrite::class)
+    );
   }
 
   /**
