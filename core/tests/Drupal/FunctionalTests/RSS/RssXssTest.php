@@ -53,7 +53,7 @@ class RssXssTest extends BrowserTestBase {
 
     $trusted_html_format = FilterFormat::create([
       'format' => 'trusted_format',
-      'name' => 'Text format for untrusted users',
+      'name' => 'Text format for trusted users',
       'weight' => 1,
       'filters' => [
         'filter_html' => [
