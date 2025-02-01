@@ -13,7 +13,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
  */
 #[Block(
   id: "local_actions_block",
-  admin_label: new TranslatableMarkup("Primary admin actions")
+  admin_label: new TranslatableMarkup("Primary admin actions"),
+  autowire: TRUE,
 )]
 class LocalActionsBlock extends BlockBase {
 
