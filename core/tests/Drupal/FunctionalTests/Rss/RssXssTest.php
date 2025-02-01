@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\FunctionalTests\Test;
+namespace Drupal\FunctionalTests\Rss;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\field\Entity\FieldConfig;
