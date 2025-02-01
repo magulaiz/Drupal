@@ -96,7 +96,7 @@ class RssXssTest extends BrowserTestBase {
     $this->assertSession()->responseNotContains($xss);
     // Ensure the created page loads with content.
     $this->assertSession()->responseContains('Confirm title.');
-    // The div should be stripped from plain text.
+    // The div should be escaped from plain text.
     $this->assertSession()->responseNotContains('Confirm <div>plain</div> text.');
     // The image should be allowed by the format.
     $this->assertSession()->responseContains('<img src="test">Confirm body text.');
