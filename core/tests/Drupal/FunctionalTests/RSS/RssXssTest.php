@@ -10,7 +10,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 
 /**
- * Tests that dangerous tags in RSS feeds are escaped or removed.
+ * Tests that dangerous tags in RSS feeds are escaped.
  *
  * @group node
  */
