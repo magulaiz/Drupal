@@ -27,7 +27,7 @@ class RssXssTest extends BrowserTestBase {
   protected static $modules = ['filter', 'editor', 'node', 'views'];
 
   /**
-   * Tests XSS functionality with a node entity in the RSS feed.
+   * Tests XSS functionality with in the RSS feed.
    */
   public function testRssXss(): void {
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
