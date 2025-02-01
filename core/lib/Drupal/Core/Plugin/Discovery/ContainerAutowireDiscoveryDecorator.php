@@ -5,6 +5,7 @@ namespace Drupal\Core\Plugin\Discovery;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
+use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Reference;
@@ -37,7 +38,7 @@ class ContainerAutowireDiscoveryDecorator implements DiscoveryInterface {
     $plugin_definitions = $this->decorated->getDefinitions();
 
     foreach ($plugin_definitions as $id => $definition) {
-      $class = $definition instanceof PluginDefinitionInterface ? $definition->getClass() : $definition['class'];
+      $class = DefaultFactory::getPluginClass($id, $definition);
       if (method_exists($class, '__construct')) {
         $constructor = new \ReflectionMethod($class, '__construct');
         $args = [];
