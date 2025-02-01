@@ -400,13 +400,13 @@ interface DisplayPluginInterface {
   /**
    * #pre_render callback for view display rendering.
    *
-   * @see self::render()
-   *
    * @param array $element
    *   The element to #pre_render
    *
    * @return array
    *   The processed element.
+   *
+   * @see self::render()
    */
   public function elementPreRender(array $element);
 
@@ -556,8 +556,8 @@ interface DisplayPluginInterface {
   /**
    * Is the output of the view empty.
    *
-   * If a view has no result and neither the empty, nor the footer nor the header
-   * does show anything return FALSE.
+   * If a view has no result and neither the empty, nor the footer nor the
+   * header does show anything return FALSE.
    *
    * @return bool
    *   Returns TRUE if the output is empty, else FALSE.
