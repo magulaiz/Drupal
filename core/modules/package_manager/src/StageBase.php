@@ -182,11 +182,25 @@ abstract class StageBase implements LoggerAwareInterface {
    */
   public readonly bool $directWrite;
 
+  /**
+   * The beginner service.
+   *
+   * @var \PhpTuf\ComposerStager\API\Core\BeginnerInterface
+   */
+  protected readonly BeginnerInterface $beginner;
+
+  /**
+   * The committer service.
+   *
+   * @var \PhpTuf\ComposerStager\API\Core\CommitterInterface
+   */
+  protected readonly CommitterInterface $committer;
+
   public function __construct(
     protected readonly PathLocator $pathLocator,
-    protected readonly BeginnerInterface $beginner,
+    BeginnerInterface $beginner,
     protected readonly StagerInterface $stager,
-    protected readonly CommitterInterface $committer,
+    CommitterInterface $committer,
     protected readonly QueueFactory $queueFactory,
     protected EventDispatcherInterface $eventDispatcher,
     protected readonly SharedTempStoreFactory $tempStoreFactory,
@@ -200,6 +214,12 @@ abstract class StageBase implements LoggerAwareInterface {
       Settings::get('package_manager_allow_direct_write', FALSE) &&
       (new \ReflectionClass($this))->getAttributes(AllowDirectWrite::class)
     );
+    if ($this->directWrite) {
+      $beginner = new DirectWriteWrapper();
+      $committer = new DirectWriteWrapper();
+    }
+    $this->beginner = $beginner;
+    $this->committer = $committer;
   }
 
   /**
