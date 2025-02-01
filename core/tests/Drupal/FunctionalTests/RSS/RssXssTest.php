@@ -98,9 +98,9 @@ class RssXssTest extends BrowserTestBase {
     $this->assertSession()->responseContains('Confirm title.');
     // The div should be escaped from plain text.
     $this->assertSession()->responseNotContains('Confirm <div>plain</div> text.');
-    // The image should be allowed by the format.
-    $this->assertSession()->responseContains('<img src="test">Confirm body text.');
     $this->assertSession()->responseContains('Confirm &lt;div&gt;plain&lt;/div&gt; text.');
+    // The image should be allowed by the format for trusted users.
+    $this->assertSession()->responseContains('<img src="test">Confirm body text.');
   }
 
 }
