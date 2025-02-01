@@ -31,12 +31,11 @@ class RssXssTest extends BrowserTestBase {
    */
   public function testRssXss(): void {
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
-    $field_storage = [
+    FieldStorageConfig::create([
       'field_name' => 'test_field',
       'entity_type' => 'node',
       'type' => 'text',
-    ];
-    FieldStorageConfig::create($field_storage)->save();
+    ])->save();
     $field = [
       'field_name' => $field_storage['field_name'],
       'entity_type' => 'node',
@@ -51,20 +50,19 @@ class RssXssTest extends BrowserTestBase {
       ->setComponent('body')
       ->save();
 
-    $full_html_format = FilterFormat::create([
-      'format' => 'full_html',
-      'name' => 'Full HTML',
-      'weight' => 1,
-      'filters' => [
-        'filter_html' => [
-          'status' => 1,
-          'settings' => [
-            'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a> <embed>',
+    FilterFormat::create([
+      'format' => 'a_text_format_suitable_for_untrusted_users',
+      'name' => 'Text format for untrusted users',
+      'weight' ⇒ 1,
+      'filters' ⇒ [
+        'filter_html' ⇒ [
+          'status' ⇒ 1,
+          'settings' ⇒ [
+            'allowed_html' => '<h2> <h3> <h4> <h5> <h6> <p> <br> <strong> <a> <embed> <div>',
           ],
         ],
       ],
     ]);
-    $full_html_format->save();
     $web_user = $this->drupalCreateUser([
       'create article content',
       'edit any article content',
@@ -75,7 +73,7 @@ class RssXssTest extends BrowserTestBase {
     // Dangerous script tag.
     $xss = '<script>alert("xss")</script>';
     $title = $xss . 'Confirm title.';
-    $body = $xss . 'Confirm body text.';
+    $body = $xss . '<div>Confirm body text.</div>';
     $plain_text = $xss . 'Confirm plain text.';
 
     $settings = [
@@ -83,7 +81,7 @@ class RssXssTest extends BrowserTestBase {
       'title' => $title,
       'body' => [
         'value' => $body,
-        'format' => 'full_html',
+        'format' => 'a_text_format_suitable_for_untrusted_users',
       ],
       'test_field' => [
         'value' => $plain_text,
@@ -96,7 +94,7 @@ class RssXssTest extends BrowserTestBase {
     $this->assertSession()->responseNotContains($xss);
     // Ensure the created page loads with content.
     $this->assertSession()->responseContains('Confirm title.');
-    $this->assertSession()->responseContains('Confirm body text.');
+    $this->assertSession()->responseContains('<div>Confirm body text.</div>');
     $this->assertSession()->responseContains('Confirm plain text.');
   }
 
