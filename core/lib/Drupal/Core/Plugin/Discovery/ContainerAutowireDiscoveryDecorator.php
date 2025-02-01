@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Plugin\Discovery;
 
+use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
 use Psr\Container\ContainerInterface;
@@ -36,8 +37,11 @@ class ContainerAutowireDiscoveryDecorator implements DiscoveryInterface {
     $plugin_definitions = $this->decorated->getDefinitions();
 
     foreach ($plugin_definitions as $id => $definition) {
-      if (method_exists($definition['class'], '__construct')) {
-        $constructor = new \ReflectionMethod($definition['class'], '__construct');
+      $class = $definition instanceof PluginDefinitionInterface ? $definition->getClass() : $definition['class'];
+      if (method_exists($class, '__construct')) {
+        $constructor = new \ReflectionMethod($class, '__construct');
+        $args = [];
+
         // @todo Figure out how to handle plugins with different constructor
         // signatures.
         foreach (array_slice($constructor->getParameters(), 3) as $pos => $parameter) {
@@ -52,10 +56,15 @@ class ContainerAutowireDiscoveryDecorator implements DiscoveryInterface {
 
           $args[$pos] = new Reference($service);
         }
-      }
 
-      if (!empty($args)) {
-        $plugin_definitions[$id]['constructor_services'] = $args;
+        if (!empty($args)) {
+          if ($definition instanceof PluginDefinitionInterface) {
+            $definition->constructorServices = $args;
+          }
+          else {
+            $plugin_definitions[$id]['constructor_services'] = $args;
+          }
+        }
       }
     }
 

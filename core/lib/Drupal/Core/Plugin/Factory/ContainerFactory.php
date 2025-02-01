@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Plugin\Factory;
 
+use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\Reference;
@@ -19,9 +20,15 @@ class ContainerFactory extends DefaultFactory {
     $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, $this->interface);
 
     // If we know how to autowire the plugin, construct it automatically.
-    if (isset($plugin_definition['constructor_services'])) {
+    if ($plugin_definition instanceof PluginDefinitionInterface) {
+      $services = $plugin_definition->constructorServices ?? NULL;
+    }
+    else {
+      $services = $plugin_definition['constructor_services'] ?? NULL;
+    }
+    if (!is_null($services)) {
       $container = \Drupal::getContainer();
-      $args = array_map(fn(Reference $service): object => $container->get((string) $service), $plugin_definition['constructor_services']);
+      $args = array_map(fn(Reference $service): object => $container->get((string) $service), $services);
       if (is_subclass_of($plugin_class, ContainerFactoryPluginInterface::class)) {
         @trigger_error(sprintf('Implementing ContainerFactoryPluginInterface in the plugin "%s" is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. The create() method can be safely removed. See https://www.drupal.org/node/7654321', $plugin_id), E_USER_DEPRECATED);
       }
