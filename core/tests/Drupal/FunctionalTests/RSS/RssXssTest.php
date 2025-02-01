@@ -75,7 +75,7 @@ class RssXssTest extends BrowserTestBase {
     // Dangerous script tag.
     $xss = '<script>alert("xss")</script>';
     $title = $xss . 'Confirm title.';
-    $body = $xss . '<img src"test" />Confirm body text.';
+    $body = $xss . '<img src="test" />Confirm body text.';
     $plain_text = $xss . 'Confirm <div>plain</div> text.';
 
     $settings = [
@@ -96,8 +96,11 @@ class RssXssTest extends BrowserTestBase {
     $this->assertSession()->responseNotContains($xss);
     // Ensure the created page loads with content.
     $this->assertSession()->responseContains('Confirm title.');
-    $this->assertSession()->responseContains('<img src"test" />Confirm body text.');
-    $this->assertSession()->responseContains('Confirm plain text.');
+    // The div should be stripped from plain text.
+    $this->assertSession()->responseNotContains('Confirm <div>plain</div> text.');
+    // The image should be allowed by the format.
+    $this->assertSession()->responseContains('<img src="test">Confirm body text.');
+    $this->assertSession()->responseContains('Confirm &lt;div&gt;plain&lt;/div&gt; text.');
   }
 
 }
