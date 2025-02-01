@@ -171,36 +171,11 @@ abstract class StageBase implements LoggerAwareInterface {
    */
   protected string $type;
 
-  /**
-   * Whether this stage will change the active directory directly.
-   *
-   * This can only happen if direct-write is globally enabled by the
-   * `package_manager_allow_direct_write` setting, AND this class opts into it
-   * by adding the AllowDirectWrite attribute.
-   *
-   * @var bool
-   */
-  public readonly bool $directWrite;
-
-  /**
-   * The beginner service.
-   *
-   * @var \PhpTuf\ComposerStager\API\Core\BeginnerInterface
-   */
-  protected readonly BeginnerInterface $beginner;
-
-  /**
-   * The committer service.
-   *
-   * @var \PhpTuf\ComposerStager\API\Core\CommitterInterface
-   */
-  protected readonly CommitterInterface $committer;
-
   public function __construct(
     protected readonly PathLocator $pathLocator,
-    BeginnerInterface $beginner,
+    protected readonly BeginnerInterface $beginner,
     protected readonly StagerInterface $stager,
-    CommitterInterface $committer,
+    protected readonly CommitterInterface $committer,
     protected readonly QueueFactory $queueFactory,
     protected EventDispatcherInterface $eventDispatcher,
     protected readonly SharedTempStoreFactory $tempStoreFactory,
@@ -209,17 +184,6 @@ abstract class StageBase implements LoggerAwareInterface {
     protected readonly FailureMarker $failureMarker,
   ) {
     $this->tempStore = $tempStoreFactory->get('package_manager_stage');
-
-    $this->directWrite = (
-      Settings::get('package_manager_allow_direct_write', FALSE) &&
-      (new \ReflectionClass($this))->getAttributes(AllowDirectWrite::class)
-    );
-    if ($this->directWrite) {
-      $beginner = new DirectWriteWrapper();
-      $committer = new DirectWriteWrapper();
-    }
-    $this->beginner = $beginner;
-    $this->committer = $committer;
   }
 
   /**
@@ -389,7 +353,9 @@ abstract class StageBase implements LoggerAwareInterface {
     $this->dispatch($event, [$this, 'markAsAvailable']);
 
     try {
-      $this->beginner->begin($active_dir, $stage_dir, $excluded_paths, NULL, $timeout);
+      if ($this->isDirectWrite() === FALSE) {
+        $this->beginner->begin($active_dir, $stage_dir, $excluded_paths, NULL, $timeout);
+      }
     }
     catch (\Throwable $error) {
       $this->destroy();
@@ -513,7 +479,9 @@ abstract class StageBase implements LoggerAwareInterface {
     $this->failureMarker->write($this, $this->getFailureMarkerMessage());
 
     try {
-      $this->committer->commit($stage_dir, $active_dir, $excluded_paths, NULL, $timeout);
+      if ($this->isDirectWrite() === FALSE) {
+        $this->committer->commit($stage_dir, $active_dir, $excluded_paths, NULL, $timeout);
+      }
     }
     catch (InvalidArgumentException | PreconditionException $e) {
       // The commit operation has not started yet, so we can clear the failure
@@ -699,6 +667,12 @@ abstract class StageBase implements LoggerAwareInterface {
 
     if ($stored_lock === [$unique_id, static::class, $this->getType()]) {
       $this->lock = $stored_lock;
+
+      if ($this->isDirectWrite()) {
+        // Bypass a hard-coded set of Composer Stager preconditions that prevent
+        // the active directory from being modified directly.
+        DirectWritePreconditionBypass::activate();
+      }
       return $this;
     }
 
@@ -763,6 +737,10 @@ abstract class StageBase implements LoggerAwareInterface {
   public function getStageDirectory(): string {
     if (!$this->lock) {
       throw new \LogicException(__METHOD__ . '() cannot be called because the stage has not been created or claimed.');
+    }
+
+    if ($this->isDirectWrite()) {
+      return $this->pathLocator->getProjectRoot();
     }
     return $this->getStagingRoot() . DIRECTORY_SEPARATOR . $this->lock[0];
   }
@@ -884,6 +862,24 @@ abstract class StageBase implements LoggerAwareInterface {
     }
     [$id] = $this->tempStore->get(static::TEMPSTORE_LOCK_KEY);
     $this->tempStore->set(self::TEMPSTORE_DESTROYED_STAGES_INFO_PREFIX . $id, $message);
+  }
+
+  /**
+   * Indicates whether this stage will change the active directory directly.
+   *
+   * This can only happen if direct-write is globally enabled by the
+   * `package_manager_allow_direct_write` setting, AND this class explicitly
+   * allows it (by adding the AllowDirectWrite attribute).
+   *
+   * @return bool
+   */
+  final public function isDirectWrite(): bool {
+    $reflector = new \ReflectionClass($this);
+
+    return (
+      Settings::get('package_manager_allow_direct_write', FALSE) &&
+      $reflector->getAttributes(AllowDirectWrite::class)
+    );
   }
 
 }

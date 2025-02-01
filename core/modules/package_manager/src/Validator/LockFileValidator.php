@@ -113,7 +113,7 @@ final class LockFileValidator implements EventSubscriberInterface {
 
     // If the stage is going to change the active directory directly, we don't
     // need to validate the lock file's consistency.
-    if ($stage->directWrite) {
+    if ($stage->isDirectWrite()) {
       return;
     }
     // Early return if the stage is not already created.
