@@ -74,7 +74,7 @@ function form_select_options($element, $choices = NULL): array {
  * index is not sufficient, and supporting this would make the
  * "helper" too complicated and cumbersome to be of any help.
  *
- * As usual with functions that can return array() or FALSE, do not
+ * As usual with functions that can return [] or FALSE, do not
  * forget to use === and !== if needed.
  *
  * @param array $element
