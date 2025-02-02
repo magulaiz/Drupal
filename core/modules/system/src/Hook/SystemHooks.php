@@ -161,7 +161,7 @@ class SystemHooks {
    * Implements hook_updater_info().
    */
   #[Hook('updater_info')]
-  public function updaterInfo() {
+  public function updaterInfo(): array {
     return [
       'module' => [
         'class' => 'Drupal\Core\Updater\Module',
@@ -180,7 +180,7 @@ class SystemHooks {
    * Implements hook_filetransfer_info().
    */
   #[Hook('filetransfer_info')]
-  public function filetransferInfo() {
+  public function filetransferInfo(): array {
     $backends = [];
     // This is the default, will be available on most systems.
     if (function_exists('ftp_connect')) {
@@ -303,8 +303,8 @@ class SystemHooks {
   /**
    * Implements hook_cron().
    *
-   * Remove older rows from flood, batch cache and expirable keyvalue tables. Also
-   * ensure files directories have .htaccess files.
+   * Remove older rows from flood, batch cache and expirable keyvalue tables.
+   * Also ensure files directories have .htaccess files.
    */
   #[Hook('cron')]
   public function cron(): void {

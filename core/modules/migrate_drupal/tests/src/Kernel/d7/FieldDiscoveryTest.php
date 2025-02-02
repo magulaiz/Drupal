@@ -17,6 +17,7 @@ use Drupal\field_discovery_test\FieldDiscoveryTestClass;
 /**
  * Test FieldDiscovery Service against Drupal 7.
  *
+ * @group #slow
  * @group migrate_drupal
  * @coversDefaultClass \Drupal\migrate_drupal\FieldDiscovery
  */
