@@ -10,6 +10,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\State\StateInterface;
+use Rector\Php70\Rector\StaticCall\StaticCallOnNonStaticToInstanceCallRector;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Alias;
@@ -236,23 +237,35 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     $routes_to_load = array_diff($names, array_keys($this->routes), array_keys($this->serializedRoutes));
     if ($routes_to_load) {
 
-      $cid = static::ROUTE_LOAD_CID_PREFIX . hash('sha512', serialize($routes_to_load));
-      if ($cache = $this->cache->get($cid)) {
-        $routes = $cache->data;
+      $cids = [];
+      foreach ($routes_to_load as $route_name) {
+        $cids[$route_name] = static::ROUTE_LOAD_CID_PREFIX . $route_name;
       }
-      else {
+
+      if ($caches = $this->cache->getMultiple($cids)) {
+        foreach ($caches as $cid => $cache) {
+          $this->serializedRoutes[substr($cid, strlen(static::ROUTE_LOAD_CID_PREFIX))] = $cache->data;
+        }
+      }
+      if (!empty($cids)) {
         try {
-          $result = $this->connection->query('SELECT [name], [route] FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE [name] IN ( :names[] )', [':names[]' => $routes_to_load]);
+          $result = $this->connection->query('SELECT [name], [route] FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE [name] IN ( :names[] )', [':names[]' => array_keys($cids)]);
           $routes = $result->fetchAllKeyed();
 
-          $this->cache->set($cid, $routes, Cache::PERMANENT, ['routes']);
+          $items = [];
+          foreach ($routes as $route_name => $route) {
+            $items[static::ROUTE_LOAD_CID_PREFIX . $route_name] = [
+              'data' => $route,
+              'tags' => ['routes'],
+            ];
+          }
+          $this->serializedRoutes += $routes;
+
+          $this->cache->setMultiple($items);
         }
         catch (\Exception) {
-          $routes = [];
         }
       }
-
-      $this->serializedRoutes += $routes;
     }
   }
 
