@@ -84,13 +84,7 @@ class RoutePreloader implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
-    // Set a really low priority to catch as many as possible routes.
-    $events[RoutingEvents::ALTER] = ['onAlterRoutes', -1024];
-    $events[RoutingEvents::FINISHED] = ['onFinishedRoutes'];
-    // Load the routes before the controller is executed (which happens after
-    // the kernel request event).
-    $events[KernelEvents::REQUEST][] = ['onRequest'];
-    return $events;
+    return [];
   }
 
   /**
