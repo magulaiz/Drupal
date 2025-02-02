@@ -60,6 +60,7 @@ class AttributeClassDiscoveryTest extends TestCase {
       'discovery_test_1' => [
         'id' => 'discovery_test_1',
         'class' => 'com\example\PluginNamespace\AttributeDiscoveryTest1',
+        'autowire' => FALSE,
       ],
     ], $discovery->getDefinitions());
 
