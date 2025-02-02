@@ -343,6 +343,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFieldValues($entity_init, 'card_1', []);
 
     // Test optgroups.
+
     $this->card1->setSetting('allowed_values', []);
     $this->card1->setSetting('allowed_values_function', '\Drupal\options_test\OptionsAllowedValues::simpleValues');
     $this->card1->save();
@@ -478,6 +479,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFieldValues($entity_init, 'card_2', []);
 
     // Test the 'None' option.
+
     // Check that the 'none' option has no effect if actual options are selected
     // as well.
     $edit = ['card_2[]' => [FormOptionsHelper::OPTIONS_EMPTY_OPTION => FormOptionsHelper::OPTIONS_EMPTY_OPTION, 0 => 0]];
@@ -499,7 +501,9 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // We do not have to test that a required select list with one option is
     // auto-selected because the browser does it for us.
+
     // Test optgroups.
+
     // Use a callback function defining optgroups.
     $this->card2->setSetting('allowed_values', []);
     $this->card2->setSetting('allowed_values_function', '\Drupal\options_test\OptionsAllowedValues::simpleValues');
