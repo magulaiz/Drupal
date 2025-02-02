@@ -800,7 +800,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
 
     // Check that the deleted entity type can no longer be retrieved from the
     // live entity type definitions.
-    $this->assertNull($this->entityTypeManager->getDefinition('entity_test_rev'));
+    $this->assertNull($this->entityTypeManager->getDefinition('entity_test_rev', FALSE));
   }
 
   /**
