@@ -7,6 +7,8 @@ namespace Drupal\Tests\views\Unit\Plugin\display;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\ViewsPluginManager;
+use Drupal\views\ViewsData;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -42,49 +44,49 @@ class PathPluginBaseTest extends UnitTestCase {
    *
    * @var \Drupal\views\Plugin\ViewsPluginManager|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $cachePluginManager;
+  protected ViewsPluginManager|MockObject $cachePluginManager;
 
   /**
    * The mocked views display_extender plugin manager.
    *
    * @var \Drupal\views\Plugin\ViewsPluginManager|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $displayExtenderPluginManager;
+  protected ViewsPluginManager|MockObject $displayExtenderPluginManager;
 
   /**
    * The mocked views exposed_form plugin manager.
    *
    * @var \Drupal\views\Plugin\ViewsPluginManager|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $exposedFormPluginManager;
+  protected ViewsPluginManager|MockObject $exposedFormPluginManager;
 
   /**
    * The mocked views pager plugin manager.
    *
    * @var \Drupal\views\Plugin\ViewsPluginManager|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $pagerPluginManager;
+  protected ViewsPluginManager|MockObject $pagerPluginManager;
 
   /**
    * The mocked views row plugin manager.
    *
    * @var \Drupal\views\Plugin\ViewsPluginManager|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $rowPluginManager;
+  protected ViewsPluginManager|MockObject $rowPluginManager;
 
   /**
    * The mocked views style plugin manager.
    *
    * @var \Drupal\views\Plugin\ViewsPluginManager|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $stylePluginManager;
+  protected ViewsPluginManager|MockObject $stylePluginManager;
 
   /**
    * The mocked views query plugin manager.
    *
    * @var \Drupal\views\Plugin\ViewsPluginManager|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $queryPluginManager;
+  protected ViewsPluginManager|MockObject $queryPluginManager;
 
   /**
    * The mocked key value storage.
@@ -98,7 +100,7 @@ class PathPluginBaseTest extends UnitTestCase {
    *
    * @var \Drupal\views\ViewsData|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $viewsData;
+  protected ViewsData|MockObject $viewsData;
 
   /**
    * {@inheritdoc}
