@@ -62,12 +62,12 @@ trait WorkspaceTestUtilities {
    * @param string $id
    *   The ID of the workspace to create.
    * @param string $parent
-   *   (optional) The ID of the parent workspace. Defaults to '_none'.
+   *   (optional) The ID of the parent workspace. Defaults to FormOptionsHelper::OPTIONS_EMPTY_OPTION.
    *
    * @return \Drupal\workspaces\WorkspaceInterface
    *   The workspace that was just created.
    */
-  protected function createAndActivateWorkspaceThroughUi(string $label, string $id, string $parent = '_none'): WorkspaceInterface {
+  protected function createAndActivateWorkspaceThroughUi(string $label, string $id, string $parent = FormOptionsHelper::OPTIONS_EMPTY_OPTION): WorkspaceInterface {
     $this->drupalGet('/admin/config/workflow/workspaces/add');
     $this->submitForm([
       'id' => $id,
