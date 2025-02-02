@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\ViewsHandlerManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the ViewsHandlerManager class.
@@ -72,7 +72,7 @@ class ViewsHandlerManagerTest extends UnitTestCase {
    * @covers ::getDefinitions
    */
   public function testAlterHookInvocation(): void {
-    \Drupal::setContainer(new ContainerBuilder());
+    \Drupal::setContainer($this->prophesize(ContainerInterface::class)->reveal());
 
     $this->moduleHandler->expects($this->once())
       ->method('alter')
