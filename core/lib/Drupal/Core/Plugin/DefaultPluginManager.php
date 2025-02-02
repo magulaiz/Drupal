@@ -13,7 +13,6 @@ use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait;
 use Drupal\Core\Plugin\Discovery\AttributeClassDiscovery;
 use Drupal\Core\Plugin\Discovery\AttributeDiscoveryWithAnnotations;
-use Drupal\Core\Plugin\Discovery\ContainerAutowireDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\PluginManagerInterface;
@@ -313,7 +312,6 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
       else {
         $discovery = new AnnotatedClassDiscovery($this->subdir, $this->namespaces, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces);
       }
-      $discovery = new ContainerAutowireDiscoveryDecorator($discovery, \Drupal::getContainer());
       $this->discovery = new ContainerDerivativeDiscoveryDecorator($discovery);
     }
     return $this->discovery;
@@ -386,6 +384,9 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected function alterDefinitions(&$definitions) {
     if ($this->alterHook) {
       $this->moduleHandler->alter($this->alterHook, $definitions);
+    }
+    if (method_exists($this->getFactory(), 'alterDefinitions')) {
+      $this->getFactory()->alterDefinitions($definitions);
     }
   }
 
