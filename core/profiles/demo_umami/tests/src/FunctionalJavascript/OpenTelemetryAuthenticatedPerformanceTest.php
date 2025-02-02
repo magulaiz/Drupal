@@ -53,9 +53,9 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
       'CacheGetCount' => 42,
       'CacheGetCountByBin' => [
         'config' => 22,
-        'bootstrap' => 5,
+        'bootstrap' => 7,
         'discovery' => 5,
-        'data' => 5,
+        'data' => 3,
         'dynamic_page_cache' => 2,
         'menu' => 1,
         'render' => 2,
