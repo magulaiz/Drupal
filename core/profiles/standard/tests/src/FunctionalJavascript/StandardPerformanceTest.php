@@ -137,12 +137,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheGetCount' => 124,
       'CacheGetCountByBin' => [
         'page' => 1,
-        'config' => 20,
+        'config' => 21,
         'data' => 8,
-        'access_policy' => 1,
+        'discovery' => 38,
         'bootstrap' => 8,
         'dynamic_page_cache' => 2,
-        'discovery' => 38,
         'render' => 36,
         'default' => 5,
         'entity' => 2,
@@ -156,9 +155,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 30,
       'CacheTagGroupedLookups' => [
         ['route_match'],
-        ['access_policies', 'config:user.role.anonymous'],
-        ['routes'],
         ['entity_types'],
+        ['routes'],
         ['config:views.view.frontpage'],
         ['config:core.extension', 'views_data'],
         ['entity_field_info'],
@@ -185,6 +183,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['config:block.block.stark_syndicate'],
         ['config:block.block.stark_content', 'config:block.block.stark_page_title', 'config:block_list', 'http_response'],
         ['library_info'],
+        ['config:user.role.anonymous'],
       ],
       'StylesheetCount' => 1,
       'StylesheetBytes' => 3450,
@@ -220,7 +219,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertCountBetween(24, 25, $performance_data->getCacheTagChecksumCount());
-    $this->assertCountBetween(39, 40, $performance_data->getCacheTagIsValidCount());
+    $this->assertCountBetween(38, 39, $performance_data->getCacheTagIsValidCount());
     $expected = [
       'QueryCount' => 10,
       'CacheGetCount' => 92,
@@ -232,7 +231,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['route_match'],
         ['entity_types'],
         ['entity_field_info', 'node_values'],
-        ['access_policies', 'config:user.role.anonymous'],
         ['routes'],
         ['entity_bundles'],
         ['user_values'],
@@ -254,6 +252,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['config:block.block.stark_syndicate'],
         ['config:block.block.stark_content', 'config:block.block.stark_page_title', 'config:block_list', 'http_response'],
         ['library_info'],
+        ['config:user.role.anonymous'],
       ],
       'StylesheetCount' => 1,
       'StylesheetBytes' => 3150,
@@ -291,9 +290,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 17,
       'CacheDeleteCount' => 0,
       'CacheTagChecksumCount' => 23,
-      'CacheTagIsValidCount' => 32,
+      'CacheTagIsValidCount' => 31,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 24,
+      'CacheTagLookupQueryCount' => 23,
       'StylesheetCount' => 1,
       'StylesheetBytes' => 3150,
     ];
@@ -348,15 +347,14 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
       'CacheTagChecksumCount' => 1,
-      'CacheTagIsValidCount' => 37,
+      'CacheTagIsValidCount' => 35,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 28,
+      'CacheTagLookupQueryCount' => 26,
       'CacheTagGroupedLookups' => [
         // Form submission and login.
         ['route_match'],
         ['routes'],
         ['entity_types'],
-        ['access_policies', 'config:user.role.anonymous'],
         ['entity_field_info', 'user_values'],
         // The user page after the redirect.
         ['route_match'],
@@ -364,7 +362,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['entity_field_info'],
         ['entity_bundles'],
         ['user_values'],
-        ['access_policies', 'config:user.role.authenticated'],
         ['routes'],
         ['rendered', 'user:2', 'user_view'],
         ['block_view', 'config:block.block.stark_site_branding', 'config:system.site'],
@@ -376,7 +373,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['config:block.block.stark_breadcrumbs'],
         ['config:block.block.stark_primary_admin_actions'],
         ['config:block.block.stark_messages'],
-        ['config:block.block.stark_primary_local_tasks', 'local_task'],
+        ['access_policies', 'config:block.block.stark_primary_local_tasks', 'config:user.role.authenticated', 'local_task'],
         ['config:block.block.stark_secondary_local_tasks'],
         ['config:block.block.stark_help'],
         ['config:block.block.stark_powered'],
@@ -438,9 +435,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
       'CacheTagChecksumCount' => 1,
-      'CacheTagIsValidCount' => 43,
+      'CacheTagIsValidCount' => 41,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 29,
+      'CacheTagLookupQueryCount' => 27,
     ];
     $this->assertMetrics($expected, $performance_data);
   }

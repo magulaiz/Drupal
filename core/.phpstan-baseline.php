@@ -20186,7 +20186,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/filter/src/Plugin/Filter/FilterHtml.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Masterminds\\\\HTML5\\\\Parser\\\\Tokenizer@anonymous/core/modules/filter/src/Plugin/Filter/FilterHtml\\.php\\:265\\:\\:setTextMode\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Masterminds\\\\HTML5\\\\Parser\\\\Tokenizer@anonymous/core/modules/filter/src/Plugin/Filter/FilterHtml\\.php\\:268\\:\\:setTextMode\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/filter/src/Plugin/Filter/FilterHtml.php',
@@ -27740,6 +27740,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/Plugin/id_map/SqlTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\Plugin\\\\source\\\\ContentEntityTest\\:\\:createEntityReferenceField\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/Plugin/source/ContentEntityTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\QueryBatchTest\\:\\:queryDataProvider\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -28248,18 +28254,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Kernel/Plugin/migrate/source/ContentEntityConstructorTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal\\\\Kernel\\\\Plugin\\\\migrate\\\\source\\\\ContentEntityTest\\:\\:createEntityReferenceField\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Kernel/Plugin/migrate/source/ContentEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal\\\\Kernel\\\\Plugin\\\\migrate\\\\source\\\\ContentEntityTest\\:\\:migrationConfigurationProvider\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Kernel/Plugin/migrate/source/ContentEntityTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal\\\\Kernel\\\\StateFileExistsTest\\:\\:createDatabaseStateSettings\\(\\) has no return type specified\\.$#',
