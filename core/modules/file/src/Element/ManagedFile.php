@@ -476,7 +476,7 @@ class ManagedFile extends FormElementBase {
    *
    * This method is intentionally left empty as no validation.
    */
-  public function validateNone($form, FormStateInterface $form_state) {
+  public function validateNone($form, FormStateInterface $form_state): void {
     // Do nothing.
   }
 
