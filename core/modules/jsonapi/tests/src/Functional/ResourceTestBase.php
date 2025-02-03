@@ -922,6 +922,35 @@ abstract class ResourceTestBase extends BrowserTestBase {
   }
 
   /**
+   * @param array $document
+   *
+   * @return void
+   */
+  public function doTestDocumentViewProtectedFields(array $document) {
+    $view_protected_internal_field_names = array_keys(static::$viewProtectedFieldNames);
+    if (count($view_protected_internal_field_names) > 0) {
+      if (isset($document['data']['attributes'])) {
+        foreach ($document['data']['attributes'] as $field_name => $field_normalization) {
+          // If the value is a view protected field verify that it's not present on the document.
+          $internal_name = $this->resourceType->getInternalName($field_name);
+          if (in_array($internal_name, $view_protected_internal_field_names)) {
+            $this->assertArrayNotHasKey($field_name, $document['data']['attributes'], static::$viewProtectedFieldNames[$internal_name]);
+          }
+        }
+      }
+      if (isset($document['data']['relationships'])) {
+        foreach ($document['data']['relationships'] as $field_name => $relationship_field_normalization) {
+          // If the value is a view protected field verify that it's not present on the response.
+          $internal_name = $this->resourceType->getInternalName($field_name);
+          if (in_array($internal_name, $view_protected_internal_field_names)) {
+            $this->assertArrayNotHasKey($field_name, $document['data']['relationships'], static::$viewProtectedFieldNames[$internal_name]);
+          }
+        }
+      }
+    }
+  }
+
+  /**
    * Tests GETting an individual resource, plus edge cases to ensure good DX.
    */
   public function testGetIndividual(): void {
@@ -992,6 +1021,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $response = $this->request('GET', $url, $request_options);
 
     $this->assertResourceResponse(200, $this->getExpectedDocument(), $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), 'UNCACHEABLE (request policy)', $this->generateDynamicPageCacheExpectedHeaderValue($this->getExpectedCacheContexts()) === 'MISS' ? 'HIT' : 'UNCACHEABLE (poor cacheability)');
+
+    $this->doTestDocumentViewProtectedFields($this->getDocumentFromResponse($response));
+
     // Assert that Dynamic Page Cache did not store a ResourceResponse object,
     // which needs serialization after every cache hit. Instead, it should
     // contain a flattened response. Otherwise performance suffers.
@@ -2106,14 +2138,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertEquals($created_entity_document, $decoded_response_body);
 
       // Assert that the entity was indeed created using the POSTed values.
-      $view_protected_internal_field_names = array_keys(static::$viewProtectedFieldNames);
       foreach ($this->getPostDocument()['data']['attributes'] as $field_name => $field_normalization) {
-        // If the value is a view protected field verify that it's not present on the response.
-        $internal_name = $this->resourceType->getInternalName($field_name);
-        if (in_array($internal_name, $view_protected_internal_field_names)) {
-          $this->assertArrayNotHasKey($field_name, $created_entity_document['data']['attributes'], static::$viewProtectedFieldNames[$internal_name]);
-          continue;
-        }
         // If the value is an array of properties, only verify that the sent
         // properties are present, the server could be computing additional
         // properties.
@@ -2128,18 +2153,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
       }
       if (isset($this->getPostDocument()['data']['relationships'])) {
         foreach ($this->getPostDocument()['data']['relationships'] as $field_name => $relationship_field_normalization) {
-          // If the value is a view protected field verify that it's not present on the response.
-          $internal_name = $this->resourceType->getInternalName($field_name);
-          if (in_array($internal_name, $view_protected_internal_field_names)) {
-            $this->assertArrayNotHasKey($field_name, $created_entity_document['data']['relationships'], static::$viewProtectedFieldNames[$internal_name]);
-            continue;
-          }
           // POSTing relationships: 'data' is required, 'links' is optional.
           static::recursiveKsort($relationship_field_normalization);
           static::recursiveKsort($created_entity_document['data']['relationships'][$field_name]);
           $this->assertEquals($relationship_field_normalization, array_diff_key($created_entity_document['data']['relationships'][$field_name], ['links' => TRUE]));
         }
       }
+
+      $this->doTestDocumentViewProtectedFields($created_entity_document);
     }
     else {
       $this->assertFalse($response->hasHeader('Location'));
@@ -2385,14 +2406,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $prior_revision_id = (int) $updated_entity->getRevisionId();
 
     // Assert that the entity was indeed created using the PATCHed values.
-    $view_protected_internal_field_names = array_keys(static::$viewProtectedFieldNames);
     foreach ($this->getPatchDocument()['data']['attributes'] as $field_name => $field_normalization) {
-      // If the value is a view protected field verify that it's not present on the response.
-      $internal_name = $this->resourceType->getInternalName($field_name);
-      if (in_array($internal_name, $view_protected_internal_field_names)) {
-        $this->assertArrayNotHasKey($field_name, $updated_entity_document['data']['attributes'], static::$viewProtectedFieldNames[$internal_name]);
-        continue;
-      }
       // If the value is an array of properties, only verify that the sent
       // properties are present, the server could be computing additional
       // properties.
@@ -2407,18 +2421,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
     if (isset($this->getPatchDocument()['data']['relationships'])) {
       foreach ($this->getPatchDocument()['data']['relationships'] as $field_name => $relationship_field_normalization) {
-        // If the value is a view protected field verify that it's not present on the response.
-        $internal_name = $this->resourceType->getInternalName($field_name);
-        if (in_array($internal_name, $view_protected_internal_field_names)) {
-          $this->assertArrayNotHasKey($field_name, $updated_entity_document['data']['relationships'], static::$viewProtectedFieldNames[$internal_name]);
-          continue;
-        }
         // POSTing relationships: 'data' is required, 'links' is optional.
         static::recursiveKsort($relationship_field_normalization);
         static::recursiveKsort($updated_entity_document['data']['relationships'][$field_name]);
         $this->assertSame($relationship_field_normalization, array_diff_key($updated_entity_document['data']['relationships'][$field_name], ['links' => TRUE]));
       }
     }
+
+    $this->doTestDocumentViewProtectedFields($updated_entity_document);
 
     // Ensure that fields do not get deleted if they're not present in the PATCH
     // request. Test this using the configurable field that we added, but which
