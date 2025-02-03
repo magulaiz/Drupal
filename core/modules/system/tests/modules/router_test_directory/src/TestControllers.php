@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\router_test;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\user\UserInterface;
@@ -115,7 +116,7 @@ class TestControllers {
     ];
   }
 
-  public function test28() {
+  public function test28(): array {
     return [
       '#cache' => [
         'url',
@@ -124,7 +125,7 @@ class TestControllers {
     ];
   }
 
-  public function test28Access() {
+  public function test28Access(): AccessResultInterface {
     return AccessResult::allowed()->addCacheTags(['router-test-28']);
   }
 

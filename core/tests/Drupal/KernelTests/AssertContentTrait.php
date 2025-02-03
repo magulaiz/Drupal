@@ -793,8 +793,10 @@ trait AssertContentTrait {
    *   message text, or use sprintf() if necessary. Avoid the use of
    *   \Drupal\Component\Render\FormattableMarkup unless you cast the object to
    *   a string. If left blank, a default message will be displayed.
+   * @param \Drupal\Core\Render\RenderContext|null $render_context
+   *   (optional) A specific render context to be used.
    */
-  protected function assertThemeOutput($callback, array $variables = [], $expected = '', $message = '', $render_context = NULL) {
+  protected function assertThemeOutput($callback, array $variables = [], $expected = '', $message = '', ?RenderContext $render_context = NULL) {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
