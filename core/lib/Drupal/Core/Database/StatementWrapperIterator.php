@@ -8,7 +8,7 @@ use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\Statement\PdoTrait;
 
-// cSpell:ignore maxlen driverdata INOUT.
+// cSpell:ignore maxlen driverdata INOUT
 
 /**
  * StatementInterface iterator implementation.
