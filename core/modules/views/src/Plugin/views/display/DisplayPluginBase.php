@@ -21,6 +21,7 @@ use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Views;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Base class for views display plugins.
@@ -763,7 +764,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       return $this->view->displayHandlers->get($display_id)->getRoutedDisplay();
     }
 
-    // No routed display exists, so return NULL
+    // No routed display exists, so return NULL.
     return NULL;
   }
 
