@@ -923,7 +923,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
   /**
    * @param array $document
-   *
+   *   A JSON:API document.
    * @return void
    */
   public function doTestDocumentViewProtectedFields(array $document) {
