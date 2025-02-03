@@ -443,4 +443,25 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     $this->getRequest()->getSession()->remove('pass_reset_' . $user->id());
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $entity = parent::validateForm($form, $form_state);
+
+    // Check whether the user name provided is an email address, if so, make
+    // sure it matches the mail value.
+    if ($this->config('user.settings')->get('verify_email_match')) {
+      $email_validator = \Drupal::service('email.validator');
+      $name = $form_state->getValue('name');
+      if ($email_validator->isValid($name)) {
+        $mail = $form_state->getValue('mail');
+        if (($name !== $mail) && $email_validator->isValid($mail)) {
+          $form_state->setErrorByName('name', $this->t('An email address was provided as a username, but does not match the account email address.'));
+        }
+      }
+    }
+    return $entity;
+  }
+
 }
