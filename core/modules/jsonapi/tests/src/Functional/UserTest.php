@@ -55,7 +55,7 @@ class UserTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected static $viewProtectedFieldNames = [
-    'pass' => NULL
+    'pass' => NULL,
   ];
 
   /**
