@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\jsonapi\JsonApiSpec;
-use DateTime;
-use DateTimeZone;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
@@ -142,9 +140,9 @@ class UserTest extends ResourceTestBase {
         'attributes' => [
           'display_name' => 'Llama',
           'created' => '1973-11-29T21:33:09+00:00',
-          'changed' => (new DateTime())->setTimestamp($this->entity->getChangedTime())
-            ->setTimezone(new DateTimeZone('UTC'))
-            ->format(DateTime::RFC3339),
+          'changed' => (new \DateTime())->setTimestamp($this->entity->getChangedTime())
+            ->setTimezone(new \DateTimeZone('UTC'))
+            ->format(\DateTime::RFC3339),
           'default_langcode' => TRUE,
           'langcode' => 'en',
           'name' => 'Llama',
@@ -160,9 +158,9 @@ class UserTest extends ResourceTestBase {
   protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
     $cache_contexts = parent::getExpectedCacheContexts($sparse_fieldset);
     if ($sparse_fieldset === NULL || !empty(array_intersect([
-        'mail',
-        'display_name',
-      ], $sparse_fieldset))) {
+      'mail',
+      'display_name',
+    ], $sparse_fieldset))) {
       $cache_contexts = Cache::mergeContexts($cache_contexts, ['user']);
     }
     return $cache_contexts;
