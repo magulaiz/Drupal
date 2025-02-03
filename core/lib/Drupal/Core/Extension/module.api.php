@@ -99,6 +99,8 @@ function hook_hook_info(): array {
  * modules will still need to maintain implementations with the #[LegacyHook]
  * attribute in order to support drupal versions older than 11.2.0.
  *
+ * @link https://www.drupal.org/node/3496788
+ *
  * Only procedural implementations are supported for this hook.
  *
  * This hook is invoked in \Drupal::moduleHandler()->getImplementationInfo().
