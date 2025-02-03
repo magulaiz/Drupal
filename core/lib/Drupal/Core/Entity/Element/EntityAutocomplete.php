@@ -22,6 +22,8 @@ use Drupal\Core\Site\Settings;
  * - #target_type: (required) The ID of the target entity type.
  * - #tags: (optional) TRUE if the element allows multiple selection. Defaults
  *   to FALSE.
+ * - #show_id: (optional) TRUE if the element should display the entity ID
+ *   in the autocomplete list. Defaults to TRUE.
  * - #default_value: (optional) The default entity or an array of default
  *   entities, depending on the value of #tags.
  * - #selection_handler: (optional) The plugin ID of the entity reference
@@ -50,6 +52,7 @@ use Drupal\Core\Site\Settings;
  *  '#type' => 'entity_autocomplete',
  *  '#target_type' => 'node',
  *  '#tags' => TRUE,
+ *  '#show_id' => TRUE,
  *  '#default_value' => $node,
  *  '#selection_handler' => 'default',
  *  '#selection_settings' => [
@@ -79,6 +82,7 @@ class EntityAutocomplete extends Textfield {
     $info['#selection_handler'] = 'default';
     $info['#selection_settings'] = [];
     $info['#tags'] = FALSE;
+    $info['#show_id'] = TRUE;
     $info['#autocreate'] = NULL;
     // This should only be set to FALSE if proper validation by the selection
     // handler is performed at another level on the extracted form values.
@@ -428,6 +432,17 @@ class EntityAutocomplete extends Textfield {
     }
 
     return $match;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public static function preRenderTextfield($element) {
+    if ($element['#show_id'] === FALSE) {
+      $element['#attributes']['data-drupal-autocomplete-hide-ids'] = '';
+    }
+
+    return parent::preRenderTextfield($element);
   }
 
 }

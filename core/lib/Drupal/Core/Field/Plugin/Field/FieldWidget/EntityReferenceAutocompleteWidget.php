@@ -135,10 +135,6 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
       '#show_id' => $this->getSetting('show_id'),
     ];
 
-    if (empty($this->getSetting('show_id'))) {
-      $element['#attributes']['data-drupal-autocomplete-hide-ids'] = '';
-    }
-
     if ($bundle = $this->getAutocreateBundle()) {
       $element['#autocreate'] = [
         'bundle' => $bundle,

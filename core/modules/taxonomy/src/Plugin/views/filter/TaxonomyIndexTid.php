@@ -190,9 +190,7 @@ class TaxonomyIndexTid extends ManyToOne {
         $form['value']['#selection_settings']['target_bundles'] = [$vocabulary->id()];
         $form['value']['#tags'] = TRUE;
         $form['value']['#process_default_value'] = FALSE;
-        if (!$show_id) {
-          $form['value']['#attributes']['data-drupal-autocomplete-hide-ids'] = '';
-        }
+        $form['value']['#show_id'] = $show_id;
       }
     }
     else {
