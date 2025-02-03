@@ -54,11 +54,8 @@
       ContentAfterOpen, SpacingBeforeShort, TagValueIndent, ShortStartSpace,
       SpacingAfter, LongNotCapital, ShortFullStop, TagGroupSpacing, Empty,
       TagsNotGrouped, ParamGroup -->
-    <!-- ParamNotFirst still not decided for PHPUnit-based tests.
-      @see https://www.drupal.org/node/2253915 -->
     <exclude name="Drupal.Commenting.DocComment.LongFullStop"/>
     <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
-    <exclude name="Drupal.Commenting.DocComment.ParamNotFirst"/>
     <exclude name="Drupal.Commenting.DocComment.ShortNotCapital"/>
   </rule>
   <rule ref="Drupal.Commenting.DocCommentAlignment"/>
@@ -70,6 +67,7 @@
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
   <rule ref="Drupal.Commenting.FunctionComment.Missing">
+    <include-pattern>core/modules/*/Plugin/views/argument/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/filter/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/access/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/cache/*</include-pattern>
@@ -83,13 +81,7 @@
     <include-pattern>*/Database/*</include-pattern>
     <exclude-pattern>*/tests/*</exclude-pattern>
   </rule>
-  <rule ref="Drupal.Commenting.FunctionComment.MissingParamType">
-    <include-pattern>core/lib/Component/*</include-pattern>
-    <include-pattern>core/includes/*</include-pattern>
-    <include-pattern>core/*/*Database*/*</include-pattern>
-    <include-pattern>*/*/views/*</include-pattern>
-    <include-pattern>*/*/views_ui/*</include-pattern>
-  </rule>
+  <rule ref="Drupal.Commenting.FunctionComment.MissingParamType"/>
   <rule ref="Drupal.Commenting.FunctionComment.MissingReturnComment">
     <include-pattern>core/lib/Drupal/Core/*</include-pattern>
     <include-pattern>core/lib/Drupal/Component/*</include-pattern>
@@ -108,11 +100,6 @@
   <rule ref="Drupal.Commenting.VariableComment">
     <!-- Sniff for: DuplicateVar, EmptyVar, IncorrectVarType, InlineVariableName, WrongStyle -->
     <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
-  </rule>
-  <rule ref="Drupal.Commenting.VariableComment.Missing">
-    <include-pattern>./core/tests/*</include-pattern>
-    <exclude-pattern>./core/*/tests/*</exclude-pattern>
-    <include-pattern>core/modules/*/tests/modules/*</include-pattern>
   </rule>
   <rule ref="Drupal.ControlStructures.ControlSignature"/>
   <rule ref="Drupal.ControlStructures.ElseIf"/>
@@ -193,6 +180,7 @@
     <include-pattern>*/modules/system/tests/modules/*</include-pattern>
     <include-pattern>*/Kernel*/*</include-pattern>
     <include-pattern>*/tests/*/Functional*/*</include-pattern>
+    <include-pattern>./core/lib/*</include-pattern>
   </rule>
 
   <!-- Generic sniffs -->
