@@ -867,7 +867,9 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         // If this is during form submission and there are temporary options
         // which can only appear if the view is in the edit cache, use those
         // options instead. This is used for AJAX multi-step stuff.
-        if ($this->view->getRequest()->request->get('form_id') && isset($this->view->temporary_options[$type][$id])) {
+        $request = $this->view->getRequest();
+        $has_form_submission = $request instanceof Request && $request->request->get('form_id');
+        if ($has_form_submission && isset($this->view->temporary_options[$type][$id])) {
           $info = $this->view->temporary_options[$type][$id];
         }
 
