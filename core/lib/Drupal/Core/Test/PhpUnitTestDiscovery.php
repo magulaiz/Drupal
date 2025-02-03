@@ -73,7 +73,7 @@ class PhpUnitTestDiscovery {
    *         'groups' => ['block', 'group2', 'group3'],
    *         'type' => 'PHPUnit-Functional',
    *         'file' => '{root}/core/modules/block/tests/src/Functional/BlockTest.php',
-   *         'tests_count' => 3,       
+   *         'tests_count' => 3,
    *       ],
    *     ];
    * @endcode
