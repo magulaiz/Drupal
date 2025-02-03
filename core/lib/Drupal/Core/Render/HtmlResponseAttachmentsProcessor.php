@@ -126,7 +126,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       $before_assets->setAlreadyLoadedLibraries($ajax_page_state_libraries);
       $assets->setAlreadyLoadedLibraries($ajax_page_state_libraries + $before_assets->getLibraries());
 
-      $after_settings = $assets->setSettings(array_merge($before_assets->getSettings(), $assets->getSettings()));
+      $assets->setSettings(array_merge($before_assets->getSettings(), $assets->getSettings()));
       $before_assets->setSettings([]);
       $variables = $this->processAssetLibraries($before_assets, $attachment_placeholders);
       $after_variables = $this->processAssetLibraries($assets, $attachment_placeholders);
