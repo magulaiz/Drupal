@@ -8,7 +8,6 @@
  * customized by user themes.
  */
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
