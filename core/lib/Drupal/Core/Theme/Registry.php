@@ -644,7 +644,7 @@ class Registry implements DestructableInterface {
         // Preprocess variables for all theming hooks. Ensure they are arrays.
         if (!isset($info['preprocess functions']) || !is_array($info['preprocess functions'])) {
           $info['preprocess functions'] = [];
-          $prefixes = [];
+          $prefixes = ['template'];
           if ($type == 'module') {
             $info['preprocess functions'] = $this->collectModulePreprocess($cache, 'preprocess_' . $hook);
           }
