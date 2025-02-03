@@ -2078,7 +2078,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $bundle = $entity->bundle();
     $entity_type = $entity->getEntityTypeId();
     $table_mapping = $this->getTableMapping();
-    $original = $entity->getOriginal();
+    $original = !empty($entity->original) ? $entity->original : NULL;
 
     // Determine which fields should be actually stored.
     $definitions = $this->entityFieldManager->getFieldDefinitions($entity_type, $bundle);
