@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Kernel;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\Event\PreCreateEvent;
@@ -13,9 +14,12 @@ use Drupal\package_manager\ValidationResult;
 /**
  * @covers \Drupal\package_manager\Validator\ComposerPatchesValidator
  * @group package_manager
+ * @group #slow
  * @internal
  */
 class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
+
+  use StringTranslationTrait;
 
   const ABSENT = 0;
   const CONFIG_ALLOWED_PLUGIN = 1;
@@ -204,6 +208,7 @@ class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
     }
     if ($in_active !== static::ABSENT) {
       $active_manipulator->commitChanges();
+      $active_manipulator->updateLock();
     }
 
     // Simulate in stage.
@@ -281,7 +286,7 @@ class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
             ->toString();
           // Reformat the provided results so that they all have the link to the
           // online documentation appended to them.
-          $messages[$message_index] = t('@message See <a href=":url">the help page</a> for information on how to resolve the problem.', ['@message' => $message, ':url' => $url]);
+          $messages[$message_index] = $this->t('@message See <a href=":url">the help page</a> for information on how to resolve the problem.', ['@message' => $message, ':url' => $url]);
         }
       }
       $expected_results[$result_index] = ValidationResult::createError($messages, $result->summary);

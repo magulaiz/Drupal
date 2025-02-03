@@ -199,8 +199,9 @@
  * Themes support post updates in order to install module dependencies that have
  * been added to the THEME.info.yml after the theme has been installed.
  * Additionally, if a theme has changed its configuration schema, post updates
- * can fix theme settings configuration. See @link hook_post_update_NAME hook_post_update_NAME @endlink
- * for more information about post updates.
+ * can fix theme settings configuration. See
+ * @link hook_post_update_NAME hook_post_update_NAME @endlink for more
+ * information about post updates.
  *
  * @see hooks
  * @see callbacks
@@ -550,9 +551,9 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  * For more detailed information, see the
  * @link themeable Theme system overview topic @endlink.
  *
- * @param $variables
+ * @param array $variables
  *   The variables array (modify in place).
- * @param $hook
+ * @param string $hook
  *   The name of the theme hook.
  */
 function hook_preprocess(&$variables, $hook) {
@@ -599,7 +600,7 @@ function hook_preprocess(&$variables, $hook) {
  * For more detailed information, see the
  * @link themeable Theme system overview topic @endlink.
  *
- * @param $variables
+ * @param array $variables
  *   The variables array (modify in place).
  */
 function hook_preprocess_HOOK(&$variables): void {
@@ -628,7 +629,8 @@ function hook_preprocess_HOOK(&$variables): void {
  * must otherwise make sure that the hook implementation is available at
  * any given time.
  *
- * Suggestions must begin with the value of HOOK, followed by two underscores to be discoverable.
+ * Suggestions must begin with the value of HOOK, followed by two underscores to
+ * be discoverable.
  *
  * In the following example, we provide suggestions to
  * node templates based bundle, id, and view mode.
@@ -682,7 +684,8 @@ function hook_theme_suggestions_HOOK(array $variables) {
  * hook_theme_suggestions_HOOK_alter(). So, for each module or theme, the more
  * general hooks are called first followed by the more specific.
  *
- * New suggestions must begin with the value of HOOK, followed by two underscores to be discoverable.
+ * New suggestions must begin with the value of HOOK, followed by two
+ * underscores to be discoverable.
  *
  * In the following example, we provide an alternative template suggestion to
  * node and taxonomy term templates based on the user being logged in.
@@ -728,8 +731,9 @@ function hook_theme_suggestions_alter(array &$suggestions, array &$variables, $h
  * hook called (in this case 'node__article') is available in
  * $variables['theme_hook_original'].
  *
- * New suggestions must begin with the value of HOOK, followed by two underscores to be discoverable.
- * For example, consider the below suggestions from hook_theme_suggestions_node_alter:
+ * New suggestions must begin with the value of HOOK, followed by two
+ * underscores to be discoverable. For example, consider the below suggestions
+ * from hook_theme_suggestions_node_alter:
  *   - node__article is valid
  *   - node__article__custom_template is valid
  *   - node--article is invalid
@@ -773,7 +777,7 @@ function hook_theme_suggestions_HOOK_alter(array &$suggestions, array &$variable
  *
  * @see \Drupal\Core\Extension\ThemeInstallerInterface::install()
  */
-function hook_themes_installed($theme_list) {
+function hook_themes_installed($theme_list): void {
   foreach ($theme_list as $theme) {
     block_theme_initialize($theme);
   }
@@ -787,7 +791,7 @@ function hook_themes_installed($theme_list) {
  *
  * @see \Drupal\Core\Extension\ThemeInstallerInterface::uninstall()
  */
-function hook_themes_uninstalled(array $themes) {
+function hook_themes_uninstalled(array $themes): void {
   // Remove some state entries depending on the theme.
   foreach ($themes as $theme) {
     \Drupal::state()->delete('example.' . $theme);
@@ -876,7 +880,7 @@ function hook_element_plugin_alter(array &$definitions) {
 /**
  * Alters JavaScript before it is presented on the page.
  *
- * @param $javascript
+ * @param array $javascript
  *   An array of all JavaScript being presented on the page.
  * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
  *   The assets attached to the current response.
@@ -904,7 +908,7 @@ function hook_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface 
  * @see core.libraries.yml
  * @see hook_library_info_alter()
  */
-function hook_library_info_build() {
+function hook_library_info_build(): array {
   $libraries = [];
   // Add a library whose information changes depending on certain conditions.
   $libraries['zombie'] = [
@@ -912,7 +916,7 @@ function hook_library_info_build() {
       'core/once',
     ],
   ];
-  if (Drupal::moduleHandler()->moduleExists('minifyzombies')) {
+  if (Drupal::moduleHandler()->moduleExists('minify_zombies')) {
     $libraries['zombie'] += [
       'js' => [
         'zombie.min.js' => [],
@@ -942,7 +946,7 @@ function hook_library_info_build() {
   // without reproducing this check. If the library definition does not exist
   // the library (of course) not be loaded but no notices or errors will be
   // triggered.
-  if (Drupal::moduleHandler()->moduleExists('vampirize')) {
+  if (Drupal::moduleHandler()->moduleExists('vampire')) {
     $libraries['vampire'] = [
       'js' => [
         'js/vampire.js' => [],
@@ -974,7 +978,7 @@ function hook_library_info_build() {
  * The results of this hook are cached, however modules may use
  * hook_js_settings_alter() to dynamically alter settings.
  */
-function hook_js_settings_build(array &$settings, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
+function hook_js_settings_build(array &$settings, \Drupal\Core\Asset\AttachedAssetsInterface $assets): void {
   // Manipulate settings.
   if (isset($settings['dialog'])) {
     $settings['dialog']['autoResize'] = FALSE;
@@ -1060,8 +1064,9 @@ function hook_library_info_alter(&$libraries, $extension) {
 /**
  * Alter CSS files before they are output on the page.
  *
- * @param $css
- *   An array of all CSS items (files and inline CSS) being requested on the page.
+ * @param array $css
+ *   An array of all CSS items (files and inline CSS) being requested on the
+ *   page.
  * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
  *   The assets attached to the current response.
  * @param \Drupal\Core\Language\LanguageInterface $language
@@ -1093,7 +1098,7 @@ function hook_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $asset
  *
  * @see hook_page_attachments_alter()
  */
-function hook_page_attachments(array &$attachments) {
+function hook_page_attachments(array &$attachments): void {
   // Unconditionally attach an asset to the page.
   $attachments['#attached']['library'][] = 'core/drupalSettings';
 
@@ -1115,11 +1120,12 @@ function hook_page_attachments(array &$attachments) {
  * exception is thrown.
  *
  * @param array &$attachments
- *   Array of all attachments provided by hook_page_attachments() implementations.
+ *   Array of all attachments provided by hook_page_attachments()
+ *   implementations.
  *
  * @see hook_page_attachments()
  */
-function hook_page_attachments_alter(array &$attachments) {
+function hook_page_attachments_alter(array &$attachments): void {
   // Conditionally remove an asset.
   if (in_array('core/jquery', $attachments['#attached']['library'])) {
     $index = array_search('core/jquery', $attachments['#attached']['library']);
@@ -1133,7 +1139,7 @@ function hook_page_attachments_alter(array &$attachments) {
  * @param array $page_top
  *   A renderable array representing the top of the page.
  */
-function hook_page_top(array &$page_top) {
+function hook_page_top(array &$page_top): void {
   $page_top['my_module'] = ['#markup' => 'This is the top.'];
 }
 
@@ -1143,7 +1149,7 @@ function hook_page_top(array &$page_top) {
  * @param array $page_bottom
  *   A renderable array representing the bottom of the page.
  */
-function hook_page_bottom(array &$page_bottom) {
+function hook_page_bottom(array &$page_bottom): void {
   $page_bottom['my_module'] = ['#markup' => 'This is the bottom.'];
 }
 
@@ -1158,7 +1164,7 @@ function hook_page_bottom(array &$page_bottom) {
  *   purposes. This is primarily useful for themes that may wish to examine
  *   existing implementations to extract data (such as arguments) so that
  *   it may properly register its own, higher priority implementations.
- * @param $type
+ * @param string $type
  *   Whether a theme, module, etc. is being processed. This is primarily useful
  *   so that themes tell if they are the actual theme being called or a parent
  *   theme. May be one of:
@@ -1169,9 +1175,9 @@ function hook_page_bottom(array &$page_bottom) {
  *     being used.
  *   - 'base_theme': A base theme is being checked for theme implementations.
  *   - 'theme': The actual theme in use is being checked.
- * @param $theme
+ * @param string $theme
  *   The actual name of theme, module, etc. that is being processed.
- * @param $path
+ * @param string $path
  *   The directory path of the theme or module, so that it doesn't need to be
  *   looked up.
  *
@@ -1318,7 +1324,7 @@ function hook_theme($existing, $type, $theme, $path): array {
  * ];
  * @endcode
  *
- * @param $theme_registry
+ * @param array $theme_registry
  *   The entire cache of theme registry information, post-processing.
  *
  * @see hook_theme()

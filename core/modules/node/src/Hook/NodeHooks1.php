@@ -2,6 +2,7 @@
 
 namespace Drupal\node\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
@@ -171,7 +172,7 @@ class NodeHooks1 {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $extra = [];
     $description = t('Node module element');
     foreach (NodeType::loadMultiple() as $bundle) {
@@ -209,7 +210,7 @@ class NodeHooks1 {
    * Implements hook_ranking().
    */
   #[Hook('ranking')]
-  public function ranking() {
+  public function ranking(): array {
     // Create the ranking array and add the basic ranking options.
     $ranking = [
       'relevance' => [
@@ -266,7 +267,7 @@ class NodeHooks1 {
    * Implements hook_page_top().
    */
   #[Hook('page_top')]
-  public function pageTop(array &$page_top) {
+  public function pageTop(array &$page_top): void {
     // Add 'Back to content editing' link on preview page.
     $route_match = \Drupal::routeMatch();
     if ($route_match->getRouteName() == 'entity.node.preview') {
@@ -315,41 +316,42 @@ class NodeHooks1 {
    * "bypass node access" permission. Such users have unrestricted access to all
    * nodes. user 1 will always pass this check.
    *
-   * Next, all implementations of hook_ENTITY_TYPE_access() for node will
-   * be called. Each implementation may explicitly allow, explicitly forbid, or
-   * ignore the access request. If at least one module says to forbid the request,
-   * it will be rejected. If no modules deny the request and at least one says to
-   * allow it, the request will be permitted.
+   * Next, all implementations of hook_ENTITY_TYPE_access() for node will be
+   * called. Each implementation may explicitly allow, explicitly forbid, or
+   * ignore the access request. If at least one module says to forbid the
+   * request, it will be rejected. If no modules deny the request and at least
+   * one says to allow it, the request will be permitted.
    *
-   * If all modules ignore the access request, then the node_access table is used
-   * to determine access. All node access modules are queried using
-   * hook_node_grants() to assemble a list of "grant IDs" for the user. This list
-   * is compared against the table. If any row contains the node ID in question
-   * (or 0, which stands for "all nodes"), one of the grant IDs returned, and a
-   * value of TRUE for the operation in question, then access is granted. Note
-   * that this table is a list of grants; any matching row is sufficient to grant
-   * access to the node.
+   * If all modules ignore the access request, then the node_access table is
+   * used to determine access. All node access modules are queried using
+   * hook_node_grants() to assemble a list of "grant IDs" for the user. This
+   * list is compared against the table. If any row contains the node ID in
+   * question (or 0, which stands for "all nodes"), one of the grant IDs
+   * returned, and a value of TRUE for the operation in question, then access is
+   * granted. Note that this table is a list of grants; any matching row is
+   * sufficient to grant access to the node.
    *
    * In node listings (lists of nodes generated from a select query, such as the
-   * default home page at path 'node', an RSS feed, a recent content block, etc.),
-   * the process above is followed except that hook_ENTITY_TYPE_access() is not
-   * called on each node for performance reasons and for proper functioning of
-   * the pager system. When adding a node listing to your module, be sure to use
-   * an entity query, which will add a tag of "node_access". This will allow
-   * modules dealing with node access to ensure only nodes to which the user has
-   * access are retrieved, through the use of hook_query_TAG_alter(). See the
-   * @link entity_api Entity API topic @endlink for more information on entity
-   * queries. Tagging a query with "node_access" does not check the
-   * published/unpublished status of nodes, so the base query is responsible
-   * for ensuring that unpublished nodes are not displayed to inappropriate users.
+   * default home page at path 'node', an RSS feed, a recent content block,
+   * etc.), the process above is followed except that hook_ENTITY_TYPE_access()
+   * is not called on each node for performance reasons and for proper
+   * functioning of the pager system. When adding a node listing to your module,
+   * be sure to use an entity query, which will add a tag of "node_access". This
+   * will allow modules dealing with node access to ensure only nodes to which
+   * the user has access are retrieved, through the use of
+   * hook_query_TAG_alter(). See the @link entity_api Entity API topic @endlink
+   * for more information on entity queries. Tagging a query with "node_access"
+   * does not check the published/unpublished status of nodes, so the base query
+   * is responsible for ensuring that unpublished nodes are not displayed to
+   * inappropriate users.
    *
    * Note: Even a single module returning an AccessResultInterface object from
    * hook_ENTITY_TYPE_access() whose isForbidden() method equals TRUE will block
    * access to the node. Therefore, implementers should take care to not deny
    * access unless they really intend to. Unless a module wishes to actively
    * forbid access it should return an AccessResultInterface object whose
-   * isAllowed() nor isForbidden() methods return TRUE, to allow other modules or
-   * the node_access table to control access.
+   * isAllowed() nor isForbidden() methods return TRUE, to allow other modules
+   * or the node_access table to control access.
    *
    * Note also that access to create nodes is handled by
    * hook_ENTITY_TYPE_create_access().
@@ -361,7 +363,7 @@ class NodeHooks1 {
    * Implements hook_ENTITY_TYPE_access().
    */
   #[Hook('node_access')]
-  public function nodeAccess(NodeInterface $node, $operation, AccountInterface $account) {
+  public function nodeAccess(NodeInterface $node, $operation, AccountInterface $account): AccessResultInterface {
     $type = $node->bundle();
     // Note create access is handled by hook_ENTITY_TYPE_create_access().
     switch ($operation) {
@@ -388,10 +390,11 @@ class NodeHooks1 {
   /**
    * Implements hook_query_TAG_alter().
    *
-   * This is the hook_query_alter() for queries tagged with 'node_access'. It adds
-   * node access checks for the user account given by the 'account' meta-data (or
-   * current user if not provided), for an operation given by the 'op' meta-data
-   * (or 'view' if not provided; other possible values are 'update' and 'delete').
+   * This is the hook_query_alter() for queries tagged with 'node_access'. It
+   * adds node access checks for the user account given by the 'account'
+   * meta-data (or current user if not provided), for an operation given by the
+   * 'op' meta-data (or 'view' if not provided; other possible values are
+   * 'update' and 'delete').
    *
    * Queries tagged with 'node_access' that are not against the {node} table
    * must add the base table as metadata. For example:
@@ -469,7 +472,7 @@ class NodeHooks1 {
    * Implements hook_modules_installed().
    */
   #[Hook('modules_installed')]
-  public function modulesInstalled(array $modules) {
+  public function modulesInstalled(array $modules): void {
     // Check if any of the newly enabled modules require the node_access table to
     // be rebuilt.
     if (!node_access_needs_rebuild() && \Drupal::moduleHandler()->hasImplementations('node_grants', $modules)) {
@@ -481,7 +484,7 @@ class NodeHooks1 {
    * Implements hook_modules_uninstalled().
    */
   #[Hook('modules_uninstalled')]
-  public function modulesUninstalled($modules) {
+  public function modulesUninstalled($modules): void {
     // Check whether any of the disabled modules implemented hook_node_grants(),
     // in which case the node access table needs to be rebuilt.
     foreach ($modules as $module) {

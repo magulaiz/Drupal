@@ -18,12 +18,18 @@ use Drupal\views\Attribute\ViewsFilter;
 class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
   use TaxonomyIndexDepthQueryTrait;
 
+  /**
+   * {@inheritdoc}
+   */
   public function operatorOptions($which = 'title') {
     return [
       'or' => $this->t('Is one of'),
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -33,6 +39,9 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildExtraOptionsForm($form, $form_state);
 
@@ -51,6 +60,9 @@ class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     // If no filter values are present, then do nothing.
     if (count($this->value) == 0) {
