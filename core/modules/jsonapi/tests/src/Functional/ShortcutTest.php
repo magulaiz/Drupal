@@ -6,7 +6,7 @@ namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Database;
- use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;

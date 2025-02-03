@@ -306,7 +306,8 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
             'field' => $label_key,
             'table' => $data_table,
           ];
-        } else {
+        }
+        else {
           $data[$views_base_table]['table']['base']['defaults'] = [
             'field' => $label_key,
           ];

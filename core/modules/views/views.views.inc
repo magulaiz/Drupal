@@ -76,8 +76,7 @@ function views_entity_field_label($entity_type, $field_name) {
  * @return array
  *   The default views data for the field.
  */
-function views_field_default_views_data(FieldStorageConfigInterface $field_storage)
-{
+function views_field_default_views_data(FieldStorageConfigInterface $field_storage) {
   $data = [];
 
   // Check the field type is available.
