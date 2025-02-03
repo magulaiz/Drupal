@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel\Views;
 
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\user\Entity\Role;
-use Drupal\user\Entity\User;
 use Drupal\views\Views;
 
 /**
@@ -15,6 +15,8 @@ use Drupal\views\Views;
  * @group user
  */
 class UserRoleTest extends ViewsKernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * Tests numeric role.
@@ -26,18 +28,17 @@ class UserRoleTest extends ViewsKernelTestBase {
     Role::create(['id' => 123, 'label' => 'Numeric'])
       ->save();
 
-    $user = User::create([
-      'uid' => 2,
+    $this->setupCurrentUser([
+      'uid' => 1,
       'name' => 'foo',
       'roles' => 123,
     ]);
-    $user->save();
 
     $view = Views::getView('user_admin_people');
     $this->executeView($view);
     $view->render('user_admin_people');
     $output = $view->field['roles_target_id']->render($view->result[0]);
-    $this->assertEquals(2, $output);
+    $this->assertEquals(1, $output);
   }
 
 }
