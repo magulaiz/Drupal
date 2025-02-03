@@ -22,7 +22,7 @@ class PagerModalTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected $defaultTheme = 'olivero';
 
   /**
    * A user with permission to access site reports.
@@ -55,8 +55,9 @@ class PagerModalTest extends WebDriverTestBase {
 
     $this->assertSession()->responseContains('Pagers in modal');
     $this->assertSession()->elementExists('css', '.test-pager-0')->clickLink('Go to page 2');
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
-    $this->assertTrue($this->assertSession()->waitForText('Current page 2'));
+    $this->assertEquals('Page 2', $this->assertSession()->elementExists('css', '.pager__item--active')->getText());
     // Ensure we're still in the modal.
     $this->assertTrue($this->assertSession()->elementExists('css', '#drupal-modal')->isVisible());
   }
