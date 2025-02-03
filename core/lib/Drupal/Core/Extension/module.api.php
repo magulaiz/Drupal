@@ -1230,14 +1230,14 @@ function hook_requirements_alter(array &$requirements): void {
 function hook_runtime_requirements(): array {
   $requirements = [];
 
-  // Report Drupal version
+  // Report Drupal version.
   $requirements['drupal'] = [
     'title' => t('Drupal'),
     'value' => \Drupal::VERSION,
     'severity' => REQUIREMENT_INFO,
   ];
 
-  // Test PHP version
+  // Test PHP version.
   $requirements['php'] = [
     'title' => t('PHP'),
     'value' => Link::fromTextAndUrl(phpversion(), Url::fromRoute('system.php'))->toString(),
@@ -1247,7 +1247,7 @@ function hook_runtime_requirements(): array {
     $requirements['php']['severity'] = REQUIREMENT_ERROR;
   }
 
-  // Report cron status
+  // Report cron status.
   $cron_last = \Drupal::state()->get('system.cron_last');
   $requirements['cron']['title'] = t('Cron maintenance tasks');
   if (is_numeric($cron_last)) {
@@ -1311,7 +1311,7 @@ function hook_runtime_requirements_alter(array &$requirements): void {
 function hook_update_requirements() {
   $requirements = [];
 
-  // Test PHP version
+  // Test PHP version.
   $requirements['php'] = [
     'title' => t('PHP'),
     'value' => phpversion(),
