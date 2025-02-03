@@ -115,7 +115,6 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
    * @covers ::validate
    */
   public function testValidationReference(): void {
-
     $users = [];
     for ($i = 0; $i <= 5; $i++) {
       $users[$i] = $this->createUser();
@@ -125,8 +124,8 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $definition = [
       'user_id' => 0,
       'field_test_reference' => [
-        $users[0]->id(),
-        $users[0]->id(),
+        (int) $users[0]->id(),
+        (int) $users[0]->id(),
       ],
     ];
     $entity = EntityTestUniqueConstraint::create($definition);
@@ -139,8 +138,8 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $definition = [
       'user_id' => 0,
       'field_test_reference' => [
-        $users[1]->id(),
-        $users[2]->id(),
+        (int) $users[1]->id(),
+        (int) $users[2]->id(),
       ],
     ];
     $entity = EntityTestUniqueConstraint::create($definition);
@@ -154,8 +153,8 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $definition = [
       'user_id' => 0,
       'field_test_reference' => [
-        $users[3]->id(),
-        $users[4]->id(),
+        (int) $users[3]->id(),
+        (int) $users[4]->id(),
       ],
     ];
     $entity = EntityTestUniqueConstraint::create($definition);
@@ -169,8 +168,8 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $definition = [
       'user_id' => 0,
       'field_test_reference' => [
-        $users[5]->id(),
-        $users[1]->id(),
+        (int) $users[5]->id(),
+        (int) $users[1]->id(),
       ],
     ];
     $entity = EntityTestUniqueConstraint::create($definition);
