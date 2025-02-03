@@ -74,8 +74,6 @@ class UserTest extends ResourceTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @var \Drupal\taxonomy\TermInterface
    */
   protected function createEntity() {
     // Create a "Llama" user.
