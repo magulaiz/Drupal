@@ -13,12 +13,9 @@
    */
   Drupal.behaviors.fieldListKeyboardNavigation = {
     attach() {
-      if (document.querySelector('[data-field-list-table]') === null) {
-        return;
-      }
       once(
         'keyboardNavigation',
-        'input[type="text"], input[type="number"]',
+        '[data-field-list-table] :is(input[type="text"], input[type="number"])',
         document.querySelector('[data-field-list-table]'),
       ).forEach((element) =>
         element.addEventListener('keypress', (event) => {
