@@ -389,7 +389,7 @@ class TestDiscovery {
     $info['type'] = 'PHPUnit-' . static::getPhpunitTestSuite($classname);
 
     if (!empty($annotations['coversDefaultClass'])) {
-      $info['description'] = 'Tests ' . $annotations['coversDefaultClass'] . '.';
+      $info['description'] = 'Tests ' . ltrim($annotations['coversDefaultClass']) . '.';
     }
     else {
       $info['description'] = static::parseTestClassSummary($doc_comment);

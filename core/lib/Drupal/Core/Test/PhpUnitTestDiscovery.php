@@ -60,7 +60,7 @@ class PhpUnitTestDiscovery {
    * @param string|null $directory
    *   (optional) Limit discovered tests to a specific directory.
    *
-   * @return array<class-string,array<'name'|'description'|'group'|'groups'|'type'|'file',string|array>>
+   * @return array<class-string,array<'name'|'description'|'group'|'groups'|'type'|'file'|'tests_count',string|array>>
    *   An array of tests keyed by the group name. If a test belongs to multiple
    *   groups, it will appear under all group keys it belongs to.
    *
@@ -73,6 +73,7 @@ class PhpUnitTestDiscovery {
    *         'groups' => ['block', 'group2', 'group3'],
    *         'type' => 'PHPUnit-Functional',
    *         'file' => '{root}/core/modules/block/tests/src/Functional/BlockTest.php',
+   *         'tests_count' => 3,       
    *       ],
    *     ];
    * @endcode
