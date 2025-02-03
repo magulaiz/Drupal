@@ -79,6 +79,8 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   public function processAttachments(AttachmentsInterface $response) {
     assert($response instanceof HtmlResponse);
 
+    $before_attached = $response->getAttachments();
+
     // First, render the actual placeholders; this may cause additional
     // attachments to be added to the response, which the attachment
     // placeholders rendered by renderHtmlResponseAttachmentPlaceholders() will
@@ -114,13 +116,21 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       $attachment_placeholders = $attached['html_response_attachment_placeholders'];
       unset($attached['html_response_attachment_placeholders']);
 
+      $before_assets = AttachedAssets::createFromRenderArray(['#attached' => $before_attached]);
       $assets = AttachedAssets::createFromRenderArray(['#attached' => $attached]);
       // Take Ajax page state into account, to allow for something like
       // Turbolinks to be implemented without altering core.
       // @see https://github.com/rails/turbolinks/
       $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
-      $assets->setAlreadyLoadedLibraries(isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : []);
-      $variables = $this->processAssetLibraries($assets, $attachment_placeholders);
+      $ajax_page_state_libraries = isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : [];
+      $before_assets->setAlreadyLoadedLibraries($ajax_page_state_libraries);
+      $assets->setAlreadyLoadedLibraries($ajax_page_state_libraries + $before_assets->getLibraries());
+
+      $variables = $this->processAssetLibraries($before_assets, $attachment_placeholders);
+      $after_variables = $this->processAssetLibraries($assets, $attachment_placeholders);
+      foreach ($after_variables as $key => $value) {
+        $variables[$key] = array_merge($variables[$key], $after_variables[$key]);
+      }
       // $variables now contains the markup to load the asset libraries. Update
       // $attached with the final list of libraries and JavaScript settings, so
       // that $response can be updated with those. Then the response object will
