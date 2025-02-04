@@ -45,7 +45,7 @@ class AutomatedCron implements EventSubscriberInterface {
    */
   public function __construct(CronInterface|\Closure $cron, ConfigFactoryInterface $config_factory, StateInterface $state) {
     if ($cron instanceof CronInterface) {
-      @trigger_error('Passing the $cron argument as an instance of type \Drupal\Core\CronInterface to ' . __METHOD__ . '() is deprecated in drupal:11.1.0 and type \Closure is required in drupal:12.0.0. Pass type \Closure instead. See https://www.drupal.org/node/3484001', E_USER_DEPRECATED);
+      @trigger_error('Passing the $cron argument as an instance of type \Drupal\Core\CronInterface to ' . __METHOD__ . '() is deprecated in drupal:11.2.0 and type \Closure is required in drupal:12.0.0. Pass type \Closure instead. See https://www.drupal.org/node/3484001', E_USER_DEPRECATED);
       $cron = fn($cron) => $cron;
     }
     $this->cronClosure = $cron;
