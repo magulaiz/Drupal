@@ -2,6 +2,8 @@
 
 namespace Drupal\workspaces\Hook;
 
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\WorkspaceDynamicSafeFormInterface;
 use Drupal\Core\Form\WorkspaceSafeFormInterface;
@@ -17,6 +19,7 @@ class FormOperations {
 
   public function __construct(
     protected WorkspaceManagerInterface $workspaceManager,
+    protected ClassResolverInterface $classResolver,
   ) {}
 
   /**
@@ -27,6 +30,12 @@ class FormOperations {
     // No alterations are needed if we're not in a workspace context.
     if (!$this->workspaceManager->hasActiveWorkspace()) {
       return;
+    }
+
+    // @todo Refactor this when hooks can be easily ordered.
+    // @see https://www.drupal.org/i/3485896
+    if ($form_state->getFormObject() instanceof EntityFormInterface) {
+      $this->classResolver->getInstanceFromDefinition(EntityOperations::class)->entityFormAlter($form, $form_state, $form_id);
     }
 
     // If a form hasn't already been marked as safe or not to submit in a
