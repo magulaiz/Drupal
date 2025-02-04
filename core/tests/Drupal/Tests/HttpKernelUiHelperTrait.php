@@ -45,6 +45,10 @@ trait HttpKernelUiHelperTrait {
    * Page caching modules will not function, because the
    * CommandLineOrUnsafeMethod caching policy will deny caching.
    *
+   * Some requests may not function correctly because DrupalKernel is not
+   * explicitly designed to handle multiple requests: see
+   * https://www.drupal.org/project/drupal/issues/2708827.
+   *
    * @param string|\Drupal\Core\Url $path
    *   Drupal path or URL to load into Mink controlled browser.
    * @param array $options
