@@ -55,6 +55,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
    */
   public function testStandardPerformance(): void {
     $this->testAnonymous();
+    $this->testCacheInvalidation();
     $this->testLogin();
     $this->testLoginBlock();
   }
@@ -268,6 +269,109 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'StylesheetBytes' => 1950,
     ];
     $this->assertMetrics($expected, $performance_data);
+  }
+
+  /**
+   * Tests the impact of a cache tag based invalidation.
+   */
+  protected function testCacheInvalidation(): void {
+    // Crate a new page, this invalidates the node_list cache tag. Need to reset
+    // the cache tag checksum service as it did not register a need to
+    // invalidate that again.
+    \Drupal::service('cache_tags.invalidator.checksum')->reset();
+    $this->drupalCreateNode(['type' => 'page', 'title' => 'new page']);
+
+    // Visit the frontpage again.
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('');
+    }, 'standardFrontPageAfterInvalidation');
+
+    $expected_queries = [
+      'SELECT "name", "route" FROM "router" WHERE "name" IN ( "view.frontpage.page_1" )',
+      'SELECT "name", "route" FROM "router" WHERE "name" IN ( "big_pipe.nojs", "block.category_autocomplete", "block_content.add_page", "block_content.add_form", "ckeditor5.media_entity_metadata", "entity.comment.edit_form", "comment.approve", "entity.comment.canonical", "entity.comment.delete_form", "comment.reply", "comment.new_comments_node_links", "comment.node_redirect", "contact.site_page", "entity.contact_form.canonical", "entity.user.contact_form", "contextual.render", "editor.filter_xss", "file.ajax_progress", "filter.tips_all", "filter.tips", "history.get_last_node_view", "history.read_node", "image.style_public", "image.style_private", "node.add_page", "node.add", "entity.node.preview", "entity.node.version_history", "entity.node.revision", "node.revision_revert_confirm", "node.revision_revert_translation_confirm", "node.revision_delete_confirm", "search.view", "search.view_help_search", "search.help_help_search", "search.view_node_search", "search.help_node_search", "search.view_user_search", "search.help_user_search", "shortcut.set_switch", "system.css_asset", "system.js_asset", "system.401", "system.403", "system.404", "system.4xx", "system.cron", "system.files", "system.private_file_download", "system.temporary", "<front>", "<none>", "<nolink>", "<button>", "<current>", "system.timezone", "system.batch_page.html", "system.db_update", "system.entity_autocomplete", "system.csrftoken", "entity.taxonomy_term.edit_form", "entity.taxonomy_term.delete_form", "toolbar.subtrees", "user.register", "user.logout", "user.logout.confirm", "user.pass", "user.page", "user.edit", "user.login", "user.cancel_confirm", "user.reset.login", "user.reset", "user.reset.form", "user.well-known.change_password", "view.frontpage.feed_1", "view.taxonomy_term.feed_1", "view.taxonomy_term.page_1", "views.ajax", "entity.file.delete_form", "entity.node.canonical", "entity.node.delete_form", "entity.node.edit_form", "entity.taxonomy_term.version_history", "entity.taxonomy_term.revision", "entity.taxonomy_term.revision_revert_form", "entity.taxonomy_term.revision_delete_form", "entity.user.canonical", "entity.user.edit_form", "entity.user.cancel_form", "entity.taxonomy_term.canonical" )',
+      'SELECT COUNT(*) AS "expression" FROM (SELECT 1 AS "expression" FROM "node_field_data" "node_field_data" WHERE ("node_field_data"."promote" = 1) AND ("node_field_data"."status" = 1)) "subquery"',
+      'SELECT "node_field_data"."sticky" AS "node_field_data_sticky", "node_field_data"."created" AS "node_field_data_created", "node_field_data"."nid" AS "nid" FROM "node_field_data" "node_field_data" WHERE ("node_field_data"."promote" = 1) AND ("node_field_data"."status" = 1) ORDER BY "node_field_data_sticky" DESC, "node_field_data_created" DESC LIMIT 10 OFFSET 0',
+      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
+    ];
+    $recorded_queries = $performance_data->getQueries();
+    $this->assertSame($expected_queries, $recorded_queries);
+    $expected = [
+      'QueryCount' => 5,
+      'CacheGetCount' => 83,
+      'CacheGetCountByBin' => [
+        'page' => 1,
+        'config' => 11,
+        'data' => 9,
+        'discovery' => 21,
+        'bootstrap' => 6,
+        'dynamic_page_cache' => 4,
+        'render' => 26,
+        'default' => 3,
+        'entity' => 1,
+        'menu' => 1,
+      ],
+      'CacheSetCount' => 7,
+      'CacheSetCountByBin' => [
+        'data' => 3,
+        'render' => 2,
+        'dynamic_page_cache' => 1,
+        'page' => 1,
+      ],
+      'CacheDeleteCount' => 0,
+      'CacheTagChecksumCount' => 11,
+      'CacheTagIsValidCount' => 41,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 4,
+      'CacheTagGroupedLookups' => [
+        [
+          'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
+          'block_view',
+          'config:block.block.stark_account_menu',
+          'config:block.block.stark_breadcrumbs',
+          'config:block.block.stark_content',
+          'config:block.block.stark_help',
+          'config:block.block.stark_main_menu',
+          'config:block.block.stark_messages',
+          'config:block.block.stark_page_title',
+          'config:block.block.stark_powered',
+          'config:block.block.stark_primary_admin_actions',
+          'config:block.block.stark_primary_local_tasks',
+          'config:block.block.stark_search_form_narrow',
+          'config:block.block.stark_search_form_wide',
+          'config:block.block.stark_secondary_local_tasks',
+          'config:block.block.stark_site_branding',
+          'config:block.block.stark_syndicate',
+          'config:block_list',
+          'config:filter.format.restricted_html',
+          'config:search.settings',
+          'config:system.menu.account',
+          'config:system.menu.main',
+          'config:system.site',
+          'config:user.role.anonymous',
+          'config:views.view.frontpage',
+          'http_response',
+          'local_task',
+          'node:1',
+          'node_list',
+          'node_view',
+          'rendered',
+          'user:0',
+          'user_view',
+        ],
+        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'library_info', 'user_values'],
+        ['config:core.extension', 'views_data'],
+        ['node_values'],
+      ],
+      'StylesheetCount' => 1,
+      'StylesheetBytes' => 3450,
+    ];
+    $this->assertMetrics($expected, $performance_data);
+    $expected_default_cache_cids = [
+      'views_data:node_field_data:en',
+      'views_data:views:en',
+      'views_data:node:en',
+    ];
+    $this->assertSame($expected_default_cache_cids, $performance_data->getCacheOperations()['get']['default']);
   }
 
   /**
