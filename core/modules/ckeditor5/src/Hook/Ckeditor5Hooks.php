@@ -361,7 +361,6 @@ class Ckeditor5Hooks {
     $definitions['ckeditor5_valid_pair__format_and_editor']['mapping']['image_upload'] = $definitions['editor.editor.*']['mapping']['image_upload'];
   }
 
-
   /**
    * Implements hook_ENTITY_TYPE_presave() for editor entities.
    */

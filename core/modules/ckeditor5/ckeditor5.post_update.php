@@ -26,7 +26,7 @@ function ckeditor5_removed_post_updates(): array {
 /**
  * Updates Text Editors using CKEditor 5 to native List "type" functionality.
  */
-function ckeditor5_post_update_list_type(&$sandbox = []) {
+function ckeditor5_post_update_list_type(array &$sandbox = []): void {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
   $config_entity_updater->update($sandbox, 'editor', function (Editor $editor): bool {
     // Only try to update editors using CKEditor 5.
