@@ -167,6 +167,10 @@ system.diff:
             Range:
               min: 0
 
+system.installer:
+  type: config_object
+  label: 'Installer config'
+
 system.logging:
   type: config_object
   label: 'Logging settings'
