@@ -198,13 +198,13 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       '#uri' => theme_get_setting('logo.url', 'olivero'),
       '#alt' => 'The site logo',
     ];
-    $olivero_logo = (string) $renderer->renderPlain($build);
+    $olivero_logo = $renderer->renderPlain($build);
     $build = [
       '#theme' => 'image',
       '#uri' => theme_get_setting('logo.url', 'claro'),
       '#alt' => 'The site logo',
     ];
-    $claro_logo = (string) $renderer->renderPlain($build);
+    $claro_logo = $renderer->renderPlain($build);
 
     $tests = [];
     $tests['[site:logo]'] = $claro_logo;
@@ -228,7 +228,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     $metadata_tests['[site:logo:default-theme:url]'] = $bubbleable_metadata_default;
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)));
 
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
@@ -290,7 +290,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     $metadata_tests['[site:logo:theme-not-enabled-theme:foo]'] = new BubbleableMetadata();
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)));
 
     // Test that the Claro logo has the path to the global logo.
     $bubbleable_metadata = new BubbleableMetadata();
@@ -301,7 +301,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $this->tokenService->replace($input, [], [], $bubbleable_metadata);
       $this->assertSame($expected, $output, "Token '$input' was not replaced.");
-      $this->assertEquals($metadata_tests[$input], $bubbleable_metadata, new FormattableMarkup('Asserting metadata for token %token.', ['%token' => $input]));
+      $this->assertEquals($metadata_tests[$input], $bubbleable_metadata, "Incorrect metadata for '$input'");
     }
   }
 
