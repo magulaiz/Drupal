@@ -234,7 +234,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $this->tokenService->replace($input, [], [], $bubbleable_metadata);
       $this->assertSame($expected, $output, "Token '$input' was not replaced.");
-      $this->assertEquals($metadata_tests[$input], $bubbleable_metadata, new FormattableMarkup('Asserting metadata for token %token.', ['%token' => $input]));
+      $this->assertEquals($metadata_tests[$input], $bubbleable_metadata, "Incorrect metadata for '$input'");
     }
   }
 
