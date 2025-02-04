@@ -155,11 +155,13 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
           $settings = NestedArray::mergeDeep($settings, $js_assets['drupalSettings'] ?? []);
           unset($js_assets['drupalSettings']);
         }
-        if ($settings_in_header) {
-          $before_js_assets_header['drupalSettings'] = $settings;
-        }
-        else {
-          $before_js_assets_footer['drupalSettings'] = $settings;
+        if ($settings) {
+          if ($settings_in_header) {
+            $before_js_assets_header['drupalSettings'] = $settings;
+          }
+          else {
+            $before_js_assets_footer['drupalSettings'] = $settings;
+          }
         }
         $variables['scripts'] = $this->jsCollectionRenderer->render($before_js_assets_header) + $this->jsCollectionRenderer->render($after_js_assets_header);
         $variables['scripts_bottom'] = $this->jsCollectionRenderer->render($before_js_assets_footer) + $this->jsCollectionRenderer->render($after_js_assets_footer);
