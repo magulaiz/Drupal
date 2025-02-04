@@ -975,10 +975,16 @@ class Registry implements DestructableInterface {
    */
   public function addFixedPreprocessFunctions(array &$cache, array $fixed_preprocess_functions, array $old_cache = []): void {
     foreach (array_keys(array_diff_key($cache, $old_cache)) as $hook) {
-      $cache[$hook]['preprocess functions'] = NestedArray::mergeDeep(
+      $preprocess_functions = NestedArray::mergeDeep(
         $fixed_preprocess_functions,
         $cache[$hook]['preprocess functions'] ?? [],
       );
+      if (isset($preprocess_functions['template'])) {
+        $template_functions = ['template' => $preprocess_functions['template']];
+        unset($preprocess_functions['template']);
+        $preprocess_functions = $template_functions + $preprocess_functions;
+      }
+      $cache[$hook]['preprocess functions'] = $preprocess_functions;
     }
   }
 
