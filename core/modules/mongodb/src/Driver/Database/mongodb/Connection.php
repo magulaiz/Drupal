@@ -129,12 +129,18 @@ class Connection extends DatabaseConnection {
     if (!empty($connection_options['hosts']) && is_array($connection_options['hosts'])) {
       $hosts = [];
       foreach ($connection_options['hosts'] as $host) {
-        if (isset($host['port'])) {
-          $hosts[] = $host['host'] . ':' . $host['port'];
+        // Port numbers are prohibited in an SRV URI.
+        if (!empty($connection_options['srv'])) {
+          $hosts[] = $host['host'];
         }
         else {
-          // Default to TCP connection on port 27017.
-          $hosts[] = $host['host'] . ':27017';
+          if (isset($host['port'])) {
+            $hosts[] = $host['host'] . ':' . $host['port'];
+          }
+          else {
+            // Default to TCP connection on port 27017.
+            $hosts[] = $host['host'] . ':27017';
+          }
         }
       }
       $uri .= implode(',', $hosts);
@@ -256,7 +262,10 @@ class Connection extends DatabaseConnection {
     if (isset($connection_options['hosts']) && is_array($connection_options['hosts'])) {
       $hosts = [];
       foreach ($connection_options['hosts'] as $host) {
-        if (isset($host['port'])) {
+        if (isset($connection_options['srv']) && $connection_options['srv']) {
+          $hosts[] = $host['host'];
+        }
+        elseif (isset($host['port'])) {
           $hosts[] = $host['host'] . ':' . $host['port'];
         }
         else {
