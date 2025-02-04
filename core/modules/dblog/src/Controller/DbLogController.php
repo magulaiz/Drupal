@@ -309,10 +309,9 @@ class DbLogController extends ControllerBase {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
-   *
    * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   The database query.
- */
+   */
   protected function addFilterToQuery(Request $request, SelectInterface &$query): void {
     $session_filters = $request->getSession()->get('dblog_overview_filter', []);
     if (empty($session_filters)) {
