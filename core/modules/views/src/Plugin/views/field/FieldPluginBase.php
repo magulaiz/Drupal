@@ -529,7 +529,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     $options['element_label_type'] = ['default' => ''];
     $options['element_label_class'] = ['default' => ''];
-    $options['element_label_colon'] = ['default' => TRUE];
+    $options['element_label_colon'] = ['default' => FALSE];
 
     $options['element_wrapper_type'] = ['default' => ''];
     $options['element_wrapper_class'] = ['default' => ''];
@@ -1740,7 +1740,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    *   An array of parent keys. This will represent the array depth.
    *
    * @return array
-   *   An array of available tokens, with nested keys representative of the array structure.
+   *   An array of available tokens, with nested keys representative of the
+   *   array structure.
    */
   protected function getTokenValuesRecursive(array $array, array $parent_keys = []) {
     $tokens = [];
@@ -1897,6 +1898,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * Gets the link generator.
    *
    * @return \Drupal\Core\Utility\LinkGeneratorInterface
+   *   The link generator service.
    */
   protected function linkGenerator() {
     if (!isset($this->linkGenerator)) {
@@ -1909,6 +1911,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * Returns the render API renderer.
    *
    * @return \Drupal\Core\Render\RendererInterface
+   *   The render API renderer service.
    */
   protected function getRenderer() {
     if (!isset($this->renderer)) {
