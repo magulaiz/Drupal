@@ -6,7 +6,6 @@ namespace Drupal\Tests\Component\Gettext;
 
 use Drupal\Component\Gettext\PoStreamReader;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\TestStatus\Warning;
 
 /**
  * Unit tests for the Gettext PO file header handling features.
@@ -15,14 +14,14 @@ use PHPUnit\Framework\TestStatus\Warning;
  *
  * @group Gettext
  */
-class PoStreamreaderTest extends TestCase {
+class PoStreamReaderTest extends TestCase {
 
   /**
-   * This test validates that calling readItem with a NULL fd
-   * returns NULL. See issue #3301239
+   * Validates that calling readItem with a NULL fd returns NULL.
    *
+   * See issue #3301239.
    */
-  public function testOpeningFileError() {
+  public function testOpeningFileError(): void {
     $reader = new PoStreamReader();
     $reader->setURI('fake');
     $this->assertNull($reader->readItem());
