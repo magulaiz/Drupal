@@ -3,6 +3,7 @@
 namespace Drupal\Core\Datetime;
 
 use Drupal\Component\Datetime\DateTimePlus;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -11,20 +12,26 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * This class extends the basic component and adds in Drupal-specific
  * handling, like translation of the format() method.
  *
- * Static methods in base class can also be used to create DrupalDateTime objects.
- * For example:
+ * Static methods in base class can also be used to create DrupalDateTime
+ * objects. For example:
  *
- * DrupalDateTime::createFromArray( array('year' => 2010, 'month' => 9, 'day' => 28) )
+ * @code
+ * DrupalDateTime::createFromArray(['year' => 2010, 'month' => 9, 'day' => 28])
+ * @endcode
  *
  * @see \Drupal\Component\Datetime\DateTimePlus
  */
 class DrupalDateTime extends DateTimePlus {
 
   use StringTranslationTrait;
+  use DependencySerializationTrait {
+    __sleep as defaultSleep;
+  }
 
   /**
    * Formatted strings translation cache.
    *
+   * @var array
    * Translation cache represents an instance storage for formatted date
    * strings. It contains a multidimensional array where:
    * - first level keys - are drupal language codes;
@@ -49,10 +56,8 @@ class DrupalDateTime extends DateTimePlus {
    *     ],
    *   ]
    * @endcode
-   *
-   * @var array
    */
-  protected $formatTranslationCache;
+  protected $formatTranslationCache = [];
 
   /**
    * Constructs a date object.
@@ -150,6 +155,7 @@ class DrupalDateTime extends DateTimePlus {
               $this->formatTranslationCache[$langcode][$code][$string] = $string;
             }
             else {
+              // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
               $this->formatTranslationCache[$langcode][$code][$string] = $this->t($string, [], $options);
             }
           }
@@ -164,6 +170,13 @@ class DrupalDateTime extends DateTimePlus {
       $this->errors[] = $e->getMessage();
     }
     return $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __sleep(): array {
+    return array_diff($this->defaultSleep(), ['formatTranslationCache']);
   }
 
 }

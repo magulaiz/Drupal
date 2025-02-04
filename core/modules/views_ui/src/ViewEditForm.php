@@ -16,6 +16,7 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -119,9 +120,10 @@ class ViewEditForm extends ViewFormBase {
     // stale between page requests.
     // See views_ui_ajax_get_form() for how this affects #ajax.
     // @todo To remove this and allow the form to be cacheable:
-    //   - Change $form_state->get('view') to $form_state->getTemporary()['view'].
-    //   - Add a #process function to initialize $form_state->getTemporary()['view']
-    //     on cached form submissions.
+    //   - Change $form_state->get('view') to
+    //     $form_state->getTemporary()['view'].
+    //   - Add a #process function to initialize
+    //     $form_state->getTemporary()['view'] on cached form submissions.
     //   - Use \Drupal\Core\Form\FormStateInterface::loadInclude().
     $form_state->disableCache();
 
@@ -300,6 +302,8 @@ class ViewEditForm extends ViewFormBase {
     foreach ($executable->displayHandlers as $id => $display) {
       if (!empty($display->display['new_id']) && $display->display['new_id'] !== $display->display['id'] && empty($display->display['deleted'])) {
         $new_id = $display->display['new_id'];
+        $attachments = $display->getAttachedDisplays();
+        $old_id = $display->display['id'];
         $display->display['id'] = $new_id;
         unset($display->display['new_id']);
         $executable->displayHandlers->set($new_id, $display);
@@ -312,6 +316,16 @@ class ViewEditForm extends ViewFormBase {
           'view' => $view->id(),
           'display_id' => $new_id,
         ]);
+
+        // Find attachments attached to old display id and attach them with new id.
+        if ($attachments) {
+          foreach ($attachments as $attachment) {
+            $attached_options = $executable->displayHandlers->get($attachment)->getOption('displays');
+            unset($attached_options[$old_id]);
+            $attached_options[$new_id] = $new_id;
+            $executable->displayHandlers->get($attachment)->setOption('displays', $attached_options);
+          }
+        }
       }
       elseif (isset($display->display['new_id'])) {
         unset($display->display['new_id']);
@@ -319,7 +333,7 @@ class ViewEditForm extends ViewFormBase {
     }
     $view->set('display', $displays);
 
-    // @todo: Revisit this when https://www.drupal.org/node/1668866 is in.
+    // @todo Revisit this when https://www.drupal.org/node/1668866 is in.
     $query = $this->requestStack->getCurrentRequest()->query;
     $destination = $query->get('destination');
 
@@ -375,7 +389,7 @@ class ViewEditForm extends ViewFormBase {
     // If the plugin doesn't exist, display an error message instead of an edit
     // page.
     if (empty($display)) {
-      // @TODO: Improved UX for the case where a plugin is missing.
+      // @todo Improved UX for the case where a plugin is missing.
       $build['#markup'] = $this->t("Error: Display @display refers to a plugin named '@plugin', but that plugin is not available.", ['@display' => $display->display['id'], '@plugin' => $display->display['display_plugin']]);
     }
     // Build the content of the edit page.
@@ -417,7 +431,7 @@ class ViewEditForm extends ViewFormBase {
     $is_display_deleted = !empty($display['deleted']);
     // The default display cannot be duplicated.
     $is_default = $display['id'] == 'default';
-    // @todo: Figure out why getOption doesn't work here.
+    // @todo Figure out why getOption doesn't work here.
     $is_enabled = $view->getExecutable()->displayHandlers->get($display['id'])->isEnabled();
 
     if ($display['id'] != 'default') {
@@ -452,7 +466,7 @@ class ViewEditForm extends ViewFormBase {
 
           if ($path && (!str_contains($path, '%'))) {
             // Wrap this in a try/catch as trying to generate links to some
-            // routes may throw a NotAcceptableHttpException if they do not
+            // routes may throw an exception, for example if they do not
             // respond to HTML, such as RESTExports.
             try {
               if (!parse_url($path, PHP_URL_SCHEME)) {
@@ -464,7 +478,7 @@ class ViewEditForm extends ViewFormBase {
                 $url = Url::fromUri("base:$path");
               }
             }
-            catch (NotAcceptableHttpException $e) {
+            catch (BadRequestException | NotAcceptableHttpException) {
               $url = '/' . $path;
             }
 
@@ -839,8 +853,8 @@ class ViewEditForm extends ViewFormBase {
    * the SharedTempStore rather than $form_state->setRebuild(). Without this
    * submit handler, buttons that add or remove displays would redirect to the
    * destination parameter (e.g., when the Edit View form is linked to from a
-   * contextual link). This handler can be added to buttons whose form submission
-   * should not yet redirect to the destination.
+   * contextual link). This handler can be added to buttons whose form
+   * submission should not yet redirect to the destination.
    */
   public function submitDelayDestination($form, FormStateInterface $form_state) {
     $request = $this->requestStack->getCurrentRequest();
@@ -1010,7 +1024,7 @@ class ViewEditForm extends ViewFormBase {
         // The rearrange form for filters contains the and/or UI, so override
         // the used path.
         $rearrange_url = Url::fromRoute('views_ui.form_rearrange_filter', ['js' => 'nojs', 'view' => $view->id(), 'display_id' => $display['id']]);
-        // TODO: Add another class to have another symbol for filter rearrange.
+        // @todo Add another class to have another symbol for filter rearrange.
         $class = 'icon compact rearrange';
         break;
 

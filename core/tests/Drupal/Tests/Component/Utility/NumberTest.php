@@ -21,26 +21,23 @@ class NumberTest extends TestCase {
   /**
    * Tests Number::validStep() without offset.
    *
-   * @dataProvider providerTestValidStep
-   * @covers ::validStep
-   *
    * @param numeric $value
    *   The value argument for Number::validStep().
    * @param numeric $step
    *   The step argument for Number::validStep().
    * @param bool $expected
    *   Expected return value from Number::validStep().
+   *
+   * @dataProvider providerTestValidStep
+   * @covers ::validStep
    */
-  public function testValidStep($value, $step, $expected) {
+  public function testValidStep($value, $step, $expected): void {
     $return = Number::validStep($value, $step);
     $this->assertEquals($expected, $return);
   }
 
   /**
    * Tests Number::validStep() with offset.
-   *
-   * @dataProvider providerTestValidStepOffset
-   * @covers ::validStep
    *
    * @param numeric $value
    *   The value argument for Number::validStep().
@@ -50,8 +47,11 @@ class NumberTest extends TestCase {
    *   The offset argument for Number::validStep().
    * @param bool $expected
    *   Expected return value from Number::validStep().
+   *
+   * @dataProvider providerTestValidStepOffset
+   * @covers ::validStep
    */
-  public function testValidStepOffset($value, $step, $offset, $expected) {
+  public function testValidStepOffset($value, $step, $offset, $expected): void {
     $return = Number::validStep($value, $step, $offset);
     $this->assertEquals($expected, $return);
   }
@@ -95,7 +95,7 @@ class NumberTest extends TestCase {
   }
 
   /**
-   * Data provider for \Drupal\Tests\Component\Utility\NumberTest::testValidStepOffset().
+   * Data provider for testValidStepOffset().
    *
    * @see \Drupal\Tests\Component\Utility\NumberTest::testValidStepOffset()
    */
@@ -121,16 +121,16 @@ class NumberTest extends TestCase {
   /**
    * Tests the alphadecimal conversion functions.
    *
-   * @dataProvider providerTestConversions
-   * @covers ::intToAlphadecimal
-   * @covers ::alphadecimalToInt
-   *
    * @param int $value
    *   The integer value.
    * @param string $expected
    *   The expected alphadecimal value.
+   *
+   * @dataProvider providerTestConversions
+   * @covers ::intToAlphadecimal
+   * @covers ::alphadecimalToInt
    */
-  public function testConversions($value, $expected) {
+  public function testConversions($value, $expected): void {
     $this->assertSame(Number::intToAlphadecimal($value), $expected);
     $this->assertSame($value, Number::alphadecimalToInt($expected));
   }
@@ -138,14 +138,14 @@ class NumberTest extends TestCase {
   /**
    * Data provider for testConversions().
    *
-   * @see testConversions()
-   *
    * @return array
    *   An array containing:
    *     - The integer value.
    *     - The alphadecimal value.
+   *
+   * @see testConversions()
    */
-  public function providerTestConversions() {
+  public static function providerTestConversions() {
     return [
       [0, '00'],
       [1, '01'],
