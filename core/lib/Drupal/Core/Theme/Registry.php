@@ -651,7 +651,7 @@ class Registry implements DestructableInterface {
           }
 
           if ($type == 'module') {
-            $info['preprocess functions'] = $this->collectModulePreprocess($cache, 'preprocess_' . $hook);
+            $info['preprocess functions'] = NestedArray::mergeDeep($info['preprocess functions'] ?? [], $this->collectModulePreprocess($cache, 'preprocess_' . $hook));
           }
           elseif ($type == 'theme_engine' || $type == 'base_theme_engine') {
             // Theme engines get an extra set that come before the normally
