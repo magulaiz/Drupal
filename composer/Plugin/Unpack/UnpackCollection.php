@@ -32,9 +32,12 @@ final class UnpackCollection implements \IteratorAggregate {
 
   /**
    * {@inheritdoc}
+   *
+   * @return \ArrayIterator<string, \Composer\Package\PackageInterface>
+   *   The list of unpacked packages.
    */
   public function getIterator(): \ArrayIterator {
-    return new \ArrayIterator($this);
+    return new \ArrayIterator($this->unpackedPackages);
   }
 
   /**
