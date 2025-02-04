@@ -20,6 +20,9 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
    */
   protected $profile = 'demo_umami';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $user = $this->drupalCreateUser();
@@ -50,9 +53,8 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
       'QueryCount' => 4,
       'CacheGetCount' => 40,
       'CacheGetCountByBin' => [
-        'config' => 20,
+        'config' => 22,
         'discovery' => 5,
-        'access_policy' => 2,
         'data' => 7,
         'bootstrap' => 4,
         'dynamic_page_cache' => 2,
@@ -60,9 +62,9 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 0,
       'CacheDeleteCount' => 0,
       'CacheTagChecksumCount' => 0,
-      'CacheTagIsValidCount' => 11,
+      'CacheTagIsValidCount' => 10,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 6,
+      'CacheTagLookupQueryCount' => 5,
       'ScriptCount' => 1,
       'ScriptBytes' => 123850,
       'StylesheetCount' => 2,
