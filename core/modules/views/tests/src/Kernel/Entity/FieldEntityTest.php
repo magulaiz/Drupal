@@ -55,6 +55,7 @@ class FieldEntityTest extends ViewsKernelTestBase {
     $this->installEntitySchema('comment');
     $this->installEntitySchema('user');
     $this->installSchema('comment', ['comment_entity_statistics']);
+    $this->installConfig(['node', 'comment']);
     $this->createContentType(['type' => 'page']);
     $this->addDefaultCommentField('node', 'page');
 
