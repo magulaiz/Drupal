@@ -62,4 +62,5 @@ function block_content_post_update_10301(?array &$sandbox = NULL): int {
       '@total' => $sandbox['total'],
     ]);
   }
+  return 0;
 }
