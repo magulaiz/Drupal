@@ -20,7 +20,7 @@ class TemplatePreprocess extends Hook {
    * Constructs a Hook attribute object.
    *
    * @param string $hook
-   *   The short hook name, without the 'hook_' prefix.
+   *   The short hook name, without the 'template_preprocess' prefix.
    * @param string $method
    *   (optional) The method name. If this attribute is on a method, this
    *   parameter is not required. If this attribute is on a class and this
