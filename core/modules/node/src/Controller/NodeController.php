@@ -206,9 +206,9 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
         if ($revision->access('revert revision')) {
           $links['revert'] = [
             'title' => $vid < $node->getRevisionId() ? $this->t('Revert') : $this->t('Set as current revision'),
-            'url' => $has_translations ?
-              Url::fromRoute('node.revision_revert_translation_confirm', ['node' => $node->id(), 'node_revision' => $vid, 'langcode' => $langcode]) :
-              Url::fromRoute('node.revision_revert_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
+            'url' => $has_translations
+              ? Url::fromRoute('node.revision_revert_translation_confirm', ['node' => $node->id(), 'node_revision' => $vid, 'langcode' => $langcode])
+              : Url::fromRoute('node.revision_revert_confirm', ['node' => $node->id(), 'node_revision' => $vid]),
           ];
         }
 
