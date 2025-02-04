@@ -9,6 +9,7 @@ use Behat\Mink\Driver\DriverInterface;
 use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
 use Behat\Mink\Session;
+use Drupal\Core\Url;
 use Drupal\Tests\WebAssert;
 use Symfony\Component\HttpKernel\HttpKernelBrowser;
 
@@ -63,6 +64,14 @@ trait HttpKernelUiHelperTrait {
    * @see \Drupal\Tests\BrowserTestBase::getHttpClient()
    */
   protected function drupalGet($path, array $options = [], array $headers = []): string {
+    // Convert a Url object to a string.
+    if ($path instanceof Url) {
+      $url_options = $path->getOptions();
+      $options = $url_options + $options;
+      $path->setOptions($options);
+      $path = $path->setAbsolute(FALSE)->toString();
+    }
+
     $session = $this->getSession();
 
     $session->visit($path);
