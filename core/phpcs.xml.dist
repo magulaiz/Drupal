@@ -9,14 +9,14 @@
   <exclude-pattern>*/node_modules/*</exclude-pattern>
 
   <!-- Exclude third party code. -->
-  <exclude-pattern>./assets/vendor/*</exclude-pattern>
-  <exclude-pattern>./core/tests/Drupal/Tests/Component/Annotation/Doctrine/</exclude-pattern>
+  <exclude-pattern>assets/vendor/*</exclude-pattern>
+  <exclude-pattern>core/tests/Drupal/Tests/Component/Annotation/Doctrine/</exclude-pattern>
   <!-- @todo Remove in Drupal 12 following https://www.drupal.org/project/drupal/issues/3299678 -->
-  <exclude-pattern>./core/lib/Drupal/Component/Diff/</exclude-pattern>
+  <exclude-pattern>core/lib/Drupal/Component/Diff/</exclude-pattern>
 
   <!-- Exclude the PHPStan baseline and temp dir. -->
-  <exclude-pattern>./core/.phpstan-baseline.php</exclude-pattern>
-  <exclude-pattern>./core/phpstan-tmp/*</exclude-pattern>
+  <exclude-pattern>core/.phpstan-baseline.php</exclude-pattern>
+  <exclude-pattern>core/phpstan-tmp/*</exclude-pattern>
 
   <file>.</file>
   <file>../composer</file>
@@ -111,7 +111,7 @@
     <include-pattern>*/modules/system/tests/modules/*</include-pattern>
     <include-pattern>*/tests/*/Form/*</include-pattern>
     <include-pattern>*/tests/*/Functional*/*</include-pattern>
-    <include-pattern>./core/lib/*</include-pattern>
+    <include-pattern>core/lib/*</include-pattern>
   </rule>
 
   <!-- Prevent misuse of the @inheritdoc PHPDoc tag. -->
