@@ -527,18 +527,13 @@ function install_begin_request($class_loader, &$install_state) {
   // Verify the last completed task in the database, if there is one.
   $task = install_verify_completed_task();
 
-  // Ensure that the active configuration is empty and
-  // the configuration 'system.install' doesn't exist
-  // before installation starts.
+  // Ensure that the active configuration is empty before installation starts.
   if ($install_state['config_verified'] && empty($task)) {
-    if (count($kernel->getConfigStorage()->listAll()) && !$kernel->getConfigStorage()->exists('system.install')) {
+    if (count($kernel->getConfigStorage()->listAll())) {
       $task = NULL;
       throw new AlreadyInstalledException($container->get('string_translation'));
     }
   }
-
-  // Create a new config storage for the installer.
-  $kernel->getConfigStorage()->write('system.install', []);
 
   // Modify the installation state as appropriate.
   $install_state['completed_task'] = $task;
@@ -628,6 +623,10 @@ function install_run_task($task, &$install_state) {
     // already.
     $current_batch = \Drupal::state()->get('install_current_batch');
     if (!$install_state['interactive'] || !$current_batch) {
+      // Create a new config storage for the installer
+      // during the batch start.
+      \Drupal::configFactory()->getEditable('system.installer')->save();
+
       $batches = $function($install_state);
       if (empty($batches)) {
         // If the task did some processing and decided no batch was necessary,
@@ -1929,7 +1928,7 @@ function install_finished(&$install_state) {
   \Drupal::messenger()->addStatus($success_message);
 
   // Remove the installer config.
-  \Drupal::configFactory()->getEditable('system.install')->delete();
+  \Drupal::configFactory()->getEditable('system.installer')->delete();
 
   // Record when this install ran.
   \Drupal::state()->set('install_time', \Drupal::time()->getRequestTime());

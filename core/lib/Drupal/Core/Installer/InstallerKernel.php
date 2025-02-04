@@ -91,7 +91,7 @@ class InstallerKernel extends DrupalKernel {
     // so we need to check the config storage directly.
     try {
       $config_storage = BootstrapConfigStorageFactory::get();
-      return $config_storage->exists('system.install');
+      return $config_storage->exists('system.installer');
     }
     catch (\Exception) {
       // If the config storage is not available, we are not installing.
