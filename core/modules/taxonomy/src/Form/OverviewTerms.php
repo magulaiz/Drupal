@@ -22,6 +22,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class OverviewTerms extends FormBase {
 
+  /**
+   * Indicator that a term matches the filter.
+   */
   protected const MATCHING_TERM_INDICATOR = '⇒';
 
   /**
@@ -78,7 +81,7 @@ class OverviewTerms extends FormBase {
    *
    * @var string|null
    */
-  protected ?string $termFilter;
+  protected ?string $termFilter = NULL;
 
   /**
    * Constructs an OverviewTerms object.
