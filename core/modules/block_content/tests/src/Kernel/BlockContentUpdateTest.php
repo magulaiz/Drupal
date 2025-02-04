@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block_content\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -92,4 +94,5 @@ class BlockContentUpdateTest extends KernelTestBase {
 
     $this->assertTrue(isset($updated_view->get('display')['default']['display_options']['empty']['area_text_custom']));
   }
+
 }
