@@ -15,6 +15,8 @@ class InstallerConfigInstallerTest extends InstallerTestBase {
 
   /**
    * The configuration name.
+   *
+   * @var string
    */
   protected $configName = 'system.installer';
 
@@ -26,7 +28,7 @@ class InstallerConfigInstallerTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSite() {
+  protected function setUpSite(): void {
     // Get the database connection.
     $database = Database::getConnection();
 
