@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\editor\Kernel {
 
   use Drupal\editor\Entity\Editor;
+  use Drupal\editor\EntityReferenceHelper;
   use Drupal\file\FileInterface;
   use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
   use Drupal\node\Entity\Node;
@@ -33,6 +34,22 @@ namespace Drupal\Tests\editor\Kernel {
      */
     protected function setUp(): void {
       parent::setUp();
+
+      // Mock the editor entity reference helper service.
+      // This MUST be done just after the parent::setUp() call, so the
+      // autowire process is not made yet for the EditorHooks class.
+      $entity_reference_helper = $this->createMock(EntityReferenceHelper::class);
+      $entity_reference_helper->method('getEntityReferenceRevisions')->willReturnCallback(function ($entity) {
+        // Only return entity reference revision entities for the test entity, and not for others.
+        $node_test_entity = $this->getTestNodeEntity();
+        $is_the_test_entity = ($entity->getEntityTypeId() === $node_test_entity->getEntityTypeId() && $entity->id() === $node_test_entity->id());
+        if (!$is_the_test_entity) {
+          return [];
+        }
+        return [$this->getTestReferencedNodeEntity()];
+      });
+      $this->container->set('Drupal\editor\EntityReferenceHelper', $entity_reference_helper);
+
       $this->installEntitySchema('file');
       $this->installSchema('node', ['node_access']);
       $this->installSchema('file', ['file_usage']);
@@ -200,23 +217,6 @@ namespace Drupal\Tests\editor\Kernel {
       return $image_entity;
     }
 
-  }
-
-}
-
-namespace Drupal\editor\Hook {
-
-  use Drupal\Core\Entity\FieldableEntityInterface;
-  use Drupal\Tests\editor\Kernel\EditorEntityRevisionsFileUsageTest;
-
-  function _editor_get_entity_reference_revisions(FieldableEntityInterface $entity, &$result = []): array {
-    // Only return entity reference revision entities for the test entity, and not for others.
-    $node_test_entity = EditorEntityRevisionsFileUsageTest::getTestNodeEntity();
-    $is_the_test_entity = ($entity->getEntityTypeId() === $node_test_entity->getEntityTypeId() && $entity->id() === $node_test_entity->id());
-    if (!$is_the_test_entity) {
-      return [];
-    }
-    return [EditorEntityRevisionsFileUsageTest::getTestReferencedNodeEntity()];
   }
 
 }

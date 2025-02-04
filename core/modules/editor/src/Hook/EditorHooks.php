@@ -4,6 +4,7 @@ namespace Drupal\editor\Hook;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\editor\Entity\Editor;
+use Drupal\editor\EntityReferenceHelper;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -21,6 +22,14 @@ use Drupal\Core\Hook\Attribute\Hook;
 class EditorHooks {
 
   use StringTranslationTrait;
+
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\editor\EntityReferenceHelper $entityReferenceHelper
+   *   The entity reference helper.
+   */
+  public function __construct(protected EntityReferenceHelper $entityReferenceHelper) {}
 
   /**
    * Implements hook_help().
@@ -252,7 +261,7 @@ class EditorHooks {
         if ($langcode != $default_langcode) {
           $translation = $entity->getTranslation($langcode);
           // Delete translation entity reference revisions usages.
-          $reference_revisions_entities = _editor_get_entity_reference_revisions($translation);
+          $reference_revisions_entities = $this->entityReferenceHelper->getEntityReferenceRevisions($translation);
           foreach ($reference_revisions_entities as $reference_revisions_entity) {
             if ($reference_revisions_entity instanceof EntityInterface) {
               $referenced_files_by_field = _editor_get_file_uuids_by_field($reference_revisions_entity);
@@ -272,7 +281,7 @@ class EditorHooks {
       }
     }
     // Delete entity reference revisions usages.
-    $reference_revisions_entities = _editor_get_entity_reference_revisions($entity);
+    $reference_revisions_entities = $this->entityReferenceHelper->getEntityReferenceRevisions($entity);
     foreach ($reference_revisions_entities as $reference_revisions_entity) {
       if ($reference_revisions_entity instanceof EntityInterface) {
         $referenced_files_by_field = _editor_get_file_uuids_by_field($reference_revisions_entity);
