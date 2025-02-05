@@ -6,6 +6,7 @@ use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a Single-Directory Component render element.
@@ -107,6 +108,11 @@ class ComponentElement extends RenderElementBase {
       if (\is_scalar($slot_value)) {
         $slot_value = [
           "#plain_text" => (string) $slot_value,
+        ];
+      }
+      if ($slot_value instanceof TranslatableMarkup) {
+        $slot_value = [
+          "#markup" => $slot_value,
         ];
       }
       if (!Element::isRenderArray($slot_value)) {
