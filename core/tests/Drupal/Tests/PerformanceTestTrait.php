@@ -720,7 +720,7 @@ trait PerformanceTestTrait {
   }
 
   /**
-   * Clear caches.
+   * Clears all cache bins.
    */
   protected function clearCaches(): void {
     foreach (Cache::getBins() as $bin) {
