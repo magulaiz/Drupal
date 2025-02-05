@@ -148,7 +148,7 @@ class SystemTokensHooks {
         'date' => $date,
         'site-logo' => $site_logo,
         'site-logo-properties' => $site_logo_properties,
-      ]
+      ],
     ];
   }
 
