@@ -153,7 +153,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
     if (empty($this->uri)) {
       throw new \Exception('Cannot open stream without URI set.');
     }
-    $this->fd = fopen($this->uri, 'rb');
+    $this->fd = @fopen($this->uri, 'rb');
     if (!$this->fd) {
       throw new \Exception('Cannot open stream');
     }
