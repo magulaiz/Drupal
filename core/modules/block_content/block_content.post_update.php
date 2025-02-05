@@ -23,44 +23,22 @@ function block_content_removed_post_updates(): array {
  * Removes the "area_text_custom" plugin from block content view configuration.
  */
 function block_content_post_update_10301(?array &$sandbox = NULL): int {
-  $storage = \Drupal::entityTypeManager()->getStorage('view');
-  $view_ids = $storage->getQuery()->execute();
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view): bool {
+    $changed = FALSE;
 
-  // Initialize batch processing if first run.
-  if (!isset($sandbox['total'])) {
-    $sandbox['total'] = count($view_ids);
-    $sandbox['current_index'] = 0;
-  }
-
-  // Process views in chunks of 10.
-  $view_ids = array_slice($view_ids, $sandbox['current_index'], 10);
-  foreach ($view_ids as $view_id) {
-    $view = $storage->load($view_id);
-    if ($view) {
-      $changed = FALSE;
-      foreach ($view->get('display') as $display_id => $display) {
-        if (
-          isset($display['display_options']['empty']['area_text_custom']) &&
-          $display['display_options']['empty']['area_text_custom']['content'] === 'There are no content blocks available.'
-        ) {
-          unset($display['display_options']['empty']['area_text_custom']);
-          $view->set('display.' . $display_id . '.display_options.empty.area_text_custom', NULL);
-          $changed = TRUE;
-        }
-      }
-      if ($changed) {
-        $view->save();
+    foreach ($view->get('display') as $display_id => $display) {
+      if (
+        isset($display['display_options']['empty']['area_text_custom']) &&
+        $display['display_options']['empty']['area_text_custom']['content'] === 'There are no content blocks available.'
+      ) {
+        unset($display['display_options']['empty']['area_text_custom']);
+        $view->set('display.' . $display_id . '.display_options.empty.area_text_custom', NULL);
+        $changed = TRUE;
       }
     }
-  }
 
-  // Update progress.
-  $sandbox['current_index'] += 10;
-  if ($sandbox['current_index'] < $sandbox['total']) {
-    return t('Updating block content views (@current/@total)', [
-      '@current' => $sandbox['current_index'],
-      '@total' => $sandbox['total'],
-    ]);
-  }
+    return $changed;
+  });
+
   return 0;
 }
