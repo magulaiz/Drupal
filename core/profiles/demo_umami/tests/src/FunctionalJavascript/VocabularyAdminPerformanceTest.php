@@ -78,12 +78,12 @@ class VocabularyAdminPerformanceTest extends PerformanceTestBase {
     }, 'umamiVocabularyAdminPageHotCache');
 
     $expected = [
-      'queryCount' => 12,
-      'cacheGetCount' => 115,
+      'queryCount' => 9,
+      'cacheGetCount' => 113,
       'cacheSetCount' => 0,
       'cacheDeleteCount' => 0,
       'cacheTagChecksumCount' => 0,
-      'cacheTagIsValidCount' => 72,
+      'cacheTagIsValidCount' => 71,
     ];
     $this->assertTermInVocabularyAdminPage();
     $this->assertMetrics($expected, $performance_data);
