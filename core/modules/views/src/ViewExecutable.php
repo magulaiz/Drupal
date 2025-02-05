@@ -1160,7 +1160,7 @@ class ViewExecutable {
         // possibly transforms the value.
         if (!$argument->setArgument($arg)) {
           $status = $argument->validateFail($arg) && $status;
-          break;
+          continue;
         }
 
         if ($argument->isException()) {
