@@ -275,6 +275,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
    * Tests the impact of a cache tag based invalidation.
    */
   protected function testCacheInvalidation(): void {
+
+    $this->drupalGet('');
+
     // Crate a new page, this invalidates the node_list cache tag. Need to reset
     // the cache tag checksum service as it did not register a need to
     // invalidate that again.
@@ -321,7 +324,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheTagChecksumCount' => 11,
       'CacheTagIsValidCount' => 41,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 4,
+      'CacheTagLookupQueryCount' => 7,
       'CacheTagGroupedLookups' => [
         [
           'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
@@ -358,9 +361,12 @@ class StandardPerformanceTest extends PerformanceTestBase {
           'user:0',
           'user_view',
         ],
-        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'library_info', 'user_values'],
+        ['route_match'],
+        ['entity_types'],
+        ['routes'],
         ['config:core.extension', 'views_data'],
-        ['node_values'],
+        ['entity_field_info', 'node_values'],
+        ['library_info'],
       ],
       'StylesheetCount' => 1,
       'StylesheetBytes' => 3450,
