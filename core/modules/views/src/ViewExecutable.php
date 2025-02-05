@@ -1185,7 +1185,6 @@ class ViewExecutable {
       else {
         // Determine default condition and handle.
         $status = $argument->defaultAction();
-        break;
       }
 
       // Be safe with references and loops:
