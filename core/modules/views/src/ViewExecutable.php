@@ -1159,7 +1159,7 @@ class ViewExecutable {
         // Set the argument, which ensures that the argument is valid and
         // possibly transforms the value.
         if (!$argument->setArgument($arg)) {
-          $status = $argument->validateFail($arg);
+          $status = $status && $argument->validateFail($arg);
           break;
         }
 
@@ -1184,7 +1184,7 @@ class ViewExecutable {
       }
       else {
         // Determine default condition and handle.
-        $status = $argument->defaultAction();
+        $status = $status && $argument->defaultAction();
       }
 
       // Be safe with references and loops:
