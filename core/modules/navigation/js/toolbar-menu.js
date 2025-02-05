@@ -142,6 +142,25 @@
      */
     Drupal.behaviors.toggleContextualLinks = {
       attach: (context) => {
+        const editableAreaBtn = document.querySelector(
+          'button.navigation-contextual-link',
+        );
+        const editableAreas = document.querySelectorAll('.contextual-region');
+        // If no contextual links are present and only the "Editable Areas" button appears in the top bar tools section,
+        // remove the button and clear the tools section to ensure the toolbar keep hidden.
+        if (editableAreas.length === 0 && editableAreaBtn) {
+          const toolbarToolsSection = document.querySelector('.top-bar__tools');
+          if (
+            toolbarToolsSection.children.length === 1 &&
+            toolbarToolsSection.children[0].classList.contains(
+              'navigation-contextual-link',
+            )
+          ) {
+            toolbarToolsSection.innerHTML = '';
+          }
+          return;
+        }
+
         const showText = Drupal.t('Editable areas');
         const hideText = Drupal.t('Hide editable areas');
 
