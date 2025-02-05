@@ -14,7 +14,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 /**
  * Implements hook_token_info().
  */
-function system_token_info() {
+function system_token_info(): array {
   $types['site'] = [
     'name' => t("Site information"),
     'description' => t("Tokens for site-wide settings and other global information."),
@@ -153,7 +153,7 @@ function system_token_info() {
 /**
  * Implements hook_tokens().
  */
-function system_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+function system_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata): array {
   $token_service = \Drupal::token();
 
   $url_options = ['absolute' => TRUE];
@@ -379,5 +379,5 @@ function _system_tokens_get_logo_rendered(string $theme, BubbleableMetadata &$bu
     '#uri' => $logo_path,
     '#alt' => t('The site logo'),
   ];
-  return \Drupal::service('renderer')->renderPlain($build);
+  return \Drupal::service('renderer')->renderInIsolation($build);
 }
