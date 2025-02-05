@@ -17,6 +17,17 @@ use PHPUnit\Framework\TestCase;
 class PoStreamReaderTest extends TestCase {
 
   /**
+   * Calling open should throws an exception if URI is invalid .
+   *
+   */
+  public function testOpenMethodThrowsExceptionOnInvalidURI(): void {
+    $reader = new PoStreamReader();
+    $reader->setURI('fake');
+    $this->expectException(\Exception::class);
+    $reader->open();
+  }
+
+  /**
    * Validates that calling readItem with a NULL fd returns NULL.
    *
    * See issue #3301239.
