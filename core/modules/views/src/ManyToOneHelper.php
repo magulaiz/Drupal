@@ -24,9 +24,9 @@ class ManyToOneHelper {
   /**
    * Should the field use formula or alias.
    *
-   * @see \Drupal\views\Plugin\views\argument\StringArgument::query()
-   *
    * @var bool
+   *
+   * @see \Drupal\views\Plugin\views\argument\StringArgument::query()
    */
   public bool $formula = FALSE;
 
@@ -56,8 +56,8 @@ class ManyToOneHelper {
   /**
    * Get the field via formula or build it using alias and field name.
    *
-   * Sometimes the handler might want us to use some kind of formula, so give
-   * it that option. If it wants us to do this, it must set $helper->formula = TRUE
+   * Sometimes the handler might want us to use some kind of formula, so give it
+   * that option. If it wants us to do this, it must set $helper->formula = TRUE
    * and implement handler->getFormula().
    */
   public function getField() {
@@ -72,10 +72,10 @@ class ManyToOneHelper {
   /**
    * Add a table to the query.
    *
-   * This is an advanced concept; not only does it add a new instance of the table,
-   * but it follows the relationship path all the way down to the relationship
-   * link point and adds *that* as a new relationship and then adds the table to
-   * the relationship, if necessary.
+   * This is an advanced concept; not only does it add a new instance of the
+   * table, but it follows the relationship path all the way down to the
+   * relationship link point and adds *that* as a new relationship and then adds
+   * the table to the relationship, if necessary.
    */
   public function addTable($join = NULL, $alias = NULL) {
     // This is used for lookups in the many_to_one table.
@@ -137,7 +137,7 @@ class ManyToOneHelper {
     $field = $this->handler->relationship . '_' . $this->handler->table . '.' . $this->handler->field;
     $join = $this->getJoin();
 
-    // shortcuts
+    // Shortcuts
     $options = $this->handler->options;
     $view = $this->handler->view;
     $query = $this->handler->query;
@@ -178,12 +178,15 @@ class ManyToOneHelper {
       $field = $this->handler->relationship . '_' . $this->handler->table . '.' . $this->handler->field;
       if ($this->handler->operator == 'or' && empty($this->handler->options['reduce_duplicates'])) {
         if (empty($this->handler->options['add_table']) && empty($this->handler->view->many_to_one_tables[$field])) {
-          // query optimization, INNER joins are slightly faster, so use them
+          // Query optimization, INNER joins are slightly faster, so use them
           // when we know we can.
           $join = $this->getJoin();
-          if (isset($join)) {
+          $group = $this->handler->options['group'] ?? FALSE;
+          // Only if there is no group with OR operator.
+          if (isset($join) && !($group && $this->handler->query->where[$group]['type'] === 'OR')) {
             $join->type = 'INNER';
           }
+
           $this->handler->tableAlias = $this->handler->query->ensureTable($this->handler->table, $this->handler->relationship, $join);
           $this->handler->view->many_to_one_tables[$field] = $this->handler->value;
         }
@@ -351,7 +354,7 @@ class ManyToOneHelper {
         $clause->condition("$alias.$field", $value);
       }
 
-      // implode on either AND or OR.
+      // Implode on either AND or OR.
       $this->handler->query->addWhere($options['group'], $clause);
     }
   }

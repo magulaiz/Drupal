@@ -11,7 +11,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,7 +52,7 @@ class ControllerResolverTest extends UnitTestCase {
    *
    * @dataProvider providerTestCreateController
    */
-  public function testCreateController($controller, $class, $output) {
+  public function testCreateController($controller, $class, $output): void {
     $this->container->set('some_service', new MockController());
     $result = $this->controllerResolver->getControllerFromDefinition($controller);
     $this->assertCallableController($result, $class, $output);
@@ -70,15 +69,13 @@ class ControllerResolverTest extends UnitTestCase {
       ['some_service:getResult', 'Drupal\Tests\Core\Controller\MockController', 'This is a regular controller.'],
       // Tests a class with injection.
       ['Drupal\Tests\Core\Controller\MockContainerInjection::getResult', 'Drupal\Tests\Core\Controller\MockContainerInjection', 'This used injection.'],
-      // Tests a ContainerAware class.
-      ['Drupal\Tests\Core\Controller\MockContainerAware::getResult', 'Drupal\Tests\Core\Controller\MockContainerAware', 'This is container aware.'],
     ];
   }
 
   /**
    * Tests createController() with a non-existent class.
    */
-  public function testCreateControllerNonExistentClass() {
+  public function testCreateControllerNonExistentClass(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->controllerResolver->getControllerFromDefinition('Class::method');
   }
@@ -86,7 +83,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Tests createController() with an invalid name.
    */
-  public function testCreateControllerInvalidName() {
+  public function testCreateControllerInvalidName(): void {
     $this->expectException(\LogicException::class);
     $this->controllerResolver->getControllerFromDefinition('ClassWithoutMethod');
   }
@@ -96,7 +93,7 @@ class ControllerResolverTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetController
    */
-  public function testGetController($attributes, $class, $output = NULL) {
+  public function testGetController($attributes, $class, $output = NULL): void {
     $request = new Request([], [], $attributes);
     $result = $this->controllerResolver->getController($request);
     if ($class) {
@@ -113,7 +110,11 @@ class ControllerResolverTest extends UnitTestCase {
   public static function providerTestGetController() {
     return [
       // Tests passing a controller via the request.
-      [['_controller' => 'Drupal\Tests\Core\Controller\MockContainerAware::getResult'], 'Drupal\Tests\Core\Controller\MockContainerAware', 'This is container aware.'],
+      [
+        ['_controller' => MockContainerInjection::class . '::getResult'],
+        MockContainerInjection::class,
+        'This used injection.',
+      ],
       // Tests a request with no controller specified.
       [[], FALSE],
     ];
@@ -124,7 +125,7 @@ class ControllerResolverTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetControllerFromDefinition
    */
-  public function testGetControllerFromDefinition($definition, $output) {
+  public function testGetControllerFromDefinition($definition, $output): void {
     $this->container->set('invoke_service', new MockInvokeController());
     $controller = $this->controllerResolver->getControllerFromDefinition($definition);
     $this->assertCallableController($controller, NULL, $output);
@@ -151,7 +152,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Tests getControllerFromDefinition() without a callable.
    */
-  public function testGetControllerFromDefinitionNotCallable() {
+  public function testGetControllerFromDefinitionNotCallable(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->controllerResolver->getControllerFromDefinition('Drupal\Tests\Core\Controller\MockController::bananas');
   }
@@ -204,6 +205,10 @@ class MockControllerPsr7 {
 }
 
 class MockContainerInjection implements ContainerInjectionInterface {
+
+  /**
+   * The test value saved during construction.
+   */
   protected $result;
 
   public function __construct($result) {
@@ -219,28 +224,7 @@ class MockContainerInjection implements ContainerInjectionInterface {
   }
 
 }
-class MockContainerAware implements ContainerAwareInterface {
 
-  /**
-   * The service container.
-   */
-  protected ContainerInterface $container;
-
-  /**
-   * Sets the service container.
-   */
-  public function setContainer(?ContainerInterface $container): void {
-    $this->container = $container;
-  }
-
-  public function getResult() {
-    if (empty($this->container)) {
-      throw new \Exception('Container was not injected.');
-    }
-    return 'This is container aware.';
-  }
-
-}
 class MockInvokeController {
 
   public function __invoke() {
