@@ -72,8 +72,9 @@ class BlockContentUpdateTest extends KernelTestBase {
     // Ensure the plugin exists before the update.
     $this->assertTrue(isset($this->view->get('display')['default']['display_options']['empty']['area_text_custom']));
 
-    // Run the update function.
-    block_content_post_update_10301();
+    // Run the update function with sandbox.
+    $sandbox = [];
+    block_content_post_update_10301($sandbox);
 
     $updated_view = View::load('block_content');
 
@@ -88,11 +89,52 @@ class BlockContentUpdateTest extends KernelTestBase {
     $this->view->set('display.default.display_options.empty.area_text_custom.content', 'My custom message.');
     $this->view->save();
 
-    block_content_post_update_10301();
+    $sandbox = [];
+    block_content_post_update_10301($sandbox);
 
     $updated_view = View::load('block_content');
 
     $this->assertTrue(isset($updated_view->get('display')['default']['display_options']['empty']['area_text_custom']));
+  }
+
+  /**
+   * Tests batch processing of multiple views.
+   */
+  public function testBatchProcessing(): void {
+    // Create additional views for batch testing.
+    for ($i = 1; $i <= 15; $i++) {
+      $view = View::create([
+        'id' => "block_content_$i",
+        'label' => "Block Content Test View $i",
+        'module' => 'views',
+        'status' => TRUE,
+        'display' => [
+          'default' => [
+            'display_options' => [
+              'empty' => [
+                'area_text_custom' => [
+                  'id' => 'text_custom',
+                  'content' => 'There are no content blocks available.',
+                ],
+              ],
+            ],
+          ],
+        ],
+      ]);
+      $view->save();
+    }
+
+    // Run the update in batches.
+    $sandbox = [];
+    do {
+      block_content_post_update_10301($sandbox);
+    } while (!empty($sandbox));
+
+    // Verify that all views have been processed.
+    for ($i = 1; $i <= 15; $i++) {
+      $updated_view = View::load("block_content_$i");
+      $this->assertFalse(isset($updated_view->get('display')['default']['display_options']['empty']['area_text_custom']));
+    }
   }
 
 }

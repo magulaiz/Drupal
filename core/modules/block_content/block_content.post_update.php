@@ -5,6 +5,9 @@
  * Post update functions for Content Block.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\views\ViewEntityInterface;
+
 /**
  * Implements hook_removed_post_updates().
  */
