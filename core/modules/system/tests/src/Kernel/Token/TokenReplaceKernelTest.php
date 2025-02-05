@@ -198,13 +198,13 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       '#uri' => theme_get_setting('logo.url', 'olivero'),
       '#alt' => 'The site logo',
     ];
-    $olivero_logo = $renderer->renderInIsolation($build);
+    $olivero_logo = (string) $renderer->renderInIsolation($build);
     $build = [
       '#theme' => 'image',
       '#uri' => theme_get_setting('logo.url', 'claro'),
       '#alt' => 'The site logo',
     ];
-    $claro_logo = $renderer->renderInIsolation($build);
+    $claro_logo = (string) $renderer->renderInIsolation($build);
 
     $tests = [];
     $tests['[site:logo]'] = $claro_logo;
