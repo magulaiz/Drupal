@@ -271,7 +271,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $this->rebuildContainer();
     $this->container->get('module_handler')->reload();
 
-    $this->drupalGet('test-content-ajax');
+    $this->drupalGet('admin/content');
 
     $page = $this->getSession()->getPage();
     $this->assertSession()->pageTextContains('Default prefix');
