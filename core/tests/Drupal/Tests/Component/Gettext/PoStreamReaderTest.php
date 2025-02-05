@@ -19,6 +19,7 @@ class PoStreamReaderTest extends TestCase {
   /**
    * Calling open should throws an exception if URI is invalid .
    *
+   * See issue #3301239.
    */
   public function testOpenMethodThrowsExceptionOnInvalidURI(): void {
     $reader = new PoStreamReader();
