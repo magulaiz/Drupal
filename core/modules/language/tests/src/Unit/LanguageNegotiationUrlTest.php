@@ -369,7 +369,8 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
       'language' => $this->languages['en'],
     ];
     $method->processOutbound('foo', $options, $request);
-    $this->assertFalse((bool) $options['absolute']);
+    // $options['absolute'] not set or null equals to FALSE.
+    $this->assertFalse($options['absolute'] ?? FALSE);
 
     // Check absolute paths are used when the language
     // is not the current language.
