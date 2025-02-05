@@ -49,7 +49,7 @@ interface AlterableInterface {
    *   otherwise.
    *
    * @todo Remove PHPCS ignore and uncomment new method parameters before
-   *   drupal:12.0.0. See https://www.drupal.org/project/drupal/i/3501046
+   *   drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3501046.
    */
   public function hasAllTags(/* string ...$tags*/);
 
@@ -67,7 +67,7 @@ interface AlterableInterface {
    *   tags, FALSE otherwise.
    *
    * @todo Remove PHPCS ignore and uncomment new method parameters before
-   *   drupal:12.0.0. See https://www.drupal.org/project/drupal/i/3501046
+   *   drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3501046.
    */
   public function hasAnyTag(/* string ...$tags*/);
 
