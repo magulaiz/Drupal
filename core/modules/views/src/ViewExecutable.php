@@ -771,7 +771,10 @@ class ViewExecutable {
         }
         foreach ($exposed_field_names as $exposed_field_name) {
           foreach ($post_form_data as $post_form_key => $post_form_value) {
-            if ($post_form_key === $exposed_field_name || str_starts_with($post_form_key, "{$exposed_field_name}_")) {
+            if (
+              in_array($post_form_key, [$exposed_field_name, '_triggering_element_name'], TRUE)
+              || str_starts_with($post_form_key, "{$exposed_field_name}_")
+            ) {
               // Pick up the exposed field and any extra variations starting
               // with the same field name.
               $this->exposed_input += [
