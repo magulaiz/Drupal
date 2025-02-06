@@ -15,8 +15,9 @@ class CloseModalDialogCommand extends CloseDialogCommand {
    * @param bool $persist
    *   (optional) Whether to persist the dialog in the DOM or not.
    */
-  public function __construct($persist = FALSE) {
-    $this->selector = '#drupal-modal';
+  
+   public function __construct($persist = FALSE, string $selector = '#drupal-modal') {
+    $this->selector = $selector;
     $this->persist = $persist;
   }
 
