@@ -128,10 +128,24 @@ class DatabaseBackend implements CacheBackendInterface {
     // ::select() is a much smaller proportion of the request.
     $result = [];
     try {
-      $result = $this->connection->query('SELECT [cid], [data], [created], [expire], [serialized], [tags], [checksum] FROM {' . $this->connection->escapeTable($this->bin) . '} WHERE [cid] IN ( :cids[] ) ORDER BY [cid]', [':cids[]' => array_keys($cid_mapping)]);
+      $result = $this->connection->query('SELECT [cid], [data], [created], [expire], [serialized], [tags], [checksum] FROM {' . $this->connection->escapeTable($this->bin) . '} WHERE [cid] IN ( :cids[] ) ORDER BY [cid]', [':cids[]' => array_keys($cid_mapping)])->fetchAll();
     }
     catch (\Exception) {
       // Nothing to do.
+    }
+    // Before checking the validity of each item individually, register the
+    // cache tags for all returned cache items for preloading, this allows the
+    // cache tag service to optimize cache tag lookups.
+    if ($this->checksumProvider instanceof CacheTagsChecksumPreloadInterface) {
+      $tags = [];
+      foreach ($result as $item) {
+        if ($item->tags) {
+          $tags = $tags + explode(' ', $item->tags);
+        }
+      }
+      if ($tags) {
+        $this->checksumProvider->registerCacheTagsForPreload($tags);
+      }
     }
     $cache = [];
     foreach ($result as $item) {
