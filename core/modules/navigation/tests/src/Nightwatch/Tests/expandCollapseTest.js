@@ -15,7 +15,7 @@ module.exports = {
     browser
       .drupalInstall()
       .drupalInstallModule('navigation', true)
-      .drupalInstallModule('big_pipe', true)
+      .drupalInstallModule('big_pipe')
       .setWindowSize(1220, 800);
   },
   after(browser) {
