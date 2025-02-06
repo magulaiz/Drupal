@@ -29,6 +29,9 @@ system.site:
         404:
           type: path
           label: 'Default 404 (not found) page'
+        base_url:
+          type: string
+          label: 'Base URL'
         front:
           type: path
           label: 'Default front page'

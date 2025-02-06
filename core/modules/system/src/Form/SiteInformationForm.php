@@ -123,6 +123,18 @@ class SiteInformationForm extends ConfigFormBase {
       '#description' => $this->t("The <em>From</em> address in automated emails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this email being flagged as spam.)"),
       '#required' => TRUE,
     ];
+    $form['base_url'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Base URL'),
+      '#open' => TRUE,
+    ];
+    $form['base_url']['site_base_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Base URL'),
+      '#default_value' => $site_config->get('page.base_url'),
+      '#size' => 40,
+      '#description' => $this->t('Specify a base URL, in https://example.org format'),
+    ];
     $form['front_page'] = [
       '#type' => 'details',
       '#title' => $this->t('Front page'),
