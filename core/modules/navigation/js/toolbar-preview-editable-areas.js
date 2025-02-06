@@ -29,33 +29,21 @@
           return;
         }
 
-        const editableAreaBtnRegion = editableAreaBtn.parentElement;
         const contextualLinks = document.querySelectorAll('.contextual-region');
         // If no contextual links are present and only the "Editable Areas" button appears in the top bar tools section,
-        // remove the button and clear the tools section to ensure the toolbar keep hidden.
+        // remove the button and the top bar.
         if (contextualLinks.length === 0) {
-          // Determine the toolbar region selector based on the button's parent class.
-          let toolbarRegionSelector = 'top-bar__tools';
-          if (editableAreaBtnRegion.classList.contains('top-bar__actions')) {
-            toolbarRegionSelector = 'top-bar__actions';
-          } else if (
-            editableAreaBtnRegion.classList.contains('top-bar__context')
-          ) {
-            toolbarRegionSelector = 'top-bar__context';
-          }
-          const toolbarSection = document.querySelector(
-            `.${toolbarRegionSelector}`,
+          editableAreaBtn.remove();
+          const topBar = document.querySelector('.top-bar');
+          const sections = topBar?.querySelector('.top-bar__content');
+
+          if (!sections) return;
+
+          const hasContent = Array.from(sections.children).some(
+            (child) => child.children.length > 0,
           );
-          // If the toolbar section contains only the "Editable Areas" button, remove the button and clear the section.
-          if (
-            toolbarSection.children.length === 1 &&
-            toolbarSection.children[0].classList.contains(
-              'navigation-contextual-link',
-            )
-          ) {
-            // Remove the button and clear the section to ensure the toolbar keep hidden.
-            // Check the css rule at top-bar.pcss.css:36
-            toolbarSection.innerHTML = '';
+          if (!hasContent) {
+            topBar.remove();
           }
           return;
         }
