@@ -71,7 +71,7 @@ JS;
    * @param string $from
    *   The HTML selector for the element container.
    */
-  protected function sortableAfter($item, $target, $from) {
+  protected function sortableAfter($item, $target, $from): void {
     $item   = addslashes($item);
     $target = addslashes($target);
     $from   = addslashes($from);

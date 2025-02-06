@@ -26258,18 +26258,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\media_library\\\\FunctionalJavascript\\\\EntityReferenceWidgetTest\\:\\:sortableAfter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/EntityReferenceWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\media_library\\\\FunctionalJavascript\\\\EntityReferenceWidgetTest\\:\\:sortableTo\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/EntityReferenceWidgetTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\media_library\\\\FunctionalJavascript\\\\MediaLibraryTestBase\\:\\:addMediaFileToField\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
