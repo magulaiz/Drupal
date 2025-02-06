@@ -137,14 +137,10 @@ class DatabaseBackend implements CacheBackendInterface {
     // cache tags for all returned cache items for preloading, this allows the
     // cache tag service to optimize cache tag lookups.
     if ($this->checksumProvider instanceof CacheTagsChecksumPreloadInterface) {
-      $tags = [];
       foreach ($result as $item) {
         if ($item->tags) {
-          $tags = $tags + explode(' ', $item->tags);
+          $this->checksumProvider->registerCacheTagsForPreload(explode(' ', $item->tags));
         }
-      }
-      if ($tags) {
-        $this->checksumProvider->registerCacheTagsForPreload($tags);
       }
     }
     $cache = [];
