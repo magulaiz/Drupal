@@ -146,7 +146,7 @@
           localStorage.setItem('Drupal.navigation.sidebarExpanded', toState);
         };
 
-        if (context === document) {
+        if (triggers.length) {
           let firstState =
             localStorage.getItem('Drupal.navigation.sidebarExpanded') !==
             'false';
