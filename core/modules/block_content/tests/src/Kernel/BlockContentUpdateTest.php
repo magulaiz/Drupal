@@ -41,6 +41,8 @@ class BlockContentUpdateTest extends KernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('view');
+    $this->installEntitySchema('block_content');
+    $this->installEntitySchema('user');
     $this->installConfig(['block_content', 'views']);
 
     // Create a test view configuration with "area_text_custom".
