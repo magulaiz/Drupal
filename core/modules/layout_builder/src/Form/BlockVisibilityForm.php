@@ -3,6 +3,7 @@
 namespace Drupal\layout_builder\Form;
 
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormBuilderInterface;
@@ -60,7 +61,7 @@ class BlockVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('plugin.manager.condition'),
       $container->get('form_builder'),
@@ -71,7 +72,7 @@ class BlockVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'layout_builder_block_visibility';
   }
 
@@ -199,7 +200,7 @@ class BlockVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
+  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state): AjaxResponse {
     // The submit was triggered by the "update operator" button, just
     // rebuild the layout UI and close the dialog.
     return $this->rebuildAndClose($this->sectionStorage);
