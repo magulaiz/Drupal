@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
@@ -58,9 +59,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
   protected $fieldName = 'field_test';
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_reference_test', 'entity_test_update'];
 
@@ -110,7 +109,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $this->assertEquals(sprintf('The referenced entity (%s: 9999) does not exist.', $this->referencedEntityType), $violations[0]->getMessage());
 
     // Test a non-referenceable bundle.
-    entity_test_create_bundle('non_referenceable', NULL, $this->referencedEntityType);
+    EntityTestHelper::createBundle('non_referenceable', NULL, $this->referencedEntityType);
     $referenced_entity = $this->entityTypeManager
       ->getStorage($this->referencedEntityType)
       ->create(['type' => 'non_referenceable']);
@@ -275,7 +274,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
       });
       $this->fail($message);
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       // Expected exception; just continue testing.
     }
     $this->assertUserAutocreate($entity, function (EntityInterface $entity, UserInterface $user) {
@@ -309,7 +308,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
       });
       $this->fail($message);
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       // Expected exception; just continue testing.
     }
     $this->assertUserRoleAutocreate($entity, function (EntityInterface $entity, RoleInterface $role) {
@@ -426,7 +425,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
         ->create(['name' => $this->randomString()]);
       $entity->target_reference = $target_id;
     }
-    catch (EntityStorageException $e) {
+    catch (EntityStorageException) {
       $this->fail($message);
     }
 
@@ -437,7 +436,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
       $storage->load($target_id);
       $this->fail($message);
     }
-    catch (EntityStorageException $e) {
+    catch (EntityStorageException) {
       // Expected exception; just continue testing.
     }
   }

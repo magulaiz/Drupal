@@ -236,7 +236,6 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $session->getPage()->fillField('Name', 'Dog');
     $session->getPage()->pressButton('Apply filters');
     $this->waitForText('Dog');
-    $this->markTestSkipped("Skipped temporarily for random fails.");
     $this->waitForNoText('Bear');
     $session->getPage()->fillField('Name', '');
     $session->getPage()->pressButton('Apply filters');
@@ -283,8 +282,8 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
 
     // Assert the same has been added twice and remove the items again.
     $this->waitForElementsCount('css', '.field--name-field-twin-media [data-media-library-item-delta]', 2);
-    $assert_session->hiddenFieldValueEquals('field_twin_media[selection][0][target_id]', 4);
-    $assert_session->hiddenFieldValueEquals('field_twin_media[selection][1][target_id]', 4);
+    $assert_session->hiddenFieldValueEquals('field_twin_media[selection][0][target_id]', '4');
+    $assert_session->hiddenFieldValueEquals('field_twin_media[selection][1][target_id]', '4');
     $wrapper->pressButton('Remove');
     $this->waitForText('Dog has been removed.');
     $wrapper->pressButton('Remove');
@@ -567,7 +566,8 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
    * Checks for inclusion of text in #drupal-live-announce.
    *
    * @param string $expected_message
-   *   The text that is expected to be present in the #drupal-live-announce element.
+   *   The text that is expected to be present in the #drupal-live-announce
+   *   element.
    *
    * @internal
    */
@@ -579,7 +579,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function sortableUpdate($item, $from, $to = NULL) {
+  protected function sortableUpdate($item, $from, $to = NULL): void {
     // See core/modules/media_library/js/media_library.widget.js.
     $script = <<<JS
 (function ($) {

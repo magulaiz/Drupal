@@ -14,9 +14,7 @@ use Drupal\block_content\Entity\BlockContent;
 class BlockContentSaveTest extends BlockContentTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block_content_test'];
 
@@ -99,8 +97,8 @@ class BlockContentSaveTest extends BlockContentTestBase {
    * Tests saving a block on block insert.
    *
    * This test ensures that a block has been fully saved when
-   * hook_block_content_insert() is invoked, so that the block can be saved again
-   * in a hook implementation without errors.
+   * hook_block_content_insert() is invoked, so that the block can be saved
+   * again in a hook implementation without errors.
    *
    * @see block_test_block_insert()
    */
