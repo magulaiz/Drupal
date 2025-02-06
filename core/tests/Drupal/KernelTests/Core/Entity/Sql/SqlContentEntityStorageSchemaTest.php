@@ -49,7 +49,7 @@ class SqlContentEntityStorageSchemaTest extends EntityKernelTestBase {
    */
   public function testUpdateFieldStorageDefinitionThrowsException(): void {
     // Install the test entity type with an additional field.
-    // Dont care about the field type, just need a field with data.
+    // Don't care about the field type, just need a field with data.
     $field = BaseFieldDefinition::create('shape')
       ->setName('shape')
       ->setProvider('entity_test');
