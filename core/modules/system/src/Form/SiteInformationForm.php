@@ -216,7 +216,8 @@ class SiteInformationForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.site')
-      ->set('page.front', $form_state->getValue('site_frontpage'))
+    ->set('page.base_url', $form_state->getValue('site_base_url'))
+    ->set('page.front', $form_state->getValue('site_frontpage'))
       ->save();
 
     parent::submitForm($form, $form_state);
