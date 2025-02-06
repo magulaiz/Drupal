@@ -7,7 +7,7 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 
-// cspell:ignore fieldnid
+// cspell:ignore fieldnid blocknodebundle fieldbody
 
 /**
  * Test layout block visibility functionality.
