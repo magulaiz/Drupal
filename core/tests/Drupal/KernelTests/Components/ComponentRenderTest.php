@@ -286,7 +286,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   }
 
   /**
-   * Ensure that the slots allow a render array or a scalar when using the render element.
+   * Ensure that the slots allow a render array, a scalar or a TranslatableMarkup when using the render element.
    */
   public function checkSlots(): void {
     $slots = [
@@ -294,6 +294,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       [
         '#plain_text' => 'This is the contents of the banner body.',
       ],
+      $this->t('This is the translated contents of the banner body.'),
     ];
     foreach ($slots as $slot) {
       $build = [
