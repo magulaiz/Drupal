@@ -2,8 +2,6 @@
 
 namespace Drupal\taxonomy\Hook;
 
-use Drupal\taxonomy\Entity\Term;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
