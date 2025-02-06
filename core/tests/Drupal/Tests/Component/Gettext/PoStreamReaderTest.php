@@ -17,25 +17,35 @@ use PHPUnit\Framework\TestCase;
 class PoStreamReaderTest extends TestCase {
 
   /**
-   * Calling open should throws an exception if URI is invalid .
+   * Creates and returns a PoStreamReader instance with a fake URI.
+   *
+   * @return \Drupal\Component\Gettext\PoStreamReader
+   *   The PoStreamReader instance.
+   */
+  private function createPoStreamReader(): PoStreamReader {
+    $reader = new PoStreamReader();
+    $reader->setURI('fake');
+    return $reader;
+  }
+
+  /**
+   * Calling open should throw an exception if URI is invalid.
    *
    * See issue #3301239.
    */
   public function testOpenMethodThrowsExceptionOnInvalidURI(): void {
-    $reader = new PoStreamReader();
-    $reader->setURI('fake');
-    $this->expectException(\Exception::class);
+    $reader = $this->createPoStreamReader();
+    $this->expectException(Exception::class);
     $reader->open();
   }
 
   /**
-   * Validates that calling readItem with a NULL fd returns NULL.
+   * Validates that calling readItem with a NULL file descriptor returns NULL.
    *
    * See issue #3301239.
    */
   public function testOpeningFileError(): void {
-    $reader = new PoStreamReader();
-    $reader->setURI('fake');
+    $reader = $this->createPoStreamReader();
     $this->assertNull($reader->readItem());
   }
 
