@@ -28,12 +28,18 @@ abstract class ConfirmFormBase extends FormBase implements ConfirmFormInterface 
     return $this->t('Cancel');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getFormName() {
-    return 'confirm';
-  }
+/**
+ * {@inheritdoc}
+ *
+ * @deprecated in drupal:11.0.0 and is scheduled for removal in drupal:12.0.0.
+ *   Implementations should remove this method.
+ *
+ * @see https://www.drupal.org/node
+ */
+public function getFormName() {
+  @trigger_error('getFormName() is deprecated and will be removed in Drupal 12.0.0.', E_USER_DEPRECATED);
+  return 'confirm';
+}
 
   /**
    * {@inheritdoc}
