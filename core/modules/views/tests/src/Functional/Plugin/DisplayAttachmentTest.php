@@ -108,7 +108,7 @@ class DisplayAttachmentTest extends ViewTestBase {
    */
   public function testAttachmentPager(): void {
     $this->drupalGet('test-display-attachment-pager');
-    // verify that there are two pagers rendered.
+    // Verify that there are two pagers rendered.
     $this->assertSession()->elementsCount('xpath', '//nav[contains(@class, "pager")]', 2);
   }
 
