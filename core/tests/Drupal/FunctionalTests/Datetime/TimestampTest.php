@@ -20,7 +20,10 @@ use Drupal\Tests\BrowserTestBase;
 class TimestampTest extends BrowserTestBase {
 
   /**
-   * An array of display options to pass to EntityDisplayRepositoryInterface::getViewDisplay().
+   * An array of display options.
+   *
+   * These options are passed to
+   * EntityDisplayRepositoryInterface::getViewDisplay().
    *
    * @var array
    */
@@ -106,7 +109,7 @@ class TimestampTest extends BrowserTestBase {
   /**
    * Tests the "datetime_timestamp" widget.
    */
-  public function testWidget() {
+  public function testWidget(): void {
     // Build up a date in the UTC timezone.
     $value = '2012-12-31 00:00:00';
     $date = new DrupalDateTime($value, 'UTC');

@@ -78,7 +78,7 @@ trait MigrationConfigurationTrait {
         $system_data[$result['type']][$result['name']] = $result;
       }
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // The table might not exist for example in tests.
     }
     return $system_data;
@@ -167,7 +167,7 @@ trait MigrationConfigurationTrait {
         }
         $migrations[] = $migration;
       }
-      catch (RequirementsException $e) {
+      catch (RequirementsException) {
         // Migrations which are not applicable given the source and destination
         // site configurations (e.g., what modules are enabled) will be silently
         // ignored.
@@ -181,6 +181,7 @@ trait MigrationConfigurationTrait {
    * Returns the follow-up migration tags.
    *
    * @return string[]
+   *   An array of follow-up migration tags.
    */
   protected function getFollowUpMigrationTags() {
     if ($this->followUpMigrationTags === NULL) {
@@ -212,7 +213,7 @@ trait MigrationConfigurationTrait {
           ->query('SELECT [schema_version] FROM {system} WHERE [name] = :module', [':module' => 'system'])
           ->fetchField();
       }
-      catch (DatabaseExceptionWrapper $e) {
+      catch (DatabaseExceptionWrapper) {
         // All database errors return FALSE.
       }
     }

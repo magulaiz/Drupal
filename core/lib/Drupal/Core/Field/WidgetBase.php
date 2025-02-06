@@ -40,7 +40,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
    * Constructs a WidgetBase object.
    *
    * @param string $plugin_id
-   *   The plugin_id for the widget.
+   *   The plugin ID for the widget.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
@@ -281,7 +281,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
         $elements['add_more'] = [
           '#type' => 'submit',
           '#name' => strtr($id_prefix, '-', '_') . '_add_more',
-          '#value' => t('Add another item'),
+          '#value' => $this->t('Add another item'),
           '#attributes' => ['class' => ['field-add-more-submit']],
           '#limit_validation_errors' => [],
           '#submit' => [[static::class, 'addMoreSubmit']],

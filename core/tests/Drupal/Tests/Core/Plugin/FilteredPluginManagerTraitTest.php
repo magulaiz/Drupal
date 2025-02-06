@@ -22,7 +22,7 @@ class FilteredPluginManagerTraitTest extends UnitTestCase {
    * @covers ::getFilteredDefinitions
    * @dataProvider providerTestGetFilteredDefinitions
    */
-  public function testGetFilteredDefinitions($contexts, $expected) {
+  public function testGetFilteredDefinitions($contexts, $expected): void {
     // Start with two plugins.
     $definitions = [];
     $definitions['plugin1'] = ['id' => 'plugin1'];
@@ -85,12 +85,24 @@ class TestFilteredPluginManager extends PluginManagerBase implements FilteredPlu
 
   use FilteredPluginManagerTrait;
 
+  /**
+   * An array of plugin definitions.
+   */
   protected $definitions = [];
 
+  /**
+   * The module handler.
+   */
   protected $moduleHandler;
 
+  /**
+   * The theme manager.
+   */
   protected $themeManager;
 
+  /**
+   * The context handler.
+   */
   protected $contextHandler;
 
   public function __construct(array $definitions, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, ContextHandlerInterface $context_handler) {
@@ -112,7 +124,7 @@ class TestFilteredPluginManager extends PluginManagerBase implements FilteredPlu
     return $this->themeManager;
   }
 
-  protected function getType() {
+  protected function getType(): string {
     return 'the_type';
   }
 
