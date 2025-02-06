@@ -5,6 +5,7 @@ namespace Drupal\views_ui;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\TempStore\Lock;
@@ -39,7 +40,7 @@ class ViewUI implements ViewEntityInterface {
    *
    * @var array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $changed_display;
 
   /**
@@ -47,7 +48,7 @@ class ViewUI implements ViewEntityInterface {
    *
    * @var float
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $render_time;
 
   /**
@@ -72,7 +73,7 @@ class ViewUI implements ViewEntityInterface {
    *
    * @var array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $temporary_options;
 
   /**
@@ -87,10 +88,8 @@ class ViewUI implements ViewEntityInterface {
    *
    * @var bool
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $live_preview;
-
-  public $renderPreview = FALSE;
 
   /**
    * The View storage object.
@@ -601,8 +600,9 @@ class ViewUI implements ViewEntityInterface {
 
       // Suppress contextual links of entities within the result set during a
       // Preview.
-      // @todo We'll want to add contextual links specific to editing the View, so
-      //   the suppression may need to be moved deeper into the Preview pipeline.
+      // @todo We'll want to add contextual links specific to editing the View,
+      //   so the suppression may need to be moved deeper into the Preview
+      //   pipeline.
       views_ui_contextual_links_suppress_push();
 
       $show_additional_queries = $config->get('ui.show.additional_queries');
@@ -1378,6 +1378,21 @@ class ViewUI implements ViewEntityInterface {
    */
   public function unsetLock() {
     $this->lock = NULL;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOriginal(): ?static {
+    return $this->storage->getOriginal();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOriginal(?EntityInterface $original): static {
+    $this->storage->setOriginal($original);
     return $this;
   }
 

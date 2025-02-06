@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @group Utility
- * @group #slow
  *
  * @coversDefaultClass \Drupal\Component\Utility\UrlHelper
  */
@@ -33,15 +32,15 @@ class UrlHelperTest extends TestCase {
   /**
    * Tests query building.
    *
-   * @dataProvider providerTestBuildQuery
-   * @covers ::buildQuery
-   *
    * @param array $query
    *   The array of query parameters.
    * @param string $expected
    *   The expected query string.
    * @param string $message
    *   The assertion message.
+   *
+   * @dataProvider providerTestBuildQuery
+   * @covers ::buildQuery
    */
   public function testBuildQuery($query, $expected, $message): void {
     $this->assertEquals(UrlHelper::buildQuery($query), $expected, $message);
@@ -82,13 +81,13 @@ class UrlHelperTest extends TestCase {
   /**
    * Tests valid absolute URLs.
    *
-   * @dataProvider providerTestValidAbsoluteData
-   * @covers ::isValid
-   *
    * @param string $url
    *   The URL to test.
    * @param string $scheme
    *   The scheme to test.
+   *
+   * @dataProvider providerTestValidAbsoluteData
+   * @covers ::isValid
    */
   public function testValidAbsolute(string $url, string $scheme): void {
     $test_url = $scheme . '://' . $url;
@@ -137,13 +136,13 @@ class UrlHelperTest extends TestCase {
   /**
    * Tests invalid absolute URLs.
    *
-   * @dataProvider providerTestInvalidAbsolute
-   * @covers ::isValid
-   *
    * @param string $url
    *   The URL to test.
    * @param string $scheme
    *   The scheme to test.
+   *
+   * @dataProvider providerTestInvalidAbsolute
+   * @covers ::isValid
    */
   public function testInvalidAbsolute(string $url, string $scheme): void {
     $test_url = $scheme . '://' . $url;
@@ -171,13 +170,13 @@ class UrlHelperTest extends TestCase {
   /**
    * Tests valid relative URLs.
    *
-   * @dataProvider providerTestValidRelativeData
-   * @covers ::isValid
-   *
    * @param string $url
    *   The URL to test.
    * @param string $prefix
    *   The prefix to test.
+   *
+   * @dataProvider providerTestValidRelativeData
+   * @covers ::isValid
    */
   public function testValidRelative(string $url, string $prefix): void {
     $test_url = $prefix . $url;
@@ -203,13 +202,13 @@ class UrlHelperTest extends TestCase {
   /**
    * Tests invalid relative URLs.
    *
-   * @dataProvider providerTestInvalidRelativeData
-   * @covers ::isValid
-   *
    * @param string $url
    *   The URL to test.
    * @param string $prefix
    *   The prefix to test.
+   *
+   * @dataProvider providerTestInvalidRelativeData
+   * @covers ::isValid
    */
   public function testInvalidRelative(string $url, string $prefix): void {
     $test_url = $prefix . $url;
@@ -220,9 +219,6 @@ class UrlHelperTest extends TestCase {
   /**
    * Tests query filtering.
    *
-   * @dataProvider providerTestFilterQueryParameters
-   * @covers ::filterQueryParameters
-   *
    * @param array $query
    *   The array of query parameters.
    * @param array $exclude
@@ -230,6 +226,9 @@ class UrlHelperTest extends TestCase {
    *   nested items.
    * @param array $expected
    *   An array containing query parameters.
+   *
+   * @dataProvider providerTestFilterQueryParameters
+   * @covers ::filterQueryParameters
    */
   public function testFilterQueryParameters($query, $exclude, $expected): void {
     $filtered = UrlHelper::filterQueryParameters($query, $exclude);
@@ -261,13 +260,13 @@ class UrlHelperTest extends TestCase {
   /**
    * Tests URL parsing.
    *
-   * @dataProvider providerTestParse
-   * @covers ::parse
-   *
    * @param string $url
    *   URL to test.
    * @param array $expected
    *   Associative array with expected parameters.
+   *
+   * @dataProvider providerTestParse
+   * @covers ::parse
    */
   public function testParse($url, $expected): void {
     $parsed = UrlHelper::parse($url);
@@ -383,13 +382,13 @@ class UrlHelperTest extends TestCase {
   /**
    * Tests path encoding.
    *
-   * @dataProvider providerTestEncodePath
-   * @covers ::encodePath
-   *
    * @param string $path
    *   A path to encode.
    * @param string $expected
    *   The expected encoded path.
+   *
+   * @dataProvider providerTestEncodePath
+   * @covers ::encodePath
    */
   public function testEncodePath($path, $expected): void {
     $encoded = UrlHelper::encodePath($path);
@@ -411,13 +410,13 @@ class UrlHelperTest extends TestCase {
   /**
    * Tests external versus internal paths.
    *
-   * @dataProvider providerTestIsExternal
-   * @covers ::isExternal
-   *
    * @param string $path
    *   URL or path to test.
    * @param bool $expected
    *   Expected result.
+   *
+   * @dataProvider providerTestIsExternal
+   * @covers ::isExternal
    */
   public function testIsExternal($path, $expected): void {
     $isExternal = UrlHelper::isExternal($path);
@@ -468,10 +467,6 @@ class UrlHelperTest extends TestCase {
   /**
    * Tests bad protocol filtering and escaping.
    *
-   * @dataProvider providerTestFilterBadProtocol
-   * @covers ::setAllowedProtocols
-   * @covers ::filterBadProtocol
-   *
    * @param string $uri
    *   Protocol URI.
    * @param string $expected
@@ -479,6 +474,9 @@ class UrlHelperTest extends TestCase {
    * @param array $protocols
    *   Protocols to allow.
    *
+   * @dataProvider providerTestFilterBadProtocol
+   * @covers ::setAllowedProtocols
+   * @covers ::filterBadProtocol
    * @runInSeparateProcess
    */
   public function testFilterBadProtocol($uri, $expected, $protocols): void {
@@ -509,10 +507,6 @@ class UrlHelperTest extends TestCase {
   /**
    * Tests dangerous URL protocol filtering.
    *
-   * @dataProvider providerTestStripDangerousProtocols
-   * @covers ::setAllowedProtocols
-   * @covers ::stripDangerousProtocols
-   *
    * @param string $uri
    *   Protocol URI.
    * @param string $expected
@@ -520,6 +514,9 @@ class UrlHelperTest extends TestCase {
    * @param array $protocols
    *   Protocols to allow.
    *
+   * @dataProvider providerTestStripDangerousProtocols
+   * @covers ::setAllowedProtocols
+   * @covers ::stripDangerousProtocols
    * @runInSeparateProcess
    */
   public function testStripDangerousProtocols($uri, $expected, $protocols): void {
