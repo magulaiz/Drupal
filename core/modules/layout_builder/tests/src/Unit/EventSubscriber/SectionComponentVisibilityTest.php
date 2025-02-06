@@ -32,6 +32,11 @@ use Drupal\Tests\UnitTestCase;
  */
 class SectionComponentVisibilityTest extends UnitTestCase {
 
+  /**
+   * The condition plugin manager.
+   *
+   * @var \Drupal\Core\Executable\ExecutableManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
   protected $conditionManager;
 
   /**
@@ -57,7 +62,7 @@ class SectionComponentVisibilityTest extends UnitTestCase {
    *
    * @covers ::onBuildRender
    */
-  public function testOnBuildRenderPreview() {
+  public function testOnBuildRenderPreview(): void {
     $subscriber = new SectionComponentVisibility(
       new ContextHandler(),
       $this->conditionManager
@@ -77,7 +82,7 @@ class SectionComponentVisibilityTest extends UnitTestCase {
    *
    * @covers ::onBuildRender
    */
-  public function testOnBuildRenderNonPreviewEmpty() {
+  public function testOnBuildRenderNonPreviewEmpty(): void {
     $subscriber = new SectionComponentVisibility(
       new ContextHandler(),
       $this->conditionManager
@@ -96,7 +101,7 @@ class SectionComponentVisibilityTest extends UnitTestCase {
    *
    * @covers ::onBuildRender
    */
-  public function testOnBuildRenderNonPreviewBadPlugin() {
+  public function testOnBuildRenderNonPreviewBadPlugin(): void {
     $subscriber = new SectionComponentVisibility(
       new ContextHandler(),
       $this->conditionManager
@@ -122,7 +127,7 @@ class SectionComponentVisibilityTest extends UnitTestCase {
    *
    * @covers ::onBuildRender
    */
-  public function testOnBuildRenderNonPreviewResolveContextAware() {
+  public function testOnBuildRenderNonPreviewResolveContextAware(): void {
     // Mock context aware plugin that will be used to assert we receive context.
     $context_aware_plugin = $this->prophesize(ConditionInterface::class)
       ->willImplement(ContextAwarePluginInterface::class);
@@ -178,7 +183,7 @@ class SectionComponentVisibilityTest extends UnitTestCase {
    * @covers ::onBuildRender
    * @dataProvider buildRenderResolves
    */
-  public function testOnBuildRenderNonPreviewResolve($result, $context_results) {
+  public function testOnBuildRenderNonPreviewResolve($result, $context_results): void {
     $uuid_factory = new UuidFactory();
     $visibility_def = [];
 
@@ -227,7 +232,7 @@ class SectionComponentVisibilityTest extends UnitTestCase {
    * @return array
    *   Method parameters for testOnBuildRenderNonPreviewResolve().
    */
-  public function buildRenderResolves() {
+  public static function buildRenderResolves(): array {
     return [
       [TRUE, ['foo' => TRUE, 'bar' => TRUE]],
       [FALSE, ['foo' => TRUE, 'bar' => FALSE]],

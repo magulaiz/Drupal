@@ -39,7 +39,7 @@ class SectionComponentVisibility implements EventSubscriberInterface {
    * @param \Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent $event
    *   The section component build render array event.
    */
-  public function onBuildRender(SectionComponentBuildRenderArrayEvent $event) {
+  public function onBuildRender(SectionComponentBuildRenderArrayEvent $event): void {
     if ($event->inPreview()) {
       return;
     }

@@ -18,6 +18,9 @@ class BlockVisibilityTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;
 
+  /**
+   * {@inheritdoc}
+   */
   protected $defaultTheme = 'olivero';
 
   /**
@@ -299,7 +302,7 @@ class BlockVisibilityTest extends WebDriverTestBase {
    * @param string $rendered_locator
    *   The CSS locator to confirm the block was rendered.
    */
-  protected function addBlock($block_link_text, $region_selector, $rendered_locator) {
+  protected function addBlock($block_link_text, $region_selector, $rendered_locator): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

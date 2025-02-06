@@ -86,7 +86,7 @@ class ConfigureVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('layout_builder.tempstore_repository'),
       $container->get('plugin.manager.condition'),
@@ -200,7 +200,7 @@ class ConfigureVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     $subform_state = SubformState::createForSubform($form['settings'], $form, $form_state);
     $this->getConditionPluginForm($this->condition)->validateConfigurationForm($form['settings'], $subform_state);
   }
@@ -208,7 +208,7 @@ class ConfigureVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     // Call the plugin submit handler.
     $subform_state = SubformState::createForSubform($form['settings'], $form, $form_state);
     $this->getConditionPluginForm($this->condition)->submitConfigurationForm($form, $subform_state);
