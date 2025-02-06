@@ -75,6 +75,7 @@ class PageEditableAreas extends TopBarItemBase implements ContainerFactoryPlugin
         '#attached' => [
           'library' => [
             'contextual/drupal.contextual-toolbar',
+            'navigation/internal.preview-editable-areas',
           ],
         ],
       ],

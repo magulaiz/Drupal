@@ -113,3 +113,10 @@ internal.safe-triangle:
   dependencies:
     - core/drupal
     - core/once
+
+internal.preview-editable-areas:
+  js:
+    js/toolbar-preview-editable-areas.js: {}
+  dependencies:
+    - core/once
+
