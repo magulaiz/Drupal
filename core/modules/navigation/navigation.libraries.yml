@@ -119,4 +119,3 @@ internal.preview-editable-areas:
     js/toolbar-preview-editable-areas.js: {}
   dependencies:
     - core/once
-

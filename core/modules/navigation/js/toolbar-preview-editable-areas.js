@@ -12,7 +12,6 @@
 
 (
   (Drupal, once) => {
-
     /**
      * Toggle contextual menu links.
      *
