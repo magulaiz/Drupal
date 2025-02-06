@@ -177,15 +177,21 @@ class TestPluginDependency {
     getPluginDependencies as public;
   }
 
+  /**
+   * The module handler.
+   */
   protected $moduleHandler;
 
+  /**
+   * The theme handler.
+   */
   protected $themeHandler;
 
-  public function setModuleHandler(ModuleHandlerInterface $module_handler) {
+  public function setModuleHandler(ModuleHandlerInterface $module_handler): void {
     $this->moduleHandler = $module_handler;
   }
 
-  public function setThemeHandler(ThemeHandlerInterface $theme_handler) {
+  public function setThemeHandler(ThemeHandlerInterface $theme_handler): void {
     $this->themeHandler = $theme_handler;
   }
 
