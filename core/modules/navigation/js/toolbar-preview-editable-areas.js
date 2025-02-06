@@ -13,30 +13,6 @@
 (
   (Drupal, once) => {
     /**
-     * Create navigation toggle contextual links button.
-     *
-     * @return {HTMLButtonElement}
-     *   The button element.
-     */
-    const navigationToggleContextualLinksBtn = () => {
-      const button = document.createElement('button');
-      // Add classes
-      button.classList.add(
-        'toolbar-button',
-        'navigation-contextual-link',
-        'toolbar-button--icon--close-preview',
-      );
-
-      // Set attributes
-      button.setAttribute('aria-label', Drupal.t('Editable areas'));
-      button.setAttribute('aria-pressed', 'false');
-
-      // Set button text
-      button.textContent = Drupal.t('Editable areas');
-      return button;
-    };
-
-    /**
      * Toggle contextual menu links.
      *
      * @type {Drupal~behavior}
@@ -50,16 +26,11 @@
         const buttonAlreadyAdded = document.querySelector(
           '.navigation-contextual-link',
         );
-        if (contextualLinks.length === 0 || buttonAlreadyAdded) {
+        if (contextualLinks.length === 0) {
+          buttonAlreadyAdded?.remove();
           return;
         }
 
-        const sections = document.querySelector('.top-bar .top-bar__content');
-        const toolsSection = sections.querySelector('.top-bar__tools');
-        if (!toolsSection) return;
-
-        // Add the Editable areas button to the toolbar.
-        toolsSection?.appendChild(navigationToggleContextualLinksBtn());
         const showText = Drupal.t('Editable areas');
         const hideText = Drupal.t('Hide editable areas');
 

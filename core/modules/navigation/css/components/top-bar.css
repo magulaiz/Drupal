@@ -36,11 +36,15 @@
     padding-inline: calc(var(--drupal-displace-offset-right, var(--admin-toolbar-sidebar-width)) + var(--admin-toolbar-space-32)) var(--admin-toolbar-space-32);
   }
 }
-.top-bar:has(.top-bar__tools:not(:empty), .top-bar__context:not(:empty), .top-bar__actions:not(:empty)) {
+.top-bar:has(.top-bar__tools *),
+.top-bar:has(.top-bar__context *),
+.top-bar:has(.top-bar__actions *) {
   display: block;
 }
 @media (min-width: 64rem) {
-  .top-bar:has(.top-bar__tools:not(:empty), .top-bar__context:not(:empty), .top-bar__actions:not(:empty)) ~ .dialog-off-canvas-main-canvas {
+  .top-bar:has(.top-bar__tools *) ~ .dialog-off-canvas-main-canvas,
+  .top-bar:has(.top-bar__context *) ~ .dialog-off-canvas-main-canvas,
+  .top-bar:has(.top-bar__actions *) ~ .dialog-off-canvas-main-canvas {
     margin-block-start: var(--admin-toolbar-top-bar-height);
   }
 }

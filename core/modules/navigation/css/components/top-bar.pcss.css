@@ -33,7 +33,9 @@
   }
 }
 
-.top-bar:has(.top-bar__tools:not(:empty), .top-bar__context:not(:empty), .top-bar__actions:not(:empty)) {
+.top-bar:has(.top-bar__tools *),
+.top-bar:has(.top-bar__context *),
+.top-bar:has(.top-bar__actions *) {
   display: block;
 
   ~ .dialog-off-canvas-main-canvas {
