@@ -755,16 +755,12 @@ class ViewExecutable {
           foreach ($this->$type as $handler) {
             if ($handler->canExpose() && $handler->isExposed()) {
               // Pick up POST data for all the exposed handlers.
-              if (!empty($handler->options['expose']['use_operator']) && !empty($handler->options['expose']['operator_id'])) {
-                $exposed_field_names[] = $handler->options['expose']['operator_id'];
+              $options = $handler->options;
+              if (!empty($options['expose']['use_operator']) && !empty($options['expose']['operator_id'])) {
+                $exposed_field_names[] = $options['expose']['operator_id'];
               }
-              if (!empty($handler->options['expose']['identifier'])) {
-                if ($handler->isAGroup()) {
-                  $exposed_field_names[] = $handler->options['group_info']['identifier'];
-                }
-                else {
-                  $exposed_field_names[] = $handler->options['expose']['identifier'];
-                }
+              if (!empty($options['expose']['identifier'])) {
+                $exposed_field_names[] = ($handler->isAGroup()) ? $options['group_info']['identifier'] : $options['expose']['identifier'];
               }
             }
           }

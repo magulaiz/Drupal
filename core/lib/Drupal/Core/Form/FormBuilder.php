@@ -1425,11 +1425,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * {@inheritdoc}
    */
   protected function getRequestWrapperFormat(): string {
+    $result = '';
     $current_request = $this->requestStack->getCurrentRequest();
     if ($current_request) {
-      return $current_request->get(MainContentViewSubscriber::WRAPPER_FORMAT) ?? '';
+      $result = $current_request->get(MainContentViewSubscriber::WRAPPER_FORMAT) ?? $result;
     }
-    return '';
+    return $result;
   }
 
   /**
