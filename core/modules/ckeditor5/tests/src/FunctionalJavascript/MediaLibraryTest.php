@@ -13,7 +13,7 @@ use Drupal\media\Entity\Media;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
-use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 // cspell:ignore arrakis complote détruire harkonnen
 
@@ -97,7 +97,7 @@ class MediaLibraryTest extends WebDriverTestBase {
       ],
     ])->save();
     $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
+      function (ConstraintViolationInterface $v) {
         return (string) $v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair(
@@ -155,7 +155,7 @@ class MediaLibraryTest extends WebDriverTestBase {
   /**
    * Tests using drupalMedia button to embed media into CKEditor 5.
    */
-  public function testButton() {
+  public function testButton(): void {
     // Skipped due to frequent random test failures.
     // @todo Fix this and stop skipping it at https://www.drupal.org/i/3351597.
     $this->markTestSkipped();
@@ -226,7 +226,7 @@ class MediaLibraryTest extends WebDriverTestBase {
   /**
    * Tests the allowed media types setting on the MediaEmbed filter.
    */
-  public function testAllowedMediaTypes() {
+  public function testAllowedMediaTypes(): void {
     $test_cases = [
       'all_media_types' => [],
       'only_image' => ['image' => 'image'],
@@ -278,7 +278,7 @@ class MediaLibraryTest extends WebDriverTestBase {
   /**
    * Ensures that alt text can be changed on Media Library inserted Media.
    */
-  public function testAlt() {
+  public function testAlt(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

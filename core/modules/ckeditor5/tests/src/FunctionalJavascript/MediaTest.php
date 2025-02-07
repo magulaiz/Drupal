@@ -15,9 +15,10 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\media\Entity\Media;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
-use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
-// cspell:ignore alternatif hurlant layercake tatou texte zartan
+// cspell:ignore alternatif drupalelementstyle hurlant layercake tatou texte
+// cspell:ignore zartan
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
@@ -28,9 +29,21 @@ use Symfony\Component\Validator\ConstraintViolation;
 class MediaTest extends MediaTestBase {
 
   /**
+   * Tests the drupal-media tag.
+   */
+  public function testDrupalMedia(): void {
+    $this->testConversion();
+    $this->testOnlyDrupalMediaTagProcessed();
+    $this->testEditableCaption();
+    $this->testAlignment();
+    $this->testAlt();
+    $this->testMediaSplitList();
+  }
+
+  /**
    * Tests that `<drupal-media>` is converted into a block element.
    */
-  public function testConversion() {
+  protected function testConversion(): void {
     // Wrap the `<drupal-media>` markup in a `<p>`.
     $original_value = $this->host->body->value;
     $this->host->body->value = '<p>foo' . $original_value . '</p>';
@@ -50,7 +63,7 @@ class MediaTest extends MediaTestBase {
    *
    * @see \Drupal\Tests\media\Kernel\MediaEmbedFilterTest::testOnlyDrupalMediaTagProcessed()
    */
-  public function testOnlyDrupalMediaTagProcessed() {
+  protected function testOnlyDrupalMediaTagProcessed(): void {
     $original_value = $this->host->body->value;
     $this->host->body->value = str_replace('drupal-media', 'p', $original_value);
     $this->host->save();
@@ -75,7 +88,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests adding media to a list does not split the list.
    */
-  public function testMediaSplitList() {
+  protected function testMediaSplitList(): void {
     $assert_session = $this->assertSession();
 
     $editor = Editor::load('test_format');
@@ -104,7 +117,7 @@ class MediaTest extends MediaTestBase {
     $filter_format->save();
 
     $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
+      function (ConstraintViolationInterface $v) {
         return (string) $v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair(
@@ -136,7 +149,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests that arbitrary attributes are allowed via GHS.
    */
-  public function testMediaArbitraryHtml() {
+  public function testMediaArbitraryHtml(): void {
     $assert_session = $this->assertSession();
 
     $editor = Editor::load('test_format');
@@ -158,7 +171,7 @@ class MediaTest extends MediaTestBase {
     ]);
     $filter_format->save();
     $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
+      function (ConstraintViolationInterface $v) {
         return (string) $v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair(
@@ -193,7 +206,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests caption editing in the CKEditor widget.
    */
-  public function testEditableCaption() {
+  protected function testEditableCaption(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     // Test that setting caption to blank string doesn't break 'Edit media'
@@ -362,7 +375,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests the CKEditor 5 media plugin can override image media's alt attribute.
    */
-  public function testAlt() {
+  protected function testAlt(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $this->drupalGet($this->host->toUrl('edit-form'));
@@ -472,7 +485,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests the CKEditor 5 media plugin loads the translated alt attribute.
    */
-  public function testTranslationAlt() {
+  public function testTranslationAlt(): void {
     \Drupal::service('module_installer')->install(['language', 'content_translation']);
     $this->resetAll();
     ConfigurableLanguage::createFromLangcode('fr')->save();
@@ -572,7 +585,7 @@ class MediaTest extends MediaTestBase {
    * the media style toolbar allows altering the alignment and that the changes
    * are reflected on the widget and downcast drupal-media tag.
    */
-  public function testAlignment() {
+  protected function testAlignment(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->drupalGet($this->host->toUrl('edit-form'));
@@ -583,7 +596,7 @@ class MediaTest extends MediaTestBase {
     // Ensure that by default the "Break text" alignment option is selected.
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    $this->assertTrue(($align_button = $this->getBalloonButton('Break text'))->hasClass('ck-on'));
+    $this->assertTrue($this->getBalloonButton('Break text')->hasClass('ck-on'));
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
@@ -623,7 +636,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Ensures that Drupal Media Styles can be displayed in a dropdown.
    */
-  public function testDrupalMediaStyleInDropdown() {
+  public function testDrupalMediaStyleInDropdown(): void {
     \Drupal::service('module_installer')->install(['ckeditor5_drupalelementstyle_test']);
     $this->resetAll();
 
@@ -660,7 +673,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests Drupal Media Style with a CSS class.
    */
-  public function testDrupalMediaStyleWithClass() {
+  public function testDrupalMediaStyleWithClass(): void {
     $editor = Editor::load('test_format');
     $editor->setSettings([
       'toolbar' => [
@@ -698,7 +711,7 @@ class MediaTest extends MediaTestBase {
     $editor->save();
 
     $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
+      function (ConstraintViolationInterface $v) {
         return (string) $v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair(
@@ -747,7 +760,7 @@ class MediaTest extends MediaTestBase {
    *
    * @dataProvider providerTestViewMode
    */
-  public function testViewMode(bool $with_alignment) {
+  public function testViewMode(bool $with_alignment): void {
     EntityViewMode::create([
       'id' => 'media.view_mode_3',
       'targetEntityType' => 'media',
