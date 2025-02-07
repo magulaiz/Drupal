@@ -8,8 +8,12 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Entity\EntityCreateAccessCheck;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\InputBag;
+use Symfony\Component\Routing\Route;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityCreateAccessCheck
@@ -118,6 +122,37 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
 
     $account = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->assertEquals($expected_access_result, $applies_check->access($route, $route_match, $account));
+  }
+
+  /**
+   * Tests an exception is thrown if no bundle is specified but is required.
+   */
+  public function testAccessThrowsExceptionWhenNoBundleSpecified(): void {
+    // Mock the entity type manager to return an entity type definition that
+    // requires a bundle.
+    $entityType = $this->createMock(EntityTypeInterface::class);
+    $entityType
+      ->method('hasKey')
+      ->willReturn(TRUE);
+    $this->entityTypeManager
+      ->method('getDefinition')
+      ->willReturn($entityType);
+
+    // Mock the route to return a _entity_create_access requirement
+    // that has no bundle set.
+    $route = $this->createMock(Route::class);
+    $route
+      ->method('getRequirement')
+      ->with('_entity_create_access')
+      ->willReturn('entity_test');
+
+    $route_match = $this->createMock(RouteMatchInterface::class);
+    $account = $this->createMock(AccountInterface::class);
+
+    // Expect an exception to be thrown.
+    $this->expectException(\InvalidArgumentException::class);
+    $accessCheck = new EntityCreateAccessCheck($this->entityTypeManager);
+    $accessCheck->access($route, $route_match, $account);
   }
 
 }
