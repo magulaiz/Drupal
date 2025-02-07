@@ -58,7 +58,8 @@ class DblogHooks {
   /**
    * Implements hook_cron().
    *
-   * Controls the size of the log table, paring it to 'dblog_row_limit' messages.
+   * Controls the size of the log table, paring it to 'dblog_row_limit'
+   * messages.
    */
   #[Hook('cron')]
   public function cron(): void {
@@ -100,7 +101,7 @@ class DblogHooks {
    * Implements hook_views_pre_render().
    */
   #[Hook('views_pre_render')]
-  public function viewsPreRender(ViewExecutable $view) {
+  public function viewsPreRender(ViewExecutable $view): void {
     if (isset($view) && $view->storage->get('base_table') == 'watchdog') {
       $view->element['#attached']['library'][] = 'dblog/drupal.dblog';
     }
