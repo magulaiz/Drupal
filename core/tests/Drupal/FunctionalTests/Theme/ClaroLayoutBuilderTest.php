@@ -6,6 +6,7 @@ namespace Drupal\FunctionalTests\Theme;
 
 use Drupal\Core\Layout\LayoutPluginManager;
 use Drupal\Tests\BrowserTestBase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Tests the layout builder with the Claro theme.
@@ -13,6 +14,7 @@ use Drupal\Tests\BrowserTestBase;
  * @group claro
  */
 class ClaroLayoutBuilderTest extends BrowserTestBase {
+  use ProphecyTrait;
 
   /**
    * {@inheritdoc}
@@ -155,14 +157,16 @@ class ClaroLayoutBuilderTest extends BrowserTestBase {
 
     // Attempt to load the Layout Builder form again.
     $this->drupalGet('admin/structure/types/manage/test_layout_content/display/default');
-    
+
     // Check if Layout Builder still functions and provides a recovery option.
     $assert_session->pageTextContains('The "layout_test_plugin" plugin does not exist.');
     $assert_session->pageTextContains('Please select a new layout or reconfigure your settings.');
   }
 
   /**
-   * Simulates a missing layout plugin by overriding the layout manager's definitions.
+   * Simulates a missing layout plugin.
+   *
+   * By overriding the layout manager's definitions.
    *
    * @param string $layout_id
    *   The ID of the layout to remove.
@@ -182,7 +186,7 @@ class ClaroLayoutBuilderTest extends BrowserTestBase {
     // Override the service container with modified definitions.
     $mock_plugin_manager = $this->prophesize(LayoutPluginManager::class);
     $mock_plugin_manager->getDefinitions()->willReturn($definitions);
-    
+
     // Replace the service in the container.
     \Drupal::getContainer()->set('plugin.manager.core.layout', $mock_plugin_manager->reveal());
   }
