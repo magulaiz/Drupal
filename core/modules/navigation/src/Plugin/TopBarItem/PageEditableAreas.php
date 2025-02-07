@@ -67,7 +67,10 @@ class PageEditableAreas extends TopBarItemBase implements ContainerFactoryPlugin
         '#component' => 'navigation:toolbar-button',
         '#props' => [
           'icon' => 'preview',
-          'extra_classes' => ['navigation-contextual-link'],
+          'extra_classes' => [
+            'navigation-contextual-link',
+            'hidden',
+          ],
         ],
         '#slots' => [
           'content' => (string) $this->t('Editable areas'),

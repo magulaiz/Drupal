@@ -23,14 +23,14 @@
     Drupal.behaviors.navigationToggleContextualLinks = {
       attach: () => {
         const contextualLinks = document.querySelectorAll('.contextual-region');
-        const buttonAlreadyAdded = document.querySelector(
+        const editableAreaBtn = document.querySelector(
           '.navigation-contextual-link',
         );
         if (contextualLinks.length === 0) {
-          buttonAlreadyAdded?.remove();
+          editableAreaBtn?.remove();
           return;
         }
-
+        editableAreaBtn.classList.remove('hidden');
         const showText = Drupal.t('Editable areas');
         const hideText = Drupal.t('Hide editable areas');
 
@@ -42,29 +42,25 @@
           );
           btn.textContent = !isEditing ? hideText : showText;
         };
-
-        once('preview-editable-areas', '.navigation-contextual-link').forEach(
-          (btn) => {
-            // Set initial state
+        once('preview-editable-areas', editableAreaBtn).forEach((btn) => {
+          // Set initial state
+          toggleButtonState(
+            localStorage.getItem('Drupal.contextualToolbar.isViewing') === null,
+            btn,
+          );
+          // Listen to click event.
+          btn.addEventListener('click', (e) => {
             toggleButtonState(
-              localStorage.getItem('Drupal.contextualToolbar.isViewing') ===
-                null,
+              !Drupal.contextualToolbar.model.get('isViewing'),
               btn,
             );
-            // Listen to click event.
-            btn.addEventListener('click', (e) => {
-              toggleButtonState(
-                !Drupal.contextualToolbar.model.get('isViewing'),
-                btn,
-              );
-              Drupal.contextualToolbar.model.set(
-                'isViewing',
-                !Drupal.contextualToolbar.model.get('isViewing'),
-              );
-              e.preventDefault();
-            });
-          },
-        );
+            Drupal.contextualToolbar.model.set(
+              'isViewing',
+              !Drupal.contextualToolbar.model.get('isViewing'),
+            );
+            e.preventDefault();
+          });
+        });
       },
     };
   }
