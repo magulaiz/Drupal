@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines the config translation list builder for entity display entities.
  */
-class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldListBuilder {
+class ConfigTranslationEntityDisplayListBuilder extends BundleAwareConfigEntityListBuilder {
 
   /**
    * Context display id.
@@ -92,6 +92,7 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity): array {
+    /** @var \Drupal\Core\Entity\Display\EntityDisplayInterface $entity */
     $row = parent::buildRow($entity);
     $row['label']['data'] = $entity->getMode() == 'default' ? $this->t('Default') : $this->entityTypeManager
       ->getStorage('entity_' . $this->displayContext . '_mode')
@@ -113,6 +114,7 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
    * {@inheritdoc}
    */
   public function getOperations(EntityInterface $entity): array {
+    /** @var \Drupal\Core\Entity\Display\EntityDisplayInterface $entity */
     if ($this->currentUser->hasPermission('translate configuration')) {
       // Entity displays have no canonical no direct edit-form links so we
       // hard-code the route to the translation operation.
