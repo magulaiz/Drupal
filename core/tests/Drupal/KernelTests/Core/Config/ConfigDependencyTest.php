@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Config;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests for configuration dependencies.
@@ -638,6 +640,69 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $this->assertEquals($entity2->uuid(), $config_entities['delete'][0]->uuid(), 'Entity 2 will be deleted.');
     $this->assertEmpty($config_entities['update'], 'No dependencies of the content entity will be updated.');
     $this->assertEmpty($config_entities['unchanged'], 'No dependencies of the content entity will be unchanged.');
+  }
+
+  /**
+   * Tests that config dependency ordering.
+   */
+  public function testDependencyOrder(): void {
+    /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
+    $config_manager = \Drupal::service('config.manager');
+    $storage = $this->container->get('entity_type.manager')->getStorage('config_test');
+    // Test dependencies between modules.
+    $entity1 = $storage->create(['id' => 'entity1']);
+    $entity1->save();
+    // Create additional entities to test dependencies on config entities.
+    $entity2 = $storage->create(['id' => 'entity2', 'dependencies' => ['enforced' => ['config' => [$entity1->getConfigDependencyName()]]]]);
+    $entity2->save();
+    $entity3 = $storage->create(['id' => 'entity3', 'dependencies' => ['enforced' => ['config' => [$entity1->getConfigDependencyName()]]]]);
+    $entity3->save();
+    // Include a role entity to test ordering when dependencies have multiple
+    // entity types.
+    $role = Role::create([
+      'id' => 'test_role',
+      'label' => 'Test role',
+      'permissions' => ["permission with {$entity2->getConfigDependencyName()} dependency"],
+    ]);
+    $role->save();
+    $entity4 = $storage->create([
+      'id' => 'entity4',
+      'dependencies' => [
+        'enforced' => [
+          'config' => [
+            $entity3->getConfigDependencyName(),
+            // Introduce a dependency on the role to change the ordering.
+            $role->getConfigDependencyName(),
+          ],
+        ],
+      ],
+    ]);
+    $entity4->save();
+
+    // Test findConfigEntityDependencies() return order is idempotent.
+    $dependents = $config_manager->findConfigEntityDependencies('config', [$entity1->getConfigDependencyName()]);
+    $dependents_again = $config_manager->findConfigEntityDependencies('config', [$entity1->getConfigDependencyName()]);
+    $this->assertSame(array_keys($dependents), array_keys($dependents_again));
+
+    $this->assertTrue(isset($dependents['user.role.test_role']), 'user.role.test_role has a dependency on config_test.dynamic.entity1.');
+    $entity2_dependents = $config_manager->findConfigEntityDependencies('config', [$entity2->getConfigDependencyName()]);
+    $this->assertTrue(isset($entity2_dependents['user.role.test_role']), 'user.role.test_role has a dependency on config_test.dynamic.entity2.');
+
+    // Test that when dependencies are loaded as entities, the order is
+    // maintained.
+    $entities = $config_manager->findConfigEntityDependenciesAsEntities('config', [$entity1->getConfigDependencyName()]);
+    $entity_config_names = array_values(array_map(fn (ConfigEntityInterface $entity) => $entity->getConfigDependencyName(), $entities));
+    $this->assertSame(array_keys($dependents), $entity_config_names, 'findConfigEntityDependencies() and findConfigEntityDependenciesAsEntities() return dependencies in the same order.');
+
+    // Create scenario where entity1 is deleted, but all the config_test
+    // entities depending on entity1 are fixed instead of being deleted. This
+    // means that entity2 is not deleted, so the role should not lose the
+    // permission depending on entity2.
+    \Drupal::state()->set('config_test.fix_dependencies', ['config_test.dynamic.entity1']);
+    $entity1->delete();
+    $role = Role::load('test_role');
+    $this->assertNotNull($role);
+    $this->assertTrue($role->hasPermission("permission with {$entity2->getConfigDependencyName()} dependency"));
   }
 
   /**
