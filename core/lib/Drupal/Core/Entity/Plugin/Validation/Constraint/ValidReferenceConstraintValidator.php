@@ -123,7 +123,21 @@ class ValidReferenceConstraintValidator extends ConstraintValidator implements C
     if ($target_ids) {
       if ($entity && !$entity->isNew()) {
         $existing_entity = $this->entityTypeManager->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
-        $existing_target_ids = array_values(array_column($existing_entity->{$value->getFieldDefinition()->getName()}->getValue(), 'target_id'));
+        $existing_target_ids = [];
+        if ($existing_entity->isTranslatable()) {
+          foreach ($existing_entity->getTranslationLanguages() as $language) {
+            $existing_entity = $existing_entity->getTranslation($language->getId());
+            foreach ($existing_entity->{$value->getFieldDefinition()->getName()}->getValue() as $item) {
+              $existing_target_ids[$item['target_id']] = $item['target_id'];
+            }
+          }
+        }
+        else {
+          foreach ($existing_entity->{$value->getFieldDefinition()
+            ->getName()}->getValue() as $item) {
+            $existing_target_ids[$item['target_id']] = $item['target_id'];
+          }
+        }
 
         $target_ids = array_diff($target_ids, $existing_target_ids);
       }
