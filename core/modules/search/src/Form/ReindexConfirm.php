@@ -60,13 +60,13 @@ class ReindexConfirm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     
-      // Ask each active search page to mark itself for re-index.
-      $search_page_repository = \Drupal::service('search.search_page_repository');
-      foreach ($search_page_repository->getIndexableSearchPages() as $entity) {
-        $entity->getPlugin()->markForReindex();
-      }
-      $this->messenger()->addStatus($this->t('All search indexes will be rebuilt.'));
-      $form_state->setRedirectUrl($this->getCancelUrl());
+    // Ask each active search page to mark itself for re-index.
+    $search_page_repository = \Drupal::service('search.search_page_repository');
+    foreach ($search_page_repository->getIndexableSearchPages() as $entity) {
+      $entity->getPlugin()->markForReindex();
+    }
+    $this->messenger()->addStatus($this->t('All search indexes will be rebuilt.'));
+    $form_state->setRedirectUrl($this->getCancelUrl());
     
   }
 

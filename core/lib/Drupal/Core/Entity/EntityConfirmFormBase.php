@@ -44,13 +44,13 @@ abstract class EntityConfirmFormBase extends EntityForm implements ConfirmFormIn
 /**
  * {@inheritdoc}
  *
- * @deprecated in drupal:11.0.0 and is scheduled for removal in drupal:12.0.0.
+ * @deprecated in drupal:11.2.0 and is scheduled for removal in drupal:12.0.0.
  *   Implementations should remove this method.
  *
  * @see https://www.drupal.org/node
  */
 public function getFormName() {
-  @trigger_error('getFormName() is deprecated and will be removed in Drupal 12.0.0.', E_USER_DEPRECATED);
+  @trigger_error('getFormName() is deprecated in Drupal 11.2.0 and will be removed in Drupal 12.0.0.', E_USER_DEPRECATED);
   return 'confirm';
 }
 
