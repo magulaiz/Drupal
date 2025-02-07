@@ -1,9 +1,8 @@
 /**
  *
- * Toolbar menu code.
+ * Preview editable areas button in the toolbar.
  *
- * Toggle own state
- * Listens toolbar-menu-set-toggle to change state.
+ * Toggle contextual links in the entire page.
  *
  * @type {Drupal~behavior}
  *
