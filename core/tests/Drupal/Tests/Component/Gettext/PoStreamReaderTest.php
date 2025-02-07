@@ -35,7 +35,7 @@ class PoStreamReaderTest extends TestCase {
    */
   public function testOpenMethodThrowsExceptionOnInvalidURI(): void {
     $reader = $this->createPoStreamReader();
-    $this->expectException(Exception::class);
+    $this->expectException(\Exception::class);
     $reader->open();
   }
 
