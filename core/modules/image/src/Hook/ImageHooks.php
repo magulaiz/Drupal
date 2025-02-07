@@ -168,7 +168,7 @@ class ImageHooks {
    * Control the access to files underneath the styles directory.
    */
   #[Hook('file_download')]
-  public function fileDownload($uri) {
+  public function fileDownload($uri): array|int|null {
     $path = StreamWrapperManager::getTarget($uri);
     // Private file access for image style derivatives.
     if (str_starts_with($path, 'styles/')) {
@@ -214,6 +214,7 @@ class ImageHooks {
         'Content-Length' => $image->getFileSize(),
       ];
     }
+    return NULL;
   }
 
   /**
@@ -237,7 +238,8 @@ class ImageHooks {
   /**
    * Implements hook_entity_presave().
    *
-   * Transforms default image of image field from array into single value at save.
+   * Transforms default image of image field from array into single value at
+   * save.
    */
   #[Hook('entity_presave')]
   public function entityPresave(EntityInterface $entity) {

@@ -43,6 +43,7 @@ class FilterPermissions implements ContainerInjectionInterface {
    * Returns an array of filter permissions.
    *
    * @return array
+   *   An array of filter permissions keyed by permission name.
    */
   public function permissions() {
     $permissions = [];
