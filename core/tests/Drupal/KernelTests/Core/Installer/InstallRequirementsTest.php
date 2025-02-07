@@ -14,7 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 class InstallRequirementsTest extends KernelTestBase {
 
   /**
-   * Tests that the installer checks merges requirements.
+   * Confirm installer checks requirements in designated classes.
    */
   public function testRequirements(): void {
     require_once 'core/includes/install.inc';

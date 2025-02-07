@@ -801,11 +801,11 @@ function install_profile_info($profile, $langcode = 'en') {
 }
 
 /**
- * Checks a module or profile requirements in RequirementsInterface.
+ * Checks a module or profile requirements via a class that implements RequirementsInterface.
  *
- * @param string $module
- *   Machine name of module or profile to check.
- * @param string $module_path
+ * @param string $extension
+ *   Machine name of the module or profile to check.
+ * @param string $path
  *   The path to the module or profile.
  *
  * @return array
@@ -813,15 +813,15 @@ function install_profile_info($profile, $langcode = 'en') {
  *
  * @internal
  */
-function install_check_class_requirements(string $module, string $module_path): array {
+function install_check_class_requirements(string $extension, string $path): array {
   $requirements = [];
-  $camelized = ContainerBuilder::camelize($module);
+  $camelized = ContainerBuilder::camelize($extension);
   $name = "{$camelized}Requirements";
-  $requirements_path = \Drupal::root() . "/$module_path/src/Install/$name.php";
+  $requirements_path = \Drupal::root() . "/$path/src/Install/$name.php";
   if (is_file($requirements_path)) {
     require_once $requirements_path;
 
-    $class_name = "Drupal\\$module\\Install\\$name";
+    $class_name = "Drupal\\$extension\\Install\\$name";
     $requirements = $class_name::getRequirements();
   }
 
