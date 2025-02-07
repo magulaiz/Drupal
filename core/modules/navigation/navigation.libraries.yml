@@ -114,6 +114,15 @@ internal.safe-triangle:
     - core/drupal
     - core/once
 
+internal.user-block:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
+  js:
+    js/user-block.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+
 internal.preview-editable-areas:
   js:
     js/toolbar-preview-editable-areas.js: {}
