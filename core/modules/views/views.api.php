@@ -317,7 +317,7 @@ function hook_views_data(): array {
       // ID of relationship handler plugin to use.
       'id' => 'standard',
       // Default label for relationship in the UI.
-      'label' => t('Example node'),
+      'title' => t('Example node'),
       // Description shown within the add relationship handler in the UI.
       'help' => t('Relationship between the node and node field data'),
     ],
