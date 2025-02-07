@@ -333,6 +333,7 @@ class NavigationMenuBlockTest extends KernelTestBase {
     // Dom\HTMLDocument::createFromString(), introduced in PHP 8.4 once PHP 8.3
     // support is dropped.
     $dom = new \DOMDocument();
+    // cspell:disable-next-line
     $dom->loadHTML((string) $render, LIBXML_NOWARNING | LIBXML_NOERROR);
     $xpath = new \DOMXPath($dom);
 
