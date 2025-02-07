@@ -210,8 +210,6 @@ class TimestampTest extends BrowserTestBase {
     $this->assertSession()->fieldExists('field_timestamp[0][value][time]');
     $this->assertSession()->fieldValueEquals('field_timestamp[0][value][time]', $date->format($time_format));
 
-
-
     // Test 'on_create' behavior.
     $this->formDisplayOptions = [
       'type' => $this->widgetType,
@@ -227,8 +225,6 @@ class TimestampTest extends BrowserTestBase {
     $this->assertSession()->fieldExists('field_timestamp[0][value][date]');
     $date_value_create = $this->getSession()->getPage()->findField('field_timestamp[0][value][date]')->getValue();
     $this->assertNotEmpty($date_value_create);
-
-
   }
 
 }
