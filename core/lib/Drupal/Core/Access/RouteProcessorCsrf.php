@@ -14,6 +14,8 @@ use Symfony\Component\Routing\Route;
  */
 class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCallbackInterface {
 
+  use RouteProcessorCsrfTrait;
+
   /**
    * Constructs a RouteProcessorCsrf object.
    *
@@ -36,12 +38,11 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
    * {@inheritdoc}
    */
   public function processOutbound($route_name, Route $route, array &$parameters, ?BubbleableMetadata $bubbleable_metadata = NULL) {
-    if ($route->hasRequirement('_csrf_token')) {
-      $path = ltrim($route->getPath(), '/');
-      // Replace the path parameters with values from the parameters array.
-      foreach ($parameters as $param => $value) {
-        $path = str_replace("{{$param}}", $value, $path);
-      }
+    if (!$route->hasRequirement('_csrf_token')) {
+      return;
+    }
+
+    $path = static::preparePath($route, $parameters);
       // Adding this to the parameters means it will get merged into the query
       // string when the route is compiled.
       if (!$bubbleable_metadata || $this->requestStack->getCurrentRequest()->getRequestFormat() !== 'html') {
@@ -53,12 +54,12 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
         $placeholder_render_array = [
           '#lazy_builder' => ['route_processor_csrf:renderPlaceholderCsrfToken', [$path]],
         ];
-        // Instead of setting an actual CSRF token as the query string, we set
-        // the placeholder, which will be replaced at the very last moment. This
-        // ensures links with CSRF tokens don't break cacheability.
-        $parameters['token'] = $placeholder;
-        $bubbleable_metadata->addAttachments(['placeholders' => [$placeholder => $placeholder_render_array]]);
-      }
+
+      // Instead of setting an actual CSRF token as the query string, we set
+      // the placeholder, which will be replaced at the very last moment. This
+      // ensures links with CSRF tokens don't break cacheability.
+      $parameters['token'] = $placeholder;
+      $bubbleable_metadata->addAttachments(['placeholders' => [$placeholder => $placeholder_render_array]]);
     }
   }
 

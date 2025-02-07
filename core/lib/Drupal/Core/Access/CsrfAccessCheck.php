@@ -4,6 +4,7 @@ namespace Drupal\Core\Access;
 
 use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -56,11 +57,10 @@ class CsrfAccessCheck implements RoutingAccessInterface {
    */
   public function access(Route $route, Request $request, RouteMatchInterface $route_match) {
     $parameters = $route_match->getRawParameters();
-    $path = ltrim($route->getPath(), '/');
-    // Replace the path parameters with values from the parameters array.
-    foreach ($parameters as $param => $value) {
-      $path = str_replace("{{$param}}", $value, $path);
+    if ($parameters instanceof ParameterBag) {
+      $parameters = $parameters->all();
     }
+    $path = RouteProcessorCsrf::preparePath($route, $parameters);
 
     if ($this->csrfToken->validate($request->query->get('token', ''), $path)) {
       $result = AccessResult::allowed();
