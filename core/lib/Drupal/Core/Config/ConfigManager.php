@@ -260,6 +260,9 @@ class ConfigManager implements ConfigManagerInterface {
       }
       return FALSE;
     }, $this->configFactory->loadMultiple($this->activeStorage->listAll()));
+    // Make sure data is in the same order whether loaded from static cache or
+    // database storage.
+    ksort($data);
     $dependency_manager->setData(array_filter($data));
     return $dependency_manager;
   }
