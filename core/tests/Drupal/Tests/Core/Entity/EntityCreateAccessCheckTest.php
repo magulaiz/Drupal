@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Entity\EntityAccessControlHandlerInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityCreateAccessCheck
@@ -126,6 +127,8 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
 
   /**
    * Tests an exception is thrown if no bundle is specified but is required.
+   *
+   * @group legacy
    */
   public function testAccessThrowsExceptionWhenNoBundleSpecified(): void {
     // Mock the entity type manager to return an entity type definition that
@@ -137,6 +140,15 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
     $this->entityTypeManager
       ->method('getDefinition')
       ->willReturn($entityType);
+
+    // Mock the AccessControlHandler.
+    $access_control_handler = $this->createMock(EntityAccessControlHandlerInterface::class);
+    $access_control_handler
+      ->method('createAccess')
+      ->willReturn(AccessResult::allowed()->cachePerPermissions());
+    $this->entityTypeManager
+      ->method('getAccessControlHandler')
+      ->willReturn($access_control_handler);
 
     // Mock the route to return a _entity_create_access requirement
     // that has no bundle set.
@@ -150,7 +162,13 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
     $account = $this->createMock(AccountInterface::class);
 
     // Expect an exception to be thrown.
-    $this->expectException(\InvalidArgumentException::class);
+    $this->expectDeprecation(
+      sprintf(
+        'Defining a \'%s\' route requirement without a bundle for an entity type which has bundles (%s) is deprecated in drupal:11.2.0 and will be disallowed in drupal:12.0.0. Specify a bundle, either as a string or as a route parameter placeholder, in the route requirement. See https://www.drupal.org/node/3505093',
+        '_entity_create_access',
+        'entity_test',
+      )
+    );
     $accessCheck = new EntityCreateAccessCheck($this->entityTypeManager);
     $accessCheck->access($route, $route_match, $account);
   }

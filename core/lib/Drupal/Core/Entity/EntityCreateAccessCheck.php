@@ -56,7 +56,13 @@ class EntityCreateAccessCheck implements AccessInterface {
     // For an entity type that has bundles, the $bundle must be specified.
     $entity_type_definition = $this->entityTypeManager->getDefinition($entity_type);
     if (empty($bundle) && $entity_type_definition && $entity_type_definition->hasKey('bundle')) {
-      throw new \InvalidArgumentException("The _entity_create_access route access requires a bundle parameter because the $entity_type entity type uses bundles.");
+      @trigger_error(
+        sprintf(
+          'Defining a \'%s\' route requirement without a bundle for an entity type which has bundles (%s) is deprecated in drupal:11.2.0 and will be disallowed in drupal:12.0.0. Specify a bundle, either as a string or as a route parameter placeholder, in the route requirement. See https://www.drupal.org/node/3505093',
+          $this->requirementsKey,
+          $entity_type,
+        ), E_USER_DEPRECATED
+      );
     }
 
     // The bundle argument can contain request argument placeholders like
