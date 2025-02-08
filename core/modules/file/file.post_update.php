@@ -16,7 +16,7 @@ function file_removed_post_updates(): array {
   ];
 }
 
-function file_post_update_add_poster_image() {
+function file_post_update_add_poster_image(): void {
   // Load all "file" field storage instances:
   $fieldInstances = \Drupal::entityTypeManager()
     ->getStorage('field_config')

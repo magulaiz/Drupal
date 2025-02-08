@@ -40,7 +40,7 @@ class FileVideoPosterFormatterTest extends FileFieldTestBase {
   /**
    * Tests rendering poster on video.
    */
-  public function testPosterNoImageStyle() {
+  public function testPosterNoImageStyle(): void {
 
     // Video field configuration.
     $video_fieldname = 'field_' . mb_strtolower($this->randomMachineName());
@@ -106,7 +106,7 @@ class FileVideoPosterFormatterTest extends FileFieldTestBase {
   /**
    * Tests rendering poster on video using an image style.
    */
-  public function testPosterImageStyle() {
+  public function testPosterImageStyle(): void {
     // Video field configuration.
     $video_fieldname = 'field_' . mb_strtolower($this->randomMachineName());
     $this->createFileField($video_fieldname, 'node', 'article', [], ['file_extensions' => 'mp4']);
@@ -143,7 +143,6 @@ class FileVideoPosterFormatterTest extends FileFieldTestBase {
       'filename' => 'file.jpg',
     ]);
     $poster1->save();
-    $poster_url = \Drupal::service('file_url_generator')->generate($poster1->getFileUri())->toString();
 
     // Create test node.
     $node = $this->drupalCreateNode([
