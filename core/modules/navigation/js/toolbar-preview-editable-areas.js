@@ -20,19 +20,16 @@
      *  Attach event into the navigation contextual link.
      */
     Drupal.behaviors.navigationToggleContextualLinks = {
-      attach: () => {
-        const contextualLinks = document.querySelectorAll('.contextual-region');
-        if (!contextualLinks.length) {
-          return;
-        }
-        const editableAreaBtn = document.querySelector(
+      attach: (context) => {
+        const editableAreaBtn = once(
+          'preview-editable-areas',
           '.js-navigation-contextual-toggle',
+          context,
         );
-        if (!editableAreaBtn) {
+        const contextualLinks = document.querySelectorAll('.contextual-region');
+        if (!contextualLinks.length || !editableAreaBtn.length) {
           return;
         }
-        editableAreaBtn.removeAttribute('hidden');
-        editableAreaBtn.classList.remove('hidden');
         const showText = Drupal.t('Editable areas');
         const hideText = Drupal.t('Hide editable areas');
 
@@ -44,7 +41,9 @@
           );
           btn.textContent = !isEditing ? hideText : showText;
         };
-        once('preview-editable-areas', editableAreaBtn).forEach((btn) => {
+        editableAreaBtn.forEach((btn) => {
+          btn.removeAttribute('hidden');
+          btn.classList.remove('hidden');
           // Set initial state
           toggleButtonState(
             localStorage.getItem('Drupal.contextualToolbar.isViewing') === null,
