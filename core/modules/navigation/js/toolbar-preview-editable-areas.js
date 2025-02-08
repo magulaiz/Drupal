@@ -22,13 +22,16 @@
     Drupal.behaviors.navigationToggleContextualLinks = {
       attach: () => {
         const contextualLinks = document.querySelectorAll('.contextual-region');
-        const editableAreaBtn = document.querySelector(
-          '.navigation-contextual-link',
-        );
-        if (contextualLinks.length === 0) {
-          editableAreaBtn?.remove();
+        if (!contextualLinks.length) {
           return;
         }
+        const editableAreaBtn = document.querySelector(
+          '.js-navigation-contextual-toggle',
+        );
+        if (!editableAreaBtn) {
+          return;
+        }
+        editableAreaBtn.removeAttribute('hidden');
         editableAreaBtn.classList.remove('hidden');
         const showText = Drupal.t('Editable areas');
         const hideText = Drupal.t('Hide editable areas');

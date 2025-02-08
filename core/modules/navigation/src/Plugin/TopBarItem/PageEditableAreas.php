@@ -6,6 +6,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Template\Attribute;
 use Drupal\navigation\Attribute\TopBarItem;
 use Drupal\navigation\EntityRouteHelper;
 use Drupal\navigation\TopBarItemBase;
@@ -68,9 +69,12 @@ class PageEditableAreas extends TopBarItemBase implements ContainerFactoryPlugin
         '#props' => [
           'icon' => 'preview',
           'extra_classes' => [
-            'navigation-contextual-link',
+            'js-navigation-contextual-toggle',
             'hidden',
           ],
+          'attributes' => new Attribute([
+            'hidden' => TRUE,
+          ]),
         ],
         '#slots' => [
           'content' => (string) $this->t('Editable areas'),
