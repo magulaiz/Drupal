@@ -174,8 +174,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $this->cacheTagsInvalidator->invalidateTags($cache_tags);
     $this->resetDefinitions();
     // Every item in the cache bin should have one of the menu cache tags but it
-    // is not guaranteed, so invalidate everything in the bin.
-    $this->menuCacheBackend->invalidateAll();
+    // is not guaranteed, so delete everything in the bin.
+    $this->menuCacheBackend->deleteAll();
   }
 
   /**
@@ -1222,7 +1222,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         'route_param_key' => [
           'description' => 'An encoded string of route parameters for loading by route.',
           'type' => 'varchar',
-          'length' => 255,
+          'length' => 2048,
         ],
         'route_parameters' => [
           'description' => 'Serialized array of route parameters of this menu link.',
@@ -1234,7 +1234,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         'url' => [
           'description' => 'The external path this link points to (when not using a route).',
           'type' => 'varchar',
-          'length' => 255,
+          'length' => 2048,
           'not null' => TRUE,
           'default' => '',
         ],

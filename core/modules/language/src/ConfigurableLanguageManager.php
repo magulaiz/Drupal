@@ -491,6 +491,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
         unset($predefined[$key]);
         continue;
       }
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $predefined[$key] = new TranslatableMarkup($value[0]);
     }
     natcasesort($predefined);
