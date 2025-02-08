@@ -197,10 +197,11 @@ class UpdateHooks {
   /**
    * Implements hook_themes_installed().
    *
-   * If themes are installed, we invalidate the information of available updates.
+   * If themes are installed, we invalidate the information of available
+   * updates.
    */
   #[Hook('themes_installed')]
-  public function themesInstalled($themes) {
+  public function themesInstalled($themes): void {
     // Clear all update module data.
     update_storage_clear();
   }
@@ -208,10 +209,11 @@ class UpdateHooks {
   /**
    * Implements hook_themes_uninstalled().
    *
-   * If themes are uninstalled, we invalidate the information of available updates.
+   * If themes are uninstalled, we invalidate the information of available
+   * updates.
    */
   #[Hook('themes_uninstalled')]
-  public function themesUninstalled($themes) {
+  public function themesUninstalled($themes): void {
     // Clear all update module data.
     update_storage_clear();
   }
@@ -219,10 +221,11 @@ class UpdateHooks {
   /**
    * Implements hook_modules_installed().
    *
-   * If modules are installed, we invalidate the information of available updates.
+   * If modules are installed, we invalidate the information of available
+   * updates.
    */
   #[Hook('modules_installed')]
-  public function modulesInstalled($modules) {
+  public function modulesInstalled($modules): void {
     // Clear all update module data.
     update_storage_clear();
   }
@@ -230,10 +233,11 @@ class UpdateHooks {
   /**
    * Implements hook_modules_uninstalled().
    *
-   * If modules are uninstalled, we invalidate the information of available updates.
+   * If modules are uninstalled, we invalidate the information of available
+   * updates.
    */
   #[Hook('modules_uninstalled')]
-  public function modulesUninstalled($modules) {
+  public function modulesUninstalled($modules): void {
     // Clear all update module data.
     update_storage_clear();
   }
@@ -249,7 +253,7 @@ class UpdateHooks {
    * @see \Drupal\update\UpdateManagerInterface
    */
   #[Hook('mail')]
-  public function mail($key, &$message, $params) {
+  public function mail($key, &$message, $params): void {
     $langcode = $message['langcode'];
     $language = \Drupal::languageManager()->getLanguage($langcode);
     $message['subject'] .= t('New release(s) available for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name')], ['langcode' => $langcode]);
@@ -273,16 +277,17 @@ class UpdateHooks {
    * Implements hook_verify_update_archive().
    *
    * First, we ensure that the archive isn't a copy of Drupal core, which the
-   * update manager does not yet support. See https://www.drupal.org/node/606592.
+   * update manager does not yet support. See
+   * https://www.drupal.org/node/606592.
    *
-   * Then, we make sure that at least one module included in the archive file has
-   * an .info.yml file which claims that the code is compatible with the current
-   * version of Drupal core.
+   * Then, we make sure that at least one module included in the archive file
+   * has an .info.yml file which claims that the code is compatible with the
+   * current version of Drupal core.
    *
    * @see \Drupal\Core\Extension\ExtensionDiscovery
    */
   #[Hook('verify_update_archive')]
-  public function verifyUpdateArchive($project, $archive_file, $directory) {
+  public function verifyUpdateArchive($project, $archive_file, $directory): array {
     $errors = [];
     // Make sure this isn't a tarball of Drupal core.
     if (file_exists("{$directory}/{$project}/index.php") && file_exists("{$directory}/{$project}/core/install.php") && file_exists("{$directory}/{$project}/core/includes/bootstrap.inc") && file_exists("{$directory}/{$project}/core/modules/node/node.module") && file_exists("{$directory}/{$project}/core/modules/system/system.module")) {

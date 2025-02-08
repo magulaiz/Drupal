@@ -22,6 +22,7 @@ class ValidationResultTest extends UnitTestCase {
    * @dataProvider providerValidConstructorArguments
    */
   public function testCreateWarningResult(array $messages, ?string $summary): void {
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString, DrupalPractice.Objects.GlobalFunction
     $summary = $summary ? t($summary) : NULL;
     $result = ValidationResult::createWarning($messages, $summary);
     $this->assertResultValid($result, $messages, $summary, SystemManager::REQUIREMENT_WARNING);
@@ -33,8 +34,10 @@ class ValidationResultTest extends UnitTestCase {
   public function testOverallSeverity(): void {
     // An error and a warning should be counted as an error.
     $results = [
+      // phpcs:disable DrupalPractice.Objects.GlobalFunction
       ValidationResult::createError([t('Boo!')]),
       ValidationResult::createWarning([t('Moo!')]),
+      // phpcs:enable DrupalPractice.Objects.GlobalFunction
     ];
     $this->assertSame(SystemManager::REQUIREMENT_ERROR, ValidationResult::getOverallSeverity($results));
 
@@ -54,6 +57,7 @@ class ValidationResultTest extends UnitTestCase {
    * @dataProvider providerValidConstructorArguments
    */
   public function testCreateErrorResult(array $messages, ?string $summary): void {
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString, DrupalPractice.Objects.GlobalFunction
     $summary = $summary ? t($summary) : NULL;
     $result = ValidationResult::createError($messages, $summary);
     $this->assertResultValid($result, $messages, $summary, SystemManager::REQUIREMENT_ERROR);
