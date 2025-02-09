@@ -2,6 +2,7 @@
 
 namespace Drupal\language\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrlFallback;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
@@ -228,7 +229,7 @@ class LanguageHooks {
    */
   #[Hook('modules_installed')]
   #[Hook('modules_uninstalled')]
-  public function modulesInstalled($modules, $is_syncing) {
+  public function modulesInstalled($modules, $is_syncing): void {
     if ($is_syncing) {
       return;
     }
@@ -304,7 +305,7 @@ class LanguageHooks {
    * Implements hook_entity_field_access().
    */
   #[Hook('entity_field_access')]
-  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
+  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL): AccessResultInterface {
     // Only allow edit access on a langcode field if the entity it is attached to
     // is configured to have an alterable language. Also without items we can not
     // decide whether or not to allow access.
@@ -365,9 +366,9 @@ class LanguageHooks {
    * Implements hook_language_types_info_alter().
    *
    * We can't set the fixed properties in \Drupal\Core\Language\LanguageManager,
-   * where the rest of the properties for the default language types are defined.
-   * The LanguageNegation classes are only loaded when the language module is
-   * enabled and we can't be sure of that in the LanguageManager.
+   * where the rest of the properties for the default language types are
+   * defined. The LanguageNegation classes are only loaded when the language
+   * module is enabled and we can't be sure of that in the LanguageManager.
    */
   #[Hook('language_types_info_alter')]
   public function languageTypesInfoAlter(array &$language_types): void {

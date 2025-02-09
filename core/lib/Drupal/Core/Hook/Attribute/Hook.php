@@ -67,6 +67,8 @@ namespace Drupal\Core\Hook\Attribute;
  *
  * Install hooks:
  * - hook_install()
+ * - hook_install_tasks()
+ * - hook_install_tasks_alter()
  * - hook_post_update_NAME()
  * - hook_schema()
  * - hook_uninstall()
@@ -75,7 +77,6 @@ namespace Drupal\Core\Hook\Attribute;
  *
  * Theme hooks:
  * - hook_preprocess_HOOK()
- * - hook_process_HOOK()
  *
  * @section sec_backwards_compatibility Backwards-compatibility
  *
@@ -100,9 +101,9 @@ class Hook {
    *   parameter is omitted, the class must have an __invoke() method, which is
    *   taken as the hook implementation.
    * @param string|null $module
-   *   (optional) The module this implementation is for. This allows one module to
-   *   implement a hook on behalf of another module. Defaults to the module the
-   *   implementation is in.
+   *   (optional) The module this implementation is for. This allows one module
+   *   to implement a hook on behalf of another module. Defaults to the module
+   *   the implementation is in.
    */
   public function __construct(
     public string $hook,

@@ -16,7 +16,7 @@ class ContextualHooks {
    * Implements hook_toolbar().
    */
   #[Hook('toolbar')]
-  public function toolbar() {
+  public function toolbar(): array {
     $items = [];
     $items['contextual'] = ['#cache' => ['contexts' => ['user.permissions']]];
     if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
@@ -55,8 +55,8 @@ class ContextualHooks {
   /**
    * Implements hook_page_attachments().
    *
-   * Adds the drupal.contextual-links library to the page for any user who has the
-   * 'access contextual links' permission.
+   * Adds the drupal.contextual-links library to the page for any user who has
+   * the 'access contextual links' permission.
    *
    * @see contextual_preprocess()
    */

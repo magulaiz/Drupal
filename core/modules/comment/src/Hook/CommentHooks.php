@@ -74,7 +74,7 @@ class CommentHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $return = [];
     foreach (CommentType::loadMultiple() as $comment_type) {
       $return['comment'][$comment_type->id()] = [
@@ -181,8 +181,8 @@ class CommentHooks {
   #[Hook('node_links_alter')]
   public function nodeLinksAlter(array &$links, NodeInterface $node, array &$context): void {
     // Comment links are only added to node entity type for backwards
-    // compatibility. Should you require comment links for other entity types you
-    // can do so by implementing a new field formatter.
+    // compatibility. Should you require comment links for other entity types
+    // you can do so by implementing a new field formatter.
     // @todo Make this configurable from the formatter. See
     //   https://www.drupal.org/node/1901110.
     $comment_links = \Drupal::service('comment.link_builder')->buildCommentedEntityLinks($node, $context);
@@ -271,7 +271,7 @@ class CommentHooks {
    * @see \Drupal\comment\Plugin\Field\FieldType\CommentItem::propertyDefinitions()
    */
   #[Hook('entity_storage_load')]
-  public function entityStorageLoad($entities, $entity_type) {
+  public function entityStorageLoad($entities, $entity_type): void {
     // Comments can only be attached to content entities, so skip others.
     if (!\Drupal::entityTypeManager()->getDefinition($entity_type)->entityClassImplements(FieldableEntityInterface::class)) {
       return;
@@ -398,7 +398,7 @@ class CommentHooks {
    * results.
    */
   #[Hook('node_search_result')]
-  public function nodeSearchResult(EntityInterface $node) {
+  public function nodeSearchResult(EntityInterface $node): array {
     $comment_fields = \Drupal::service('comment.manager')->getFields('node');
     $comments = 0;
     $open = FALSE;
@@ -424,13 +424,14 @@ class CommentHooks {
         'comment' => \Drupal::translation()->formatPlural($comments, '1 comment', '@count comments'),
       ];
     }
+    return [];
   }
 
   /**
    * Implements hook_user_cancel().
    */
   #[Hook('user_cancel')]
-  public function userCancel($edit, UserInterface $account, $method) {
+  public function userCancel($edit, UserInterface $account, $method): void {
     switch ($method) {
       case 'user_cancel_block_unpublish':
         $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);
@@ -445,9 +446,9 @@ class CommentHooks {
         $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);
         foreach ($comments as $comment) {
           $langcodes = array_keys($comment->getTranslationLanguages());
-          // For efficiency manually save the original comment before applying any
-          // changes.
-          $comment->original = clone $comment;
+          // For efficiency manually set the original comment before applying
+          // any changes.
+          $comment->setOriginal(clone $comment);
           foreach ($langcodes as $langcode) {
             $comment_translated = $comment->getTranslation($langcode);
             $comment_translated->setOwnerId(0);
@@ -476,7 +477,7 @@ class CommentHooks {
    * Implements hook_ranking().
    */
   #[Hook('ranking')]
-  public function ranking() {
+  public function ranking(): array {
     return \Drupal::service('comment.statistics')->getRankingInfo();
   }
 

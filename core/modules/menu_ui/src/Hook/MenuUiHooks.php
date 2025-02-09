@@ -65,7 +65,7 @@ class MenuUiHooks {
    * Implements hook_entity_type_build().
    */
   #[Hook('entity_type_build')]
-  public function entityTypeBuild(array &$entity_types) {
+  public function entityTypeBuild(array &$entity_types): void {
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
     $entity_types['menu']->setFormClass('add', 'Drupal\menu_ui\MenuForm')->setFormClass('edit', 'Drupal\menu_ui\MenuForm')->setFormClass('delete', 'Drupal\menu_ui\Form\MenuDeleteForm')->setListBuilderClass('Drupal\menu_ui\MenuListBuilder')->setLinkTemplate('add-form', '/admin/structure/menu/add')->setLinkTemplate('delete-form', '/admin/structure/menu/manage/{menu}/delete')->setLinkTemplate('edit-form', '/admin/structure/menu/manage/{menu}')->setLinkTemplate('add-link-form', '/admin/structure/menu/manage/{menu}/add')->setLinkTemplate('collection', '/admin/structure/menu');
     if (isset($entity_types['node'])) {
@@ -93,7 +93,8 @@ class MenuUiHooks {
    */
   #[Hook('form_node_form_alter')]
   public function formNodeFormAlter(&$form, FormStateInterface $form_state) : void {
-    // Generate a list of possible parents (not including this link or descendants).
+    // Generate a list of possible parents (not including this link or
+    // descendants).
     // @todo This must be handled in a #process handler.
     $node = $form_state->getFormObject()->getEntity();
     $defaults = menu_ui_get_menu_link_defaults($node);
@@ -231,9 +232,9 @@ class MenuUiHooks {
       '#description' => t('Content of this type can be placed in the selected menus.'),
     ];
     // @todo See if we can avoid pre-loading all options by changing the form or
-    //   using a #process callback. https://www.drupal.org/node/2310319
-    //   To avoid an 'illegal option' error after saving the form we have to load
-    //   all available menu parents. Otherwise, it is not possible to dynamically
+    //   using a #process callback. https://www.drupal.org/node/2310319 To avoid
+    //   an 'illegal option' error after saving the form we have to load all
+    //   available menu parents. Otherwise, it is not possible to dynamically
     //   add options to the list using ajax.
     $options_cacheability = new CacheableMetadata();
     $options = $menu_parent_selector->getParentSelectOptions('', NULL, $options_cacheability);

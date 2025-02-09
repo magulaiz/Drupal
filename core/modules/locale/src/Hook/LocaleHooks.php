@@ -161,7 +161,7 @@ class LocaleHooks {
    * Implements hook_modules_installed().
    */
   #[Hook('modules_installed')]
-  public function modulesInstalled($modules) {
+  public function modulesInstalled($modules): void {
     $components['module'] = $modules;
     locale_system_update($components);
   }
@@ -170,7 +170,7 @@ class LocaleHooks {
    * Implements hook_module_preuninstall().
    */
   #[Hook('module_preuninstall')]
-  public function modulePreuninstall($module) {
+  public function modulePreuninstall($module): void {
     $components['module'] = [$module];
     locale_system_remove($components);
   }
@@ -179,7 +179,7 @@ class LocaleHooks {
    * Implements hook_themes_installed().
    */
   #[Hook('themes_installed')]
-  public function themesInstalled($themes) {
+  public function themesInstalled($themes): void {
     $components['theme'] = $themes;
     locale_system_update($components);
   }
@@ -188,7 +188,7 @@ class LocaleHooks {
    * Implements hook_themes_uninstalled().
    */
   #[Hook('themes_uninstalled')]
-  public function themesUninstalled($themes) {
+  public function themesUninstalled($themes): void {
     $components['theme'] = $themes;
     locale_system_remove($components);
   }
@@ -213,7 +213,7 @@ class LocaleHooks {
    * Implements hook_cache_flush().
    */
   #[Hook('cache_flush')]
-  public function cacheFlush() {
+  public function cacheFlush(): void {
     \Drupal::state()->delete('system.javascript_parsed');
   }
 

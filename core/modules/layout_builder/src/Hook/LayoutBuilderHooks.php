@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Link;
 use Drupal\Core\Breadcrumb\Breadcrumb;
@@ -137,12 +138,12 @@ class LayoutBuilderHooks {
   /**
    * Implements hook_entity_view_alter().
    *
-   * ExtraFieldBlock block plugins add placeholders for each extra field which is
-   * configured to be displayed. Those placeholders are replaced by this hook.
-   * Modules that implement hook_entity_extra_field_info() use their
+   * ExtraFieldBlock block plugins add placeholders for each extra field which
+   * is configured to be displayed. Those placeholders are replaced by this
+   * hook. Modules that implement hook_entity_extra_field_info() use their
    * implementations of hook_entity_view_alter() to add the rendered output of
-   * the extra fields they provide, so we cannot get the rendered output of extra
-   * fields before this point in the view process.
+   * the extra fields they provide, so we cannot get the rendered output of
+   * extra fields before this point in the view process.
    * layout_builder_module_implements_alter() moves this implementation of
    * hook_entity_view_alter() to the end of the list.
    *
@@ -264,7 +265,7 @@ class LayoutBuilderHooks {
    * Implements hook_ENTITY_TYPE_access().
    */
   #[Hook('block_content_access')]
-  public function blockContentAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  public function blockContentAccess(EntityInterface $entity, $operation, AccountInterface $account): AccessResultInterface {
     /** @var \Drupal\block_content\BlockContentInterface $entity */
     if ($operation === 'view' || $entity->isReusable() || empty(\Drupal::service('inline_block.usage')->getUsage($entity->id()))) {
       // If the operation is 'view' or this is reusable block or if this is

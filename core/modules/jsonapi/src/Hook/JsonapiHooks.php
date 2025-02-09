@@ -49,7 +49,7 @@ class JsonapiHooks {
    * Implements hook_modules_installed().
    */
   #[Hook('modules_installed')]
-  public function modulesInstalled($modules) {
+  public function modulesInstalled($modules): void {
     $potential_conflicts = ['content_translation', 'config_translation', 'language'];
     if (!empty(array_intersect($modules, $potential_conflicts))) {
       \Drupal::messenger()->addWarning(t('Some multilingual features currently do not work well with JSON:API. See the <a href=":jsonapi-docs">JSON:API multilingual support documentation</a> for more information on the current status of multilingual support.', [':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/translations']));
@@ -98,7 +98,7 @@ class JsonapiHooks {
    * Implements hook_jsonapi_entity_filter_access().
    */
   #[Hook('jsonapi_entity_filter_access')]
-  public function jsonapiEntityFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account) {
+  public function jsonapiEntityFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // All core entity types and most or all contrib entity types allow users
     // with the entity type's administrative permission to view all of the
     // entities, so enable similarly permissive filtering to those users as well.
@@ -109,13 +109,14 @@ class JsonapiHooks {
         JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, $admin_permission),
       ];
     }
+    return [];
   }
 
   /**
    * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'block_content'.
    */
   #[Hook('jsonapi_block_content_filter_access')]
-  public function jsonapiBlockContentFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account) {
+  public function jsonapiBlockContentFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // @see \Drupal\block_content\BlockContentAccessControlHandler::checkAccess()
     // \Drupal\jsonapi\Access\TemporaryQueryGuard adds the condition for
     // (isReusable()), so this does not have to.
@@ -129,7 +130,7 @@ class JsonapiHooks {
    * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'comment'.
    */
   #[Hook('jsonapi_comment_filter_access')]
-  public function jsonapiCommentFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account) {
+  public function jsonapiCommentFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // @see \Drupal\comment\CommentAccessControlHandler::checkAccess()
     // \Drupal\jsonapi\Access\TemporaryQueryGuard adds the condition for
     // (access to the commented entity), so this does not have to.
@@ -143,7 +144,7 @@ class JsonapiHooks {
    * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'entity_test'.
    */
   #[Hook('jsonapi_entity_test_filter_access')]
-  public function jsonapiEntityTestFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account) {
+  public function jsonapiEntityTestFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // @see \Drupal\entity_test\EntityTestAccessControlHandler::checkAccess()
     return [
       JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'view test entity'),
@@ -154,7 +155,7 @@ class JsonapiHooks {
    * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'file'.
    */
   #[Hook('jsonapi_file_filter_access')]
-  public function jsonapiFileFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account) {
+  public function jsonapiFileFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // @see \Drupal\file\FileAccessControlHandler::checkAccess()
     // \Drupal\jsonapi\Access\TemporaryQueryGuard adds the condition for
     // (public OR owner), so this does not have to.
@@ -167,7 +168,7 @@ class JsonapiHooks {
    * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'media'.
    */
   #[Hook('jsonapi_media_filter_access')]
-  public function jsonapiMediaFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account) {
+  public function jsonapiMediaFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // @see \Drupal\media\MediaAccessControlHandler::checkAccess()
     return [
       JSONAPI_FILTER_AMONG_PUBLISHED => AccessResult::allowedIfHasPermission($account, 'view media'),
@@ -178,7 +179,7 @@ class JsonapiHooks {
    * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'node'.
    */
   #[Hook('jsonapi_node_filter_access')]
-  public function jsonapiNodeFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account) {
+  public function jsonapiNodeFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // @see \Drupal\node\NodeAccessControlHandler::access()
     if ($account->hasPermission('bypass node access')) {
       return [
@@ -213,7 +214,7 @@ class JsonapiHooks {
    * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'shortcut'.
    */
   #[Hook('jsonapi_shortcut_filter_access')]
-  public function jsonapiShortcutFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account) {
+  public function jsonapiShortcutFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // @see \Drupal\shortcut\ShortcutAccessControlHandler::checkAccess()
     // \Drupal\jsonapi\Access\TemporaryQueryGuard adds the condition for
     // (shortcut_set = $shortcut_set_storage->getDisplayedToUser($current_user)),
@@ -230,7 +231,7 @@ class JsonapiHooks {
    * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'taxonomy_term'.
    */
   #[Hook('jsonapi_taxonomy_term_filter_access')]
-  public function jsonapiTaxonomyTermFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account) {
+  public function jsonapiTaxonomyTermFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // @see \Drupal\taxonomy\TermAccessControlHandler::checkAccess()
     return [
       JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'administer taxonomy'),
@@ -242,7 +243,7 @@ class JsonapiHooks {
    * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'user'.
    */
   #[Hook('jsonapi_user_filter_access')]
-  public function jsonapiUserFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account) {
+  public function jsonapiUserFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // @see \Drupal\user\UserAccessControlHandler::checkAccess()
     // \Drupal\jsonapi\Access\TemporaryQueryGuard adds the condition for
     // (!isAnonymous()), so this does not have to.
@@ -256,7 +257,7 @@ class JsonapiHooks {
    * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'workspace'.
    */
   #[Hook('jsonapi_workspace_filter_access')]
-  public function jsonapiWorkspaceFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account) {
+  public function jsonapiWorkspaceFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // @see \Drupal\workspaces\WorkspaceAccessControlHandler::checkAccess()
     return [
       JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'view any workspace'),

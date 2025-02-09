@@ -287,6 +287,10 @@ class Registry implements DestructableInterface {
    * Gets the theme registry cache.
    *
    * @return array|null
+   *   The complete theme registry data array for the active theme for this
+   *   registry.
+   *
+   * @see Registry::$registry
    */
   protected function cacheGet(): ?array {
     $theme_name = $this->theme->getName();
@@ -587,8 +591,10 @@ class Registry implements DestructableInterface {
           $info['preprocess functions'] = [];
           $prefixes = [];
           if ($type == 'module') {
-            // Default variable preprocessor prefix.
-            $prefixes[] = 'template';
+            // Add template_preprocess_HOOK functions.
+            if (function_exists('template_preprocess_' . $hook)) {
+              $info['preprocess functions'][] = 'template_preprocess_' . $hook;
+            }
             // Add all modules so they can intervene with their own variable
             // preprocessors. This allows them to provide variable preprocessors
             // even if they are not the owner of the current hook.
@@ -716,8 +722,8 @@ class Registry implements DestructableInterface {
     if (isset($cache[$source_hook_name]) && (!isset($cache[$source_hook_name]['incomplete preprocess functions']) || !isset($cache[$destination_hook_name]['incomplete preprocess functions']))) {
       $cache[$destination_hook_name] = $parent_hook + $cache[$source_hook_name];
       if (isset($parent_hook['preprocess functions'])) {
-        $diff = array_diff($parent_hook['preprocess functions'], $cache[$source_hook_name]['preprocess functions']);
-        $cache[$destination_hook_name]['preprocess functions'] = array_merge($cache[$source_hook_name]['preprocess functions'], $diff);
+        $diff = array_diff($parent_hook['preprocess functions'], $cache[$source_hook_name]['preprocess functions'] ?? []);
+        $cache[$destination_hook_name]['preprocess functions'] = array_merge($cache[$source_hook_name]['preprocess functions'] ?? [], $diff);
       }
       // If a base hook isn't set, this is the actual base hook.
       if (!isset($cache[$source_hook_name]['base hook'])) {
@@ -864,7 +870,7 @@ class Registry implements DestructableInterface {
   /**
    * Gets all user functions grouped by the word before the first underscore.
    *
-   * @param $prefixes
+   * @param string[] $prefixes
    *   An array of function prefixes by which the list can be limited.
    *
    * @return array

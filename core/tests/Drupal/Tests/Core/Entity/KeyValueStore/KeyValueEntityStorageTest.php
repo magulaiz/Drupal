@@ -61,6 +61,8 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   protected $languageManager;
 
   /**
+   * The entity storage.
+   *
    * @var \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage
    */
   protected $entityStorage;
@@ -97,10 +99,10 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   /**
    * Prepares the key value entity storage.
    *
-   * @covers ::__construct
-   *
    * @param string $uuid_key
    *   (optional) The entity key used for the UUID. Defaults to 'uuid'.
+   *
+   * @covers ::__construct
    */
   protected function setUpKeyValueEntityStorage($uuid_key = 'uuid'): void {
     $this->entityType->expects($this->atLeastOnce())
@@ -633,10 +635,30 @@ class KeyValueEntityStorageTest extends UnitTestCase {
 }
 
 class EntityBaseTest extends EntityBase {
+
+  /**
+   * The entity ID.
+   */
   public $id;
+
+  /**
+   * The language code for the entity.
+   */
   public $langcode;
+
+  /**
+   * The entity UUID.
+   */
   public $uuid;
+
+  /**
+   * The entity label.
+   */
   public $label;
+
+  /**
+   * The original, or NULL if the entity cannot be loaded.
+   */
   public $original;
 
 }
