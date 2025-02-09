@@ -24,8 +24,8 @@ class SystemTestHooks {
     $output = '';
     switch ($route_name) {
       case 'help.page.system_test':
-        $output = '<h2>' . t('Test Help Page') . '</h2>';
-        $output .= '<p>' . t('This is a test help page for the system_test module for the purpose of testing if the "Help" link displays properly.') . '</p>';
+        $output = '<h2>' . $this->t('Test Help Page') . '</h2>';
+        $output .= '<p>' . $this->t('This is a test help page for the system_test module for the purpose of testing if the "Help" link displays properly.') . '</p>';
     }
 
     return $output;

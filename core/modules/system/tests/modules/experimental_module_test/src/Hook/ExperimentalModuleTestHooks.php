@@ -23,7 +23,7 @@ class ExperimentalModuleTestHooks {
     $output = '';
     switch ($route_name) {
       case 'help.page.experimental_module_test':
-        $output = '<p>' . t('The Experimental Test module is not done yet. It may eat your data, but you can read the <a href=":url">online documentation for the Experimental Test module</a>.', [':url' => 'http://www.example.com']) . '</p>';
+        $output = '<p>' . $this->t('The Experimental Test module is not done yet. It may eat your data, but you can read the <a href=":url">online documentation for the Experimental Test module</a>.', [':url' => 'http://www.example.com']) . '</p>';
     }
 
     return $output;
