@@ -2,16 +2,20 @@
 
 namespace Drupal\Core\StreamWrapper;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Defines the read-only profile:// stream wrapper for installed profile files.
  *
  * Usage:
+ *
  * @code
  * profile://
  * @endcode
  * Points to the installed profile root directory.
  */
 class ProfileStream extends ExtensionStreamBase {
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}

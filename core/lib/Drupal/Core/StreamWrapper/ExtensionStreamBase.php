@@ -29,8 +29,8 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
   /**
    * {@inheritdoc}
    */
-  public function setUri($uri) {
-    if (strpos($uri, '://') === FALSE) {
+  public function setUri($uri): void {
+    if (!str_contains($uri, '://')) {
       // The delimiter ('://') was not found in $uri, malformed $uri passed.
       throw new \InvalidArgumentException("Malformed URI: {$uri}");
     }

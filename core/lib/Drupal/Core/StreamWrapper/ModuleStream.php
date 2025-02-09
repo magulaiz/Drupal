@@ -2,10 +2,13 @@
 
 namespace Drupal\Core\StreamWrapper;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Defines the read-only module:// stream wrapper for module files.
  *
  * Usage:
+ *
  * @code
  * module://{name}
  * @endcode
@@ -13,6 +16,7 @@ namespace Drupal\Core\StreamWrapper;
  * referred.
  */
 class ModuleStream extends ExtensionStreamBase {
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}

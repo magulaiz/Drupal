@@ -2,10 +2,13 @@
 
 namespace Drupal\Core\StreamWrapper;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Defines the read-only theme:// stream wrapper for theme files.
  *
  * Usage:
+ *
  * @code
  * theme://{name}
  * @endcode
@@ -13,6 +16,7 @@ namespace Drupal\Core\StreamWrapper;
  * referred.
  */
 class ThemeStream extends ExtensionStreamBase {
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}

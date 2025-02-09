@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\StreamWrapper;
 
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
@@ -80,7 +82,7 @@ class ExtensionStreamTest extends KernelTestBase {
    * @return array[]
    *   A list of urls to test.
    */
-  public function providerInvalidUris(): array {
+  public static function providerInvalidUris(): array {
     return [
       ['invalid/uri'],
       ['invalid_uri'],
@@ -144,7 +146,7 @@ class ExtensionStreamTest extends KernelTestBase {
    *   - The result or the exception when running getExternalUrl() method. The
    *     value is prefixed later, in the test method, with the base url.
    */
-  public function providerStreamWrapperMethods(): array {
+  public static function providerStreamWrapperMethods(): array {
     return [
       // Cases for module:// stream wrapper.
       [
@@ -226,7 +228,7 @@ class ExtensionStreamTest extends KernelTestBase {
    * @param string $class_name
    *   The class name of the expected exception.
    * @param string $expected_message
-   *   The The expected exception message.
+   *   The expected exception message.
    *
    * @dataProvider providerStreamWrapperMethodsOnMissingExtensions
    */
@@ -247,7 +249,7 @@ class ExtensionStreamTest extends KernelTestBase {
    * @param string $class_name
    *   The class name of the expected exception.
    * @param string $expected_message
-   *   The The expected exception message.
+   *   The expected exception message.
    *
    * @dataProvider providerStreamWrapperMethodsOnMissingExtensions
    */
@@ -268,7 +270,7 @@ class ExtensionStreamTest extends KernelTestBase {
    * @param string $class_name
    *   The class name of the expected exception.
    * @param string $expected_message
-   *   The The expected exception message.
+   *   The expected exception message.
    *
    * @dataProvider providerStreamWrapperMethodsOnMissingExtensions
    */
@@ -290,7 +292,7 @@ class ExtensionStreamTest extends KernelTestBase {
    *   - The class name of the expected exception.
    *   - The expected exception message.
    */
-  public function providerStreamWrapperMethodsOnMissingExtensions(): array {
+  public static function providerStreamWrapperMethodsOnMissingExtensions(): array {
     return [
       // Cases for module:// stream wrapper.
       [
