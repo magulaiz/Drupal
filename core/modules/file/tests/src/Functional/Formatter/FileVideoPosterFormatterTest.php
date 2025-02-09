@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Functional\Formatter;
 
 use Drupal\file\Entity\File;
-use Drupal\Tests\file\Functional\FileFieldCreationTrait;
 use Drupal\Tests\file\Functional\FileFieldTestBase;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
-use Drupal\Tests\node\Traits\NodeCreationTrait;
 
 /**
  * @coversDefaultClass \Drupal\file\Plugin\Field\FieldFormatter\FileVideoFormatter
@@ -16,9 +14,7 @@ use Drupal\Tests\node\Traits\NodeCreationTrait;
  */
 class FileVideoPosterFormatterTest extends FileFieldTestBase {
 
-  use FileFieldCreationTrait;
   use ImageFieldCreationTrait;
-  use NodeCreationTrait;
 
   /**
    * {@inheritdoc}
