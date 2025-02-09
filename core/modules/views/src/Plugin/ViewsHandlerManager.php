@@ -121,11 +121,26 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
         }
       }
 
-      // Then try the configuration provided for the handler.
+      // Then try the configuration provided for the handler, if that is a
+      // supported plugin for this field.
       if (isset($item['plugin_id'])) {
-        $handler = $this->createInstance($item['plugin_id'], $definition);
-        if (!method_exists($handler, 'broken') || !$handler->broken()) {
-          return $handler;
+        if ($item ['plugin_id'] === $definition['id'] || in_array($item['plugin_id'], $definition['ids'] ?? [])) {
+          $handler = $this->createInstance($item['plugin_id'], $definition);
+          if (!method_exists($handler, 'broken') || !$handler->broken()) {
+            return $handler;
+          }
+        }
+        // @todo If it is a deprecated ID, still allow it but trigger a
+        //   deprecation message.
+        elseif (isset($definition['deprecated_ids'][$item['plugin_id']])) {
+          @trigger_error($definition['deprecated_ids'][$item['plugin_id']], E_USER_DEPRECATED);
+          $handler = $this->createInstance($item['plugin_id'], $definition);
+          if (!method_exists($handler, 'broken') || !$handler->broken()) {
+            return $handler;
+          }
+        }
+        else {
+          @trigger_error('Configuring a views plugin id that is not allowed is deprecated drupal:11.2.0 and is removed from drupal:12.0.0. Update the configuration or ensure that it is added to the views data id, ids or deprecated_ids for this column and handler type. See https://www.drupal.org/node/3458099', E_USER_DEPRECATED);
         }
       }
 
