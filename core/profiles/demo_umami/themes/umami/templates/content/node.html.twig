@@ -75,7 +75,7 @@
 
   {{ title_prefix }}
   {% if label %}
-    {% if page %}
+    {% if view_mode == "full" %}
       <header class="node__header">
         <h1 class="page-title">
           {{ label }}
