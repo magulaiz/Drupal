@@ -124,7 +124,7 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
       // Then try the configuration provided for the handler, if that is a
       // supported plugin for this field.
       if (isset($item['plugin_id'])) {
-        if ($item ['plugin_id'] === $definition['id'] || in_array($item['plugin_id'], $definition['ids'] ?? [])) {
+        if ($item['plugin_id'] === $definition['id'] || in_array($item['plugin_id'], $definition['ids'] ?? [])) {
           $handler = $this->createInstance($item['plugin_id'], $definition);
           if (!method_exists($handler, 'broken') || !$handler->broken()) {
             return $handler;
