@@ -54,8 +54,8 @@ class ExtensionStreamTest extends KernelTestBase {
 
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
-    // Install Stark and Claro themes.
-    $theme_installer->install(['stark', 'claro']);
+    // Install Olivero and Claro themes.
+    $theme_installer->install(['olivero', 'claro']);
 
     // Set 'minimal' as installed profile for the purposes of this test.
     $this->setInstallProfile('minimal');
@@ -175,22 +175,22 @@ class ExtensionStreamTest extends KernelTestBase {
       ],
       // Cases for theme:// stream wrapper.
       [
-        'theme://seven',
-        'theme://seven',
-        '/core/themes/seven',
-        'core/themes/seven',
+        'theme://claro',
+        'theme://claro',
+        '/core/themes/claro',
+        'core/themes/claro',
       ],
       [
-        'theme://seven/style.css',
-        'theme://seven',
-        '/core/themes/seven/style.css',
-        'core/themes/seven/style.css',
+        'theme://claro/style.css',
+        'theme://claro',
+        '/core/themes/claro/style.css',
+        'core/themes/claro/style.css',
       ],
       [
-        'theme://bartik/color/preview.js',
-        'theme://bartik/color',
-        '/core/themes/bartik/color/preview.js',
-        'core/themes/bartik/color/preview.js',
+        'theme://olivero/color/preview.js',
+        'theme://olivero/color',
+        '/core/themes/olivero/color/preview.js',
+        'core/themes/olivero/color/preview.js',
       ],
       // Cases for profile:// stream wrapper.
       [
@@ -200,10 +200,10 @@ class ExtensionStreamTest extends KernelTestBase {
         'core/profiles/minimal',
       ],
       [
-        'profile://config/install/block.block.stark_login.yml',
+        'profile://config/install/block.block.olivero_login.yml',
         'profile://config/install',
-        '/core/profiles/minimal/config/install/block.block.stark_login.yml',
-        'core/profiles/minimal/config/install/block.block.stark_login.yml',
+        '/core/profiles/minimal/config/install/block.block.olivero_login.yml',
+        'core/profiles/minimal/config/install/block.block.olivero_login.yml',
       ],
       [
         'profile://config/install/node.type.article.yml',
@@ -317,9 +317,9 @@ class ExtensionStreamTest extends KernelTestBase {
         'The theme fifteen does not exist.',
       ],
       [
-        'theme://stark/stark.info.yml',
+        'theme://olivero/olivero.info.yml',
         UnknownExtensionException::class,
-        'The theme stark does not exist.',
+        'The theme olivero does not exist.',
       ],
     ];
   }
