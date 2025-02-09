@@ -560,7 +560,7 @@ class ModuleHandler implements ModuleHandlerInterface {
           else {
             $callable = $listener;
           }
-          if (isset($this->moduleList[$module])) {
+          if (isset($this->moduleList[$module]) || $module == 'core') {
             $this->invokeMap[$hook][$module][] = $callable;
           }
         }
