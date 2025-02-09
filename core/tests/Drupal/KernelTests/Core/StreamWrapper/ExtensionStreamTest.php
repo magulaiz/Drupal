@@ -54,8 +54,8 @@ class ExtensionStreamTest extends KernelTestBase {
 
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
-    // Install Bartik and Seven themes.
-    $theme_installer->install(['bartik', 'seven']);
+    // Install Stark and Claro themes.
+    $theme_installer->install(['stark', 'claro']);
 
     // Set 'minimal' as installed profile for the purposes of this test.
     $this->setInstallProfile('minimal');
