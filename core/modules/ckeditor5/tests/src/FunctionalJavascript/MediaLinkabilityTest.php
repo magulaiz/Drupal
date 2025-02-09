@@ -305,6 +305,9 @@ class MediaLinkabilityTest extends MediaTestBase {
     $this->assertNotEmpty($xpath->query('//drupal-media'));
   }
 
+  /**
+   * Tests that entity link suggestions work correctly for media links in CKEditor 5.
+   */
   public function testWithEntityLinkSuggestions(): void {
     $content_to_add = $this->drupalCreateNode([
       'type' => 'blog',
