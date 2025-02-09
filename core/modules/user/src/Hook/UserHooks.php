@@ -124,7 +124,7 @@ class UserHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $fields['user']['user']['form']['account'] = [
       'label' => t('User name and password'),
       'description' => t('User module account form elements.'),
@@ -222,10 +222,10 @@ class UserHooks {
    * Implements hook_user_login().
    */
   #[Hook('user_login')]
-  public function userLogin(UserInterface $account) {
-    // Reset static cache of default variables in template_preprocess() to reflect
-    // the new user.
-    drupal_static_reset('template_preprocess');
+  public function userLogin(UserInterface $account): void {
+    // Reset default theme variables.
+    \Drupal::service('theme.manager')->resetActiveTheme();
+
     // If the user has a NULL time zone, notify them to set a time zone.
     $config = \Drupal::config('system.date');
     if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
@@ -242,17 +242,16 @@ class UserHooks {
    * Implements hook_user_logout().
    */
   #[Hook('user_logout')]
-  public function userLogout(AccountInterface $account) {
-    // Reset static cache of default variables in template_preprocess() to reflect
-    // the new user.
-    drupal_static_reset('template_preprocess');
+  public function userLogout(AccountInterface $account): void {
+    // Reset default theme variables.
+    \Drupal::service('theme.manager')->resetActiveTheme();
   }
 
   /**
    * Implements hook_mail().
    */
   #[Hook('mail')]
-  public function mail($key, &$message, $params) {
+  public function mail($key, &$message, $params): void {
     $token_service = \Drupal::token();
     $language_manager = \Drupal::languageManager();
     $langcode = $message['langcode'];
@@ -347,7 +346,7 @@ class UserHooks {
    * Implements hook_modules_uninstalled().
    */
   #[Hook('modules_uninstalled')]
-  public function modulesUninstalled($modules) {
+  public function modulesUninstalled($modules): void {
     // Remove any potentially orphan module data stored for users.
     \Drupal::service('user.data')->delete($modules);
   }
@@ -356,7 +355,7 @@ class UserHooks {
    * Implements hook_toolbar().
    */
   #[Hook('toolbar')]
-  public function toolbar() {
+  public function toolbar(): array {
     $user = \Drupal::currentUser();
     $items['user'] = [
       '#type' => 'toolbar_item',
@@ -480,7 +479,7 @@ class UserHooks {
    * Implements hook_filter_format_disable().
    */
   #[Hook('filter_format_disable')]
-  public function filterFormatDisable(FilterFormatInterface $filter_format) {
+  public function filterFormatDisable(FilterFormatInterface $filter_format): void {
     // Remove the permission from any roles.
     $permission = $filter_format->getPermissionName();
     /** @var \Drupal\user\Entity\Role $role */
@@ -495,7 +494,7 @@ class UserHooks {
    * Implements hook_entity_operation().
    */
   #[Hook('entity_operation')]
-  public function entityOperation(EntityInterface $entity) {
+  public function entityOperation(EntityInterface $entity): array {
     // Add Manage permissions link if this entity type defines the permissions
     // link template.
     if (!$entity->hasLinkTemplate('entity-permissions-form')) {

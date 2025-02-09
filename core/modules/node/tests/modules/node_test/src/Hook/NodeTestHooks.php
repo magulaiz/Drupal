@@ -28,24 +28,18 @@ class NodeTestHooks {
       // Add RSS elements and namespaces when building the RSS feed.
       $node->rss_elements[] = [
         'key' => 'testElement',
-        'value' => t('Value of testElement RSS element for node @nid.', [
-          '@nid' => $node->id(),
-        ]),
+        'value' => 'Value of testElement RSS element for node ' . $node->id() . '.',
       ];
       // Add content that should be displayed only in the RSS feed.
       $build['extra_feed_content'] = [
-        '#markup' => '<p>' . t('Extra data that should appear only in the RSS feed for node @nid.', [
-          '@nid' => $node->id(),
-        ]) . '</p>',
+        '#markup' => '<p>' . 'Extra data that should appear only in the RSS feed for node ' . $node->id() . '.</p>',
         '#weight' => 10,
       ];
     }
     if ($view_mode != 'rss') {
       // Add content that should NOT be displayed in the RSS feed.
       $build['extra_non_feed_content'] = [
-        '#markup' => '<p>' . t('Extra data that should appear everywhere except the RSS feed for node @nid.', [
-          '@nid' => $node->id(),
-        ]) . '</p>',
+        '#markup' => '<p>' . 'Extra data that should appear everywhere except the RSS feed for node ' . $node->id() . '.</p>',
       ];
     }
   }
@@ -64,7 +58,7 @@ class NodeTestHooks {
    * Implements hook_node_grants().
    */
   #[Hook('node_grants')]
-  public function nodeGrants(AccountInterface $account, $operation) {
+  public function nodeGrants(AccountInterface $account, $operation): array {
     // Give everyone full grants so we don't break other node tests.
     // Our node access tests asserts three realms of access.
     // See testGrantAlter().
@@ -75,10 +69,10 @@ class NodeTestHooks {
    * Implements hook_node_access_records().
    */
   #[Hook('node_access_records')]
-  public function nodeAccessRecords(NodeInterface $node) {
+  public function nodeAccessRecords(NodeInterface $node): array {
     // Return nothing when testing for empty responses.
     if (!empty($node->disable_node_access)) {
-      return;
+      return [];
     }
     $grants = [];
     if ($node->getType() == 'article') {
@@ -141,8 +135,8 @@ class NodeTestHooks {
       $node->changed = 979534800;
     }
     // Determine changes.
-    if (!empty($node->original) && $node->original->getTitle() == 'test_changes') {
-      if ($node->original->getTitle() != $node->getTitle()) {
+    if ($node->getOriginal()?->getTitle() == 'test_changes') {
+      if ($node->getOriginal()->getTitle() != $node->getTitle()) {
         $node->title->value .= '_presave';
       }
     }
@@ -154,8 +148,8 @@ class NodeTestHooks {
   #[Hook('node_update')]
   public function nodeUpdate(NodeInterface $node) {
     // Determine changes on update.
-    if (!empty($node->original) && $node->original->getTitle() == 'test_changes') {
-      if ($node->original->getTitle() != $node->getTitle()) {
+    if ($node->getOriginal()?->getTitle() == 'test_changes') {
+      if ($node->getOriginal()->getTitle() != $node->getTitle()) {
         $node->title->value .= '_update';
       }
     }

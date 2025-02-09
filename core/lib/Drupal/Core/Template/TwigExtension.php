@@ -191,7 +191,7 @@ class TwigExtension extends AbstractExtension {
   /**
    * Generates a URL path given a route name and parameters.
    *
-   * @param $name
+   * @param string $name
    *   The name of the route.
    * @param array $parameters
    *   (optional) An associative array of route parameters names and values.
@@ -214,7 +214,7 @@ class TwigExtension extends AbstractExtension {
   /**
    * Generates an absolute URL given a route name and parameters.
    *
-   * @param $name
+   * @param string $name
    *   The name of the route.
    * @param array $parameters
    *   An associative array of route parameter names and values.
@@ -490,12 +490,11 @@ class TwigExtension extends AbstractExtension {
    * For example: a generated link or generated URL object is passed as a Twig
    * template argument, and its bubbleable metadata must be bubbled.
    *
-   * @see \Drupal\Core\GeneratedLink
-   * @see \Drupal\Core\GeneratedUrl
-   *
    * @param mixed $arg
    *   A Twig template argument that is about to be printed.
    *
+   * @see \Drupal\Core\GeneratedLink
+   * @see \Drupal\Core\GeneratedUrl
    * @see \Drupal\Core\Theme\ThemeManager::render()
    * @see \Drupal\Core\Render\RendererInterface::render()
    */

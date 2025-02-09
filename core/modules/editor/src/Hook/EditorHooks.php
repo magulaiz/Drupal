@@ -57,8 +57,8 @@ class EditorHooks {
   /**
    * Implements hook_menu_links_discovered_alter().
    *
-   * Rewrites the menu entries for filter module that relate to the configuration
-   * of text editors.
+   * Rewrites the menu entries for filter module that relate to the
+   * configuration of text editors.
    */
   #[Hook('menu_links_discovered_alter')]
   public function menuLinksDiscoveredAlter(array &$links): void {
@@ -207,14 +207,14 @@ class EditorHooks {
     }
     // On new revisions, all files are considered to be a new usage and no
     // deletion of previous file usages are necessary.
-    if (!empty($entity->original) && $entity->getRevisionId() != $entity->original->getRevisionId()) {
+    if ($entity->getOriginal() && $entity->getRevisionId() != $entity->getOriginal()->getRevisionId()) {
       $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
       foreach ($referenced_files_by_field as $uuids) {
         _editor_record_file_usage($uuids, $entity);
       }
     }
     else {
-      $original_uuids_by_field = empty($entity->original) ? [] : _editor_get_file_uuids_by_field($entity->original);
+      $original_uuids_by_field = !$entity->getOriginal() ? [] : _editor_get_file_uuids_by_field($entity->getOriginal());
       $uuids_by_field = _editor_get_file_uuids_by_field($entity);
       // Detect file usages that should be incremented.
       foreach ($uuids_by_field as $field => $uuids) {
@@ -268,13 +268,13 @@ class EditorHooks {
    * @see file_get_file_references()
    */
   #[Hook('file_download')]
-  public function fileDownload($uri) {
+  public function fileDownload($uri): array|int|null {
     // Get the file record based on the URI. If not in the database just return.
     /** @var \Drupal\file\FileRepositoryInterface $file_repository */
     $file_repository = \Drupal::service('file.repository');
     $file = $file_repository->loadByUri($uri);
     if (!$file) {
-      return;
+      return NULL;
     }
     // Temporary files are handled by file_file_download(), so nothing to do here
     // about them.
@@ -287,7 +287,7 @@ class EditorHooks {
     // an image preview on a node creation form) in which case, allow download by
     // the file's owner.
     if (empty($usage_list['editor']) && ($file->isPermanent() || $file->getOwnerId() != \Drupal::currentUser()->id())) {
-      return;
+      return NULL;
     }
     // Editor.module MUST NOT call $file->access() here (like file_file_download()
     // does) as checking the 'download' access to a file entity would end up in

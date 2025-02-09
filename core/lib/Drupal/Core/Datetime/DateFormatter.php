@@ -33,7 +33,7 @@ class DateFormatter implements DateFormatterInterface {
   protected $dateFormatStorage;
 
   /**
-   * Language manager for retrieving the default langcode when none is specified.
+   * The Language manager.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
@@ -53,6 +53,11 @@ class DateFormatter implements DateFormatterInterface {
    */
   protected $requestStack;
 
+  /**
+   * The available date formats.
+   *
+   * @var array
+   */
   protected $dateFormats = [];
 
   /**

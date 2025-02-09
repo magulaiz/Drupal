@@ -189,6 +189,7 @@ final class NavigationLinkBlock extends BlockBase {
    *   The URI to get the displayable string for.
    *
    * @return string
+   *   The displayable string for the URI.
    *
    * @see static::getUserEnteredStringAsUri()
    */
@@ -246,6 +247,10 @@ final class NavigationLinkBlock extends BlockBase {
     // Ensure that user has access to link before rendering it.
     try {
       $url = Url::fromUri($config['uri']);
+      // Internal routes must exist.
+      if (!$url->isExternal() && !$url->isRouted()) {
+        return $build;
+      }
       $access = $url->access(NULL, TRUE);
       if (!$access->isAllowed()) {
         // Cacheable dependency is explicitly added when access is not granted.
