@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
@@ -45,6 +47,7 @@ class EntityAccessControlHandlerTest extends UnitTestCase {
   public function setUp(): void {
     parent::setUp();
 
+    // phpcs:ignore Generic.PHP.DeprecatedFunctions.Deprecated
     assert_options(ASSERT_ACTIVE, FALSE);
 
     $this->entityType = $this->prophesize(EntityTypeInterface::class);
@@ -61,13 +64,14 @@ class EntityAccessControlHandlerTest extends UnitTestCase {
   public function tearDown(): void {
     parent::tearDown();
 
+    // phpcs:ignore Generic.PHP.DeprecatedFunctions.Deprecated
     assert_options(ASSERT_ACTIVE, TRUE);
   }
 
   /**
    * Provides data to self::testAccess().
    */
-  public function provideAccess() {
+  public static function provideAccess() {
     return [
       'duplicate allowed' => [
         TRUE,
@@ -104,6 +108,12 @@ class EntityAccessControlHandlerTest extends UnitTestCase {
    *
    * @param bool|null $expected
    *   TRUE if allowed, FALSE if forbidden, or NULL if neutral.
+   * @param string $operation
+   *   The operation.
+   * @param array $permissions
+   *   The permissions.
+   * @param string $entity_type_admin_permission
+   *   The entity type admin permission.
    */
   public function testAccess($expected, $operation, array $permissions, $entity_type_admin_permission) {
     $account = $this->prophesize(AccountInterface::class);
@@ -125,7 +135,7 @@ class EntityAccessControlHandlerTest extends UnitTestCase {
     $this->entityType->getAdminPermission()
       ->willReturn($entity_type_admin_permission);
 
-    $this->moduleHandler->invokeAll(Argument::cetera())->willreturn([]);
+    $this->moduleHandler->invokeAll(Argument::cetera())->willReturn([]);
 
     $result = $this->entityAccessControlHandler->access($entity->reveal(), $operation, $account->reveal(), TRUE);
     if ($expected === TRUE) {
