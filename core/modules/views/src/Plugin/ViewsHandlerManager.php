@@ -140,7 +140,7 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
           }
         }
         else {
-          @trigger_error('Configuring a views plugin id that is not allowed is deprecated drupal:11.2.0 and is removed from drupal:12.0.0. Update the configuration or ensure that it is added to the views data id, ids or deprecated_ids for this column and handler type. See https://www.drupal.org/node/3458099', E_USER_DEPRECATED);
+          @trigger_error('Configuring a views plugin id that is not allowed is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Update the configuration or ensure that it is added to the views data id, ids or deprecated_ids for this column and handler type. See https://www.drupal.org/node/3458099', E_USER_DEPRECATED);
         }
       }
 
