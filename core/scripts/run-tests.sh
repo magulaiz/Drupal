@@ -226,7 +226,7 @@ exit($status);
 /**
  * Print help text.
  */
-function simpletest_script_help(): string {
+function simpletest_script_help(): void {
   global $args;
 
   echo <<<EOF
