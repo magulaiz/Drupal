@@ -30,8 +30,8 @@ class OpenModalDialogCommand extends OpenDialogCommand {
    *   on the content of the dialog. If left empty, the settings will be
    *   populated automatically from the current request.
    * @param string $selector
-   *    (optional) Selector to scope the modal. Only modals of the same scope
-   *    will be removed after opening a subsequent modal.
+   *   (optional) Selector to scope the modal. Only modals of the same scope
+   *   will be removed after opening a subsequent modal.
    */
   public function __construct($title, $content, array $dialog_options = [], $settings = NULL, string $selector = '#drupal-modal') {
     $dialog_options['modal'] = TRUE;
