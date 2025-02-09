@@ -452,12 +452,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/includes/theme.inc',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function _template_preprocess_default_variables\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/includes/theme.inc',
-];
-$ignoreErrors[] = [
 	'message' => '#^Function drupal_find_theme_templates\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -11624,12 +11618,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/basic_auth/tests/modules/basic_auth_test/src/BasicAuthTestController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function big_pipe_theme_suggestions_big_pipe_interface_preview\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/big_pipe/big_pipe.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\big_pipe\\\\EventSubscriber\\\\HtmlResponseBigPipeSubscriber\\:\\:onRespond\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -11787,12 +11775,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function block_theme_initialize\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/block.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function block_theme_suggestions_block\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block/block.module',
@@ -14358,12 +14340,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config/src/Form/ConfigSync.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config\\\\Hook\\\\ConfigHooks\\:\\:fileDownload\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/src/Hook/ConfigHooks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config\\\\Hook\\\\ConfigHooks\\:\\:help\\(\\) has no return type specified\\.$#',
@@ -17384,12 +17360,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/editor/src/Hook/EditorHooks.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\editor\\\\Hook\\\\EditorHooks\\:\\:fileDownload\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/editor/src/Hook/EditorHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\editor\\\\Hook\\\\EditorHooks\\:\\:filterFormatPresave\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -19400,12 +19370,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/file_test/src/Form/FileTestSaveUploadFromForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\file_test\\\\Hook\\\\FileTestHooks\\:\\:fileDownload\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/file_test/src/Hook/FileTestHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\file_test\\\\Hook\\\\FileTestHooks\\:\\:fileInsert\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -20775,12 +20739,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\image\\\\Hook\\\\ImageHooks\\:\\:fieldStorageConfigUpdate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/src/Hook/ImageHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\image\\\\Hook\\\\ImageHooks\\:\\:fileDownload\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/src/Hook/ImageHooks.php',
@@ -29270,12 +29228,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/node.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function node_theme_suggestions_node\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/node.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\ConfigTranslation\\\\NodeTypeMapper\\:\\:setEntity\\(\\) should return bool but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
 	'count' => 2,
@@ -32054,12 +32006,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/rest/tests/src/Unit/EventSubscriber/ResourceResponseSubscriberTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function search_theme_suggestions_search_result\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/search.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$working_to might not be defined\\.$#',
 	'identifier' => 'variable.undefined',
 	'count' => 1,
@@ -34142,12 +34088,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Form/ThemeSettingsForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Hook\\\\SystemHooks\\:\\:fileDownload\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Hook/SystemHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Hook\\\\SystemHooks\\:\\:help\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -34365,36 +34305,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function system_sort_themes\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function system_theme_suggestions_field\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function system_theme_suggestions_html\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function system_theme_suggestions_maintenance_page\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function system_theme_suggestions_page\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function system_theme_suggestions_region\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/system.module',
@@ -38068,24 +37978,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/src/ThemeTestPreprocess.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function theme_test_theme_suggestions_node\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/theme_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function theme_test_theme_suggestions_theme_test_preprocess_suggestions\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/theme_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function theme_test_theme_suggestions_theme_test_suggestion_provided\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/theme_test.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\trusted_hosts_test\\\\Controller\\\\TrustedHostsTestController\\:\\:bagType\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -40523,12 +40415,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function taxonomy_term_is_page\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/taxonomy.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function taxonomy_theme_suggestions_taxonomy_term\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/taxonomy.module',
@@ -51599,12 +51485,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function views_ui_contextual_links_suppress_push\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/views_ui.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function views_ui_theme_suggestions_views_ui_view_preview_section\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/views_ui.module',

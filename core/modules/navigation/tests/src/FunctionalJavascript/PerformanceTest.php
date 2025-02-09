@@ -73,16 +73,15 @@ class PerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 4,
-      'CacheGetCount' => 61,
+      'CacheGetCount' => 59,
       'CacheGetCountByBin' => [
         'config' => 11,
         'data' => 6,
-        'discovery' => 11,
+        'discovery' => 10,
         'bootstrap' => 6,
         'dynamic_page_cache' => 2,
         'render' => 23,
         'menu' => 1,
-        'default' => 1,
       ],
       'CacheSetCount' => 2,
       'CacheSetCountByBin' => [
@@ -90,7 +89,7 @@ class PerformanceTest extends PerformanceTestBase {
       ],
       'CacheDeleteCount' => 0,
       'CacheTagChecksumCount' => 3,
-      'CacheTagIsValidCount' => 30,
+      'CacheTagIsValidCount' => 29,
       'CacheTagInvalidationCount' => 0,
       'ScriptCount' => 2,
       'ScriptBytes' => 215500,
@@ -98,7 +97,6 @@ class PerformanceTest extends PerformanceTestBase {
       'StylesheetBytes' => 92000,
     ];
     $this->assertMetrics($expected, $performance_data);
-    $this->assertSame(['core.extension.list.module'], $performance_data->getCacheOperations()['get']['default']);
 
     // Check that the navigation toolbar is cached without any high-cardinality
     // cache contexts (user, route, query parameters etc.).
