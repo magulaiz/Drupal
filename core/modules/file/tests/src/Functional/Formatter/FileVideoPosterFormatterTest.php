@@ -25,11 +25,6 @@ class FileVideoPosterFormatterTest extends FileFieldTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'entity_test',
-    'field',
-    'file',
-    'user',
-    'system',
     'image',
   ];
 

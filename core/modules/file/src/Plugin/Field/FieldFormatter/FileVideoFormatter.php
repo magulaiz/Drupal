@@ -229,7 +229,7 @@ class FileVideoFormatter extends FileMediaFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
+  public function viewElements(FieldItemListInterface $items, $langcode): array {
     $elements = parent::viewElements($items, $langcode);
 
     /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
@@ -284,7 +284,7 @@ class FileVideoFormatter extends FileMediaFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function calculateDependencies() {
+  public function calculateDependencies(): array {
     $dependencies = parent::calculateDependencies();
     $style_id = $this->getSetting('poster_image_style');
     /** @var \Drupal\image\ImageStyleInterface $style */
