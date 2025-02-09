@@ -18,9 +18,9 @@ class SyslogHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.syslog':
-        $output = '';
         $output .= '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Syslog module logs events by sending messages to the logging facility of your web server\'s operating system. Syslog is an operating system administrative logging tool that provides valuable information for use in system management and security auditing. Most suited to medium and large sites, Syslog provides filtering tools that allow messages to be routed by type and severity. For more information, see the <a href=":syslog">online documentation for the Syslog module</a>, as well as PHP\'s documentation pages for the <a href="http://php.net/manual/function.openlog.php">openlog</a> and <a href="http://php.net/manual/function.syslog.php">syslog</a> functions.', [':syslog' => 'https://www.drupal.org/documentation/modules/syslog']) . '</p>';
         $output .= '<h2>' . t('Uses') . '</h2>';
@@ -30,11 +30,9 @@ class SyslogHooks {
         $output .= '<dt>' . t('Logging for Microsoft Windows') . '</dt>';
         $output .= '<dd>' . t('On Microsoft Windows, messages are always sent to the Event Log using the code <code>LOG_USER</code>.') . '</dd>';
         $output .= '</dl>';
-        return $output;
-
-      default:
-        return '';
     }
+
+    return $output;
   }
 
   /**

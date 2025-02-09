@@ -17,9 +17,9 @@ class TelephoneHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.telephone':
-        $output = '';
         $output .= '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Telephone module allows you to create fields that contain telephone numbers. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":telephone_documentation">online documentation for the Telephone module</a>.', [
           ':field' => Url::fromRoute('help.page', [
@@ -41,11 +41,9 @@ class TelephoneHooks {
         $output .= '<dt>' . t('Displaying telephone numbers as links') . '</dt>';
         $output .= '<dd>' . t('Telephone numbers can be displayed as links with the scheme name <em>tel:</em> by choosing the <em>Telephone</em> display format on the <em>Manage display</em> page. Any spaces will be stripped out of the link text. This semantic markup improves the user experience on mobile and assistive technology devices.') . '</dd>';
         $output .= '</dl>';
-        return $output;
-
-      default:
-        return '';
     }
+
+    return $output;
   }
 
   /**

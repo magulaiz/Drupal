@@ -30,9 +30,9 @@ class UserHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.user':
-        $output = '';
         $output .= '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The User module allows users to register, log in, and log out. It also allows users with proper permissions to manage user roles and permissions. For more information, see the <a href=":user_docs">online documentation for the User module</a>.', [':user_docs' => 'https://www.drupal.org/documentation/modules/user']) . '</p>';
         $output .= '<h2>' . t('Uses') . '</h2>';
@@ -59,34 +59,40 @@ class UserHooks {
           ':accounts' => Url::fromRoute('entity.user.admin_form')->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'user.admin_create':
-        return '<p>' . t("This web page allows administrators to register new users. Users' email addresses and usernames must be unique.") . '</p>';
+        $output = '<p>' . t("This web page allows administrators to register new users. Users' email addresses and usernames must be unique.") . '</p>';
+        break;
 
       case 'user.admin_permissions':
-        return '<p>' . t('Permissions let you control what users can do and see on your site. You can define a specific set of permissions for each role. (See the <a href=":role">Roles</a> page to create a role.) Any permissions granted to the Authenticated user role will be given to any user who is logged in to your site. On the <a href=":settings">Role settings</a> page, you can make any role into an Administrator role for the site, meaning that role will be granted all permissions. You should be careful to ensure that only trusted users are given this access and level of control of your site.', [
+        $output = '<p>' . t('Permissions let you control what users can do and see on your site. You can define a specific set of permissions for each role. (See the <a href=":role">Roles</a> page to create a role.) Any permissions granted to the Authenticated user role will be given to any user who is logged in to your site. On the <a href=":settings">Role settings</a> page, you can make any role into an Administrator role for the site, meaning that role will be granted all permissions. You should be careful to ensure that only trusted users are given this access and level of control of your site.', [
           ':role' => Url::fromRoute('entity.user_role.collection')->toString(),
           ':settings' => Url::fromRoute('user.role.settings')->toString(),
         ]) . '</p>';
+        break;
 
       case 'entity.user_role.collection':
-        return '<p>' . t('A role defines a group of users that have certain privileges. These privileges are defined on the <a href=":permissions">Permissions page</a>. Here, you can define the names and the display sort order of the roles on your site. It is recommended to order roles from least permissive (for example, Anonymous user) to most permissive (for example, Administrator user). Users who are not logged in have the Anonymous user role. Users who are logged in have the Authenticated user role, plus any other roles granted to their user account.', [
+        $output = '<p>' . t('A role defines a group of users that have certain privileges. These privileges are defined on the <a href=":permissions">Permissions page</a>. Here, you can define the names and the display sort order of the roles on your site. It is recommended to order roles from least permissive (for example, Anonymous user) to most permissive (for example, Administrator user). Users who are not logged in have the Anonymous user role. Users who are logged in have the Authenticated user role, plus any other roles granted to their user account.', [
           ':permissions' => Url::fromRoute('user.admin_permissions')->toString(),
         ]) . '</p>';
+        break;
 
       case 'entity.user.field_ui_fields':
-        return '<p>' . t('This form lets administrators add and edit fields for storing user data.') . '</p>';
+        $output = '<p>' . t('This form lets administrators add and edit fields for storing user data.') . '</p>';
+        break;
 
       case 'entity.entity_form_display.user.default':
-        return '<p>' . t('This form lets administrators configure how form fields should be displayed when editing a user profile.') . '</p>';
+        $output = '<p>' . t('This form lets administrators configure how form fields should be displayed when editing a user profile.') . '</p>';
+        break;
 
       case 'entity.entity_view_display.user.default':
-        return '<p>' . t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
-
-      default:
-        return '';
+        $output = '<p>' . t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
+        break;
     }
+
+    return $output;
+
   }
 
   /**

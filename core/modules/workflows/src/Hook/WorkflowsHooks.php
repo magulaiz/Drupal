@@ -16,6 +16,7 @@ class WorkflowsHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.workflows':
         $content_moderation_url = NULL;
@@ -55,11 +56,9 @@ class WorkflowsHooks {
         $output .= '<dt>' . t('Configuring workflows further') . '</dt>';
         $output .= '<dd>' . t('Depending on the installed workflow type, additional configuration can be available in the edit form of a workflow.') . '</dd>';
         $output .= '<dl>';
-        return $output;
-
-      default:
-        return '';
     }
+
+    return $output;
   }
 
 }

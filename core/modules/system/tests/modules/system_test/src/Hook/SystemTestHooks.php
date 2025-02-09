@@ -21,16 +21,14 @@ class SystemTestHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.system_test':
-        $output = '';
         $output .= '<h2>' . $this->t('Test Help Page') . '</h2>';
         $output .= '<p>' . $this->t('This is a test help page for the system_test module for the purpose of testing if the "Help" link displays properly.') . '</p>';
-        return $output;
-
-      default:
-        return '';
     }
+
+    return $output;
   }
 
   /**
