@@ -799,7 +799,6 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $file_system = $this->container->get('file_system');
 
     // Add to the twin media field.
-    // Add to the twin media field.
     $this->openMediaLibraryForField('field_twin_media');
 
     // Assert the upload form is now visible for default tab type_three.
