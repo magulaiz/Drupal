@@ -47,9 +47,6 @@ class EntityAccessControlHandlerTest extends UnitTestCase {
   public function setUp(): void {
     parent::setUp();
 
-    // phpcs:ignore Generic.PHP.DeprecatedFunctions.Deprecated
-    assert_options(ASSERT_ACTIVE, FALSE);
-
     $this->entityType = $this->prophesize(EntityTypeInterface::class);
 
     $this->moduleHandler = $this->prophesize(ModuleHandlerInterface::class);
@@ -63,15 +60,12 @@ class EntityAccessControlHandlerTest extends UnitTestCase {
    */
   public function tearDown(): void {
     parent::tearDown();
-
-    // phpcs:ignore Generic.PHP.DeprecatedFunctions.Deprecated
-    assert_options(ASSERT_ACTIVE, TRUE);
   }
 
   /**
    * Provides data to self::testAccess().
    */
-  public static function provideAccess() {
+  public static function provideAccess(): array {
     return [
       'duplicate allowed' => [
         TRUE,
@@ -115,7 +109,7 @@ class EntityAccessControlHandlerTest extends UnitTestCase {
    * @param string $entity_type_admin_permission
    *   The entity type admin permission.
    */
-  public function testAccess($expected, $operation, array $permissions, $entity_type_admin_permission) {
+  public function testAccess(?bool $expected, string $operation, array $permissions, string $entity_type_admin_permission): void {
     $account = $this->prophesize(AccountInterface::class);
     $account->id()->willReturn(2);
     foreach ($permissions as $permission => $has_permission) {
