@@ -18,10 +18,10 @@ class SearchHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.search':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Search module provides the ability to set up search pages based on plugins provided by other modules. In Drupal core, there are two page-type plugins: the Content page type provides keyword searching for content managed by the Node module, and the Users page type provides keyword searching for registered users. Contributed modules may provide other page-type plugins. For more information, see the <a href=":search-module">online documentation for the Search module</a>.', [':search-module' => 'https://www.drupal.org/documentation/modules/search']) . '</p>';
         $output .= '<h2>' . t('Uses') . '</h2>';
         $output .= '<dl>';
@@ -66,11 +66,9 @@ class SearchHooks {
           ':sphinx_url' => 'https://www.drupal.org/project/sphinx',
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
-
-      default:
-        return '';
     }
+
+    return $output;
   }
 
   /**

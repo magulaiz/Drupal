@@ -73,10 +73,10 @@ class ContextualHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.contextual':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Contextual links module gives users with the <em>Use contextual links</em> permission quick access to tasks associated with certain areas of pages on your site. For example, a menu displayed as a block has links to edit the menu and configure the block. For more information, see the <a href=":contextual">online documentation for the Contextual Links module</a>.', [':contextual' => 'https://www.drupal.org/docs/8/core/modules/contextual']) . '</p>';
         $output .= '<h2>' . t('Uses') . '</h2>';
         $output .= '<dl>';
@@ -100,11 +100,8 @@ class ContextualHooks {
         $output .= t('Once the contextual links button for the area of interest is visible, click the button to display the links.');
         $output .= '</dd>';
         $output .= '</dl>';
-        return $output;
-
-      default:
-        return '';
     }
+    return $output;
   }
 
   /**

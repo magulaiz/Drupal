@@ -29,6 +29,7 @@ class CommentHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.comment':
         $output = '<h2>' . t('About') . '</h2>';
@@ -60,14 +61,13 @@ class CommentHooks {
         ]) . '</dd>';
         $output .= '</dl>';
         return $output;
+        break;
 
       case 'entity.comment_type.collection':
         $output = '<p>' . t('This page provides a list of all comment types on the site and allows you to manage the fields, form and display settings for each.') . '</p>';
-        return $output;
-
-      default:
-        return '';
+        break;
     }
+    return $output;
   }
 
   /**

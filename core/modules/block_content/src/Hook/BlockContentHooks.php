@@ -21,11 +21,11 @@ class BlockContentHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.block_content':
         $field_ui = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Block Content module allows you to create and manage custom <em>block types</em> and <em>content-containing blocks</em>. For more information, see the <a href=":online-help">online documentation for the Block Content module</a>.', [':online-help' => 'https://www.drupal.org/documentation/modules/block_content']) . '</p>';
         $output .= '<h2>' . t('Uses') . '</h2>';
         $output .= '<dl>';
@@ -43,11 +43,8 @@ class BlockContentHooks {
           ':block-library' => Url::fromRoute('entity.block_content.collection')->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
-
-      default:
-        return '';
     }
+    return $output;
   }
 
   /**

@@ -16,10 +16,10 @@ class ResponsiveImageHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.responsive_image':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Responsive Image module provides an image formatter that allows browsers to select which image file to display based on media queries or which image file types the browser supports, using the HTML 5 picture and source elements and/or the sizes, srcset and type attributes. For more information, see the <a href=":responsive_image">online documentation for the Responsive Image module</a>.', [
           ':responsive_image' => 'https://www.drupal.org/documentation/modules/responsive_image',
         ]) . '</p>';
@@ -60,14 +60,14 @@ class ResponsiveImageHooks {
           ])->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'entity.responsive_image_style.collection':
-        return '<p>' . t('A responsive image style associates an image style with each breakpoint defined by your theme.') . '</p>';
-
-      default:
-        return '';
+        $output = '<p>' . t('A responsive image style associates an image style with each breakpoint defined by your theme.') . '</p>';
+        break;
     }
+
+    return $output;
   }
 
   /**

@@ -16,10 +16,10 @@ class RestHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.rest':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The RESTful Web Services module provides a framework for exposing REST resources on your site. It provides support for content entity types such as the main site content, comments, content blocks, taxonomy terms, and user accounts, etc. (see the <a href=":field">Field module help page</a> for more information about entities). REST support for content items of the Node module is installed by default, and support for other types of content entities can be enabled. Other modules may add support for other types of REST resources. For more information, see the <a href=":rest">online documentation for the RESTful Web Services module</a>.', [
           ':rest' => 'https://www.drupal.org/documentation/modules/rest',
           ':field' => \Drupal::moduleHandler()->moduleExists('field') ? Url::fromRoute('help.page', [
@@ -53,11 +53,9 @@ class RestHooks {
           ':comparison' => 'https://www.drupal.org/docs/8/modules/jsonapi/jsonapi-vs-cores-rest-module',
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
-
-      default:
-        return '';
     }
+
+    return $output;
   }
 
 }

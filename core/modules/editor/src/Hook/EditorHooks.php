@@ -24,10 +24,10 @@ class EditorHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.editor':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Text Editor module provides a framework that other modules (such as <a href=":ckeditor5">CKEditor5 module</a>) can use to provide toolbars and other functionality that allow users to format text more easily than typing HTML tags directly. For more information, see the <a href=":documentation">online documentation for the Text Editor module</a>.', [
           ':documentation' => 'https://www.drupal.org/documentation/modules/editor',
           ':ckeditor5' => \Drupal::moduleHandler()->moduleExists('ckeditor5') ? Url::fromRoute('help.page', [
@@ -50,11 +50,8 @@ class EditorHooks {
         $output .= '<dt>' . t('Using different text editors and formats') . '</dt>';
         $output .= '<dd>' . t('If you change the text format on a text field, the text editor will change as well because the text editor configuration is associated with the individual text format. This allows the use of the same text editor with different options for different text formats. It also allows users to choose between text formats with different text editors if they are installed.') . '</dd>';
         $output .= '</dl>';
-        return $output;
-
-      default:
-        return '';
     }
+    return $output;
   }
 
   /**

@@ -17,13 +17,12 @@ class HelpTopicsTestHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.help_topics_test':
-        return 'Some kind of non-empty output for testing';
-
-      default:
-        return '';
+        $output = 'Some kind of non-empty output for testing';
     }
+    return $output;
   }
 
   /**

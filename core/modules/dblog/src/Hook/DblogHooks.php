@@ -19,10 +19,10 @@ class DblogHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.dblog':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Database Logging module logs system events in the Drupal database. For more information, see the <a href=":dblog">online documentation for the Database Logging module</a>.', [':dblog' => 'https://www.drupal.org/documentation/modules/dblog']) . '</p>';
         $output .= '<h2>' . t('Uses') . '</h2>';
         $output .= '<dl>';
@@ -33,14 +33,13 @@ class DblogHooks {
         $output .= '<dt>' . t('This log is not persistent') . '</dt>';
         $output .= '<dd>' . t('The Database Logging module logs may be cleared by administrators and automated cron tasks, so they should not be used for <a href=":audit_trail_wiki">forensic logging</a>. For forensic purposes, use the Syslog module.', [':audit_trail_wiki' => 'https://en.wikipedia.org/wiki/Audit_trail']) . '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'dblog.overview':
-        return '<p>' . t('The Database Logging module logs system events in the Drupal database. Monitor your site or debug site problems on this page.') . '</p>';
-
-      default:
-        return '';
+        $output = '<p>' . t('The Database Logging module logs system events in the Drupal database. Monitor your site or debug site problems on this page.') . '</p>';
+        break;
     }
+    return $output;
   }
 
   /**

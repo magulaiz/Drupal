@@ -21,10 +21,10 @@ class LocaleHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.locale':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Interface Translation module allows you to translate interface text (<em>strings</em>) into different languages, and to switch between them for the display of interface text. It uses the functionality provided by the <a href=":language">Language module</a>. For more information, see the <a href=":doc-url">online documentation for the Interface Translation module</a>.', [
           ':doc-url' => 'https://www.drupal.org/documentation/modules/locale/',
           ':language' => Url::fromRoute('help.page', [
@@ -58,17 +58,18 @@ class LocaleHooks {
           ':languages' => Url::fromRoute('entity.configurable_language.collection')->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'entity.configurable_language.collection':
-        return '<p>' . t('Interface translations are automatically imported when a language is added, or when new modules or themes are installed. The report <a href=":update">Available translation updates</a> shows the status. Interface text can be customized in the <a href=":translate">user interface translation</a> page.', [
+        $output = '<p>' . t('Interface translations are automatically imported when a language is added, or when new modules or themes are installed. The report <a href=":update">Available translation updates</a> shows the status. Interface text can be customized in the <a href=":translate">user interface translation</a> page.', [
           ':update' => Url::fromRoute('locale.translate_status')->toString(),
           ':translate' => Url::fromRoute('locale.translate_page')->toString(),
         ]) . '</p>';
+        break;
 
       case 'locale.translate_page':
         $output = '<p>' . t('This page allows a translator to search for specific translated and untranslated strings, and is used when creating or editing translations. (Note: Because translation tasks involve many strings, it may be more convenient to <a title="User interface translation export" href=":export">export</a> strings for offline editing in a desktop Gettext translation editor.) Searches may be limited to strings in a specific language.', [':export' => Url::fromRoute('locale.translate_export')->toString()]) . '</p>';
-        return $output;
+        break;
 
       case 'locale.translate_import':
         $output = '<p>' . t('Translation files are automatically downloaded and imported when <a title="Languages" href=":language">languages</a> are added, or when modules or themes are installed.', [
@@ -79,14 +80,13 @@ class LocaleHooks {
           ':export' => Url::fromRoute('locale.translate_export')->toString(),
         ]) . '</p>';
         $output .= '<p>' . t('Note that importing large .po files may take several minutes.') . '</p>';
-        return $output;
+        break;
 
       case 'locale.translate_export':
-        return '<p>' . t('This page exports the translated strings used by your site. An export file may be in Gettext Portable Object (<em>.po</em>) form, which includes both the original string and the translation (used to share translations with others), or in Gettext Portable Object Template (<em>.pot</em>) form, which includes the original strings only (used to create new translations with a Gettext translation editor).') . '</p>';
-
-      default:
-        return '';
+        $output = '<p>' . t('This page exports the translated strings used by your site. An export file may be in Gettext Portable Object (<em>.po</em>) form, which includes both the original string and the translation (used to share translations with others), or in Gettext Portable Object Template (<em>.pot</em>) form, which includes the original strings only (used to create new translations with a Gettext translation editor).') . '</p>';
+        break;
     }
+    return $output;
   }
 
   /**

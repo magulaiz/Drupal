@@ -19,7 +19,7 @@ class TextHooks {
     $output = '';
     switch ($route_name) {
       case 'help.page.text':
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Text module allows you to create short and long text fields with optional summaries. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":text_documentation">online documentation for the Text module</a>.', [
           ':field' => Url::fromRoute('help.page', [
             'name' => 'field',

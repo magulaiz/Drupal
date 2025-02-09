@@ -16,6 +16,7 @@ class PageCacheHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.page_cache':
         $output = '<h2>' . t('About') . '</h2>';
@@ -37,11 +38,9 @@ class PageCacheHooks {
           ':cache-settings' => Url::fromRoute('system.performance_settings')->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
-
-      default:
-        return '';
     }
+
+    return $output;
   }
 
 }

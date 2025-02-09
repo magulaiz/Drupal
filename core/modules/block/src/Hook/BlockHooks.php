@@ -21,11 +21,11 @@ class BlockHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.block':
         $block_content = \Drupal::moduleHandler()->moduleExists('block_content') ? Url::fromRoute('help.page', ['name' => 'block_content'])->toString() : '#';
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Block module allows you to place blocks in regions of your installed themes, and configure block settings. For more information, see the <a href=":blocks-documentation">online documentation for the Block module</a>.', [':blocks-documentation' => 'https://www.drupal.org/documentation/modules/block/']) . '</p>';
         $output .= '<h2>' . t('Uses') . '</h2>';
         $output .= '<dl>';
@@ -42,17 +42,18 @@ class BlockHooks {
         $output .= '<dt>' . t('Adding content blocks') . '</dt>';
         $output .= '<dd>' . t('You can add content blocks, if the <em>Block Content</em> module is installed. For more information, see the <a href=":blockcontent-help">Block Content help page</a>.', [':blockcontent-help' => $block_content]) . '</dd>';
         $output .= '</dl>';
-        return $output;
-    }
-    if ($route_name == 'block.admin_display' || $route_name == 'block.admin_display_theme') {
-      $demo_theme = $route_match->getParameter('theme') ?: \Drupal::config('system.theme')->get('default');
-      $themes = \Drupal::service('theme_handler')->listInfo();
-      $output = '<p>' . t('Block placement is specific to each theme on your site. Changes will not be saved until you click <em>Save blocks</em> at the bottom of the page.') . '</p>';
-      $output .= '<p>' . Link::fromTextAndUrl(t('Demonstrate block regions (@theme)', ['@theme' => $themes[$demo_theme]->info['name']]), Url::fromRoute('block.admin_demo', ['theme' => $demo_theme]))->toString() . '</p>';
-      return $output;
+        break;
+
+      case 'block.admin_display':
+      case 'block.admin_display_theme':
+        $demo_theme = $route_match->getParameter('theme') ?: \Drupal::config('system.theme')->get('default');
+        $themes = \Drupal::service('theme_handler')->listInfo();
+        $output = '<p>' . t('Block placement is specific to each theme on your site. Changes will not be saved until you click <em>Save blocks</em> at the bottom of the page.') . '</p>';
+        $output .= '<p>' . Link::fromTextAndUrl(t('Demonstrate block regions (@theme)', ['@theme' => $themes[$demo_theme]->info['name']]), Url::fromRoute('block.admin_demo', ['theme' => $demo_theme]))->toString() . '</p>';
+        break;
     }
 
-    return '';
+    return $output;
   }
 
   /**

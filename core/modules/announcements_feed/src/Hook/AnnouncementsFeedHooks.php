@@ -17,10 +17,10 @@ class AnnouncementsFeedHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.announcements_feed':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Announcements module displays announcements from the Drupal community. For more information, see the <a href=":documentation">online documentation for the Announcements module</a>.', [
           ':documentation' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/announcements-feed',
         ]) . '</p>';
@@ -30,11 +30,8 @@ class AnnouncementsFeedHooks {
           '@link' => Link::createFromRoute(t('Announcements'), 'announcements_feed.announcement')->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
-
-      default:
-        return '';
     }
+    return $output;
   }
 
   /**

@@ -30,6 +30,7 @@ class MediaLibraryHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.media_library':
         $output = '<h2>' . t('About') . '</h2>';
@@ -71,11 +72,8 @@ class MediaLibraryHooks {
           ':media-types' => Url::fromRoute('entity.media_type.collection')->toString(),
         ]) . '</li>';
         $output .= '</ul>';
-        return $output;
-
-      default:
-        return '';
     }
+    return $output;
   }
 
   /**

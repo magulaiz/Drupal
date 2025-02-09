@@ -23,10 +23,10 @@ class ImageHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.image':
         $field_ui_url = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
-        $output = '';
         $output .= '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Image module allows you to create fields that contain image files and to configure <a href=":image_styles">Image styles</a> that can be used to manipulate the display of images. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for terminology and general information on entities, fields, and how to create and manage fields. For more information, see the <a href=":image_documentation">online documentation for the Image module</a>.', [
           ':image_styles' => Url::fromRoute('entity.image_style.collection')->toString(),
@@ -58,23 +58,24 @@ class ImageHooks {
         $output .= '<dt>' . t('Configuring displays and form displays') . '</dt>';
         $output .= '<dd>' . t('On the <em>Manage display</em> page, you can choose the image formatter, which determines the image style used to display the image in each display mode and whether or not to display the image as a link. On the <em>Manage form display</em> page, you can configure the image upload widget, including setting the preview image style shown on the entity edit form.') . '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'entity.image_style.collection':
-        return '<p>' . t('Image styles commonly provide thumbnail sizes by scaling and cropping images, but can also add various effects before an image is displayed. When an image is displayed with a style, a new file is created and the original image is left unchanged.') . '</p>';
+        $output = '<p>' . t('Image styles commonly provide thumbnail sizes by scaling and cropping images, but can also add various effects before an image is displayed. When an image is displayed with a style, a new file is created and the original image is left unchanged.') . '</p>';
+        break;
 
       case 'image.effect_add_form':
         $effect = \Drupal::service('plugin.manager.image.effect')->getDefinition($route_match->getParameter('image_effect'));
-        return isset($effect['description']) ? '<p>' . $effect['description'] . '</p>' : '';
+        $output = isset($effect['description']) ? '<p>' . $effect['description'] . '</p>' : '';
+        break;
 
       case 'image.effect_edit_form':
         $effect = $route_match->getParameter('image_style')->getEffect($route_match->getParameter('image_effect'));
         $effect_definition = $effect->getPluginDefinition();
-        return isset($effect_definition['description']) ? '<p>' . $effect_definition['description'] . '</p>' : '';
-
-      default:
-        return '';
+        $output = isset($effect_definition['description']) ? '<p>' . $effect_definition['description'] . '</p>' : '';
+        break;
     }
+    return $output;
   }
 
   /**

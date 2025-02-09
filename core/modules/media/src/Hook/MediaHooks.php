@@ -24,6 +24,7 @@ class MediaHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.media':
         $output = '<h2>' . t('About') . '</h2>';
@@ -66,11 +67,8 @@ class MediaHooks {
         $output .= '<li>' . t('Existing media items can be reused on any other content items with a media reference field.') . '</li>';
         $output .= '</ul>';
         $output .= '<p>' . t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before installing the Media module.') . '</p>';
-        return $output;
-
-      default:
-        return '';
     }
+    return $output;
   }
 
   /**

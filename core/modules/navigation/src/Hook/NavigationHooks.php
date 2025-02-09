@@ -38,26 +38,23 @@ class NavigationHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
-    switch ($route_name) {
-      case 'help.page.navigation':
-        $output = '<h3>' . t('About') . '</h3>';
-        $output .= '<p>' . t('The Navigation module provides a left-aligned, collapsible, vertical sidebar navigation.') . '</p>';
-        $output .= '<p>' . t('For more information, see the <a href=":docs">online documentation for the Navigation module</a>.', [':docs' => 'https://www.drupal.org/project/navigation']) . '</p>';
-        return $output;
-    }
+    $output = '';
     $configuration_route = 'layout_builder.navigation.';
-    if (!$route_match->getRouteObject()->getOption('_layout_builder') || !str_starts_with($route_name, $configuration_route)) {
-      $output = '';
-      $output .= \Drupal::moduleHandler()->invoke('layout_builder', 'help', [$route_name, $route_match]);
-      return $output;
+
+    if ($route_name === 'help.page.navigation') {
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Navigation module provides a left-aligned, collapsible, vertical sidebar navigation.') . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href=":docs">online documentation for the Navigation module</a>.', [':docs' => 'https://www.drupal.org/project/navigation']) . '</p>';
     }
-    if (str_starts_with($route_name, $configuration_route)) {
+    elseif (!$route_match->getRouteObject()->getOption('_layout_builder') || !str_starts_with($route_name, $configuration_route)) {
+      $output .= \Drupal::moduleHandler()->invoke('layout_builder', 'help', [$route_name, $route_match]);
+    }
+    elseif (str_starts_with($route_name, $configuration_route)) {
       $output = '<p>' . t('This layout builder tool allows you to configure the blocks in the navigation toolbar.') . '</p>';
       $output .= '<p>' . t('Forms and links inside the content of the layout builder tool have been disabled.') . '</p>';
-      return $output;
     }
 
-    return '';
+    return $output;
   }
 
   /**

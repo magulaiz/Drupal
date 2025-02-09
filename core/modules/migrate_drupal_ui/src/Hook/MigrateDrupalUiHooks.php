@@ -16,10 +16,10 @@ class MigrateDrupalUiHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.migrate_drupal_ui':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Migrate Drupal UI module provides a simple user interface to perform an upgrade from an earlier version of Drupal. For more information, see the <a href=":migrate">online documentation for the Migrate Drupal UI module</a>.', [':migrate' => 'https://www.drupal.org/upgrade/migrate']) . '</p>';
         $output .= '<h2>' . t('Uses') . '</h2>';
         $output .= '<dl>';
@@ -42,11 +42,9 @@ class MigrateDrupalUiHooks {
         $output .= '<dt>' . t('Rolling back an upgrade') . '</dt>';
         $output .= '<dd>' . t('Rolling back an upgrade is not yet supported through the user interface.') . '</dd>';
         $output .= '</dl>';
-        return $output;
-
-      default:
-        return '';
     }
+
+    return $output;
   }
 
 }

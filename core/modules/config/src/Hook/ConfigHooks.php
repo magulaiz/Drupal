@@ -17,10 +17,10 @@ class ConfigHooks {
    */
   #[Hook('help')]
   public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.config':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Configuration Manager module provides a user interface for importing and exporting configuration changes between installations of your website in different environments. Configuration is stored in YAML format. For more information, see the <a href=":url">online documentation for the Configuration Manager module</a>.', [':url' => 'https://www.drupal.org/documentation/administer/config']) . '</p>';
         $output .= '<h2>' . t('Uses') . '</h2>';
         $output .= '<dl>';
@@ -39,36 +39,30 @@ class ConfigHooks {
           ':single-import' => Url::fromRoute('config.import_single')->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'config.sync':
-        $output = '';
-        $output .= '<p>' . t('Compare the configuration uploaded to your sync directory with the active configuration before completing the import.') . '</p>';
-        return $output;
+        $output = '<p>' . t('Compare the configuration uploaded to your sync directory with the active configuration before completing the import.') . '</p>';
+        break;
 
       case 'config.export_full':
-        $output = '';
-        $output .= '<p>' . t('Export and download the full configuration of this site as a gzipped tar file.') . '</p>';
-        return $output;
+        $output = '<p>' . t('Export and download the full configuration of this site as a gzipped tar file.') . '</p>';
+        break;
 
       case 'config.import_full':
-        $output = '';
-        $output .= '<p>' . t('Upload a full site configuration archive to the sync directory. It can then be compared and imported on the Synchronize page.') . '</p>';
-        return $output;
+        $output = '<p>' . t('Upload a full site configuration archive to the sync directory. It can then be compared and imported on the Synchronize page.') . '</p>';
+        break;
 
       case 'config.export_single':
-        $output = '';
-        $output .= '<p>' . t('Choose a configuration item to display its YAML structure.') . '</p>';
-        return $output;
+        $output = '<p>' . t('Choose a configuration item to display its YAML structure.') . '</p>';
+        break;
 
       case 'config.import_single':
         $output = '';
         $output .= '<p>' . t('Import a single configuration item by pasting its YAML structure into the text field.') . '</p>';
-        return $output;
-
-      default:
-        return '';
+        break;
     }
+    return $output;
   }
 
   /**
