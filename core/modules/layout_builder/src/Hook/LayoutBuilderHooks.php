@@ -41,7 +41,10 @@ class LayoutBuilderHooks {
     if ($route_match->getRouteObject()->getOption('_layout_builder')) {
       $output = '<p>' . t('This layout builder tool allows you to configure the layout of the main content area.') . '</p>';
       if (\Drupal::currentUser()->hasPermission('administer blocks')) {
-        $output .= '<p>' . t('To manage other areas of the page, use the <a href="@block-ui">block administration page</a>.', ['@block-ui' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';
+        $output .= '<p>' . t('To manage other areas of the page, use the <a href="@block-ui">block administration page</a>.', [
+            '@block-ui' => Url::fromRoute('block.admin_display')
+              ->toString(),
+          ]) . '</p>';
       }
       else {
         $output .= '<p>' . t('To manage other areas of the page, use the block administration page.') . '</p>';

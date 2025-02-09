@@ -60,7 +60,6 @@ class CommentHooks {
           ':admin-comment' => Url::fromRoute('comment.admin')->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
         break;
 
       case 'entity.comment_type.collection':
