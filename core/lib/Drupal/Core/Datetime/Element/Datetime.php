@@ -77,10 +77,23 @@ class Datetime extends DateElementBase {
     $element += ['#date_timezone' => date_default_timezone_get()];
 
     if ($input !== FALSE) {
-      $date_input = $element['#date_date_element'] != 'none' && !empty($input['date']) ? $input['date'] : '';
-      $time_input = $element['#date_time_element'] != 'none' && !empty($input['time']) ? $input['time'] : '';
-      $date_format = $element['#date_date_element'] != 'none' ? static::getHtml5DateFormat($element) : '';
-      $time_format = $element['#date_time_element'] != 'none' ? static::getHtml5TimeFormat($element) : '';
+      if ($element['#date_date_element'] === 'datetime-local' && !empty($input['date'])) {
+        // With a datetime-local input, the date value is always normalized to
+        // the format Y-m-d\TH:i
+        // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local
+        // 'html_datetime' is not a valid format to pass to
+        // DrupalDateTime::createFromFormat()
+        // @see https://www.drupal.org/project/drupal/issues/3505318
+        [$date_input, $time_input] = explode('T', $input['date']);
+        $date_format = DateFormat::load('html_date')->getPattern();
+        $time_format = DateFormat::load('html_time')->getPattern();
+      }
+      else {
+        $date_input = $element['#date_date_element'] != 'none' && !empty($input['date']) ? $input['date'] : '';
+        $time_input = $element['#date_time_element'] != 'none' && !empty($input['time']) ? $input['time'] : '';
+        $date_format = $element['#date_date_format'] != 'none' ? static::getHtml5DateFormat($element) : '';
+        $time_format = $element['#date_time_element'] != 'none' ? static::getHtml5TimeFormat($element) : '';
+      }
 
       // Seconds will be omitted in a post in case there's no entry.
       if (!empty($time_input) && strlen($time_input) == 5) {
