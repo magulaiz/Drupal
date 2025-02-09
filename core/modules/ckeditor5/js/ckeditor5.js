@@ -417,9 +417,9 @@
           editor.ui.view.editable.element
             .closest('.ck-editor')
             .style.setProperty(
-              '--ck-min-height',
-              `${calculateLineHeight(rows)}px`,
-            );
+            '--ck-min-height',
+            `${calculateLineHeight(rows)}px`,
+          );
 
           // CKEditor 4 had a feature to remove the required attribute
           // see: https://www.drupal.org/project/drupal/issues/1954968
@@ -670,7 +670,10 @@
   // Respond to dialogs that are saved, sending data back to CKEditor.
   $(window).on('editor:dialogsave', (e, values, selector) => {
     if (Drupal.ckeditor5.saveCallback) {
-      if (Object.hasOwn(Drupal.ckeditor5.saveCallback, 'has') && Drupal.ckeditor5.saveCallback.has(selector)) {
+      if (
+        Object.hasOwn(Drupal.ckeditor5.saveCallback, 'has') &&
+        Drupal.ckeditor5.saveCallback.has(selector)
+      ) {
         Drupal.ckeditor5.saveCallback.get(selector)(values);
       }
       else {
@@ -685,7 +688,10 @@
     const options = dialogSettings.options || {};
     const selector = options.selector || '#drupal-modal';
     if (Drupal.ckeditor5.saveCallback) {
-      if (Object.hasOwn(Drupal.ckeditor5.saveCallback, 'has') && Drupal.ckeditor5.saveCallback.has(selector)) {
+      if (
+        Object.hasOwn(Drupal.ckeditor5.saveCallback, 'has') &&
+        Drupal.ckeditor5.saveCallback.has(selector)
+      ) {
         Drupal.ckeditor5.saveCallback.delete(selector);
       }
       else {

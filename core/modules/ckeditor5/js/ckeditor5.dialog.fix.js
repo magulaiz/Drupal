@@ -20,8 +20,8 @@
       }
       return (
         (event.target.classList && event.target.classList.contains('ck')) ||
-          this._super(event)
-        );
+        this._super(event)
+      );
     },
   });
 })(jQuery);
