@@ -49,9 +49,7 @@ class ViewsExposedFilterAriaRoleTest extends ViewTestBase {
   public function testViewsExposedFilterAriaDescribedby(): void {
 
     // Add role attribute to the form via hook_form_alter.
-    $this->container->get('state')->set('views_test_config_form_alter', [
-      '#attributes' => ['role' => 'search'],
-    ]);
+    $this->container->get('state')->set('views_test_config_form_alter', TRUE);
 
     // Place the exposed filter block from test_exposed_block view.
     $this->drupalPlaceBlock('views_exposed_filter_block:test_exposed_block-block_1', [
