@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_theme().
  */
-function theme_suggestions_base1_test_theme($existing, $type, $theme, $path) {
+function theme_suggestions_base1_test_theme($existing, $type, $theme, $path): array {
   $items['theme_suggestions_base4_test_alternate__from_hook_theme_suggestions_hook_alter'] = [
     'variables' => [],
   ];
@@ -20,7 +20,7 @@ function theme_suggestions_base1_test_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function theme_suggestions_base1_test_theme_suggestions_theme_test_base1(array $variables) {
+function theme_suggestions_base1_test_theme_suggestions_theme_test_base1(array $variables): array {
   return [
     'theme_test_base1__from_hook_theme_suggestions_hook',
     'theme_test_base1__from_hook_theme_suggestions_hook_too',
@@ -30,7 +30,7 @@ function theme_suggestions_base1_test_theme_suggestions_theme_test_base1(array $
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
-function theme_suggestions_base1_test_theme_suggestions_theme_test_base1_alter(array &$suggestions, array $variables, $hook) {
+function theme_suggestions_base1_test_theme_suggestions_theme_test_base1_alter(array &$suggestions, array $variables, $hook): void {
   $suggestions[] = $hook . '__from_hook_theme_suggestions_hook_alter__but_reordered';
 
   // We move a suggestion from hook_theme_suggestions_HOOK() to come after our

@@ -25,7 +25,7 @@ class TwigDebugMarkupTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
     // Enable Twig debugging.
     $parameters = $container->getParameter('twig.config');
@@ -48,7 +48,7 @@ class TwigDebugMarkupTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function testDebugMarkup() {
+  public function testDebugMarkup(): void {
     $extension = '.html.twig';
     $hook = 'theme_test_specific_suggestions';
     $build = [
@@ -80,7 +80,7 @@ class TwigDebugMarkupTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function testFileNameSuggestions() {
+  public function testFileNameSuggestions(): void {
     $extension = '.html.twig';
 
     // Render a template using a single suggestion.
@@ -114,7 +114,7 @@ class TwigDebugMarkupTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function testFileNameNotMatchingSuggestion() {
+  public function testFileNameNotMatchingSuggestion(): void {
     $extension = '.html.twig';
 
     // Find full path to template.
@@ -146,7 +146,7 @@ class TwigDebugMarkupTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function testXssComments() {
+  public function testXssComments(): void {
     $extension = '.html.twig';
 
     // Render a template whose suggestions have been compromised.

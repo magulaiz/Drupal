@@ -24,7 +24,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
     // Enable Twig debugging.
     $parameters = $container->getParameter('twig.config');
@@ -58,7 +58,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function runTemplateSuggestionTest(array $build, array $modules, string $theme, array $expected, array $unexpected = []) {
+  public function runTemplateSuggestionTest(array $build, array $modules, string $theme, array $expected, array $unexpected = []): void {
     // Enable modules.
     if (!empty($modules)) {
       $this->enableModules($modules);
@@ -101,7 +101,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function testHookThemeSuggestionsHook(array $modules, string $theme, array $expected) {
+  public function testHookThemeSuggestionsHook(array $modules, string $theme, array $expected): void {
     $this->runTemplateSuggestionTest(
       [
         '#theme' => 'theme_test_suggestion_provided',
@@ -152,7 +152,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function testHookThemeSuggestionsAlter(array $modules, string $theme, array $expected) {
+  public function testHookThemeSuggestionsAlter(array $modules, string $theme, array $expected): void {
     $this->runTemplateSuggestionTest(
       [
         '#theme' => 'theme_test_general_suggestions',
@@ -225,7 +225,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function testHookThemeSuggestionsHookAlter(array $modules, string $theme, array $expected) {
+  public function testHookThemeSuggestionsHookAlter(array $modules, string $theme, array $expected): void {
     $this->runTemplateSuggestionTest(
       [
         '#theme' => 'theme_test_suggestions',
@@ -283,7 +283,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function testNonBaseHookThemeSuggestions(array $modules, string $theme, array $expected) {
+  public function testNonBaseHookThemeSuggestions(array $modules, string $theme, array $expected): void {
     $this->runTemplateSuggestionTest(
       [
         '#theme' => 'theme_test_specific_suggestions__variant',
@@ -341,7 +341,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function testUnimplementedNonBaseHookThemeSuggestions() {
+  public function testUnimplementedNonBaseHookThemeSuggestions(): void {
     $extension = '.html.twig';
     $this->runTemplateSuggestionTest(
       [
@@ -376,7 +376,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function testThemeSuggestionsOrdering(array $modules, string $theme, array $expected, array $unexpected) {
+  public function testThemeSuggestionsOrdering(array $modules, string $theme, array $expected, array $unexpected): void {
     $this->runTemplateSuggestionTest(
       [
         '#theme' => 'theme_test_base1__from_theme_property__too',
@@ -449,7 +449,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function testArrayThemeSuggestions(array $modules, string $theme, array $expected, array $unexpected) {
+  public function testArrayThemeSuggestions(array $modules, string $theme, array $expected, array $unexpected): void {
     $this->runTemplateSuggestionTest(
       [
         '#theme' => [
@@ -669,7 +669,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  public function testExecutionOrder() {
+  public function testExecutionOrder(): void {
     // Normal module weight is not calculated in KernelTest, so we fake it by
     // (re)installing the modules in order of their weight (alphabetical order).
     $this->disableModules(['theme_test']);
