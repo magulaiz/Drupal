@@ -15,7 +15,7 @@ class RemoveHook extends Hook {
    *
    * @param string $hook
    *   The short hook name, without the 'hook_' prefix.
-   * @param string $class
+   * @param class-string $class
    *   The class the implementation to remove is in.
    * @param string $method
    *   The method name of the implementation to remove.
