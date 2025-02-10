@@ -59,8 +59,8 @@ abstract class HookPriorityTestBase extends UnitTestCase {
    *
    * @param class-string $classBeingChanged
    *   The class being changed, the method has the same name.
-   * @param Order|class-string $order
-   *  Either a member of the Order enum or the name of a ComplexOrder class.
+   * @param \Drupal\Core\Hook\Order|class-string $order
+   *   Either a member of the Order enum or the name of a ComplexOrder class.
    * @param class-string $relativeTo
    *   If the operation is before or after, this is the name of the class
    *   the operation changes relative to.
