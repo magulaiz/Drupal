@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Config;
 
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\user\Entity\Role;
