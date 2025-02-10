@@ -82,7 +82,7 @@ class RouteProcessorCsrfTest extends UnitTestCase {
    */
   public function testProcessOutboundNoRequirement(): void {
     $this->sessionConfiguration->expects($this->never())
-    ->method('hasSession');
+      ->method('hasSession');
 
     $this->csrfToken->expects($this->never())
       ->method('get');

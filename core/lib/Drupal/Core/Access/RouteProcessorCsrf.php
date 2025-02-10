@@ -20,7 +20,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
    *
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrfToken
    *   The CSRF token generator.
-   * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
+   * @param \Drupal\Core\Session\SessionConfigurationInterface $sessionConfiguration
    *   The session configuration.
    * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   The request stack.
