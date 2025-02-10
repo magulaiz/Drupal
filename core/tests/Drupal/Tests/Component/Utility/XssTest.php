@@ -23,7 +23,6 @@ use PHPUnit\Framework\TestCase;
  *   CVE-2006-1226 (= rev. 1.112?), CVE-2008-0273, CVE-2008-3740.
  *
  * @group Utility
- * @group #slow
  * @coversDefaultClass \Drupal\Component\Utility\Xss
  * @runTestsInSeparateProcesses
  */
@@ -65,7 +64,8 @@ class XssTest extends TestCase {
    * @param string $message
    *   The assertion message to display upon failure.
    * @param array $allowed_tags
-   *   (optional) The allowed HTML tags to be passed to \Drupal\Component\Utility\Xss::filter().
+   *   (optional) The allowed HTML tags to be passed to
+   *   \Drupal\Component\Utility\Xss::filter().
    *
    * @dataProvider providerTestFilterXssNormalized
    */
@@ -132,7 +132,8 @@ class XssTest extends TestCase {
    * @param string $message
    *   The assertion message to display upon failure.
    * @param array $allowed_tags
-   *   (optional) The allowed HTML tags to be passed to \Drupal\Component\Utility\Xss::filter().
+   *   (optional) The allowed HTML tags to be passed to
+   *   \Drupal\Component\Utility\Xss::filter().
    *
    * @dataProvider providerTestFilterXssNotNormalized
    */
