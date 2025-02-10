@@ -23,9 +23,6 @@ class HookPriorityEqualPriorityTest extends HookPriorityTestBase {
     $this->assertSame($this->getPriority('b'), $this->getPriority('c'));
   }
 
-  /**
-   * @covers ::first
-   */
   public function testFirst(): void {
     // "c" was first, make "a" the first.
     $this->doPriorityChange('a', Order::First);
@@ -36,9 +33,6 @@ class HookPriorityEqualPriorityTest extends HookPriorityTestBase {
     // can be in any order.
   }
 
-  /**
-   * @covers ::last
-   */
   public function testLast(): void {
     // "c" was first, make it the last.
     $this->doPriorityChange('c', Order::Last);
@@ -49,9 +43,6 @@ class HookPriorityEqualPriorityTest extends HookPriorityTestBase {
     // can be in any order.
   }
 
-  /**
-   * @covers ::before
-   */
   public function testBefore(): void {
     // "a" was last, move it before "b".
     $this->doPriorityChange('a', OrderBefore::class, 'b');
@@ -61,9 +52,6 @@ class HookPriorityEqualPriorityTest extends HookPriorityTestBase {
     // can be in any order.
   }
 
-  /**
-   * @covers ::after
-   */
   public function testAfter(): void {
     // "c" was first, move it after "b".
     $this->doPriorityChange('c', OrderAfter::class, 'b');
