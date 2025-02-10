@@ -22,7 +22,9 @@ class HookPriority {
    * @param string $event
    *   Listeners to this event will be ordered.
    * @param \Drupal\Core\Hook\Attribute\Hook $hook
-   *   The hook attribute.
+   *   The hook attribute. Most of the order parameter is ignored by this
+   *   class, only $hook->order->value is used. The rest is preprocessed by
+   *   HookCollectorPass and passed in $other_specifiers.
    * @param array|null $other_specifiers
    *   Other hook implementations to compare to, if any. The array is a list of
    *   strings, each string is a class and method separated by ::.
