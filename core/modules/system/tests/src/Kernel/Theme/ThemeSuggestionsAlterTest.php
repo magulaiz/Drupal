@@ -76,12 +76,12 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
 
     // Check the output for expected results.
     foreach ($expected as $expected_string) {
-      $this->assertStringContainsString($expected_string, $output, $this->getName());
+      $this->assertStringContainsString($expected_string, $output, $this->name());
     }
 
     // Check the output for unexpected results.
     foreach ($unexpected as $unexpected_string) {
-      $this->assertStringNotContainsString($unexpected_string, $output, $this->getName());
+      $this->assertStringNotContainsString($unexpected_string, $output, $this->name());
     }
   }
 
@@ -685,7 +685,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
     // Messages are not output with $this->render().
     $output = $this->render($build);
 
-    $this->assertStringContainsString('Template overridden based on new theme suggestion provided by the test_theme theme via hook_theme_suggestions_HOOK_alter().', $output, $this->getName());
+    $this->assertStringContainsString('Template overridden based on new theme suggestion provided by the test_theme theme via hook_theme_suggestions_HOOK_alter().', $output, $this->name());
 
     // Retrieve all messages we've set via \Drupal::messenger()->addStatus().
     $messages = $this->container->get('messenger')->messagesByType('status');
