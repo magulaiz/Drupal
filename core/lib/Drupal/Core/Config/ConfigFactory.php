@@ -77,6 +77,10 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
     $this->typedConfigManager = $typed_config;
     // To obtain relevant cache keys, we need to search our cache's keys.
     $this->cache = $cache;
+    if ($this->cache === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $cache argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3063687', E_USER_DEPRECATED);
+      $this->cache = \Drupal::service('cache.backend.memory');
+    }
   }
 
   /**
@@ -321,7 +325,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *   An array of cache keys that match the provided config name.
    */
   protected function getConfigCacheKeys($name) {
-    return array_filter(array_keys((array) $this->cache), function ($key) use ($name) {
+    return array_filter(array_keys($this->cache), function ($key) use ($name) {
       // Return TRUE if the key is the name or starts with the configuration
       // name plus the delimiter.
       return $key === $name || str_starts_with($key, $name . ':');
