@@ -18,7 +18,7 @@ class ReOrderHook extends Hook {
    *
    * @param string $hook
    *   The short hook name, without the 'hook_' prefix.
-   * @param string $class
+   * @param class-string $class
    *   The class the implementation to modify is in. This allows one module to
    *   affect the order of another module's hook.
    * @param string $method
