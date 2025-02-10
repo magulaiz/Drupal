@@ -29,6 +29,8 @@ use Symfony\Component\DependencyInjection\Definition;
  *
  * Finally, a hook_implementations_map container parameter is added. This
  * contains a mapping from [hook,class,method] to the module name.
+ *
+ * @internal
  */
 class HookCollectorPass implements CompilerPassInterface {
 
@@ -70,12 +72,20 @@ class HookCollectorPass implements CompilerPassInterface {
    */
   public function process(ContainerBuilder $container): array {
     $collector = static::collectAllHookImplementations($container->getParameter('container.modules'), $container);
+    // List of modules implementing hooks with the implementation details.
     $implementations = [];
+    // List of modules implementing hooks, used for
+    // hook_module_implementations_alter.
     $legacyImplementations = [];
+    // Groups of hooks that should be ordered together.
     $orderGroups = [];
+    // Attributes related to ordering hooks.
     $orderAttributes = [];
+    // List of modules that the hooks are defined for, keyed by class and
+    // method.
     $moduleFinder = [];
-    // These need to be processed after normal hooks.
+    // These attributes need to be processed after all hooks have been
+    // processed.
     $process_after = [
       RemoveHook::class => [],
       ReOrderHook::class => [],
@@ -92,9 +102,14 @@ class HookCollectorPass implements CompilerPassInterface {
             if ($class !== ProceduralCall::class) {
               self::checkForProceduralOnlyHooks($hook);
             }
+            // Set properties on hook class that are needed for registration.
             $hook->set(... compact('class', 'method', 'module'));
+            // Store a list of modules implementing hooks for simplifying
+            // registration and hook_module_implements_alter execution.
             $legacyImplementations[$hook->hook][$hook->module] = '';
+            // Store the implementation details for registering the hook.
             $implementations[$hook->hook][$hook->module][$class][$hook->method] = $hook->method;
+            // Reverse lookup for modules implementing hooks.
             $moduleFinder[$class][$hook->method] = $hook->module;
             if ($hook->order) {
               $this->gatherOrderInformation($hook, $orderAttributes, $orderGroups);
@@ -104,6 +119,10 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
+    // Loop over all RemoveHook attributes and remove them from the maps before
+    // registering the hooks. This must happen after all collection, but before
+    // registration to ensure the hook it is removing has already been
+    // discovered.
     foreach ($process_after[RemoveHook::class] as $hook) {
       if ($module = ($moduleFinder[$hook->class][$hook->method] ?? '')) {
         unset($legacyImplementations[$hook->hook][$module]);
@@ -111,6 +130,10 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
+    // Loop over all ReOrderHook attributes and remove them from the maps
+    // before registering the hooks. This must happen after all collection,
+    // but before registration to ensure this ordering directive takes
+    // precedence.
     foreach ($process_after[ReOrderHook::class] as $hook) {
       $this->gatherOrderInformation($hook, $orderAttributes, $orderGroups);
     }
