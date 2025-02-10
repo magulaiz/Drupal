@@ -9,6 +9,8 @@ use Drupal\Core\Hook\Order;
 
 /**
  * Set the order of an already existing implementation.
+ *
+ * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 class ReOrderHook extends Hook {
