@@ -224,16 +224,13 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   A request object.
    */
   protected function setResponseCacheable(Response $response, Request $request) {
-    // HTTP/1.0 proxies do not support the Vary header, so prevent any caching
-    // by sending an Expires date in the past. HTTP/1.1 clients ignore the
-    // Expires header if a Cache-Control: max-age directive is specified (see
-    // RFC 2616, section 14.9.3).
-    if (!$response->headers->has('Expires')) {
-      $this->setExpiresNoCache($response);
-    }
-
     $max_age = $this->config->get('cache.page.max_age');
     $response->headers->set('Cache-Control', 'public, max-age=' . $max_age);
+
+    // If the response does not already have an Expires header, set one.
+    if (is_int($max_age) && !$response->headers->has('Expires')) {
+      $response->setExpires((new \DateTime())->setTimestamp($this->time->getRequestTime() + $max_age));
+    }
 
     // In order to support HTTP cache-revalidation, ensure that there is a
     // Last-Modified and an ETag header on the response.
