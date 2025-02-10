@@ -53,8 +53,8 @@ class ViewsExposedFilterAriaRoleTest extends ViewTestBase {
       '#attributes' => ['role' => 'search'],
     ]);
 
-    // Place the exposed filter block from test_exposed_block view
-    $block = $this->drupalPlaceBlock('views_exposed_filter_block:test_exposed_block-block_1', [
+    // Place the exposed filter block from test_exposed_block view.
+    $this->drupalPlaceBlock('views_exposed_filter_block:test_exposed_block-block_1', [
       'region' => 'content',
     ]);
 
@@ -74,4 +74,5 @@ class ViewsExposedFilterAriaRoleTest extends ViewTestBase {
     // Verify the block has aria-describedby set to the title ID.
     $this->assertEquals($title_id, $block_element->getAttribute('aria-describedby'), 'aria-describedby is correctly set to the title ID.');
   }
+
 }

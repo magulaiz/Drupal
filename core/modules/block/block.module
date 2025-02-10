@@ -6,7 +6,6 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Installer\InstallerKernel;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Initializes blocks for installed themes.
