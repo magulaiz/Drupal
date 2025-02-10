@@ -245,6 +245,9 @@ class Datetime extends DateElementBase {
     if ($element['#date_date_element'] != 'none') {
 
       $date_format = $element['#date_date_element'] != 'none' ? static::getHtml5DateFormat($element) : '';
+      if ($element['#date_date_element'] === 'datetime-local') {
+        $date_format = DateFormat::load('html_date')->getPattern() . '\T' . DateFormat::load('html_time')->getPattern();
+      }
       $date_value = !empty($date) ? $date->format($date_format, $format_settings) : $element['#value']['date'];
 
       // Creating format examples on every individual date item is messy, and
