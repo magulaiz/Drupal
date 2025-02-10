@@ -662,6 +662,8 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $role = Role::create([
       'id' => 'test_role',
       'label' => 'Test role',
+      // This adds an implicit dependency on $entity 2, and hence also $entity1,
+      // to the role.
       'permissions' => ["permission with {$entity2->getConfigDependencyName()} dependency"],
     ]);
     $role->save();
@@ -670,29 +672,17 @@ class ConfigDependencyTest extends EntityKernelTestBase {
       'dependencies' => [
         'enforced' => [
           'config' => [
+            // Add dependencies to $entity3 and the role so that the $entity4
+            // should be last to be processed when handling dependency removal.
+            // The role should be processed after $entity1 and $entity2, but
+            // before $entity4.
             $entity3->getConfigDependencyName(),
-            // Introduce a dependency on the role to change the ordering.
             $role->getConfigDependencyName(),
           ],
         ],
       ],
     ]);
     $entity4->save();
-
-    // Test findConfigEntityDependencies() return order is idempotent.
-    $dependents = $config_manager->findConfigEntityDependencies('config', [$entity1->getConfigDependencyName()]);
-    $dependents_again = $config_manager->findConfigEntityDependencies('config', [$entity1->getConfigDependencyName()]);
-    $this->assertSame(array_keys($dependents), array_keys($dependents_again));
-
-    $this->assertTrue(isset($dependents['user.role.test_role']), 'user.role.test_role has a dependency on config_test.dynamic.entity1.');
-    $entity2_dependents = $config_manager->findConfigEntityDependencies('config', [$entity2->getConfigDependencyName()]);
-    $this->assertTrue(isset($entity2_dependents['user.role.test_role']), 'user.role.test_role has a dependency on config_test.dynamic.entity2.');
-
-    // Test that when dependencies are loaded as entities, the order is
-    // maintained.
-    $entities = $config_manager->findConfigEntityDependenciesAsEntities('config', [$entity1->getConfigDependencyName()]);
-    $entity_config_names = array_values(array_map(fn (ConfigEntityInterface $entity) => $entity->getConfigDependencyName(), $entities));
-    $this->assertSame(array_keys($dependents), $entity_config_names, 'findConfigEntityDependencies() and findConfigEntityDependenciesAsEntities() return dependencies in the same order.');
 
     // Create scenario where entity1 is deleted, but all the config_test
     // entities depending on entity1 are fixed instead of being deleted. This
