@@ -131,7 +131,7 @@ class RouteProcessorCsrfTest extends UnitTestCase {
   /**
    * Tests the processOutbound() method for anonymous users.
    */
-  public function testProcessOutboundForAnonymous() {
+  public function testProcessOutboundForAnonymous(): void {
     $this->sessionConfiguration->expects($this->once())
       ->method('hasSession')
       ->willReturn(FALSE);
