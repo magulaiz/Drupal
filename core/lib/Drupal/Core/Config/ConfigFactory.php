@@ -201,11 +201,28 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
     return $list;
   }
 
+  /**
+   * Retrieves a cached configuration value.
+   *
+   * @param string $cache_key
+   *   The cache key to retrieve the configuration value.
+   *
+   * @return mixed
+   *   The cached data if available, or NULL otherwise.
+   */
   protected function cacheGet($cache_key) {
     $static_value = $this->cache->get($cache_key) ? $this->cache->get($cache_key)->data : NULL;
     return $static_value;
   }
 
+  /**
+   * Stores a configuration value in the cache.
+   *
+   * @param string $cache_key
+   *   The cache key under which the data should be stored.
+   * @param \Drupal\Core\Cache\CacheableDependencyInterface $data
+   *   The data to be cached (must be cacheable).
+   */
   protected function cacheSet($cache_key, $data) {
     $this->cache->set($cache_key, $data, Cache::PERMANENT, $data->getCacheTags());
   }
