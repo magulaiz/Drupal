@@ -45,9 +45,6 @@ class HookPriorityTest extends HookPriorityTestBase {
     $this->assertGreaterThan($this->getPriority('a'), $this->getPriority('c'));
   }
 
-  /**
-   * @covers ::first
-   */
   public function testFirst(): void {
     // "c" was first, make "a" the first.
     $this->doPriorityChange('a', Order::First);
@@ -57,9 +54,6 @@ class HookPriorityTest extends HookPriorityTestBase {
     $this->assertNoChange('a');
   }
 
-  /**
-   * @covers ::last
-   */
   public function testLast(): void {
     // "c" was first, make it the last.
     $this->doPriorityChange('c', Order::Last);
@@ -69,9 +63,6 @@ class HookPriorityTest extends HookPriorityTestBase {
     $this->assertNoChange('c');
   }
 
-  /**
-   * @covers ::before
-   */
   public function testBefore(): void {
     // "a" was last, move it before "b".
     $this->doPriorityChange('a', OrderBefore::class, 'b');
@@ -82,9 +73,6 @@ class HookPriorityTest extends HookPriorityTestBase {
     $this->assertGreaterThan($this->getPriority('a'), $this->getPriority('c'));
   }
 
-  /**
-   * @covers ::after
-   */
   public function testAfter(): void {
     // "c" was first, move it after "b".
     $this->doPriorityChange('c', OrderAfter::class, 'b');
@@ -95,36 +83,24 @@ class HookPriorityTest extends HookPriorityTestBase {
     $this->assertGreaterThan($this->getPriority('a'), $this->getPriority('c'));
   }
 
-  /**
-   * @covers ::first
-   */
   public function testFirstNoChange(): void {
     // "c" was first, making it first should be a no-op.
     $this->doPriorityChange('c', Order::First);
     $this->assertNoChange();
   }
 
-  /**
-   * @covers ::last
-   */
   public function testLastNoChange(): void {
     // "a" was last, making it last should be a no-op.
     $this->doPriorityChange('a', Order::Last);
     $this->assertNoChange();
   }
 
-  /**
-   * @covers ::before
-   */
   public function testBeforeNoChange(): void {
     // "b" is already firing before "a", this should be a no-op.
     $this->doPriorityChange('b', OrderBefore::class, 'a');
     $this->assertNoChange();
   }
 
-  /**
-   * @covers ::after
-   */
   public function testAfterNoChange(): void {
     // "b' is already firing after "c", this should be a no-op.
     $this->doPriorityChange('b', OrderAfter::class, 'c');
