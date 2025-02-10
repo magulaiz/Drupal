@@ -95,6 +95,8 @@ use Drupal\Core\Hook\Order;
  * the procedural hook implementations.
  *
  * See \Drupal\Core\Hook\Attribute\LegacyHook for additional information.
+ *
+ * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 class Hook {
