@@ -133,7 +133,7 @@ class Hook {
   /**
    * Set necessary parameters for the hook attribute.
    *
-   * @param string $class
+   * @param class-string $class
    *   The class for the hook.
    * @param string $module
    *   The module for the hook.
