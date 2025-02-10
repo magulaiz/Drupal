@@ -477,7 +477,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         $values['logo_path'] = $filename;
       }
     }
-    catch (FileException $e) {
+    catch (FileException) {
       // Ignore.
     }
     try {
@@ -488,7 +488,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         $values['toggle_favicon'] = 1;
       }
     }
-    catch (FileException $e) {
+    catch (FileException) {
       // Ignore.
     }
     unset($values['logo_upload']);
@@ -513,9 +513,9 @@ class ThemeSettingsForm extends ConfigFormBase {
   /**
    * Helper function for the system_theme_settings form.
    *
-   * Attempts to validate normal system paths, paths relative to the public files
-   * directory, or stream wrapper URIs. If the given path is any of the above,
-   * returns a valid path or URI that the theme system can display.
+   * Attempts to validate normal system paths, paths relative to the public
+   * files directory, or stream wrapper URIs. If the given path is any of the
+   * above, returns a valid path or URI that the theme system can display.
    *
    * @param string $path
    *   A path relative to the Drupal root or to the public files directory, or

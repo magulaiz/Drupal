@@ -19,15 +19,15 @@ class CryptTest extends TestCase {
   /**
    * Tests hash generation.
    *
-   * @dataProvider providerTestHashBase64
-   * @covers ::hashBase64
-   *
    * @param string $data
    *   Data to hash.
    * @param string $expected_hash
    *   Expected result from hashing $data.
+   *
+   * @dataProvider providerTestHashBase64
+   * @covers ::hashBase64
    */
-  public function testHashBase64($data, $expected_hash) {
+  public function testHashBase64($data, $expected_hash): void {
     $hash = Crypt::hashBase64($data);
     $this->assertEquals($expected_hash, $hash, 'The correct hash was not calculated.');
   }
@@ -35,17 +35,17 @@ class CryptTest extends TestCase {
   /**
    * Tests HMAC generation.
    *
-   * @dataProvider providerTestHmacBase64
-   * @covers ::hmacBase64
-   *
    * @param string $data
    *   Data to hash.
    * @param string $key
    *   Key to use in hashing process.
    * @param string $expected_hmac
    *   Expected result from hashing $data using $key.
+   *
+   * @dataProvider providerTestHmacBase64
+   * @covers ::hmacBase64
    */
-  public function testHmacBase64($data, $key, $expected_hmac) {
+  public function testHmacBase64($data, $key, $expected_hmac): void {
     $hmac = Crypt::hmacBase64($data, $key);
     $this->assertEquals($expected_hmac, $hmac, 'The correct hmac was not calculated.');
   }
@@ -53,15 +53,15 @@ class CryptTest extends TestCase {
   /**
    * Tests the hmacBase64 method with invalid parameters.
    *
-   * @dataProvider providerTestHmacBase64Invalid
-   * @covers ::hmacBase64
-   *
    * @param string $data
    *   Data to hash.
    * @param string $key
    *   Key to use in hashing process.
+   *
+   * @dataProvider providerTestHmacBase64Invalid
+   * @covers ::hmacBase64
    */
-  public function testHmacBase64Invalid($data, $key) {
+  public function testHmacBase64Invalid($data, $key): void {
     $this->expectException('InvalidArgumentException');
     Crypt::hmacBase64($data, $key);
   }

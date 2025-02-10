@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\autowire_test;
 
 use Drupal\Core\Database\Connection;
@@ -19,11 +21,15 @@ class TestService {
 
   /**
    * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
    */
   protected $database;
 
   /**
    * The Drupal kernel.
+   *
+   * @var \Drupal\Core\DrupalKernelInterface
    */
   protected $kernel;
 

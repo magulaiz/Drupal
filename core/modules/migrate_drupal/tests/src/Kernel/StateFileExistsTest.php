@@ -38,6 +38,7 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
    * @var array
    */
   protected $stateFileRequired = [
+    // @todo Remove ban in https://www.drupal.org/project/drupal/issues/3488827
     'ban',
     'block',
     'block_content',
@@ -77,7 +78,7 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
   /**
    * Tests that the migrate_drupal.yml files exist as needed.
    */
-  public function testMigrationState() {
+  public function testMigrationState(): void {
     // Install all available modules.
     $module_handler = $this->container->get('module_handler');
     $all_modules = $this->coreModuleListDataProvider();
