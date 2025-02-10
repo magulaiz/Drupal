@@ -117,7 +117,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @see testHookThemeSuggestionsHook()
    */
-  public function providerHookThemeSuggestionsHook(): array {
+  public static function providerHookThemeSuggestionsHook(): array {
     return [
       'Base template used when suggestion template not found' => [
         'modules' => [],
@@ -168,7 +168,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @see testHookThemeSuggestionsAlter()
    */
-  public function providerHookThemeSuggestionsAlter(): array {
+  public static function providerHookThemeSuggestionsAlter(): array {
     $extension = '.html.twig';
     return [
       'Base template used when suggestion template is not available' => [
@@ -241,7 +241,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @see testHookThemeSuggestionsHookAlter()
    */
-  public function providerHookThemeSuggestionsHookAlter(): array {
+  public static function providerHookThemeSuggestionsHookAlter(): array {
     return [
       'Base template used when suggestion template is not available' => [
         'modules' => [],
@@ -299,7 +299,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @see testNonBaseHookThemeSuggestions()
    */
-  public function providerNonBaseHookThemeSuggestions(): array {
+  public static function providerNonBaseHookThemeSuggestions(): array {
     $extension = '.html.twig';
     return [
       'Base template used when suggestion template is not available' => [
@@ -393,7 +393,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @see testThemeSuggestionsOrdering()
    */
-  public function providerThemeSuggestionsOrdering(): array {
+  public static function providerThemeSuggestionsOrdering(): array {
     $extension = '.html.twig';
     return [
       '#theme property suggestions always override ones from hook_theme_suggestions_hook' => [
@@ -473,7 +473,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    *
    * @see testArrayThemeSuggestions()
    */
-  public function providerArrayThemeSuggestions(): array {
+  public static function providerArrayThemeSuggestions(): array {
     $extension = '.html.twig';
     return [
       'Only the last #theme array entry is expanded into suggestions' => [
