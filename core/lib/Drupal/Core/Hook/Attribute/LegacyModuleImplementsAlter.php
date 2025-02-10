@@ -19,6 +19,8 @@ namespace Drupal\Core\Hook\Attribute;
  * only the legacy hook implementation is executed.
  *
  * For more information, see https://www.drupal.org/node/3496788.
+ *
+ * @internal
  */
 #[\Attribute(\Attribute::TARGET_FUNCTION)]
 class LegacyModuleImplementsAlter {
