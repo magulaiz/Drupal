@@ -34,8 +34,6 @@ class BlockUiTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected $regions;
-
   /**
    * The submitted block values used by this test.
    *
@@ -52,6 +50,8 @@ class BlockUiTest extends BrowserTestBase {
 
   /**
    * An administrative user to configure the test environment.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $adminUser;
 
