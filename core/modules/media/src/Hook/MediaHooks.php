@@ -249,8 +249,10 @@ class MediaHooks {
   #[Hook('form_filter_format_edit_form_alter')]
   public function formFilterFormatEditFormAlter(array &$form, FormStateInterface $form_state, $form_id) : void {
     // Add an additional validate callback so we can ensure the order of filters
-    // is correct.
-    $form['#validate'][] = 'media_filter_format_edit_form_validate';
+    // is correct, this is not necessary when using ckeditor5.
+    if ($form_state->getValue('editor') !== 'ckeditor5') {
+      $form['#validate'][] = 'media_filter_format_edit_form_validate';
+    }
   }
 
   /**
@@ -259,8 +261,10 @@ class MediaHooks {
   #[Hook('form_filter_format_add_form_alter')]
   public function formFilterFormatAddFormAlter(array &$form, FormStateInterface $form_state, $form_id) : void {
     // Add an additional validate callback so we can ensure the order of filters
-    // is correct.
-    $form['#validate'][] = 'media_filter_format_edit_form_validate';
+    // is correct, this is not necessary when using ckeditor5.
+    if ($form_state->getValue('editor') !== 'ckeditor5') {
+      $form['#validate'][] = 'media_filter_format_edit_form_validate';
+    }
   }
 
   /**
