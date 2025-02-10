@@ -238,6 +238,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
 
     $response->headers->set('X-Content-Type-Options', 'foo');
     $response->headers->set('X-Frame-Options', 'DENY');
+    $response->headers->set('Expires', 'Mon, 10 Feb 2025 00:00:00 GMT');
 
     $finishSubscriber->onRespond($event);
 
@@ -245,6 +246,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
     // 'X-Content-Type-Options' will be unconditionally set by core.
     $this->assertEquals(['nosniff'], $response->headers->all('X-Content-Type-Options'));
     $this->assertEquals(['DENY'], $response->headers->all('X-Frame-Options'));
+    $this->assertEquals(['Mon, 10 Feb 2025 00:00:00 GMT'], $response->headers->all('Expires'));
   }
 
 }
