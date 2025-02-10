@@ -46,7 +46,7 @@ class ViewsExposedFilterAriaRoleTest extends ViewTestBase {
   /**
    * Tests aria-describedby attribute handling in Views exposed filter blocks.
    */
-  public function testViewsExposedFilterAriaDescribedby() {
+  public function testViewsExposedFilterAriaDescribedby(): void {
 
     // Add role attribute to the form via hook_form_alter.
     $this->container->get('state')->set('views_test_config_form_alter', [
