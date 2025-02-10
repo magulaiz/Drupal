@@ -2,6 +2,7 @@
 
 namespace Drupal\page_cache\StackMiddleware;
 
+use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -284,21 +285,7 @@ class PageCache implements HttpKernelInterface {
     // the returned value needs to be checked before calling getTimestamp.
     elseif ($expires = $response->getExpires()) {
       $date = $expires->getTimestamp();
-      if ($date > $request_time) {
-        $expire = $date;
-      }
-      elseif ($response->getEtag() && $expires == \DateTime::createFromFormat('j-M-Y H:i:s T', '19-Nov-1978 05:00:00 UTC')) {
-        // \Drupal\Core\EventSubscriber\FinishResponseSubscriber::onRespond()
-        // will set the expires to this date and remove the ETag if it
-        // determines the response is not cacheable. And given how this
-        // module is meant to work, we'll cache it permanently for anonymous
-        // users as expected until it's invalidated by a cache tag.
-        $expire = Cache::PERMANENT;
-      }
-      else {
-        // The expiry date is in the past. Ignore it.
-        return FALSE;
-      }
+      $expire = ($date > $request_time) ? $date : Cache::PERMANENT;
     }
     else {
       $expire = Cache::PERMANENT;
@@ -331,7 +318,25 @@ class PageCache implements HttpKernelInterface {
   protected function get(Request $request, $allow_invalid = FALSE) {
     $cid = $this->getCacheId($request);
     if ($cache = $this->cache->get($cid, $allow_invalid)) {
-      return $cache->data;
+      /** @var \Symfony\Component\HttpFoundation\Response $cached_response */
+      $cached_response = $cache->data;
+      // Set conditional response headers.
+      if ($if_modified_since = $request->headers->get('If-Modified-Since')) {
+        $if_modified_since = \DateTime::createFromFormat(DateTimePlus::RFC7231, $if_modified_since);
+        $if_none_match = $request->headers->get('If-None-Match');
+        // If-None-Match takes precedence over If-Modified-Since.
+        if ($if_none_match !== NULL) {
+          // Strip the weak validator prefix.
+          $if_none_match = preg_replace('/^W\//', '', $if_none_match);
+          if ($if_none_match === $cached_response->getEtag()) {
+            $cached_response->setNotModified();
+          }
+        }
+        elseif ($cached_response->getLastModified() > $if_modified_since) {
+          $cached_response->setNotModified();
+        }
+      }
+      return $cached_response;
     }
     return FALSE;
   }
