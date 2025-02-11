@@ -39,7 +39,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    * only for the render array given in a test and not for an entire page.
    */
   protected function render(array &$elements): string {
-    return  (string) $this->container->get('renderer')->renderRoot($elements);
+    return (string) $this->container->get('renderer')->renderRoot($elements);
   }
 
   /**
