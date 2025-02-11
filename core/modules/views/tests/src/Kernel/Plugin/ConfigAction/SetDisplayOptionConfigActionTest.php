@@ -150,8 +150,8 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
     // Check that field user_id now exists.
     $this->assertArrayHasKey('user_id', $fields);
     // Check whether type field is above name.
-    $name_position = array_search('name', $fields);
-    $type_position = array_search('type', $fields);
+    $name_position = array_search('name', array_keys($fields));
+    $type_position = array_search('type', array_keys($fields));
     $this->assertGreaterThan($name_position, $type_position);
   }
 
