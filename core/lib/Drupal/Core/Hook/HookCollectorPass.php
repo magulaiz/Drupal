@@ -179,12 +179,6 @@ class HookCollectorPass implements CompilerPassInterface {
       $extension = $fileinfo->getExtension();
       $filename = $fileinfo->getPathname();
 
-      if (($extension === 'module' || $extension === 'profile') && !$iterator->getDepth() && !$skip_procedural) {
-        // There is an expectation for all modules and profiles to be loaded.
-        // .module and .profile files are not supposed to be in subdirectories.
-        // These need to be loaded even if the module has no procedural hooks.
-        include_once $filename;
-      }
       if ($extension === 'php') {
         $cached = $hook_file_cache->get($filename);
         if ($cached) {
@@ -329,9 +323,11 @@ class HookCollectorPass implements CompilerPassInterface {
     $this->addFromAttribute(new Hook($hook, $module . '_' . $hook), ProceduralCall::class, $module);
     if ($hook === 'hook_info') {
       $this->hookInfo[] = $function;
+      include_once $fileinfo->getPathname();
     }
     if ($hook === 'module_implements_alter') {
       $this->moduleImplementsAlters[] = $function;
+      include_once $fileinfo->getPathname();
     }
     if ($fileinfo->getExtension() !== 'module') {
       $this->includes[$function] = $fileinfo->getPathname();
