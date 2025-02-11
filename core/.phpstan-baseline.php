@@ -59378,24 +59378,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Render/RendererTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Static call to instance method PHPUnit\\\\Framework\\\\TestCase\\:\\:exactly\\(\\)\\.$#',
-	'identifier' => 'method.staticCall',
-	'count' => 3,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Render/RendererTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Static call to instance method PHPUnit\\\\Framework\\\\TestCase\\:\\:never\\(\\)\\.$#',
-	'identifier' => 'method.staticCall',
-	'count' => 3,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Render/RendererTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Static call to instance method PHPUnit\\\\Framework\\\\TestCase\\:\\:once\\(\\)\\.$#',
-	'identifier' => 'method.staticCall',
-	'count' => 5,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Render/RendererTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Render\\\\RendererTestBase\\:\\:assertRenderCacheItem\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
