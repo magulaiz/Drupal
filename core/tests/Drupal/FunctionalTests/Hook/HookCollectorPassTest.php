@@ -43,15 +43,14 @@ class HookCollectorPassTest extends BrowserTestBase {
   }
 
   /**
-   * Tests pre-existing configuration detection.
+   * Tests installing a module with a Drupal container call outside functions.
+   *
+   * If this is removed then it needs to be moved to a test that installs modules through
+   * admin/modules.
    */
   public function testPreExistingConfigInstall(): void {
     $this->drupalLogin($this->adminUser);
 
-    // Try to install config_install_fail_test and config_test. Doing this
-    // will install the config_test module first because it is a dependency of
-    // config_install_fail_test.
-    // @see \Drupal\system\Form\ModulesListForm::submitForm()
     $this->drupalGet('admin/modules');
     $this->submitForm([
       'modules[config_test][enable]' => TRUE,

@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 
-\Drupal::config('system.site')->get('name');
-\Drupal::service('page_cache_kill_switch')->trigger();
-
 /**
  * This implements a hook and should be picked up.
  *
