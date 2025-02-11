@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Used to test bare container calls in .module files.
+ * @file
+ * Used to test bare container calls in .module files.
  */
 
 declare(strict_types=1);
