@@ -325,10 +325,3 @@ function system_post_update_convert_empty_country_and_timezone_settings_to_null(
     $system_date_settings->save();
   }
 }
-
-/**
- * Rebuild the container to fix HTML in RSS feeds.
- */
-function system_post_update_remove_rss_cdata_subscriber(): void {
-  // Empty update to trigger container rebuild.
-}
