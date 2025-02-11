@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Ajax;
 
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\CommandInterface;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @coversDefaultClass \Drupal\Core\Ajax\AjaxResponse
@@ -109,7 +109,11 @@ class AjaxResponseTest extends UnitTestCase {
   public function testMergeWithOtherAjaxResponse(): void {
     $response = new AjaxResponse([]);
 
-    $command_one = $this->createCommandMock('one');
+    $command_one = $this->createMock('Drupal\Core\Ajax\CommandInterface');
+    $command_one->expects($this->once())
+      ->method('render')
+      ->willReturn(['command' => 'one']);
+
     $command_two = $this->createCommandMockWithSettingsAndLibrariesAttachments(
       'Drupal\Core\Ajax\HtmlCommand', [
         'setting1' => 'value1',
@@ -150,7 +154,7 @@ class AjaxResponseTest extends UnitTestCase {
     array|null $settings,
     array|null $libraries,
     string $command_name,
-  ): CommandInterface {
+  ): MockObject {
     $command = $this->createMock($command_class_name);
     $command->expects($this->once())
       ->method('render')
@@ -161,20 +165,6 @@ class AjaxResponseTest extends UnitTestCase {
     $assets->expects($this->once())->method('getSettings')->willReturn($settings);
 
     $command->expects($this->once())->method('getAttachedAssets')->willReturn($assets);
-
-    return $command;
-  }
-
-  /**
-   * Creates a mock of the Drupal\Core\Ajax\CommandInterface.
-   *
-   * @throws \PHPUnit\Framework\MockObject\Exception
-   */
-  private function createCommandMock(string $command_name): CommandInterface {
-    $command = $this->createMock('Drupal\Core\Ajax\CommandInterface');
-    $command->expects($this->once())
-      ->method('render')
-      ->willReturn(['command' => $command_name]);
 
     return $command;
   }
