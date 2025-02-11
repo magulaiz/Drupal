@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   This API is experimental.
  */
 #[ConfigAction(
-  id: 'setBlockSettings',
+  id: 'block:setBlockSettings',
   admin_label: new TranslatableMarkup('Set Block Settings'),
   entity_types: ['block'],
 )]
@@ -48,7 +48,7 @@ final class SetBlockSettings implements ConfigActionPluginInterface, ContainerFa
   public function apply(string $configName, mixed $value): void {
     $block = $this->configManager->loadConfigEntityByName($configName);
     if (!$block instanceof BlockInterface) {
-      throw new ConfigActionException(sprintf('Config %s is not a valid Drupal block.', $configName));
+      throw new ConfigActionException(sprintf('The config %s is not a valid Drupal block.', $configName));
     }
 
     // Expect $value to be an array whose keys are the block settings keys
