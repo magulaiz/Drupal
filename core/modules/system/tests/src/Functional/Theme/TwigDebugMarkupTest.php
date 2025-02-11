@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Theme;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -60,7 +61,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
       . '   ▪️ node' . $extension . PHP_EOL
       . '-->' . PHP_EOL;
     $this->assertStringContainsString($expected_templates_suggestions, $output, 'Suggested template files found in order and node ID specific template shown as current template.');
-    $this->assertStringContainsString('<!-- INVALID FILE NAME SUGGESTIONS:' . PHP_EOL . '   See https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/function/hook_theme_suggestions_alter' . PHP_EOL . '   invalid_theme_suggestions' . PHP_EOL . '-->', $output, 'Twig debug markup found invalid suggestions.');
+    $this->assertStringContainsString('<!-- ❗ INVALID FILE NAME SUGGESTIONS:' . PHP_EOL . '   See https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/function/hook_theme_suggestions_alter' . PHP_EOL . '   invalid_theme_suggestions' . PHP_EOL . '-->', $output, 'Twig debug markup found invalid suggestions.');
     $template_filename = $templates['node__1']['path'] . '/' . $templates['node__1']['template'] . $extension;
     $this->assertStringContainsString("💡 BEGIN CUSTOM TEMPLATE OUTPUT from '$template_filename'", $output, 'Full path to current template file found.');
 
@@ -78,8 +79,12 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $build += $builder->view($node3);
     $output = (string) $renderer->renderRoot($build);
     $this->assertStringContainsString("THEME HOOK: 'node__foo__bar'", $output, 'Theme call information found.');
+
+    // @see theme_test_theme_suggestions_node()
+    $xss_suggestion = Html::escape('<script type="text/javascript">alert(\'yo\');</script>') . $extension;
     $expected_templates_suggestions = '▪️ node--foo--bar' . $extension . PHP_EOL
       . '   ▪️ node--foo' . $extension . PHP_EOL
+      . '   ▪️ node--' . $xss_suggestion . PHP_EOL
       . '   ▪️ node--3--full' . $extension . PHP_EOL
       . '   ▪️ node--3' . $extension . PHP_EOL
       . '   ▪️ node--page--full' . $extension . PHP_EOL

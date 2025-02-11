@@ -39,7 +39,7 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
    * only for the render array given in a test and not for an entire page.
    */
   protected function render(array &$elements): string {
-    return $this->container->get('renderer')->renderRoot($elements)->__toString();
+    return  (string) $this->container->get('renderer')->renderRoot($elements);
   }
 
   /**
@@ -179,15 +179,6 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
           "<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'core/modules/system/tests/modules/theme_test/templates/theme-test-general-suggestions$extension' -->",
         ],
       ],
-      'Suggestion provided by a module\'s hook_theme_suggestions_alter is used' => [
-        // @see theme_suggestions_test_theme_suggestions_alter()
-        'modules' => ['theme_suggestions_test'],
-        'theme' => '',
-        'expected' => [
-          'Template overridden based on new theme suggestion provided by a module via hook_theme_suggestions_alter().',
-          "<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'core/modules/system/tests/modules/theme_suggestions_test/templates/theme-test-general-suggestions--module-override$extension' -->",
-        ],
-      ],
       'Suggestion provided by a theme\'s hook_theme_suggestions_alter is used' => [
         'modules' => [],
         // @see test_theme_theme_suggestions_alter()
@@ -197,15 +188,24 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
           "<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'core/modules/system/tests/themes/test_theme/templates/theme-test-general-suggestions--theme-override$extension' -->",
         ],
       ],
+      'Suggestion provided by a module\'s hook_theme_suggestions_alter is used' => [
+        // @see theme_suggestions_test_theme_suggestions_alter()
+        'modules' => ['theme_suggestions_test'],
+        'theme' => '',
+        'expected' => [
+          'Template overridden based on new theme suggestion provided by a module via hook_theme_suggestions_alter().',
+          "<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'core/modules/system/tests/modules/theme_suggestions_test/templates/theme-test-general-suggestions--module-override$extension' -->",
+        ],
+      ],
       'Themes implementing hook_theme_suggestions_alter override modules' => [
         'modules' => ['theme_suggestions_test'],
         'theme' => 'test_theme',
         'expected' => [
-          'Template overridden based on new theme suggestion provided by the test_theme theme via hook_theme_suggestions_alter().',
-          "<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'core/modules/system/tests/themes/test_theme/templates/theme-test-general-suggestions--theme-override$extension' -->",
+          'Template overridden based on new theme suggestion provided by a module via hook_theme_suggestions_alter().',
+          "<!-- BEGIN OUTPUT from 'core/modules/system/tests/modules/theme_suggestions_test/templates/theme-test-general-suggestions--module-override$extension' -->",
         ],
         'unexpected' => [
-          'Template overridden based on new theme suggestion provided by a module via hook_theme_suggestions_alter().',
+          'Template overridden based on new theme suggestion provided by the test_theme theme via hook_theme_suggestions_alter().',
         ],
       ],
     ];
@@ -685,25 +685,24 @@ class ThemeSuggestionsAlterTest extends KernelTestBase {
     // Messages are not output with $this->render().
     $output = $this->render($build);
 
-    $this->assertStringContainsString('Template overridden based on new theme suggestion provided by the test_theme theme via hook_theme_suggestions_HOOK_alter().', $output, $this->name());
+    $this->assertStringContainsString('Template overridden based on new theme suggestion provided by a module via hook_theme_suggestions_HOOK_alter().', $output, $this->name());
 
     // Retrieve all messages we've set via \Drupal::messenger()->addStatus().
     $messages = $this->container->get('messenger')->messagesByType('status');
 
     // Ensure that the order is:
-    // 1. hook_theme_suggestions_HOOK()
-    // 2. Grouped by module:
-    //    hook_theme_suggestions_alter()
-    //    hook_theme_suggestions_HOOK_alter()
-    // 3. Grouped by theme:
-    //    hook_theme_suggestions_alter()
-    //    hook_theme_suggestions_HOOK_alter()
     $expected_order = [
-      'theme_test_theme_suggestions_theme_test_suggestions() executed.',
+      // 1. hook_theme_suggestions_HOOK()
       'theme_suggestions_test_theme_suggestions_alter() executed.',
       'theme_suggestions_test_theme_suggestions_theme_test_suggestions_alter() executed.',
-      'theme_test_theme_suggestions_alter() executed.',
+      // 2. Grouped by module:
+      //    hook_theme_suggestions_alter()
+      //    hook_theme_suggestions_HOOK_alter()
+      'theme_test_theme_suggestions_alter() executed for theme_test_suggestions.',
       'theme_test_theme_suggestions_theme_test_suggestions_alter() executed.',
+      // 3. Grouped by theme:
+      //    hook_theme_suggestions_alter()
+      //    hook_theme_suggestions_HOOK_alter()
       'test_theme_theme_suggestions_alter() executed.',
       'test_theme_theme_suggestions_theme_test_suggestions_alter() executed.',
     ];
