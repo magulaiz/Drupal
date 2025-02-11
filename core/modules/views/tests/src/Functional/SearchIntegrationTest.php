@@ -155,7 +155,9 @@ class SearchIntegrationTest extends ViewTestBase {
 
   /**
    * Tests aria-describedby attribute handling in Views exposed filter blocks.
-   * While search role assigned to the view exposed form.
+   *
+   * This test verifies that when the search role is assigned to the views
+   * exposed form, the aria-describedby attribute is correctly set.
    */
   public function testViewsExposedFilterAriaDescribedby(): void {
 
