@@ -116,7 +116,7 @@ function hook_hook_info(): array {
  * @param string $hook
  *   The name of the module hook being implemented.
  */
-function hook_module_implements_alter(&$implementations, $hook) {
+function hook_module_implements_alter(&$implementations, $hook): void {
   if ($hook == 'form_alter') {
     // Move my_module_form_alter() to the end of the list.
     // \Drupal::moduleHandler()->getImplementationInfo()
@@ -151,7 +151,7 @@ function hook_module_implements_alter(&$implementations, $hook) {
  *
  * @see \Drupal\Core\Extension\ModuleUninstallValidatorInterface
  */
-function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $file, $type) {
+function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $file, $type): void {
   // Only fill this in if the .info.yml file does not define a 'datestamp'.
   if (empty($info['datestamp'])) {
     $info['datestamp'] = $file->getFileInfo()->getMTime();
@@ -530,7 +530,7 @@ function hook_install_tasks(&$install_state) {
  * @see hook_install_tasks()
  * @see install_tasks()
  */
-function hook_install_tasks_alter(&$tasks, $install_state) {
+function hook_install_tasks_alter(&$tasks, $install_state): void {
   // Replace the entire site configuration form provided by Drupal core
   // with a custom callback function defined by this installation profile.
   $tasks['install_configure_form']['function'] = 'my_profile_install_configure_form';
@@ -1059,7 +1059,7 @@ function hook_updater_info(): array {
  * @see drupal_get_updaters()
  * @see hook_updater_info()
  */
-function hook_updater_info_alter(&$updaters) {
+function hook_updater_info_alter(&$updaters): void {
   // Adjust weight so that the theme Updater gets a chance to handle a given
   // update task before module updaters.
   $updaters['theme']['weight'] = -1;

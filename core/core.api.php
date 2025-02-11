@@ -2027,7 +2027,7 @@ function hook_cron() {
  *
  * @see hook_data_type_info()
  */
-function hook_data_type_info_alter(&$data_types) {
+function hook_data_type_info_alter(&$data_types): void {
   $data_types['email']['class'] = '\Drupal\my_module\Type\Email';
 }
 
@@ -2046,7 +2046,7 @@ function hook_data_type_info_alter(&$data_types) {
  *
  * @ingroup queue
  */
-function hook_queue_info_alter(&$queues) {
+function hook_queue_info_alter(&$queues): void {
   // This site has many feeds so let's spend 90 seconds on each cron run
   // updating feeds instead of the default 60.
   $queues['my_module_feeds']['cron']['time'] = 90;
@@ -2058,7 +2058,7 @@ function hook_queue_info_alter(&$queues) {
  * @param array $definitions
  *   The array of condition definitions.
  */
-function hook_condition_info_alter(array &$definitions) {
+function hook_condition_info_alter(array &$definitions): void {
   // Add custom or modify existing condition definitions.
   if (isset($definitions['node_type']) && $definitions['node_type']['class'] == 'Drupal\node\Plugin\Condition\NodeType') {
     // If the node_type's class is unaltered, use a custom implementation.
@@ -2112,7 +2112,7 @@ function hook_condition_info_alter(array &$definitions) {
  *
  * @see \Drupal\Core\Mail\MailManagerInterface::mail()
  */
-function hook_mail_alter(&$message) {
+function hook_mail_alter(&$message): void {
   if ($message['id'] == 'modulename_messagekey') {
     if (!example_notifications_optin($message['to'], $message['id'])) {
       // If the recipient has opted to not receive such messages, cancel
@@ -2208,7 +2208,7 @@ function hook_mail($key, &$message, $params): void {
  * @see \Drupal\Core\Annotation\Mail
  * @see \Drupal\Core\Mail\MailManager
  */
-function hook_mail_backend_info_alter(&$info) {
+function hook_mail_backend_info_alter(&$info): void {
   unset($info['test_mail_collector']);
 }
 
@@ -2220,7 +2220,7 @@ function hook_mail_backend_info_alter(&$info) {
  *
  * @see \Drupal\Core\Locale\CountryManager::getList()
  */
-function hook_countries_alter(&$countries) {
+function hook_countries_alter(&$countries): void {
   // Elbonia is now independent, so add it to the country list.
   $countries['EB'] = 'Elbonia';
 }
@@ -2234,7 +2234,7 @@ function hook_countries_alter(&$countries) {
  * @see \Drupal\Core\Display\VariantManager
  * @see \Drupal\Core\Display\Attribute\DisplayVariant
  */
-function hook_display_variant_plugin_alter(array &$definitions) {
+function hook_display_variant_plugin_alter(array &$definitions): void {
   $definitions['full_page']['admin_label'] = t('Block layout');
 }
 
@@ -2244,7 +2244,7 @@ function hook_display_variant_plugin_alter(array &$definitions) {
  * @param \Drupal\Core\Layout\LayoutDefinition[] $definitions
  *   The array of layout definitions, keyed by plugin ID.
  */
-function hook_layout_alter(&$definitions) {
+function hook_layout_alter(&$definitions): void {
   // Remove a layout.
   unset($definitions['twocol']);
 }
@@ -2318,7 +2318,7 @@ function hook_rebuild(): void {
  * @see callback_batch_operation()
  * @see \Drupal\Core\Config\ConfigImporter::initialize()
  */
-function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\ConfigImporter $config_importer) {
+function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\ConfigImporter $config_importer): void {
   $deletes = $config_importer->getUnprocessedConfiguration('delete');
   if (isset($deletes['field.storage.node.body'])) {
     $sync_steps[] = '_additional_configuration_step';
@@ -2347,7 +2347,7 @@ function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\Config
  * @see \Drupal\Core\Config\TypedConfigManager
  * @see \Drupal\Core\Config\Schema\ConfigSchemaAlterException
  */
-function hook_config_schema_info_alter(&$definitions) {
+function hook_config_schema_info_alter(&$definitions): void {
   // Enhance the text and date type definitions with classes to generate proper
   // form elements in ConfigTranslationFormBase. Other translatable types will
   // appear as a one line textfield.
@@ -2364,7 +2364,7 @@ function hook_config_schema_info_alter(&$definitions) {
  * @see \Drupal\Core\Validation\ConstraintManager
  * @see \Drupal\Core\Validation\Attribute\Constraint
  */
-function hook_validation_constraint_alter(array &$definitions) {
+function hook_validation_constraint_alter(array &$definitions): void {
   $definitions['Null']['class'] = '\Drupal\my_module\Plugin\Validation\Constraints\MyClass';
 }
 

@@ -199,7 +199,7 @@ function hook_migrate_MIGRATION_ID_prepare_row(Row $row, MigrateSourceInterface 
  *
  * @ingroup migration
  */
-function hook_migration_plugins_alter(array &$migrations) {
+function hook_migration_plugins_alter(array &$migrations): void {
   $migrations = array_filter($migrations, function (array $migration) {
     $tags = isset($migration['migration_tags']) ? (array) $migration['migration_tags'] : [];
     return !in_array('Drupal 6', $tags);
