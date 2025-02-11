@@ -120,6 +120,8 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
       [
         'option' => 'fields',
         'item' => 'type',
+        'item_sibling' => 'name',
+        'position' => 'before',
         'settings' => [
           'id' => 'type',
           'table' => 'entity_test',
@@ -147,6 +149,10 @@ class SetDisplayOptionConfigActionTest extends ViewsKernelTestBase {
     $this->assertArrayHasKey('type', $fields);
     // Check that field user_id now exists.
     $this->assertArrayHasKey('user_id', $fields);
+    // Check whether type field is above name.
+    $name_position = array_search('name', $fields);
+    $type_position = array_search('type', $fields);
+    $this->assertGreaterThan($name_position, $type_position);
   }
 
   /**

@@ -104,8 +104,41 @@ class SetDisplayOption implements ConfigActionPluginInterface, ContainerFactoryP
       if (!empty($option_settings[$item]) && !$allow_update) {
         throw new ConfigActionException(sprintf('Item %s already exists in %s display for %s', $item, $display_id, $option));
       }
-      $option_settings[$item] = $settings;
-      $settings = $option_settings;
+      // Check if the item needs to be placed in a specific position. This will
+      // help in case a field or filter needs to be added not to the end of the
+      // list.
+      if (!empty($value['item_sibling'])) {
+        $sibling = $value['item_sibling'];
+        if (!empty($value['position']) && in_array($value['position'], ['before', 'after'])) {
+          $position = $value['position'];
+        }
+        else {
+          $position = 'after';
+        }
+        $key_pos = array_search($sibling, array_keys($option_settings));
+        if ($key_pos !== FALSE) {
+          if ($position == 'after') {
+            $key_pos++;
+          }
+          else {
+            $key_pos--;
+          }
+          if ($key_pos > 0) {
+            $second_array = array_splice($option_settings, $key_pos);
+            $settings = array_merge($option_settings, [$item => $settings], $second_array);
+          }
+          else {
+            $settings = array_merge([$item => $settings], $option_settings);
+          }
+        }
+        else {
+          throw new ConfigActionException(sprintf('Item sibling %s does not exist', $sibling));
+        }
+      }
+      else {
+        $option_settings[$item] = $settings;
+        $settings = $option_settings;
+      }
     }
     if ($override) {
       $view->displayHandlers->get($display_id)->overrideOption($option, $settings);
