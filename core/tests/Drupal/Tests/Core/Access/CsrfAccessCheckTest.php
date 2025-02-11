@@ -43,7 +43,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
   /**
    * The session configuration.
    *
-   * @var \Drupal\Core\Session\SessionConfigurationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\SessionConfigurationInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $sessionConfiguration;
 
@@ -89,7 +89,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
   /**
    * Tests the access() method for anonymous users.
    */
-  public function testAccessTokenAnonymousPass() {
+  public function testAccessTokenAnonymousPass(): void {
     $this->sessionConfiguration->expects($this->once())
       ->method('hasSession')
       ->willReturn(FALSE);
