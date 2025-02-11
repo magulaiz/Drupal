@@ -111,9 +111,15 @@ class AjaxResponseTest extends UnitTestCase {
 
     $command_one = $this->createCommandMock('one');
     $command_two = $this->createCommandMockWithSettingsAndLibrariesAttachments(
-      'Drupal\Core\Ajax\HtmlCommand', ['setting', 'otherSetting'], ['jquery', 'drupal'], 'two');
+      'Drupal\Core\Ajax\HtmlCommand', [
+        'setting1' => 'value1',
+        'setting2' => 'value2',
+      ], ['jquery', 'drupal'], 'two');
     $command_three = $this->createCommandMockWithSettingsAndLibrariesAttachments(
-      'Drupal\Core\Ajax\InsertCommand', ['definitelyNotASetting'], ['jquery', 'ajax'], 'three');
+      'Drupal\Core\Ajax\InsertCommand', [
+        'setting1' => 'overridden',
+        'setting3' => 'value3',
+      ], ['jquery', 'ajax'], 'three');
 
     $response->addCommand($command_one);
     $response->addCommand($command_two);
@@ -121,12 +127,16 @@ class AjaxResponseTest extends UnitTestCase {
     $response2 = new AjaxResponse([]);
     $response2->addCommand($command_three);
 
-    $result = $response->mergeWith($response2);
+    $response->mergeWith($response2);
     self::assertEquals([
       'library' => ['jquery', 'drupal', 'jquery', 'ajax'],
-      'drupalSettings' => ['definitelyNotASetting', 'otherSetting'],
-    ], $result->getAttachments());
-    self::assertEquals([['command' => 'one'], ['command' => 'two'], ['command' => 'three']], $result->getCommands());
+      'drupalSettings' => [
+        'setting1' => 'overridden',
+        'setting2' => 'value2',
+        'setting3' => 'value3',
+      ],
+    ], $response->getAttachments());
+    self::assertEquals([['command' => 'one'], ['command' => 'two'], ['command' => 'three']], $response->getCommands());
   }
 
   /**
