@@ -404,7 +404,7 @@ class HandlerTest extends ViewTestBase {
    * an empty earlier argument does not prevent subsequent arguments from
    * falling back to their default values.
    */
-  public function testViewArgumentsDefaultValue() {
+  public function testViewArgumentsDefaultValue(): void {
     $view = Views::getView('test_view');
     $this->assertNotNull($view, 'View test_argument was loaded.');
 
