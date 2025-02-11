@@ -23,7 +23,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManager;
  * @param string $uri
  *   The URI of the file.
  *
- * @return string[]|int
+ * @return string[]|int|null
  *   If the user does not have permission to access the file, return -1. If the
  *   user has permission, return an array with the appropriate headers. If the
  *   file is not controlled by the current module, the return value should be
@@ -31,7 +31,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManager;
  *
  * @see \Drupal\system\FileDownloadController::download()
  */
-function hook_file_download($uri) {
+function hook_file_download($uri): array|int|null {
   // Check to see if this is a config download.
   $scheme = StreamWrapperManager::getScheme($uri);
   $target = StreamWrapperManager::getTarget($uri);
@@ -40,6 +40,7 @@ function hook_file_download($uri) {
       'Content-disposition' => 'attachment; filename="config.tar.gz"',
     ];
   }
+  return NULL;
 }
 
 /**
@@ -133,11 +134,12 @@ function hook_file_mimetype_mapping_alter(&$mapping) {
 /**
  * Alter archiver information declared by other modules.
  *
- * See hook_archiver_info() for a description of archivers and the archiver
- * information structure.
- *
  * @param array $info
- *   Archiver information to alter (return values from hook_archiver_info()).
+ *   An associative array of archivers, keyed by archiver ID. Each value
+ *   consists of the plugin definition for that archiver.
+ *
+ * @see \Drupal\Core\Archiver\ArchiverManager
+ * @see \Drupal\Core\Archiver\Attribute\Archiver
  */
 function hook_archiver_info_alter(&$info) {
   $info['tar']['extensions'][] = 'tgz';
