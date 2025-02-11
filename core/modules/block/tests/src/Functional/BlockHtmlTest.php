@@ -55,6 +55,19 @@ class BlockHtmlTest extends BrowserTestBase {
 
     // Ensure expected markup for a menu block.
     $this->assertSession()->elementExists('xpath', '//nav[@id="block-test-menu-block"]/ul/li');
+
+    // Locate the block element.
+    $block_element = $this->assertSession()->elementExists('css', '#block-test-menu-block');
+
+    // Verify the block has the role attribute.
+    $this->assertEquals('navigation', $block_element->getAttribute('role'), 'Block has role="navigation".');
+
+    // Find the block title element (h2) and get its ID.
+    $title_element = $this->assertSession()->elementExists('css', 'h2');
+    $title_id = $title_element->getAttribute('id');
+
+    // Verify the block has aria-describedby set to the title ID.
+    $this->assertEquals($title_id, $block_element->getAttribute('aria-describedby'), 'aria-describedby is correctly set to the title ID.');
   }
 
 }
