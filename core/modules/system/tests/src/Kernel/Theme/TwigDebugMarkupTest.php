@@ -40,7 +40,7 @@ class TwigDebugMarkupTest extends KernelTestBase {
    * only for the render array given in a test and not for an entire page.
    */
   protected function render(array &$elements): string {
-    return $this->container->get('renderer')->renderRoot($elements)->__toString();
+    return (string) $this->container->get('renderer')->renderRoot($elements);
   }
 
   /**
