@@ -28,6 +28,7 @@ class Html {
 
   /**
    * An array of IDs, including incremented versions when an ID is duplicated.
+   *
    * @var array
    */
   protected static $seenIds;
@@ -85,8 +86,6 @@ class Html {
    * Link below shows the syntax for valid CSS identifiers (including element
    * names, classes, and IDs in selectors).
    *
-   * @see https://www.w3.org/TR/CSS21/syndata.html#characters
-   *
    * @param string $identifier
    *   The identifier to clean.
    * @param array $filter
@@ -94,6 +93,8 @@ class Html {
    *
    * @return string
    *   The cleaned identifier.
+   *
+   * @see https://www.w3.org/TR/CSS21/syndata.html#characters
    */
   public static function cleanCssIdentifier(
     $identifier,
@@ -413,9 +414,9 @@ class Html {
    * Html::decodeEntities() will convert all HTML entities to UTF-8 bytes,
    * including "&eacute;" and "&lt;" to "é" and "<".
    *
-   * When constructing @link theme_render render arrays @endlink passing the output of Html::escape() to
-   * '#markup' is not recommended. Use the '#plain_text' key instead and the
-   * renderer will autoescape the text.
+   * When constructing @link theme_render render arrays @endlink passing the
+   * output of Html::escape() to '#markup' is not recommended. Use the
+   * '#plain_text' key instead and the renderer will autoescape the text.
    *
    * @param string $text
    *   The input text.
@@ -465,7 +466,7 @@ class Html {
     assert(isset(parse_url($scheme_and_host)["host"]), '$base_url is absolute and hence has a host.');
 
     $html_dom = Html::load($html);
-    $xpath = new \DOMXpath($html_dom);
+    $xpath = new \DOMXPath($html_dom);
 
     // Update all root-relative URLs to absolute URLs in the given HTML.
     // Perform on attributes that may contain a single URI.

@@ -12,7 +12,7 @@ use Drupal\taxonomy\Entity\Term;
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function taxonomy_theme_suggestions_taxonomy_term(array $variables) {
+function taxonomy_theme_suggestions_taxonomy_term(array $variables): array {
   $suggestions = [];
 
   /** @var \Drupal\taxonomy\TermInterface $term */
@@ -95,7 +95,7 @@ function taxonomy_term_is_page(Term $term) {
  * The index lists all terms that are related to a given node entity, and is
  * therefore maintained at the entity level.
  *
- * @param \Drupal\node\Entity\Node $node
+ * @param \Drupal\node\NodeInterface $node
  *   The node entity.
  */
 function taxonomy_build_node_index($node) {

@@ -203,6 +203,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    *   Which plugin should be used for the new display ID.
    *
    * @return string
+   *   The generated display ID.
    */
   protected function generateDisplayId($plugin_id) {
     // 'default' is singular and is unique, so just go with 'default'
@@ -352,7 +353,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $this->invalidateCaches();
 
     // Rebuild the router if this is a new view, or its status changed.
-    if (!isset($this->original) || ($this->status() != $this->original->status())) {
+    if (!$this->getOriginal() || ($this->status() != $this->getOriginal()->status())) {
       \Drupal::service('router.builder')->setRebuildNeeded();
     }
   }

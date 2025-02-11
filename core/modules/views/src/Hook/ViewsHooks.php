@@ -57,7 +57,7 @@ class ViewsHooks {
    * Implements hook_views_pre_render().
    */
   #[Hook('views_pre_render')]
-  public function viewsPreRender($view) {
+  public function viewsPreRender($view): void {
     // If using AJAX, send identifying data about this view.
     if ($view->ajaxEnabled() && empty($view->is_attachment) && empty($view->live_preview)) {
       $view->element['#attached']['drupalSettings']['views'] = [
@@ -78,14 +78,13 @@ class ViewsHooks {
       ];
       $view->element['#attached']['library'][] = 'views/views.ajax';
     }
-    return $view;
   }
 
   /**
    * Implements hook_theme().
    *
-   * Register views theming functions and those that are defined via views plugin
-   * definitions.
+   * Register views theming functions and those that are defined via views
+   * plugin definitions.
    */
   #[Hook('theme')]
   public function theme($existing, $type, $theme, $path) : array {
@@ -176,9 +175,9 @@ class ViewsHooks {
         if (!isset($def['theme']) || empty($def['register_theme'])) {
           continue;
         }
-        // For each theme registration, we have a base directory to check for the
-        // templates folder. This will be relative to the root of the given module
-        // folder, so we always need a module definition.
+        // For each theme registration, we have a base directory to check for
+        // the templates folder. This will be relative to the root of the given
+        // module folder, so we always need a module definition.
         // @todo Watchdog or exception?
         if (!isset($def['provider']) || !$module_handler->moduleExists($def['provider'])) {
           continue;
