@@ -246,6 +246,9 @@ system.rss:
       type: mapping
       label: 'Feed items'
       mapping:
+        text_format:
+          type: string
+          label: 'Feed text format'
         view_mode:
           type: string
           label: 'Feed content'
