@@ -235,7 +235,7 @@ class ConfigActionsTest extends KernelTestBase {
     $block_settings = $block_to_test->get('settings');
     $this->assertArrayNotHasKey('foo', $block_settings);
     $this->expectExceptionMessage('Invalid settings "foo" provided for the block block.block.claro_primary_local_tasks.');
-    $this->configActionManager->applyAction($action, 'block.block.claro_primary_local_tasks', ['foo' => 'bar',]);
+    $this->configActionManager->applyAction($action, 'block.block.claro_primary_local_tasks', ['foo' => 'bar']);
   }
 
   /**
@@ -248,7 +248,7 @@ class ConfigActionsTest extends KernelTestBase {
     $this->assertNotEmpty($block_settings);
     $settings_to_update = [
       'label' => 'Primary tabs - Test',
-      'label_display' => '1'
+      'label_display' => '1',
     ];
     $this->configActionManager->applyAction($action, 'block.block.claro_primary_local_tasks', $settings_to_update);
     // Load the block again and check the settings.
