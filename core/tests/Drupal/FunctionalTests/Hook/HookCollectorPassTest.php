@@ -14,9 +14,11 @@ use Drupal\Tests\BrowserTestBase;
 class HookCollectorPassTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * The admin user used in this test.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
-  protected static $modules = ['system'];
+  protected $adminUser;
 
   /**
    * {@inheritdoc}
@@ -24,13 +26,38 @@ class HookCollectorPassTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests Hook Collector Pass.
+   * {@inheritdoc}
    */
-  public function testHookCollectorModuleServices(): void {
-    /** @var \Drupal\Core\Extension\ModuleInstallerInterface $module_installer */
-    $module_installer = $this->container->get('module_installer');
-    // Install module with service in .module outside of function.
-    $this->assertTrue($module_installer->install(['hook_collector_skip_procedural_attribute']));
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->adminUser = $this->drupalCreateUser([
+      'administer modules',
+      'administer themes',
+      'administer site configuration',
+    ]);
+
+    // Ensure the global variable being asserted by this test does not exist;
+    // a previous test executed in this request/process might have set it.
+    unset($GLOBALS['hook_config_test']);
+  }
+
+  /**
+   * Tests pre-existing configuration detection.
+   */
+  public function testPreExistingConfigInstall(): void {
+    $this->drupalLogin($this->adminUser);
+
+    // Try to install config_install_fail_test and config_test. Doing this
+    // will install the config_test module first because it is a dependency of
+    // config_install_fail_test.
+    // @see \Drupal\system\Form\ModulesListForm::submitForm()
+    $this->drupalGet('admin/modules');
+    $this->submitForm([
+      'modules[config_test][enable]' => TRUE,
+    ], 'Install');
+
+    $this->assertSession()->responseContains('Module <em class="placeholder">Configuration test</em> has been installed.');
   }
 
 }

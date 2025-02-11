@@ -1,0 +1,3 @@
+<?php
+
+$site_path = \Drupal::getContainer()->getParameter('site.path');
