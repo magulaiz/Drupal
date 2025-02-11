@@ -120,9 +120,6 @@ class SetDisplayOption implements ConfigActionPluginInterface, ContainerFactoryP
           if ($position == 'after') {
             $key_pos++;
           }
-          else {
-            $key_pos--;
-          }
           if ($key_pos > 0) {
             $second_array = array_splice($option_settings, $key_pos);
             $settings = array_merge($option_settings, [$item => $settings], $second_array);
