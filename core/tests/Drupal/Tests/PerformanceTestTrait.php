@@ -299,7 +299,8 @@ trait PerformanceTestTrait {
    * @todo https://www.drupal.org/project/drupal/issues/3379757
    *
    * @param string|null $service_name
-   *   An optional human readable identifier so that traces can be grouped together.
+   *   An optional human readable identifier so that traces can be grouped
+   *   together.
    *
    * @return \Drupal\Tests\PerformanceData
    *   An instance of the performance data value object.
@@ -663,14 +664,18 @@ trait PerformanceTestTrait {
       'ScriptBytes',
       'StylesheetBytes',
     ];
+    $values = [];
     foreach ($expected as $name => $metric) {
       if (in_array($name, $assertRange)) {
         $this->assertCountBetween($metric - 500, $metric + 500, $performance_data->{"get$name"}(), "Asserting $name");
+        unset($expected[$name]);
       }
       else {
-        $this->assertSame($metric, $performance_data->{"get$name"}(), "Asserting $name");
+        $values[$name] = $performance_data->{"get$name"}();
       }
     }
+    $this->assertSame($expected, $values);
+
   }
 
   /**
