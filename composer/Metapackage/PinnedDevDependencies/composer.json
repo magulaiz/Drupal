@@ -59,7 +59,7 @@
         "phpunit/php-invoker": "5.0.1",
         "phpunit/php-text-template": "4.0.1",
         "phpunit/php-timer": "7.0.1",
-        "phpunit/phpunit": "11.5.3",
+        "phpunit/phpunit": "11.5.7",
         "ramsey/collection": "2.0.0",
         "ramsey/uuid": "4.7.6",
         "react/promise": "v3.2.0",
