@@ -1,3 +1,9 @@
 <?php
 
-$site_path = \Drupal::getContainer()->getParameter('site.path');
+/**
+ * @file Used to test bare container calls in .module files.
+ */
+
+declare(strict_types=1);
+
+\Drupal::getContainer()->getParameter('site.path');
