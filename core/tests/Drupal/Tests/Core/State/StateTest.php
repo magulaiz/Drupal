@@ -398,8 +398,8 @@ class StateTest extends UnitTestCase {
       'key3' => ['value' => 'value3', 'original' => NULL],
     ], $this->state->getKeysSetDuringRequest());
 
-    $nonOverWrittingValues = ['key4' => 'value4', 'key5' => 'value5', 'key6' => 'value6'];
-    $this->state->setMultiple($nonOverWrittingValues);
+    $nonOverwritingValues = ['key4' => 'value4', 'key5' => 'value5', 'key6' => 'value6'];
+    $this->state->setMultiple($nonOverwritingValues);
     $this->assertEquals([
       'key1' => ['value' => 'value1', 'original' => NULL],
       'key2' => ['value' => 'value2', 'original' => NULL],
@@ -409,8 +409,8 @@ class StateTest extends UnitTestCase {
       'key6' => ['value' => 'value6', 'original' => NULL],
     ], $this->state->getKeysSetDuringRequest());
 
-    $overwrittingValues = ['key6' => 'new-value-6'];
-    $this->state->setMultiple($overwrittingValues);
+    $overwritingValues = ['key6' => 'new-value-6'];
+    $this->state->setMultiple($overwritingValues);
     $this->assertEquals([
       'key1' => ['value' => 'value1', 'original' => NULL],
       'key2' => ['value' => 'value2', 'original' => NULL],
