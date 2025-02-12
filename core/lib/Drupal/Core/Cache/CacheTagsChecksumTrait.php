@@ -60,7 +60,7 @@ trait CacheTagsChecksumTrait {
    * Implements \Drupal\Core\Cache\CacheTagsInvalidatorInterface::invalidateTags()
    */
   public function invalidateTags(array $tags) {
-    if (($this->connection->driver() == 'mongodb') && !$this->tableExists) {
+    if (isset($this->connection) && ($this->connection->driver() == 'mongodb') && !$this->tableExists) {
       // For MongoDB the table needs to exist. Otherwise MongoDB creates one
       // without the correct validation.
       $this->tableExists = $this->ensureTableExists();
@@ -96,7 +96,7 @@ trait CacheTagsChecksumTrait {
    * Implements \Drupal\Core\Cache\CacheTagsChecksumInterface::getCurrentChecksum()
    */
   public function getCurrentChecksum(array $tags) {
-    if (($this->connection->driver() == 'mongodb') && !$this->tableExists) {
+    if (isset($this->connection) && ($this->connection->driver() == 'mongodb') && !$this->tableExists) {
       // For MongoDB the table needs to exist. Otherwise MongoDB creates one
       // without the correct validation.
       $this->tableExists = $this->ensureTableExists();
