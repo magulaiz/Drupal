@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\test_page_test\Controller;
 
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -85,7 +86,7 @@ class Test {
    * @param int $code
    *   The status code.
    */
-  public function httpResponseException($code) {
+  public function httpResponseException(int $code) {
     throw new HttpException($code);
   }
 
@@ -168,56 +169,6 @@ class Test {
    */
   public function metaRefresh() {
     return new RedirectResponse(Url::fromRoute('test_page_test.test_page', [], ['absolute' => TRUE])->toString(), 302);
-  }
-
-  /**
-   * Returns a page render array with 2 elements with the same HTML IDs.
-   *
-   * @return array
-   *   A render array as expected by
-   *   \Drupal\Core\Render\RendererInterface::render().
-   */
-  public function renderPageWithDuplicateIds() {
-    return [
-      '#type' => 'container',
-      'title' => [
-        '#type' => 'html_tag',
-        '#tag' => 'h1',
-        '#value' => 'Hello',
-        '#attributes' => ['id' => 'page-element'],
-      ],
-      'description' => [
-        '#type' => 'html_tag',
-        '#tag' => 'h2',
-        '#value' => 'World',
-        '#attributes' => ['id' => 'page-element'],
-      ],
-    ];
-  }
-
-  /**
-   * Returns a page render array with 2 elements with the unique HTML IDs.
-   *
-   * @return array
-   *   A render array as expected by
-   *   \Drupal\Core\Render\RendererInterface::render().
-   */
-  public function renderPageWithoutDuplicateIds() {
-    return [
-      '#type' => 'container',
-      'title' => [
-        '#type' => 'html_tag',
-        '#tag' => 'h1',
-        '#value' => 'Hello',
-        '#attributes' => ['id' => 'page-element-title'],
-      ],
-      'description' => [
-        '#type' => 'html_tag',
-        '#tag' => 'h2',
-        '#value' => 'World',
-        '#attributes' => ['id' => 'page-element-description'],
-      ],
-    ];
   }
 
   /**

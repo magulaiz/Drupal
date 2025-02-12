@@ -15,7 +15,6 @@ use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
  * Tests the Field UI "Manage Fields" screens.
  *
  * @group field_ui
- * @group #slow
  */
 class ManageFieldsTest extends WebDriverTestBase {
 
@@ -319,12 +318,10 @@ class ManageFieldsTest extends WebDriverTestBase {
         'selection_list' => [
           'List (text)',
           'List (integer)',
-          'List (float)',
         ],
         'number' => [
           'Number (integer)',
           'Number (decimal)',
-          'Number (float)',
         ],
       };
       // Assert that the field type options are displayed as per their weights.

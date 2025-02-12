@@ -26,3 +26,37 @@ function navigation_post_update_update_permissions(array &$sandbox) {
     return $needs_save;
   });
 }
+
+/**
+ * Defines the values for the default logo dimensions.
+ */
+function navigation_post_update_set_logo_dimensions_default(array &$sandbox) {
+  // Empty post_update hook.
+}
+
+/**
+ * Creates the Navigation user links menu.
+ */
+function navigation_post_update_navigation_user_links_menu(array &$sandbox): void {
+  $menu_storage = \Drupal::entityTypeManager()->getStorage('menu');
+
+  // Do not create the new menu if already exists.
+  if ($menu_storage->load('navigation-user-links')) {
+    return;
+  }
+
+  $menu_storage
+    ->create([
+      'id' => 'navigation-user-links',
+      'label' => 'Navigation user links',
+      'description' => 'User links to be used in Navigation',
+      'dependencies' => [
+        'enforced' => [
+          'module' => [
+            'navigation',
+          ],
+        ],
+      ],
+      'locked' => TRUE,
+    ])->save();
+}

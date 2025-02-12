@@ -196,7 +196,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
     $data[] = [new Request(['destination' => '//example:com/test'])];
     $data['absolute external url'] = [new Request(['destination' => 'https://example.com'])];
     $data['absolute external url with folder'] = [new Request(['destination' => 'http://example.ca/drupal'])];
-    $data['path without drupal basepath'] = [new Request(['destination' => '/test'])];
+    $data['path without drupal base path'] = [new Request(['destination' => '/test'])];
     $data['path with URL'] = [new Request(['destination' => '/example.com'])];
     $data['path with URL and two slashes'] = [new Request(['destination' => '//example.com'])];
 

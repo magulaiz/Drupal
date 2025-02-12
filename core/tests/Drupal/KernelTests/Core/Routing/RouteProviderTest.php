@@ -35,7 +35,7 @@ class RouteProviderTest extends KernelTestBase {
   use PathAliasTestTrait;
 
   /**
-   * Modules to enable.
+   * {@inheritdoc}
    */
   protected static $modules = [
     'url_alter_test',
@@ -536,7 +536,7 @@ class RouteProviderTest extends KernelTestBase {
       $this->assertCount(1, $routes, 'The correct number of routes was found.');
     }
     catch (ResourceNotFoundException) {
-      $this->fail('No matchout route found with 0 as argument value');
+      $this->fail('No matching route found with 0 as argument value');
     }
   }
 
@@ -747,6 +747,31 @@ class RouteProviderTest extends KernelTestBase {
     $this->assertEquals(0, $result->count());
     $candidates = $provider->getCandidateOutlines(explode('/', trim($shortest, '/')));
     $this->assertCount(7, $candidates);
+  }
+
+  /**
+   * @covers \Drupal\Core\Routing\RouteProvider::getRouteAliases
+   */
+  public function testRouteAliases(): void {
+    $connection = Database::getConnection();
+    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
+
+    $this->fixtures->createTables($connection);
+
+    $dumper = new MatcherDumper($connection, $this->state, $this->logger, 'test_routes');
+    $dumper->addRoutes($this->fixtures->aliasedRouteCollection());
+    $dumper->dump();
+
+    $aliases = $provider->getRouteAliases('route_a');
+    $this->assertCount(2, $aliases);
+    $this->assertEquals('route_a', $aliases['route_b']->getId());
+    $this->assertEquals('route_a', $aliases['route_c']->getId());
+    $this->assertTrue($aliases['route_c']->isDeprecated());
+
+    $deprecation = $aliases['route_c']->getDeprecation('route_c');
+    $this->assertEquals('drupal/core', $deprecation['package']);
+    $this->assertEquals('11.2.0', $deprecation['version']);
+    $this->assertEquals('route_c is deprecated!', $deprecation['message']);
   }
 
 }

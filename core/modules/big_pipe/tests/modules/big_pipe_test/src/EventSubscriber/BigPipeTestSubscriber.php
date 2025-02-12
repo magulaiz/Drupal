@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\big_pipe_test\EventSubscriber;
 
 use Drupal\Core\Render\AttachmentsInterface;
@@ -20,12 +22,12 @@ class BigPipeTestSubscriber implements EventSubscriberInterface {
   /**
    * Triggers exception for embedded HTML/AJAX responses with certain content.
    *
-   * @see \Drupal\big_pipe_test\BigPipeTestController::responseException()
-   *
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
    *
    * @throws \Exception
+   *
+   * @see \Drupal\big_pipe_test\BigPipeTestController::responseException()
    */
   public function onRespondTriggerException(ResponseEvent $event) {
     $response = $event->getResponse();
