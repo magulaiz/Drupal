@@ -3,6 +3,7 @@
 namespace Drupal\path\Plugin\Field\FieldType;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -18,7 +19,7 @@ class PathFieldItemList extends FieldItemList {
   /**
    * {@inheritdoc}
    */
-  protected function computeValue() {
+  protected function computeValue(): void {
     // Default the langcode to the current language if this is a new entity or
     // there is no alias for an existent entity.
     $value = ['langcode' => $this->getLangcode()];
@@ -48,7 +49,7 @@ class PathFieldItemList extends FieldItemList {
   /**
    * {@inheritdoc}
    */
-  public function defaultAccess($operation = 'view', ?AccountInterface $account = NULL) {
+  public function defaultAccess($operation = 'view', ?AccountInterface $account = NULL): AccessResultInterface {
     if ($operation == 'view') {
       return AccessResult::allowed();
     }
@@ -58,7 +59,7 @@ class PathFieldItemList extends FieldItemList {
   /**
    * {@inheritdoc}
    */
-  public function delete() {
+  public function delete(): void {
     // Delete all aliases associated with this entity in the current language.
     $entity = $this->getEntity();
 

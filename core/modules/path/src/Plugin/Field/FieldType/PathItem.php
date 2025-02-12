@@ -66,7 +66,6 @@ class PathItem extends FieldItemBase {
    */
   public function postSave($update) {
     $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
-    $entity = $this->getEntity();
 
     // If specified, rely on the langcode property for the language, so that the
     // existing language of an alias can be kept. That could for example be
@@ -117,7 +116,7 @@ class PathItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition): array {
     $random = new Random();
     $values['alias'] = '/' . str_replace(' ', '-', strtolower($random->sentences(3)));
     return $values;
@@ -126,7 +125,7 @@ class PathItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function mainPropertyName() {
+  public static function mainPropertyName(): string {
     return 'alias';
   }
 
