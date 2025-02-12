@@ -597,7 +597,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
 
     $errors = $entity->validate();
     $this->assertCount(1, $errors);
-    $this->assertEquals('This entity (file: ' . HTML::escape($filename) . ') cannot be referenced.', $errors[0]->getMessage());
+    $this->assertEquals('This entity (file: ' . $filename . ') cannot be referenced.', $errors[0]->getMessage());
     $this->assertEquals('field_test_file.0.entity', $errors[0]->getPropertyPath());
 
     // Set the file as permanent and try again.
