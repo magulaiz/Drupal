@@ -6,6 +6,7 @@
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
@@ -36,6 +37,7 @@ use Drupal\locale\Gettext;
  *   l10n_update functionality to feed in translation files alike.
  *   https://www.drupal.org/node/1191488
  */
+#[StopProceduralHookScan]
 function locale_translate_batch_import_files(array $options, $force = FALSE) {
   $options += [
     'overwrite_options' => [],
@@ -674,7 +676,8 @@ function locale_config_batch_update_config_translations(array $names, array $lan
  *   Contains a list of files imported.
  *
  * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
- * locale_config_batch_update_config_translations($names, $langcodes, $context) instead.
+ * locale_config_batch_update_config_translations($names, $langcodes, $context)
+ * instead.
  *
  * @see https://www.drupal.org/node/3475054
  */

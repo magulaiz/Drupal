@@ -513,6 +513,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
         ->range(0, 1)
         ->sort($this->entityType->getKey('revision'), 'DESC')
         ->accessCheck(FALSE)
+        ->addMetaData('entity_id', $entity_id)
+        ->addTag('latest_translated_affected_revision')
         ->execute();
 
       $this->latestRevisionIds[$entity_id][$langcode] = key($result);
@@ -571,7 +573,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition.
-   * @param $batch_size
+   * @param int $batch_size
    *   The maximum number of field data records to purge before returning.
    *
    * @return \Drupal\Core\Field\FieldItemListInterface[]

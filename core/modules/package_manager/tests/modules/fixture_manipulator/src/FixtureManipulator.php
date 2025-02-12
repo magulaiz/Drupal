@@ -299,12 +299,12 @@ class FixtureManipulator {
   /**
    * Modifies the project root's composer.json properties.
    *
-   * @see \Composer\Command\ConfigCommand
-   *
    * @param array $additional_config
    *   The configuration to add.
    * @param bool $update_lock
    *   Whether to run composer update --lock. Defaults to FALSE.
+   *
+   * @see \Composer\Command\ConfigCommand
    */
   public function addConfig(array $additional_config, bool $update_lock = FALSE): self {
     if (empty($additional_config)) {
@@ -442,9 +442,16 @@ class FixtureManipulator {
 
   protected function runComposerCommand(array $command_options): OutputCallbackInterface {
     $plain_output = new class() implements OutputCallbackInterface {
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+      /**
+       * The standard output for the process.
+       */
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable, Drupal.Commenting.VariableComment.Missing
       public string $stdout = '';
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+
+      /**
+       * The error output for the process.
+       */
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable, Drupal.Commenting.VariableComment.Missing
       public string $stderr = '';
 
       /**

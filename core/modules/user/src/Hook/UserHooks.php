@@ -124,7 +124,7 @@ class UserHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $fields['user']['user']['form']['account'] = [
       'label' => t('User name and password'),
       'description' => t('User module account form elements.'),
@@ -223,9 +223,9 @@ class UserHooks {
    */
   #[Hook('user_login')]
   public function userLogin(UserInterface $account): void {
-    // Reset static cache of default variables in template_preprocess() to reflect
-    // the new user.
-    drupal_static_reset('template_preprocess');
+    // Reset default theme variables.
+    \Drupal::service('theme.manager')->resetActiveTheme();
+
     // If the user has a NULL time zone, notify them to set a time zone.
     $config = \Drupal::config('system.date');
     if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
@@ -243,9 +243,8 @@ class UserHooks {
    */
   #[Hook('user_logout')]
   public function userLogout(AccountInterface $account): void {
-    // Reset static cache of default variables in template_preprocess() to reflect
-    // the new user.
-    drupal_static_reset('template_preprocess');
+    // Reset default theme variables.
+    \Drupal::service('theme.manager')->resetActiveTheme();
   }
 
   /**

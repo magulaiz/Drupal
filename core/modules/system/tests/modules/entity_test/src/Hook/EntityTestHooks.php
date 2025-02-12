@@ -6,6 +6,7 @@ namespace Drupal\entity_test\Hook;
 
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -20,11 +21,14 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\entity_test\EntityTestHelper;
 
 /**
  * Hook implementations for entity_test.
  */
 class EntityTestHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_entity_type_alter().
@@ -33,7 +37,7 @@ class EntityTestHooks {
   public function entityTypeAlter(array &$entity_types) : void {
     $state = \Drupal::state();
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
       // Optionally specify a translation handler for testing translations.
       if ($state->get('entity_test.translation')) {
         $translation = $entity_types[$entity_type]->get('translation');
@@ -62,7 +66,7 @@ class EntityTestHooks {
    * Implements hook_entity_base_field_info().
    */
   #[Hook('entity_base_field_info')]
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
     $fields = [];
     if ($entity_type->id() === 'entity_test' && \Drupal::state()->get('entity_test.internal_field')) {
       $fields['internal_string_field'] = BaseFieldDefinition::create('string')->setLabel('Internal field')->setInternal(TRUE);
@@ -84,10 +88,10 @@ class EntityTestHooks {
       ]);
     }
     if ($entity_type->id() == 'entity_test_mulrev' && \Drupal::state()->get('entity_test.field_test_item')) {
-      $fields['field_test_item'] = BaseFieldDefinition::create('field_test')->setLabel(t('Field test'))->setDescription(t('A field test.'))->setRevisionable(TRUE)->setTranslatable(TRUE);
+      $fields['field_test_item'] = BaseFieldDefinition::create('field_test')->setLabel($this->t('Field test'))->setDescription($this->t('A field test.'))->setRevisionable(TRUE)->setTranslatable(TRUE);
     }
     if ($entity_type->id() == 'entity_test_mulrev' && \Drupal::state()->get('entity_test.multi_column')) {
-      $fields['description'] = BaseFieldDefinition::create('shape')->setLabel(t('Some custom description'))->setTranslatable(TRUE);
+      $fields['description'] = BaseFieldDefinition::create('shape')->setLabel($this->t('Some custom description'))->setTranslatable(TRUE);
     }
     return $fields;
   }
@@ -109,8 +113,8 @@ class EntityTestHooks {
     if ($entity_type->id() == 'entity_test' && $state->get('entity_test.remove_name_field')) {
       unset($fields['name']);
     }
-    // In 8001 we are assuming that a new definition with multiple cardinality has
-    // been deployed.
+    // In 8001 we are assuming that a new definition with multiple cardinality
+    // has been deployed.
     // @todo Remove this if we end up using state definitions at runtime. See
     //   https://www.drupal.org/node/2554235.
     if ($entity_type->id() == 'entity_test' && $state->get('entity_test.db_updates.entity_definition_updates') == 8001) {
@@ -120,9 +124,12 @@ class EntityTestHooks {
 
   /**
    * Implements hook_entity_bundle_info().
+   *
+   * @see \Drupal\entity_test\EntityTestHelper::createBundle()
+   * @see \Drupal\entity_test\EntityTestHelper::deleteBundle()
    */
   #[Hook('entity_bundle_info')]
-  public function entityBundleInfo() {
+  public function entityBundleInfo(): array {
     $bundles = [];
     $entity_types = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entity_types as $entity_type_id => $entity_type) {
@@ -164,12 +171,12 @@ class EntityTestHooks {
       if ($entity_info[$entity_type]->getProvider() == 'entity_test' && !isset($view_modes[$entity_type])) {
         $view_modes[$entity_type] = [
           'full' => [
-            'label' => t('Full object'),
+            'label' => $this->t('Full object'),
             'status' => TRUE,
             'cache' => TRUE,
           ],
           'teaser' => [
-            'label' => t('Teaser'),
+            'label' => $this->t('Teaser'),
             'status' => TRUE,
             'cache' => TRUE,
           ],
@@ -186,7 +193,7 @@ class EntityTestHooks {
     $entity_info = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entity_info as $entity_type => $info) {
       if ($entity_info[$entity_type]->getProvider() == 'entity_test') {
-        $form_modes[$entity_type]['compact'] = ['label' => t('Compact version'), 'status' => TRUE];
+        $form_modes[$entity_type]['compact'] = ['label' => $this->t('Compact version'), 'status' => TRUE];
       }
     }
   }
@@ -205,21 +212,21 @@ class EntityTestHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $extra['entity_test']['bundle_with_extra_fields'] = [
       'display' => [
               // Note: those extra fields do not currently display anything, they are
               // just used in \Drupal\Tests\field_ui\Kernel\EntityDisplayTest to test
               // the behavior of entity display objects.
         'display_extra_field' => [
-          'label' => t('Display extra field'),
-          'description' => t('An extra field on the display side.'),
+          'label' => $this->t('Display extra field'),
+          'description' => $this->t('An extra field on the display side.'),
           'weight' => 5,
           'visible' => TRUE,
         ],
         'display_extra_field_hidden' => [
-          'label' => t('Display extra field (hidden)'),
-          'description' => t('An extra field on the display side, hidden by default.'),
+          'label' => $this->t('Display extra field (hidden)'),
+          'description' => $this->t('An extra field on the display side, hidden by default.'),
           'visible' => FALSE,
         ],
       ],

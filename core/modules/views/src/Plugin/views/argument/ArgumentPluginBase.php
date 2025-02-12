@@ -71,7 +71,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   public $value = NULL;
 
   /**
-   * The table to use for the name, should it not be in the same table as the argument.
+   * The table to use for the name, if it is not the same table as the argument.
    *
    * @var string
    */
@@ -157,6 +157,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     }
   }
 
+  /**
+   * Checks if the argument has an exception.
+   */
   public function isException($arg = NULL) {
     if (!isset($arg)) {
       $arg = $this->argument ?? NULL;
@@ -164,6 +167,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     return !empty($this->options['exception']['value']) && $this->options['exception']['value'] === $arg;
   }
 
+  /**
+   * Returns the title of the exception for the argument.
+   */
   public function exceptionTitle() {
     // If title overriding is off for the exception, return the normal title.
     if (empty($this->options['exception']['title_enable'])) {
@@ -176,6 +182,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * Determine if the argument needs a style plugin.
    *
    * @return bool
+   *   TRUE if the argument needs a style plugin, FALSE otherwise.
    */
   public function needsStylePlugin() {
     $info = $this->defaultActions($this->options['default_action']);
@@ -183,6 +190,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     return !empty($info['style plugin']) || !empty($validate_info['style plugin']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -227,6 +237,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     return $callbacks;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
@@ -476,6 +489,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     return $output;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     $option_values = &$form_state->getValue('options');
     if (empty($option_values)) {
@@ -506,6 +522,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
 
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $option_values = &$form_state->getValue('options');
     if (empty($option_values)) {
@@ -990,7 +1009,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    *
    * The base variant of this is usually adequate.
    *
-   * @param $order
+   * @param string $order
    *   The order selected in the UI.
    * @param string|null $by
    *   (optional) This parameter sets the direction for which to order.
@@ -1006,7 +1025,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * This will be called once per row of a summary, and used as part of
    * $view->getUrl().
    *
-   * @param $data
+   * @param array $data
    *   The query results for the row.
    */
   public function summaryArgument($data) {
@@ -1016,7 +1035,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   /**
    * Provides the name to use for the summary, defaults to the name field.
    *
-   * @param $data
+   * @param array $data
    *   The query results for the row.
    */
   public function summaryName($data) {
@@ -1107,7 +1126,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   /**
    * Set the input for this argument.
    *
-   * @return TRUE if it successfully validates; FALSE if it does not.
+   * @return true
+   *   if it successfully validates; FALSE if it does not.
    */
   public function setArgument($arg) {
     $this->argument = $arg;

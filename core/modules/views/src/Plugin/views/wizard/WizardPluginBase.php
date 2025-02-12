@@ -174,6 +174,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * Gets the filters property.
    *
    * @return array
+   *   An array of filters, keyed by filter ID, containing filter information.
    */
   public function getFilters() {
     $filters = [];
@@ -207,6 +208,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * Gets the availableSorts property.
    *
    * @return array
+   *   An array of available sorts, keyed by sort ID, containing sort information.
    */
   public function getAvailableSorts() {
     return $this->availableSorts;
@@ -216,6 +218,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * Gets the sorts property.
    *
    * @return array
+   *   An array of sorts, keyed by sort ID, containing sort information.
    */
   public function getSorts() {
     return $this->sorts;
@@ -482,14 +485,14 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Gets the current value of a #select element, from within a form constructor function.
    *
-   * This function is intended for use in highly dynamic forms (in particular the
-   * add view wizard) which are rebuilt in different ways depending on which
-   * triggering element (AJAX or otherwise) was most recently fired. For example,
-   * sometimes it is necessary to decide how to build one dynamic form element
-   * based on the value of a different dynamic form element that may not have
-   * even been present on the form the last time it was submitted. This function
-   * takes care of resolving those conflicts and gives you the proper current
-   * value of the requested #select element.
+   * This function is intended for use in highly dynamic forms (in particular
+   * the add view wizard) which are rebuilt in different ways depending on which
+   * triggering element (AJAX or otherwise) was most recently fired. For
+   * example, sometimes it is necessary to decide how to build one dynamic form
+   * element based on the value of a different dynamic form element that may not
+   * have even been present on the form the last time it was submitted. This
+   * function takes care of resolving those conflicts and gives you the proper
+   * current value of the requested #select element.
    *
    * By necessity, this function sometimes uses non-validated user input from
    * FormState::$input in making its determination. Although it performs some
@@ -502,25 +505,25 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param $parents
+   * @param array $parents
    *   An array of parent keys that point to the part of the submitted form
-   *   values that are expected to contain the element's value (in the case where
-   *   this form element was actually submitted). In a simple case (assuming
-   *   #tree is TRUE throughout the form), if the select element is located in
-   *   $form['wrapper']['select'], so that the submitted form values would
-   *   normally be found in $form_state->getValue(['wrapper', 'select']),
+   *   values that are expected to contain the element's value (in the case
+   *   where this form element was actually submitted). In a simple case
+   *   (assuming #tree is TRUE throughout the form), if the select element is
+   *   located in $form['wrapper']['select'], so that the submitted form values
+   *   would normally be found in $form_state->getValue(['wrapper', 'select']),
    *   you would pass ['wrapper', 'select'] for this parameter.
-   * @param $default_value
-   *   The default value to return if the #select element does not currently have
-   *   a proper value set based on the submitted input.
-   * @param $element
+   * @param array|string $default_value
+   *   The default value to return if the #select element does not currently
+   *   have a proper value set based on the submitted input.
+   * @param array $element
    *   An array representing the current version of the #select element within
    *   the form.
    *
    * @return array|string
-   *   The current value of the #select element. A common use for this is to feed
-   *   it back into $element['#default_value'] so that the form will be rendered
-   *   with the correct value selected.
+   *   The current value of the #select element. A common use for this is to
+   *   feed it back into $element['#default_value'] so that the form will be
+   *   rendered with the correct value selected.
    */
   public static function getSelected(FormStateInterface $form_state, $parents, $default_value, $element) {
     // For now, don't trust this to work on anything but a #select element.
