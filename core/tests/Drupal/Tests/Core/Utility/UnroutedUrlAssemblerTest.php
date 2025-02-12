@@ -91,12 +91,12 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
    */
   public static function providerTestAssembleWithExternalUrl() {
     return [
-      ['http://example.com/test', [], 'http://example.com/test'],
-      ['http://example.com/test', ['fragment' => 'example'], 'http://example.com/test#example'],
-      ['http://example.com/test', ['fragment' => 'example'], 'http://example.com/test#example'],
-      ['http://example.com/test', ['query' => ['foo' => 'bar']], 'http://example.com/test?foo=bar'],
-      ['http://example.com/test', ['https' => TRUE], 'https://example.com/test'],
-      ['https://example.com/test', ['https' => FALSE], 'http://example.com/test'],
+      ['https://example.com/test', [], 'https://example.com/test'],
+      ['https://example.com/test', ['fragment' => 'example'], 'https://example.com/test#example'],
+      ['https://example.com/test', ['fragment' => 'example'], 'https://example.com/test#example'],
+      ['https://example.com/test', ['query' => ['foo' => 'bar']], 'https://example.com/test?foo=bar'],
+      ['https://example.com/test', ['https' => TRUE], 'https://example.com/test'],
+      ['https://example.com/test', ['https' => FALSE], 'https://example.com/test'],
       ['https://example.com/test?foo=1#bar', [], 'https://example.com/test?foo=1#bar'],
       'override-query' => ['https://example.com/test?foo=1#bar', ['query' => ['foo' => 2]], 'https://example.com/test?foo=2#bar'],
       'override-query-merge' => ['https://example.com/test?foo=1#bar', ['query' => ['bar' => 2]], 'https://example.com/test?foo=1&bar=2#bar'],

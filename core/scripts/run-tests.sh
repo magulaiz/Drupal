@@ -357,9 +357,9 @@ To run this script you will normally invoke it from the root directory of your
 Drupal installation as the webserver user (differs per configuration), or root:
 
 sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
-  --url http://example.com/ --all
+  --url https://example.com/ --all
 sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
-  --url http://example.com/ --class Drupal\block\Tests\BlockTest
+  --url https://example.com/ --class Drupal\block\Tests\BlockTest
 
 Without a preinstalled Drupal site, specify a SQLite database pathname to create
 and the default database connection info to use in tests:
@@ -367,7 +367,7 @@ and the default database connection info to use in tests:
 sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
   --sqlite /tmpfs/drupal/test.sqlite
   --dburl mysql://username:password@localhost/database
-  --url http://example.com/ --all
+  --url https://example.com/ --all
 
 EOF;
 }
