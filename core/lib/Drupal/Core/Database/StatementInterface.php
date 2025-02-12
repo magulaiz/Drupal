@@ -117,8 +117,8 @@ interface StatementInterface extends \Traversable {
   /**
    * Fetches the next row and returns it as an object.
    *
-   * The object will be of the class specified by StatementInterface::setFetchMode()
-   * or stdClass if not specified.
+   * The object will be of the class specified by
+   * StatementInterface::setFetchMode() or stdClass if not specified.
    *
    * @param string|null $class_name
    *   Name of the created class.
@@ -168,6 +168,9 @@ interface StatementInterface extends \Traversable {
    *
    * @return array
    *   An indexed array, or an empty array if there is no result set.
+   *
+   * @throws \ValueError
+   *   If there is at least one record but the column index is not defined.
    */
   public function fetchCol($index = 0);
 

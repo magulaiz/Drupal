@@ -85,14 +85,6 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected $timeLimit = 500;
 
-  /**
-   * The translation file directory for the test environment.
-   *
-   * This is set in BrowserTestBase::prepareEnvironment().
-   *
-   * @var string
-   */
-  protected $translationFilesDirectory;
 
   /**
    * The config importer that can be used in a test.
@@ -129,15 +121,6 @@ abstract class BrowserTestBase extends TestCase {
    * @var string
    */
   protected $defaultTheme;
-
-  /**
-   * An array of custom translations suitable for SettingsEditor::rewrite().
-   *
-   * @var array
-   *
-   * @see \Drupal\Core\Site\SettingsEditor::rewrite()
-   */
-  protected $customTranslations;
 
   /**
    * Mink class for the default driver to use.

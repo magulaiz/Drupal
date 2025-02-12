@@ -249,7 +249,7 @@ function install_state_defaults() {
     // The server URL where the interface translation files can be downloaded.
     // Tokens in the pattern will be replaced by appropriate values for the
     // required translation file.
-    'server_pattern' => 'https://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po',
+    'server_pattern' => \Drupal::TRANSLATION_DEFAULT_SERVER_PATTERN,
     // Installation tasks can set this to TRUE to force the page request to
     // end (even if there is no themeable output), in the case of an interactive
     // installation. This is needed only rarely; for example, it would be used
@@ -1716,6 +1716,13 @@ function install_download_additional_translations_operations(&$install_state) {
   if (!($language = ConfigurableLanguage::load($langcode))) {
     // Create the language if not already shipped with a profile.
     $language = ConfigurableLanguage::createFromLangcode($langcode);
+
+    $standard_languages = LanguageManager::getStandardLanguageList();
+    if (isset($standard_languages[$langcode])) {
+      // Use the localized language label since the site is being installed
+      // with that language.
+      $language->setName($standard_languages[$langcode][1]);
+    }
   }
   $language->save();
 
@@ -1909,11 +1916,6 @@ function install_finished(&$install_state) {
   // This would normally happen upon KernelEvents::TERMINATE, but since the
   // installer does not use an HttpKernel, that event is never triggered.
   \Drupal::service('router.builder')->rebuild();
-
-  // Run cron to populate update status tables (if available) so that users
-  // will be warned if they've installed an out of date Drupal version.
-  // Will also trigger indexing of profile-supplied content or feeds.
-  \Drupal::service('cron')->run();
 
   if ($install_state['interactive']) {
     // Load current user and perform final login tasks.
