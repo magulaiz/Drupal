@@ -75,7 +75,7 @@ class PathAliasTest extends PathTestBase {
     \Drupal::cache('data')->deleteAll();
     $this->drupalGet(trim($edit['path[0][value]'], '/'), ['alias' => TRUE]);
     $prefix_list = \Drupal::cache('bootstrap')->get('path_alias_prefix_list');
-    $this->assertNull($prefix_list->data['node']);
+    $this->assertTrue($prefix_list->data['node']);
     $this->assertFalse($prefix_list->data['user']);
     $this->assertNull($prefix_list->data['admin']);
     $this->assertNotEmpty(\Drupal::cache('data')->get('preload-paths:' . $edit['path[0][value]']), 'Cache entry was created.');
