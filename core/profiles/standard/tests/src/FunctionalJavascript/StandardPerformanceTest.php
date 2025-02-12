@@ -142,7 +142,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         'entity' => 2,
         'menu' => 2,
       ],
-      'CacheSetCount' => 43,
+      'CacheSetCount' => 44,
       'CacheDeleteCount' => 0,
       'CacheTagChecksumCount' => 35,
       'CacheTagIsValidCount' => 42,
