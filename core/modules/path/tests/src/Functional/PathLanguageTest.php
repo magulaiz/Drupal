@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\path\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\user\Entity\User;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
@@ -18,6 +20,7 @@ use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 class PathLanguageTest extends PathTestBase {
 
   use ContentTranslationTestTrait;
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -89,15 +92,15 @@ class PathLanguageTest extends PathTestBase {
     // Edit the node to set language and path.
     $edit = [];
     $edit['path[0][alias]'] = '/' . $english_alias;
-    $this->drupalGet('node/' . $english_node->id() . '/edit');
+    $this->drupalGet($english_node->toUrl('edit-form'));
     $this->submitForm($edit, 'Save');
 
     // Confirm that the alias works.
     $this->drupalGet($english_alias);
-    $this->assertSession()->pageTextContains($english_node->body->value);
+    $this->assertSession()->pageTextContains($english_node->get('body')->value);
 
     // Translate the node into French.
-    $this->drupalGet('node/' . $english_node->id() . '/translations');
+    $this->drupalGet(Url::fromRoute('entity.node.content_translation_overview', ['node' => $english_node->id()]));
     $this->clickLink('Add');
 
     $edit = [];
@@ -201,7 +204,7 @@ class PathLanguageTest extends PathTestBase {
   /**
    * Tests alias generation when the field is marked as non-translatable.
    */
-  public function testNonTranslatableAlias() {
+  public function testNonTranslatableAlias(): void {
     // Disable translation for path field.
     // Enable translation for page node.
     $edit = [
@@ -223,16 +226,17 @@ class PathLanguageTest extends PathTestBase {
     // Edit the node to set language and path.
     $edit = [];
     $edit['path[0][alias]'] = '/' . $english_alias;
-    $this->drupalGet('node/' . $english_node->id() . '/edit');
+    $this->drupalGet($english_node->toUrl('edit-form'));
     $this->submitForm($edit, 'Save');
 
     // Confirm that the alias works.
     $this->drupalGet($english_alias);
-    $this->assertSession()->pageTextContains($english_node->body->value);
+    $this->assertSession()->pageTextContains($english_node->get('body')->value);
 
     // Translate the node into French.
-    $this->drupalGet('node/' . $english_node->id() . '/translations');
-    $this->clickLink(t('Add'));
+    $this->drupalGet(Url::fromRoute('entity.node.content_translation_overview', ['node' => $english_node->id()]));
+
+    $this->clickLink($this->t('Add'));
 
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();

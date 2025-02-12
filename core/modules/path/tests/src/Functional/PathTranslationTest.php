@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\path\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 
 /**
  * Tests alias langcode for multilingual nodes.
@@ -62,9 +65,8 @@ class PathTranslationTest extends PathTestBase {
   /**
    * Tests the alias langcode for untranslatable node.
    */
-  public function testAliasUntranslatableNode() {
+  public function testAliasUntranslatableNode(): void {
     // Create a node.
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $node = $this->drupalCreateNode([
       'type' => 'page',
       'langcode' => 'en',
@@ -75,12 +77,12 @@ class PathTranslationTest extends PathTestBase {
     $edit = [
       'path[0][alias]' => '/' . $alias,
     ];
-    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->drupalGet($node->toUrl('edit-form'));
     $this->submitForm($edit, 'Save');
 
     // Tests that the alias works.
     $this->drupalGet($alias);
-    $this->assertSession()->responseContains($node->body->value);
+    $this->assertSession()->responseContains($node->get('body')->value);
 
     // Tests that the alias was saved with 'und' langcode.
     $conditions = [
@@ -94,7 +96,7 @@ class PathTranslationTest extends PathTestBase {
   /**
    * Tests the alias langcode for translatable node.
    */
-  public function testAliasLangcode() {
+  public function testAliasLangcode(): void {
     // Tests the langcode for translatable path.
     // It should be set to the node's langcode.
     $english_alias = $this->randomMachineName();
@@ -105,8 +107,7 @@ class PathTranslationTest extends PathTestBase {
     // It should be set to not specified.
     $english_alias = $this->randomMachineName();
     $not_specified = LanguageInterface::LANGCODE_NOT_SPECIFIED;
-    $this->doTestAliasLangcode(FALSE, $english_alias, $english_alias,
-      $not_specified, $not_specified);
+    $this->doTestAliasLangcode(FALSE, $english_alias, $english_alias, $not_specified, $not_specified);
   }
 
   /**
@@ -123,7 +124,7 @@ class PathTranslationTest extends PathTestBase {
    * @param string $expected_fr
    *   The expected langcode for Spanish.
    */
-  protected function doTestAliasLangcode(bool $translate_path, string $english_alias, string $french_alias, string $expected_en, $expected_fr): void {
+  protected function doTestAliasLangcode(bool $translate_path, string $english_alias, string $french_alias, string $expected_en, string $expected_fr): void {
     // Enable translation for page nodes.
     $edit = [
       'entity_types[node]' => 1,
@@ -146,7 +147,7 @@ class PathTranslationTest extends PathTestBase {
     $edit_en = [
       'path[0][alias]' => '/' . $english_alias,
     ];
-    $this->drupalGet('node/' . $english_node->id() . '/edit');
+    $this->drupalGet($english_node->toUrl('edit-form'));
     $this->submitForm($edit_en, 'Save');
 
     // Translate the node into French.
@@ -155,7 +156,7 @@ class PathTranslationTest extends PathTestBase {
       'body[0][value]' => $this->randomMachineName(),
       'path[0][alias]' => '/' . $french_alias,
     ];
-    $this->drupalGet('node/' . $english_node->id() . '/translations/add/en/fr');
+    $this->drupalGet(Url::fromRoute('entity.node.content_translation_add', ['node' => $english_node->id(), 'source' => 'en', 'target' => 'fr']));
     $this->submitForm($edit_fr, 'Save (this translation)');
 
     // Clear the path lookup cache.
