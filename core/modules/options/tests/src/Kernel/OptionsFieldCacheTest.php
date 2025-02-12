@@ -15,11 +15,11 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
- * Tests the caching behavior of allowed values for options fields.
+ * Tests the caching behavior for options fields.
  *
  * @group options
  */
-class OptionsAllowedValuesCacheTest extends FieldKernelTestBase {
+class OptionsFieldCacheTest extends FieldKernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -50,6 +50,16 @@ class OptionsAllowedValuesCacheTest extends FieldKernelTestBase {
    * The list field in the bundle 2.
    */
   protected FieldConfigInterface $bundle2Field;
+
+  /**
+   * The entity for the bundle 1.
+   */
+  protected EntityInterface $bundle1Entity;
+
+  /**
+   * The entity for the bundle 2.
+   */
+  protected EntityInterface $bundle2Entity;
 
   /**
    * {@inheritdoc}
@@ -100,24 +110,24 @@ class OptionsAllowedValuesCacheTest extends FieldKernelTestBase {
     ]);
     $this->bundle2Field->save();
 
+    // Create two entities, one for each bundle.
+    $this->bundle1Entity = EntityTestWithBundle::create([
+      'type' => 'bundle1',
+      'name' => 'Test entity bundle1',
+    ]);
+    $this->bundle1Entity->save();
+    $this->bundle2Entity = EntityTestWithBundle::create([
+      'type' => 'bundle2',
+      'name' => 'Test entity bundle2',
+    ]);
+    $this->bundle2Entity->save();
+
   }
 
   /**
    * Tests that the allowed values cache is correctly set per bundle.
    */
   public function testOptionsAllowedValuesIsCachedPerBundle(): void {
-
-    // Create two entities, one for each bundle.
-    $entity1 = EntityTestWithBundle::create([
-      'type' => 'bundle1',
-      'name' => 'Test entity bundle1',
-    ]);
-    $entity1->save();
-    $entity2 = EntityTestWithBundle::create([
-      'type' => 'bundle2',
-      'name' => 'Test entity bundle2',
-    ]);
-    $entity2->save();
 
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager */
     $entityFieldManager = \Drupal::service('entity_field.manager');
@@ -131,11 +141,11 @@ class OptionsAllowedValuesCacheTest extends FieldKernelTestBase {
     // Get the allowed values for each bundle.
     $bundle1AllowedValues = options_allowed_values(
       $bundle1FieldDefinition->getFieldStorageDefinition(),
-      $entity1
+      $this->bundle1Entity
     );
     $bundle2AllowedValues = options_allowed_values(
       $bundle2FieldDefinition->getFieldStorageDefinition(),
-      $entity2
+      $this->bundle2Entity
     );
 
     // Check that the allowed values are correct for each bundle.
