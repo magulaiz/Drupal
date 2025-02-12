@@ -5,6 +5,9 @@
  * Post update functions for Content Block.
  */
 
+use Drupal\block\BlockInterface;
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+
 /**
  * Implements hook_removed_post_updates().
  */
@@ -17,4 +20,23 @@ function block_content_removed_post_updates(): array {
     'block_content_post_update_sort_permissions' => '11.0.0',
     'block_content_post_update_revision_type' => '11.0.0',
   ];
+}
+
+/**
+ * Remove deprecated status and info keys from block_content blocks.
+ */
+function block_content_post_update_remove_block_content_status_info_keys(array &$sandbox = []): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)
+    ->update($sandbox, 'block', function (BlockInterface $block): bool {
+      if (!str_starts_with($block->getPluginId(), 'block_content')) {
+        return FALSE;
+      }
+      $settings = $block->getPlugin()->getConfiguration();
+      if (!isset($settings['info']) && !isset($settings['status'])) {
+        return FALSE;
+      }
+      unset($settings['info'], $settings['status']);
+      $block->getPlugin()->setConfiguration($settings);
+      return TRUE;
+    });
 }
