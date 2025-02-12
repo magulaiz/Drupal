@@ -67,10 +67,12 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // aggregates and image styles are created on disk but otherwise caches are
     // empty.
     $this->drupalGet('');
+    sleep(2);
+    $this->drupalGet('');
+    sleep(2);
     // Give time for big pipe placeholders, asset aggregate requests, and post
     // response tasks to finish processing and write to any caches before
     // clearing caches again.
-    sleep(2);
     foreach (Cache::getBins() as $bin) {
       $bin->deleteAll();
     }
