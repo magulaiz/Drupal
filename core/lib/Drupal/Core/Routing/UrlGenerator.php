@@ -290,6 +290,8 @@ class UrlGenerator implements UrlGeneratorInterface {
     // Outbound path processors might need the route object for the path, e.g.
     // to get the path pattern.
     $options['route'] = $route;
+    // Outbound path processors might need the route name for the path.
+    $options['route_name'] = $name;
     if ($options['path_processing']) {
       $path = $this->processPath($path, $options, $generated_url);
     }
