@@ -27,4 +27,4 @@ class ParagraphStorageSchema extends SqlContentEntityStorageSchema {
     return $schema;
   }
 
-git }
+}
