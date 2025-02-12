@@ -7,11 +7,14 @@ namespace Drupal\block_content_theme_suggestions_test\Hook;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Hook implementations for block_content_theme_suggestions_test.
  */
 class BlockContentThemeSuggestionsTestHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_entity_extra_field_info().
@@ -20,8 +23,8 @@ class BlockContentThemeSuggestionsTestHooks {
   public function entityExtraFieldInfo(): array {
     // Add an extra field to the test bundle.
     $extra['node']['bundle_with_extra_field']['display']['block_content_extra_field_test'] = [
-      'label' => t('Extra field'),
-      'description' => t('Extra field description'),
+      'label' => $this->t('Extra field'),
+      'description' => $this->t('Extra field description'),
       'weight' => 0,
     ];
     return $extra;
