@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path\Functional;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\Tests\WaitTerminateTestTrait;
@@ -78,7 +79,7 @@ class PathAliasTest extends PathTestBase {
     // Visit the alias for the node and confirm a cache entry is created.
     \Drupal::cache('data')->deleteAll();
     // @todo Remove this once https://www.drupal.org/node/2480077 lands.
-    \Drupal::cache('render')->deleteAll();
+    Cache::invalidateTags(['rendered']);
     $this->drupalGet(trim($edit['alias[0][value]'], '/'));
     $this->assertNotEmpty(\Drupal::cache('data')->get('preload-paths:' . $edit['path[0][value]']), 'Cache entry was created.');
   }
