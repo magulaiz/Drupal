@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -36,9 +38,9 @@ class EntityRevisionTest extends EntityTestBase {
   }
 
   /**
-   * Tests that revision destination fails for unrevisionable entities.
+   * Tests entities that do not support revisions.
    */
-  public function testUnrevisionable() {
+  public function testNoRevisionSupport(): void {
     $this->entityType->getKey('id')->willReturn('id');
     $this->entityType->getKey('revision')->willReturn('');
     $this->entityFieldManager->getBaseFieldDefinitions('foo')
@@ -65,7 +67,7 @@ class EntityRevisionTest extends EntityTestBase {
   /**
    * Tests that translation destination fails for untranslatable entities.
    */
-  public function testUntranslatable() {
+  public function testUntranslatable(): void {
     $this->entityType->getKey('id')->willReturn('id');
     $this->entityType->getKey('revision')->willReturn('vid');
     $this->entityType->getKey('langcode')->willReturn('');
@@ -98,9 +100,14 @@ class EntityRevisionTest extends EntityTestBase {
  */
 class EntityRevisionTestDestination extends EntityRevision {
 
+  /**
+   * The test entity.
+   *
+   * @var \Drupal\migrate\Plugin\migrate\destination\EntityRevision|null
+   */
   private $entity = NULL;
 
-  public function setEntity($entity) {
+  public function setEntity($entity): void {
     $this->entity = $entity;
   }
 

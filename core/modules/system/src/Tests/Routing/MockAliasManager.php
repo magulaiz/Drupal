@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\system\Tests\Routing;
 
 use Drupal\path_alias\AliasManagerInterface;
@@ -71,6 +73,13 @@ class MockAliasManager implements AliasManagerInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @param string $path
+   *   The path of the alias.
+   * @param string $langcode
+   *   The language code.
+   *
+   * @return string
    */
   public function getAliasByPath($path, $langcode = NULL) {
     if ($path[0] !== '/') {

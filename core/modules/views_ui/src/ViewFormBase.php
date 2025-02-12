@@ -2,6 +2,7 @@
 
 namespace Drupal\views_ui;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -78,8 +79,8 @@ abstract class ViewFormBase extends EntityForm {
    *
    * This function can be called from hook_menu_local_tasks_alter() to implement
    * these tabs as secondary local tasks, or it can be called from elsewhere if
-   * having them as secondary local tasks isn't desired. The caller is responsible
-   * for setting the active tab's #active property to TRUE.
+   * having them as secondary local tasks isn't desired. The caller is
+   * responsible for setting the active tab's #active property to TRUE.
    *
    * @param \Drupal\views_ui\ViewUI $view
    *   The ViewUI entity.
@@ -140,7 +141,7 @@ abstract class ViewFormBase extends EntityForm {
   }
 
   /**
-   * Controls whether or not the default display should have its own tab on edit.
+   * Returns whether or not the default display should have its own tab on edit.
    */
   public function isDefaultDisplayShown(ViewUI $view) {
     // Always show the default display for advanced users who prefer that mode.
@@ -160,7 +161,7 @@ abstract class ViewFormBase extends EntityForm {
   public function getDisplayLabel(ViewUI $view, $display_id, $check_changed = TRUE) {
     $display = $view->get('display');
     $title = $display_id == 'default' ? $this->t('Default') : $display[$display_id]['display_title'];
-    $title = views_ui_truncate($title, 25);
+    $title = Unicode::truncate($title, 25, FALSE, TRUE);
 
     if ($check_changed && !empty($view->changed_display[$display_id])) {
       $changed = '*';

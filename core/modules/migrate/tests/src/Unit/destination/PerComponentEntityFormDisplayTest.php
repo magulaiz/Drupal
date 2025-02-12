@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\destination\PerComponentEntityFormDisplayTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\destination;
 
@@ -21,7 +18,7 @@ class PerComponentEntityFormDisplayTest extends MigrateTestCase {
   /**
    * Tests the entity display import method.
    */
-  public function testImport() {
+  public function testImport(): void {
     $values = [
       'entity_type' => 'entity_type_test',
       'bundle' => 'bundle_test',
@@ -39,7 +36,7 @@ class PerComponentEntityFormDisplayTest extends MigrateTestCase {
     $entity->expects($this->once())
       ->method('setComponent')
       ->with('field_name_test', ['test setting'])
-      ->will($this->returnSelf());
+      ->willReturnSelf();
     $entity->expects($this->once())
       ->method('save')
       ->with();
@@ -52,7 +49,19 @@ class PerComponentEntityFormDisplayTest extends MigrateTestCase {
 
 class TestPerComponentEntityFormDisplay extends PerComponentEntityFormDisplay {
   const MODE_NAME = 'form_mode';
+
+  /**
+   * The test values.
+   *
+   * @var string[]
+   */
   protected $testValues;
+
+  /**
+   * The test entity.
+   *
+   * @var \PHPUnit\Framework\MockObject\MockObject
+   */
   protected $entity;
 
   public function __construct($entity) {

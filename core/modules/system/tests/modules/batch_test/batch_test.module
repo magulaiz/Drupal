@@ -5,6 +5,8 @@
  * Helper module for the Batch API tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Form\FormState;
 
@@ -188,6 +190,17 @@ function _batch_test_batch_7() {
   }
 
   return $batch_builder->toArray() + ['batch_test_id' => 'batch_7'];
+}
+
+/**
+ * Batch 8: Throws an exception.
+ */
+function _batch_test_batch_8(): array {
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->addOperation('_batch_test_callback_8', [FALSE])
+    ->addOperation('_batch_test_callback_8', [TRUE]);
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_8'];
 }
 
 /**

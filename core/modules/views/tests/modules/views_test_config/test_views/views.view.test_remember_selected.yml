@@ -6,7 +6,7 @@ dependencies:
   module:
     - node
 id: test_remember_selected
-label: ''
+label: test_remember_selected
 module: views
 description: ''
 tag: ''
@@ -40,7 +40,7 @@ display:
           admin_label: ''
           entity_type: node
           entity_field: type
-          plugin_id: in_operator
+          plugin_id: bundle
           operator: in
           value: {  }
           group: 1
