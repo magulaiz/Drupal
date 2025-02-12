@@ -1657,6 +1657,7 @@
  * Legacy meta hooks:
  * - hook_hook_info()
  * - hook_module_implements_alter()
+ * @see https://www.drupal.org/node/3496788
  *
  * Install hooks:
  * - hook_install()
