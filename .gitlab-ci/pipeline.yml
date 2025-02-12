@@ -76,7 +76,7 @@ variables:
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
 
 .with-database: &with-database
-  name: daffie/mongodb-7:latest
+  name: daffie/mongodb-8:latest
   alias: database
 
 .with-chrome: &with-chrome
