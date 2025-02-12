@@ -192,8 +192,8 @@ class TranslateAction extends ConfigurableActionBase implements ContainerFactory
         }
 
         // Translate the referenced entities that have translation enabled.
-        $field_classs = $definition->getClass();
-        if (is_subclass_of($field_classs, EntityReferenceFieldItemList::class)) {
+        $field_class = $definition->getClass();
+        if (is_subclass_of($field_class, EntityReferenceFieldItemList::class)) {
           $target_type = $definition->getSetting('target_type');
           if ($content_translation_manager->isEnabled($target_type)) {
             foreach ($entity->{$field_name}->referencedEntities() as $referenced_entity) {
