@@ -181,7 +181,7 @@ default:
   <<: *default-stage
   variables:
     _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "mongodb-7"
+    _TARGET_DB: "mongodb-8"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
   # Run on MR, schedule, push, parent pipeline and performance test.
   rules:
@@ -215,7 +215,7 @@ default:
   allow_failure: true
   variables:
     _TARGET_PHP: "8.3-ubuntu"
-    _TARGET_DB: "mongodb-7"
+    _TARGET_DB: "mongodb-8"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   trigger:
