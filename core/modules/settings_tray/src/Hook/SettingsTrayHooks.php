@@ -97,8 +97,8 @@ class SettingsTrayHooks {
   /**
    * Implements hook_toolbar_alter().
    *
-   * Alters the 'contextual' toolbar tab if it exists (meaning the user is allowed
-   * to use contextual links) and if they can administer blocks.
+   * Alters the 'contextual' toolbar tab if it exists (meaning the user is
+   * allowed to use contextual links) and if they can administer blocks.
    *
    * @todo Remove the "administer blocks" requirement in
    *   https://www.drupal.org/node/2822965.
@@ -112,7 +112,8 @@ class SettingsTrayHooks {
       $items['contextual']['#weight'] = -1000;
       $items['contextual']['#attached']['library'][] = 'settings_tray/drupal.settings_tray';
       $items['contextual']['tab']['#attributes']['data-drupal-settingstray'] = 'toggle';
-      // Set a class on items to mark whether they should be active in edit mode.
+      // Set a class on items to mark whether they should be active in edit
+      // mode.
       // @todo Create a dynamic method for modules to set their own items.
       //   https://www.drupal.org/node/2784589.
       $edit_mode_items = ['contextual'];
@@ -127,7 +128,8 @@ class SettingsTrayHooks {
   /**
    * Implements hook_block_alter().
    *
-   * Ensures every block plugin definition has an 'settings_tray' form specified.
+   * Ensures every block plugin definition has an 'settings_tray' form
+   * specified.
    *
    * @see \Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck
    */

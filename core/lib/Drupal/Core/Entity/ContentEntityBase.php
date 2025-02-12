@@ -1200,7 +1200,11 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     if ($entity_type->hasKey('id')) {
       $duplicate->{$entity_type->getKey('id')}->value = NULL;
     }
+    // Explicitly mark the entity as new and the default revision. A new entity
+    // is always the default revision, but that persists only until the entity
+    // is saved.
     $duplicate->enforceIsNew();
+    $duplicate->isDefaultRevision(TRUE);
 
     // Check if the entity type supports UUIDs and generate a new one if so.
     if ($entity_type->hasKey('uuid')) {
@@ -1212,6 +1216,11 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       $duplicate->{$entity_type->getKey('revision')}->value = NULL;
       $duplicate->loadedRevisionId = NULL;
     }
+
+    // Modules might need to add or change the data initially held by the new
+    // entity object, for instance to fill-in default values.
+    \Drupal::moduleHandler()->invokeAll($this->getEntityTypeId() . '_duplicate', [$duplicate, $this]);
+    \Drupal::moduleHandler()->invokeAll('entity_duplicate', [$duplicate, $this]);
 
     return $duplicate;
   }
