@@ -149,8 +149,14 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/000000
    */
   public function tips($long = FALSE) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement.. See https://www.drupal.org/node/000000', E_USER_DEPRECATED);
   }
 
 }
