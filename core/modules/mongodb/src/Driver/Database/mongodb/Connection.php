@@ -108,7 +108,7 @@ class Connection extends DatabaseConnection {
     // flexibility of deployment and the ability to change the servers in
     // rotation without reconfiguring clients.
     // @see https://www.mongodb.com/docs/manual/reference/connection-string/#srv-connection-format
-    if (!empty($connection_options['srv'])) {
+    if (isset($connection_options['srv']) && $connection_options['srv']) {
       $uri = 'mongodb+srv://';
     }
     else {
@@ -129,12 +129,18 @@ class Connection extends DatabaseConnection {
     if (!empty($connection_options['hosts']) && is_array($connection_options['hosts'])) {
       $hosts = [];
       foreach ($connection_options['hosts'] as $host) {
-        if (isset($host['port'])) {
-          $hosts[] = $host['host'] . ':' . $host['port'];
+        // Port numbers are prohibited in an SRV URI.
+        if (isset($connection_options['srv']) && $connection_options['srv']) {
+          $hosts[] = $host['host'];
         }
         else {
-          // Default to TCP connection on port 27017.
-          $hosts[] = $host['host'] . ':27017';
+          if (isset($host['port'])) {
+            $hosts[] = $host['host'] . ':' . $host['port'];
+          }
+          else {
+            // Default to TCP connection on port 27017.
+            $hosts[] = $host['host'] . ':27017';
+          }
         }
       }
       $uri .= implode(',', $hosts);
@@ -256,7 +262,11 @@ class Connection extends DatabaseConnection {
     if (isset($connection_options['hosts']) && is_array($connection_options['hosts'])) {
       $hosts = [];
       foreach ($connection_options['hosts'] as $host) {
-        if (isset($host['port'])) {
+        // Port numbers are prohibited in an SRV URI.
+        if (isset($connection_options['srv']) && $connection_options['srv']) {
+          $hosts[] = $host['host'];
+        }
+        elseif (isset($host['port'])) {
           $hosts[] = $host['host'] . ':' . $host['port'];
         }
         else {

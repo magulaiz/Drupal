@@ -624,7 +624,7 @@ class UrlConversionTest extends CoreUrlConversionTest {
       'autoload' => 'core/modules/mongodb/src/Driver/Database/mongodb/',
       'srv' => TRUE,
     ];
-    $expected_url6 = 'mongodb+srv://test_user:test_pass@test_host:5432/test_database?replicaSet=dbrs';
+    $expected_url6 = 'mongodb+srv://test_user:test_pass@test_host/test_database?replicaSet=dbrs';
 
     $info7 = [
       'database' => 'test_database',
@@ -687,7 +687,7 @@ class UrlConversionTest extends CoreUrlConversionTest {
       'autoload' => 'core/modules/mongodb/src/Driver/Database/mongodb/',
       'srv' => TRUE,
     ];
-    $expected_url9 = 'mongodb+srv://test_user:test_pass@test_host1:27017,test_host2:27018,test_host3:27019/test_database?replicaSet=dbrs';
+    $expected_url9 = 'mongodb+srv://test_user:test_pass@test_host1,test_host2,test_host3/test_database?replicaSet=dbrs';
 
     $info10 = [
       'database' => 'test_database',
@@ -712,7 +712,7 @@ class UrlConversionTest extends CoreUrlConversionTest {
       'autoload' => 'core/modules/mongodb/src/Driver/Database/mongodb/',
       'srv' => TRUE,
     ];
-    $expected_url10 = 'mongodb+srv://test_user:test_pass@test_host1,test_host2:27018,test_host3/test_database?replicaSet=dbrs';
+    $expected_url10 = 'mongodb+srv://test_user:test_pass@test_host1,test_host2,test_host3/test_database?replicaSet=dbrs';
 
     $info11 = [
       'database' => 'test_database',

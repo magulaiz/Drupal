@@ -681,6 +681,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       // Just continue testing.
     }
 
+    // Create the missing schema and insert a row.
     $this->installSchema('database_test', ['test']);
     $this->connection->insert('test')
       ->fields([
