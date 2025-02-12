@@ -38,7 +38,8 @@ use Drupal\Core\Hook\Order;
  *
  * @see https://www.drupal.org/node/3493962
  *
- * Removing hook implementations can be done by using the remove parameter.
+ * Removing hook implementations can be done by using the attribute
+ * \Drupal\Core\Hook\Attribute/RemoveHook.
  *
  * @see https://www.drupal.org/node/3496786
  *
