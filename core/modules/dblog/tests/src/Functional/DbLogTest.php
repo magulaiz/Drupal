@@ -502,7 +502,7 @@ class DbLogTest extends BrowserTestBase {
     // Delete the user created at the start of this test.
     // We need to POST here to invoke batch_process() in the internal browser.
     $this->drupalGet('user/' . $user->id() . '/cancel');
-    $this->submitForm(['user_cancel_method' => 'user_cancel_reassign'], 'Confirm');
+    $this->submitForm(['user_cancel_method' => 'user_cancel_reassign', 'edit-user-cancel-confirm' => 0], 'Confirm');
 
     // View the database log report.
     $this->drupalGet('admin/reports/dblog');

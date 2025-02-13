@@ -192,7 +192,6 @@ class UserCancelTest extends BrowserTestBase {
 
     // Confirm account cancellation.
     $timestamp = time();
-
     $this->submitForm([], 'Confirm');
     $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
 
@@ -519,7 +518,6 @@ class UserCancelTest extends BrowserTestBase {
   public function testUserCancelByAdmin(): void {
     $this->config('user.settings')
       ->set('cancel_method', 'user_cancel_reassign')
-      ->set('notify.cancel_confirm', 0)
       ->save();
 
     // Create a regular user.
@@ -534,6 +532,15 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains("Are you sure you want to cancel the account {$account->getAccountName()}?");
     $this->assertSession()->pageTextContains('Cancellation method');
 
+    // Confirm the default value of the cancel_confirm checkbox is true.
+    $this->assertSession()->checkboxChecked('edit-user-cancel-confirm');
+
+    /* Now resave the configuration to false and check that the checkbox is
+    unchecked. */
+    $this->config('user.settings')->set('notify.cancel_confirm', 0)->save();
+    $this->drupalGet('user/' . $account->id() . '/cancel');
+    $this->assertSession()->checkboxNotChecked('edit-user-cancel-confirm');
+
     // Confirm deletion.
     $this->submitForm([], 'Confirm');
     $this->assertSession()->pageTextContains("Account {$account->getAccountName()} has been deleted.");
@@ -544,7 +551,10 @@ class UserCancelTest extends BrowserTestBase {
    * Tests deletion of a user account without an email address.
    */
   public function testUserWithoutEmailCancelByAdmin(): void {
-    $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    $this->config('user.settings')
+      ->set('cancel_method', 'user_cancel_reassign')
+      ->set('notify.cancel_confirm', 0)
+      ->save();
 
     // Create a regular user.
     $account = $this->drupalCreateUser([]);

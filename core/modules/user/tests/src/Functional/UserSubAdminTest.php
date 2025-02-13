@@ -58,7 +58,7 @@ class UserSubAdminTest extends BrowserTestBase {
     $this->assertSession()->responseContains('Disable the account and keep its content.');
 
     // Test that cancel confirmation gives an admin style message.
-    $this->submitForm([], 'Confirm');
+    $this->submitForm(['edit-user-cancel-confirm' => 0], 'Confirm');
     $this->assertSession()->pageTextContains('Account ' . $cancel_user->getAccountName() . ' has been disabled.');
 
     // Repeat with permission to select account cancellation method.
