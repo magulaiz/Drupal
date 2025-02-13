@@ -34508,180 +34508,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/ajax_test/src/Form/AjaxTestMessageCommandForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function _batch_test_callback_1\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_callback_2\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_callback_5\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_callback_6\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_callback_7\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_finished_0\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_finished_1\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_finished_1_finished\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_finished_2\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_finished_3\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_finished_4\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_finished_5\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_finished_6\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_finished_7\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_finished_helper\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_nested_batch_callback\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$messages might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_batch_0\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_batch_1\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_batch_2\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_batch_3\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_batch_4\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_batch_5\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_batch_6\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_batch_7\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_nested_drupal_form_submit_callback\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_theme_callback\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function _batch_test_title_callback\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function batch_test_stack\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\batch_test\\\\Form\\\\BatchTestChainedForm\\:\\:batchTestChainedFormSubmit1\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -35338,12 +35164,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_schema_test/src/Hook/EntitySchemaTestHooks.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function _entity_test_record_hooks\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/entity_test.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Function entity_test_create_bundle\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -35351,18 +35171,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function entity_test_delete_bundle\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/entity_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function entity_test_form_entity_test_form_validate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/entity_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function entity_test_form_entity_test_form_validate_check\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/entity_test.module',
@@ -39832,12 +39640,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Common/AddFeedTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\DateFormatAccessControlHandlerTest\\:\\:testAccessProvider\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/DateFormatAccessControlHandlerTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\Entity\\\\EntityReferenceSelection\\\\EntityReferenceSelectionAccessTest\\:\\:addDefaultCommentField\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -39872,12 +39674,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Form/FormElementMaxlengthTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\MenuAccessControlHandlerTest\\:\\:testAccessProvider\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateActionConfigsTest\\:\\:assertConfigSchema\\(\\) has no return type specified\\.$#',

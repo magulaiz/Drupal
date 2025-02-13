@@ -232,6 +232,9 @@ services:
       - { name: cache_tags_invalidator}
       - { name: backend_overridable }
   Drupal\Core\Cache\CacheTagsChecksumInterface: '@cache_tags.invalidator.checksum'
+  cache_tags.preloader:
+    class: Drupal\Core\Cache\EventSubscriber\CacheTagPreloadSubscriber
+    autowire: true
   cache.backend.chainedfast:
     class: Drupal\Core\Cache\ChainedFastBackendFactory
     arguments: ['@settings']
@@ -1835,8 +1838,6 @@ services:
   response_filter.active_link:
     class: Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
     arguments: ['@current_user', '@path.current', '@path.matcher', '@language_manager']
-  response_filter.rss.cdata:
-    class: Drupal\Core\EventSubscriber\RssResponseCdata
   response_filter.rss.relative_url:
     class: Drupal\Core\EventSubscriber\RssResponseRelativeUrlFilter
   messenger:
