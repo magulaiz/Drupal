@@ -57,6 +57,9 @@ exports.command = function drupalInstall(
     if (error.stdout) {
       console.log('Output:', error.stdout.toString());
     }
+    if (error instanceof SyntaxError) {
+      console.log('Unexpected webserver command JSON output:', install.toString());
+    }
     this.assert.fail(error);
   }
 
