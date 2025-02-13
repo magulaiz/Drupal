@@ -27,7 +27,7 @@ class NodeHooks1 {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
     // Remind site administrators about the {node_access} table being flagged
     // for rebuild. We don't need to issue the message on the confirm form, or
     // while the rebuild is being processed.
@@ -42,10 +42,11 @@ class NodeHooks1 {
       }
       \Drupal::messenger()->addError($message);
     }
+
+    $output = '';
     switch ($route_name) {
       case 'help.page.node':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Node module manages the creation, editing, deletion, settings, and display of the main site content. Content items managed by the Node module are typically displayed as pages on your site, and include a title, some meta-data (author, creation time, content type, etc.), and optional fields containing text or other data (fields are managed by the <a href=":field">Field module</a>). For more information, see the <a href=":node">online documentation for the Node module</a>.', [
           ':node' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/node-module',
           ':field' => Url::fromRoute('help.page', [
@@ -76,35 +77,43 @@ class NodeHooks1 {
           ])->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'node.type_add':
-        return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
+        $output = '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
+        break;
 
       case 'entity.entity_form_display.node.default':
       case 'entity.entity_form_display.node.form_mode':
         $type = $route_match->getParameter('node_type');
-        return '<p>' . t('Content items can be edited using different form modes. Here, you can define which fields are shown and hidden when %type content is edited in each form mode, and define how the field form widgets are displayed in each form mode.', ['%type' => $type->label()]) . '</p>';
+        $output = '<p>' . t('Content items can be edited using different form modes. Here, you can define which fields are shown and hidden when %type content is edited in each form mode, and define how the field form widgets are displayed in each form mode.', ['%type' => $type->label()]) . '</p>';
+        break;
 
       case 'entity.entity_view_display.node.default':
       case 'entity.entity_view_display.node.view_mode':
         $type = $route_match->getParameter('node_type');
-        return '<p>' . t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' . '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', ['%type' => $type->label()]) . '</p>';
+        $output = '<p>' . t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' . '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', ['%type' => $type->label()]) . '</p>';
+        break;
 
       case 'entity.node.version_history':
-        return '<p>' . t('Revisions allow you to track differences between multiple versions of your content, and revert to older versions.') . '</p>';
+        $output = '<p>' . t('Revisions allow you to track differences between multiple versions of your content, and revert to older versions.') . '</p>';
+        break;
 
       case 'entity.node.edit_form':
         $node = $route_match->getParameter('node');
         $type = NodeType::load($node->getType());
         $help = $type->getHelp();
-        return !empty($help) ? Xss::filterAdmin($help) : '';
+        $output = !empty($help) ? Xss::filterAdmin($help) : '';
+        break;
 
       case 'node.add':
         $type = $route_match->getParameter('node_type');
         $help = $type->getHelp();
-        return !empty($help) ? Xss::filterAdmin($help) : '';
+        $output = !empty($help) ? Xss::filterAdmin($help) : '';
+        break;
     }
+
+    return $output;
   }
 
   /**

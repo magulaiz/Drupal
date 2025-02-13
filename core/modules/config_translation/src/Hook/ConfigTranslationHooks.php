@@ -18,11 +18,11 @@ class ConfigTranslationHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.config_translation':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Configuration Translation module allows you to translate configuration text; for example, the site name, vocabularies, menus, or date formats. Together with the modules <a href=":language">Language</a>, <a href=":content-translation">Content Translation</a>, and <a href=":locale">Interface Translation</a>, it allows you to build multilingual websites. For more information, see the <a href=":doc_url">online documentation for the Configuration Translation module</a>.', [
           ':doc_url' => 'https://www.drupal.org/documentation/modules/config_translation',
           ':config' => Url::fromRoute('help.page', [
@@ -53,12 +53,13 @@ class ConfigTranslationHooks {
           ':translation-page' => Url::fromRoute('config_translation.mapper_list')->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'config_translation.mapper_list':
         $output = '<p>' . t('This page lists all configuration items on your site that have translatable text, like your site name, role names, etc.') . '</p>';
-        return $output;
+        break;
     }
+    return $output;
   }
 
   /**

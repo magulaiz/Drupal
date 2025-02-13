@@ -17,11 +17,11 @@ class OptionsHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.options':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Options module allows you to create fields where data values are selected from a fixed list of options. Usually these items are entered through a select list, checkboxes, or radio buttons. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":options_do">online documentation for the Options module</a>.', [
           ':field' => Url::fromRoute('help.page', [
             'name' => 'field',
@@ -44,8 +44,8 @@ class OptionsHooks {
         $output .= '<dt>' . t('Choosing list field type') . '</dt>';
         $output .= '<dd>' . t('There are three types of list fields, which store different types of data: <em>float</em>, <em>integer</em> or, <em>text</em>. The <em>float</em> type allows storing approximate decimal values. The <em>integer</em> type allows storing whole numbers, such as years (for example, 2012) or values (for example, 1, 2, 5, 305). The <em>text</em> list field type allows storing text values. No matter which type of list field you choose, you can define whatever labels you wish for data entry.') . '</dd>';
         $output .= '</dl>';
-        return $output;
     }
+    return $output;
   }
 
   /**

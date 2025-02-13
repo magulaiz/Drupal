@@ -17,11 +17,11 @@ class TaxonomyHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.taxonomy':
         $field_ui_url = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
-        $output = '';
         $output .= '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Taxonomy module allows users who have permission to create and edit content to categorize (tag) content of that type. Users who have the <em>Administer vocabularies and terms</em> <a href=":permissions" title="Taxonomy module permissions">permission</a> can add <em>vocabularies</em> that contain a set of related <em>terms</em>. The terms in a vocabulary can either be pre-set by an administrator or built gradually as content is added and edited. Terms may be organized hierarchically if desired.', [
           ':permissions' => Url::fromRoute('user.admin_permissions.module', [
@@ -61,12 +61,14 @@ class TaxonomyHooks {
         $output .= '</ul>';
         $output .= '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'entity.taxonomy_vocabulary.collection':
         $output = '<p>' . t('Taxonomy is for categorizing content. Terms are grouped into vocabularies. For example, a vocabulary called "Fruit" would contain the terms "Apple" and "Banana".') . '</p>';
-        return $output;
+        break;
     }
+
+    return $output;
   }
 
   /**

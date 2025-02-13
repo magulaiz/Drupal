@@ -26,11 +26,11 @@ class ContentTranslationHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.content_translation':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Content Translation module allows you to translate content, comments, content blocks, taxonomy terms, users and other <a href=":field_help" title="Field module help, with background on content entities">content entities</a>. Together with the modules <a href=":language">Language</a>, <a href=":config-trans">Configuration Translation</a>, and <a href=":locale">Interface Translation</a>, it allows you to build multilingual websites. For more information, see the <a href=":translation-entity">online documentation for the Content Translation module</a>.', [
           ':locale' => \Drupal::moduleHandler()->moduleExists('locale') ? Url::fromRoute('help.page', [
             'name' => 'locale',
@@ -65,7 +65,7 @@ class ContentTranslationHooks {
         $output .= '<dt>' . t('Setting status of translations') . '</dt>';
         $output .= '<dd>' . t('If you edit a translation in one language you may want to set the status of the other translations as <em>out-of-date</em>. You can set this status by selecting the <em>Flag other translations as outdated</em> checkbox in the Translation section of the content editing form. The status will be visible on the Translations page.') . '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'language.content_settings_page':
         $output = '';
@@ -74,8 +74,9 @@ class ContentTranslationHooks {
             ':url' => Url::fromRoute('entity.configurable_language.collection')->toString(),
           ]) . '</p>';
         }
-        return $output;
+        break;
     }
+    return $output;
   }
 
   /**

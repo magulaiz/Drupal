@@ -18,14 +18,14 @@ class ContactHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.contact':
         $menu_page = \Drupal::moduleHandler()->moduleExists('menu_ui') ? Url::fromRoute('entity.menu.collection')->toString() : '#';
         $block_page = \Drupal::moduleHandler()->moduleExists('block') ? Url::fromRoute('block.admin_display')->toString() : '#';
         $contact_page = Url::fromRoute('entity.contact_form.collection')->toString();
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Contact module allows visitors to contact registered users on your site, using the personal contact form, and also allows you to set up site-wide contact forms. For more information, see the <a href=":contact">online documentation for the Contact module</a>.', [':contact' => 'https://www.drupal.org/documentation/modules/contact']) . '</p>';
         $output .= '<h2>' . t('Uses') . '</h2>';
         $output .= '<dl>';
@@ -38,8 +38,8 @@ class ContactHooks {
         $output .= '<dt>' . t('Adding content to contact forms') . '</dt>';
         $output .= '<dd>' . t('From the <a href=":contact_admin">Contact forms page</a>, you can configure the fields to be shown on contact forms, including their labels and help text. If you would like other content (such as text or images) to appear on a contact form, use a block. You can create and edit blocks on the <a href=":blocks">Block layout page</a>, if the Block module is installed.', [':blocks' => $block_page, ':contact_admin' => $contact_page]) . '</dd>';
         $output .= '</dl>';
-        return $output;
     }
+    return $output;
   }
 
   /**

@@ -8,6 +8,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\layout_builder\InlineBlockEntityOperations;
 use Drupal\layout_builder\Plugin\Block\ExtraFieldBlock;
 use Drupal\Core\Render\Element;
@@ -31,54 +32,61 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class LayoutBuilderHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     // Add help text to the Layout Builder UI.
     if ($route_match->getRouteObject()->getOption('_layout_builder')) {
-      $output = '<p>' . t('This layout builder tool allows you to configure the layout of the main content area.') . '</p>';
+      $output = '<p>' . $this->t('This layout builder tool allows you to configure the layout of the main content area.') . '</p>';
       if (\Drupal::currentUser()->hasPermission('administer blocks')) {
-        $output .= '<p>' . t('To manage other areas of the page, use the <a href="@block-ui">block administration page</a>.', ['@block-ui' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';
+        $output .= '<p>' . $this->t('To manage other areas of the page, use the <a href="@block-ui">block administration page</a>.', [
+          '@block-ui' => Url::fromRoute('block.admin_display')->toString(),
+        ]) . '</p>';
       }
       else {
-        $output .= '<p>' . t('To manage other areas of the page, use the block administration page.') . '</p>';
+        $output .= '<p>' . $this->t('To manage other areas of the page, use the block administration page.') . '</p>';
       }
-      $output .= '<p>' . t('Forms and links inside the content of the layout builder tool have been disabled.') . '</p>';
-      return $output;
+      $output .= '<p>' . $this->t('Forms and links inside the content of the layout builder tool have been disabled.') . '</p>';
     }
-    switch ($route_name) {
-      case 'help.page.layout_builder':
-        $output = '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('Layout Builder allows you to use layouts to customize how content, content blocks, and other <a href=":field_help" title="Field module help, with background on content entities">content entities</a> are displayed.', [
-          ':field_help' => Url::fromRoute('help.page', [
-            'name' => 'field',
-          ])->toString(),
-        ]) . '</p>';
-        $output .= '<p>' . t('For more information, see the <a href=":layout-builder-documentation">online documentation for the Layout Builder module</a>.', [
-          ':layout-builder-documentation' => 'https://www.drupal.org/docs/8/core/modules/layout-builder',
-        ]) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
-        $output .= '<dl>';
-        $output .= '<dt>' . t('Default layouts') . '</dt>';
-        $output .= '<dd>' . t('Layout Builder can be selectively enabled on the "Manage Display" page in the <a href=":field_ui">Field UI</a>. This allows you to control the output of each type of display individually. For example, a "Basic page" might have view modes such as Full and Teaser, with each view mode having different layouts selected.', [
-          ':field_ui' => Url::fromRoute('help.page', [
-            'name' => 'field_ui',
-          ])->toString(),
-        ]) . '</dd>';
-        $output .= '<dt>' . t('Overridden layouts') . '</dt>';
-        $output .= '<dd>' . t('If enabled, each individual content item can have a custom layout. Once the layout for an individual content item is overridden, changes to the Default layout will no longer affect it. Overridden layouts may be reverted to return to matching and being synchronized to their Default layout.') . '</dd>';
-        $output .= '<dt>' . t('User permissions') . '</dt>';
-        $output .= '<dd>' . t('The Layout Builder module makes a number of permissions available, which can be set by role on the <a href=":permissions">permissions page</a>. For more information, see the <a href=":layout-builder-permissions">Configuring Layout Builder permissions</a> online documentation.', [
-          ':permissions' => Url::fromRoute('user.admin_permissions.module', [
-            'modules' => 'layout_builder',
-          ])->toString(),
-          ':layout-builder-permissions' => 'https://www.drupal.org/docs/8/core/modules/layout-builder/configuring-layout-builder-permissions',
-        ]) . '</dd>';
-        $output .= '</dl>';
-        return $output;
+    else {
+      switch ($route_name) {
+        case 'help.page.layout_builder':
+          $output = '<h2>' . $this->t('About') . '</h2>';
+          $output .= '<p>' . $this->t('Layout Builder allows you to use layouts to customize how content, content blocks, and other <a href=":field_help" title="Field module help, with background on content entities">content entities</a> are displayed.', [
+            ':field_help' => Url::fromRoute('help.page', [
+              'name' => 'field',
+            ])->toString(),
+          ]) . '</p>';
+          $output .= '<p>' . $this->t('For more information, see the <a href=":layout-builder-documentation">online documentation for the Layout Builder module</a>.', [
+            ':layout-builder-documentation' => 'https://www.drupal.org/docs/8/core/modules/layout-builder',
+          ]) . '</p>';
+          $output .= '<h2>' . $this->t('Uses') . '</h2>';
+          $output .= '<dl>';
+          $output .= '<dt>' . $this->t('Default layouts') . '</dt>';
+          $output .= '<dd>' . $this->t('Layout Builder can be selectively enabled on the "Manage Display" page in the <a href=":field_ui">Field UI</a>. This allows you to control the output of each type of display individually. For example, a "Basic page" might have view modes such as Full and Teaser, with each view mode having different layouts selected.', [
+            ':field_ui' => Url::fromRoute('help.page', [
+              'name' => 'field_ui',
+            ])->toString(),
+          ]) . '</dd>';
+          $output .= '<dt>' . $this->t('Overridden layouts') . '</dt>';
+          $output .= '<dd>' . $this->t('If enabled, each individual content item can have a custom layout. Once the layout for an individual content item is overridden, changes to the Default layout will no longer affect it. Overridden layouts may be reverted to return to matching and being synchronized to their Default layout.') . '</dd>';
+          $output .= '<dt>' . $this->t('User permissions') . '</dt>';
+          $output .= '<dd>' . $this->t('The Layout Builder module makes a number of permissions available, which can be set by role on the <a href=":permissions">permissions page</a>. For more information, see the <a href=":layout-builder-permissions">Configuring Layout Builder permissions</a> online documentation.', [
+            ':permissions' => Url::fromRoute('user.admin_permissions.module', [
+              'modules' => 'layout_builder',
+            ])->toString(),
+            ':layout-builder-permissions' => 'https://www.drupal.org/docs/8/core/modules/layout-builder/configuring-layout-builder-permissions',
+          ]) . '</dd>';
+          $output .= '</dl>';
+      }
     }
+
+    return $output;
   }
 
   /**

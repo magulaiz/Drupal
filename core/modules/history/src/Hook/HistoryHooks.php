@@ -18,7 +18,8 @@ class HistoryHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.history':
         $output = '<h2>' . t('About') . '</h2>';
@@ -28,8 +29,8 @@ class HistoryHooks {
           ])->toString() : '#',
           ':url' => 'https://www.drupal.org/documentation/modules/history',
         ]) . '</p>';
-        return $output;
     }
+    return $output;
   }
 
   /**

@@ -18,11 +18,11 @@ class MenuLinkContentHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.menu_link_content':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Custom Menu Links module allows users to create menu links. These links can be translated if multiple languages are used for the site.');
         if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
           $output .= ' ' . t('It is required by the Menu UI module, which provides an interface for managing menus and menu links. For more information, see the <a href=":menu-help">Menu UI module help page</a> and the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>.', [
@@ -36,8 +36,8 @@ class MenuLinkContentHooks {
           $output .= ' ' . t('For more information, see the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>. If you install the Menu UI module, it provides an interface for managing menus and menu links.', [':drupal-org-help' => 'https://www.drupal.org/documentation/modules/menu_link']);
         }
         $output .= '</p>';
-        return $output;
     }
+    return $output;
   }
 
   /**

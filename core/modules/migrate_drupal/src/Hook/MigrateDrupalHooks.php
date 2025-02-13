@@ -20,19 +20,20 @@ class MigrateDrupalHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.migrate_drupal':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Migrate Drupal module provides a framework based on the <a href=":migrate">Migrate module</a> to facilitate migration from a Drupal (6, 7, or 8) site to your website. It does not provide a user interface. For more information, see the <a href=":migrate_drupal">online documentation for the Migrate Drupal module</a>.', [
           ':migrate' => Url::fromRoute('help.page', [
             'name' => 'migrate',
           ])->toString(),
           ':migrate_drupal' => 'https://www.drupal.org/documentation/modules/migrate_drupal',
         ]) . '</p>';
-        return $output;
     }
+
+    return $output;
   }
 
   /**

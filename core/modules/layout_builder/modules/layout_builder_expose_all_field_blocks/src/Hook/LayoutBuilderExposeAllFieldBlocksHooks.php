@@ -14,7 +14,8 @@ class LayoutBuilderExposeAllFieldBlocksHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.layout_builder_expose_all_field_blocks':
         $output = '<h2>' . t('About') . '</h2>';
@@ -25,9 +26,8 @@ class LayoutBuilderExposeAllFieldBlocksHooks {
         $output .= '<p>' . t('For more information, see the <a href=":href">online documentation for the Layout Builder Expose All Field Blocks module</a>.', [
           ':href' => 'https://www.drupal.org/node/3223395#s-layout-builder-expose-all-field-blocks',
         ]) . '</p>';
-        return $output;
     }
-    return NULL;
+    return $output;
   }
 
 }

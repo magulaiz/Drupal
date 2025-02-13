@@ -38,12 +38,12 @@ class ContentModerationHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       // Main module help for the content_moderation module.
       case 'help.page.content_moderation':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Content Moderation module allows you to expand on Drupal\'s "unpublished" and "published" states for content. It allows you to have a published version that is live, but have a separate working copy that is undergoing review before it is published. This is achieved by using <a href=":workflows">Workflows</a> to apply different states and transitions to entities as needed. For more information, see the <a href=":content_moderation">online documentation for the Content Moderation module</a>.', [
           ':content_moderation' => 'https://www.drupal.org/documentation/modules/content_moderation',
           ':workflows' => Url::fromRoute('help.page', [
@@ -73,8 +73,8 @@ class ContentModerationHooks {
         $output .= '<dt>' . t('Configure Content Moderation permissions') . '</dt>';
         $output .= '<dd>' . t('Each transition is exposed as a permission. If a user has the permission for a transition, they can use the transition to change the state of the content item, from Draft to Published.') . '</dd>';
         $output .= '</dl>';
-        return $output;
     }
+    return $output;
   }
 
   /**

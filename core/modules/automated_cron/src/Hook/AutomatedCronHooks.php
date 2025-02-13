@@ -15,11 +15,11 @@ class AutomatedCronHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.automated_cron':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Automated Cron module runs cron operations for your site using normal browser/page requests instead of having to set up a separate cron job. The Automated Cron module checks at the end of each server response when cron operation was last ran and, if it has been too long since last run, it executes the cron tasks after sending a server response. For more information, see the <a href=":automated_cron-documentation">online documentation for the Automated Cron module</a>.', [
           ':automated_cron-documentation' => 'https://www.drupal.org/documentation/modules/automated_cron',
         ]) . '</p>';
@@ -32,8 +32,8 @@ class AutomatedCronHooks {
         $output .= '<dt>' . t('Disabling Automated Cron') . '</dt>';
         $output .= '<dd>' . t('To disable automated cron, the recommended method is to uninstall the module, to reduce site overhead. If you only want to disable it temporarily, you can set the frequency to Never on the Cron page, and then change the frequency back when you want to start it up again.') . '</dd>';
         $output .= '</dl>';
-        return $output;
     }
+    return $output;
   }
 
   /**

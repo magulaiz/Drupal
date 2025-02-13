@@ -16,11 +16,11 @@ class LinkHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.link':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Link module allows you to create fields that contain internal or external URLs and optional link text. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":link_documentation">online documentation for the Link module</a>.', [
           ':field' => Url::fromRoute('help.page', [
             'name' => 'field',
@@ -49,8 +49,8 @@ class LinkHooks {
         $output .= '<dt>' . t('Validating URLs') . '</dt>';
         $output .= '<dd>' . t('All links are validated after a link field is filled in. They can include anchors or query strings.') . '</dd>';
         $output .= '</dl>';
-        return $output;
     }
+    return $output;
   }
 
   /**

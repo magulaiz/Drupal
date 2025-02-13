@@ -14,11 +14,11 @@ class BreakpointHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.breakpoint':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Breakpoint module keeps track of the height, width, and resolution breakpoints where a responsive design needs to change in order to respond to different devices being used to view the site. This module does not have a user interface. For more information, see the <a href=":docs">online documentation for the Breakpoint module</a>.', [':docs' => 'https://www.drupal.org/documentation/modules/breakpoint']) . '</p>';
         $output .= '<h4>' . t('Terminology') . '</h4>';
         $output .= '<dl>';
@@ -36,8 +36,8 @@ class BreakpointHooks {
         $output .= '<dt>' . t('Defining breakpoints and breakpoint groups') . '</dt>';
         $output .= '<dd>' . t('Modules and themes can use the API provided by the Breakpoint module to define breakpoints and breakpoint groups, and to assign resolution multipliers to breakpoints.') . '</dd>';
         $output .= '</dl>';
-        return $output;
     }
+    return $output;
   }
 
   /**

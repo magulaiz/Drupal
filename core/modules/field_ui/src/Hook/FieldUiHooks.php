@@ -22,7 +22,8 @@ class FieldUiHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.field_ui':
         $output = '';
@@ -60,11 +61,13 @@ class FieldUiHooks {
           ])->toString() : '#',
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'entity.field_storage_config.collection':
-        return '<p>' . t('This list shows all fields currently in use for easy reference.') . '</p>';
+        $output = '<p>' . t('This list shows all fields currently in use for easy reference.') . '</p>';
+        break;
     }
+    return $output;
   }
 
   /**

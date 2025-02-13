@@ -16,7 +16,8 @@ class ShortcutHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.shortcut':
         $output = '<h2>' . t('About') . '</h2>';
@@ -38,7 +39,7 @@ class ShortcutHooks {
           ])->toString() : '#',
         ]) . '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'entity.shortcut_set.collection':
       case 'shortcut.set_add':
@@ -50,9 +51,11 @@ class ShortcutHooks {
               'user' => $user->id(),
             ])->toString(),
           ]) . '</p>';
-          return $output;
         }
+        break;
     }
+
+    return $output;
   }
 
   /**

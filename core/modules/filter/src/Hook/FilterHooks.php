@@ -15,11 +15,11 @@ class FilterHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.filter':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The Filter module allows administrators to configure text formats. Text formats change how HTML tags and other text will be <em>processed and displayed</em> in the site. They are used to transform text, and also help to defend your website against potentially damaging input from malicious users. Visual text editors can be associated with text formats by using the <a href=":editor_help">Text Editor module</a>. For more information, see the <a href=":filter_do">online documentation for the Filter module</a>.', [
           ':filter_do' => 'https://www.drupal.org/documentation/modules/filter/',
           ':editor_help' => \Drupal::moduleHandler()->moduleExists('editor') ? Url::fromRoute('help.page', [
@@ -43,7 +43,7 @@ class FilterHooks {
         $output .= '<dt>' . t('Choosing a text format') . '</dt>';
         $output .= '<dd>' . t('When creating or editing data in a field that has text formats enabled, users can select the format under the field from the Text format select list.') . '</dd>';
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'filter.admin_overview':
         $output = '<p>' . t('Text formats define how text is filtered for output and how HTML tags and other text is displayed, replaced, or removed. <strong>Improper text format configuration is a security risk.</strong> Learn more on the <a href=":filter_help">Filter module help page</a>.', [
@@ -52,12 +52,13 @@ class FilterHooks {
           ])->toString(),
         ]) . '</p>';
         $output .= '<p>' . t('Text formats are presented on content editing pages in the order defined on this page. The first format available to a user will be selected by default.') . '</p>';
-        return $output;
+        break;
 
       case 'entity.filter_format.edit_form':
         $output = '<p>' . t('A text format contains filters that change the display of user input; for example, stripping out malicious HTML or making URLs clickable. Filters are executed from top to bottom and the order is important, since one filter may prevent another filter from doing its job. For example, when URLs are converted into links before disallowed HTML tags are removed, all links may be removed. When this happens, the order of filters may need to be rearranged.') . '</p>';
-        return $output;
+        break;
     }
+    return $output;
   }
 
   /**

@@ -20,11 +20,11 @@ class Ckeditor5Hooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.ckeditor5':
-        $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
+        $output = '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The CKEditor 5 module provides a highly-accessible, highly-usable visual text editor and adds a toolbar to text fields. Users can use buttons to format content and to create semantically correct and valid HTML. The CKEditor module uses the framework provided by the <a href=":text_editor">Text Editor module</a>. It requires JavaScript to be enabled in the browser. For more information, see the <a href=":doc_url">online documentation for the CKEditor 5 module</a> and the <a href=":cke5_url">CKEditor 5 website</a>.', [
           ':doc_url' => 'https://www.drupal.org/docs/contributed-modules/ckeditor-5',
           ':cke5_url' => 'https://ckeditor.com/ckeditor-5/',
@@ -82,8 +82,8 @@ class Ckeditor5Hooks {
         $output .= '<dt id="source-editing">' . t('Tags/attributes that are not explicitly supported by any plugin are supported by Source Editing') . '</dt>';
         $output .= '<dd>' . t('When a necessary tag/attribute is not directly supported by an available plugin, the "Source Editing" plugin is enabled. This plugin is typically used for by passing the CKEditor 5 UI and editing contents as HTML source. In the settings for Source Editing, tags/attributes that aren\'t available via other plugins are added to Source Editing\'s "Manually editable HTML tags" setting so they are supported by the text format.') . '</dd>';
         $output .= '</dl>';
-        return $output;
     }
+    return $output;
   }
 
   /**

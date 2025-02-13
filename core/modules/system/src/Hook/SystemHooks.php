@@ -31,10 +31,10 @@ class SystemHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.system':
-        $output = '';
         $output .= '<h2>' . t('About') . '</h2>';
         $output .= '<p>' . t('The System module is integral to the site: it provides user interfaces for many core systems and settings, as well as the basic administrative menu structure. For more information, see the <a href=":system">online documentation for the System module</a>.', [':system' => 'https://www.drupal.org/documentation/modules/system']) . '</p>';
         $output .= '<h2>' . t('Uses') . '</h2>';
@@ -95,25 +95,28 @@ class SystemHooks {
           $output .= '<dd>' . t('Only the most highly critical security announcements will be shown. <a href=":advisories-list">View all security announcements</a>.', [':advisories-list' => 'https://www.drupal.org/security']) . '</dd>';
         }
         $output .= '</dl>';
-        return $output;
+        break;
 
       case 'system.admin_index':
-        return '<p>' . t('This page shows you all available administration tasks for each module.') . '</p>';
+        $output = '<p>' . t('This page shows you all available administration tasks for each module.') . '</p>';
+        break;
 
       case 'system.themes_page':
         $output = '<p>' . t('Set and configure the default theme for your website.  Alternative <a href=":themes">themes</a> are available.', [':themes' => 'https://www.drupal.org/project/themes']) . '</p>';
         if (\Drupal::moduleHandler()->moduleExists('block')) {
           $output .= '<p>' . t('You can place blocks for each theme on the <a href=":blocks">block layout</a> page.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';
         }
-        return $output;
+        break;
 
       case 'system.theme_settings_theme':
         $theme_list = \Drupal::service('theme_handler')->listInfo();
         $theme = $theme_list[$route_match->getParameter('theme')];
-        return '<p>' . t('These options control the display settings for the %name theme. When your site is displayed using this theme, these settings will be used.', ['%name' => $theme->info['name']]) . '</p>';
+        $output = '<p>' . t('These options control the display settings for the %name theme. When your site is displayed using this theme, these settings will be used.', ['%name' => $theme->info['name']]) . '</p>';
+        break;
 
       case 'system.theme_settings':
-        return '<p>' . t('Control default display settings for your site, across all themes. Use theme-specific settings to override these defaults.') . '</p>';
+        $output = '<p>' . t('Control default display settings for your site, across all themes. Use theme-specific settings to override these defaults.') . '</p>';
+        break;
 
       case 'system.modules_list':
         $output = '<p>' . t('Add <a href=":modules">contributed modules</a> to extend your site\'s functionality.', [':modules' => 'https://www.drupal.org/project/modules']) . '</p>';
@@ -125,32 +128,36 @@ class SystemHooks {
             ])->toString(),
           ]) . '</p>';
         }
-        return $output;
+        break;
 
       case 'system.modules_uninstall':
-        return '<p>' . t('The uninstall process removes all data related to a module.') . '</p>';
+        $output = '<p>' . t('The uninstall process removes all data related to a module.') . '</p>';
+        break;
 
       case 'entity.block.edit_form':
         if (($block = $route_match->getParameter('block')) && $block->getPluginId() == 'system_powered_by_block') {
-          return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
+          $output = '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
         }
         break;
 
       case 'block.admin_add':
         if ($route_match->getParameter('plugin_id') == 'system_powered_by_block') {
-          return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
+          $output = '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
         }
         break;
 
       case 'system.site_maintenance_mode':
         if (\Drupal::currentUser()->id() == 1) {
-          return '<p>' . t('Use maintenance mode when making major updates, particularly if the updates could disrupt visitors or the update process. Examples include upgrading, importing or exporting content, modifying a theme, modifying content types, and making backups.') . '</p>';
+          $output = '<p>' . t('Use maintenance mode when making major updates, particularly if the updates could disrupt visitors or the update process. Examples include upgrading, importing or exporting content, modifying a theme, modifying content types, and making backups.') . '</p>';
         }
         break;
 
       case 'system.status':
-        return '<p>' . t("Here you can find a short overview of your site's parameters as well as any problems detected with your installation. It may be useful to copy and paste this information into support requests filed on Drupal.org's support forums and project issue queues. Before filing a support request, ensure that your web server meets the <a href=\":system-requirements\">system requirements.</a>", [':system-requirements' => 'https://www.drupal.org/docs/system-requirements']) . '</p>';
+        $output = '<p>' . t("Here you can find a short overview of your site's parameters as well as any problems detected with your installation. It may be useful to copy and paste this information into support requests filed on Drupal.org's support forums and project issue queues. Before filing a support request, ensure that your web server meets the <a href=\":system-requirements\">system requirements.</a>", [':system-requirements' => 'https://www.drupal.org/docs/system-requirements']) . '</p>';
+        break;
     }
+
+    return $output;
   }
 
   /**

@@ -24,7 +24,8 @@ class FieldLayoutHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string {
+    $output = '';
     switch ($route_name) {
       case 'help.page.field_layout':
         $output = '<h2>' . t('About') . '</h2>';
@@ -32,8 +33,9 @@ class FieldLayoutHooks {
         $output .= '<p>' . t('For more information, see the <a href=":field-layout-documentation">online documentation for the Field Layout module</a>.', [
           ':field-layout-documentation' => 'https://www.drupal.org/documentation/modules/field_layout',
         ]) . '</p>';
-        return $output;
+        break;
     }
+    return $output;
   }
 
   /**
