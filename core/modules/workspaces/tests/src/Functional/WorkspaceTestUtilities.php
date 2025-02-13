@@ -74,8 +74,6 @@ trait WorkspaceTestUtilities {
       'parent' => $parent,
     ], 'Save and switch');
 
-    $this->getSession()->getPage()->hasContent("$label ($id)");
-
     return Workspace::load($id);
   }
 
@@ -99,8 +97,6 @@ trait WorkspaceTestUtilities {
       'label' => $label,
       'parent' => $parent,
     ], 'Save');
-
-    $this->getSession()->getPage()->hasContent("$label ($id)");
 
     return Workspace::load($id);
   }
