@@ -23,7 +23,7 @@ function content_moderation_removed_post_updates(): array {
 /**
  * Install moderated block content view.
  */
-function content_moderation_post_update_install_moderated_block_content_view() {
+function content_moderation_post_update_install_moderated_block_content_view() :void {
   $dir = \Drupal::service('extension.list.module')->getPath('content_moderation') . '/config/optional';
   $fileStorage = new FileStorage($dir);
   $config = $fileStorage->read('views.view.moderated_blocks');

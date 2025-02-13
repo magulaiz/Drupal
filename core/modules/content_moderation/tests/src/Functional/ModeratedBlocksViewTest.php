@@ -68,7 +68,7 @@ class ModeratedBlocksViewTest extends BlockContentTestBase {
   /**
    * Tests the moderated block content page.
    */
-  public function testModeratedBlockContentPage() {
+  public function testModeratedBlockContentPage() :void {
     $assert_session = $this->assertSession();
     $this->drupalLogin($this->adminUser);
 
@@ -184,7 +184,7 @@ class ModeratedBlocksViewTest extends BlockContentTestBase {
   /**
    * Tests the moderated blocks content page with multilingual content.
    */
-  public function testModeratedBlockContentPageMultilingual() {
+  public function testModeratedBlockContentPageMultilingual() :void {
     ConfigurableLanguage::createFromLangcode('fr')->save();
 
     $block = $this->createBlockContent([
