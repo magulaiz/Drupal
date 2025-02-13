@@ -61,6 +61,9 @@ class ConfigImportRecreateTest extends KernelTestBase {
     );
   }
 
+  /**
+   * Tests the recreation of a content type and its associated configurations.
+   */
   public function testRecreateEntity(): void {
     $type_name = $this->randomMachineName(16);
     $content_type = NodeType::create([
@@ -75,7 +78,7 @@ class ConfigImportRecreateTest extends KernelTestBase {
       'entity_type' => 'node',
       'type' => 'text_long',
     ])->save();
-  
+
     FieldConfig::create([
       'field_name' => 'content',
       'entity_type' => 'node',
@@ -127,7 +130,7 @@ class ConfigImportRecreateTest extends KernelTestBase {
       'entity_type' => 'node',
       'type' => 'text_long',
     ])->save();
-  
+
     FieldConfig::create([
       'field_name' => 'content',
       'entity_type' => 'node',
@@ -165,6 +168,6 @@ class ConfigImportRecreateTest extends KernelTestBase {
     $this->assertFalse($this->configImporter->reset()->hasUnprocessedConfigurationChanges());
     $content_type = NodeType::load($type_name);
     $this->assertEquals('Node type one', $content_type->label());
-}
+  }
 
 }

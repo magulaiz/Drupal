@@ -372,7 +372,7 @@ class EntityDisplayTest extends KernelTestBase {
       'entity_type' => 'node',
       'type' => 'text_long',
     ])->save();
-  
+
     FieldConfig::create([
       'field_name' => 'content',
       'entity_type' => 'node',

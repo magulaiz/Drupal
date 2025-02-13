@@ -54,8 +54,8 @@ trait ContentTypeCreationTrait {
         'bundle' => $type->id(),
         'label' => 'Body',
         'settings' => [
-            'display_summary' => TRUE,
-            'allowed_formats' => [],
+          'display_summary' => TRUE,
+          'allowed_formats' => [],
         ],
       ]);
       $field->save();
@@ -72,21 +72,21 @@ trait ContentTypeCreationTrait {
 
       // Assign display settings for the 'default' and 'teaser' view modes.
       $display_repository->getViewDisplay('node', $type->id())
-      ->setComponent('body', [
-        'label' => 'hidden',
-        'type' => 'text_default',
-      ])
-      ->save();
+        ->setComponent('body', [
+          'label' => 'hidden',
+          'type' => 'text_default',
+        ])
+        ->save();
 
       // The teaser view mode is created by the Standard profile and might not exist.
       $view_modes = $display_repository->getViewModes('node');
       if (isset($view_modes['teaser'])) {
         $display_repository->getViewDisplay('node', $type->id(), 'teaser')
-        ->setComponent('body', [
-          'label' => 'hidden',
-          'type' => 'text_summary_or_trimmed',
-        ])
-        ->save();
+          ->setComponent('body', [
+            'label' => 'hidden',
+            'type' => 'text_summary_or_trimmed',
+          ])
+          ->save();
       }
     }
 

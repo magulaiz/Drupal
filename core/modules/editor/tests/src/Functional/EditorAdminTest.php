@@ -128,7 +128,7 @@ class EditorAdminTest extends BrowserTestBase {
       'type'        => 'text_long',
     ]);
     $field_storage->save();
-    
+
     $field_config = FieldConfig::create([
       'field_name'  => $field_name,
       'entity_type' => 'node',

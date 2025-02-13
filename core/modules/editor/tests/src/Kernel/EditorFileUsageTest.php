@@ -64,7 +64,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
       'type' => 'text_with_summary',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ])->save();
-  
+
     FieldConfig::create([
       'field_name' => 'content',
       'entity_type' => 'node',
