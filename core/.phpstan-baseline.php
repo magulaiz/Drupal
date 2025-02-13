@@ -3069,24 +3069,5 @@ in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
 	'count' => 1,
 	'path' => __DIR__ . '/tests/TestSuites/UnitTestSuite.php',
 ];
-$ignoreErrors[] = [
-  'message' => '#^Method Drupal\\\\content_moderation\\\\Plugin\\\\Action\\\\ModerationStateChange\\:\\:addDependencies\\(\\) has no return type specified\\.$#',
-  'identifier' => 'missingType.return',
-  'count' => 1,
-  'path' => __DIR__ . '/modules/content_moderation/src/Plugin/Action/ModerationStateChange.php',
-];
-$ignoreErrors[] = [
-  'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ActionConfigSchemaTest\\:\\:assertConfigSchema\\(\\) has no return type specified\\.$#',
-  'identifier' => 'missingType.return',
-  'count' => 1,
-  'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ActionConfigSchemaTest.php',
-];
-$ignoreErrors[] = [
-  'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ActionConfigSchemaTest\\:\\:assertConfigSchemaByName\\(\\) has no return type specified\\.$#',
-  'identifier' => 'missingType.return',
-  'count' => 1,
-  'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ActionConfigSchemaTest.php',
-];
-
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];
