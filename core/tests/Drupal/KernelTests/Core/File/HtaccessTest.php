@@ -97,7 +97,7 @@ class HtaccessTest extends KernelTestBase {
   /**
    * @covers ::ensure
    */
-  public function testHtaccessEnsureDisabled() {
+  public function testHtaccessEnsureDisabled(): void {
     $this->setSetting('auto_create_htaccess', FALSE);
     $streamWrapperManager = $this->prophesize(StreamWrapperManagerInterface::class);
     $logger = new TestLogger();
@@ -109,7 +109,7 @@ class HtaccessTest extends KernelTestBase {
   /**
    * @covers ::write
    */
-  public function testHtaccessSaveDisabled() {
+  public function testHtaccessSaveDisabled(): void {
     $this->setSetting('auto_create_htaccess', FALSE);
     $this->assertFalse($this->htaccessWriter->write($this->public, FALSE));
   }
