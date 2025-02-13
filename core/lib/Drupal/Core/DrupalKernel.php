@@ -222,6 +222,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * \Drupal\KernelTests\KernelTestBase to register itself as service provider.
    *
    * @var array
+   *
+   * (a)deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use services
+   * tagged with the service_provider tag instead. Not marked with @ yet because
+   * phpstan hates it.
+   * @see https://www.drupal.org/project/drupal/issues/2910814
    */
   protected $serviceProviderClasses;
 
@@ -652,7 +657,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $name = "{$camelized}ServiceProvider";
       $class = "Drupal\\{$module}\\{$name}";
       if (class_exists($class)) {
-        $this->serviceProviderClasses['app'][$module] = $class;
+        $this->serviceProviderClasses['app'][$class] = $class;
       }
       $filename = dirname($filename) . "/$module.services.yml";
       if (is_file($filename)) {
@@ -1308,6 +1313,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     $this->initializeServiceProviders();
+    unset($this->serviceProviderClasses['app']['core']);
     $container = $this->getContainerBuilder();
     $container->set('kernel', $this);
     $container->setParameter('container.modules', $this->getModulesParameter());
@@ -1369,6 +1375,24 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         $provider->register($container);
       }
     }
+    foreach ($container->findTaggedServiceIds('service_provider') as $id => $info) {
+      $provider = $container->get($id);
+      $class = get_class($provider);
+      if (isset($this->serviceProviderClasses['app'][$class])) {
+        unset($this->serviceProviderClasses['app'][$class]);
+        continue;
+      }
+      $this->serviceProviders['app'][] = $provider;
+      if ($provider instanceof ServiceProviderInterface) {
+        $provider->register($container);
+      }
+    }
+
+    /**
+     * foreach ($this->serviceProviderClasses['app'] as $class) {
+     * @trigger_error("Service providers are now tagged services with the service_provider tag. Magic naming for $class is deprecated in drupal:11.2.0 and removed in drupal:12.0.0.");
+     * }
+     */
     // Register site-specific service overrides.
     foreach ($this->serviceYamls['site'] as $filename) {
       $yaml_loader->load($filename);

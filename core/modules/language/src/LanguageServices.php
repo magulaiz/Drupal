@@ -11,14 +11,14 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Overrides the language_manager service to point to language's module one.
  */
-class LanguageServiceProvider extends ServiceProviderBase {
+class LanguageServices extends ServiceProviderBase {
 
-  const CONFIG_PREFIX = 'language.entity.';
+  const string CONFIG_PREFIX = 'language.entity.';
 
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     // The following services are needed only on multilingual sites.
     if ($this->isMultilingual()) {
       $container->register('language_request_subscriber', 'Drupal\language\EventSubscriber\LanguageRequestSubscriber')
@@ -43,7 +43,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function alter(ContainerBuilder $container) {
+  public function alter(ContainerBuilder $container): void {
     $definition = $container->getDefinition('language_manager');
     $definition->setClass('Drupal\language\ConfigurableLanguageManager')
       ->addArgument(new Reference('config.factory'))
@@ -63,7 +63,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
    * @return bool
    *   TRUE if the site is multilingual, FALSE otherwise.
    */
-  protected function isMultilingual() {
+  protected function isMultilingual(): bool {
     // Assign the prefix to a local variable so it can be used in an anonymous
     // function.
     $prefix = static::CONFIG_PREFIX;
@@ -85,7 +85,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
    *   system.site:default_langcode if the corresponding configuration entity
    *   exists, otherwise FALSE.
    */
-  protected function getDefaultLanguageValues() {
+  protected function getDefaultLanguageValues(): array|FALSE {
     $config_storage = BootstrapConfigStorageFactory::get();
     $system = $config_storage->read('system.site');
     // In Kernel tests it's possible this code is called before system.site

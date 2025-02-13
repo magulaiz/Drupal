@@ -29,3 +29,7 @@ services:
     tags:
       - { name: paramconverter }
     lazy: true
+  language.service_provider:
+    class: Drupal\language\LanguageServices
+    tags:
+      - { name: service_provider }
