@@ -154,7 +154,7 @@ class TranslateActionTest extends KernelTestBase {
   }
 
   /**
-   * Execute an action for given entitties.
+   * Execute an action for given entities.
    *
    * @param \Drupal\system\Entity\Action $action
    *   The name of the theme hook to invoke; e.g. 'links' for links.html.twig.
