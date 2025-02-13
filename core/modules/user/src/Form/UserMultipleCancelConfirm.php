@@ -241,6 +241,11 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
         }
       }
     }
+    /* If using a cancellation confirmation email add usernames to status
+    message. */
+    if (!empty($usernames)) {
+      $this->messenger()->addStatus($this->t('A confirmation request to cancel the following account(s) has been sent: %accounts.', ['%accounts' => implode(', ', $usernames)]));
+    }
     $form_state->setRedirect('entity.user.collection');
   }
 
