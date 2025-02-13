@@ -231,11 +231,11 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
 
           if ($cancel_confirm === 1) {
             _user_mail_notify('cancel_confirm', $user);
+            array_push($usernames, $user->label());
           }
           else {
             user_cancel($form_state->getValues(), $uid, $form_state->getValue('user_cancel_method'));
           }
-          array_push($usernames, $user->label());
           $this->logger('user')->info('Sent account cancellation request to %name %email.',
             ['%name' => $user->label(), '%email' => '<' . $user->getEmail() . '>']);
         }
