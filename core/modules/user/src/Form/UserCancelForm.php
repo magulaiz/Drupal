@@ -100,7 +100,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     $form['user_cancel_confirm'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Require email confirmation'),
-      '#default_value' => !$override_access,
+      '#default_value' => $override_access === TRUE ? FALSE : $this->config('user.settings')->get('notify.cancel_confirm'),
       '#access' => $override_access,
       '#description' => $this->t('When enabled, the user must confirm the account cancellation via email.'),
     ];

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Functional;
 
+use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\node\Traits\NodeAccessTrait;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -279,7 +279,7 @@ class UserCancelTest extends BrowserTestBase {
   public function testUserBlockUnpublishNodeAccess(): void {
     \Drupal::service('module_installer')->install(['node_access_test', 'user_form_test']);
 
-    // Setup node access
+    // Setup node access.
     node_access_rebuild();
     $this->addPrivateField(NodeType::load('page'));
     \Drupal::state()->set('node_access_test.private', TRUE);
@@ -517,7 +517,10 @@ class UserCancelTest extends BrowserTestBase {
    * Create an administrative user and delete another user.
    */
   public function testUserCancelByAdmin(): void {
-    $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    $this->config('user.settings')
+      ->set('cancel_method', 'user_cancel_reassign')
+      ->set('notify.cancel_confirm', 0)
+      ->save();
 
     // Create a regular user.
     $account = $this->drupalCreateUser([]);
@@ -569,7 +572,10 @@ class UserCancelTest extends BrowserTestBase {
    */
   public function testMassUserCancelByAdmin(): void {
     \Drupal::service('module_installer')->install(['views']);
-    $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    $this->config('user.settings')
+      ->set('cancel_method', 'user_cancel_reassign')
+      ->set('notify.cancel_confirm', 0)
+      ->save();
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
     // Enable account cancellation notification.
     $this->config('user.settings')->set('notify.status_canceled', TRUE)->save();

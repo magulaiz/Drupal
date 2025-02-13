@@ -149,6 +149,12 @@ class AccountSettingsForm extends ConfigFormBase {
       '#config_target' => 'user.settings:cancel_method',
       '#description' => $this->t('Users with the %select-cancel-method or %administer-users <a href=":permissions-url">permissions</a> can override this default method.', ['%select-cancel-method' => $this->t('Select method for cancelling account'), '%administer-users' => $this->t('Administer users'), ':permissions-url' => Url::fromRoute('user.admin_permissions')->toString()]),
     ];
+    $form['registration_cancellation']['user_cancel_confirmation'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Require email confirmation to cancel account'),
+      '#config_target' => 'user.settings:notify.cancel_confirm',
+      '#description' => $this->t('When enabled, the user must confirm the account cancellation via email.'),
+    ];
     $form['registration_cancellation']['user_cancel_method'] += user_cancel_methods();
     foreach (Element::children($form['registration_cancellation']['user_cancel_method']) as $key) {
       // All account cancellation methods that specify #access cannot be

@@ -6,8 +6,8 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Url;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\Core\Url;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -175,7 +175,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
     $form['user_cancel_confirm'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Require email confirmation'),
-      '#default_value' => FALSE,
+      '#default_value' => $this->config('user.settings')->get('notify.cancel_confirm'),
       '#description' => $this->t('When enabled, the user must confirm the account cancellation via email.'),
     ];
     // Also allow to send account canceled notification mail, if enabled.
@@ -200,13 +200,16 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
 
     // Clear out the accounts from the temp store.
     $this->tempStoreFactory->get('user_user_operations_cancel')->delete($current_user_id);
+    $cancel_confirm = $form_state->getValue('user_cancel_confirm');
     if ($form_state->getValue('confirm')) {
+      $usernames = [];
       foreach ($form_state->getValue('accounts') as $uid => $value) {
         // Prevent programmatic form submissions from cancelling user 1.
         if ($uid <= 1) {
           continue;
         }
-        // Prevent user administrators from deleting themselves without confirmation.
+        /* Prevent user administrators from deleting themselves without
+        confirmation. */
         if ($uid == $current_user_id) {
           $admin_form_mock = [];
           $admin_form_state = $form_state;
@@ -221,7 +224,20 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
           $admin_form->submitForm($admin_form_mock, $admin_form_state);
         }
         else {
-          user_cancel($form_state->getValues(), $uid, $form_state->getValue('user_cancel_method'));
+          $user = $this->entityTypeManager->getStorage('user')->load($value);
+          $user->user_cancel_method = $form_state->getValue('user_cancel_method');
+          $user->user_cancel_notify = $form_state->getValue('user_cancel_notify');
+          $user->save();
+
+          if ($cancel_confirm === 1) {
+            _user_mail_notify('cancel_confirm', $user);
+          }
+          else {
+            user_cancel($form_state->getValues(), $uid, $form_state->getValue('user_cancel_method'));
+          }
+          array_push($usernames, $user->label());
+          $this->logger('user')->info('Sent account cancellation request to %name %email.',
+            ['%name' => $user->label(), '%email' => '<' . $user->getEmail() . '>']);
         }
       }
     }
