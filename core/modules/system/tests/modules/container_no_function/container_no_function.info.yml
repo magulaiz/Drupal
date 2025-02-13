@@ -1,0 +1,5 @@
+name: 'Container call outside function'
+type: module
+description: 'Support module for HookCollectorPass tests.'
+package: Testing
+version: VERSION

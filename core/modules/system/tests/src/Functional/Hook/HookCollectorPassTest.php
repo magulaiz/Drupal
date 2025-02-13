@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\FunctionalTests\Hook;
+namespace Drupal\Tests\system\Functional\Hook;
 
 use Drupal\Tests\BrowserTestBase;
 
@@ -36,10 +36,6 @@ class HookCollectorPassTest extends BrowserTestBase {
       'administer themes',
       'administer site configuration',
     ]);
-
-    // Ensure the global variable being asserted by this test does not exist;
-    // a previous test executed in this request/process might have set it.
-    unset($GLOBALS['hook_config_test']);
   }
 
   /**
@@ -53,10 +49,10 @@ class HookCollectorPassTest extends BrowserTestBase {
 
     $this->drupalGet('admin/modules');
     $this->submitForm([
-      'modules[config_test][enable]' => TRUE,
+      'modules[container_no_function][enable]' => TRUE,
     ], 'Install');
 
-    $this->assertSession()->responseContains('Module <em class="placeholder">Configuration test</em> has been installed.');
+    $this->assertSession()->responseContains('Module <em class="placeholder">Container call outside function</em> has been installed.');
   }
 
 }
