@@ -365,7 +365,7 @@ function template_preprocess_node(&$variables): void {
     ]);
     $author_name = $formatter->viewElements($node->get('uid'), $node->language()->getId());
     $variables['author_name'] = $renderer->render($author_name);
-    unset($variables['elements']['uid']);;
+    unset($variables['elements']['uid']);
   }
 
   if (isset($variables['elements']['title']) && (!$skip_custom_preprocessing || !$node->getFieldDefinition('title')->isDisplayConfigurable('view'))) {
