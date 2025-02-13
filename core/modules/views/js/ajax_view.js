@@ -101,7 +101,7 @@
 
     // Add the ajax to exposed forms.
     this.$exposed_form = $(
-      `.view-media-library form#views-exposed-form-${settings.view_name.replace(/_/g,'-')}-${settings.view_display_id.replace(/_/g, '-')}, form.views-exposed-form[data-drupal-target-view="${settings.view_dom_id}"], form.views-exposed-form[data-drupal-target-view="${settings.view_name}-${settings.view_display_id}"]`,
+      `.view-media-library form#views-exposed-form-${settings.view_name.replace(/_/g, '-')}-${settings.view_display_id.replace(/_/g, '-')}, form.views-exposed-form[data-drupal-target-view="${settings.view_dom_id}"], form.views-exposed-form[data-drupal-target-view="${settings.view_name}-${settings.view_display_id}"]`,
     );
     once('exposed-form', this.$exposed_form).forEach(
       this.attachExposedFormAjax.bind(this),

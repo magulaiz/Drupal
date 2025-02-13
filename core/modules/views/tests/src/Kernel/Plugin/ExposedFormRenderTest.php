@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
-use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
