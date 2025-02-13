@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Kernel\Views;
 
 use Drupal\node\Entity\NodeType;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -67,7 +69,60 @@ class RowPluginTest extends ViewsKernelTestBase {
       'name' => 'Article',
     ]);
     $node_type->save();
-    node_add_body_field($node_type);
+    // Ensure the body field storage exists.
+    $field_storage = FieldStorageConfig::loadByName('node', 'body');
+    if (!$field_storage) {
+      $field_storage = FieldStorageConfig::create([
+        'field_name' => 'body',
+        'entity_type' => 'node',
+        'type' => 'text_long',
+      ]);
+      $field_storage->save();
+    }
+
+    // Ensure the body field exists for this content type.
+    $field = FieldConfig::loadByName('node', $node_type->id(), 'body');
+    if (!$field) {
+      $field = FieldConfig::create([
+        'field_storage' => $field_storage,
+        'bundle' => $node_type->id(),
+        'label' => 'Body',
+        'settings' => [
+          'display_summary' => TRUE,
+          'allowed_formats' => [],
+        ],
+      ]);
+      $field->save();
+    }
+
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
+    // Assign widget settings for the default form mode.
+    $display_repository->getFormDisplay('node', $node_type->id())
+      ->setComponent('body', [
+        'type' => 'text_textarea',
+      ])
+      ->save();
+
+    // Assign display settings for the 'default' and 'teaser' view modes.
+    $display_repository->getViewDisplay('node', $node_type->id())
+      ->setComponent('body', [
+        'label' => 'hidden',
+        'type' => 'text_default',
+      ])
+      ->save();
+
+    // Ensure teaser view mode exists before setting display settings.
+    $view_modes = $display_repository->getViewModes('node');
+    if (isset($view_modes['teaser'])) {
+      $display_repository->getViewDisplay('node', $node_type->id(), 'teaser')
+        ->setComponent('body', [
+          'label' => 'hidden',
+          'type' => 'text_summary_or_trimmed',
+        ])
+        ->save();
+    }
 
     // Create two nodes.
     for ($i = 0; $i < 2; $i++) {

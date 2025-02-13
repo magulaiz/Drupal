@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
@@ -84,7 +85,26 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
    */
   public function testFailIfExists(): void {
     $this->installConfig('node');
-    node_add_body_field(NodeType::load('one'));
+    $field_storage = FieldStorageConfig::loadByName('node', 'body');
+    if (!$field_storage) {
+      $field_storage = FieldStorageConfig::create([
+        'field_name' => 'body',
+        'entity_type' => 'node',
+        'type' => 'text_long',
+      ]);
+      $field_storage->save();
+    }
+
+    // Manually create the field.
+    $field = FieldConfig::loadByName('node', 'one', 'body');
+    if (!$field) {
+      $field = FieldConfig::create([
+        'field_storage' => $field_storage,
+        'bundle' => 'one',
+        'label' => 'Body',
+      ]);
+      $field->save();
+    }
 
     $this->expectException(ConfigActionException::class);
     $this->expectExceptionMessage('Field node.one.body already exists.');
@@ -97,10 +117,26 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
   public function testIgnoreExistingFields(): void {
     $this->installConfig('node');
 
-    node_add_body_field(NodeType::load('one'))
-      ->setLabel('Original label')
-      ->setDescription('Original description')
-      ->save();
+    $field_storage = FieldStorageConfig::loadByName('node', 'body');
+    if (!$field_storage) {
+      $field_storage = FieldStorageConfig::create([
+        'field_name' => 'body',
+        'entity_type' => 'node',
+        'type' => 'text_long',
+      ]);
+      $field_storage->save();
+    }
+
+    $existing_field = FieldConfig::loadByName('node', 'one', 'body');
+    if (!$existing_field) {
+      $existing_field = FieldConfig::create([
+        'field_storage' => $field_storage,
+        'bundle' => 'one',
+        'label' => 'Original label',
+        'description' => 'Original description',
+      ]);
+      $existing_field->save();
+    }
 
     $this->applyAction('field.storage.node.body');
 

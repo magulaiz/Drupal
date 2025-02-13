@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\editor\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -115,10 +117,25 @@ class EditorAdminTest extends BrowserTestBase {
     // Install the node module.
     $this->container->get('module_installer')->install(['node']);
     $this->resetAll();
-    // Create a new node type and attach the 'body' field to it.
+    // Create a new node type and attach a text field to it.
     $node_type = NodeType::create(['type' => $this->randomMachineName(), 'name' => $this->randomString()]);
     $node_type->save();
-    node_add_body_field($node_type, $this->randomString());
+
+    $field_name = $this->randomMachineName();
+    $field_storage = FieldStorageConfig::create([
+      'field_name'  => $field_name,
+      'entity_type' => 'node',
+      'type'        => 'text_long',
+    ]);
+    $field_storage->save();
+    
+    $field_config = FieldConfig::create([
+      'field_name'  => $field_name,
+      'entity_type' => 'node',
+      'bundle'      => $node_type->id(),
+      'label'       => 'Body',
+    ]);
+    $field_config->save();
 
     $permissions = ['administer filters', "edit any {$node_type->id()} content"];
     foreach ($formats as $format => $name) {
@@ -128,13 +145,13 @@ class EditorAdminTest extends BrowserTestBase {
       $permissions[] = "use text format $format";
     }
 
-    // Create a node having the body format value 'monoceros'.
+    // Create a node having a text format value 'monoceros'.
     $node = Node::create([
       'type' => $node_type->id(),
       'title' => $this->randomString(),
     ]);
-    $node->body->value = $this->randomString(100);
-    $node->body->format = 'monoceros';
+    $node->$field_name->value = $this->randomString(100);
+    $node->$field_name->format = 'monoceros';
     $node->save();
 
     // Log in as a user able to use both formats and edit nodes of created type.
@@ -148,7 +165,7 @@ class EditorAdminTest extends BrowserTestBase {
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->responseContains($text);
 
-    // Disable the format assigned to the 'body' field of the node.
+    // Disable the format assigned to a text field of the node.
     FilterFormat::load('monoceros')->disable()->save();
 
     // Edit again the node.

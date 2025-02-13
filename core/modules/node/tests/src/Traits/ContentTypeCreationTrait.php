@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Traits;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\TestCase;
 
@@ -41,7 +43,52 @@ trait ContentTypeCreationTrait {
     ];
     $type = NodeType::create($values);
     $status = $type->save();
-    node_add_body_field($type);
+
+    // Add body field manually.
+    $field_storage = FieldStorageConfig::loadByName('node', 'body');
+    $field = FieldConfig::loadByName('node', $type->id(), 'body');
+
+    if (!$field) {
+      $field = FieldConfig::create([
+        'field_storage' => $field_storage,
+        'bundle' => $type->id(),
+        'label' => 'Body',
+        'settings' => [
+            'display_summary' => TRUE,
+            'allowed_formats' => [],
+        ],
+      ]);
+      $field->save();
+
+      /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+      $display_repository = \Drupal::service('entity_display.repository');
+
+      // Assign widget settings for the default form mode.
+      $display_repository->getFormDisplay('node', $type->id())
+        ->setComponent('body', [
+          'type' => 'text_textarea_with_summary',
+        ])
+        ->save();
+
+      // Assign display settings for the 'default' and 'teaser' view modes.
+      $display_repository->getViewDisplay('node', $type->id())
+      ->setComponent('body', [
+        'label' => 'hidden',
+        'type' => 'text_default',
+      ])
+      ->save();
+
+      // The teaser view mode is created by the Standard profile and might not exist.
+      $view_modes = $display_repository->getViewModes('node');
+      if (isset($view_modes['teaser'])) {
+        $display_repository->getViewDisplay('node', $type->id(), 'teaser')
+        ->setComponent('body', [
+          'label' => 'hidden',
+          'type' => 'text_summary_or_trimmed',
+        ])
+        ->save();
+      }
+    }
 
     if ($this instanceof TestCase) {
       $this->assertSame($status, SAVED_NEW, (new FormattableMarkup('Created content type %type.', ['%type' => $type->id()]))->__toString());

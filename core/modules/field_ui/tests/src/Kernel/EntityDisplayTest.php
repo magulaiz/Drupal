@@ -367,7 +367,18 @@ class EntityDisplayTest extends KernelTestBase {
       'name' => 'Article',
     ]);
     $type->save();
-    node_add_body_field($type);
+    FieldStorageConfig::create([
+      'field_name' => 'content',
+      'entity_type' => 'node',
+      'type' => 'text_long',
+    ])->save();
+  
+    FieldConfig::create([
+      'field_name' => 'content',
+      'entity_type' => 'node',
+      'bundle' => $type->id(),
+      'label' => 'Content',
+    ])->save();
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
     $display_repository->getViewDisplay('node', 'article')->save();
