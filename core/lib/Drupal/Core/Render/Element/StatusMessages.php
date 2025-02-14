@@ -32,7 +32,7 @@ class StatusMessages extends RenderElementBase {
       '#display' => NULL,
       '#pre_render' => [
         static::class . '::generatePlaceholder',
-        [self::class, 'preRenderHtmxElement'],
+        [self::class, 'processHtmxElement'],
       ],
       '#include_fallback' => FALSE,
     ];

@@ -36,7 +36,7 @@ class Checkbox extends FormElementBase {
       '#process' => [
         [$class, 'processCheckbox'],
         [$class, 'processAjaxForm'],
-        [$class, 'preRenderHtmxElement'],
+        [$class, 'processHtmxElement'],
         [$class, 'processGroup'],
       ],
       '#pre_render' => [

@@ -54,7 +54,7 @@ class Datetime extends DateElementBase {
       '#process' => [
         [$class, 'processDatetime'],
         [$class, 'processAjaxForm'],
-        [$class, 'preRenderHtmxElement'],
+        [$class, 'processHtmxElement'],
         [$class, 'processGroup'],
       ],
       '#pre_render' => [

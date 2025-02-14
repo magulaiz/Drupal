@@ -22,7 +22,7 @@ class PageTitle extends RenderElementBase {
       // formatted titles.
       '#title' => NULL,
       '#pre_render' => [
-        [self::class, 'preRenderHtmxElement'],
+        [self::class, 'processHtmxElement'],
       ],
     ];
   }

@@ -49,7 +49,7 @@ class HtmxOperationsTest extends UnitTestCase {
    *   A stub of a processed render array.
    */
   protected function processOperations(): array {
-    return RenderElementBase::preRenderHtmxElement(['#htmx' => $this->htmx]);
+    return RenderElementBase::processHtmxElement(['#htmx' => $this->htmx]);
   }
 
   /**

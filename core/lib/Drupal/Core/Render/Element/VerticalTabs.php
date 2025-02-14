@@ -61,7 +61,7 @@ class VerticalTabs extends RenderElementBase {
       ],
       '#pre_render' => [
         [$class, 'preRenderVerticalTabs'],
-        [self::class, 'preRenderHtmxElement'],
+        [self::class, 'processHtmxElement'],
       ],
       '#theme_wrappers' => ['vertical_tabs', 'form_element'],
     ];

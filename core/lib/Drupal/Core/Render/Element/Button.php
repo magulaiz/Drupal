@@ -46,7 +46,7 @@ class Button extends FormElementBase {
       '#process' => [
         [$class, 'processButton'],
         [$class, 'processAjaxForm'],
-        [$class, 'preRenderHtmxElement'],
+        [$class, 'processHtmxElement'],
       ],
       '#pre_render' => [
         [$class, 'preRenderButton'],

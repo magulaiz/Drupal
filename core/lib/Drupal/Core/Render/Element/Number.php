@@ -42,7 +42,7 @@ class Number extends FormElementBase {
       '#step' => 1,
       '#process' => [
         [$class, 'processAjaxForm'],
-        [$class, 'preRenderHtmxElement'],
+        [$class, 'processHtmxElement'],
       ],
       '#element_validate' => [
         [$class, 'validateNumber'],

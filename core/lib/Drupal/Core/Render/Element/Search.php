@@ -34,7 +34,7 @@ class Search extends FormElementBase {
       '#process' => [
         [$class, 'processAutocomplete'],
         [$class, 'processAjaxForm'],
-        [$class, 'preRenderHtmxElement'],
+        [$class, 'processHtmxElement'],
       ],
       '#pre_render' => [
         [$class, 'preRenderSearch'],

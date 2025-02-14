@@ -88,7 +88,7 @@ class MachineName extends Textfield {
         [$class, 'processMachineName'],
         [$class, 'processAutocomplete'],
         [$class, 'processAjaxForm'],
-        [$class, 'preRenderHtmxElement'],
+        [$class, 'processHtmxElement'],
       ],
       '#element_validate' => [
         [$class, 'validateMachineName'],

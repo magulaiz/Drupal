@@ -45,7 +45,7 @@ class Url extends FormElementBase {
         [$class, 'processAutocomplete'],
         [$class, 'processAjaxForm'],
         [$class, 'processPattern'],
-        [$class, 'preRenderHtmxElement'],
+        [$class, 'processHtmxElement'],
       ],
       '#element_validate' => [
         [$class, 'validateUrl'],

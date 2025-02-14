@@ -42,7 +42,7 @@ class Textarea extends FormElementBase {
       '#process' => [
         [$class, 'processAjaxForm'],
         [$class, 'processGroup'],
-        [$class, 'preRenderHtmxElement'],
+        [$class, 'processHtmxElement'],
       ],
       '#pre_render' => [
         [$class, 'preRenderGroup'],

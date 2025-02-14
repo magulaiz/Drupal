@@ -59,7 +59,7 @@ class Container extends RenderElementBase {
       '#pre_render' => [
         [$class, 'preRenderGroup'],
         [$class, 'preRenderContainer'],
-        [$class, 'preRenderHtmxElement'],
+        [$class, 'processHtmxElement'],
       ],
       '#theme_wrappers' => ['container'],
     ];

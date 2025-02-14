@@ -53,7 +53,7 @@ class Dropbutton extends RenderElementBase {
     return [
       '#pre_render' => [
         [$class, 'preRenderDropbutton'],
-        [$class, 'preRenderHtmxElement'],
+        [$class, 'processHtmxElement'],
       ],
       '#theme' => 'links__dropbutton',
     ];

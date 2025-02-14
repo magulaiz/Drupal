@@ -21,7 +21,7 @@ class Label extends RenderElementBase {
     return [
       '#theme' => 'form_element_label',
       '#pre_render' => [
-        [self::class, 'preRenderHtmxElement'],
+        [self::class, 'processHtmxElement'],
       ],
     ];
   }
