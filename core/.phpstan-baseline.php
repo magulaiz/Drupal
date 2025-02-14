@@ -18196,12 +18196,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/src/FileInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\file\\\\FileServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/src/FileServiceProvider.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\file\\\\FileUsage\\\\DatabaseFileUsageBackend\\:\\:add\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -20050,10 +20044,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/inline_form_errors/src/FormErrorHandler.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\inline_form_errors\\\\InlineFormErrorsServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\inline_form_errors\\\\Hook\\\\InlineFormErrorsHooks\\:\\:help\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/inline_form_errors/src/InlineFormErrorsServiceProvider.php',
+	'path' => __DIR__ . '/modules/inline_form_errors/src/Hook/InlineFormErrorsHooks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\inline_form_errors\\\\RenderElementHelper\\:\\:alterElementInfo\\(\\) has no return type specified\\.$#',
@@ -22180,12 +22174,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/src/LayoutBuilderOverridesPermissions.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\LayoutBuilderServiceProvider\\:\\:register\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/LayoutBuilderServiceProvider.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\LayoutTempstoreRepository\\:\\:delete\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -24052,12 +24040,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media/tests/modules/media_test_oembed/src/Controller/ResourceController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_test_oembed\\\\MediaTestOembedServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/modules/media_test_oembed/src/MediaTestOembedServiceProvider.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media_test_oembed\\\\ProviderRepository\\:\\:setProvider\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -24664,10 +24646,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media_library/src/Form/SettingsForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_library\\\\MediaLibraryServiceProvider\\:\\:register\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\media_library\\\\Hook\\\\MediaLibraryHooks\\:\\:help\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/src/MediaLibraryServiceProvider.php',
+	'path' => __DIR__ . '/modules/media_library/src/Hook/MediaLibraryHooks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media_library\\\\MediaLibraryState\\:\\:validateRequiredParameters\\(\\) has no return type specified\\.$#',
@@ -26296,10 +26278,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate_drupal/src/FieldDiscoveryInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\migrate_drupal\\\\MigrateDrupalServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\migrate_drupal\\\\Hook\\\\MigrateDrupalHooks\\:\\:help\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal/src/MigrateDrupalServiceProvider.php',
+	'path' => __DIR__ . '/modules/migrate_drupal/src/Hook/MigrateDrupalHooks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate_drupal\\\\MigrationPluginManager\\:\\:processDefinition\\(\\) has no return type specified\\.$#',
@@ -27578,12 +27560,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/NodeGrantDatabaseStorageInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\NodeServiceProvider\\:\\:register\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/NodeServiceProvider.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\NodeStorage\\:\\:clearRevisionsLanguage\\(\\) has no return type specified\\.$#',
@@ -30796,12 +30772,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/serialization/src/Normalizer/TypedDataNormalizer.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\SerializationServiceProvider\\:\\:register\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/SerializationServiceProvider.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_normalization_test\\\\Normalization\\\\TextItemSillyNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
 	'identifier' => 'missingType.generics',
 	'count' => 1,
@@ -32230,10 +32200,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/system.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\accept_header_routing_test\\\\AcceptHeaderRoutingTestServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function system_post_update_sdc_uninstall\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/accept_header_routing_test/src/AcceptHeaderRoutingTestServiceProvider.php',
+	'path' => __DIR__ . '/modules/system/system.post_update.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\action_test\\\\Plugin\\\\Action\\\\NoType\\:\\:execute\\(\\) has no return type specified\\.$#',
@@ -32510,12 +32480,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/condition_test/src/Plugin/Condition/OptionalContextCondition.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\container_rebuild_test\\\\ContainerRebuildTestServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/container_rebuild_test/src/ContainerRebuildTestServiceProvider.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\cron_queue_test\\\\Plugin\\\\QueueWorker\\\\CronQueueTestDatabaseDelayException\\:\\:processItem\\(\\) has no return type specified\\.$#',
@@ -33564,10 +33528,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/error_service_test/src/Controller/LonelyMonkeyController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\error_service_test\\\\ErrorServiceTestServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
+	'message' => '#^Access to static property \\$containerBuilder on an unknown class Drupal\\\\error_service_test\\\\ErrorServiceTestServiceProvider\\.$#',
+	'identifier' => 'class.notFound',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/error_service_test/src/ErrorServiceTestServiceProvider.php',
+	'path' => __DIR__ . '/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\error_test\\\\Controller\\\\ErrorTestController\\:\\:generateFatalErrors\\(\\) has no return type specified\\.$#',
@@ -34626,12 +34590,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/router_test_directory/src/RouteTestSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\router_test\\\\RouterTestServiceProvider\\:\\:register\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/router_test_directory/src/RouterTestServiceProvider.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\router_test\\\\TestContent\\:\\:subrequestTest\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -34774,12 +34732,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/sdc_other_node_visitor/src/Twig/Extension/TestProfilerExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\service_provider_test\\\\ServiceProviderTestServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/service_provider_test/src/ServiceProviderTestServiceProvider.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\service_provider_test\\\\TestClass\\:\\:destruct\\(\\) has no return type specified\\.$#',
@@ -48780,12 +48732,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceViewBuilder.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workspaces\\\\WorkspacesServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/src/WorkspacesServiceProvider.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspace_update_test\\\\Negotiator\\\\TestWorkspaceNegotiator\\:\\:getActiveWorkspace\\(\\) has no return type specified\\.$#',
