@@ -143,6 +143,10 @@ class BooleanFormatter extends FormatterBase {
     $formats = $this->getOutputFormats();
     $format = $this->getSetting('format');
 
+    if ($items->isEmpty()) {
+      return [['#markup' => $formats[$format][1]]];
+    }
+
     foreach ($items as $delta => $item) {
       $value = !empty($item->value) ? (bool) $item->value : FALSE;
 
@@ -154,7 +158,7 @@ class BooleanFormatter extends FormatterBase {
       }
     }
 
-    return !empty($elements) ? $elements : [['#markup' => $formats[$format][1]]];
+    return $elements;
   }
 
 }
