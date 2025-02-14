@@ -9,5 +9,5 @@ action.configuration.entity:translate_action:*:
       type: sequence
       label: 'The langcodes to create translations for.'
       sequence:
-        type: string
+        type: langcode
         label: 'Langcode'
