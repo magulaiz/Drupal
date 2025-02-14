@@ -53,10 +53,12 @@ class UserNameThemeCacheTest extends KernelTestBase {
 
     $user1 = User::create([
       'name' => 'user 1',
+      'status' => TRUE,
     ]);
     $user1->save();
     $user2 = User::create([
       'name' => 'user 2',
+      'status' => FALSE,
     ]);
     $user2->save();
 
@@ -88,6 +90,7 @@ class UserNameThemeCacheTest extends KernelTestBase {
       '#theme' => 'username',
       '#account' => $user1,
     ];
+    // User 1 is active, so there should be a link to the profile.
     $markup = $renderer->executeInRenderContext($context, fn() => $renderer->render($build));
     $this->assertSame('<a title="View user profile." href="/user/1">user 1</a>', (string) $markup);
     $metadata = $context->pop();
@@ -100,8 +103,9 @@ class UserNameThemeCacheTest extends KernelTestBase {
       '#theme' => 'username',
       '#account' => $user2,
     ];
+    // User 2 is inactive, so no link.
     $markup = $renderer->executeInRenderContext($context, fn() => $renderer->render($build));
-    $this->assertSame('<a title="View user profile." href="/user/2">user 2</a>', (string) $markup);
+    $this->assertSame('<span>user 2</span>', (string) $markup);
     $metadata = $context->pop();
     $this->assertInstanceOf(CacheableDependencyInterface::class, $metadata);
     $this->assertSame(['user.permissions'], $metadata->getCacheContexts());
