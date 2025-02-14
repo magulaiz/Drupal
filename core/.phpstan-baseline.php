@@ -33528,12 +33528,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/error_service_test/src/Controller/LonelyMonkeyController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Access to static property \\$containerBuilder on an unknown class Drupal\\\\error_service_test\\\\ErrorServiceTestServiceProvider\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\error_test\\\\Controller\\\\ErrorTestController\\:\\:generateFatalErrors\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
