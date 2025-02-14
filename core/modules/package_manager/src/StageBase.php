@@ -434,8 +434,18 @@ abstract class StageBase implements LoggerAwareInterface {
 
     // If constraints were changed, update those packages.
     if ($runtime || $dev) {
-      $command = array_merge(['update', '--with-all-dependencies', '--optimize-autoloader'], $runtime, $dev);
-      $do_stage($command);
+      $do_stage([
+        'update',
+        // Allow updating top-level dependencies.
+        '--with-all-dependencies',
+        // Always optimize the autoloader for better site performance.
+        '--optimize-autoloader',
+        // For extra safety, make Composer do only the necessary changes to
+        // transitive (indirect) dependencies.
+        '--minimal-changes',
+        ...$runtime,
+        ...$dev,
+      ]);
     }
     $this->dispatch(new PostRequireEvent($this, $runtime, $dev));
   }
