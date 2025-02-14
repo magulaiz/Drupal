@@ -568,6 +568,10 @@ abstract class StageBase implements LoggerAwareInterface {
     if ($this->isApplying()) {
       throw new StageException($this, 'Cannot destroy the stage directory while it is being applied to the active directory.');
     }
+    // If we're in direct-write mode, we don't want to destroy anything.
+    if ($this->isDirectWrite()) {
+      return;
+    }
 
     // If the stage directory exists, queue it to be automatically cleaned up
     // later by a queue (which may or may not happen during cron).
