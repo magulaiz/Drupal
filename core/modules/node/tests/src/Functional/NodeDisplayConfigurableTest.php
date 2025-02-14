@@ -55,11 +55,17 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
     $user = $this->drupalCreateUser([
       'administer nodes',
     ], $this->randomMachineName(14));
+    $profile_viewer_user = $this->drupalCreateUser([
+      'access user profiles',
+    ], $this->randomMachineName(14));
     $this->drupalLogin($user);
     $node = $this->drupalCreateNode(['uid' => $user->id()]);
     $assert = $this->assertSession();
 
     // Check the node with Drupal default non-configurable display.
+    $this->drupalGet($node->toUrl());
+    $this->assertNodeHtml($node, $user, TRUE, $metadata_region, $field_classes, $field_classes);
+    $this->drupalLogin($profile_viewer_user);
     $this->drupalGet($node->toUrl());
     $this->assertNodeHtml($node, $user, TRUE, $metadata_region, $field_classes, $field_classes);
 
@@ -78,6 +84,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
       ->save();
 
     // Recheck the node with configurable display.
+    $this->drupalLogin($user);
     $this->drupalGet($node->toUrl());
 
     $this->assertNodeHtml($node, $user, FALSE, $metadata_region, $field_classes, FALSE);
@@ -97,7 +104,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    * @param \Drupal\node\NodeInterface $node
    *   The node being tested.
    * @param \Drupal\user\UserInterface $user
-   *   The logged in user.
+   *   The author of the node.
    * @param bool $is_inline
    *   Whether the fields are rendered inline or not.
    * @param string $metadata_region
@@ -144,7 +151,14 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
       }
     }
     else {
-      $assert->elementTextContains('css', $uid_selector . ' a', $user->getAccountName());
+      if ($this->loggedInUser->hasPermission('access user profiles')) {
+        $assert->elementTextContains('css', $uid_selector . ' a', $user->getAccountName());
+      }
+      else {
+        $assert->elementTextContains('css', $uid_selector, $user->getAccountName());
+        $assert->elementNotExists('css', $uid_selector . ' a');
+      }
+
       $assert->elementTextContains('css', 'article ' . $metadata_region, 'Submitted by');
     }
   }

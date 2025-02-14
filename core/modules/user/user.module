@@ -6,7 +6,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -169,12 +169,9 @@ function template_preprocess_username(&$variables): void {
     $variables['truncated'] = FALSE;
   }
   $variables['name'] = $name;
-  // For cacheability and consistent user experience, only check global access
-  // to view user profiles and ignore whether teh user is viewing a label for
-  // their own profile.
   $variables['profile_access'] = FALSE;
-  if ($account instanceof UserInterface) {
-    $profile_access = AccessResultAllowed::allowedIfHasPermission(\Drupal::currentUser(), 'access user profiles');
+  if ($account instanceof AccessibleInterface) {
+    $profile_access = $account->access('view linked label', NULL, TRUE);
     $metadata->addCacheableDependency($profile_access);
     $variables['profile_access'] = $profile_access->isAllowed();
   }
