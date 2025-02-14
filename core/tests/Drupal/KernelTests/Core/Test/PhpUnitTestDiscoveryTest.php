@@ -8,6 +8,8 @@ use Drupal\Core\Test\TestDiscovery;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\TextUI\Configuration\Builder;
+use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
 use Symfony\Component\Process\Process;
 
 /**
@@ -26,6 +28,12 @@ use Symfony\Component\Process\Process;
 #[Group('Test')]
 #[Group('#slow')]
 class PhpUnitTestDiscoveryTest extends KernelTestBase {
+
+  private const TEST_LIST_MISMATCH_MESSAGE =
+    "The list of test classes to be executed misses some files, see below. Make sure to:\n" .
+    "1) give test classes a name that ends with a *Test suffix, and that the file is named accordingly;\n" .
+    "2) the file of the test class is reachable by the directories specified in the <testsuites> section of the phpunit.xml file;\n" .
+    "3) your version of the phpunit.xml configuration file is aligned with the PHPUnit and Drupal versions being used in testing.\n";
 
   /**
    * The filepath to the XML file to be used for dumping the test list.
@@ -55,7 +63,21 @@ class PhpUnitTestDiscoveryTest extends KernelTestBase {
    */
   #[IgnoreDeprecations]
   public function testPhpUnitTestDiscoveryEqualsInternal(): void {
-    // PHPUnit's own test discovery.
+    // Drupal's test discovery, used by run-tests.sh.
+    $testDiscovery = new TestDiscovery(
+      $this->container->getParameter('app.root'),
+      $this->container->get('class_loader')
+    );
+    $internalList = [];
+    foreach ($testDiscovery->getTestClasses() as $group) {
+      foreach (array_keys($group) as $class) {
+        $internalList[] = $class;
+      }
+    }
+    $internalList = array_unique($internalList);
+    asort($internalList);
+
+    // PHPUnit's test discovery - via CLI execution.
     $process = new Process([
       'vendor/bin/phpunit',
       '--configuration',
@@ -75,27 +97,29 @@ class PhpUnitTestDiscoveryTest extends KernelTestBase {
 
     $phpUnitXmlList = new \DOMDocument();
     $phpUnitXmlList->loadXML(file_get_contents($this->xmlOutputFile));
-    $phpUnitList = [];
+    $phpUnitClientList = [];
     foreach ($phpUnitXmlList->getElementsByTagName('testCaseClass') as $node) {
-      $phpUnitList[] = $node->getAttribute('name');
+      $phpUnitClientList[] = $node->getAttribute('name');
     }
-    asort($phpUnitList);
+    asort($phpUnitClientList);
 
-    // Drupal's own test discovery, used by run-tests.sh.
-    $testDiscovery = new TestDiscovery(
-      $this->container->getParameter('app.root'),
-      $this->container->get('class_loader')
-    );
-    $internalList = [];
-    foreach ($testDiscovery->getTestClasses() as $group) {
-      foreach (array_keys($group) as $class) {
-        $internalList[] = $class;
+    // Check against Drupal's discovery.
+    $this->assertEquals(implode("\n", $phpUnitClientList), implode("\n", $internalList), self::TEST_LIST_MISMATCH_MESSAGE);
+
+    // PHPUnit's test discovery - via API.
+    $phpUnitConfiguration = (new Builder())->build(['--configuration', 'core']);
+    $phpUnitTestSuite = (new TestSuiteBuilder())->build($phpUnitConfiguration);
+    $phpUnitApiList = [];
+    foreach ($phpUnitTestSuite->tests() as $testSuite) {
+      foreach ($testSuite->tests() as $test) {
+        $phpUnitApiList[] = $test->name();
       }
     }
-    $internalList = array_unique($internalList);
-    asort($internalList);
+    asort($phpUnitApiList);
 
-    $this->assertEquals(array_values($phpUnitList), array_values($internalList));
+    // Check against Drupal's discovery.
+    $this->assertEquals(implode("\n", $phpUnitApiList), implode("\n", $internalList), self::TEST_LIST_MISMATCH_MESSAGE);
+
   }
 
 }
