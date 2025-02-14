@@ -3,7 +3,7 @@ services:
     class: Drupal\accept_header_routing_test\Routing\AcceptHeaderMatcher
     tags:
       - { name: route_filter }
-  accept_header_matcher.service_provider:
-    class: Drupal\accept_header_matcher\AcceptHeaderRoutingTestServices
+  accept_header_routing_test.service_provider:
+    class: Drupal\accept_header_routing_test\AcceptHeaderRoutingTestServices
     tags:
       - { name: service_provider }
