@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Kernel\Plugin\Action;
 
-use Drupal\Core\Language\LanguageInterface;
+use Drupal\content_translation\ContentTranslationManagerInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Render\RenderContext;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\system\Entity\Action;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * Tests Content Entity Translate action.
@@ -22,11 +28,14 @@ use Drupal\system\Entity\Action;
  */
 class TranslateActionTest extends KernelTestBase {
 
+  use EntityReferenceFieldCreationTrait;
+
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'content_translation',
+    'field',
     'language',
     'node',
     'system',
@@ -35,31 +44,23 @@ class TranslateActionTest extends KernelTestBase {
 
   /**
    * The content translation manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationManagerInterface
    */
-  protected $contentTranslationManager;
+  protected ContentTranslationManagerInterface $contentTranslationManager;
 
   /**
    * The language manager.
-   *
-   * @var \Drupal\language\ConfigurableLanguageManagerInterface
    */
-  protected $languageManager;
+  protected ConfigurableLanguageManagerInterface $languageManager;
 
   /**
    * The added languages.
-   *
-   * @var array
    */
-  protected $langcodes = [];
+  protected array $langcodes = [];
 
   /**
    * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
    */
-  protected $renderer;
+  protected RendererInterface $renderer;
 
   /**
    * {@inheritdoc}
@@ -79,10 +80,42 @@ class TranslateActionTest extends KernelTestBase {
     $this->setupLanguages();
 
     // Create a node type for testing.
-    $type = NodeType::create(['type' => 'page', 'name' => 'page']);
-    $type->save();
+    $entity_type = 'node';
+    $article_type = NodeType::create(['type' => 'article', 'name' => 'article']);
+    $article_type->save();
+
+    $page_type = NodeType::create(['type' => 'page', 'name' => 'page']);
+    $page_type->save();
 
     $this->enableTranslation();
+
+    $field_name = 'field_ref_article';
+    // Look for or add the specified field to the requested entity bundle.
+    FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'type' => 'entity_reference',
+      'entity_type' => $entity_type,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+      'translatable' => '0',
+      'settings' => [
+        'target_type' => $entity_type,
+      ],
+    ])->save();
+
+    FieldConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => $entity_type,
+      'bundle' => 'page',
+      'label' => 'Article reference',
+      'settings' => [
+        'handler_settings' => [
+          'target_bundles' => [
+            'article' => 'article',
+          ],
+        ],
+      ],
+    ])->save();
+
   }
 
   /**
@@ -91,6 +124,7 @@ class TranslateActionTest extends KernelTestBase {
   protected function enableTranslation(): void {
     // Enable translation for the page content type.
     $this->contentTranslationManager->setEnabled('node', 'page', TRUE);
+    $this->contentTranslationManager->setEnabled('node', 'article', TRUE);
   }
 
   /**
@@ -114,43 +148,72 @@ class TranslateActionTest extends KernelTestBase {
       'label' => 'Translate',
       'plugin' => 'entity:translate_action:node',
       'configuration' => [
-        'source_langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+        'source_langcode' => 'en',
         'target_langcodes' => ['fr'],
       ],
     ]);
     $action->save();
 
-    // Create a translatable test node.
-    $node = Node::create([
-      'type' => 'page',
-      'title' => 'Test node',
+    // Create a translatable test nodes.
+    $article_node = Node::create([
+      'type' => 'article',
+      'title' => 'Article Test node',
       'uid' => 1,
       'langcode' => 'en',
     ]);
-    $node->save();
+    $article_node->save();
+
+    $page_node = Node::create([
+      'type' => 'page',
+      'title' => 'Page Test node',
+      'uid' => 1,
+      'langcode' => 'en',
+      'field_ref_article' => [
+        ['target_id' => $article_node->id()],
+      ],
+    ]);
+    $page_node->save();
+
+    $this->assertFalse($page_node->hasTranslation('fr'));
+    $this->assertFalse($article_node->hasTranslation('fr'));
 
     // Make sure only fr translation is created.
-    $this->executeActionOnEntities($action, [$node]);
+    $this->executeActionOnEntities($action, [$page_node]);
 
-    $this->assertTrue($node->hasTranslation('fr'));
-    $this->assertFalse($node->hasTranslation('es'));
-    $fr_translation = $node->getTranslation('fr');
-    $this->assertEquals($fr_translation->label(), 'Test node');
-    $fr_translation->setTitle('Node de test');
-    $fr_translation->save();
+    $this->assertTrue($page_node->hasTranslation('fr'));
+    $this->assertFalse($page_node->hasTranslation('es'));
+    $fr_page_translation = $page_node->getTranslation('fr');
+    $this->assertEquals($fr_page_translation->label(), 'Page Test node');
+    // Also check the referenced article node.
+    $article_node = Node::load($article_node->id());
+    $this->assertTrue($article_node->hasTranslation('fr'));
 
     // Make sure also es translation is created using fr translation as source.
+    $fr_article_translation = $article_node->getTranslation('fr');
+    $fr_page_translation->setTitle('Page Node de test');
+    $fr_page_translation->save();
+    $fr_article_translation->setTitle('Article Node de test');
+    $fr_article_translation->save();
+
     // Update the action configuration accordingly.
     $action->set('configuration', ['source_langcode' => 'fr', 'target_langcodes' => ['es']]);
     $action->save();
 
-    $this->executeActionOnEntities($action, [$node]);
+    $this->executeActionOnEntities($action, [$page_node]);
 
-    $this->assertTrue($node->hasTranslation('es'));
-    $es_translation = $node->getTranslation('es');
-    $this->assertEquals($es_translation->label(), 'Node de test');
-    $es_translation_metadata = $this->contentTranslationManager->getTranslationMetadata($es_translation);
-    $this->assertEquals($es_translation_metadata->getSource(), 'fr');
+    // Reload the page node to get the updated translations.
+    $page_node = Node::load($page_node->id());
+    $this->assertTrue($page_node->hasTranslation('es'));
+    $es_page_translation = $page_node->getTranslation('es');
+    $this->assertEquals($es_page_translation->label(), 'Page Node de test');
+    $this->assertEquals($this->contentTranslationManager->getTranslationMetadata($es_page_translation)->getSource(), 'fr');
+
+    // Reload the article node to get the updated translations.
+    $article_node = Node::load($article_node->id());
+    $this->assertTrue($article_node->hasTranslation('es'));
+    $es_article_translation = $article_node->getTranslation('es');
+    $this->assertEquals($es_article_translation->label(), 'Article Node de test');
+    $this->assertEquals($this->contentTranslationManager->getTranslationMetadata($es_article_translation)->getSource(), 'fr');
   }
 
   /**

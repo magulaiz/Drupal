@@ -29,49 +29,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 )]
 class TranslateAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
-  /**
-   * The content translation manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationManagerInterface
-   */
-  protected $contentTranslationManager;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * Constructs a CreateEntityTranslation object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager
-   *   The content translation manager.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ContentTranslationManagerInterface $content_translation_manager, EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected ContentTranslationManagerInterface $contentTranslationManager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected LanguageManagerInterface $languageManager,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->contentTranslationManager = $content_translation_manager;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->languageManager = $language_manager;
   }
 
   /**
@@ -161,6 +127,7 @@ class TranslateAction extends ConfigurableActionBase implements ContainerFactory
     $content_translation_manager = $this->contentTranslationManager;
 
     $source_translation = $entity->hasTranslation($source_langcode) ? $entity->getTranslation($source_langcode) : $entity;
+    // Avoid "Invalid translation language (und) specified" errors.
     $source_translation_metadata = $content_translation_manager->getTranslationMetadata($source_translation);
     if ($source_translation_metadata->getSource() === LanguageInterface::LANGCODE_NOT_SPECIFIED || $source_translation_metadata->getSource() === NULL) {
       $source_translation_metadata->setSource($source_langcode);
@@ -176,11 +143,9 @@ class TranslateAction extends ConfigurableActionBase implements ContainerFactory
       $translation = $entity->addTranslation($langcode, $source_translation->toArray());
       $translations_added = TRUE;
 
-      // Avoid "Invalid translation language (und) specified" errors.
+      // Set the source language of the entity translation.
       $translation_metadata = $content_translation_manager->getTranslationMetadata($translation);
-      if ($translation_metadata->getSource() === LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-        $translation_metadata->setSource($source_langcode);
-      }
+      $translation_metadata->setSource($source_langcode);
 
       // We need to create translations for Reference fields not translatable.
       foreach ($entity->getFieldDefinitions() as $field_name => $definition) {
@@ -193,12 +158,17 @@ class TranslateAction extends ConfigurableActionBase implements ContainerFactory
 
         // Translate the referenced entities that have translation enabled.
         $field_class = $definition->getClass();
-        if (is_subclass_of($field_class, EntityReferenceFieldItemList::class)) {
+        if (is_a(EntityReferenceFieldItemList::class, $field_class, TRUE) || is_subclass_of($field_class, EntityReferenceFieldItemList::class)) {
           $target_type = $definition->getSetting('target_type');
-          if ($content_translation_manager->isEnabled($target_type)) {
+          if (!empty($target_type) && $content_translation_manager->isEnabled($target_type)) {
             foreach ($entity->{$field_name}->referencedEntities() as $referenced_entity) {
-              if ($referenced_entity instanceof ContentEntityInterface && $referenced_entity->hasTranslation($source_langcode) && !$referenced_entity->hasTranslation($langcode)) {
-                $referenced_entity = $referenced_entity->addTranslation($langcode, $referenced_entity->getTranslation($source_langcode)->toArray());
+              $source_referenced_translation = $referenced_entity->hasTranslation($source_langcode) ? $referenced_entity->getTranslation($source_langcode) : $referenced_entity;
+              if ($source_referenced_translation instanceof ContentEntityInterface && !$source_referenced_translation->hasTranslation($langcode)) {
+                // Add the translation for the referenced entity.
+                $referenced_entity_translation = $source_referenced_translation->addTranslation($langcode, $source_referenced_translation->toArray());
+                // Set the source language of the referenced entity translation.
+                $referenced_translation_metadata = $content_translation_manager->getTranslationMetadata($referenced_entity_translation);
+                $referenced_translation_metadata->setSource($source_langcode);
                 $referenced_entity->save();
               }
             }
