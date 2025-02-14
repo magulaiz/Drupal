@@ -7,16 +7,15 @@ namespace Drupal\Tests\content_translation\Kernel\Plugin\Action;
 use Drupal\content_translation\ContentTranslationManagerInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\system\Entity\Action;
-use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * Tests Content Entity Translate action.
@@ -27,8 +26,6 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
  * @group content_translation
  */
 class TranslateActionTest extends KernelTestBase {
-
-  use EntityReferenceFieldCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -50,7 +47,7 @@ class TranslateActionTest extends KernelTestBase {
   /**
    * The language manager.
    */
-  protected ConfigurableLanguageManagerInterface $languageManager;
+  protected LanguageManagerInterface $languageManager;
 
   /**
    * The added languages.
