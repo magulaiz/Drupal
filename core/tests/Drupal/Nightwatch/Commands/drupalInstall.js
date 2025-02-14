@@ -61,8 +61,8 @@ exports.command = function drupalInstall(
     }
     if (error instanceof SyntaxError && installCommandStdout.length) {
       console.log(
-        'The Drupal profile installation produced an invalid JSON output:', 
-        installCommandStdout.toString()
+        'The Drupal profile installation produced an invalid JSON output:',
+        installCommandStdout.toString(),
       );
     }
     this.assert.fail(error);
