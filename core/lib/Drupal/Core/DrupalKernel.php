@@ -1377,14 +1377,18 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
     foreach ($container->findTaggedServiceIds('service_provider') as $id => $info) {
       $provider = $container->get($id);
+      // Start of BC layer.
       $class = get_class($provider);
       if (isset($this->serviceProviderClasses['app'][$class])) {
         unset($this->serviceProviderClasses['app'][$class]);
         continue;
       }
-      $this->serviceProviders['app'][] = $provider;
+      // End of BC layer.
       if ($provider instanceof ServiceProviderInterface) {
         $provider->register($container);
+      }
+      if ($provider instanceof ServiceModifierInterface) {
+        $this->serviceProviders['app'][] = $provider;
       }
     }
 
