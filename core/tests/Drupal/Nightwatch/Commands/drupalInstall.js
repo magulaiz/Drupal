@@ -58,7 +58,10 @@ exports.command = function drupalInstall(
       console.log('Output:', error.stdout.toString());
     }
     if (error instanceof SyntaxError) {
-      console.log('Unexpected webserver command JSON output:', install.toString());
+      console.log(
+        'The Drupal profile installation produced an invalid JSON output:',
+        install.toString(),
+      );
     }
     this.assert.fail(error);
   }
