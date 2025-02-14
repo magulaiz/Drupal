@@ -67,7 +67,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
     $this->assertNodeHtml($node, $user, TRUE, $metadata_region, $field_classes, $field_classes);
     $this->drupalLogin($profile_viewer_user);
     $this->drupalGet($node->toUrl());
-    $this->assertNodeHtml($node, $user, TRUE, $metadata_region, $field_classes, $field_classes);
+    $this->assertNodeHtml($node, $user, TRUE, $metadata_region, $field_classes, $field_classes, TRUE);
 
     // Enable module to make base fields' displays configurable.
     \Drupal::service('module_installer')->install(['node_display_configurable_test']);
@@ -113,10 +113,13 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    *   If TRUE, check for field--name-XXX classes on created/uid fields.
    * @param bool $title_classes
    *   If TRUE, check for field--name-XXX classes on title field.
+   * @param bool $author_inline_as_link
+   *   If TRUE and fields are inline, the author field should be displayed as
+   *   a link.
    *
    * @internal
    */
-  protected function assertNodeHtml(NodeInterface $node, UserInterface $user, bool $is_inline, string $metadata_region, bool $field_classes, bool $title_classes): void {
+  protected function assertNodeHtml(NodeInterface $node, UserInterface $user, bool $is_inline, string $metadata_region, bool $field_classes, bool $title_classes, bool $author_inline_as_link = FALSE): void {
     $assert = $this->assertSession();
 
     $html_element = $is_inline ? 'span' : 'div';
@@ -151,7 +154,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
       }
     }
     else {
-      if ($this->loggedInUser->hasPermission('access user profiles')) {
+      if ($author_inline_as_link) {
         $assert->elementTextContains('css', $uid_selector . ' a', $user->getAccountName());
       }
       else {
