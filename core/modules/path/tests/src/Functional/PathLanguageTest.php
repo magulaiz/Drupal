@@ -116,7 +116,6 @@ class PathLanguageTest extends PathTestBase {
     // Languages are cached on many levels, and we need to clear those caches.
     $this->container->get('language_manager')->reset();
     $this->rebuildContainer();
-    $languages = $this->container->get('language_manager')->getLanguages();
 
     // Ensure the node was created.
     $english_node = $node_storage->load($english_node->id());
@@ -125,7 +124,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Confirm that the alias works.
     $this->drupalGet('fr' . $edit['path[0][alias]']);
-    $this->assertSession()->pageTextContains($english_node_french_translation->body->value);
+    $this->assertSession()->pageTextContains($english_node_french_translation->get('body')->value);
 
     // Confirm that the alias is returned for the URL. Languages are cached on
     // many levels, and we need to clear those caches.
@@ -154,18 +153,18 @@ class PathLanguageTest extends PathTestBase {
     // path alias for French matching the english alias. So the alias manager
     // needs to use the URL language to check whether the alias is valid.
     $this->drupalGet($english_alias);
-    $this->assertSession()->pageTextContains($english_node_french_translation->body->value);
+    $this->assertSession()->pageTextContains($english_node_french_translation->get('body')->value);
 
     // Check that the French alias works.
     $this->drupalGet("fr/$french_alias");
-    $this->assertSession()->pageTextContains($english_node_french_translation->body->value);
+    $this->assertSession()->pageTextContains($english_node_french_translation->get('body')->value);
 
     // Disable URL language negotiation.
     $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_URL, [LanguageNegotiationUrl::METHOD_ID => FALSE]);
 
     // Check that the English alias still works.
     $this->drupalGet($english_alias);
-    $this->assertSession()->pageTextContains($english_node_french_translation->body->value);
+    $this->assertSession()->pageTextContains($english_node_french_translation->get('body')->value);
 
     // Check that the French alias is not available. We check the unprefixed
     // alias because we disabled URL language negotiation above. In this
@@ -198,7 +197,7 @@ class PathLanguageTest extends PathTestBase {
     // Check that the English alias still works.
     $this->drupalGet($english_alias);
     $this->assertPathAliasExists('/' . $english_alias, 'en', NULL, 'English alias is not deleted when French translation is removed.');
-    $this->assertSession()->pageTextContains($english_node->body->value);
+    $this->assertSession()->pageTextContains($english_node->get('body')->value);
   }
 
   /**
@@ -260,7 +259,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Confirm that the alias works.
     $this->drupalGet('fr' . $edit['path[0][alias]']);
-    $this->assertSession()->pageTextContains($english_node_french_translation->body->value);
+    $this->assertSession()->pageTextContains($english_node_french_translation->get('body')->value);
   }
 
 }

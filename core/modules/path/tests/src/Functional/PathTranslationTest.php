@@ -170,9 +170,9 @@ class PathTranslationTest extends PathTestBase {
 
     // Tests that both aliases work.
     $this->drupalGet($edit_en['path[0][alias]']);
-    $this->assertSession()->responseContains($english_node->body->value);
+    $this->assertSession()->responseContains($english_node->get('body')->value);
     $this->drupalGet('fr' . $edit_fr['path[0][alias]']);
-    $this->assertSession()->responseContains($french_translation->body->value);
+    $this->assertSession()->responseContains($french_translation->get('body')->value);
 
     // Tests that the English alias was saved with the expected langcode.
     $conditions = [
