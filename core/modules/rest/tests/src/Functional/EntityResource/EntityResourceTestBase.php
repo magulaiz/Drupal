@@ -189,6 +189,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->entityStorage = $this->container->get('entity_type.manager')
       ->getStorage(static::$entityTypeId);
 
+    // Set some page cache max-age so that responses are cacheable.
+    $this->config('system.performance')
+      ->set('cache.page.max_age', 300)
+      ->save();
+
     // Create an entity.
     $this->entity = $this->createEntity();
 
