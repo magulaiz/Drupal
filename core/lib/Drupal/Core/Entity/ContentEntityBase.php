@@ -200,7 +200,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    */
   public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = []) {
     $this->entityTypeId = $entity_type;
-    $this->entityKeys['bundle'] = $bundle ? $bundle : $this->entityTypeId;
+    $this->entityKeys['bundle'] = $bundle ?: $this->entityTypeId;
     $this->langcodeKey = $this->getEntityType()->getKey('langcode');
     $this->defaultLangcodeKey = $this->getEntityType()->getKey('default_langcode');
     $this->revisionTranslationAffectedKey = $this->getEntityType()->getKey('revision_translation_affected');
@@ -1216,6 +1216,11 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       $duplicate->{$entity_type->getKey('revision')}->value = NULL;
       $duplicate->loadedRevisionId = NULL;
     }
+
+    // Modules might need to add or change the data initially held by the new
+    // entity object, for instance to fill-in default values.
+    \Drupal::moduleHandler()->invokeAll($this->getEntityTypeId() . '_duplicate', [$duplicate, $this]);
+    \Drupal::moduleHandler()->invokeAll('entity_duplicate', [$duplicate, $this]);
 
     return $duplicate;
   }
