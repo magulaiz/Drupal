@@ -284,8 +284,22 @@ class PageCache implements HttpKernelInterface {
     // The getExpires method could return NULL if Expires header is not set, so
     // the returned value needs to be checked before calling getTimestamp.
     elseif ($expires = $response->getExpires()) {
-      $date = $expires->getTimestamp();
-      $expire = ($date > $request_time) ? $date : Cache::PERMANENT;
+      $expires_timestamp = $expires->getTimestamp();
+      if ($expires_timestamp > $request_time) {
+        $expire = $expires_timestamp;
+      }
+      else {
+        $response->headers->set(static::HEADER,
+          // The special value '19-Nov-1978 05:00:00 UTC' is a special value
+          // used by FinishResponseSubscriber to indicate that the response
+          // is not cacheable (mostly due to a max_age = 0 or the response not
+          // being an instance of CacheableResponseInterface). So, simply saying
+          // "Expires header in the past" would be misleading in this case.
+          $expires == \DateTime::createFromFormat('j-M-Y H:i:s T', '19-Nov-1978 05:00:00 UTC')
+            ? 'UNCACHEABLE (Not cacheable)'
+            : 'UNCACHEABLE (Expires header in the past)');
+        return FALSE;
+      }
     }
     else {
       $expire = Cache::PERMANENT;
