@@ -27,6 +27,8 @@ exports.command = function drupalInstall(
   // Ensure no session cookie exists anymore; they won't work on this newly installed Drupal site anyway.
   this.deleteCookies();
 
+  let installCommandStdout;
+
   try {
     setupFile = setupFile ? `--setup-file "${setupFile}"` : '';
     installProfile = `--install-profile "${installProfile}"`;
@@ -35,12 +37,12 @@ exports.command = function drupalInstall(
       process.env.DRUPAL_TEST_DB_URL.length > 0
         ? `--db-url "${process.env.DRUPAL_TEST_DB_URL}"`
         : '';
-    const install = execSync(
+    installCommandStdout = execSync(
       commandAsWebserver(
         `php ./scripts/test-site.php install ${setupFile} ${installProfile} ${langcodeOption} --base-url ${process.env.DRUPAL_TEST_BASE_URL} ${dbOption} --json`,
       ),
     );
-    const installData = JSON.parse(install.toString());
+    const installData = JSON.parse(installCommandStdout.toString());
     this.globals.drupalDbPrefix = installData.db_prefix;
     this.globals.drupalSitePath = installData.site_path;
     const url = new URL(process.env.DRUPAL_TEST_BASE_URL);
@@ -57,10 +59,10 @@ exports.command = function drupalInstall(
     if (error.stdout) {
       console.log('Output:', error.stdout.toString());
     }
-    if (error instanceof SyntaxError) {
+    if (error instanceof SyntaxError && installCommandStdout.length) {
       console.log(
-        'The Drupal profile installation produced an invalid JSON output:',
-        install.toString(),
+        'The Drupal profile installation produced an invalid JSON output:', 
+        installCommandStdout.toString()
       );
     }
     this.assert.fail(error);
