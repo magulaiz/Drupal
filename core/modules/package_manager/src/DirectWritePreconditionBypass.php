@@ -16,6 +16,11 @@ use PhpTuf\ComposerStager\API\Translation\Value\TranslatableInterface;
  *
  * Only certain preconditions can be bypassed; this class implements all of
  * those interfaces, and only accepts them in its constructor.
+ *
+ * @internal
+ *    This is an internal part of Package Manager and may be changed or removed
+ *    at any time without warning. External code should not interact with this
+ *    class.
  */
 final class DirectWritePreconditionBypass implements ActiveAndStagingDirsAreDifferentInterface {
 
