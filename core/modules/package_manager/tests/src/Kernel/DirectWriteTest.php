@@ -76,6 +76,10 @@ class DirectWriteTest extends PackageManagerKernelTestBase {
     $this->assertCount(2, $records);
     $this->assertSame('Direct-write is enabled. Skipping sandboxing.', (string) $records[0]['message']);
     $this->assertSame('Direct-write is enabled. Changes have been made to the running code base.', (string) $records[1]['message']);
+
+    // A stage that doesn't support direct-write should not be influenced by
+    // the setting.
+    $this->assertFalse($this->createStage()->isDirectWrite());
   }
 
 }
