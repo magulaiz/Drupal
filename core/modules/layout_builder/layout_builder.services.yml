@@ -60,3 +60,7 @@ services:
   layout_builder.element.prepare_layout:
     class: Drupal\layout_builder\EventSubscriber\PrepareLayout
     arguments: ['@layout_builder.tempstore_repository', '@messenger']
+  layout_builder.service_provider:
+    class: Drupal\layout_builder\LayoutBuilderServices
+    tags:
+      - { name: service_provider }
