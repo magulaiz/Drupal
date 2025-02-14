@@ -621,6 +621,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         if (str_starts_with($header, 'X-Drupal-Assertion-') || in_array($header, $ignored_headers)) {
           unset($headers[$header]);
         }
+        if ($header === 'Etag') {
+          // Remove the weak ETag prefix,
+          // since Nginx may add it in some circumstances.
+          $headers[$header] = preg_replace('/^W\//', '', $headers[$header]);
+        }
       }
       return $headers;
     };
