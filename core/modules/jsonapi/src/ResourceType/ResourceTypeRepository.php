@@ -371,7 +371,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
       }
     }
 
-    if ($config_schema_type_definition !== FALSE) {
+    if ($config_schema_type_definition === FALSE) {
       return FALSE;
     }
 
