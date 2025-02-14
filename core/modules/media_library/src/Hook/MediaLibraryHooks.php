@@ -18,6 +18,7 @@ use Drupal\media_library\Form\FileUploadForm;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Render\Element;
 
 /**
  * Hook implementations for media_library.
@@ -171,9 +172,10 @@ class MediaLibraryHooks {
           }
         }
         // If the current query contains any parameters we use to contextually
-        // filter the view, ensure they persist across AJAX rebuilds.
-        // The ajax_path is shared for all AJAX views on the page, but our query
-        // parameters are prefixed and should not interfere with any other views.
+        // filter the view, ensure they persist across AJAX rebuilds. The
+        // ajax_path is shared for all AJAX views on the page, but our query
+        // parameters are prefixed and should not interfere with any other
+        // views.
         // @todo Rework or remove this in https://www.drupal.org/node/2983451
         if (!empty($query)) {
           $ajax_path =& $output['#attached']['drupalSettings']['views']['ajax_path'];
@@ -203,6 +205,27 @@ class MediaLibraryHooks {
       // @see field_ui_form_alter()
       if (isset($form['actions']['save_continue'])) {
         $form['actions']['save_continue']['#submit'][] = '_media_library_media_type_form_submit';
+      }
+    }
+  }
+
+  /**
+   * Implements hook_form_FORM_ID_alter().
+   *
+   * Alter the bulk form to add a more accessible label.
+   *
+   * @todo Remove in https://www.drupal.org/node/2983454
+   */
+  #[Hook('form_views_form_media_library_page_alter')]
+  public function formViewsFormMediaLibraryPageAlter(array &$form, FormStateInterface $form_state, $form_id) : void {
+    if (isset($form['media_bulk_form']) && isset($form['output'])) {
+      /** @var \Drupal\views\ViewExecutable $view */
+      $view = $form['output'][0]['#view'];
+      foreach (Element::getVisibleChildren($form['media_bulk_form']) as $key) {
+        if (isset($view->result[$key])) {
+          $media = $view->field['media_bulk_form']->getEntity($view->result[$key]);
+          $form['media_bulk_form'][$key]['#title'] = $media ? t('Select @label', ['@label' => $media->label()]) : '';
+        }
       }
     }
   }

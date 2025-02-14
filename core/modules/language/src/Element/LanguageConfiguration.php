@@ -18,12 +18,11 @@ class LanguageConfiguration extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#tree' => TRUE,
       '#process' => [
-        [$class, 'processLanguageConfiguration'],
+        [static::class, 'processLanguageConfiguration'],
       ],
     ];
   }
@@ -108,6 +107,7 @@ class LanguageConfiguration extends FormElementBase {
    * Wraps the language manager.
    *
    * @return \Drupal\Core\Language\LanguageManagerInterface
+   *   The language manager service.
    */
   protected static function languageManager() {
     return \Drupal::languageManager();

@@ -153,7 +153,7 @@ class FieldWebTest extends ViewTestBase {
   }
 
   /**
-   * Assertion helper which checks whether a string is not part of another string.
+   * Asserts that a string is not part of another string.
    *
    * @param string $haystack
    *   The value to search in.
@@ -208,7 +208,7 @@ class FieldWebTest extends ViewTestBase {
       // Some combinations of PHP / libxml versions return an empty array
       // instead of the documented FALSE. Forcefully convert any falsy values
       // to an empty array to allow foreach(...) constructions.
-      return $result ? $result : [];
+      return $result ?: [];
     }
     else {
       return FALSE;
@@ -284,6 +284,7 @@ class FieldWebTest extends ViewTestBase {
       $this->assertSubString(Html::decodeEntities($result), Html::decodeEntities($expected_result));
 
       // @todo The route-based URL generator strips out NULL attributes.
+      // phpcs:ignore
       // $expected_result = Url::fromRoute('entity.node.canonical', ['node' => '123'], ['query' => ['foo' => NULL], 'fragment' => 'bar', 'absolute' => $absolute])->toString();
       $expected_result = Url::fromUserInput('/node/123', ['query' => ['foo' => NULL], 'fragment' => 'bar', 'absolute' => $absolute])->toString();
       $alter['path'] = 'node/123?foo#bar';
@@ -645,7 +646,7 @@ class FieldWebTest extends ViewTestBase {
       }
     }
 
-    // Tests for displaying a readmore link when the output got trimmed.
+    // Tests for displaying a 'read more' link when the output got trimmed.
     $row->views_test_data_name = $this->randomMachineName(8);
     $name_field->options['alter']['max_length'] = 5;
     $name_field->options['alter']['more_link'] = TRUE;

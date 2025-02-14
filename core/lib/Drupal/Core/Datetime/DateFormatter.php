@@ -33,7 +33,7 @@ class DateFormatter implements DateFormatterInterface {
   protected $dateFormatStorage;
 
   /**
-   * Language manager for retrieving the default langcode when none is specified.
+   * The Language manager.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
@@ -168,7 +168,7 @@ class DateFormatter implements DateFormatterInterface {
         break;
       }
     }
-    return $output ? $output : $this->t('0 sec', [], ['langcode' => $langcode]);
+    return $output ?: $this->t('0 sec', [], ['langcode' => $langcode]);
   }
 
   /**

@@ -348,12 +348,13 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    *
    * The resulting string will be sanitized with Xss::filterAdmin.
    *
-   * @param $text
+   * @param string $text
    *   Unsanitized string with possible tokens.
-   * @param $tokens
+   * @param array $tokens
    *   Array of token => replacement_value items.
    *
    * @return string
+   *   The sanitized string with tokens replaced.
    */
   protected function viewsTokenReplace($text, $tokens) {
     if (!strlen($text)) {
@@ -418,8 +419,8 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       ];
 
       // Currently you cannot attach assets to tokens with
-      // Renderer::renderInIsolation(). This may be unnecessarily limiting. Consider
-      // using Renderer::executeInRenderContext() instead.
+      // Renderer::renderInIsolation(). This may be unnecessarily limiting.
+      // Consider using Renderer::executeInRenderContext() instead.
       // @todo https://www.drupal.org/node/2566621
       return (string) $this->getRenderer()->renderInIsolation($build);
     }
@@ -659,6 +660,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * Returns the render API renderer.
    *
    * @return \Drupal\Core\Render\RendererInterface
+   *   The renderer service.
    */
   protected function getRenderer() {
     if (!isset($this->renderer)) {

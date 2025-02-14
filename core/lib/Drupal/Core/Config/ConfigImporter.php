@@ -123,7 +123,7 @@ class ConfigImporter {
   protected $themeHandler;
 
   /**
-   * Flag set to import system.theme during processing theme install and uninstalls.
+   * Indicates if a system theme is in processing theme install and uninstalls.
    *
    * @var bool
    */
@@ -186,7 +186,8 @@ class ConfigImporter {
    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
    *   The configuration manager.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
-   *   The lock backend to ensure multiple imports do not occur at the same time.
+   *   The lock backend to ensure multiple imports do not occur at the same
+   *   time.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed configuration manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -410,12 +411,12 @@ class ConfigImporter {
     // sorted in reverse alphabetical order, to ensure the order is exactly
     // opposite from installation. For example, this module list:
     // @code
-    // array(
+    // [
     //   'actions' => 0,
     //   'ban' => 0,
     //   'options' => -2,
     //   'text' => -1,
-    // );
+    // ];
     // @endcode
     // Will result in the following sort order:
     // 1. -2   options
@@ -1017,7 +1018,7 @@ class ConfigImporter {
     }
     else {
       $data = $this->storageComparer->getSourceStorage($collection)->read($name);
-      $config->setData($data ? $data : []);
+      $config->setData($data ?: []);
       $config->save();
     }
     $this->setProcessedConfiguration($collection, $op, $name);

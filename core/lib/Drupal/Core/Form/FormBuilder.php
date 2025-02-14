@@ -729,6 +729,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // submitted form value appears literally, regardless of custom #tree
       // and #parents being set elsewhere.
       '#parents' => ['form_build_id'],
+      // Certain browsers such as Firefox retain form input data after reload.
+      // This can result in the form being in a strange state if the page is
+      // reloaded after an AJAX request. Setting the form build ID field's
+      // autocomplete off prevents the input from being retained.
+      '#attributes' => ['autocomplete' => 'off'],
     ];
 
     // Add a token, based on either #token or form_id, to any form displayed to
@@ -1329,7 +1334,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * element. If the name alone doesn't identify the element uniquely, the input
    * key '_triggering_element_value' may also be set to require a match on
    * element value. An example where this is needed is if there are several
-   * // buttons all named 'op', and only differing in their value.
+   * // buttons all named 'op', and only different in their value.
    */
   protected function elementTriggeredScriptedSubmission($element, FormStateInterface &$form_state) {
     $input = $form_state->getUserInput();

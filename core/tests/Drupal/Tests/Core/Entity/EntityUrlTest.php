@@ -463,8 +463,8 @@ class EntityUrlTest extends UnitTestCase {
    * Returns a mock entity for testing.
    *
    * @param class-string<\Drupal\Tests\Core\Entity\StubEntityBase> $class
-   *   The class name to mock. Should be \Drupal\Tests\Core\Entity\StubEntityBase
-   *   or a subclass.
+   *   The class name to mock. Should be
+   *   \Drupal\Tests\Core\Entity\StubEntityBase or a subclass.
    * @param array<string,int|string> $values
    *   An array of entity values to construct the mock entity with.
    * @param list<string> $methods
@@ -476,9 +476,9 @@ class EntityUrlTest extends UnitTestCase {
   protected function getEntity(string $class, array $values, array $methods = []): StubEntityBase&MockObject {
     $methods = array_merge($methods, ['getEntityType', 'entityTypeBundleInfo']);
 
-    // Prophecy does not allow prophesizing abstract classes while actually
-    // calling their code. We use Prophecy below because that allows us to
-    // add method prophecies later while still revealing the prophecy now.
+    // Prophecy does not allow mocking abstract classes while actually calling
+    // their code. We use Prophecy below because that allows us to add method
+    // prophecies later while still revealing the prophecy now.
     $entity = $this->getMockBuilder($class)
       ->setConstructorArgs([$values, static::ENTITY_TYPE_ID])
       ->onlyMethods($methods)

@@ -144,6 +144,9 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
     $this->query = &$view->query;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -228,9 +231,9 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   /**
    * Transform a string by a certain method.
    *
-   * @param $string
+   * @param string $string
    *   The input you want to transform.
-   * @param $option
+   * @param string $option
    *   How do you want to transform it, possible values:
    *   - upper: Uppercase the string.
    *   - lower: lowercase the string.
@@ -306,6 +309,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Gets the module handler.
    *
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    */
   protected function getModuleHandler() {
     if (!$this->moduleHandler) {
@@ -390,6 +394,9 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
   /**
    * Provide defaults for the handler.
+   *
+   * @param array $option
+   *   An array of options.
    */
   public function defineExtraOptions(&$option) {}
 
@@ -640,6 +647,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Exposed means it provides form elements to let users modify the view.
    *
    * @return bool
+   *   TRUE if the item is exposed, FALSE otherwise.
    */
   public function isExposed() {
     return !empty($this->options['exposed']);
@@ -671,6 +679,11 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
   /**
    * If set to remember exposed input in the session, store it there.
+   *
+   * @param array $input
+   *   Associative array containing the exposed data for this view.
+   * @param bool $status
+   *   Whether to store the exposed input in the session.
    */
   public function storeExposedInput($input, $status) {
     return TRUE;
@@ -736,6 +749,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Gets views data service.
    *
    * @return \Drupal\views\ViewsData
+   *   The views data service.
    */
   protected function getViewsData() {
     if (!$this->viewsData) {
@@ -746,7 +760,10 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Sets the views data service.
+   *
+   * @param \Drupal\views\ViewsData $views_data
+   *   The view to save.
    */
   public function setViewsData(ViewsData $views_data) {
     $this->viewsData = $views_data;

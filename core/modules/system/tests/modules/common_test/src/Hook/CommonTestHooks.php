@@ -49,7 +49,7 @@ class CommonTestHooks {
    * Implements hook_TYPE_alter().
    *
    * This is to verify that
-   * \Drupal::moduleHandler()->alter(array(TYPE1, TYPE2), ...) allows
+   * \Drupal::moduleHandler()->alter([TYPE1, TYPE2], ...) allows
    * hook_module_implements_alter() to affect the order in which module
    * implementations are executed.
    */
@@ -108,8 +108,8 @@ class CommonTestHooks {
   /**
    * Implements hook_cron().
    *
-   * System module should handle if a module does not catch an exception and keep
-   * cron going.
+   * System module should handle if a module does not catch an exception and
+   * keep cron going.
    *
    * @see common_test_cron_helper()
    */

@@ -17,7 +17,7 @@ class NodeTokensHooks {
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
-  public function tokenInfo() {
+  public function tokenInfo(): array {
     $type = [
       'name' => t('Nodes'),
       'description' => t('Tokens related to individual content items, or "nodes".'),
@@ -165,7 +165,7 @@ class NodeTokensHooks {
 
           // Default values for the chained tokens handled below.
           case 'author':
-            $account = $node->getOwner() ? $node->getOwner() : User::load(0);
+            $account = $node->getOwner() ?: User::load(0);
             $bubbleable_metadata->addCacheableDependency($account);
             $replacements[$original] = $account->label();
             break;

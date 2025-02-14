@@ -142,8 +142,8 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * @param string|null $plugin_definition_attribute_name
    *   (optional) The name of the attribute that contains the plugin definition.
    * @param string|array|null $plugin_definition_annotation_name
-   *   (optional) The name of the annotation that contains the plugin definition.
-   *   Defaults to 'Drupal\Component\Annotation\Plugin'.
+   *   (optional) The name of the annotation that contains the plugin
+   *   definition. Defaults to 'Drupal\Component\Annotation\Plugin'.
    * @param string[] $additional_annotation_namespaces
    *   (optional) Additional namespaces to scan for annotation definitions.
    *
@@ -378,7 +378,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   /**
    * Invokes the hook to alter the definitions if the alter hook is set.
    *
-   * @param $definitions
+   * @param array $definitions
    *   The discovered plugin definitions.
    */
   protected function alterDefinitions(&$definitions) {

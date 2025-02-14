@@ -11,10 +11,11 @@ use Drupal\views\ViewExecutable;
 use Drupal\Core\Form\OptGroup;
 
 /**
- * Simple filter to handle matching of multiple options selectable via checkboxes.
+ * Filter to handle matching of multiple options selectable via checkboxes.
  *
  * Definition items:
- * - options callback: The function to call in order to generate the value options. If omitted, the options 'Yes' and 'No' will be used.
+ * - options callback: The function to call in order to generate the value
+ *   options. If omitted, the options 'Yes' and 'No' will be used.
  * - options arguments: An array of arguments to pass to the options callback.
  *
  * @ingroup views_filter_handlers
@@ -275,6 +276,9 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
 
   /**
    * When using exposed filters, we may be required to reduce the set.
+   *
+   * @param array $input
+   *   (optional) Associative array containing the exposed data for this view.
    */
   public function reduceValueOptions($input = NULL) {
     if (!isset($input)) {

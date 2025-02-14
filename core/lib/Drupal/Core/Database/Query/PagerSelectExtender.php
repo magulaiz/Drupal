@@ -84,8 +84,8 @@ class PagerSelectExtender extends SelectExtender {
   /**
    * Ensure that there is an element associated with this query.
    *
-   * After running this method, access $this->element to get the element for this
-   * query.
+   * After running this method, access $this->element to get the element for
+   * this query.
    */
   protected function ensureElement() {
     if (!isset($this->element)) {
@@ -100,7 +100,7 @@ class PagerSelectExtender extends SelectExtender {
    * one is generated off of the pager query itself.
    *
    * @param \Drupal\Core\Database\Query\SelectInterface $query
-   *   The count query object.  It must return a single row with a single column,
+   *   The count query object. It must return a single row with a single column,
    *   which is the total number of records.
    */
   public function setCountQuery(SelectInterface $query) {
@@ -152,7 +152,7 @@ class PagerSelectExtender extends SelectExtender {
    * explicitly, so it is possible for two pagers to end up using the same ID
    * if both are set explicitly.
    *
-   * @param $element
+   * @param array $element
    *   Element ID that is used to differentiate different pager queries.
    */
   public function element($element) {

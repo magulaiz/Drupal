@@ -347,6 +347,9 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     return preg_match('/^' . $pattern . '$/', $subject);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
   }
@@ -367,10 +370,16 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     return 'temp.' . $tablename;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function driver() {
     return 'sqlite';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function databaseType() {
     return 'sqlite';
   }
@@ -391,6 +400,9 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function mapConditionOperator($operator) {
     return static::$sqliteConditionOperatorMap[$operator] ?? NULL;
   }
@@ -433,12 +445,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     if ($url_components['path'][0] === '/') {
       $url_components['path'] = substr($url_components['path'], 1);
     }
-    if ($url_components['path'][0] === '/' || $url_components['path'] === ':memory:') {
-      $database['database'] = $url_components['path'];
-    }
-    else {
-      $database['database'] = $root . '/' . $url_components['path'];
-    }
+    $database['database'] = $url_components['path'];
 
     // User credentials and system port are irrelevant for SQLite.
     unset(

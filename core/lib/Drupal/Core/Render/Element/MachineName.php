@@ -35,7 +35,8 @@ use Drupal\Core\Render\Attribute\FormElement;
  *     human-readable name (i.e., as contained in the $form structure) to use as
  *     source for the machine name. Defaults to ['label'].
  *   - label: (optional) Text to display as label for the machine name value
- *     after the human-readable name form element. Defaults to t('Machine name').
+ *     after the human-readable name form element. Defaults to t('Machine
+ *     name').
  *   - replace_pattern: (optional) A regular expression (without delimiters)
  *     matching disallowed characters in the machine name. Defaults to
  *     '[^a-z0-9_]+'.
@@ -76,7 +77,6 @@ class MachineName extends Textfield {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#default_value' => NULL,
@@ -85,15 +85,15 @@ class MachineName extends Textfield {
       '#size' => 60,
       '#autocomplete_route_name' => FALSE,
       '#process' => [
-        [$class, 'processMachineName'],
-        [$class, 'processAutocomplete'],
-        [$class, 'processAjaxForm'],
+        [static::class, 'processMachineName'],
+        [static::class, 'processAutocomplete'],
+        [static::class, 'processAjaxForm'],
       ],
       '#element_validate' => [
-        [$class, 'validateMachineName'],
+        [static::class, 'validateMachineName'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderTextfield'],
+        [static::class, 'preRenderTextfield'],
       ],
       '#theme' => 'input__textfield',
       '#theme_wrappers' => ['form_element'],

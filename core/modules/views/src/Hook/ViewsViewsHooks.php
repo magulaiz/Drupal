@@ -170,11 +170,11 @@ class ViewsViewsHooks {
     if ($entity_type_manager->hasDefinition('field_storage_config')) {
       /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
       foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
-        if (_views_field_get_entity_type_storage($field_storage)) {
+        if (\Drupal::service('views.field_data_provider')->getSqlStorageForField($field_storage)) {
           $provider = $field_storage->getTypeProvider();
           $result = (array) $module_handler->invoke($provider === 'core' ? 'views' : $provider, 'field_views_data', [$field_storage]);
           if (empty($result)) {
-            $result = views_field_default_views_data($field_storage);
+            $result = \Drupal::service('views.field_data_provider')->defaultFieldImplementation($field_storage);
           }
           $module_handler->alter('field_views_data', $result, $field_storage);
           if (is_array($result)) {
@@ -190,9 +190,9 @@ class ViewsViewsHooks {
    * Implements hook_views_data_alter().
    *
    * Field modules can implement hook_field_views_data_views_data_alter() to
-   * alter the views data on a per field basis. This is weirdly named so as
-   * not to conflict with the \Drupal::moduleHandler()->alter('field_views_data')
-   * in views_views_data().
+   * alter the views data on a per field basis. This is weirdly named so as not
+   * to conflict with the \Drupal::moduleHandler()->alter('field_views_data') in
+   * views_views_data().
    */
   #[Hook('views_data_alter')]
   public function viewsDataAlter(&$data): void {
@@ -202,7 +202,7 @@ class ViewsViewsHooks {
     }
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
-      if (_views_field_get_entity_type_storage($field_storage)) {
+      if (\Drupal::service('views.field_data_provider')->getSqlStorageForField($field_storage)) {
         \Drupal::moduleHandler()->invoke($field_storage->getTypeProvider(), 'field_views_data_views_data_alter', [&$data, $field_storage]);
       }
     }
@@ -212,13 +212,13 @@ class ViewsViewsHooks {
    * Implements hook_field_views_data().
    *
    * The function implements the hook on behalf of 'core' because it adds a
-   * relationship and a reverse relationship to entity_reference field type, which
-   * is provided by core. This function also provides an argument plugin for
-   * entity_reference fields that handles title token replacement.
+   * relationship and a reverse relationship to entity_reference field type,
+   * which is provided by core. This function also provides an argument plugin
+   * for entity_reference fields that handles title token replacement.
    */
   #[Hook('field_views_data')]
   public function fieldViewsData(FieldStorageConfigInterface $field_storage): array {
-    $data = views_field_default_views_data($field_storage);
+    $data = \Drupal::service('views.field_data_provider')->defaultFieldImplementation($field_storage);
     // The code below only deals with the Entity reference field type.
     if ($field_storage->getType() != 'entity_reference') {
       return $data;

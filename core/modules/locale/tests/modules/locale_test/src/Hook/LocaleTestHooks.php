@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\locale_test\Hook;
 
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Hook\Attribute\Hook;
@@ -13,6 +14,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for locale_test.
  */
 class LocaleTestHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_system_info_alter().
@@ -45,11 +48,11 @@ class LocaleTestHooks {
   /**
    * Implements hook_locale_translation_projects_alter().
    *
-   * The translation status process by default checks the status of the installed
-   * projects. This function replaces the data of the installed modules by a
-   * predefined set of modules with fixed file names and release versions. Project
-   * names, versions, timestamps etc must be fixed because they must match the
-   * files created by the test script.
+   * The translation status process by default checks the status of the
+   * installed projects. This function replaces the data of the installed
+   * modules by a predefined set of modules with fixed file names and release
+   * versions. Project names, versions, timestamps etc must be fixed because
+   * they must match the files created by the test script.
    *
    * The "locale.test_projects_alter" state variable must be set by the
    * test script in order for this hook to take effect.
@@ -174,11 +177,11 @@ class LocaleTestHooks {
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
-  public function tokenInfo() {
+  public function tokenInfo(): array {
     $info = [];
-    $info['types']['locale_test'] = ['name' => t('Locale test'), 'description' => t('Locale test')];
-    $info['tokens']['locale_test']['security_test1'] = ['type' => 'text', 'name' => t('Security test 1')];
-    $info['tokens']['locale_test']['security_test2'] = ['type' => 'text', 'name' => t('Security test 2')];
+    $info['types']['locale_test'] = ['name' => $this->t('Locale test'), 'description' => $this->t('Locale test')];
+    $info['tokens']['locale_test']['security_test1'] = ['type' => 'text', 'name' => $this->t('Security test 1')];
+    $info['tokens']['locale_test']['security_test2'] = ['type' => 'text', 'name' => $this->t('Security test 2')];
     return $info;
   }
 

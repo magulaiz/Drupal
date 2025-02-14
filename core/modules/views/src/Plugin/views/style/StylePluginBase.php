@@ -154,6 +154,7 @@ abstract class StylePluginBase extends PluginBase {
    * Returns the usesRowPlugin property.
    *
    * @return bool
+   *   TRUE if this style uses a row plugin, FALSE otherwise.
    */
   public function usesRowPlugin() {
     return $this->usesRowPlugin;
@@ -164,6 +165,7 @@ abstract class StylePluginBase extends PluginBase {
    * Returns the usesRowClass property.
    *
    * @return bool
+   *   TRUE if this style uses a row class, FALSE otherwise.
    */
   public function usesRowClass() {
     return $this->usesRowClass;
@@ -173,6 +175,7 @@ abstract class StylePluginBase extends PluginBase {
    * Returns the usesGrouping property.
    *
    * @return bool
+   *   TRUE if this style supports grouping, FALSE otherwise.
    */
   public function usesGrouping() {
     return $this->usesGrouping;
@@ -182,6 +185,7 @@ abstract class StylePluginBase extends PluginBase {
    * Return TRUE if this style also uses fields.
    *
    * @return bool
+   *   TRUE if fields are used, FALSE otherwise.
    */
   public function usesFields() {
     // If we use a row plugin, ask the row plugin. Chances are, we don't
@@ -212,6 +216,7 @@ abstract class StylePluginBase extends PluginBase {
    * Return TRUE if this style enables field labels by default.
    *
    * @return bool
+   *   TRUE if field labels are enabled by default, FALSE otherwise.
    */
   public function defaultFieldLabels() {
     return $this->defaultFieldLabels;
@@ -428,7 +433,7 @@ abstract class StylePluginBase extends PluginBase {
   /**
    * Allow the style to do stuff before each row is rendered.
    *
-   * @param $result
+   * @param array $result
    *   The full array of results from the query.
    */
   public function preRender($result) {
@@ -474,7 +479,7 @@ abstract class StylePluginBase extends PluginBase {
    * Plugins may override this method if they wish some other way of handling
    * grouping.
    *
-   * @param $sets
+   * @param array $sets
    *   An array keyed by group content containing the grouping sets to render.
    *   Each set contains the following associative array:
    *   - group: The group content.
@@ -523,12 +528,12 @@ abstract class StylePluginBase extends PluginBase {
   /**
    * Group records as needed for rendering.
    *
-   * @param $records
+   * @param array $records
    *   An array of records from the view to group.
-   * @param $groupings
+   * @param array $groupings
    *   An array of grouping instructions on which fields to group. If empty, the
    *   result set will be given a single group with an empty string as a label.
-   * @param $group_rendered
+   * @param bool $group_rendered
    *   Boolean value whether to use the rendered or the raw field value for
    *   grouping. If set to NULL the return is structured as before
    *   Views 7.x-3.0-rc2. After Views 7.x-3.0 this boolean is only used if
@@ -755,13 +760,13 @@ abstract class StylePluginBase extends PluginBase {
   /**
    * #pre_render callback for view row field rendering.
    *
-   * @see self::render()
-   *
    * @param array $data
    *   The element to #pre_render
    *
    * @return array
    *   The processed element.
+   *
+   * @see self::render()
    */
   public function elementPreRenderRow(array $data) {
     // Render row fields.
@@ -795,9 +800,9 @@ abstract class StylePluginBase extends PluginBase {
   /**
    * Get the raw field value.
    *
-   * @param $index
+   * @param int $index
    *   The index count of the row.
-   * @param $field
+   * @param string $field
    *   The id of the field.
    */
   public function getFieldValue($index, $field) {

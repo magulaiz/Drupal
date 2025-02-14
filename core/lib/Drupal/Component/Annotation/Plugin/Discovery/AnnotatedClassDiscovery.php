@@ -64,8 +64,8 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
    *   (optional) An array of namespace that may contain plugin implementations.
    *   Defaults to an empty array.
    * @param string $plugin_definition_annotation_name
-   *   (optional) The name of the annotation that contains the plugin definition.
-   *   Defaults to 'Drupal\Component\Annotation\Plugin'.
+   *   (optional) The name of the annotation that contains the plugin
+   *   definition. Defaults to 'Drupal\Component\Annotation\Plugin'.
    * @param string[] $annotation_namespaces
    *   (optional) Additional namespaces to be scanned for annotation classes.
    */
@@ -181,6 +181,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
    * Gets an array of PSR-4 namespaces to search for plugin classes.
    *
    * @return string[]
+   *   The PSR-4 namespaces for the plugin class.
    */
   protected function getPluginNamespaces() {
     return $this->pluginNamespaces;
