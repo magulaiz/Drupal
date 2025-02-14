@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Kernel;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\package_manager\PathLocator;
 use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
@@ -21,6 +22,8 @@ class DirectWriteTest extends PackageManagerKernelTestBase {
     // Even if we use a stage that supports direct write, it should not be
     // enabled.
     $stage = $this->createStage(DirectWriteTestStage::class);
+    $logger = new TestLogger();
+    $stage->setLogger($logger);
     $this->assertFalse($stage->isDirectWrite());
     $stage->create();
     $this->assertTrue($stage->stageDirectoryExists());
@@ -28,6 +31,7 @@ class DirectWriteTest extends PackageManagerKernelTestBase {
       $this->container->get(PathLocator::class)->getProjectRoot(),
       $stage->getStageDirectory(),
     );
+    $this->assertFalse($logger->hasRecords('info'));
   }
 
   /**
@@ -49,6 +53,8 @@ class DirectWriteTest extends PackageManagerKernelTestBase {
     $this->setSetting('package_manager_allow_direct_write', TRUE);
 
     $stage = $this->createStage(DirectWriteTestStage::class);
+    $logger = new TestLogger();
+    $stage->setLogger($logger);
     $this->assertTrue($stage->isDirectWrite());
     $stage->create();
     // In direct-write mode, the active and stage directories are the same.
@@ -65,6 +71,11 @@ class DirectWriteTest extends PackageManagerKernelTestBase {
     $queue = $this->container->get(QueueFactory::class)
       ->get('package_manager_cleanup');
     $this->assertSame(0, $queue->numberOfItems());
+
+    $records = $logger->recordsByLevel['info'];
+    $this->assertCount(2, $records);
+    $this->assertSame('Direct-write is enabled. Skipping sandboxing.', (string) $records[0]['message']);
+    $this->assertSame('Direct-write is enabled. Changes have been made to the running code base.', (string) $records[1]['message']);
   }
 
 }

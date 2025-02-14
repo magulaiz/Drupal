@@ -353,7 +353,10 @@ abstract class StageBase implements LoggerAwareInterface {
     $this->dispatch($event, [$this, 'markAsAvailable']);
 
     try {
-      if ($this->isDirectWrite() === FALSE) {
+      if ($this->isDirectWrite()) {
+        $this->logger?->info($this->t('Direct-write is enabled. Skipping sandboxing.'));
+      }
+      else {
         $this->beginner->begin($active_dir, $stage_dir, $excluded_paths, NULL, $timeout);
       }
     }
@@ -489,7 +492,10 @@ abstract class StageBase implements LoggerAwareInterface {
     $this->failureMarker->write($this, $this->getFailureMarkerMessage());
 
     try {
-      if ($this->isDirectWrite() === FALSE) {
+      if ($this->isDirectWrite()) {
+        $this->logger?->info($this->t('Direct-write is enabled. Changes have been made to the running code base.'));
+      }
+      else {
         $this->committer->commit($stage_dir, $active_dir, $excluded_paths, NULL, $timeout);
       }
     }
