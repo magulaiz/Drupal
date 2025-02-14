@@ -1,0 +1,5 @@
+services:
+  mysql.service_provider:
+    class: Drupal\mysql\MysqlServices
+    tags:
+      - { name: service_provider }
