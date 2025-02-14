@@ -22,10 +22,30 @@ interface RouteMatchInterface {
   /**
    * Returns the route name.
    *
+   * Usage of this method is discouraged for comparing the route name against a
+   * string because it can't account for aliased or deprecated routes. If
+   * possible, use RouteMatchInterface::isRouteName() instead.
+   *
    * @return string|null
    *   The route name. NULL if no route is matched.
    */
   public function getRouteName();
+
+  /**
+   * Compares the route name to the given value.
+   *
+   * @param string|array $value
+   *   The value to check against.
+   * @param string|null $operator
+   *  (optional) The comparison operator. Possible values:
+   *   - '=', 'STARTS_WITH', 'CONTAINS', 'ENDS_WITH': These operators expect
+   *     $value to be a string.
+   *   - 'IN', 'NOT IN': These operators expect $value to be an array.
+   *
+   * @return bool
+   *   Returns TRUE if the given value matches the route name, FALSE otherwise.
+   */
+  public function isRouteName(string|array $value, string $operator = NULL): bool;
 
   /**
    * Returns the route object.
