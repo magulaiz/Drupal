@@ -123,7 +123,12 @@ class BulkFormAccessTest extends UserTestBase {
     $edit = [
       'user_cancel_method' => 'user_cancel_delete',
     ];
+    $timestamp = time();
     $this->submitForm($edit, 'Confirm');
+
+    // Visit link in confirmation emails.
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
+    $this->drupalGet("user/" . $account2->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account2, $timestamp));
 
     // Ensure the account "no_delete" still exists.
     $account = User::load($account->id());

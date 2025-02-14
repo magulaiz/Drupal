@@ -94,13 +94,11 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     ];
     $form['user_cancel_method'] += $this->cancelMethods;
 
-    // When managing another user, can skip the account cancellation
-    // confirmation mail (by default).
     $override_access = !$own_account;
     $form['user_cancel_confirm'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Require email confirmation'),
-      '#default_value' => !$override_access,
+      '#default_value' => $override_access === FALSE ? FALSE : $this->config('user.settings')->get('notify.cancel_confirm'),
       '#access' => $override_access,
       '#description' => $this->t('When enabled, the user must confirm the account cancellation via email.'),
     ];
