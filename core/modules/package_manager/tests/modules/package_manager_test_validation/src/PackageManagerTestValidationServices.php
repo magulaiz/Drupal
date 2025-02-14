@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Modifies container services for testing.
  */
-class PackageManagerTestValidationServiceProvider extends ServiceProviderBase {
+class PackageManagerTestValidationServices extends ServiceProviderBase {
 
   /**
    * {@inheritdoc}
