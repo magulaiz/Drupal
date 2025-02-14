@@ -26,33 +26,34 @@ class FieldHooks {
    * @{
    * Attaches custom data fields to Drupal entities.
    *
-   * The Field API allows custom data fields to be attached to Drupal entities and
-   * takes care of storing, loading, editing, and rendering field data. Any entity
-   * type (node, user, etc.) can use the Field API to make itself "fieldable" and
-   * thus allow fields to be attached to it. Other modules can provide a user
-   * interface for managing custom fields via a web browser as well as a wide and
-   * flexible variety of data type, form element, and display format capabilities.
+   * The Field API allows custom data fields to be attached to Drupal entities
+   * and takes care of storing, loading, editing, and rendering field data. Any
+   * entity type (node, user, etc.) can use the Field API to make itself
+   * "fieldable" and thus allow fields to be attached to it. Other modules can
+   * provide a user interface for managing custom fields via a web browser as
+   * well as a wide and flexible variety of data type, form element, and display
+   * format capabilities.
    *
    * The Field API defines two primary data structures, FieldStorage and Field,
-   * and the concept of a Bundle. A FieldStorage defines a particular type of data
-   * that can be attached to entities. A Field is attached to a single
-   * Bundle. A Bundle is a set of fields that are treated as a group by the Field
-   * Attach API and is related to a single fieldable entity type.
+   * and the concept of a Bundle. A FieldStorage defines a particular type of
+   * data that can be attached to entities. A Field is attached to a single
+   * Bundle. A Bundle is a set of fields that are treated as a group by the
+   * Field Attach API and is related to a single fieldable entity type.
    *
    * For example, suppose a site administrator wants Article nodes to have a
-   * subtitle and photo. Using the Field API or Field UI module, the administrator
-   * creates a field named 'subtitle' of type 'text' and a field named 'photo' of
-   * type 'image'. The administrator (again, via a UI) creates two Field
-   * Instances, one attaching the field 'subtitle' to the 'node' bundle 'article'
-   * and one attaching the field 'photo' to the 'node' bundle 'article'. When the
-   * node storage loads an Article node, it loads the values of the
-   * 'subtitle' and 'photo' fields because they are both attached to the 'node'
-   * bundle 'article'.
+   * subtitle and photo. Using the Field API or Field UI module, the
+   * administrator creates a field named 'subtitle' of type 'text' and a field
+   * named 'photo' of type 'image'. The administrator (again, via a UI) creates
+   * two Field Instances, one attaching the field 'subtitle' to the 'node'
+   * bundle 'article' and one attaching the field 'photo' to the 'node' bundle
+   * 'article'. When the node storage loads an Article node, it loads the values
+   * of the 'subtitle' and 'photo' fields because they are both attached to the
+   * 'node' bundle 'article'.
    *
    * - @link field_types Field Types API @endlink: Defines field types, widget
-   *   types, and display formatters. Field modules use this API to provide field
-   *   types like Text and Node Reference along with the associated form elements
-   *   and display formatters.
+   *   types, and display formatters. Field modules use this API to provide
+   *   field types like Text and Node Reference along with the associated form
+   *   elements and display formatters.
    *
    * - @link field_purge Field API bulk data deletion @endlink: Cleans up after
    *   bulk deletion operations such as deletion of field storage or field.
@@ -171,7 +172,7 @@ class FieldHooks {
    * Implements hook_entity_field_storage_info().
    */
   #[Hook('entity_field_storage_info')]
-  public function entityFieldStorageInfo(EntityTypeInterface $entity_type) {
+  public function entityFieldStorageInfo(EntityTypeInterface $entity_type): array {
     if (\Drupal::entityTypeManager()->getStorage($entity_type->id()) instanceof DynamicallyFieldableEntityStorageInterface) {
       // Query by filtering on the ID as this is more efficient than filtering
       // on the entity_type property directly.
@@ -184,32 +185,33 @@ class FieldHooks {
       }
       return $result;
     }
+    return [];
   }
 
   /**
    * Implements hook_entity_bundle_field_info().
    */
   #[Hook('entity_bundle_field_info')]
-  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions): array {
+    $result = [];
     if (\Drupal::entityTypeManager()->getStorage($entity_type->id()) instanceof DynamicallyFieldableEntityStorageInterface) {
       // Query by filtering on the ID as this is more efficient than filtering
       // on the entity_type property directly.
       $ids = \Drupal::entityQuery('field_config')->condition('id', $entity_type->id() . '.' . $bundle . '.', 'STARTS_WITH')->execute();
       // Fetch all fields and key them by field name.
       $field_configs = FieldConfig::loadMultiple($ids);
-      $result = [];
       foreach ($field_configs as $field_instance) {
         $result[$field_instance->getName()] = $field_instance;
       }
-      return $result;
     }
+    return $result;
   }
 
   /**
    * Implements hook_entity_bundle_delete().
    */
   #[Hook('entity_bundle_delete')]
-  public function entityBundleDelete($entity_type_id, $bundle) {
+  public function entityBundleDelete($entity_type_id, $bundle): void {
     $storage = \Drupal::entityTypeManager()->getStorage('field_config');
     // Get the fields on the bundle.
     $fields = $storage->loadByProperties(['entity_type' => $entity_type_id, 'bundle' => $bundle]);
@@ -266,8 +268,8 @@ class FieldHooks {
   /**
    * Implements hook_form_FORM_ID_alter().
    *
-   * Adds a warning if field data will be permanently removed by the configuration
-   * synchronization.
+   * Adds a warning if field data will be permanently removed by the
+   * configuration synchronization.
    *
    * @see \Drupal\field\ConfigImporterFieldPurger
    */
@@ -292,7 +294,7 @@ class FieldHooks {
    * Implements hook_ENTITY_TYPE_insert() for 'field_config'.
    */
   #[Hook('field_config_insert')]
-  public function fieldConfigInsert(FieldConfigInterface $field) {
+  public function fieldConfigInsert(FieldConfigInterface $field): void {
     if ($field->isSyncing()) {
       // Don't change anything during a configuration sync.
       return;
@@ -310,7 +312,7 @@ class FieldHooks {
    * an entity reference field.
    */
   #[Hook('field_storage_config_update')]
-  public function fieldStorageConfigUpdate(FieldStorageConfigInterface $field_storage) {
+  public function fieldStorageConfigUpdate(FieldStorageConfigInterface $field_storage): void {
     if ($field_storage->isSyncing()) {
       // Don't change anything during a configuration sync.
       return;
@@ -342,7 +344,7 @@ class FieldHooks {
    * Determine the selection handler plugin ID for an entity reference field.
    */
   #[Hook('field_config_create')]
-  public function fieldConfigCreate(FieldConfigInterface $field) {
+  public function fieldConfigCreate(FieldConfigInterface $field): void {
     if ($field->isSyncing()) {
       return;
     }
@@ -372,7 +374,7 @@ class FieldHooks {
    * Determine the selection handler plugin ID for an entity reference field.
    */
   #[Hook('field_config_presave')]
-  public function fieldConfigPresave(FieldConfigInterface $field) {
+  public function fieldConfigPresave(FieldConfigInterface $field): void {
     // Don't change anything during a configuration sync.
     if ($field->isSyncing()) {
       return;

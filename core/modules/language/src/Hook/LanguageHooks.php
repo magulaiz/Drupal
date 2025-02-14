@@ -210,7 +210,7 @@ class LanguageHooks {
    * Implements hook_entity_bundle_delete().
    */
   #[Hook('entity_bundle_delete')]
-  public function entityBundleDelete($entity_type_id, $bundle) {
+  public function entityBundleDelete($entity_type_id, $bundle): void {
     // Remove the content language settings associated with the bundle.
     $settings = ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle);
     if (!$settings->isNew()) {
@@ -362,9 +362,9 @@ class LanguageHooks {
    * Implements hook_language_types_info_alter().
    *
    * We can't set the fixed properties in \Drupal\Core\Language\LanguageManager,
-   * where the rest of the properties for the default language types are defined.
-   * The LanguageNegation classes are only loaded when the language module is
-   * enabled and we can't be sure of that in the LanguageManager.
+   * where the rest of the properties for the default language types are
+   * defined. The LanguageNegation classes are only loaded when the language
+   * module is enabled and we can't be sure of that in the LanguageManager.
    */
   #[Hook('language_types_info_alter')]
   public function languageTypesInfoAlter(array &$language_types): void {

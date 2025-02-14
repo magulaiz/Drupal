@@ -507,6 +507,11 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->assertNull($duplicate->getOriginalId());
     $this->assertNotEquals($this->entity->uuid(), $duplicate->uuid());
     $this->assertSame($new_uuid, $duplicate->uuid());
+
+    $this->moduleHandler->invokeAll($this->entityTypeId . '_duplicate', [$duplicate, $this->entity])
+      ->shouldHaveBeenCalled();
+    $this->moduleHandler->invokeAll('entity_duplicate', [$duplicate, $this->entity])
+      ->shouldHaveBeenCalled();
   }
 
   /**
@@ -717,10 +722,19 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
 
 class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCollections {
 
+  /**
+   * The plugin collection.
+   */
   protected $pluginCollection;
 
+  /**
+   * The plugin manager.
+   */
   protected $pluginManager;
 
+  /**
+   * The configuration for the plugin collection.
+   */
   protected array $the_plugin_collection_config = [];
 
   public function setPluginManager(PluginManagerInterface $plugin_manager): void {

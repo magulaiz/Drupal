@@ -12,6 +12,7 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
@@ -220,7 +221,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
     // Create a "foo" bundle for the given entity type.
     $bundle = 'foo';
-    entity_test_create_bundle($bundle, NULL, $entity_type);
+    EntityTestHelper::createBundle($bundle, NULL, $entity_type);
 
     // Add a field of the given type to the given entity type's "foo" bundle.
     $field_name = $referenced_entity->getEntityTypeId() . '_reference';
@@ -305,7 +306,8 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    * - entity cache tag: "<entity type>:<entity ID>"
    * - entity type list cache tag: "<entity type>_list"
    * - referencing entity type view cache tag: "<referencing entity type>_view"
-   * - referencing entity type cache tag: "<referencing entity type>:<referencing entity ID>"
+   * - referencing entity type cache tag: "
+   *   <referencing entity type>:<referencing entity ID>"
    */
   public function testReferencedEntity(): void {
     $entity_type = $this->entity->getEntityTypeId();

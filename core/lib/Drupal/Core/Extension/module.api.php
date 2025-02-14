@@ -64,17 +64,15 @@ use Drupal\Core\Utility\UpdateException;
  *
  * Only procedural implementations are supported for this hook.
  *
- * Normally hooks do not need to be explicitly defined. However, by declaring a
- * hook explicitly, a module may define a "group" for it. Modules that implement
- * a hook may then place their implementation in either $module.module or in
- * $module.$group.inc. If the hook is located in $module.$group.inc, then that
- * file will be automatically loaded when needed.
- * In general, hooks that are rarely invoked and/or are very large should be
- * placed in a separate include file, while hooks that are very short or very
- * frequently called should be left in the main module file so that they are
- * always available.
+ * Support for this hook will be removed in Drupal 12.0.0.
+ * This hook has intentionally not been deprecated since removing
+ * implementations will break modules with code in $module.$group.inc files.
  *
- * See system_hook_info() for all hook groups defined by Drupal core.
+ * $module.$group.inc themselves have been deprecated, so modules supporting
+ * drupal 12.0.0 will have removed all code from $module.$group.inc files.
+ *
+ * Once a module requires 12.0.0 as a minimum version of Drupal the module can
+ * safely remove hook_hook_info() implementations.
  *
  * @return array
  *   An associative array whose keys are hook names and whose values are an
@@ -83,7 +81,7 @@ use Drupal\Core\Utility\UpdateException;
  *     system will determine whether a file with the name $module.$group.inc
  *     exists, and automatically load it when required.
  */
-function hook_hook_info() {
+function hook_hook_info(): array {
   $hooks['token_info'] = [
     'group' => 'tokens',
   ];
@@ -183,8 +181,8 @@ function hook_module_preinstall($module, bool $is_syncing): void {
  * This function differs from hook_install() in that it gives all other modules
  * a chance to perform actions when a module is installed, whereas
  * hook_install() is only called on the module actually being installed. See
- * \Drupal\Core\Extension\ModuleInstaller::install() for a detailed description of
- * the order in which install hooks are invoked.
+ * \Drupal\Core\Extension\ModuleInstaller::install() for a detailed description
+ * of the order in which install hooks are invoked.
  *
  * This hook should be implemented in a .module file, not in an .install file.
  *
@@ -538,6 +536,8 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
   $tasks['install_configure_form']['function'] = 'my_profile_install_configure_form';
 }
 
+// phpcs:disable Drupal.Commenting.DocComment.ParamNotFirst
+
 /**
  * Perform a single update between minor versions.
  *
@@ -778,6 +778,7 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * @see \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
  * @see https://www.drupal.org/node/2535316
  */
+// phpcs:enable
 function hook_update_N(&$sandbox) {
   // For non-batch updates, the signature can simply be:
   // function hook_update_N() {
@@ -833,6 +834,8 @@ function hook_update_N(&$sandbox) {
   return t('All foo bars were updated with the new suffix');
 }
 
+// phpcs:disable Drupal.Commenting.DocComment.ParamNotFirst
+
 /**
  * Executes an update which is intended to update data, like entities.
  *
@@ -885,6 +888,7 @@ function hook_update_N(&$sandbox) {
  * @see hook_update_N()
  * @see hook_removed_post_updates()
  */
+// phpcs:enable
 function hook_post_update_NAME(&$sandbox) {
   // Example of updating some content.
   $node = \Drupal\node\Entity\Node::load(123);
@@ -1025,7 +1029,7 @@ function hook_update_last_removed(): int {
  * @see drupal_get_updaters()
  * @see hook_updater_info_alter()
  */
-function hook_updater_info() {
+function hook_updater_info(): array {
   return [
     'module' => [
       'class' => 'Drupal\Core\Updater\Module',

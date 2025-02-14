@@ -71,7 +71,7 @@ class CommentHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $return = [];
     foreach (CommentType::loadMultiple() as $comment_type) {
       $return['comment'][$comment_type->id()] = [
@@ -112,7 +112,7 @@ class CommentHooks {
    * Implements hook_ENTITY_TYPE_create() for 'field_config'.
    */
   #[Hook('field_config_create')]
-  public function fieldConfigCreate(FieldConfigInterface $field) {
+  public function fieldConfigCreate(FieldConfigInterface $field): void {
     if ($field->getType() == 'comment' && !$field->isSyncing()) {
       // Assign default values for the field.
       $default_value = $field->getDefaultValueLiteral();
@@ -133,7 +133,7 @@ class CommentHooks {
    * Implements hook_ENTITY_TYPE_update() for 'field_config'.
    */
   #[Hook('field_config_update')]
-  public function fieldConfigUpdate(FieldConfigInterface $field) {
+  public function fieldConfigUpdate(FieldConfigInterface $field): void {
     if ($field->getType() == 'comment') {
       // Comment field settings also affects the rendering of *comment* entities,
       // not only the *commented* entities.
@@ -145,7 +145,7 @@ class CommentHooks {
    * Implements hook_ENTITY_TYPE_insert() for 'field_storage_config'.
    */
   #[Hook('field_storage_config_insert')]
-  public function fieldStorageConfigInsert(FieldStorageConfigInterface $field_storage) {
+  public function fieldStorageConfigInsert(FieldStorageConfigInterface $field_storage): void {
     if ($field_storage->getType() == 'comment') {
       // Check that the target entity type uses an integer ID.
       $entity_type_id = $field_storage->getTargetEntityTypeId();
@@ -159,7 +159,7 @@ class CommentHooks {
    * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
    */
   #[Hook('field_config_delete')]
-  public function fieldConfigDelete(FieldConfigInterface $field) {
+  public function fieldConfigDelete(FieldConfigInterface $field): void {
     if ($field->getType() == 'comment') {
       // Delete all comments that used by the entity bundle.
       $entity_query = \Drupal::entityQuery('comment')->accessCheck(FALSE);
@@ -178,8 +178,8 @@ class CommentHooks {
   #[Hook('node_links_alter')]
   public function nodeLinksAlter(array &$links, NodeInterface $node, array &$context): void {
     // Comment links are only added to node entity type for backwards
-    // compatibility. Should you require comment links for other entity types you
-    // can do so by implementing a new field formatter.
+    // compatibility. Should you require comment links for other entity types
+    // you can do so by implementing a new field formatter.
     // @todo Make this configurable from the formatter. See
     //   https://www.drupal.org/node/1901110.
     $comment_links = \Drupal::service('comment.link_builder')->buildCommentedEntityLinks($node, $context);
@@ -190,7 +190,7 @@ class CommentHooks {
    * Implements hook_entity_view().
    */
   #[Hook('entity_view')]
-  public function entityView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  public function entityView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode): void {
     if ($entity instanceof FieldableEntityInterface && $view_mode == 'rss' && $display->getComponent('links')) {
       /** @var \Drupal\comment\CommentManagerInterface $comment_manager */
       $comment_manager = \Drupal::service('comment.manager');
@@ -298,7 +298,7 @@ class CommentHooks {
    * Implements hook_entity_insert().
    */
   #[Hook('entity_insert')]
-  public function entityInsert(EntityInterface $entity) {
+  public function entityInsert(EntityInterface $entity): void {
     // Allow bulk updates and inserts to temporarily disable the
     // maintenance of the {comment_entity_statistics} table.
     if (\Drupal::state()->get('comment.maintain_entity_statistics') && ($fields = \Drupal::service('comment.manager')->getFields($entity->getEntityTypeId()))) {
@@ -310,7 +310,7 @@ class CommentHooks {
    * Implements hook_entity_predelete().
    */
   #[Hook('entity_predelete')]
-  public function entityPredelete(EntityInterface $entity) {
+  public function entityPredelete(EntityInterface $entity): void {
     // Entities can have non-numeric IDs, but {comment} and
     // {comment_entity_statistics} tables have integer columns for entity ID, and
     // PostgreSQL throws exceptions if you attempt query conditions with
@@ -461,7 +461,7 @@ class CommentHooks {
    * Implements hook_ENTITY_TYPE_predelete() for user entities.
    */
   #[Hook('user_predelete')]
-  public function userPredelete($account) {
+  public function userPredelete($account): void {
     $entity_query = \Drupal::entityQuery('comment')->accessCheck(FALSE);
     $entity_query->condition('uid', $account->id());
     $cids = $entity_query->execute();
@@ -482,7 +482,7 @@ class CommentHooks {
    * Implements hook_ENTITY_TYPE_presave() for entity_view_display entities.
    */
   #[Hook('entity_view_display_presave')]
-  public function entityViewDisplayPresave(EntityViewDisplayInterface $display) {
+  public function entityViewDisplayPresave(EntityViewDisplayInterface $display): void {
     // Act only on comment view displays being disabled.
     if ($display->isNew() || $display->getTargetEntityTypeId() !== 'comment' || $display->status()) {
       return;

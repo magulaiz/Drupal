@@ -57,8 +57,8 @@ class EditorHooks {
   /**
    * Implements hook_menu_links_discovered_alter().
    *
-   * Rewrites the menu entries for filter module that relate to the configuration
-   * of text editors.
+   * Rewrites the menu entries for filter module that relate to the
+   * configuration of text editors.
    */
   #[Hook('menu_links_discovered_alter')]
   public function menuLinksDiscoveredAlter(array &$links): void {
@@ -185,7 +185,7 @@ class EditorHooks {
    * Implements hook_entity_insert().
    */
   #[Hook('entity_insert')]
-  public function entityInsert(EntityInterface $entity) {
+  public function entityInsert(EntityInterface $entity): void {
     // Only act on content entities.
     if (!$entity instanceof FieldableEntityInterface) {
       return;
@@ -200,7 +200,7 @@ class EditorHooks {
    * Implements hook_entity_update().
    */
   #[Hook('entity_update')]
-  public function entityUpdate(EntityInterface $entity) {
+  public function entityUpdate(EntityInterface $entity): void {
     // Only act on content entities.
     if (!$entity instanceof FieldableEntityInterface) {
       return;
@@ -235,7 +235,7 @@ class EditorHooks {
    * Implements hook_entity_delete().
    */
   #[Hook('entity_delete')]
-  public function entityDelete(EntityInterface $entity) {
+  public function entityDelete(EntityInterface $entity): void {
     // Only act on content entities.
     if (!$entity instanceof FieldableEntityInterface) {
       return;
@@ -250,7 +250,7 @@ class EditorHooks {
    * Implements hook_entity_revision_delete().
    */
   #[Hook('entity_revision_delete')]
-  public function entityRevisionDelete(EntityInterface $entity) {
+  public function entityRevisionDelete(EntityInterface $entity): void {
     // Only act on content entities.
     if (!$entity instanceof FieldableEntityInterface) {
       return;
@@ -268,13 +268,13 @@ class EditorHooks {
    * @see file_get_file_references()
    */
   #[Hook('file_download')]
-  public function fileDownload($uri) {
+  public function fileDownload($uri): array|int|null {
     // Get the file record based on the URI. If not in the database just return.
     /** @var \Drupal\file\FileRepositoryInterface $file_repository */
     $file_repository = \Drupal::service('file.repository');
     $file = $file_repository->loadByUri($uri);
     if (!$file) {
-      return;
+      return NULL;
     }
     // Temporary files are handled by file_file_download(), so nothing to do here
     // about them.
@@ -287,7 +287,7 @@ class EditorHooks {
     // an image preview on a node creation form) in which case, allow download by
     // the file's owner.
     if (empty($usage_list['editor']) && ($file->isPermanent() || $file->getOwnerId() != \Drupal::currentUser()->id())) {
-      return;
+      return NULL;
     }
     // Editor.module MUST NOT call $file->access() here (like file_file_download()
     // does) as checking the 'download' access to a file entity would end up in
@@ -326,7 +326,7 @@ class EditorHooks {
    * @todo remove in https://www.drupal.org/project/drupal/issues/3231354.
    */
   #[Hook('filter_format_presave')]
-  public function filterFormatPresave(FilterFormatInterface $format) {
+  public function filterFormatPresave(FilterFormatInterface $format): void {
     // The text format being created cannot have a text editor yet.
     if ($format->isNew()) {
       return;

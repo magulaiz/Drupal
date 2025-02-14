@@ -2,15 +2,17 @@
 
 namespace Drupal\navigation\Hook;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\navigation\RenderCallbacks;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
+use Drupal\navigation\RenderCallbacks;
 use Drupal\navigation\TopBarItemManagerInterface;
 
 /**
@@ -19,6 +21,17 @@ use Drupal\navigation\TopBarItemManagerInterface;
 class NavigationHooks {
 
   use StringTranslationTrait;
+
+  /**
+   * NavigationHooks constructor.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
+   *   The current user.
+   */
+  public function __construct(
+    protected AccountInterface $currentUser,
+  ) {
+  }
 
   /**
    * Implements hook_help().
@@ -81,16 +94,8 @@ class NavigationHooks {
   #[Hook('theme')]
   public function theme($existing, $type, $theme, $path) : array {
     $items['top_bar'] = ['render element' => 'element'];
-    $items['top_bar_local_tasks'] = ['variables' => ['local_tasks' => []]];
-    $items['top_bar_local_task'] = ['variables' => ['link' => []]];
-    $items['big_pipe_interface_preview__navigation_shortcut_lazy_builder_lazyLinks__Shortcuts'] = [
-      'variables' => [
-        'callback' => NULL,
-        'arguments' => NULL,
-        'preview' => NULL,
-      ],
-      'base hook' => 'big_pipe_interface_preview',
-    ];
+    $items['top_bar_page_actions'] = ['variables' => ['page_actions' => [], 'featured_page_actions' => []]];
+    $items['top_bar_page_action'] = ['variables' => ['link' => []]];
     $items['block__navigation'] = ['render element' => 'elements', 'base hook' => 'block'];
     $items['navigation_menu'] = [
       'base hook' => 'menu',
@@ -101,10 +106,22 @@ class NavigationHooks {
         'attributes' => [],
       ],
     ];
-    $items['menu_region__footer'] = ['variables' => ['items' => [], 'title' => NULL, 'menu_name' => NULL]];
     $items['navigation_content_top'] = [
       'variables' => [
         'items' => [],
+      ],
+    ];
+    $items['navigation__messages'] = [
+      'variables' => [
+        'message_list' => NULL,
+      ],
+    ];
+    $items['navigation__message'] = [
+      'variables' => [
+        'attributes' => [],
+        'url' => NULL,
+        'content' => NULL,
+        'type' => 'status',
       ],
     ];
     return $items;
@@ -170,7 +187,8 @@ class NavigationHooks {
     array_walk($definitions, function (&$definition, $block_id) {
       [$base_plugin_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $block_id);
 
-      // Add the allow_in_navigation attribute to those blocks valid for Navigation.
+      // Add the allow_in_navigation attribute to those blocks valid for
+      // Navigation.
       // @todo Refactor to use actual block Attribute once
       //   https://www.drupal.org/project/drupal/issues/3443882 is merged.
       $allow_in_navigation = [
@@ -234,6 +252,21 @@ class NavigationHooks {
         '#weight' => -1000,
       ],
     ];
+  }
+
+  /**
+   * Implements hook_js_settings_alter().
+   */
+  #[Hook('js_settings_alter')]
+  public function jsSettingsAlter(array &$settings, AttachedAssetsInterface $assets): void {
+    // If Navigation's user-block library is not installed, return.
+    if (!in_array('navigation/internal.user-block', $assets->getLibraries())) {
+      return;
+    }
+    // Provide the user name in drupalSettings to allow JavaScript code to
+    // customize the experience for the end user, rather than the server side,
+    // which would break the render cache.
+    $settings['navigation']['user'] = $this->currentUser->getAccountName();
   }
 
 }

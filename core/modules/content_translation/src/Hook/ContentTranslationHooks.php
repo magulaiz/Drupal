@@ -92,45 +92,46 @@ class ContentTranslationHooks {
   /**
    * Implements hook_entity_type_alter().
    *
-   * The content translation UI relies on the entity info to provide its features.
-   * See the documentation of hook_entity_type_build() in the Entity API
-   * documentation for more details on all the entity info keys that may be
+   * The content translation UI relies on the entity info to provide its
+   * features. See the documentation of hook_entity_type_build() in the Entity
+   * API documentation for more details on all the entity info keys that may be
    * defined.
    *
    * To make Content Translation automatically support an entity type some keys
    * may need to be defined, but none of them is required unless the entity path
-   * is different from the usual /ENTITY_TYPE/{ENTITY_TYPE} pattern (for instance
-   * "/taxonomy/term/{taxonomy_term}"). Here are a list of those optional keys:
+   * is different from the usual /ENTITY_TYPE/{ENTITY_TYPE} pattern (for
+   * instance "/taxonomy/term/{taxonomy_term}"). Here are a list of those
+   * optional keys:
    * - canonical: This key (in the 'links' entity info property) must be defined
    *   if the entity path is different from /ENTITY_TYPE/{ENTITY_TYPE}
    * - translation: This key (in the 'handlers' entity annotation property)
-   *   specifies the translation handler for the entity type. If an entity type is
-   *   translatable and no translation handler is defined,
+   *   specifies the translation handler for the entity type. If an entity type
+   *   is translatable and no translation handler is defined,
    *   \Drupal\content_translation\ContentTranslationHandler will be assumed.
    *   Every translation handler must implement
    *   \Drupal\content_translation\ContentTranslationHandlerInterface.
    * - content_translation_ui_skip: By default, entity types that do not have a
-   *   canonical link template cannot be enabled for translation. Setting this key
-   *   to TRUE overrides that. When that key is set, the Content Translation
+   *   canonical link template cannot be enabled for translation. Setting this
+   *   key to TRUE overrides that. When that key is set, the Content Translation
    *   module will not provide any UI for translating the entity type, and the
    *   entity type should implement its own UI. For instance, this is useful for
    *   entity types that are embedded into others for editing (which would not
    *   need a canonical link, but could still support translation).
    * - content_translation_metadata: To implement its business logic the content
-   *   translation UI relies on various metadata items describing the translation
-   *   state. The default implementation is provided by
+   *   translation UI relies on various metadata items describing the
+   *   translation state. The default implementation is provided by
    *   \Drupal\content_translation\ContentTranslationMetadataWrapper, which is
-   *   relying on one field for each metadata item (field definitions are provided
-   *   by the translation handler). Entity types needing to customize this
-   *   behavior can specify an alternative class through the
+   *   relying on one field for each metadata item (field definitions are
+   *   provided by the translation handler). Entity types needing to customize
+   *   this behavior can specify an alternative class through the
    *   'content_translation_metadata' key in the entity type definition. Every
    *   content translation metadata wrapper needs to implement
    *   \Drupal\content_translation\ContentTranslationMetadataWrapperInterface.
    *
-   * If the entity paths match the default pattern above and there is no need for
-   * an entity-specific translation handler, Content Translation will provide
-   * built-in support for the entity. However enabling translation for each
-   * translatable bundle will be required.
+   * If the entity paths match the default pattern above and there is no need
+   * for an entity-specific translation handler, Content Translation will
+   * provide built-in support for the entity. However enabling translation for
+   * each translatable bundle will be required.
    *
    * @see \Drupal\Core\Entity\Annotation\EntityType
    */
@@ -178,14 +179,14 @@ class ContentTranslationHooks {
    * Installs Content Translation's field storage definitions for the target
    * entity type, if required.
    *
-   * Also clears the bundle information cache so that the bundle's translatability
-   * will be set properly.
+   * Also clears the bundle information cache so that the bundle's
+   * translatability will be set properly.
    *
    * @see content_translation_entity_bundle_info_alter()
    * @see \Drupal\content_translation\ContentTranslationManager::isEnabled()
    */
   #[Hook('language_content_settings_insert')]
-  public function languageContentSettingsInsert(ContentLanguageSettingsInterface $settings) {
+  public function languageContentSettingsInsert(ContentLanguageSettingsInterface $settings): void {
     if ($settings->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
       _content_translation_install_field_storage_definitions($settings->getTargetEntityTypeId());
     }
@@ -198,14 +199,14 @@ class ContentTranslationHooks {
    * Installs Content Translation's field storage definitions for the target
    * entity type, if required.
    *
-   * Also clears the bundle information cache so that the bundle's translatability
-   * will be changed properly.
+   * Also clears the bundle information cache so that the bundle's
+   * translatability will be changed properly.
    *
    * @see content_translation_entity_bundle_info_alter()
    * @see \Drupal\content_translation\ContentTranslationManager::isEnabled()
    */
   #[Hook('language_content_settings_update')]
-  public function languageContentSettingsUpdate(ContentLanguageSettingsInterface $settings) {
+  public function languageContentSettingsUpdate(ContentLanguageSettingsInterface $settings): void {
     $original_settings = $settings->getOriginal();
     if ($settings->getThirdPartySetting('content_translation', 'enabled', FALSE) && !$original_settings->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
       _content_translation_install_field_storage_definitions($settings->getTargetEntityTypeId());
@@ -238,7 +239,8 @@ class ContentTranslationHooks {
    * Implements hook_entity_base_field_info().
    */
   #[Hook('entity_base_field_info')]
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
+    $info = [];
     /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
     $manager = \Drupal::service('content_translation.manager');
     $entity_type_id = $entity_type->id();
@@ -249,13 +251,13 @@ class ContentTranslationHooks {
       // or it was enabled before, so that we keep translation metadata around
       // when translation is disabled.
       // @todo Re-evaluate this approach and consider removing field storage
-      //   definitions and the related field data if the entity type has no bundle
-      //   enabled for translation.
-      // @see https://www.drupal.org/node/2907777
+      //   definitions and the related field data if the entity type has no
+      //   bundle enabled for translation. See https://www.drupal.org/i/2907777
       if ($manager->isEnabled($entity_type_id) || array_intersect_key($definitions, $installed_storage_definitions)) {
-        return $definitions;
+        $info = $definitions;
       }
     }
+    return $info;
   }
 
   /**
@@ -418,7 +420,7 @@ class ContentTranslationHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $extra = [];
     $bundle_info_service = \Drupal::service('entity_type.bundle.info');
     foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $info) {
@@ -469,7 +471,7 @@ class ContentTranslationHooks {
    * Implements hook_entity_presave().
    */
   #[Hook('entity_presave')]
-  public function entityPresave(EntityInterface $entity) {
+  public function entityPresave(EntityInterface $entity): void {
     if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && !$entity->isNew() && $entity->getOriginal()) {
       /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
       $manager = \Drupal::service('content_translation.manager');
