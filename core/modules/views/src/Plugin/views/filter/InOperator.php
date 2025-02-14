@@ -5,23 +5,27 @@ namespace Drupal\views\Plugin\views\filter;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Form\OptGroup;
 
 /**
- * Simple filter to handle matching of multiple options selectable via checkboxes.
+ * Filter to handle matching of multiple options selectable via checkboxes.
  *
  * Definition items:
- * - options callback: The function to call in order to generate the value options. If omitted, the options 'Yes' and 'No' will be used.
+ * - options callback: The function to call in order to generate the value
+ *   options. If omitted, the options 'Yes' and 'No' will be used.
  * - options arguments: An array of arguments to pass to the options callback.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("in_operator")
  */
-class InOperator extends FilterPluginBase {
+#[ViewsFilter("in_operator")]
+class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
 
+  /**
+   * The default form type.
+   */
   protected $valueFormType = 'checkboxes';
 
   /**
@@ -40,7 +44,7 @@ class InOperator extends FilterPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
     $this->valueTitle = $this->t('Options');
@@ -80,11 +84,17 @@ class InOperator extends FilterPluginBase {
     return $this->valueOptions;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function defaultExposeOptions() {
     parent::defaultExposeOptions();
     $this->options['expose']['reduce'] = FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildExposeForm(&$form, FormStateInterface $form_state) {
     parent::buildExposeForm($form, $form_state);
     $form['expose']['reduce'] = [
@@ -96,6 +106,9 @@ class InOperator extends FilterPluginBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -107,11 +120,7 @@ class InOperator extends FilterPluginBase {
   }
 
   /**
-   * Gets the operators.
-   *
-   * This kind of construct makes it relatively easy for a child class
-   * to add or remove functionality by overriding this function and
-   * adding/removing items from this array.
+   * {@inheritdoc}
    */
   public function operators() {
     $operators = [
@@ -130,7 +139,7 @@ class InOperator extends FilterPluginBase {
         'values' => 1,
       ],
     ];
-    // if the definition allows for the empty operator, add it.
+    // If the definition allows for the empty operator, add it.
     if (!empty($this->definition['allow empty'])) {
       $operators += [
         'empty' => [
@@ -163,6 +172,9 @@ class InOperator extends FilterPluginBase {
     return $options;
   }
 
+  /**
+   * Gets the operators that have a given number of values.
+   */
   protected function operatorValues($values = 1) {
     $options = [];
     foreach ($this->operators() as $id => $info) {
@@ -174,6 +186,9 @@ class InOperator extends FilterPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $form['value'] = [];
     $options = [];
@@ -196,7 +211,7 @@ class InOperator extends FilterPluginBase {
       $identifier = $this->options['expose']['identifier'];
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
-        // exposed and locked.
+        // Exposed and locked.
         $which = in_array($this->operator, $this->operatorValues(1)) ? 'value' : 'none';
       }
       else {
@@ -261,6 +276,9 @@ class InOperator extends FilterPluginBase {
 
   /**
    * When using exposed filters, we may be required to reduce the set.
+   *
+   * @param array $input
+   *   (optional) Associative array containing the exposed data for this view.
    */
   public function reduceValueOptions($input = NULL) {
     if (!isset($input)) {
@@ -311,6 +329,9 @@ class InOperator extends FilterPluginBase {
     return parent::acceptExposedInput($input);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function valueSubmit($form, FormStateInterface $form_state) {
     // Drupal's FAPI system automatically puts '0' in for any checkbox that
     // was not set, and the key to the checkbox if it is set.
@@ -324,6 +345,9 @@ class InOperator extends FilterPluginBase {
     $form_state->setValue(['options', 'value'], $form['value']['#value']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function adminSummary() {
     if ($this->isAGroup()) {
       return $this->t('grouped');
@@ -388,6 +412,9 @@ class InOperator extends FilterPluginBase {
     return $operator . (($values !== '') ? ' ' . $values : '');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $info = $this->operators();
     if (!empty($info[$this->operator]['method'])) {
@@ -395,6 +422,9 @@ class InOperator extends FilterPluginBase {
     }
   }
 
+  /**
+   * Filters by a simple operator.
+   */
   protected function opSimple() {
     if (empty($this->value)) {
       return;
@@ -406,6 +436,9 @@ class InOperator extends FilterPluginBase {
     $this->query->addWhere($this->options['group'], "$this->tableAlias.$this->realField", array_values($this->value), $this->operator);
   }
 
+  /**
+   * Filters by operator 'empty'.
+   */
   protected function opEmpty() {
     $this->ensureMyTable();
     if ($this->operator == 'empty') {
@@ -418,6 +451,9 @@ class InOperator extends FilterPluginBase {
     $this->query->addWhere($this->options['group'], "$this->tableAlias.$this->realField", NULL, $operator);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validate() {
     $this->getValueOptions();
     $errors = parent::validate();

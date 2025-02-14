@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Composer\Plugin\Scaffold;
 
 /**
@@ -7,7 +9,18 @@ namespace Drupal\Tests\Composer\Plugin\Scaffold;
  */
 class ScaffoldTestResult {
 
+  /**
+   * The location of the scaffold fixture.
+   *
+   * @var string
+   */
   protected $docroot;
+
+  /**
+   * The stdout from the test.
+   *
+   * @var string
+   */
   protected $scaffoldOutput;
 
   /**
