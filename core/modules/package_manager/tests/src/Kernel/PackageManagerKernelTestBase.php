@@ -490,6 +490,7 @@ class DirectWriteTestStage extends TestStage {
    * {@inheritdoc}
    */
   protected string $type = 'package_manager:test_direct_write';
+
 }
 
 /**
