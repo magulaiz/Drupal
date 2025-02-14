@@ -102,6 +102,29 @@ class RouteMatch implements RouteMatchInterface {
   /**
    * {@inheritdoc}
    */
+  public function isRouteName(string|array $value, ?string $operator = NULL): bool {
+    $operator ??= '=';
+
+    if (is_array($value) && in_array($operator, ['=', 'STARTS_WITH', 'CONTAINS', 'ENDS_WITH'], TRUE)) {
+      throw new \InvalidArgumentException('Invalid operator for an array value.');
+    }
+
+    // @todo Check $value for deprecated route names.
+
+    return match ($operator) {
+      '=' => $this->routeName === $value,
+      'IN' => array_search($this->routeName, $value) !== FALSE,
+      'NOT IN' => array_search($this->routeName, $value) === FALSE,
+      'STARTS_WITH' => str_starts_with($this->routeName, $value),
+      'CONTAINS' => str_contains($this->routeName, $value),
+      'ENDS_WITH' => str_ends_with($this->routeName, $value),
+      default => throw new \InvalidArgumentException('Invalid operator.'),
+    };
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getRouteObject() {
     return $this->route;
   }
