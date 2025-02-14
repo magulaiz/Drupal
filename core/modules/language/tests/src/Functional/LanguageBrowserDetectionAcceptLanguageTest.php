@@ -69,6 +69,11 @@ class LanguageBrowserDetectionAcceptLanguageTest extends BrowserTestBase {
     $this->submitForm(['edit-selected-langcode' => 'en'], 'Save configuration');
 
     $this->drupalLogout();
+
+    // Set some page cache max-age so that responses are cacheable.
+    $this->config('system.performance')
+      ->set('cache.page.max_age', 300)
+      ->save();
   }
 
   /**

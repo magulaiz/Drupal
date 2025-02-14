@@ -48,10 +48,16 @@ class ContactSitewideTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
     $this->drupalPlaceBlock('system_breadcrumb_block');
     $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalPlaceBlock('local_actions_block');
     $this->drupalPlaceBlock('page_title_block');
+
+    // Set some page cache max-age so that responses are cacheable.
+    $this->config('system.performance')
+      ->set('cache.page.max_age', 300)
+      ->save();
   }
 
   /**

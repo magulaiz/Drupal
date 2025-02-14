@@ -21,6 +21,18 @@ class DefaultFormatTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    // Set some page cache max-age so that responses are cacheable.
+    $this->config('system.performance')
+      ->set('cache.page.max_age', 300)
+      ->save();
+  }
+
   public function testFoo(): void {
     $this->drupalGet('/default_format_test/human');
     $this->assertSame('format:html', $this->getSession()->getPage()->getContent());

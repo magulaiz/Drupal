@@ -28,6 +28,18 @@ class CorsIntegrationTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    // Set some page cache max-age so that responses are cacheable.
+    $this->config('system.performance')
+      ->set('cache.page.max_age', 300)
+      ->save();
+  }
+
   public function testCrossSiteRequest(): void {
     // Test default parameters.
     $cors_config = $this->container->getParameter('cors.config');

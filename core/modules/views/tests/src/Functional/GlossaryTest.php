@@ -31,6 +31,18 @@ class GlossaryTest extends ViewTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
+
+    // Set some page cache max-age so that responses are cacheable.
+    $this->config('system.performance')
+      ->set('cache.page.max_age', 300)
+      ->save();
+  }
+
+  /**
    * Tests the default glossary view.
    */
   public function testGlossaryView(): void {

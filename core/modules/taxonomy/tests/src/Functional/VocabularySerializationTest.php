@@ -37,6 +37,11 @@ class VocabularySerializationTest extends BrowserTestBase {
     parent::setUp();
 
     Vocabulary::create(['vid' => 'test', 'name' => 'Test'])->save();
+
+    // Set some page cache max-age so that responses are cacheable.
+    $this->config('system.performance')
+      ->set('cache.page.max_age', 300)
+      ->save();
   }
 
   public function testSerialization(): void {

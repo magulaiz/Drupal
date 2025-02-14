@@ -35,6 +35,7 @@ trait PerformanceTestTrait {
     \Drupal::configFactory()->getEditable('system.performance')
       ->set('css.preprocess', TRUE)
       ->set('js.preprocess', TRUE)
+      ->set('cache.page.max_age', 3600)
       ->save();
   }
 

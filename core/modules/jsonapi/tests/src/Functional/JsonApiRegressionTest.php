@@ -47,6 +47,18 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    // Set some page cache max-age so that responses are cacheable.
+    $this->config('system.performance')
+      ->set('cache.page.max_age', 300)
+      ->save();
+  }
+
+  /**
    * Ensure deep nested include works on multi target entity type field.
    *
    * @see https://www.drupal.org/project/drupal/issues/2973681
