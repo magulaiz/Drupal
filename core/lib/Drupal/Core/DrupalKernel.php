@@ -1399,11 +1399,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
     }
 
-    /**
-     * foreach ($this->serviceProviderClasses['app'] as $class) {
-     * @trigger_error("Service providers are now tagged services with the service_provider tag. Magic naming for $class is deprecated in drupal:11.2.0 and removed in drupal:12.0.0.");
-     * }
-     */
+    // @phpstan-ignore property.deprecated
+    foreach ($this->serviceProviderClasses['app'] as $class) {
+      @trigger_error("Service providers are now tagged services with the service_provider tag. Magic naming for $class is deprecated in drupal:11.2.0 and removed in drupal:12.0.0.");
+    }
+
     // Register site-specific service overrides.
     foreach ($this->serviceYamls['site'] as $filename) {
       $yaml_loader->load($filename);
