@@ -818,7 +818,7 @@ function install_check_class_requirements(string $extension, string $path): arra
   if (is_dir($dir)) {
     $fileSystemIterator = new FilesystemIterator($dir);
     foreach ($fileSystemIterator as $fileInfo) {
-      if ($fileInfo->isFile()) {
+      if ($fileInfo->isFile() && $fileInfo->getExtension() === 'php') {
         $filename = $fileInfo->getFilename();
         $requirements_path = $dir . '/' . $filename;
         require_once $requirements_path;
