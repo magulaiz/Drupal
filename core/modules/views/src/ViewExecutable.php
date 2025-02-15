@@ -777,7 +777,6 @@ class ViewExecutable {
    *   of the user's roles, FALSE otherwise.
    */
   public function isFilterRememberEnabled() {
-    $roles = $this->getUser()->getRoles();
     // Loop through the exposed input filters.
     foreach ($this->exposed_input as $filter_name => $input) {
       // Check if the filter exists in the display handler's filter options.
@@ -786,8 +785,8 @@ class ViewExecutable {
         $filter_config = $this->display_handler->getOption('filters')[$filter_name];
         // Check if the "Remember" setting is enabled.
         if ($filter_config['expose']['remember']) {
-          foreach ($roles as $role) {
-            if ($filter_config['expose']['remember_roles'][$role] != 0) {
+          foreach ($filter_config['expose']['remember_roles'] as $role => $remember_roles) {
+            if ($remember_roles != 0 && $this->getUser()->hasRole($role)) {
               return TRUE;
             }
           }
