@@ -9,9 +9,6 @@ interface InstallRequirementsInterface {
    *
    * Classes implementing this must be in the Install namespace.
    * For example src/Install/ModuleNameRequirements.php.
-   * Classes implementing this must be named using a camel case version
-   * of the extension name and also end with 'Requirements'.
-   * There must be only one class implementing this per extension.
    *
    * During the 'install' phase, modules can for example assert that
    * library or server versions are available or sufficient.

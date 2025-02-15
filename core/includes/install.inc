@@ -8,7 +8,6 @@
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Installer\InstallerKernel;
@@ -814,16 +813,24 @@ function install_profile_info($profile, $langcode = 'en') {
  * @internal
  */
 function install_check_class_requirements(string $extension, string $path): array {
+  $dir = \Drupal::root() . "/$path/src/Install";
   $requirements = [];
-  $camelized = ContainerBuilder::camelize($extension);
-  $name = "{$camelized}Requirements";
-  $requirements_path = \Drupal::root() . "/$path/src/Install/$name.php";
-  if (is_file($requirements_path)) {
-    require_once $requirements_path;
+  if (is_dir($dir)) {
+    $fileSystemIterator = new FilesystemIterator($dir);
+    foreach ($fileSystemIterator as $fileInfo) {
+      if ($fileInfo->isFile()) {
+        $filename = $fileInfo->getFilename();
+        $requirements_path = $dir . '/' . $filename;
+        require_once $requirements_path;
 
-    $class_name = "Drupal\\$extension\\Install\\$name";
-    $requirements = $class_name::getRequirements();
+        $name = pathinfo($filename, PATHINFO_FILENAME);
+        $class_name = "Drupal\\$extension\\Install\\$name";
+        if (class_exists($class_name) && is_subclass_of($class_name, 'Drupal\Core\Extension\InstallRequirementsInterface')) {
+          $requirements = $class_name::getRequirements();
+        }
+      }
+    }
+
   }
-
   return $requirements;
 }
