@@ -245,10 +245,8 @@ class UpdateMiscTest extends UpdateTestBase {
     $this->cronRun();
 
     $captured_emails = \Drupal::state()->get('system.test_mail_collector');
-    $sent_message = end($captured_emails);
-
     // Check no e-mails were sent.
-    $this->assertFalse($sent_message);
+    $this->assertCount(0, $captured_emails);
 
   }
 
