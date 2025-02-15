@@ -20,7 +20,7 @@ use Drupal\system\Entity\Action;
 /**
  * Tests Content Entity Translate action.
  *
- * @covers \Drupal\block_content\Plugin\migrate\source\d7\BlockCustomTranslation
+ * @covers \Drupal\content_translation\Plugin\Action\TranslateAction
  *
  * @group action
  * @group content_translation
