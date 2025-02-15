@@ -10,6 +10,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\InstallRequirementsInterface;
 use Drupal\Core\Installer\InstallerKernel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -825,7 +826,7 @@ function install_check_class_requirements(string $extension, string $path): arra
 
         $name = pathinfo($filename, PATHINFO_FILENAME);
         $class_name = "Drupal\\$extension\\Install\\$name";
-        if (class_exists($class_name) && is_subclass_of($class_name, 'Drupal\Core\Extension\InstallRequirementsInterface')) {
+        if (class_exists($class_name) && ($class_name instanceOf InstallRequirementsInterface)) {
           $requirements = $class_name::getRequirements();
         }
       }
