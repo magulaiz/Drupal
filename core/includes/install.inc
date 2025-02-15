@@ -823,8 +823,8 @@ function install_check_class_requirements(string $extension, string $path): arra
         $requirements_path = $dir . '/' . $filename;
         require_once $requirements_path;
 
-        $name = pathinfo($filename, PATHINFO_FILENAME);
-        $class_name = "Drupal\\$extension\\Install\\$name";
+        $namespace = "Drupal\\$extension\\Install";
+        $class_name = $namespace . '\\' . $fileInfo->getBasename('.php');
         if (class_exists($class_name) && class_implements($class_name, 'Drupal\Core\Extension\InstallRequirementsInterface')) {
           $requirements = $class_name::getRequirements();
         }
