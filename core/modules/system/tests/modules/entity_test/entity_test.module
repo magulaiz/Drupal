@@ -49,3 +49,16 @@ function entity_test_delete_bundle($bundle, $entity_type = 'entity_test') {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\entity_test\EntityTestHelper::deleteBundle() instead. See https://www.drupal.org/node/3497049', E_USER_DEPRECATED);
   EntityTestHelper::deleteBundle($bundle, $entity_type);
 }
+
+/**
+ * Implements hook_ENTITY_TYPE_load().
+ */
+function entity_test_entity_test_bundle_load($entities) {
+  foreach ($entities as $entity) {
+    assert($entity instanceof EntityInterface);
+    // Prime the data type cache and test that the entity bundle data types can
+    // still be derived correctly.
+    /* @see \Drupal\KernelTests\Core\TypedData\TypedDataDefinitionEntityBundleTest::testEntityBundleDefinitions() */
+    $entity->getTypedData();
+  }
+}
