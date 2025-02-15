@@ -139,7 +139,7 @@ class UpdateSettingsForm extends ConfigFormBase {
    *   The value of the form element.
    */
   public static function arrayToMultiLineString(array $value): string {
-    return count(array_filter($value)) > 0 ? implode("\n", $value) : '';
+    return array_filter($value) !== [] ? implode("\n", $value) : '';
   }
 
 }
