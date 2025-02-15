@@ -104,11 +104,11 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       0 => [
         // CSS assets.
         [
-          0 => ['group' => 0, 'type' => 'external', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'http://example.com/popular.js'],
+          0 => ['group' => 0, 'type' => 'external', 'media' => 'all', 'preprocess' => TRUE, 'data' => 'https://example.com/popular.js'],
         ],
         // Render elements.
         [
-          0 => $create_link_element('http://example.com/popular.js', 'all'),
+          0 => $create_link_element('https://example.com/popular.js', 'all'),
         ],
       ],
       // Single file CSS asset.
@@ -294,7 +294,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       'type' => 'internal',
       'media' => 'all',
       'preprocess' => TRUE,
-      'data' => 'http://example.com/popular.js',
+      'data' => 'https://example.com/popular.js',
     ];
     $this->renderer->render([$css_group]);
   }

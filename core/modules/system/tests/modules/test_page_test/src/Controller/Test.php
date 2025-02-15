@@ -97,6 +97,42 @@ class Test {
     ];
   }
 
+  /**
+   * Sets an HTTP header.
+   *
+   * @param string $name
+   *   The header name.
+   * @param string $value
+   *   (optional) The header value ot set.
+   */
+  public function setHeader($name, $value = NULL) {
+    $response = new Response();
+    $response->headers->set($name, $value);
+    return $response;
+  }
+
+  /**
+   * Renders a page with encoded markup.
+   *
+   * @return array
+   *   A render array as expected by
+   *   \Drupal\Core\Render\RendererInterface::render().
+   */
+  public function renderEncodedMarkup() {
+    return ['#plain_text' => 'Bad html <script>alert(123);</script>'];
+  }
+
+  /**
+   * Renders a page with pipe character in link test.
+   *
+   * @return array
+   *   A render array as expected by
+   *   \Drupal\Core\Render\RendererInterface::render().
+   */
+  public function renderPipeInLink() {
+    return ['#markup' => '<a href="https://example.com">foo|bar|baz</a>'];
+  }
+
   public function escapedCharacters() {
     return [
       '#prefix' => '<div class="escaped">',

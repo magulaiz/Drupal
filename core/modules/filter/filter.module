@@ -378,7 +378,7 @@ function template_preprocess_filter_tips(&$variables): void {
  * Converts text into hyperlinks automatically.
  *
  * This filter identifies and makes clickable three types of "links".
- * - URLs like http://example.com.
+ * - URLs like https://example.com.
  * - Email addresses like name@example.com.
  * - Web addresses without the "http://" protocol defined, like
  *   www.example.com.
@@ -427,7 +427,7 @@ function _filter_url($text, $filter) {
   $valid_url_query_ending_chars = '[a-zA-Z0-9_&=#\/]';
 
   // Full path
-  // and allow @ in a URL, but only in the middle. Catch things like http://example.com/@user/
+  // and allow @ in a URL, but only in the middle. Catch things like https://example.com/@user/
   $valid_url_path = '(?:(?:' . $valid_url_path_characters . '*(?:' . $valid_url_balanced_parens . $valid_url_path_characters . '*)*' . $valid_url_ending_characters . ')|(?:@' . $valid_url_path_characters . '+\/))';
 
   // Prepare domain name pattern.

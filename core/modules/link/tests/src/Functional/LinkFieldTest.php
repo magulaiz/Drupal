@@ -110,7 +110,7 @@ class LinkFieldTest extends BrowserTestBase {
       ->setComponent($field_name, [
         'type' => 'link_default',
         'settings' => [
-          'placeholder_url' => 'http://example.com',
+          'placeholder_url' => 'https://example.com',
         ],
       ])
       ->save();
@@ -123,7 +123,7 @@ class LinkFieldTest extends BrowserTestBase {
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][uri]", '');
-    $this->assertSession()->responseContains('placeholder="http://example.com"');
+    $this->assertSession()->responseContains('placeholder="https://example.com"');
 
     // Create a path alias.
     $this->createPathAlias('/admin', '/a/path/alias');
@@ -298,7 +298,7 @@ class LinkFieldTest extends BrowserTestBase {
       ->setComponent($field_name, [
         'type' => 'link_default',
         'settings' => [
-          'placeholder_url' => 'http://example.com',
+          'placeholder_url' => 'https://example.com',
           'placeholder_title' => 'Enter the text for this link',
         ],
       ])
@@ -321,7 +321,7 @@ class LinkFieldTest extends BrowserTestBase {
       // Assert label is shown.
       $this->assertSession()->pageTextContains('Read more about this entity');
       $this->assertSession()->fieldValueEquals("{$field_name}[0][uri]", '');
-      $this->assertSession()->responseContains('placeholder="http://example.com"');
+      $this->assertSession()->responseContains('placeholder="https://example.com"');
 
       if ($title_setting === DRUPAL_DISABLED) {
         $this->assertSession()->fieldNotExists("{$field_name}[0][title]");

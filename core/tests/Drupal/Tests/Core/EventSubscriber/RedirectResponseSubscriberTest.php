@@ -57,17 +57,17 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
       ->getMock();
     $this->requestContext->expects($this->any())
       ->method('getCompleteBaseUrl')
-      ->willReturn('http://example.com/drupal');
+      ->willReturn('https://example.com/drupal');
 
     $this->urlAssembler = $this->createMock(UnroutedUrlAssemblerInterface::class);
     $this->urlAssembler
       ->expects($this->any())
       ->method('assemble')
       ->willReturnMap([
-        ['base:test', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'http://example.com/drupal/test'],
-        ['base:example.com', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'http://example.com/drupal/example.com'],
-        ['base:example:com', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'http://example.com/drupal/example:com'],
-        ['base:javascript:alert(0)', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'http://example.com/drupal/javascript:alert(0)'],
+        ['base:test', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'https://example.com/drupal/test'],
+        ['base:example.com', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'https://example.com/drupal/example.com'],
+        ['base:example:com', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'https://example.com/drupal/example:com'],
+        ['base:javascript:alert(0)', ['query' => [], 'fragment' => '', 'absolute' => TRUE], FALSE, 'https://example.com/drupal/javascript:alert(0)'],
       ]);
 
     $container = new Container();
@@ -89,7 +89,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   public function testDestinationRedirect(Request $request, $expected): void {
     $dispatcher = new EventDispatcher();
     $kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
-    $response = new RedirectResponse('http://example.com/drupal');
+    $response = new RedirectResponse('https://example.com/drupal');
     $request->headers->set('HOST', 'example.com');
 
     $listener = new RedirectResponseSubscriber($this->urlAssembler, $this->requestContext, $this->loggerClosure);
@@ -102,7 +102,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
       $this->assertEquals($expected, $target_url);
     }
     else {
-      $this->assertEquals('http://example.com/drupal', $target_url);
+      $this->assertEquals('https://example.com/drupal', $target_url);
     }
   }
 
@@ -114,13 +114,13 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   public static function providerTestDestinationRedirect() {
     return [
       [new Request(), FALSE],
-      [new Request(['destination' => 'test']), 'http://example.com/drupal/test'],
-      [new Request(['destination' => '/drupal/test']), 'http://example.com/drupal/test'],
-      [new Request(['destination' => 'example.com']), 'http://example.com/drupal/example.com'],
-      [new Request(['destination' => 'example:com']), 'http://example.com/drupal/example:com'],
-      [new Request(['destination' => 'javascript:alert(0)']), 'http://example.com/drupal/javascript:alert(0)'],
-      [new Request(['destination' => 'http://example.com/drupal/']), 'http://example.com/drupal/'],
-      [new Request(['destination' => 'http://example.com/drupal/test']), 'http://example.com/drupal/test'],
+      [new Request(['destination' => 'test']), 'https://example.com/drupal/test'],
+      [new Request(['destination' => '/drupal/test']), 'https://example.com/drupal/test'],
+      [new Request(['destination' => 'example.com']), 'https://example.com/drupal/example.com'],
+      [new Request(['destination' => 'example:com']), 'https://example.com/drupal/example:com'],
+      [new Request(['destination' => 'javascript:alert(0)']), 'https://example.com/drupal/javascript:alert(0)'],
+      [new Request(['destination' => 'https://example.com/drupal/']), 'https://example.com/drupal/'],
+      [new Request(['destination' => 'https://example.com/drupal/test']), 'https://example.com/drupal/test'],
     ];
   }
 
@@ -163,12 +163,12 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
    */
   public static function providerTestDestinationRedirectToExternalUrl() {
     return [
-      'absolute external url' => [new Request(['destination' => 'http://example.com']), 'http://example.com'],
-      'absolute external url with folder' => [new Request(['destination' => 'http://example.com/foobar']), 'http://example.com/foobar'],
+      'absolute external url' => [new Request(['destination' => 'https://example.com']), 'https://example.com'],
+      'absolute external url with folder' => [new Request(['destination' => 'https://example.com/foobar']), 'https://example.com/foobar'],
       'absolute external url with folder2' => [new Request(['destination' => 'http://example.ca/drupal']), 'http://example.ca/drupal'],
-      'path without drupal base path' => [new Request(['destination' => '/test']), 'http://example.com/test'],
-      'path with URL' => [new Request(['destination' => '/example.com']), 'http://example.com/example.com'],
-      'path with URL and two slashes' => [new Request(['destination' => '//example.com']), 'http://example.com//example.com'],
+      'path without drupal basepath' => [new Request(['destination' => '/test']), 'https://example.com/test'],
+      'path with URL' => [new Request(['destination' => '/example.com']), 'https://example.com/example.com'],
+      'path with URL and two slashes' => [new Request(['destination' => '//example.com']), 'https://example.com//example.com'],
     ];
   }
 
@@ -178,7 +178,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   public function testDestinationRedirectWithInvalidUrl(Request $request): void {
     $dispatcher = new EventDispatcher();
     $kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
-    $response = new RedirectResponse('http://example.com/drupal');
+    $response = new RedirectResponse('https://example.com/drupal');
 
     $listener = new RedirectResponseSubscriber($this->urlAssembler, $this->requestContext, $this->loggerClosure);
     $dispatcher->addListener(KernelEvents::RESPONSE, [$listener, 'checkRedirectUrl']);
@@ -194,7 +194,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
     $data = [];
     $data[] = [new Request(['destination' => '//example:com'])];
     $data[] = [new Request(['destination' => '//example:com/test'])];
-    $data['absolute external url'] = [new Request(['destination' => 'http://example.com'])];
+    $data['absolute external url'] = [new Request(['destination' => 'https://example.com'])];
     $data['absolute external url with folder'] = [new Request(['destination' => 'http://example.ca/drupal'])];
     $data['path without drupal base path'] = [new Request(['destination' => '/test'])];
     $data['path with URL'] = [new Request(['destination' => '/example.com'])];

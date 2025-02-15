@@ -313,7 +313,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $domain_configuration[] = [
       'http_host' => 'example.com',
       'domains' => [
-        'de' => 'http://example.com',
+        'de' => 'https://example.com',
       ],
       'expected_langcode' => 'de',
     ];
@@ -330,7 +330,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
       'http_host' => 'example.com',
       'domains' => [
         'de' => 'http://example.de',
-        'en' => 'http://example.com',
+        'en' => 'https://example.com',
       ],
       'expected_langcode' => 'en',
     ];
