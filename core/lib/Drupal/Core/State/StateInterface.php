@@ -74,4 +74,16 @@ interface StateInterface {
    */
   public function resetCache();
 
+  /**
+   * Returns the keys that have been modified during the request.
+   *
+   * This associative array is indexed by key names, where each value
+   * is an array containing:
+   *   - value: The value that was set during the request.
+   *   - original: The initial value stored at the beginning of the request.
+   *
+   * @return array
+   */
+  public function getKeysSetDuringRequest(): array;
+
 }
