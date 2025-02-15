@@ -385,40 +385,34 @@ class StateTest extends UnitTestCase {
   }
 
   /**
-   * Tests getModifiedKeys() method.
+   * Tests getValuesSetDuringRequest() method.
    *
-   * @covers ::getKeysSetDuringRequest
+   * @covers ::getValuesSetDuringRequest
    */
-  public function testGetKeysSetDuringRequest(): State {
+  public function testFetValuesSetDuringRequest(): State {
     $values = ['key1' => 'value1', 'key2' => 'value2', 'key3' => 'value3'];
     $this->state->setMultiple($values);
-    $this->assertEquals([
-      'key1' => ['value' => 'value1', 'original' => NULL],
-      'key2' => ['value' => 'value2', 'original' => NULL],
-      'key3' => ['value' => 'value3', 'original' => NULL],
-    ], $this->state->getKeysSetDuringRequest());
+    $this->assertSame(['value' => 'value1', 'original' => NULL], $this->state->getValuesSetDuringRequest('key1'));
+    $this->assertSame(['value' => 'value2', 'original' => NULL], $this->state->getValuesSetDuringRequest('key2'));
+    $this->assertSame(['value' => 'value3', 'original' => NULL], $this->state->getValuesSetDuringRequest('key3'));
+    $this->assertNull($this->state->getValuesSetDuringRequest('key4'));
 
     $nonOverwritingValues = ['key4' => 'value4', 'key5' => 'value5', 'key6' => 'value6'];
     $this->state->setMultiple($nonOverwritingValues);
-    $this->assertEquals([
-      'key1' => ['value' => 'value1', 'original' => NULL],
-      'key2' => ['value' => 'value2', 'original' => NULL],
-      'key3' => ['value' => 'value3', 'original' => NULL],
-      'key4' => ['value' => 'value4', 'original' => NULL],
-      'key5' => ['value' => 'value5', 'original' => NULL],
-      'key6' => ['value' => 'value6', 'original' => NULL],
-    ], $this->state->getKeysSetDuringRequest());
+    $this->assertSame(['value' => 'value1', 'original' => NULL], $this->state->getValuesSetDuringRequest('key1'));
+    $this->assertSame(['value' => 'value2', 'original' => NULL], $this->state->getValuesSetDuringRequest('key2'));
+    $this->assertSame(['value' => 'value3', 'original' => NULL], $this->state->getValuesSetDuringRequest('key3'));
+    $this->assertSame(['value' => 'value4', 'original' => NULL], $this->state->getValuesSetDuringRequest('key4'));
+    $this->assertSame(['value' => 'value5', 'original' => NULL], $this->state->getValuesSetDuringRequest('key5'));
+    $this->assertSame(['value' => 'value6', 'original' => NULL], $this->state->getValuesSetDuringRequest('key6'));
 
-    $overwritingValues = ['key6' => 'new-value-6'];
+    $overwritingValues = ['key5' => 'new-value-5', 'key6' => 'new-value-6'];
     $this->state->setMultiple($overwritingValues);
-    $this->assertEquals([
-      'key1' => ['value' => 'value1', 'original' => NULL],
-      'key2' => ['value' => 'value2', 'original' => NULL],
-      'key3' => ['value' => 'value3', 'original' => NULL],
-      'key4' => ['value' => 'value4', 'original' => NULL],
-      'key5' => ['value' => 'value5', 'original' => NULL],
-      'key6' => ['value' => 'new-value-6', 'original' => NULL],
-    ], $this->state->getKeysSetDuringRequest());
+    $this->assertSame(['value' => 'new-value-5', 'original' => NULL], $this->state->getValuesSetDuringRequest('key5'));
+    $this->assertSame(['value' => 'new-value-6', 'original' => NULL], $this->state->getValuesSetDuringRequest('key6'));
+
+    $this->state->set('key4', 'new-value-4');
+    $this->assertSame(['value' => 'new-value-4', 'original' => NULL], $this->state->getValuesSetDuringRequest('key4'));
 
     return $this->state;
   }

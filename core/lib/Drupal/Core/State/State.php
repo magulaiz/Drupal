@@ -155,8 +155,8 @@ class State extends CacheCollector implements StateInterface {
   /**
    * {@inheritdoc}
    */
-  public function getKeysSetDuringRequest(): array {
-    return $this->keysSetDuringRequest;
+  public function getValuesSetDuringRequest(string $key): ?array {
+    return $this->keysSetDuringRequest[$key] ?? NULL;
   }
 
   /**
@@ -170,9 +170,6 @@ class State extends CacheCollector implements StateInterface {
    *   The previous value that was stored.
    */
   protected function registerKeySetDuringRequest(string $key, mixed $value, mixed $previousValue): void {
-    if (!isset($this->keysSetDuringRequest[$key])) {
-      $this->keysSetDuringRequest[$key] = [];
-    }
     $this->keysSetDuringRequest[$key]['value'] = $value;
     if (!array_key_exists('original', $this->keysSetDuringRequest[$key])) {
       $this->keysSetDuringRequest[$key]['original'] = $previousValue;
