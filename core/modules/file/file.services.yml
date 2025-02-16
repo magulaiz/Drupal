@@ -37,6 +37,6 @@ services:
     arguments: ['@file_system']
   Drupal\file\Upload\InputStreamFileWriterInterface: '@file.input_stream_file_writer'
   file.service_provider:
-    class: Drupal\file\FileServices
+    class: Drupal\file\FileServiceAlter
     tags:
       - { name: service_provider }

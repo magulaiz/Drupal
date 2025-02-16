@@ -9,7 +9,7 @@ use Drupal\Core\StackMiddleware\NegotiationMiddleware;
 /**
  * Adds 'application/octet-stream' as a known (bin) format.
  */
-class FileServices implements ServiceModifierInterface {
+class FileServiceAlter implements ServiceModifierInterface {
 
   /**
    * {@inheritdoc}
