@@ -35,7 +35,7 @@ class State extends CacheCollector implements StateInterface {
    *
    * An associative array keyed by the state key name, where each value
    * is an array with the following keys:
-   *   - value: The last value set during the request. 
+   *   - value: The last value set during the request.
    *   - original: The initial value at the start of the request.
    */
   protected array $keysSetDuringRequest = [];
