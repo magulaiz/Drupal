@@ -22,6 +22,6 @@ services:
     class: Drupal\media_library\MediaLibraryEditorOpener
     arguments: ['@entity_type.manager']
   media_library.service_provider:
-    class: Drupal\media_library\MediaLibraryServices
+    class: Drupal\media_library\MediaLibraryServiceRegister
     tags:
       - { name: service_provider }

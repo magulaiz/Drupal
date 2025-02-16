@@ -10,7 +10,7 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 /**
  * Service provider for media library services.
  */
-class MediaLibraryServices implements ServiceProviderInterface {
+class MediaLibraryServiceRegister implements ServiceProviderInterface {
 
   /**
    * {@inheritdoc}
