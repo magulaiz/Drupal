@@ -621,10 +621,21 @@
       ckeditorAjaxDialog.execute();
 
       // Store the save callback to be executed when this dialog is closed.
-      Drupal.ckeditor5.saveCallback.set(
-        dialogSettings.selector || '#drupal-modal',
-        saveCallback,
-      );
+      if (
+        Object.hasOwn(Drupal.ckeditor5, 'saveCallback') &&
+        Drupal.ckeditor5.saveCallback != null &&
+        Object.hasOwn(Drupal.ckeditor5.saveCallback, 'has') &&
+        Drupal.ckeditor5.saveCallback.has(set) &&
+        Object.hasOwn(dialogSettings, 'selector')
+      ) {
+        Drupal.ckeditor5.saveCallback.set(
+          dialogSettings.selector || '#drupal-modal',
+          saveCallback,
+        );
+      }
+      else {
+        Drupal.ckeditor5.saveCallback = saveCallback;
+      }
     },
   };
 
