@@ -512,23 +512,3 @@ function views_entity_field_label($entity_type, $field_name) {
   @trigger_error("views_entity_field_label() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal::service('entity_field.manager')->getFieldLabels(). See https://www.drupal.org/node/3489411", E_USER_DEPRECATED);
   return \Drupal::service('entity_field.manager')->getFieldLabels($entity_type, $field_name);
 }
-
-/**
- * Implements hook_modules_uninstalled().
- */
-function views_modules_uninstalled(array $modules, bool $is_syncing): void {
-  if ($is_syncing) {
-    return;
-  }
-  $config = \Drupal::configFactory()->getEditable('views.settings');
-  /** @var array $display_extenders */
-  $display_extenders = $config->get('display_extenders') ?: [];
-  foreach ($modules as $module) {
-    $key = array_search($module, $display_extenders, TRUE);
-    if ($key !== FALSE) {
-      unset($display_extenders[$key]);
-    }
-  }
-  $config->set('display_extenders', $display_extenders);
-  $config->save();
-}

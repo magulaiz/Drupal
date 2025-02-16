@@ -268,10 +268,10 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    * Processes display extenders.
    *
    * @param \Drupal\views\ViewEntityInterface $view
-   *  The View to update.
+   *   The View to update.
    *
    * @return bool
-   *  Whether the display was updated.
+   *   Whether the display was updated.
    */
   protected function processDisplayExtenders(ViewEntityInterface $view): bool {
     $changed = FALSE;

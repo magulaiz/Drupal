@@ -21,7 +21,6 @@ use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Views;
-use function array_filter;
 
 /**
  * Base class for views display plugins.
