@@ -10,7 +10,7 @@ use Drupal\Core\DependencyInjection\ServiceProviderBase;
 /**
  * Replaces oEmbed-related media services with testing versions.
  */
-class MediaTestOembedServices extends ServiceProviderBase {
+class MediaTestOembedServiceAlter extends ServiceProviderBase {
 
   /**
    * {@inheritdoc}
