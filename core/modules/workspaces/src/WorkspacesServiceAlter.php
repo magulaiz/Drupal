@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Defines a service provider for the Workspaces module.
  */
-class WorkspacesServices extends ServiceProviderBase {
+class WorkspacesServiceAlter extends ServiceProviderBase {
 
   /**
    * {@inheritdoc}
