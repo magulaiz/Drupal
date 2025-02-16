@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\profile_install_requirements\Install;
+namespace Drupal\module_install_unmet_requirements\Install\Requirements;
 
 use Drupal\Core\Extension\InstallRequirementsInterface;
 
-class ProfileInstallRequirementsRequirements implements InstallRequirementsInterface {
+class ModuleInstallUnmetRequirementsRequirements implements InstallRequirementsInterface {
 
   /**
    * {@inheritdoc}

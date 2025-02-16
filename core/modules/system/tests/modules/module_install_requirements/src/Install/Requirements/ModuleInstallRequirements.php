@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\module_install_requirements\Install;
+namespace Drupal\module_install_requirements\Install\Requirements;
 
 use Drupal\Core\Extension\InstallRequirementsInterface;
 
