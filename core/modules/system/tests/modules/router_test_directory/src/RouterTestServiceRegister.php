@@ -10,7 +10,7 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 /**
  * Registers a dynamic route provider.
  */
-class RouterTestServices implements ServiceProviderInterface {
+class RouterTestServiceRegister implements ServiceProviderInterface {
 
   /**
    * {@inheritdoc}

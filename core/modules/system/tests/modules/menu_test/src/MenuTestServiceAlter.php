@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Decorate core's default path-based breadcrumb builder when it is available.
  */
-class MenuTestServices implements ServiceModifierInterface {
+class MenuTestServiceAlter implements ServiceModifierInterface {
 
   /**
    * {@inheritdoc}

@@ -10,7 +10,7 @@ use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 /**
  * Service provider for the accept_header_routing_test module.
  */
-class AcceptHeaderRoutingTestServices implements ServiceModifierInterface {
+class AcceptHeaderRoutingTestServiceAlter implements ServiceModifierInterface {
 
   /**
    * {@inheritdoc}

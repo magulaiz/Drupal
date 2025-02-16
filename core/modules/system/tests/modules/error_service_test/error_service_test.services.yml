@@ -13,6 +13,6 @@ services:
       - { name: logger }
       - { name: backend_overridable }
   error_service_test.service_provider:
-    class: Drupal\error_service_test\ErrorServiceTestServices
+    class: Drupal\error_service_test\ErrorServiceTestServiceAlter
     tags:
       - { name: service_provider }

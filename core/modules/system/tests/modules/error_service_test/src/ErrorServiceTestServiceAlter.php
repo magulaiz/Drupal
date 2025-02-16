@@ -10,7 +10,7 @@ use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 /**
  * The service provider for testing bedlam in container rebuilds.
  */
-class ErrorServiceTestServices implements ServiceModifierInterface {
+class ErrorServiceTestServiceAlter implements ServiceModifierInterface {
 
   /**
    * The in-situ container builder.

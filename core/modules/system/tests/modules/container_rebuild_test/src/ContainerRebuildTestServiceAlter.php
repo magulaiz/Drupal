@@ -10,7 +10,7 @@ use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 /**
  * The service provider for testing container rebuilds.
  */
-class ContainerRebuildTestServices implements ServiceModifierInterface {
+class ContainerRebuildTestServiceAlter implements ServiceModifierInterface {
 
   /**
    * {@inheritdoc}

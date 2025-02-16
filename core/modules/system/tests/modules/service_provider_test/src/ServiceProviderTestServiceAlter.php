@@ -11,7 +11,7 @@ use Drupal\Core\Site\Settings;
 /**
  * Service provider for service provider testing module.
  */
-class ServiceProviderTestServices implements ServiceModifierInterface {
+class ServiceProviderTestServiceAlter implements ServiceModifierInterface {
 
   /**
    * {@inheritdoc}

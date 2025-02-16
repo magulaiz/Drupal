@@ -4,6 +4,6 @@ services:
     tags:
       - { name: route_filter }
   accept_header_routing_test.service_provider:
-    class: Drupal\accept_header_routing_test\AcceptHeaderRoutingTestServices
+    class: Drupal\accept_header_routing_test\AcceptHeaderRoutingTestServiceAlter
     tags:
       - { name: service_provider }
