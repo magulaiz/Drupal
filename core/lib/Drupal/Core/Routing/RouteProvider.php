@@ -122,7 +122,8 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tag_invalidator
    *   The cache tag invalidator.
    * @param string $table
-   *   (Optional) The table in the database to use for matching. Defaults to 'router'
+   *   (Optional) The table in the database to use for matching. Defaults to
+   *   'router'
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   (Optional) The language manager.
    */
@@ -314,7 +315,8 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
         continue;
       }
       elseif ($i < (1 << $length)) {
-        // We have exhausted the masks of a given length, so decrease the length.
+        // We have exhausted the masks of a given length, so decrease the
+        // length.
         --$length;
       }
       $current = '';

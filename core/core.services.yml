@@ -232,6 +232,9 @@ services:
       - { name: cache_tags_invalidator}
       - { name: backend_overridable }
   Drupal\Core\Cache\CacheTagsChecksumInterface: '@cache_tags.invalidator.checksum'
+  cache_tags.preloader:
+    class: Drupal\Core\Cache\EventSubscriber\CacheTagPreloadSubscriber
+    autowire: true
   cache.backend.chainedfast:
     class: Drupal\Core\Cache\ChainedFastBackendFactory
     arguments: ['@settings']
@@ -1457,7 +1460,7 @@ services:
     class: Drupal\Core\Access\RouteProcessorCsrf
     tags:
       - { name: route_processor_outbound }
-    arguments: ['@csrf_token']
+    arguments: ['@csrf_token', '@request_stack']
   transliteration:
     class: Drupal\Core\Transliteration\PhpTransliteration
     arguments: [null, '@module_handler']
@@ -1805,6 +1808,11 @@ services:
     tags:
       - { name: service_collector, tag: placeholder_strategy, call: addPlaceholderStrategy }
   Drupal\Core\Render\Placeholder\PlaceholderStrategyInterface: '@placeholder_strategy'
+  placeholder_strategy.cached:
+    class: Drupal\Core\Render\Placeholder\CachedStrategy
+    arguments: ['@placeholder_strategy', '@render_cache']
+    tags:
+      - { name: placeholder_strategy, priority: 100 }
   placeholder_strategy.single_flush:
     class: Drupal\Core\Render\Placeholder\SingleFlushStrategy
     tags:
@@ -1830,8 +1838,6 @@ services:
   response_filter.active_link:
     class: Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
     arguments: ['@current_user', '@path.current', '@path.matcher', '@language_manager']
-  response_filter.rss.cdata:
-    class: Drupal\Core\EventSubscriber\RssResponseCdata
   response_filter.rss.relative_url:
     class: Drupal\Core\EventSubscriber\RssResponseRelativeUrlFilter
   messenger:
@@ -1865,7 +1871,6 @@ services:
   Drupal\Core\Theme\ComponentNegotiator:
     arguments:
       - '@theme.manager'
-      - '@extension.list.module'
   plugin.manager.sdc:
     public: true
     class: Drupal\Core\Theme\ComponentPluginManager

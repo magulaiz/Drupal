@@ -3,9 +3,11 @@
 namespace Drupal\navigation\Hook;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
@@ -21,6 +23,17 @@ class NavigationHooks {
   use StringTranslationTrait;
 
   /**
+   * NavigationHooks constructor.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
+   *   The current user.
+   */
+  public function __construct(
+    protected AccountInterface $currentUser,
+  ) {
+  }
+
+  /**
    * Implements hook_help().
    */
   #[Hook('help')]
@@ -28,9 +41,9 @@ class NavigationHooks {
     switch ($route_name) {
       case 'help.page.navigation':
         $output = '';
-        $output .= '<h3>' . t('About') . '</h3>';
-        $output .= '<p>' . t('The Navigation module provides a left-aligned, collapsible, vertical sidebar navigation.') . '</p>';
-        $output .= '<p>' . t('For more information, see the <a href=":docs">online documentation for the Navigation module</a>.', [':docs' => 'https://www.drupal.org/project/navigation']) . '</p>';
+        $output .= '<h3>' . $this->t('About') . '</h3>';
+        $output .= '<p>' . $this->t('The Navigation module provides a left-aligned, collapsible, vertical sidebar navigation.') . '</p>';
+        $output .= '<p>' . $this->t('For more information, see the <a href=":docs">online documentation for the Navigation module</a>.', [':docs' => 'https://www.drupal.org/project/navigation']) . '</p>';
         return $output;
     }
     $configuration_route = 'layout_builder.navigation.';
@@ -38,8 +51,8 @@ class NavigationHooks {
       return \Drupal::moduleHandler()->invoke('layout_builder', 'help', [$route_name, $route_match]);
     }
     if (str_starts_with($route_name, $configuration_route)) {
-      $output = '<p>' . t('This layout builder tool allows you to configure the blocks in the navigation toolbar.') . '</p>';
-      $output .= '<p>' . t('Forms and links inside the content of the layout builder tool have been disabled.') . '</p>';
+      $output = '<p>' . $this->t('This layout builder tool allows you to configure the blocks in the navigation toolbar.') . '</p>';
+      $output .= '<p>' . $this->t('Forms and links inside the content of the layout builder tool have been disabled.') . '</p>';
       return $output;
     }
   }
@@ -61,10 +74,10 @@ class NavigationHooks {
       $navigation_renderer->buildTopBar($page_top);
       return;
     }
-    // But if in layout mode, add an empty element to leave space. We need to use
-    // an empty .admin-toolbar element because the css uses the adjacent sibling
-    // selector. The actual rendering of the navigation blocks/layout occurs in
-    // the layout form.
+    // But if in layout mode, add an empty element to leave space. We need to
+    // use an empty .admin-toolbar element because the css uses the adjacent
+    // sibling selector. The actual rendering of the navigation blocks/layout
+    // occurs in the layout form.
     $page_top['navigation'] = [
       '#type' => 'html_tag',
       '#tag' => 'aside',
@@ -83,14 +96,6 @@ class NavigationHooks {
     $items['top_bar'] = ['render element' => 'element'];
     $items['top_bar_page_actions'] = ['variables' => ['page_actions' => [], 'featured_page_actions' => []]];
     $items['top_bar_page_action'] = ['variables' => ['link' => []]];
-    $items['big_pipe_interface_preview__navigation_shortcut_lazy_builder_lazyLinks__Shortcuts'] = [
-      'variables' => [
-        'callback' => NULL,
-        'arguments' => NULL,
-        'preview' => NULL,
-      ],
-      'base hook' => 'big_pipe_interface_preview',
-    ];
     $items['block__navigation'] = ['render element' => 'elements', 'base hook' => 'block'];
     $items['navigation_menu'] = [
       'base hook' => 'menu',
@@ -101,10 +106,22 @@ class NavigationHooks {
         'attributes' => [],
       ],
     ];
-    $items['menu_region__footer'] = ['variables' => ['items' => [], 'title' => NULL, 'menu_name' => NULL]];
     $items['navigation_content_top'] = [
       'variables' => [
         'items' => [],
+      ],
+    ];
+    $items['navigation__messages'] = [
+      'variables' => [
+        'message_list' => NULL,
+      ],
+    ];
+    $items['navigation__message'] = [
+      'variables' => [
+        'attributes' => [],
+        'url' => NULL,
+        'content' => NULL,
+        'type' => 'status',
       ],
     ];
     return $items;
@@ -170,7 +187,8 @@ class NavigationHooks {
     array_walk($definitions, function (&$definition, $block_id) {
       [$base_plugin_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $block_id);
 
-      // Add the allow_in_navigation attribute to those blocks valid for Navigation.
+      // Add the allow_in_navigation attribute to those blocks valid for
+      // Navigation.
       // @todo Refactor to use actual block Attribute once
       //   https://www.drupal.org/project/drupal/issues/3443882 is merged.
       $allow_in_navigation = [
@@ -234,6 +252,21 @@ class NavigationHooks {
         '#weight' => -1000,
       ],
     ];
+  }
+
+  /**
+   * Implements hook_js_settings_alter().
+   */
+  #[Hook('js_settings_alter')]
+  public function jsSettingsAlter(array &$settings, AttachedAssetsInterface $assets): void {
+    // If Navigation's user-block library is not installed, return.
+    if (!in_array('navigation/internal.user-block', $assets->getLibraries())) {
+      return;
+    }
+    // Provide the user name in drupalSettings to allow JavaScript code to
+    // customize the experience for the end user, rather than the server side,
+    // which would break the render cache.
+    $settings['navigation']['user'] = $this->currentUser->getAccountName();
   }
 
 }

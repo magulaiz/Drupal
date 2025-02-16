@@ -1716,6 +1716,13 @@ function install_download_additional_translations_operations(&$install_state) {
   if (!($language = ConfigurableLanguage::load($langcode))) {
     // Create the language if not already shipped with a profile.
     $language = ConfigurableLanguage::createFromLangcode($langcode);
+
+    $standard_languages = LanguageManager::getStandardLanguageList();
+    if (isset($standard_languages[$langcode])) {
+      // Use the localized language label since the site is being installed
+      // with that language.
+      $language->setName($standard_languages[$langcode][1]);
+    }
   }
   $language->save();
 
@@ -1828,8 +1835,8 @@ function _install_prepare_import($langcodes, $server_pattern) {
       // version number.
       if (isset($matches[1]) && $version = $matches[1]) {
         $info = _install_get_version_info($version);
-        // Picking the first file does not necessarily result in the right file. So
-        // we check if at least the major version number is available.
+        // Picking the first file does not necessarily result in the right file.
+        // So we check if at least the major version number is available.
         if ($info['major']) {
           $core = $info['major'] . '.x';
           $data = [

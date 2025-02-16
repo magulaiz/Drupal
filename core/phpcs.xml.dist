@@ -44,8 +44,9 @@
   <rule ref="Drupal.Classes.UnusedUseStatement"/>
   <rule ref="Drupal.Classes.UseGlobalClass"/>
   <rule ref="Drupal.Classes.UseLeadingBackslash"/>
-  <rule ref="Drupal.Commenting.ClassComment">
-    <exclude name="Drupal.Commenting.ClassComment.Missing"/>
+  <rule ref="Drupal.Commenting.ClassComment"/>
+  <rule ref="Drupal.Commenting.ClassComment.Missing">
+    <include-pattern>*/Functional/*</include-pattern>
   </rule>
   <rule ref="Drupal.Commenting.DataTypeNamespace"/>
   <rule ref="Drupal.Commenting.Deprecated"/>
@@ -54,11 +55,8 @@
       ContentAfterOpen, SpacingBeforeShort, TagValueIndent, ShortStartSpace,
       SpacingAfter, LongNotCapital, ShortFullStop, TagGroupSpacing, Empty,
       TagsNotGrouped, ParamGroup -->
-    <!-- ParamNotFirst still not decided for PHPUnit-based tests.
-      @see https://www.drupal.org/node/2253915 -->
     <exclude name="Drupal.Commenting.DocComment.LongFullStop"/>
     <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
-    <exclude name="Drupal.Commenting.DocComment.ParamNotFirst"/>
     <exclude name="Drupal.Commenting.DocComment.ShortNotCapital"/>
   </rule>
   <rule ref="Drupal.Commenting.DocCommentAlignment"/>
@@ -67,9 +65,9 @@
   <rule ref="Drupal.Commenting.FileComment"/>
   <rule ref="Drupal.Commenting.FunctionComment">
     <exclude name="Drupal.Commenting.FunctionComment.ParamCommentFullStop"/>
-    <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
   <rule ref="Drupal.Commenting.FunctionComment.Missing">
+    <include-pattern>core/modules/*/Plugin/views/argument/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/filter/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/access/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/cache/*</include-pattern>
@@ -81,18 +79,19 @@
     <include-pattern>core/modules/*/Plugin/views/pager/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/style/*</include-pattern>
     <include-pattern>*/Database/*</include-pattern>
-    <exclude-pattern>*/tests/*</exclude-pattern>
+    <include-pattern>*/FunctionalJavascript/*</include-pattern>
   </rule>
-  <rule ref="Drupal.Commenting.FunctionComment.MissingParamType">
-    <include-pattern>core/lib/Component/*</include-pattern>
-    <include-pattern>core/includes/*</include-pattern>
-    <include-pattern>core/*/*Database*/*</include-pattern>
-    <include-pattern>*/*/views/*</include-pattern>
-    <include-pattern>*/*/views_ui/*</include-pattern>
-  </rule>
+  <rule ref="Drupal.Commenting.FunctionComment.MissingParamType"/>
   <rule ref="Drupal.Commenting.FunctionComment.MissingReturnComment">
     <include-pattern>core/lib/Drupal/Core/*</include-pattern>
     <include-pattern>core/lib/Drupal/Component/*</include-pattern>
+    <include-pattern>core/tests/*</include-pattern>
+  </rule>
+  <rule ref="Drupal.Commenting.FunctionComment.MissingReturnComment">
+    <exclude-pattern>core/lib/Drupal/Core/*</exclude-pattern>
+    <exclude-pattern>core/lib/Drupal/Component/*</exclude-pattern>
+    <exclude-pattern>core/tests/*</exclude-pattern>
+    <exclude-pattern>core/*/tests/*</exclude-pattern>
   </rule>
   <rule ref="Drupal.Commenting.GenderNeutralComment"/>
   <rule ref="Drupal.Commenting.HookComment"/>
@@ -105,15 +104,7 @@
   <rule ref="Drupal.Commenting.InlineVariableComment"/>
   <rule ref="Drupal.Commenting.PostStatementComment"/>
   <rule ref="Drupal.Commenting.TodoComment" />
-  <rule ref="Drupal.Commenting.VariableComment">
-    <!-- Sniff for: DuplicateVar, EmptyVar, IncorrectVarType, InlineVariableName, WrongStyle -->
-    <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
-  </rule>
-  <rule ref="Drupal.Commenting.VariableComment.Missing">
-    <include-pattern>./core/tests/*</include-pattern>
-    <exclude-pattern>./core/*/tests/*</exclude-pattern>
-    <include-pattern>core/modules/*/tests/modules/*</include-pattern>
-  </rule>
+  <rule ref="Drupal.Commenting.VariableComment"/>
   <rule ref="Drupal.ControlStructures.ControlSignature"/>
   <rule ref="Drupal.ControlStructures.ElseIf"/>
   <rule ref="Drupal.ControlStructures.InlineControlStructure"/>
@@ -166,8 +157,6 @@
 
   <!-- Drupal Practice sniffs -->
   <rule ref="DrupalPractice.CodeAnalysis.VariableAnalysis">
-    <exclude-pattern>*/core/tests/*</exclude-pattern>
-    <exclude-pattern>*/core/profiles/*/tests/*</exclude-pattern>
     <!-- Do not run this sniff on API files or transliteration data. -->
     <exclude-pattern>*.api.php</exclude-pattern>
     <exclude-pattern>core/lib/Drupal/Component/Transliteration/data/*.php</exclude-pattern>
@@ -189,8 +178,10 @@
   <rule ref="DrupalPractice.Objects.GlobalFunction">
     <include-pattern>*/Plugin/*</include-pattern>
     <include-pattern>*/ListBuilder/*</include-pattern>
-    <include-pattern>*/tests/*/Form/*</include-pattern>
-    <include-pattern>*/modules/system/tests/modules/*</include-pattern>
+    <include-pattern>*/tests/*</include-pattern>
+    <include-pattern>./core/lib/*</include-pattern>
+    <include-pattern>./core/modules/*</include-pattern>
+    <include-pattern>*/Hook/*</include-pattern>
   </rule>
 
   <!-- Generic sniffs -->
@@ -289,6 +280,7 @@
     </properties>
   </rule>
   <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator"/>
+  <rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator"/>
   <rule ref="SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch" />
   <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
     <properties>
