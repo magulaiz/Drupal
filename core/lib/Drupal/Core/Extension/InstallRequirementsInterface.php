@@ -7,8 +7,8 @@ interface InstallRequirementsInterface {
   /**
    * Check installation requirements.
    *
-   * Classes implementing this must be in the Install namespace.
-   * For example src/Install/ModuleNameRequirements.php.
+   * Classes implementing this must be in the Install/Requirements namespace.
+   * For example src/Install/Requirements/ModuleNameRequirements.php.
    *
    * During the 'install' phase, modules can for example assert that
    * library or server versions are available or sufficient.
