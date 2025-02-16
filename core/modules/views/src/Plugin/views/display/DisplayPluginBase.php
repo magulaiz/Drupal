@@ -173,7 +173,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $display_extender_options = $display['display_options']['display_extenders'];
       foreach ($extenders as $extender) {
         /** @var \Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase $plugin */
-        if ($plugin = $manager->createInstance($extender)) {
+        if ($manager->hasDefinition($extender) && $plugin = $manager->createInstance($extender)) {
           $extender_options = $display_extender_options[$plugin->getPluginId()] ?? [];
           $plugin->init($this->view, $this, $extender_options);
           $this->extenders[$extender] = $plugin;

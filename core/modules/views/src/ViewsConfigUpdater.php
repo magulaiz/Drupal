@@ -131,9 +131,6 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processEntityArgumentUpdate($view)) {
         $changed = TRUE;
       }
-      if ($this->processDisplayExtenders($view)) {
-        $changed = TRUE;
-      }
       return $changed;
     });
   }
@@ -259,37 +256,6 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     if ($this->deprecationsEnabled && $changed && !$deprecations_triggered) {
       $deprecations_triggered = TRUE;
       @trigger_error(sprintf('The update to convert "numeric" arguments to "entity_target_id" for entity reference fields for view "%s" is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3441945', $view->id()), E_USER_DEPRECATED);
-    }
-
-    return $changed;
-  }
-
-  /**
-   * Processes display extenders.
-   *
-   * @param \Drupal\views\ViewEntityInterface $view
-   *   The View to update.
-   *
-   * @return bool
-   *   Whether the display was updated.
-   */
-  protected function processDisplayExtenders(ViewEntityInterface $view): bool {
-    $changed = FALSE;
-    $displays = $view->get('display');
-    $display_extenders = $view->getExecutable()->getDisplay()->getExtenders();
-    $extenders_plugin_ids = [];
-    foreach ($display_extenders as $display_extender) {
-      $extenders_plugin_ids[$display_extender->getPluginId()] = $display_extender;
-    }
-    foreach ($displays as &$display) {
-      if (isset($display['display_options']['display_extenders'])) {
-        foreach ($display['display_options']['display_extenders'] as $plugin_id => $options) {
-          if (!isset($extenders_plugin_ids[$plugin_id]) || !$extenders_plugin_ids[$plugin_id]->applies($options)) {
-            unset($display['display_options']['display_extenders'][$plugin_id]);
-            $changed = TRUE;
-          }
-        }
-      }
     }
 
     return $changed;
