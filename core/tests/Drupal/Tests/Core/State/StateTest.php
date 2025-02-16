@@ -389,7 +389,7 @@ class StateTest extends UnitTestCase {
    *
    * @covers ::getValuesSetDuringRequest
    */
-  public function testFetValuesSetDuringRequest(): State {
+  public function testGetValuesSetDuringRequest(): void {
     $values = ['key1' => 'value1', 'key2' => 'value2', 'key3' => 'value3'];
     $this->state->setMultiple($values);
     $this->assertSame(['value' => 'value1', 'original' => NULL], $this->state->getValuesSetDuringRequest('key1'));
@@ -413,8 +413,6 @@ class StateTest extends UnitTestCase {
 
     $this->state->set('key4', 'new-value-4');
     $this->assertSame(['value' => 'new-value-4', 'original' => NULL], $this->state->getValuesSetDuringRequest('key4'));
-
-    return $this->state;
   }
 
 }

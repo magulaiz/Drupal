@@ -77,11 +77,11 @@ interface StateInterface {
   /**
    * Returns the values if a key has been modified during the request.
    *
-   * @return array{original: mixed, current: mixed}|null
+   * @return array{original: mixed, value: mixed}|null
    *   An array containing:
-   *     - value: The value that was set during the request.
-   *     - original: The initial value stored at the beginning of the request.
-   *   If the key was not set then NULL is returned.
+   *     - value: The last value set during the request.
+   *     - original: The initial value at the start of the request.
+   *   If the key was not set, NULL is returned.
    */
   public function getValuesSetDuringRequest(string $key): ?array;
 

@@ -192,7 +192,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('dblog.overview'));
     $this->assertSession()->pageTextContainsOnce('Maintenance mode enabled.');
     $this->assertSession()->pageTextNotContains('Maintenance mode disabled.');
-    // Turn of maintenance mode.
+    // Turn off maintenance mode.
     $edit = [
       'maintenance_mode' => 0,
     ];

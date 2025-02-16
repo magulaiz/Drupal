@@ -33,12 +33,10 @@ class State extends CacheCollector implements StateInterface {
   /**
    * Tracks keys that have been modified during the request lifecycle.
    *
-   * This associative array is keyed by key names, where each value
-   * is an array containing these keys:
-   *   - value: The value that was set during the request. If the value was
-   *     set multiple times, this will be the last value set.
-   *   - original: The initial value that was stored at the beginning
-   *     of the request.
+   * An associative array keyed by the state key name, where each value
+   * is an array with the following keys:
+   *   - value: The last value set during the request. 
+   *   - original: The initial value at the start of the request.
    */
   protected array $keysSetDuringRequest = [];
 
