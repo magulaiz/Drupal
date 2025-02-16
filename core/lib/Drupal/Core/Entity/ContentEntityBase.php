@@ -200,7 +200,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    */
   public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = []) {
     $this->entityTypeId = $entity_type;
-    $this->entityKeys['bundle'] = $bundle ? $bundle : $this->entityTypeId;
+    $this->entityKeys['bundle'] = $bundle ?: $this->entityTypeId;
     $this->langcodeKey = $this->getEntityType()->getKey('langcode');
     $this->defaultLangcodeKey = $this->getEntityType()->getKey('default_langcode');
     $this->revisionTranslationAffectedKey = $this->getEntityType()->getKey('revision_translation_affected');
@@ -233,8 +233,8 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
             }
           }
           else {
-            // We save translatable fields such as the publishing status of a node
-            // into an entity key array keyed by langcode as a performance
+            // We save translatable fields such as the publishing status of a
+            // node into an entity key array keyed by langcode as a performance
             // optimization, so we don't have to go through TypedData when we
             // need these values.
             foreach ($this->values[$field_name] as $langcode => $field_value) {
