@@ -159,4 +159,21 @@ class BlockContentHooks {
     return $operations;
   }
 
+  /**
+   * Implements hook_ENTITY_TYPE_presave().
+   */
+  #[Hook('block_presave')]
+  public function blockPreSave(BlockInterface $block): void {
+    // @see block_content_post_update_remove_block_content_status_info_keys()
+    if (!str_starts_with($block->getPluginId(), 'block_content')) {
+      return;
+    }
+    $settings = $block->get('settings');
+    if (!isset($settings['info']) && !isset($settings['status'])) {
+      return;
+    }
+    unset($settings['info'], $settings['status']);
+    $block->set('settings', $settings);
+  }
+
 }

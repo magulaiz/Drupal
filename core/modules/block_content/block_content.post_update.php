@@ -32,11 +32,6 @@ function block_content_post_update_remove_block_content_status_info_keys(array &
         return FALSE;
       }
       $settings = $block->getPlugin()->getConfiguration();
-      if (!isset($settings['info']) && !isset($settings['status'])) {
-        return FALSE;
-      }
-      unset($settings['info'], $settings['status']);
-      $block->getPlugin()->setConfiguration($settings);
-      return TRUE;
+      return isset($settings['info']) && isset($settings['status']);
     });
 }
