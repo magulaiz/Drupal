@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @see \Drupal\layout_builder\EventSubscriber\SetInlineBlockDependency
  */
-class LayoutBuilderServices implements ServiceProviderInterface {
+class LayoutBuilderServiceRegister implements ServiceProviderInterface {
 
   /**
    * {@inheritdoc}
