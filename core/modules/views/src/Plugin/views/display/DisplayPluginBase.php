@@ -970,10 +970,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $this->dependencies = parent::calculateDependencies();
     // Collect all the dependencies of handlers and plugins. Only calculate
     // their dependencies if they are configured by this display.
-    $extenders = array_filter($this->extenders, static function ($plugin) {
-      return $plugin->applies($plugin->options);
-    });
-    $plugins = array_merge($this->getAllHandlers(TRUE), $this->getAllPlugins(TRUE), $extenders);
+    $plugins = array_merge($this->getAllHandlers(TRUE), $this->getAllPlugins(TRUE));
     array_walk($plugins, [$this, 'calculatePluginDependencies']);
 
     return $this->dependencies;
