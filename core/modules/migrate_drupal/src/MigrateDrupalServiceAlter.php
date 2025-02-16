@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Alters container services.
  */
-class MigrateDrupalServices extends ServiceProviderBase {
+class MigrateDrupalServiceAlter extends ServiceProviderBase {
 
   /**
    * {@inheritdoc}
