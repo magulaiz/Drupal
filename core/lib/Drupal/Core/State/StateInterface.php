@@ -77,7 +77,7 @@ interface StateInterface {
   /**
    * Returns the values if a key has been modified during the request.
    *
-   * @return array{original: mixed, value: mixed}|null
+   * @return array{value: mixed, original: mixed}|null
    *   An array containing:
    *     - value: The last value set during the request.
    *     - original: The initial value at the start of the request.
