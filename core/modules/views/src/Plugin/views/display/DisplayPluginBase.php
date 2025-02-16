@@ -21,6 +21,7 @@ use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Views;
+use function array_filter;
 
 /**
  * Base class for views display plugins.
@@ -969,7 +970,10 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $this->dependencies = parent::calculateDependencies();
     // Collect all the dependencies of handlers and plugins. Only calculate
     // their dependencies if they are configured by this display.
-    $plugins = array_merge($this->getAllHandlers(TRUE), $this->getAllPlugins(TRUE));
+    $extenders = array_filter($this->extenders, static function ($plugin) {
+      return $plugin->applies($plugin->options);
+    });
+    $plugins = array_merge($this->getAllHandlers(TRUE), $this->getAllPlugins(TRUE), $extenders);
     array_walk($plugins, [$this, 'calculatePluginDependencies']);
 
     return $this->dependencies;
@@ -2043,12 +2047,13 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         break;
     }
 
-    $extender_options = $this->getOption('display_extenders');
+    $extender_options = [];
     foreach ($this->extenders as $extender) {
       $extender->submitOptionsForm($form, $form_state);
-
       $plugin_id = $extender->getPluginId();
-      $extender_options[$plugin_id] = $extender->options;
+      if ($extender->applies($extender->options)) {
+        $extender_options[$plugin_id] = $extender->options;
+      }
     }
     $this->setOption('display_extenders', $extender_options);
   }
