@@ -576,9 +576,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         ],
         'merge_defaults' => [$this, 'mergePlugin'],
       ],
-      'display_extenders' => [
-        'default' => [],
-      ],
       'exposed_form' => [
         'contains' => [
           'type' => ['default' => 'basic'],
