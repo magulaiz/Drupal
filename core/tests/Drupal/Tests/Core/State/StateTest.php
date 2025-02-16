@@ -415,4 +415,27 @@ class StateTest extends UnitTestCase {
     $this->assertSame(['value' => 'new-value-4', 'original' => NULL], $this->state->getValuesSetDuringRequest('key4'));
   }
 
+  /**
+   * Tests getValuesSetDuringRequest() method with an existing value.
+   *
+   * @covers ::getValuesSetDuringRequest
+   */
+  public function testExistingGetValuesSetDuringRequest(): void {
+    $keyValueStorage = $this->getMockBuilder(KeyValueStoreInterface::class)->getMock();
+    $keyValueStorage->expects($this->once())->method('get')->with('existing')->willReturn('value');
+    $factory = $this->getMockBuilder(KeyValueFactoryInterface::class)->getMock();
+    $factory->expects($this->once())
+      ->method('get')
+      ->with('state')
+      ->willReturn($keyValueStorage);
+    $lock = $this->getMockBuilder(LockBackendInterface::class)->getMock();
+    $cache = $this->getMockBuilder(CacheBackendInterface::class)
+      ->getMock();
+    $state = new State($factory, $cache, $lock);
+    $state->set('existing', 'new-value');
+    $this->assertSame(['value' => 'new-value', 'original' => 'value'], $state->getValuesSetDuringRequest('existing'));
+    $state->set('existing', 'newer-value');
+    $this->assertSame(['value' => 'newer-value', 'original' => 'value'], $state->getValuesSetDuringRequest('existing'));
+  }
+
 }
