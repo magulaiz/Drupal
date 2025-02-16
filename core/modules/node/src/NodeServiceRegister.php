@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Registers services in the container.
  */
-class NodeServices implements ServiceProviderInterface {
+class NodeServiceRegister implements ServiceProviderInterface {
 
   /**
    * {@inheritdoc}
