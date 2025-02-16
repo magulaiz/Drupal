@@ -11,6 +11,6 @@ services:
     tags:
       - { name: event_subscriber }
   package_manager_test_validation.service_provider:
-    class: Drupal\package_manager_test_validation\PackageManagerTestValidationServices
+    class: Drupal\package_manager_test_validation\PackageManagerTestValidationServiceAlter
     tags:
       - { name: service_provider }

@@ -6,6 +6,6 @@ services:
   Drupal\package_manager_bypass\LoggingCommitter:
     decorates: 'PhpTuf\ComposerStager\API\Core\CommitterInterface'
   package_manager_bypass.service_provider:
-    class: Drupal\package_manager_bypass\PackageManagerBypassServices
+    class: Drupal\package_manager_bypass\PackageManagerBypassServiceAlter
     tags:
       - { name: service_provider }
