@@ -4,11 +4,12 @@ namespace Drupal\datetime\Plugin\views\filter;
 
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\views\Attribute\ViewsFilter;
-use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Plugin\views\filter\Date as NumericDate;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -16,15 +17,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Date/time views filter.
  *
- * Even thought dates are stored as strings, the numeric filter is extended
+ * Even though dates are stored as strings, the numeric filter is extended
  * because it provides more sensible operators.
  *
  * @ingroup views_filter_handlers
  */
 #[ViewsFilter("datetime")]
 class Date extends NumericDate implements ContainerFactoryPluginInterface {
-
-  use FieldAPIHandlerTrait;
 
   /**
    * The date formatter service.
@@ -57,6 +56,13 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
   protected $requestStack;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected EntityTypeManager $entityTypeManager;
+
+  /**
    * Constructs a new Date handler.
    *
    * @param array $configuration
@@ -69,20 +75,45 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
    *   The date formatter service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack used to determine the current time.
+   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatterInterface $date_formatter, RequestStack $request_stack) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatterInterface $date_formatter, RequestStack $request_stack, EntityTypeManager $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->dateFormatter = $date_formatter;
     $this->requestStack = $request_stack;
+    $this->entityTypeManager = $entity_type_manager;
+  }
 
-    $definition = $this->getFieldStorageDefinition();
-    if ($definition->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {
-      // Date format depends on field storage format.
-      $this->dateFormat = DateTimeItemInterface::DATE_STORAGE_FORMAT;
-      // Timezone offset calculation is not applicable to dates that are stored
-      // as date-only.
-      $this->calculateOffset = FALSE;
+  /**
+   * Sets $dateFormat and $calculateOffset depending on
+   * field storage config.
+   *
+   * If $field is a base table field (not an entity field),
+   * $dateFormat and $calculateOffset are not set.
+   *
+   * @param string $field
+   *   A table and field/column in the format "table.field".
+   *
+   * @return void
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function setDateFormat($field) {
+    $field_storage_definition = $this->entityTypeManager->getStorage('field_storage_config')->load($field);
+    if ($field_storage_definition) {
+      $definition = BaseFieldDefinition::createFromFieldStorageDefinition($field_storage_definition);
+      if ($definition && $definition->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {
+        // Date format depends on field storage format.
+        $this->dateFormat = DateTimeItemInterface::DATE_STORAGE_FORMAT;
+        // Timezone offset calculation is not applicable to dates that are stored
+        // as date-only.
+        $this->calculateOffset = FALSE;
+      }
     }
+    // If there is no field storage config, this must be a base table field/column.
+    // @todo Is there a way to determine whether the field contains only dates only
+    // and set $this->dateFormat and $this->calculateOffset accordingly?
   }
 
   /**
@@ -94,7 +125,8 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
       $plugin_id,
       $plugin_definition,
       $container->get('date.formatter'),
-      $container->get('request_stack')
+      $container->get('request_stack'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -102,6 +134,8 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
    * Override parent method, which deals with dates as integers.
    */
   protected function opBetween($field) {
+    $this->setDateFormat($field);
+
     $timezone = $this->getTimezone();
     $origin_offset = $this->getOffset($this->value['min'], $timezone);
 
@@ -126,6 +160,8 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
    * Override parent method, which deals with dates as integers.
    */
   protected function opSimple($field) {
+    $this->setDateFormat($field);
+
     $timezone = $this->getTimezone();
     $origin_offset = $this->getOffset($this->value['value'], $timezone);
 
