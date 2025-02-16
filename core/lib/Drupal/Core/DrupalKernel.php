@@ -1375,32 +1375,27 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     foreach ($this->serviceYamls['app'] as $filename) {
       $yaml_loader->load($filename);
     }
-    foreach ($this->serviceProviders['app'] as $provider) {
-      if ($provider instanceof ServiceProviderInterface) {
-        $provider->register($container);
-      }
-    }
     foreach ($container->findTaggedServiceIds('service_provider') as $id => $info) {
       $provider = $container->get($id);
-      // Start of BC layer.
       $class = get_class($provider);
-      // @phpstan-ignore property.deprecated
-      if (isset($this->serviceProviderClasses['app'][$class])) {
-        // @phpstan-ignore property.deprecated
-        unset($this->serviceProviderClasses['app'][$class]);
-        continue;
-      }
+      // Start of BC layer.
+      unset($this->serviceProviders['app'][$class]);
       // End of BC layer.
       if ($provider instanceof ServiceProviderInterface) {
         $provider->register($container);
       }
       if ($provider instanceof ServiceModifierInterface) {
-        $this->serviceProviders['app'][] = $provider;
+        $this->serviceProviders['app'][$class] = $provider;
+      }
+    }
+    foreach ($this->serviceProviders['app'] as $provider) {
+      if ($provider instanceof ServiceProviderInterface) {
+        $provider->register($container);
       }
     }
 
     // @phpstan-ignore property.deprecated
-    foreach ($this->serviceProviderClasses['app'] as $class) {
+    foreach ($this->serviceProviders['app'] as $class => $provider) {
       @trigger_error("Service providers are now tagged services with the service_provider tag. Magic naming for $class is deprecated in drupal:11.2.0 and removed in drupal:12.0.0.");
     }
 
