@@ -37,10 +37,8 @@ abstract class DisplayExtenderPluginBase extends PluginBase {
    *
    * @param array $display_options
    *   The display options.
-   *
-   * @return bool
    */
-  public function applies($display_options) {
+  public function applies(array $display_options): bool {
     return TRUE;
   }
 
