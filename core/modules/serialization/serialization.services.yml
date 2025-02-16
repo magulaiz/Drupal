@@ -115,6 +115,6 @@ services:
     class: Drupal\serialization\EventSubscriber\UserRouteAlterSubscriber
     arguments: ['%serializer.formats%']
   serialization.service_provider:
-    class: Drupal\serialization\SerializationServices
+    class: Drupal\serialization\SerializationServiceRegister
     tags:
       - { name: service_provider }

@@ -8,7 +8,7 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 /**
  * Serialization dependency injection container.
  */
-class SerializationServices implements ServiceProviderInterface {
+class SerializationServiceRegister implements ServiceProviderInterface {
 
   /**
    * {@inheritdoc}
