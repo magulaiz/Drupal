@@ -179,7 +179,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     }
   }
 
-    /**
+  /**
    * Tests the logo tokens for the active and default theme.
    */
   public function testSystemSiteLogoTokenReplacement(): void {
