@@ -27,6 +27,7 @@ interface ContentEntityInterface extends \Traversable, FieldableEntityInterface,
 
   /**
    * Creates an instance of the entity to allow for DI.
+   *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The container.
    * @param array $values
@@ -34,14 +35,14 @@ interface ContentEntityInterface extends \Traversable, FieldableEntityInterface,
    *   has bundles, the bundle key has to be specified.
    * @param string $entity_type
    *   The type of the entity to create.
-   * @param $bundle
+   * @param bool $bundle
    *   The bundle of the entity to create.
-   * @param $translations
+   * @param array $translations
    *   Any entity translations.
    *
    * @return \Drupal\Core\Entity\ContentEntityInterface
    *   The created entity.
    */
-  public static function createInstance(ContainerInterface $container, array $values, string $entity_type, $bundle = FALSE, $translations = []);
+  public static function createInstance(ContainerInterface $container, array $values, string $entity_type, bool $bundle = FALSE, array $translations = []);
 
 }

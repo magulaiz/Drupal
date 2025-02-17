@@ -78,7 +78,7 @@ abstract class EntityBase implements InjectableEntityInterface {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, array $values, string $entity_type) {
     return new static($values, $entity_type);
