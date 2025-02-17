@@ -1,7 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
-id: no_time_medium
-label: 'No time, medium date'
+id: medium_without_time
+label: 'Medium date (without time)'
 locked: false
 pattern: 'D, j M Y'
