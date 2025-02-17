@@ -9,6 +9,8 @@ use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
+// cspell:ignore basefield
+
 /**
  * Tests Field SQL Storage .
  *
@@ -20,9 +22,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class FieldSqlStorageTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field', 'field_test', 'text', 'entity_test'];
 
@@ -374,7 +374,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       $field_storage->save();
       $this->fail('Update succeeded.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Expected exception; just continue testing.
     }
 
@@ -468,7 +468,8 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $this->assertEquals($foreign_key_name, $schema['foreign keys'][$foreign_key_name]['table'], 'Foreign key table name preserved through CRUD');
     $this->assertEquals('id', $schema['foreign keys'][$foreign_key_name]['columns'][$foreign_key_name], 'Foreign key column name preserved through CRUD');
 
-    // Update the field settings, it should update the foreign key definition too.
+    // Update the field settings, it should update the foreign key definition
+    // too.
     $foreign_key_name = 'color';
     $field_storage->setSetting('foreign_key_name', $foreign_key_name);
     $field_storage->save();

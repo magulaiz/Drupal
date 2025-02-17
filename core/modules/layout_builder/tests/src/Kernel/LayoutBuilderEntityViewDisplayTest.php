@@ -11,7 +11,6 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
  * @coversDefaultClass \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay
  *
  * @group layout_builder
- * @group #slow
  */
 class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
 
@@ -88,7 +87,8 @@ class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
     $this->sectionList->setOverridable();
     $this->assertTrue($this->sectionList->isLayoutBuilderEnabled());
 
-    // Ensure Layout Builder is still enabled after setting Overridable to FALSE.
+    // Ensure Layout Builder is still enabled after setting Overridable to
+    // FALSE.
     $this->sectionList->setOverridable(FALSE);
     $this->assertTrue($this->sectionList->isLayoutBuilderEnabled());
   }

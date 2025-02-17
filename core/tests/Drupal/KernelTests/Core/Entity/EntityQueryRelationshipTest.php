@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
@@ -20,9 +21,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
   use EntityReferenceFieldCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['taxonomy'];
 
@@ -78,7 +77,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
     $vocabulary->save();
 
     // Second, create the field.
-    entity_test_create_bundle('test_bundle');
+    EntityTestHelper::createBundle('test_bundle');
     $this->fieldName = $this->randomMachineName();
     $handler_settings = [
       'target_bundles' => [
@@ -86,7 +85,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
       ],
       'auto_create' => TRUE,
     ];
-    $this->createEntityReferenceField('entity_test', 'test_bundle', $this->fieldName, NULL, 'taxonomy_term', 'default', $handler_settings);
+    $this->createEntityReferenceField('entity_test', 'test_bundle', $this->fieldName, '', 'taxonomy_term', 'default', $handler_settings);
 
     // Create two terms and also two accounts.
     for ($i = 0; $i <= 1; $i++) {

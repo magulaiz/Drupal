@@ -32,7 +32,9 @@ class TranslationManagerTest extends UnitTestCase {
 
   /**
    * Provides some test data for formatPlural()
+   *
    * @return array
+   *   An array of test data for formatPlural().
    */
   public static function providerTestFormatPlural() {
     return [
@@ -87,6 +89,7 @@ class TranslationManagerTest extends UnitTestCase {
    * Provides test data for translate().
    *
    * @return array
+   *   An array of test data for translate().
    */
   public static function providerTestTranslatePlaceholder() {
     return [

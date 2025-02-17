@@ -15,7 +15,6 @@ use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
  * Tests pluggable caching for views.
  *
  * @group views
- * @group #slow
  * @see views_plugin_cache
  */
 class CacheTest extends ViewsKernelTestBase {
@@ -28,9 +27,7 @@ class CacheTest extends ViewsKernelTestBase {
   public static $testViews = ['test_view', 'test_cache', 'test_groupwise_term_ui', 'test_display', 'test_filter'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['taxonomy', 'text', 'user', 'node'];
 
@@ -266,8 +263,8 @@ class CacheTest extends ViewsKernelTestBase {
    */
   public function testHeaderStorage(): void {
     // Create a view with output caching enabled.
-    // Some hook_views_pre_render in views_test_data.module adds the test css/js file.
-    // so they should be added to the css/js storage.
+    // Some hook_views_pre_render in views_test_data.module adds the test css/js
+    // file. so they should be added to the css/js storage.
     $view = Views::getView('test_view');
     $view->setDisplay();
     $view->storage->set('id', 'test_cache_header_storage');
