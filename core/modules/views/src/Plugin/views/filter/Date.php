@@ -4,6 +4,7 @@ namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Attribute\ViewsFilter;
+use Drupal\Component\Datetime;
 
 /**
  * Filter to handle dates stored as a timestamp.
@@ -21,7 +22,6 @@ class Date extends NumericFilter {
 
     // Value is already set up properly, we're just adding our new field to it.
     $options['value']['contains']['type']['default'] = 'date';
-
     return $options;
   }
 
@@ -181,20 +181,33 @@ class Date extends NumericFilter {
    * {@inheritdoc}
    */
   protected function opBetween($field) {
+
     $a = intval(strtotime($this->value['min'], 0));
     $b = intval(strtotime($this->value['max'], 0));
 
     if ($this->value['type'] == 'offset') {
+      $request_time = $this->getCurrentTime();
       // Keep sign.
-      $a = '***CURRENT_TIME***' . sprintf('%+d', $a);
+      // $a = '***CURRENT_TIME***' . sprintf('%+d', $a);.
+      $a = $request_time + $a;
       // Keep sign.
-      $b = '***CURRENT_TIME***' . sprintf('%+d', $b);
+      // $b = '***CURRENT_TIME***' . sprintf('%+d', $b);.
+      $b = $request_time + $b;
     }
+<<<<<<< Updated upstream
     // This is safe because we are manually scrubbing the values. It is
     // necessary to do it this way because $a and $b are formulas when using an
     // offset.
+=======
+
+    /*
+    This is safe because we are manually scrubbing the values.
+    It is necessary to do it this way because $a and $b are formulas when using an offset.
+     */
+>>>>>>> Stashed changes
     $operator = strtoupper($this->operator);
     $this->query->addWhereExpression($this->options['group'], "$field $operator $a AND $b");
+
   }
 
   /**
@@ -209,6 +222,13 @@ class Date extends NumericFilter {
     // This is safe because we are manually scrubbing the value. It is necessary
     // to do it this way because $value is a formula when using an offset.
     $this->query->addWhereExpression($this->options['group'], "$field $this->operator $value");
+  }
+
+  /**
+   *
+   */
+  public function getCurrentTime() {
+    return time();
   }
 
 }
