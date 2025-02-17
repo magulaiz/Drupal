@@ -217,6 +217,8 @@ class Date extends NumericFilter {
 
   /**
    * Get Current_Time.
+   *
+   * @return int
    */
   public function getCurrentTime() {
     return time();
