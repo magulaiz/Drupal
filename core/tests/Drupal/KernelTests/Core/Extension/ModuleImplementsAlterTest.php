@@ -42,7 +42,7 @@ class ModuleImplementsAlterTest extends KernelTestBase {
 
     // Assert that module_implements_alter_test.module is now included.
     $this->assertTrue(function_exists('test_auto_include'),
-    'The file module_implements_alter_test.module was successfully included.');  
+    'The file module_implements_alter_test.module was successfully included.');
 
     $this->assertTrue(\Drupal::moduleHandler()->hasImplementations('module_implements_alter', 'module_implements_alter_test'),
     'module_implements_alter_test implements hook_module_implements_alter().');
