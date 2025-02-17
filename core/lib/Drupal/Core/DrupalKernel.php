@@ -1395,7 +1395,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     foreach ($this->serviceProviders['app'] as $class => $provider) {
-      @trigger_error("Service providers are now tagged services with the service_provider tag. Magic naming for $class is deprecated in drupal:11.2.0 and removed in drupal:12.0.0.");
+      @trigger_error("Service providers are now tagged services with the service_provider tag. Magic naming for $class is deprecated in drupal:11.2.0 and removed in drupal:12.0.0.", E_USER_DEPRECATED);
     }
 
     // Register site-specific service overrides.
