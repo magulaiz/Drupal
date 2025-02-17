@@ -27,8 +27,6 @@ abstract class HookPriorityTestBase extends UnitTestCase {
    * @param bool $different_priority
    *   When TRUE, "c" will fire first, "b" second and "a" last. When FALSE,
    *   the priority will be set to be the same and the order is undefined.
-   *
-   * @return void
    */
   protected function setUpContainer(bool $different_priority): void {
     $this->container = new ContainerBuilder();
