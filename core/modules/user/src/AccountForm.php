@@ -196,12 +196,19 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       $status = $config->get('register') == UserInterface::REGISTER_VISITORS ? 1 : 0;
     }
 
+    // Determine if the user is editing their own profile.
+    $self_edit = $user->id() == $account->id();
+
     $form['account']['status'] = [
       '#type' => 'radios',
       '#title' => $this->t('Status'),
       '#default_value' => $status,
       '#options' => [$this->t('Blocked'), $this->t('Active')],
       '#access' => $account->status->access('edit'),
+      // If the admin is editing their own profile, disable the status field.
+      '#disabled' => $self_edit,
+      // Display a message informing admins they cannot modify their own status.
+      '#description' => $self_edit ? $this->t('As an admin, you cannot modify your own account status') : NULL,
     ];
 
     $roles = Role::loadMultiple();

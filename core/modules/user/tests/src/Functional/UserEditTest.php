@@ -260,4 +260,31 @@ class UserEditTest extends BrowserTestBase {
     $this->assertFalse($this->getSession()->getPage()->hasField('mail'));
   }
 
+  /**
+   * Tests that an admin cannot edit their own account status.
+   */
+  public function testAdminSelfBlocking(): void {
+    // Create an admin user with permission to administer other users.
+    $admin = $this->drupalCreateUser(['administer users']);
+    $user = $this->drupalCreateUser();
+
+    // Log in as the admin and attempt to edit their own profile.
+    $this->drupalLogin($admin);
+    $this->drupalGet("user/" . $admin->id() . "/edit");
+
+    // Ensure the status field is present but disabled for self-editing.
+    $this->assertSession()->fieldExists('edit-status-0');
+    $this->assertSession()->fieldDisabled('edit-status-0');
+    $this->assertSession()->fieldDisabled('edit-status-1');
+
+    // Verify that an explanation message is displayed.
+    $this->assertNotNull($this->getSession()->getPage()->findById('edit-status--wrapper--description'));
+
+    // Test editing another user to ensure the status field is enabled.
+    $this->drupalGet("user/" . $user->id() . "/edit");
+    $this->assertSession()->fieldExists('edit-status-0');
+    $this->assertSession()->fieldEnabled('edit-status-0');
+    $this->assertSession()->fieldEnabled('edit-status-1');
+  }
+
 }
