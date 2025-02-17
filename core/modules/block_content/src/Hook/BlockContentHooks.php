@@ -2,6 +2,7 @@
 
 namespace Drupal\block_content\Hook;
 
+use Drupal\block\BlockConfigUpdater;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\block_content\BlockContentInterface;
@@ -164,16 +165,9 @@ class BlockContentHooks {
    */
   #[Hook('block_presave')]
   public function blockPreSave(BlockInterface $block): void {
-    // @see block_content_post_update_remove_block_content_status_info_keys()
-    if (!str_starts_with($block->getPluginId(), 'block_content')) {
-      return;
-    }
-    $settings = $block->get('settings');
-    if (!isset($settings['info']) && !isset($settings['status'])) {
-      return;
-    }
-    unset($settings['info'], $settings['status']);
-    $block->set('settings', $settings);
+    /** @var \Drupal\block\BlockConfigUpdater $blockConfigUpdater */
+    $blockConfigUpdater = \Drupal::classResolver(BlockConfigUpdater::class);
+    $blockConfigUpdater->updateBlock($block);
   }
 
 }
