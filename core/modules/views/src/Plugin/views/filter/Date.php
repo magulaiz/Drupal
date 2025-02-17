@@ -4,7 +4,6 @@ namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Attribute\ViewsFilter;
-use Drupal\Component\Datetime;
 
 /**
  * Filter to handle dates stored as a timestamp.
@@ -217,7 +216,7 @@ class Date extends NumericFilter {
   }
 
   /**
-   *Get Current_Time
+   * Get Current_Time.
    */
   public function getCurrentTime() {
     return time();
