@@ -276,9 +276,9 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, array $values, string $entity_type, $bundle = FALSE, $translations = []) {
+  public static function createInstance(ContainerInterface $container, array $values, string $entity_type, bool $bundle = FALSE, array $translations = []) {
     return new static($values, $entity_type, $bundle, $translations);
   }
 
