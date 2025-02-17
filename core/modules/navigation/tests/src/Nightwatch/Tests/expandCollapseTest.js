@@ -32,16 +32,16 @@ module.exports = {
           '[data-once="admin-toolbar-document-triggers-listener"]',
         )
         // This pause required to wait for first init event.
-        .waitForElementNotPresent(selectors.expandButton.collapsed)
-        .waitForElementPresent(selectors.expandButton.expanded)
-        .waitForElementPresent(selectors.htmlAttribute.expanded)
-        .click(selectors.expandButton.expanded)
+        .waitForElementNotPresent(selectors.expandButton.expanded)
         .waitForElementPresent(selectors.expandButton.collapsed)
         .waitForElementPresent(selectors.htmlAttribute.collapsed)
         .click(selectors.expandButton.collapsed)
-        .waitForElementNotPresent(selectors.expandButton.collapsed)
         .waitForElementPresent(selectors.expandButton.expanded)
-        .waitForElementPresent(selectors.htmlAttribute.expanded);
+        .waitForElementPresent(selectors.htmlAttribute.expanded)
+        .click(selectors.expandButton.expanded)
+        .waitForElementNotPresent(selectors.expandButton.expanded)
+        .waitForElementPresent(selectors.expandButton.collapsed)
+        .waitForElementPresent(selectors.htmlAttribute.collapsed);
     });
   },
 };
