@@ -189,13 +189,8 @@ class ContentTranslationHooks {
    * @see content_translation_entity_bundle_info_alter()
    * @see \Drupal\content_translation\ContentTranslationManager::isEnabled()
    */
-<<<<<<< HEAD
-  #[Hook('language_content_settings_insert', order: Order::Last)]
-  public function languageContentSettingsInsert(ContentLanguageSettingsInterface $settings): void {
-=======
   #[Hook('language_content_settings_insert')]
   public function languageContentSettingsInsert(ContentLanguageSettingsInterface $settings): void {
->>>>>>> beef39243fd (Update correct hooks)
     if ($settings->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
       _content_translation_install_field_storage_definitions($settings->getTargetEntityTypeId());
     }
