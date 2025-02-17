@@ -45,7 +45,10 @@ class BooleanFormatter extends FormatterBase {
    */
   protected function getOutputFormats() {
     $formats = [
-      'default' => [$this->getFieldSetting('on_label'), $this->getFieldSetting('off_label')],
+      'default' => [
+        $this->getFieldSetting('on_label'),
+        $this->getFieldSetting('off_label'),
+      ],
       'yes-no' => [$this->t('Yes'), $this->t('No')],
       'true-false' => [$this->t('True'), $this->t('False')],
       'on-off' => [$this->t('On'), $this->t('Off')],
@@ -68,10 +71,16 @@ class BooleanFormatter extends FormatterBase {
     foreach ($this->getOutputFormats() as $format_name => $format) {
       if (is_array($format)) {
         if ($format_name == 'default') {
-          $formats[$format_name] = $this->t('Field settings (@on_label / @off_label)', ['@on_label' => $format[0], '@off_label' => $format[1]]);
+          $formats[$format_name] = $this->t('Field settings (@on_label / @off_label)', [
+            '@on_label' => $format[0],
+            '@off_label' => $format[1],
+          ]);
         }
         else {
-          $formats[$format_name] = $this->t('@on_label / @off_label', ['@on_label' => $format[0], '@off_label' => $format[1]]);
+          $formats[$format_name] = $this->t('@on_label / @off_label', [
+            '@on_label' => $format[0],
+            '@off_label' => $format[1],
+          ]);
         }
       }
       else {
@@ -144,7 +153,14 @@ class BooleanFormatter extends FormatterBase {
     $format = $this->getSetting('format');
 
     if ($items->isEmpty()) {
-      return [['#markup' => $formats[$format][1]]];
+      if ($format == 'custom') {
+        $elements[] = ['#markup' => $this->getSetting('format_custom_false')];
+      }
+      else {
+        $elements[] = ['#markup' => $formats[$format][1]];
+      }
+
+      return $elements;
     }
 
     foreach ($items as $delta => $item) {
