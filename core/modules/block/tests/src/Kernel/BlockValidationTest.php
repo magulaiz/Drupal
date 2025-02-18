@@ -29,6 +29,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
       "'id' is a required key.",
       "'label' is a required key.",
       "'label_display' is a required key.",
+      "'condition_logic' is a required key.",
       "'provider' is a required key.",
     ],
   ];

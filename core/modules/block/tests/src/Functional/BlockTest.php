@@ -23,6 +23,11 @@ class BlockTest extends BlockTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['node'];
+
+  /**
    * Tests block visibility.
    */
   public function testBlockVisibility(): void {
@@ -648,6 +653,8 @@ class BlockTest extends BlockTestBase {
    */
   public function testBlockConditionLogicToggle(): void {
     $this->drupalLogin($this->adminUser);
+    $this->drupalCreateContentType(['type' => 'page']);
+    $this->drupalCreateContentType(['type' => 'article']);
     $page1 = $this->drupalCreateNode(['type' => 'page']);
     $page2 = $this->drupalCreateNode(['type' => 'page']);
     $article1 = $this->drupalCreateNode(['type' => 'article']);
