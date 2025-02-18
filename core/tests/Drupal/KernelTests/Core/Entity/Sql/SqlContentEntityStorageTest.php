@@ -14,16 +14,12 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Tests that the deleteFromDedicatedTables() method only executes one DELETE query.
  *
- * @group my_module
+ * @group Entity
  */
 class SqlContentEntityStorageTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * We use the "system" module to ensure the database is set up.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 
