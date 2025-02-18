@@ -25,16 +25,16 @@ class SystemTokensHooks {
       'description' => $this->t("Tokens for site-wide settings and other global information."),
     ];
     $types['site-logo'] = [
-      'name' => t('Site logo'),
-      'description' => t('Tokens related to the site logo.'),
+      'name' => $this->t('Site logo'),
+      'description' => $this->t('Tokens related to the site logo.'),
       'needs-data' => 'site',
     ];
     $types['site-logo-properties'] = [
-      'name' => t('Site logo properties'),
-      'description' => t('Tokens for site logo properties.'),
+      'name' => $this->t('Site logo properties'),
+      'description' => $this->t('Tokens for site logo properties.'),
       'needs-data' => 'site-logo',
     ];
-    $types['date'] = ['name' => t("Dates"), 'description' => t("Tokens related to times and dates.")];
+    $types['date'] = ['name' => $this->t("Dates"), 'description' => t("Tokens related to times and dates.")];
     // Site-wide global tokens.
     $site['name'] = ['name' => $this->t("Name"), 'description' => $this->t("The name of the site.")];
     $site['slogan'] = ['name' => $this->t("Slogan"), 'description' => $this->t("The slogan of the site.")];
@@ -70,20 +70,20 @@ class SystemTokensHooks {
     // The [site:logo] token renders the active theme logo. Chained tokens can be
     // used for rendering specific theme logos or logo properties (URLs) instead.
     $site['logo'] = [
-      'name' => t('Logo'),
-      'description' => t('The logo of the active theme. Note that the theme may be different when this is used in the administrative interface.'),
+      'name' => $this->t('Logo'),
+      'description' => $this->t('The logo of the active theme. Note that the theme may be different when this is used in the administrative interface.'),
       'type' => 'site-logo',
     ];
 
     // Tokens for a specific theme logo.
     $site_logo['active-theme'] = [
-      'name' => t('Active theme'),
-      'description' => t('The logo of the active theme. Note that the theme may be different when this is used in the administrative interface.'),
+      'name' => $this->t('Active theme'),
+      'description' => $this->t('The logo of the active theme. Note that the theme may be different when this is used in the administrative interface.'),
       'type' => 'site-logo-properties',
     ];
     $site_logo['default-theme'] = [
-      'name' => t('Default theme'),
-      'description' => t('The logo that is configured for the default theme.'),
+      'name' => $this->t('Default theme'),
+      'description' => $this->t('The logo that is configured for the default theme.'),
       'type' => 'site-logo-properties',
     ];
     // Obtain a list of installed themes and make tokens from them.
@@ -91,8 +91,8 @@ class SystemTokensHooks {
     foreach ($themes as $theme => $info) {
       if (empty($info->info['hidden'])) {
         $site_logo['theme-' . $theme] = [
-          'name' => t('@theme', ['@theme' => $info->info['name']]),
-          'description' => t('The logo that is configured for the %theme theme.', [
+          'name' => $this->t('@theme', ['@theme' => $info->info['name']]),
+          'description' => $this->t('The logo that is configured for the %theme theme.', [
             '%theme' => $info->info['name'],
           ]),
           'type' => 'site-logo-properties',
@@ -102,8 +102,8 @@ class SystemTokensHooks {
 
     // Tokens for individual properties for logos.
     $site_logo_properties['url'] = [
-      'name' => t('URL'),
-      'description' => t('The URL of the logo.'),
+      'name' => $this->t('URL'),
+      'description' => $this->t('The URL of the logo.'),
     ];
 
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
