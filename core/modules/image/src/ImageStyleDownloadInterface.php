@@ -46,7 +46,7 @@ interface ImageStyleDownloadInterface {
    * @return bool
    *   Whether the source image exists.
    */
-  public function sourceImageExists(string $image_uri, bool $token_is_valid): bool ;
+  public function sourceImageExists(string $image_uri, bool $token_is_valid): bool;
 
   /**
    * Get the file URI without the extension from any conversion image style.
@@ -60,7 +60,7 @@ interface ImageStyleDownloadInterface {
    * @return string
    *   The file URI without the extension from any conversion image style.
    */
-  public static function getUriWithoutConvertedExtension(string $uri): string ;
+  public static function getUriWithoutConvertedExtension(string $uri): string;
 
   /**
    * Factorization of ImageStyleDownloadController::deliver Line 114-124.
@@ -73,7 +73,7 @@ interface ImageStyleDownloadInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   Thrown when the file request is invalid.
    */
-  public function checkNormalizedScheme($scheme, $image_uri): void ;
+  public function checkNormalizedScheme($scheme, $image_uri): void;
 
   /**
    * Factorization of ImageStyleDownloadController::deliver Line 139-142.
@@ -92,7 +92,7 @@ interface ImageStyleDownloadInterface {
    * @return bool
    *   ITOK Token ins valid.
    */
-  public function checkToken(Request $request, $image_uri, $scheme, $target, ImageStyleInterface $image_style) : bool ;
+  public function checkToken(Request $request, $image_uri, $scheme, $target, ImageStyleInterface $image_style) : bool;
 
   /**
    * Factorization of ImageStyleDownloadController::deliver Line 126-152.
@@ -109,7 +109,7 @@ interface ImageStyleDownloadInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   Thrown when the file request is invalid.
    */
-  public function authorizedDerivativeGeneration(ImageStyleInterface $image_style, $scheme, $target, $token_is_valid): void ;
+  public function authorizedDerivativeGeneration(ImageStyleInterface $image_style, $scheme, $target, $token_is_valid): void;
 
   /**
    * Factorization of ImageStyleDownloadController::deliver Line 157-165.
@@ -124,6 +124,6 @@ interface ImageStyleDownloadInterface {
    * @return bool
    *   Scheme is public.
    */
-  public function isSchemePublic($token_is_valid, $scheme, $derivative_scheme) ;
+  public function isSchemePublic($token_is_valid, $scheme, $derivative_scheme): bool;
 
 }
