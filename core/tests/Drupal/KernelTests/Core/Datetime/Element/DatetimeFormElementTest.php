@@ -85,7 +85,7 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
   }
 
   /**
-   * @covers ::valueCallback
+   * @covers ::validateDatetime
    */
   public function testDatetimeLocalNoExceptionMetOnSubmit(): void {
     $form_state = new FormState();
