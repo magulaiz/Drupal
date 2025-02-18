@@ -64,10 +64,16 @@ final class AddItemToToolbar implements ConfigActionPluginInterface, ContainerFa
     foreach ($value as $item) {
       $this->applySingle($editor, $item);
     }
+    $editor->save();
   }
 
   /**
-   * {@inheritdoc}
+   * Adds an item to the toolbar.
+   *
+   * @param \Drupal\editor\EditorInterface $editor
+   *   The editor to which the item should be added.
+   * @param array $value
+   *   An array of options for the item.
    */
   private function applySingle(EditorInterface $editor, array $value): void {
     $item_name = $value['item_name'];
@@ -124,7 +130,7 @@ final class AddItemToToolbar implements ConfigActionPluginInterface, ContainerFa
       }
     }
 
-    $editor->setSettings($editor_settings)->save();
+    $editor->setSettings($editor_settings);
   }
 
 }
