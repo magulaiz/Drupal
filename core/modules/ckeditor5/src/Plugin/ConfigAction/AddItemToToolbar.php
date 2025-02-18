@@ -40,15 +40,20 @@ final class AddItemToToolbar implements ConfigActionPluginInterface, ContainerFa
    * {@inheritdoc}
    */
   public function apply(string $configName, mixed $value): void {
-    // Handle a "pluralized" invocation of this plugin which allows multiple
-    // configurations to be passed in as an indexed array.
-    if ($this->pluginId === 'editor:addItemsToToolbar') {
-      assert(is_array($value) && array_is_list($value));
+    // Normalize $value, which could be one of three things:
+    // - A string (add one item to the toolbar, no additional options)
+    // - An associative array (add one item to the toolbar, with options)
+    // - An indexed array (add multiple items to the toolbar, each of which
+    //   could be one of the previous two forms)
+    if (is_string($value)) {
+      $value = [
+        ['item_name' => $value],
+      ];
     }
-    elseif (is_string($value)) {
-      $value = ['item_name' => $value];
+    elseif (is_array($value) && !array_is_list($value)) {
+      $value = [$value];
     }
-    assert(is_array($value));
+    assert(is_array($value) && array_is_list($value));
 
     $editor = $this->configManager->loadConfigEntityByName($configName);
     assert($editor instanceof EditorInterface);
