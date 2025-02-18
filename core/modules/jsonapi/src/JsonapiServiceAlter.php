@@ -4,9 +4,7 @@ namespace Drupal\jsonapi;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
-use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\StackMiddleware\NegotiationMiddleware;
-use Drupal\jsonapi\DependencyInjection\Compiler\RegisterSerializationClassesCompilerPass;
 
 /**
  * Adds 'api_json' as known format and prevents its use in the REST module.
@@ -17,7 +15,7 @@ use Drupal\jsonapi\DependencyInjection\Compiler\RegisterSerializationClassesComp
  * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  */
-class JsonapiServiceProvider implements ServiceModifierInterface, ServiceProviderInterface {
+class JsonapiServiceAlter implements ServiceModifierInterface {
 
   /**
    * {@inheritdoc}
@@ -31,13 +29,6 @@ class JsonapiServiceProvider implements ServiceModifierInterface, ServiceProvide
           ['application/vnd.api+json'],
         ]);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function register(ContainerBuilder $container) {
-    $container->addCompilerPass(new RegisterSerializationClassesCompilerPass());
   }
 
 }
