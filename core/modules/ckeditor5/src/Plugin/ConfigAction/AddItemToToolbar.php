@@ -40,18 +40,31 @@ final class AddItemToToolbar implements ConfigActionPluginInterface, ContainerFa
    * {@inheritdoc}
    */
   public function apply(string $configName, mixed $value): void {
+    // Handle a "pluralized" invocation of this plugin which allows multiple
+    // configurations to be passed in as an indexed array.
+    if ($this->pluginId === 'editor:addItemsToToolbar') {
+      assert(is_array($value) && array_is_list($value));
+    }
+    elseif (is_string($value)) {
+      $value = ['item_name' => $value];
+    }
+    assert(is_array($value));
+
     $editor = $this->configManager->loadConfigEntityByName($configName);
     assert($editor instanceof EditorInterface);
 
     if ($editor->getEditor() !== 'ckeditor5') {
       throw new ConfigActionException(sprintf('The %s config action only works with editors that use CKEditor 5.', $this->pluginId));
     }
-
-    if (is_string($value)) {
-      $value = ['item_name' => $value];
+    foreach ($value as $item) {
+      $this->applySingle($editor, $item);
     }
-    assert(is_array($value));
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  private function applySingle(EditorInterface $editor, array $value): void {
     $item_name = $value['item_name'];
     assert(is_string($item_name));
 
