@@ -449,7 +449,7 @@ function hook_uninstall($is_syncing): void {
  * @see hook_install_tasks_alter()
  * @see install_tasks()
  */
-function hook_install_tasks(&$install_state) {
+function hook_install_tasks(&$install_state): array {
   // Here, we define a variable to allow tasks to indicate that a particular,
   // processor-intensive batch process needs to be triggered later on in the
   // installation.
@@ -957,7 +957,7 @@ function hook_removed_post_updates(): array {
  * @see update_resolve_dependencies()
  * @see hook_update_N()
  */
-function hook_update_dependencies() {
+function hook_update_dependencies(): array {
   // Indicate that the my_module_update_8001() function provided by this module
   // must run after the another_module_update_8003() function provided by the
   // 'another_module' module.

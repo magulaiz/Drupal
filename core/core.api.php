@@ -1985,7 +1985,7 @@
  *
  * @see queue
  */
-function hook_cron() {
+function hook_cron(): void {
   // Short-running operation example, not using a queue:
   // Delete all expired records since the last cron run.
   $expires = \Drupal::state()->get('my_module.last_check', 0);

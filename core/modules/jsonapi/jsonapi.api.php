@@ -341,7 +341,7 @@ function hook_jsonapi_ENTITY_TYPE_filter_access(EntityTypeInterface $entity_type
  * @return \Drupal\Core\Access\AccessResultInterface
  *   The access result.
  */
-function hook_jsonapi_entity_field_filter_access(FieldDefinitionInterface $field_definition, AccountInterface $account) {
+function hook_jsonapi_entity_field_filter_access(FieldDefinitionInterface $field_definition, AccountInterface $account): \Drupal\Core\Access\AccessResultInterface {
   if ($field_definition->getTargetEntityTypeId() === 'node' && $field_definition->getName() === 'field_sensitive_data') {
     $has_sufficient_access = FALSE;
     foreach (['administer nodes', 'view all sensitive field data'] as $permission) {

@@ -176,7 +176,7 @@ function hook_migrate_prepare_row(Row $row, MigrateSourceInterface $source, Migr
  *
  * @ingroup migration
  */
-function hook_migrate_MIGRATION_ID_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
+function hook_migrate_MIGRATION_ID_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration): void {
   $value = $source->getDatabase()->query('SELECT [value] FROM {variable} WHERE [name] = :name', [':name' => 'my_module_filter_foo_' . $row->getSourceProperty('format')])->fetchField();
   if ($value) {
     $row->setSourceProperty('settings:my_module:foo', unserialize($value));

@@ -1147,7 +1147,7 @@ function hook_entity_storage_load(array $entities, $entity_type): void {
  *
  * @see hook_entity_storage_load()
  */
-function hook_ENTITY_TYPE_storage_load(array $entities) {
+function hook_ENTITY_TYPE_storage_load(array $entities): void {
   foreach ($entities as $entity) {
     $entity->foo = my_module_add_something_uncached($entity);
   }

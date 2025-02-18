@@ -703,7 +703,7 @@ function hook_views_query_substitutions(ViewExecutable $view): array {
  *   corresponding value is its replacement. The value will be escaped unless it
  *   is already marked safe.
  */
-function hook_views_form_substitutions() {
+function hook_views_form_substitutions(): array {
   return [
     '<!--views-form-example-substitutions-->' => 'Example Substitution',
   ];
@@ -724,7 +724,7 @@ function hook_views_form_substitutions() {
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
+function hook_views_pre_view(ViewExecutable $view, $display_id, array &$args): void {
 
   // Modify contextual filters for my_special_view if user has
   // 'my special permission'.
@@ -746,7 +746,7 @@ function hook_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_pre_build(ViewExecutable $view) {
+function hook_views_pre_build(ViewExecutable $view): void {
   // Because of some inexplicable business logic, we should remove all
   // attachments from all views on Mondays.
   // (This alter could be done later in the execution process as well.)
@@ -767,7 +767,7 @@ function hook_views_pre_build(ViewExecutable $view) {
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_post_build(ViewExecutable $view) {
+function hook_views_post_build(ViewExecutable $view): void {
   // If the exposed field 'type' is set, hide the column containing the content
   // type. (Note that this is a solution for a particular view, and makes
   // assumptions about both exposed filter settings and the fields in the view.
@@ -792,7 +792,7 @@ function hook_views_post_build(ViewExecutable $view) {
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_pre_execute(ViewExecutable $view) {
+function hook_views_pre_execute(ViewExecutable $view): void {
   // Whenever a view queries more than two tables, show a message that notifies
   // view administrators that the query might be heavy.
   // (This action could be performed later in the execution process, but not
@@ -818,7 +818,7 @@ function hook_views_pre_execute(ViewExecutable $view) {
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_post_execute(ViewExecutable $view) {
+function hook_views_post_execute(ViewExecutable $view): void {
   // If there are more than 100 results, show a message that encourages the user
   // to change the filter settings.
   // (This action could be performed later in the execution process, but not
@@ -901,7 +901,7 @@ function hook_views_post_render(ViewExecutable $view, array &$output, CachePlugi
  * @see hook_views_query_substitutions()
  * @see \Drupal\views\Plugin\views\query\Sql
  */
-function hook_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+function hook_views_query_alter(ViewExecutable $view, QueryPluginBase $query): void {
   // (Example assuming a view with an exposed filter on node title.)
   // If the input for the title filter is a positive integer, filter against
   // node ID instead of node title.

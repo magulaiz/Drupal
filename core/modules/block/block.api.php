@@ -233,7 +233,7 @@ function hook_block_build_BASE_BLOCK_ID_alter(array &$build, BlockPluginInterfac
  * @see \Drupal\block\BlockAccessControlHandler::checkAccess()
  * @ingroup block_api
  */
-function hook_block_access(Block $block, $operation, AccountInterface $account) {
+function hook_block_access(Block $block, $operation, AccountInterface $account): \Drupal\Core\Access\AccessResultInterface {
   // Example code that would prevent displaying the 'Powered by Drupal' block in
   // a region different than the footer.
   if ($operation == 'view' && $block->getPluginId() == 'system_powered_by_block') {
