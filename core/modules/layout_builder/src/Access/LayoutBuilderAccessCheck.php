@@ -27,7 +27,7 @@ class LayoutBuilderAccessCheck implements AccessInterface {
    *   The route match.
    */
   public function __construct(
-    protected RouteMatchInterface $route_match
+    protected RouteMatchInterface $route_match,
   ) {}
 
   /**
@@ -54,10 +54,12 @@ class LayoutBuilderAccessCheck implements AccessInterface {
     }
 
     // Disables access to inline blocks add_block routes if the section storage opts out.
+    // Check if inline block access should be disabled.
     if ($operation === 'add_block' && !($section_storage->getPluginDefinition()->get('allow_inline_blocks') ?? TRUE)) {
-      if ($this->route_match->getRouteName() === 'layout_builder.choose_inline_block' ||
-        ($this->route_match->getRouteName() === 'layout_builder.add_block' && str_starts_with((string) $this->route_match->getParameter('plugin_id'), 'inline_block:'))
-      ) {
+      $route_name = $this->route_match->getRouteName();
+      $is_inline_block = str_starts_with((string) $this->route_match->getParameter('plugin_id'), 'inline_block:');
+
+      if ($route_name === 'layout_builder.choose_inline_block' || ($route_name === 'layout_builder.add_block' && $is_inline_block)) {
         $access = $access->andIf(AccessResult::forbidden());
       }
     }
