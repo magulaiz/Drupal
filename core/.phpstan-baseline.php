@@ -20044,12 +20044,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/inline_form_errors/src/FormErrorHandler.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\inline_form_errors\\\\Hook\\\\InlineFormErrorsHooks\\:\\:help\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/inline_form_errors/src/Hook/InlineFormErrorsHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\inline_form_errors\\\\RenderElementHelper\\:\\:alterElementInfo\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -24634,12 +24628,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media_library/src/Form/SettingsForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_library\\\\Hook\\\\MediaLibraryHooks\\:\\:help\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/src/Hook/MediaLibraryHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media_library\\\\MediaLibraryState\\:\\:validateRequiredParameters\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -26264,12 +26252,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal/src/FieldDiscoveryInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\migrate_drupal\\\\Hook\\\\MigrateDrupalHooks\\:\\:help\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal/src/Hook/MigrateDrupalHooks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate_drupal\\\\MigrationPluginManager\\:\\:processDefinition\\(\\) has no return type specified\\.$#',
