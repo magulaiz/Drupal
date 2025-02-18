@@ -20,7 +20,7 @@ class JsonapiServiceRegister implements ServiceProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     $container->addCompilerPass(new RegisterSerializationClassesCompilerPass());
   }
 

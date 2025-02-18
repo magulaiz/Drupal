@@ -20,7 +20,7 @@ class JsonapiServiceAlter implements ServiceModifierInterface {
   /**
    * {@inheritdoc}
    */
-  public function alter(ContainerBuilder $container) {
+  public function alter(ContainerBuilder $container): void {
     if ($container->has('http_middleware.negotiation') && is_a($container->getDefinition('http_middleware.negotiation')->getClass(), NegotiationMiddleware::class, TRUE)) {
       // @see http://www.iana.org/assignments/media-types/application/vnd.api+json
       $container->getDefinition('http_middleware.negotiation')
