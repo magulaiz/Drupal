@@ -5,11 +5,14 @@ namespace Drupal\views;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Plugin\DefaultLazyPluginCollection;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * A class which wraps the displays of a view so you can lazy-initialize them.
  */
 class DisplayPluginCollection extends DefaultLazyPluginCollection {
+
+  use StringTranslationTrait;
 
   /**
    * Stores a reference to the view which has this displays attached.
@@ -49,6 +52,7 @@ class DisplayPluginCollection extends DefaultLazyPluginCollection {
    * {@inheritdoc}
    *
    * @return \Drupal\views\Plugin\views\display\DisplayPluginBase
+   *   The display plugin.
    */
   public function &get($instance_id) {
     return parent::get($instance_id);
@@ -80,7 +84,7 @@ class DisplayPluginCollection extends DefaultLazyPluginCollection {
     // display plugin isn't found.
     catch (PluginException $e) {
       $message = $e->getMessage();
-      \Drupal::messenger()->addWarning(t('@message', ['@message' => $message]));
+      \Drupal::messenger()->addWarning($this->t('@message', ['@message' => $message]));
     }
 
     // If no plugin instance has been created, return NULL.

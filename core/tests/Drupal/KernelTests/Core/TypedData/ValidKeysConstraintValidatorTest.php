@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\block\Entity\Block;
@@ -57,11 +59,6 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
         'use_site_slogan' => TRUE,
         'label_display' => FALSE,
         'condition_logic' => 'and',
-        // TRICKY: these 4 are inherited from `type: block_settings`.
-        'status' => TRUE,
-        'info' => '',
-        'view_mode' => 'full',
-        'context_mapping' => [],
       ],
     ]);
     $block->save();
@@ -83,7 +80,8 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     $data = $this->config->toArray();
     $data['settings']['foobar'] = TRUE;
     $this->assertValidationErrors('block.block.branding', $data,
-      // Now 1 validation error should be triggered: one for the unsupported key.
+      // Now 1 validation error should be triggered: one for the unsupported
+      // key.
       // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
       // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
       [
@@ -249,8 +247,8 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
     // Passing a non-array value should raise an exception.
     try {
-      // TRICKY: we must clone the definition because the instance is modified
-      // when processing.
+      // We must clone the definition because the instance is modified when
+      // processing.
       // @see \Drupal\Core\Config\Schema\Mapping::processRequiredKeyFlags()
       $typed_config->create(clone $definition, 2501)->validate();
       $this->fail('Expected an exception but none was raised.');

@@ -51,7 +51,7 @@ class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery 
   /**
    * {@inheritdoc}
    */
-  protected function prepareAnnotationDefinition(AnnotationInterface $annotation, $class, BaseStaticReflectionParser $parser = NULL) {
+  protected function prepareAnnotationDefinition(AnnotationInterface $annotation, $class, ?BaseStaticReflectionParser $parser = NULL) {
     if (!($annotation instanceof MultipleProviderAnnotationInterface)) {
       throw new \LogicException('AnnotatedClassDiscoveryAutomatedProviders annotations must implement \Drupal\migrate\Annotation\MultipleProviderAnnotationInterface');
     }
@@ -90,7 +90,8 @@ class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery 
             if ($fileinfo->getExtension() == 'php') {
               if ($cached = $this->fileCache->get($fileinfo->getPathName())) {
                 if (isset($cached['id'])) {
-                  // Explicitly unserialize this to create a new object instance.
+                  // Explicitly unserialize this to create a new object
+                  // instance.
                   $definitions[$cached['id']] = unserialize($cached['content']);
                 }
                 continue;

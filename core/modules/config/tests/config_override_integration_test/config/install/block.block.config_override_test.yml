@@ -15,9 +15,6 @@ settings:
   label_display: visible
   condition_logic: and
   provider: block_test
-  status: true
-  info: ''
-  view_mode: default
 visibility:
   request_path:
     id: request_path

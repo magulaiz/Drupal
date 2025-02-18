@@ -12,6 +12,7 @@ use Drupal\Core\Config\Entity\ImportableEntityStorageInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -122,7 +123,7 @@ class ConfigImporter {
   protected $themeHandler;
 
   /**
-   * Flag set to import system.theme during processing theme install and uninstalls.
+   * Indicates if a system theme is in processing theme install and uninstalls.
    *
    * @var bool
    */
@@ -185,7 +186,8 @@ class ConfigImporter {
    * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
    *   The configuration manager.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
-   *   The lock backend to ensure multiple imports do not occur at the same time.
+   *   The lock backend to ensure multiple imports do not occur at the same
+   *   time.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed configuration manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -201,7 +203,7 @@ class ConfigImporter {
    * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
    *   The theme extension list.
    */
-  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL) {
+  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme) {
     $this->moduleExtensionList = $extension_list_module;
     $this->storageComparer = $storage_comparer;
     $this->eventDispatcher = $event_dispatcher;
@@ -212,10 +214,6 @@ class ConfigImporter {
     $this->moduleInstaller = $module_installer;
     $this->themeHandler = $theme_handler;
     $this->stringTranslation = $string_translation;
-    if ($extension_list_theme === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $extension_list_theme argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3284397', E_USER_DEPRECATED);
-      $extension_list_theme = \Drupal::service('extension.list.theme');
-    }
     $this->themeExtensionList = $extension_list_theme;
     foreach ($this->storageComparer->getAllCollectionNames() as $collection) {
       $this->processedConfiguration[$collection] = $this->storageComparer->getEmptyChangelist();
@@ -370,11 +368,12 @@ class ConfigImporter {
    *   The type of extension, either 'theme' or 'module'.
    * @param string $op
    *   The change operation performed, either install or uninstall.
-   * @param string $name
-   *   The name of the extension processed.
+   * @param string|array $name
+   *   The name or names of the extension(s) processed.
    */
   protected function setProcessedExtension($type, $op, $name) {
-    $this->processedExtensions[$type][$op][] = $name;
+    $name = (array) $name;
+    $this->processedExtensions[$type][$op] = array_merge($this->processedExtensions[$type][$op], $name);
   }
 
   /**
@@ -412,14 +411,14 @@ class ConfigImporter {
     // sorted in reverse alphabetical order, to ensure the order is exactly
     // opposite from installation. For example, this module list:
     // @code
-    // array(
+    // [
     //   'actions' => 0,
     //   'ban' => 0,
     //   'options' => -2,
     //   'text' => -1,
-    // );
+    // ];
     // @endcode
-    // will result in the following sort order:
+    // Will result in the following sort order:
     // 1. -2   options
     // 2. -1   text
     // 3.  0 0 ban
@@ -631,7 +630,11 @@ class ConfigImporter {
     $operation = $this->getNextExtensionOperation();
     if (!empty($operation)) {
       $this->processExtension($operation['type'], $operation['op'], $operation['name']);
-      $context['message'] = t('Synchronizing extensions: @op @name.', ['@op' => $operation['op'], '@name' => $operation['name']]);
+      $names = implode(', ', (array) $operation['name']);
+      $context['message'] = match ($operation['op']) {
+        'install' => $this->t('Synchronizing extensions: installed @name.', ['@name' => $names]),
+        'uninstall' => $this->t('Synchronizing extensions: uninstalled @name.', ['@name' => $names]),
+      };
       $processed_count = count($this->processedExtensions['module']['install']) + count($this->processedExtensions['module']['uninstall']);
       $processed_count += count($this->processedExtensions['theme']['uninstall']) + count($this->processedExtensions['theme']['install']);
       $context['finished'] = $processed_count / $this->totalExtensionsToProcess;
@@ -733,7 +736,7 @@ class ConfigImporter {
     // The import is now complete.
     $this->lock->release(static::LOCK_NAME);
     $this->reset();
-    $context['message'] = t('Finalizing configuration synchronization.');
+    $context['message'] = $this->t('Finalizing configuration synchronization.');
     $context['finished'] = 1;
   }
 
@@ -754,10 +757,16 @@ class ConfigImporter {
       foreach ($types as $type) {
         $unprocessed = $this->getUnprocessedExtensions($type);
         if (!empty($unprocessed[$op])) {
+          if ($type === 'module' && $op === 'install') {
+            $name = array_slice($unprocessed[$op], 0, Settings::get('core.multi_module_install_batch_size', 20));
+          }
+          else {
+            $name = array_shift($unprocessed[$op]);
+          }
           return [
             'op' => $op,
             'type' => $type,
-            'name' => array_shift($unprocessed[$op]),
+            'name' => $name,
           ];
         }
       }
@@ -869,16 +878,17 @@ class ConfigImporter {
    *   The type of extension, either 'module' or 'theme'.
    * @param string $op
    *   The change operation.
-   * @param string $name
-   *   The name of the extension to process.
+   * @param string|array $names
+   *   The name or names of the extension(s) to process.
    */
-  protected function processExtension($type, $op, $name) {
+  protected function processExtension(string $type, string $op, string|array $names): void {
+    $names = (array) $names;
     // Set the config installer to use the sync directory instead of the
     // extensions own default config directories.
     \Drupal::service('config.installer')
       ->setSourceStorage($this->storageComparer->getSourceStorage());
     if ($type == 'module') {
-      $this->moduleInstaller->$op([$name], FALSE);
+      $this->moduleInstaller->$op($names, FALSE);
       // Installing a module can cause a kernel boot therefore inject all the
       // services again.
       $this->reInjectMe();
@@ -897,10 +907,9 @@ class ConfigImporter {
         $this->configManager->getConfigFactory()->reset('system.theme');
         $this->processedSystemTheme = TRUE;
       }
-      \Drupal::service('theme_installer')->$op([$name]);
+      \Drupal::service('theme_installer')->$op($names);
     }
-
-    $this->setProcessedExtension($type, $op, $name);
+    $this->setProcessedExtension($type, $op, $names);
   }
 
   /**
@@ -1009,7 +1018,7 @@ class ConfigImporter {
     }
     else {
       $data = $this->storageComparer->getSourceStorage($collection)->read($name);
-      $config->setData($data ? $data : []);
+      $config->setData($data ?: []);
       $config->save();
     }
     $this->setProcessedConfiguration($collection, $op, $name);

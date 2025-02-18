@@ -17,5 +17,5 @@ settings:
   label_display: '0'
   condition_logic: and
   provider: search
-  page_id: ''
+  page_id: null
 visibility: {  }
