@@ -5,6 +5,7 @@ namespace Drupal\layout_builder\Access;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\Routing\Route;
@@ -18,6 +19,16 @@ use Symfony\Component\Routing\Route;
  *   Tagged services are internal.
  */
 class LayoutBuilderAccessCheck implements AccessInterface {
+
+  /**
+   * Constructs a new LayoutBuilderAccessCheck class.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   */
+  public function __construct(
+    protected RouteMatchInterface $route_match
+  ) {}
 
   /**
    * Checks routing access to the layout.
@@ -42,9 +53,13 @@ class LayoutBuilderAccessCheck implements AccessInterface {
       $access = $access->andIf(AccessResult::allowedIfHasPermission($account, 'configure any layout'));
     }
 
-    // Disables access to add_block routes if the section storage opts out.
+    // Disables access to inline blocks add_block routes if the section storage opts out.
     if ($operation === 'add_block' && !($section_storage->getPluginDefinition()->get('allow_inline_blocks') ?? TRUE)) {
-      $access = $access->andIf(AccessResult::forbidden());
+      if ($this->route_match->getRouteName() === 'layout_builder.choose_inline_block' ||
+        ($this->route_match->getRouteName() === 'layout_builder.add_block' && str_starts_with((string) $this->route_match->getParameter('plugin_id'), 'inline_block:'))
+      ) {
+        $access = $access->andIf(AccessResult::forbidden());
+      }
     }
 
     if ($access instanceof RefinableCacheableDependencyInterface) {
