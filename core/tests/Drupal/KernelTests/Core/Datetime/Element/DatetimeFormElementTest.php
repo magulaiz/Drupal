@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Datetime\Element;
 
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -47,14 +49,14 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'datetime_form_element_test';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     // Test datetime-local element.
     $form['datetime_local_picker'] = [
       '#type' => 'datetime',
@@ -73,19 +75,19 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
   }
 
   /**
    * @covers ::valueCallback
    */
-  public function testDatetimeLocalNoExceptionMetOnSubmit() {
+  public function testDatetimeLocalNoExceptionMetOnSubmit(): void {
     $form_state = new FormState();
     $form_state->setValue('datetime_local_picker', ['date' => '2025-02-18T12:00']);
     $this->formBuilder->submitForm($this, $form_state);
@@ -95,7 +97,7 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
   /**
    * @covers ::valueCallback
    */
-  public function testDatetimeLocalValueCallback() {
+  public function testDatetimeLocalValueCallback(): void {
     $element = [
       '#type' => 'datetime',
       '#date_date_element' => 'datetime-local',
@@ -121,7 +123,7 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
   /**
    * @covers ::processDatetime
    */
-  public function testDatetimeLocalProcessDatetime() {
+  public function testDatetimeLocalProcessDatetime(): void {
     $form = [
       'datetime_local_picker' => [
         '#type' => 'datetime',
@@ -141,7 +143,7 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
       'submit' => [
         '#type' => 'submit',
         '#value' => 'Submit',
-      ]
+      ],
     ];
     $element = $form['datetime_local_picker'];
     $form_state = new FormState();
