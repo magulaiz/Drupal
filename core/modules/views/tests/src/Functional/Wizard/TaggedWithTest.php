@@ -280,7 +280,6 @@ class TaggedWithTest extends WizardTestBase {
     $this->assertSession()->elementExists('xpath', $tags_xpath);
     $this->submitForm(['show[tagged_with]' => 'term1'], 'Save and edit');
     $this->assertSession()->statusCodeEquals(200);
-    $this->getSession()->getPage()->hasContent('Has taxonomy term (= term1)');
   }
 
 }
