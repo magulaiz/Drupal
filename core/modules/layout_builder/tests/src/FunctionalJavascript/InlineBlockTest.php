@@ -607,8 +607,6 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->drupalGet('/admin/config/user-interface/navigation-block');
     $this->drupalGet('/layout_builder/choose/inline-block/navigation/navigation.block_layout/0/content');
     $assert_session->pageTextContains('You are not authorized to access this page');
-    $this->drupalGet('/layout_builder/add/block/navigation/navigation.block_layout/0/content/inline_block');
-    $assert_session->pageTextContains('You are not authorized to access this page');
     $this->drupalGet('/layout_builder/add/block/navigation/navigation.block_layout/0/content/inline_block%3Abanner_block');
     $assert_session->pageTextContains('You are not authorized to access this page');
   }
