@@ -232,8 +232,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
         $this->limit_values = TRUE;
       }
 
-      // Otherwise, we only limit values if the user hasn't selected "all", 0, or
-      // the value matching field cardinality.
+      // Otherwise, we only limit values if the user hasn't selected "all", 0,
+      // or the value matching field cardinality.
       if ((($this->options['delta_limit'] > 0) && ($this->options['delta_limit'] != $cardinality)) || intval($this->options['delta_offset'])) {
         $this->limit_values = TRUE;
       }
@@ -270,7 +270,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       }
       $options += is_array($this->options['group_columns']) ? $this->options['group_columns'] : [];
 
-      // Go through the list and determine the actual column name from field api.
+      // Go through the list and determine the actual column name from field
+      // api.
       $fields = [];
       $table_mapping = $this->getTableMapping();
       $field_definition = $this->getFieldStorageDefinition();
@@ -357,7 +358,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    *   The field storage definition used by this handler.
    *
    * @throws \Exception
-   *   If no field storage definition was found for the given entity type and field name.
+   *   If no field storage definition was found for the given entity type and
+   *   field name.
    */
   protected function getFieldStorageDefinition() {
     $entity_type_id = $this->definition['entity_type'];

@@ -7,7 +7,6 @@
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Batch\BatchStorageInterface;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Core\Template\Attribute;
@@ -85,8 +84,8 @@ function form_select_options($element, $choices = NULL) {
     unset($choices['#sort_start']);
   }
 
-  // array_key_exists() accommodates the rare event where $element['#value'] is NULL.
-  // isset() fails in this situation.
+  // array_key_exists() accommodates the rare event where $element['#value'] is
+  // NULL. isset() fails in this situation.
   $value_valid = \array_key_exists('#value', $element);
   $value_is_array = $value_valid && is_array($element['#value']);
   // Check if the element is multiple select and no value has been selected.
@@ -901,24 +900,7 @@ function batch_process($redirect = NULL, ?Url $url = NULL, $redirect_callback = 
 
     // Assign an id to progressive batches. Non-progressive batches skip
     // database storage completely.
-    try {
-      $batch['id'] = $batch['progressive'] ? \Drupal::service(BatchStorageInterface::class)->getId() : 'non-progressive';
-    }
-    catch (IntegrityConstraintViolationException) {
-      // @todo this is here to support the update path to deprecate
-      // Connection::nextId(). Remove in Drupal 11.
-      $connection = \Drupal::database();
-      $max_bid = (int) $connection->query('SELECT MAX([bid]) FROM {batch}')->fetchField();
-      $batch['id'] = $max_bid + 1;
-      $connection->insert('batch')
-        ->fields([
-          'bid' => $batch['id'],
-          'timestamp' => \Drupal::time()->getRequestTime(),
-          'token' => '',
-          'batch' => NULL,
-        ])
-        ->execute();
-    }
+    $batch['id'] = $batch['progressive'] ? \Drupal::service(BatchStorageInterface::class)->getId() : 'non-progressive';
 
     // Move operations to a job queue. Non-progressive batches will use a
     // memory-based queue.
@@ -952,7 +934,8 @@ function batch_process($redirect = NULL, ?Url $url = NULL, $redirect_callback = 
       // Store the batch.
       \Drupal::service(BatchStorageInterface::class)->create($batch);
 
-      // Set the batch number in the session to guarantee that it will stay alive.
+      // Set the batch number in the session to guarantee that it will stay
+      // alive.
       $session = \Drupal::request()->getSession();
       $batches = $session->get('batches', []);
       $batches[$batch['id']] = TRUE;
