@@ -26,8 +26,6 @@ interface MailThemeManagerInterface {
   /**
    * Switches to the theme for the given mail template ID and runs a callback.
    *
-   * @template Result
-   *
    * @param \Drupal\Core\MailTheme\MailTemplateId $templateId
    *   The mail template ID used to look up the theme.
    * @param callable(): Result $function
@@ -35,6 +33,8 @@ interface MailThemeManagerInterface {
    *
    * @return Result
    *   The result returned by the callback.
+   *
+   * @template Result
    */
   public function executeInMailTheme(MailTemplateId $templateId, callable $function): mixed;
 
