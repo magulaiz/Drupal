@@ -162,8 +162,8 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  protected function buildCreateAccessCid(?string $entity_bundle, array $context): string {
-    $cid = parent::buildCreateAccessCid($entity_bundle, $context);
+  protected function buildCreateAccessCid(array $context, ?string $entity_bundle): string {
+    $cid = parent::buildCreateAccessCid($context, $entity_bundle);
     $cid .= ':' . (isset($context['commented_entity']) ? $context['commented_entity']->id() : '0');
     $cid .= ':' . (isset($context['parent_comment']) ? $context['parent_comment']->id() : '0');
     return $cid;

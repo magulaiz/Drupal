@@ -38,11 +38,11 @@ class CommentCreationAccessTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installConfig(['user', 'comment']);
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installEntitySchema('comment');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
+    $this->installConfig(['user', 'comment']);
 
     $this->createCommentType('entity_test', ['id' => 'comment']);
     $this->addDefaultCommentField('entity_test', 'entity_test');

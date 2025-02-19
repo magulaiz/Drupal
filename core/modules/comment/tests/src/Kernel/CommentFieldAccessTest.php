@@ -382,7 +382,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       'status' => FALSE,
     ]);
 
-    $account = $this->createUser([], ['access comments']);
+    $account = $this->createUser(['access comments', 'view test entity']);
 
     // Reload the entity.
     $host = EntityTest::load($host->id());

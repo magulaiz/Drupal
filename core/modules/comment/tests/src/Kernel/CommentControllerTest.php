@@ -54,15 +54,14 @@ class CommentControllerTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installConfig(['comment', 'filter', 'user']);
     $this->installEntitySchema('comment');
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installSchema('node', ['node_access']);
-    $this->installSchema('system', ['sequences']);
+    $this->installConfig(['comment', 'filter', 'user']);
 
-    NodeType::create(['type' => 'page'])->save();
+    NodeType::create(['type' => 'page', 'name' => 'page'])->save();
     $this->addDefaultCommentField('node', 'page');
     // Create a comment controller instance.
     $this->controller = $this->container->get('class_resolver')->getInstanceFromDefinition(CommentController::class);
@@ -162,7 +161,7 @@ class CommentControllerTest extends KernelTestBase {
    *
    * @see self::testReplyFormAccess()
    */
-  public function providerTestReplyFormAccess(): array {
+  public static function providerTestReplyFormAccess(): array {
     return [
       'commenter' => [
         ['access content', 'access comments', 'post comments'], TRUE,
