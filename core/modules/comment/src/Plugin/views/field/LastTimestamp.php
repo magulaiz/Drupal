@@ -9,7 +9,7 @@ use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
- * Field handler to display the timestamp of a comment with the count of comments.
+ * Field handler to display the timestamp of the last comment.
  *
  * @ingroup views_field_handlers
  */
@@ -23,6 +23,17 @@ class LastTimestamp extends Date {
     parent::init($view, $display, $options);
 
     $this->additional_fields['comment_count'] = 'comment_count';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function query(): void {
+    $this->ensureMyTable();
+    // Add the field.
+    $params = $this->options['group_type'] != 'group' ? ['function' => $this->options['group_type']] : [];
+    $this->field_alias = $this->query->addField(NULL, "IF({$this->tableAlias}.comment_count > 0, {$this->tableAlias}.{$this->realField}, NULL)", $this->tableAlias . '_' . $this->field, $params);
+    $this->addAdditionalFields();
   }
 
   /**
