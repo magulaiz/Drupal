@@ -49,3 +49,18 @@ function block_post_update_move_custom_block_library(&$sandbox = NULL): void {
     return FALSE;
   });
 }
+
+/**
+ * Updates search blocks with default page_id value.
+ */
+function block_post_update_update_page_id(&$sandbox = NULL): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'block', function (BlockInterface $block): bool {
+    $settings = $block->get('settings');
+    if (\array_key_exists('page_id', $settings) === TRUE && $block->uuid() !== NULL) {
+      $settings['page_id'] = ($settings['page_id'] !== '') ? $settings['page_id'] : NULL;
+      $block->set('settings', $settings);
+      return TRUE;
+    }
+    return FALSE;
+  });
+}
