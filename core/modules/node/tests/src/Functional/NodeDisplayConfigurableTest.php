@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -14,33 +16,14 @@ use Drupal\user\UserInterface;
 class NodeDisplayConfigurableTest extends NodeTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  protected static $modules = ['rdf', 'block'];
+  protected static $modules = ['block'];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $data = $this->getProvidedData();
-    $theme = reset($data);
-    \Drupal::service('theme_installer')->install([$theme]);
-    $this->config('system.theme')->set('default', $theme)->save();
-    $settings = [
-      'theme' => $theme,
-      'region' => 'content',
-      'weight' => -100,
-    ];
-    $this->drupalPlaceBlock('page_title_block', $settings);
-  }
+  protected $defaultTheme = 'stark';
 
   /**
    * Sets base fields to configurable display and check settings are respected.
@@ -54,7 +37,16 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    *
    * @dataProvider provideThemes
    */
-  public function testDisplayConfigurable(string $theme, string $metadata_region, bool $field_classes) {
+  public function testDisplayConfigurable(string $theme, string $metadata_region, bool $field_classes): void {
+    \Drupal::service('theme_installer')->install([$theme]);
+    $this->config('system.theme')->set('default', $theme)->save();
+    $settings = [
+      'theme' => $theme,
+      'region' => 'content',
+      'weight' => -100,
+    ];
+    $this->drupalPlaceBlock('page_title_block', $settings);
+
     // Change the node type setting to show submitted by information.
     $node_type = \Drupal::entityTypeManager()->getStorage('node_type')->load('page');
     $node_type->setDisplaySubmitted(TRUE);
@@ -69,7 +61,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
 
     // Check the node with Drupal default non-configurable display.
     $this->drupalGet($node->toUrl());
-    $this->assertNodeHtml($node, $user, TRUE, $metadata_region, $field_classes);
+    $this->assertNodeHtml($node, $user, TRUE, $metadata_region, $field_classes, $field_classes);
 
     // Enable module to make base fields' displays configurable.
     \Drupal::service('module_installer')->install(['node_display_configurable_test']);
@@ -82,14 +74,13 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
         'label' => 'above',
         'settings' => ['link' => FALSE],
       ])
+      ->removeComponent('title')
       ->save();
 
     // Recheck the node with configurable display.
     $this->drupalGet($node->toUrl());
 
-    $this->assertNodeHtml($node, $user, FALSE, $metadata_region, $field_classes);
-
-    $assert->elementExists('css', 'div[rel="schema:author"]');
+    $this->assertNodeHtml($node, $user, FALSE, $metadata_region, $field_classes, FALSE);
 
     // Remove from display.
     $display->removeComponent('uid')
@@ -97,7 +88,6 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
       ->save();
 
     $this->drupalGet($node->toUrl());
-    $assert->elementNotExists('css', 'div[rel="schema:author"]');
     $assert->elementTextNotContains('css', 'article', $user->getAccountName());
   }
 
@@ -113,15 +103,17 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    * @param string $metadata_region
    *   The region of the node html content where meta data is expected.
    * @param bool $field_classes
-   *   If TRUE, check for field--name-XXX classes.
+   *   If TRUE, check for field--name-XXX classes on created/uid fields.
+   * @param bool $title_classes
+   *   If TRUE, check for field--name-XXX classes on title field.
    *
    * @internal
    */
-  protected function assertNodeHtml(NodeInterface $node, UserInterface $user, bool $is_inline, string $metadata_region, bool $field_classes): void {
+  protected function assertNodeHtml(NodeInterface $node, UserInterface $user, bool $is_inline, string $metadata_region, bool $field_classes, bool $title_classes): void {
     $assert = $this->assertSession();
 
     $html_element = $is_inline ? 'span' : 'div';
-    $title_selector = 'h1 span' . ($field_classes ? '.field--name-title' : '');
+    $title_selector = 'h1 span' . ($title_classes ? '.field--name-title' : '');
     $assert->elementTextContains('css', $title_selector, $node->getTitle());
 
     // With field classes, the selector can be very specific.
@@ -133,10 +125,10 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
       // When field classes aren't available, use HTML elements for testing.
       $formatted_time = \Drupal::service('date.formatter')->format($node->getCreatedTime());
       if ($is_inline) {
-        $created_selector = sprintf('//article//%s//%s[text()="%s"]', $metadata_region, $html_element, $formatted_time);
+        $created_selector = sprintf('//article//%s//%s/time[text()="%s"]', $metadata_region, $html_element, $formatted_time);
       }
       else {
-        $created_selector = sprintf('//article//%s[text()="%s"]', $html_element, $formatted_time);
+        $created_selector = sprintf('//article//%s//%s/time[text()="%s"]', $html_element, $html_element, $formatted_time);
       }
       $assert->elementExists('xpath', $created_selector);
     }
@@ -145,12 +137,14 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
     if (!$is_inline) {
       $field_classes_selector = $field_classes ? "[contains(concat(' ', normalize-space(@class), ' '), ' field--name-uid ')]" : '';
       $assert->elementExists('xpath', sprintf('//article//%s//*%s//%s[text()="Authored by"]', $html_element, $field_classes_selector, $html_element));
-      $assert->elementTextContains('css', "$uid_selector $html_element" . '[rel="schema:author"]', $user->getAccountName());
+      $assert->elementTextContains('css', $uid_selector, $user->getAccountName());
       $assert->elementNotExists('css', "$uid_selector a");
-      $assert->elementExists('css', 'span[property="schema:dateCreated"]');
+      if ($field_classes) {
+        $assert->elementExists('css', $created_selector);
+      }
     }
     else {
-      $assert->elementTextContains('css', $uid_selector . ' a[property="schema:name"]', $user->getAccountName());
+      $assert->elementTextContains('css', $uid_selector . ' a', $user->getAccountName());
       $assert->elementTextContains('css', 'article ' . $metadata_region, 'Submitted by');
     }
   }
@@ -160,16 +154,12 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    *
    * @return array
    */
-  public function provideThemes() {
+  public static function provideThemes() {
     return [
-      ['bartik', 'header', TRUE],
       ['claro', 'footer', TRUE],
-      ['classy', 'footer', TRUE],
       // @todo Add coverage for olivero after fixing
       // https://www.drupal.org/project/drupal/issues/3215220.
       // ['olivero', 'footer', TRUE],
-      ['seven', 'footer', TRUE],
-      ['stable', 'footer', FALSE],
       ['stable9', 'footer', FALSE],
     ];
   }

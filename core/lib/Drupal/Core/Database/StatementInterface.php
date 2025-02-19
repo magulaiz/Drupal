@@ -5,15 +5,15 @@ namespace Drupal\Core\Database;
 /**
  * Represents a prepared statement.
  *
- * Child implementations should either extend PDOStatement:
+ * Child implementations should either extend StatementWrapperIterator:
  * @code
- * class Drupal\Core\Database\Driver\oracle\Statement extends PDOStatement implements Drupal\Core\Database\StatementInterface {}
+ * class Drupal\my_module\Driver\Database\my_driver\Statement extends Drupal\Core\Database\StatementWrapperIterator {}
  * @endcode
  * or define their own class. If defining their own class, they will also have
- * to implement either the Iterator or IteratorAggregate interface before
+ * to implement either the \Iterator or \IteratorAggregate interface before
  * Drupal\Core\Database\StatementInterface:
  * @code
- * class Drupal\Core\Database\Driver\oracle\Statement implements Iterator, Drupal\Core\Database\StatementInterface {}
+ * class Drupal\my_module\Driver\Database\my_driver\Statement implements Iterator, Drupal\Core\Database\StatementInterface {}
  * @endcode
  *
  * @ingroup database
@@ -23,13 +23,13 @@ interface StatementInterface extends \Traversable {
   /**
    * Executes a prepared statement.
    *
-   * @param $args
+   * @param array|null $args
    *   An array of values with as many elements as there are bound parameters in
    *   the SQL statement being executed. This can be NULL.
-   * @param $options
+   * @param array $options
    *   An array of options for this query.
    *
-   * @return
+   * @return bool
    *   TRUE on success, or FALSE on failure.
    */
   public function execute($args = [], $options = []);
@@ -37,7 +37,7 @@ interface StatementInterface extends \Traversable {
   /**
    * Gets the query string of this statement.
    *
-   * @return
+   * @return string
    *   The query string, in its form with placeholders.
    */
   public function getQueryString();
@@ -48,15 +48,13 @@ interface StatementInterface extends \Traversable {
    * @return string
    *   The target connection string of this statement.
    */
-  // @todo Include this method in the interface in Drupal 10.
-  // @see https://www.drupal.org/project/drupal/issues/3210310
-  // public function getConnectionTarget(): string;
+  public function getConnectionTarget(): string;
 
   /**
-   * Returns the number of rows affected by the last SQL statement.
+   * Returns the number of rows matched by the last SQL statement.
    *
-   * @return
-   *   The number of rows affected by the last DELETE, INSERT, or UPDATE
+   * @return int
+   *   The number of rows matched by the last DELETE, INSERT, or UPDATE
    *   statement executed or throws \Drupal\Core\Database\RowCountException
    *   if the last executed statement was SELECT.
    *
@@ -70,15 +68,15 @@ interface StatementInterface extends \Traversable {
    * See http://php.net/manual/pdo.constants.php for the definition of the
    * constants used.
    *
-   * @param $mode
-   *   One of the PDO::FETCH_* constants.
-   * @param $a1
+   * @param int $mode
+   *   One of the \PDO::FETCH_* constants.
+   * @param int|null $a1
    *   An option depending of the fetch mode specified by $mode:
-   *   - for PDO::FETCH_COLUMN, the index of the column to fetch
-   *   - for PDO::FETCH_CLASS, the name of the class to create
-   *   - for PDO::FETCH_INTO, the object to add the data to
-   * @param $a2
-   *   If $mode is PDO::FETCH_CLASS, the optional arguments to pass to the
+   *   - for \PDO::FETCH_COLUMN, the index of the column to fetch
+   *   - for \PDO::FETCH_CLASS, the name of the class to create
+   *   - for \PDO::FETCH_INTO, the object to add the data to
+   * @param array $a2
+   *   If $mode is \PDO::FETCH_CLASS, the optional arguments to pass to the
    *   constructor.
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []);
@@ -89,59 +87,58 @@ interface StatementInterface extends \Traversable {
    * See http://php.net/manual/pdo.constants.php for the definition of the
    * constants used.
    *
-   * @param $mode
-   *   One of the PDO::FETCH_* constants.
+   * @param int $mode
+   *   One of the \PDO::FETCH_* constants.
    *   Default to what was specified by setFetchMode().
-   * @param $cursor_orientation
+   * @param int|null $cursor_orientation
    *   Not implemented in all database drivers, don't use.
-   * @param $cursor_offset
+   * @param int|null $cursor_offset
    *   Not implemented in all database drivers, don't use.
    *
-   * @return
-   *   A result, formatted according to $mode.
+   * @return array|object|false
+   *   A result, formatted according to $mode, or FALSE on failure.
    */
   public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL);
 
   /**
    * Returns a single field from the next record of a result set.
    *
-   * @param $index
+   * @param int $index
    *   The numeric index of the field to return. Defaults to the first field.
    *
-   * @return
+   * @return mixed
    *   A single field from the next record, or FALSE if there is no next record.
+   *
+   * @throws \ValueError
+   *   If there is a record and the column index is not defined.
    */
   public function fetchField($index = 0);
 
   /**
    * Fetches the next row and returns it as an object.
    *
-   * The object will be of the class specified by StatementInterface::setFetchMode()
-   * or stdClass if not specified.
-   *
-   * phpcs:disable Drupal.Commenting
-   * @todo Remove PHPCS overrides https://www.drupal.org/node/3194677.
+   * The object will be of the class specified by
+   * StatementInterface::setFetchMode() or stdClass if not specified.
    *
    * @param string|null $class_name
    *   Name of the created class.
-   * @param array|null $constructor_arguments
+   * @param array $constructor_arguments
    *   Elements of this array are passed to the constructor.
-   * phpcs:enable
    *
    * @return mixed
    *   The object of specified class or \stdClass if not specified. Returns
    *   FALSE or NULL if there is no next row.
    */
-  public function fetchObject(/* string $class_name = NULL, array $constructor_arguments = NULL */);
+  public function fetchObject(?string $class_name = NULL, array $constructor_arguments = []);
 
   /**
    * Fetches the next row and returns it as an associative array.
    *
-   * This method corresponds to PDOStatement::fetchObject(), but for associative
-   * arrays. For some reason PDOStatement does not have a corresponding array
-   * helper method, so one is added.
+   * This method corresponds to \PDOStatement::fetchObject(), but for
+   * associative arrays. For some reason \PDOStatement does not have a
+   * corresponding array helper method, so one is added.
    *
-   * @return
+   * @return array|bool
    *   An associative array, or FALSE if there is no next row.
    */
   public function fetchAssoc();
@@ -149,14 +146,14 @@ interface StatementInterface extends \Traversable {
   /**
    * Returns an array containing all of the result set rows.
    *
-   * @param $mode
-   *   One of the PDO::FETCH_* constants.
-   * @param $column_index
-   *   If $mode is PDO::FETCH_COLUMN, the index of the column to fetch.
-   * @param $constructor_arguments
-   *   If $mode is PDO::FETCH_CLASS, the arguments to pass to the constructor.
+   * @param int|null $mode
+   *   One of the \PDO::FETCH_* constants.
+   * @param int|null $column_index
+   *   If $mode is \PDO::FETCH_COLUMN, the index of the column to fetch.
+   * @param array $constructor_arguments
+   *   If $mode is \PDO::FETCH_CLASS, the arguments to pass to the constructor.
    *
-   * @return
+   * @return array
    *   An array of results.
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL);
@@ -166,11 +163,14 @@ interface StatementInterface extends \Traversable {
    *
    * Note that this method will run the result set to the end.
    *
-   * @param $index
+   * @param int $index
    *   The index of the column number to fetch.
    *
-   * @return
+   * @return array
    *   An indexed array, or an empty array if there is no result set.
+   *
+   * @throws \ValueError
+   *   If there is at least one record but the column index is not defined.
    */
   public function fetchCol($index = 0);
 
@@ -184,12 +184,12 @@ interface StatementInterface extends \Traversable {
    *
    * Note that this method will run the result set to the end.
    *
-   * @param $key_index
+   * @param int $key_index
    *   The numeric index of the field to use as the array key.
-   * @param $value_index
+   * @param int $value_index
    *   The numeric index of the field to use as the array value.
    *
-   * @return
+   * @return array
    *   An associative array, or an empty array if there is no result set.
    */
   public function fetchAllKeyed($key_index = 0, $value_index = 1);
@@ -200,15 +200,15 @@ interface StatementInterface extends \Traversable {
    * If the given key appears multiple times, later records will overwrite
    * earlier ones.
    *
-   * @param $key
+   * @param string $key
    *   The name of the field on which to index the array.
-   * @param $fetch
-   *   The fetchmode to use. If set to PDO::FETCH_ASSOC, PDO::FETCH_NUM, or
-   *   PDO::FETCH_BOTH the returned value with be an array of arrays. For any
+   * @param int|null $fetch
+   *   The fetch mode to use. If set to \PDO::FETCH_ASSOC, \PDO::FETCH_NUM, or
+   *   \PDO::FETCH_BOTH the returned value with be an array of arrays. For any
    *   other value it will be an array of objects. By default, the fetch mode
    *   set for the query will be used.
    *
-   * @return
+   * @return array
    *   An associative array, or an empty array if there is no result set.
    */
   public function fetchAllAssoc($key, $fetch = NULL);

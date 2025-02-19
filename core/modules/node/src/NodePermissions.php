@@ -43,23 +43,25 @@ class NodePermissions {
       ],
       "edit own $type_id content" => [
         'title' => $this->t('%type_name: Edit own content', $type_params),
+        'description' => $this->t('Note that anonymous users with this permission are able to edit any content created by any anonymous user.'),
       ],
       "edit any $type_id content" => [
         'title' => $this->t('%type_name: Edit any content', $type_params),
       ],
       "delete own $type_id content" => [
         'title' => $this->t('%type_name: Delete own content', $type_params),
+        'description' => $this->t('Note that anonymous users with this permission are able to delete any content created by any anonymous user.'),
       ],
       "delete any $type_id content" => [
         'title' => $this->t('%type_name: Delete any content', $type_params),
       ],
       "view $type_id revisions" => [
         'title' => $this->t('%type_name: View revisions', $type_params),
-        'description' => t('To view a revision, you also need permission to view the content item.'),
+        'description' => $this->t('To view a revision, you also need permission to view the content item.'),
       ],
       "revert $type_id revisions" => [
         'title' => $this->t('%type_name: Revert revisions', $type_params),
-        'description' => t('To revert a revision, you also need permission to edit the content item.'),
+        'description' => $this->t('To revert a revision, you also need permission to edit the content item.'),
       ],
       "delete $type_id revisions" => [
         'title' => $this->t('%type_name: Delete revisions', $type_params),

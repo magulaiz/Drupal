@@ -1,18 +1,18 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cspell:ignore mediaimagetextalternative
+/* cspell:ignore drupalelementstyle drupallinkmedia drupalmediacaption */
+/* cspell:ignore mediaimagetextalternativeediting mediaimagetextalternativeui */
+/* cspell:ignore mediaimagetextalternative */
 
 import DrupalMedia from './drupalmedia';
-
-// cspell:ignore drupallinkmedia
 import DrupalLinkMedia from './drupallinkmedia/drupallinkmedia';
-
-// cspell:ignore mediaimagetextalternative
+import DrupalElementStyle from './drupalelementstyle';
+import DrupalMediaCaption from './drupalmediacaption';
 import MediaImageTextAlternative from './mediaimagetextalternative';
 import MediaImageTextAlternativeEditing from './mediaimagetextalternative/mediaimagetextalternativeediting';
 import MediaImageTextAlternativeUi from './mediaimagetextalternative/mediaimagetextalternativeui';
 
 /**
- * @internal
+ * @private
  */
 export default {
   DrupalMedia,
@@ -20,4 +20,6 @@ export default {
   MediaImageTextAlternativeEditing,
   MediaImageTextAlternativeUi,
   DrupalLinkMedia,
+  DrupalMediaCaption,
+  DrupalElementStyle,
 };

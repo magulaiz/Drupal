@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Functional\Handler;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
@@ -20,9 +22,7 @@ class FieldDropButtonTest extends ViewTestBase {
   public static $testViews = ['test_dropbutton'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node'];
 
@@ -34,8 +34,8 @@ class FieldDropButtonTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
 
     $admin_user = $this->drupalCreateUser([
       'access content overview',
@@ -48,7 +48,7 @@ class FieldDropButtonTest extends ViewTestBase {
   /**
    * Tests dropbutton field.
    */
-  public function testDropbutton() {
+  public function testDropbutton(): void {
     // Create some test nodes.
     $nodes = [];
     for ($i = 0; $i < 5; $i++) {

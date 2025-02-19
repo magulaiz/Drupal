@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\block_content\Entity\BlockContent;
@@ -7,6 +9,7 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
+use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 
 /**
  * Tests the Layout Builder UI.
@@ -17,6 +20,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;
   use LayoutBuilderSortTrait;
+  use OffCanvasTestTrait;
 
   /**
    * {@inheritdoc}
@@ -27,12 +31,13 @@ class LayoutBuilderTest extends WebDriverTestBase {
     'layout_builder',
     'layout_test',
     'node',
+    'off_canvas_test',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The node to customize with Layout Builder.
@@ -65,7 +70,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $bundle->save();
     block_content_add_body_field($bundle->id());
     BlockContent::create([
-      'info' => 'My custom block',
+      'info' => 'My content block',
       'type' => 'basic',
       'body' => [
         [
@@ -96,7 +101,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
   /**
    * Tests the Layout Builder UI.
    */
-  public function testLayoutBuilderUi() {
+  public function testLayoutBuilderUi(): void {
     $layout_url = 'node/1/layout';
     $node_url = 'node/1';
 
@@ -225,7 +230,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $this->drupalGet($layout_url);
     $this->markCurrentPage();
 
-    $this->openAddBlockForm('My custom block');
+    $this->openAddBlockForm('My content block');
     $page->pressButton('Add block');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('This is the block content');
@@ -260,7 +265,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
   /**
    * Tests configurable layouts.
    */
-  public function testConfigurableLayoutSections() {
+  public function testConfigurableLayoutSections(): void {
     $layout_url = 'node/1/layout';
 
     \Drupal::entityTypeManager()
@@ -284,17 +289,19 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->linkExists('Add section');
     $this->clickLink('Add section');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->elementExists('css', '#drupal-off-canvas');
+    $this->waitForOffCanvasArea();
 
     $assert_session->linkExists('One column');
     $this->clickLink('One column');
     $assert_session->assertWaitOnAjaxRequest();
+    $this->waitForOffCanvasArea();
 
     // Add another section.
     $assert_session->linkExists('Add section');
     $this->clickLink('Add section');
+
+    $this->waitForOffCanvasArea();
     $assert_session->waitForElementVisible('named', ['link', 'Layout plugin (with settings)']);
-    $assert_session->elementExists('css', '#drupal-off-canvas');
 
     $assert_session->linkExists('Layout plugin (with settings)');
     $this->clickLink('Layout plugin (with settings)');
@@ -309,6 +316,8 @@ class LayoutBuilderTest extends WebDriverTestBase {
     // Ensure validation error is displayed for ConfigureSectionForm.
     $assert_session->linkExists('Add section');
     $this->clickLink('Add section');
+    $this->waitForOffCanvasArea();
+
     $assert_session->waitForElementVisible('named', ['link', 'Layout plugin (with settings)']);
     $this->clickLink('Layout plugin (with settings)');
     $this->assertOffCanvasFormAfterWait('layout_builder_configure_section');
@@ -335,7 +344,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
   /**
    * Tests bypassing the off-canvas dialog.
    */
-  public function testLayoutNoDialog() {
+  public function testLayoutNoDialog(): void {
     $layout_url = 'node/1/layout';
 
     \Drupal::entityTypeManager()
@@ -398,7 +407,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    *
    * @todo Remove this in https://www.drupal.org/project/drupal/issues/2918718.
    */
-  protected function clickContextualLink($selector, $link_locator, $force_visible = TRUE) {
+  protected function clickContextualLink($selector, $link_locator, $force_visible = TRUE): void {
     /** @var \Drupal\FunctionalJavascriptTests\JSWebAssert $assert_session */
     $assert_session = $this->assertSession();
     /** @var \Behat\Mink\Element\DocumentElement $page */
@@ -441,7 +450,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    * @param bool $allow_custom
    *   Whether to allow custom layouts.
    */
-  private function enableLayoutsForBundle($path, $allow_custom = FALSE) {
+  private function enableLayoutsForBundle($path, $allow_custom = FALSE): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->drupalGet($path);
@@ -461,7 +470,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    * @param string $block_title
    *   The block title which will be the link text.
    */
-  private function openAddBlockForm($block_title) {
+  private function openAddBlockForm($block_title): void {
     $assert_session = $this->assertSession();
     $assert_session->linkExists('Add block');
     $this->clickLink('Add block');
@@ -479,7 +488,8 @@ class LayoutBuilderTest extends WebDriverTestBase {
    */
   private function assertOffCanvasFormAfterWait(string $expected_form_id): void {
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $off_canvas = $this->assertSession()->waitForElementVisible('css', '#drupal-off-canvas');
+    $this->waitForOffCanvasArea();
+    $off_canvas = $this->assertSession()->elementExists('css', '#drupal-off-canvas');
     $this->assertNotNull($off_canvas);
     $form_id_element = $off_canvas->find('hidden_field_selector', ['hidden_field', 'form_id']);
     // Ensure the form ID has the correct value and that the form is visible.
@@ -493,7 +503,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    *
    * @todo Remove in https://www.drupal.org/project/drupal/issues/2909782.
    */
-  private function markCurrentPage() {
+  private function markCurrentPage(): void {
     $this->pageReloadMarker = $this->randomMachineName();
     $this->getSession()->executeScript('document.body.appendChild(document.createTextNode("' . $this->pageReloadMarker . '"));');
   }

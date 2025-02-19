@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\accept_header_routing_test;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -10,6 +12,11 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * Example implementation of "accept header"-based content negotiation.
  */
 class AcceptHeaderMiddleware implements HttpKernelInterface {
+
+  /**
+   * The app kernel.
+   */
+  protected HttpKernelInterface $app;
 
   /**
    * Constructs a new AcceptHeaderMiddleware instance.
@@ -24,10 +31,9 @@ class AcceptHeaderMiddleware implements HttpKernelInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
+  public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
     $mapping = [
       'application/json' => 'json',
-      'application/hal+json' => 'hal_json',
       'application/xml' => 'xml',
       'text/html' => 'html',
     ];

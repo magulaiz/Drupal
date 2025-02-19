@@ -2,28 +2,27 @@
 
 namespace Drupal\system\Element;
 
-use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Core\Render\Element\StatusReport;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
 /**
  * Creates status report page element.
- *
- * @RenderElement("status_report_page")
  */
-class StatusReportPage extends RenderElement {
+#[RenderElement('status_report_page')]
+class StatusReportPage extends RenderElementBase {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#theme' => 'status_report_page',
       '#pre_render' => [
-        [$class, 'preRenderCounters'],
-        [$class, 'preRenderGeneralInfo'],
-        [$class, 'preRenderRequirements'],
+        [static::class, 'preRenderCounters'],
+        [static::class, 'preRenderGeneralInfo'],
+        [static::class, 'preRenderRequirements'],
       ],
     ];
   }
@@ -59,7 +58,9 @@ class StatusReportPage extends RenderElement {
         case 'php_memory_limit':
           $element['#general_info']['#' . $key] = $requirement;
           if (isset($requirement['severity']) && $requirement['severity'] < REQUIREMENT_WARNING) {
-            unset($element['#requirements'][$key]);
+            if (empty($requirement['severity']) || $requirement['severity'] == REQUIREMENT_OK) {
+              unset($element['#requirements'][$key]);
+            }
           }
           break;
       }

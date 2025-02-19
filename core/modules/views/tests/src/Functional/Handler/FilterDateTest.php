@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Functional\Handler;
 
 use Drupal\field\Entity\FieldConfig;
@@ -25,16 +27,14 @@ class FilterDateTest extends ViewTestBase {
   public static $testViews = ['test_filter_date_between'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'views_ui', 'datetime'];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The date formatter.
@@ -43,8 +43,21 @@ class FilterDateTest extends ViewTestBase {
    */
   public $dateFormatter;
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  /**
+   * @var array
+   */
+  protected array $nodes;
+
+  /**
+   * @var array
+   */
+  protected array $map;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
     $this->dateFormatter = $this->container->get('date.formatter');
 
     // Add a date field so we can test datetime handling.
@@ -84,7 +97,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Runs other test methods.
    */
-  public function testDateFilter() {
+  public function testDateFilter(): void {
     $this->_testOffset();
     $this->_testBetween();
     $this->_testUiValidation();
@@ -95,7 +108,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Tests the general offset functionality.
    */
-  protected function _testOffset() {
+  protected function _testOffset(): void {
     $view = Views::getView('test_filter_date_between');
 
     // Test offset for simple operator.
@@ -126,7 +139,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Tests the filter operator between/not between.
    */
-  protected function _testBetween() {
+  protected function _testBetween(): void {
     $view = Views::getView('test_filter_date_between');
 
     // Test between with min and max.
@@ -182,7 +195,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Make sure the validation callbacks works.
    */
-  protected function _testUiValidation() {
+  protected function _testUiValidation(): void {
 
     $this->drupalLogin($this->drupalCreateUser([
       'administer views',
@@ -202,7 +215,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Tests date filter UI.
    */
-  protected function _testFilterDateUI() {
+  protected function _testFilterDateUI(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
     $this->submitForm([], 'Expose filter');
@@ -293,7 +306,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Tests datetime grouped filter UI.
    */
-  protected function _testFilterDatetimeUI() {
+  protected function _testFilterDatetimeUI(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_filter_date_between/default/filter');
     $this->submitForm([
@@ -328,7 +341,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Tests that the exposed date filter is displayed without errors.
    */
-  public function testExposedFilter() {
+  public function testExposedFilter(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
     $this->submitForm([], 'Expose filter');

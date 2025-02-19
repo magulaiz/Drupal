@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\position_shim_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -22,7 +24,7 @@ class PositionShimTestController extends ControllerBase {
       ],
       '#attached' => [
         'library' => [
-          'core/jquery.ui.position',
+          'core/drupal.jquery.position',
           'position_shim_test/position.shim.test',
         ],
       ],

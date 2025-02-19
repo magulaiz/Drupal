@@ -17,7 +17,7 @@ class RegisterEntityResolversCompilerPass implements CompilerPassInterface {
    * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
    *   The container to process.
    */
-  public function process(ContainerBuilder $container) {
+  public function process(ContainerBuilder $container): void {
     $definition = $container->getDefinition('serializer.entity_resolver');
     $resolvers = [];
 
@@ -48,15 +48,8 @@ class RegisterEntityResolversCompilerPass implements CompilerPassInterface {
    *   to low priority.
    */
   protected function sort($services) {
-    $sorted = [];
     krsort($services);
-
-    // Flatten the array.
-    foreach ($services as $a) {
-      $sorted = array_merge($sorted, $a);
-    }
-
-    return $sorted;
+    return array_merge(...$services);
   }
 
 }

@@ -26,7 +26,7 @@ class EnabledConfigurablePluginsConstraintValidator extends ConstraintValidator 
    * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
    *   Thrown when the given constraint is not supported by this validator.
    */
-  public function validate($settings, Constraint $constraint) {
+  public function validate($settings, Constraint $constraint): void {
     if (!$constraint instanceof EnabledConfigurablePluginsConstraint) {
       throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\EnabledConfigurablePluginsConstraint');
     }
@@ -35,17 +35,20 @@ class EnabledConfigurablePluginsConstraintValidator extends ConstraintValidator 
     try {
       $plugin_settings = $this->context->getRoot()->get('settings.plugins')->getValue();
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       $plugin_settings = [];
     }
 
     foreach ($configurable_enabled_definitions as $id => $definition) {
-      if ($definition->hasConditions() && isset($definition->getConditions()['imageUploadStatus']) && $definition->getConditions()['imageUploadStatus'] === TRUE) {
-        // This is the exception to the rule: this is a privileged plugin due to
-        // the Text Editor config entity's built-in image upload settings.
-        // @see \Drupal\editor\Entity\Editor::getImageUploadSettings()
-        // @see editor_image_upload_settings_form()
-        // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ImageUpload::buildConfigurationForm()
+      // Create a fresh instance of this CKEditor 5 plugin, not tied to a text
+      // editor configuration entity.
+      $plugin = $this->pluginManager->getPlugin($id, NULL);
+      // If this plugin is configurable but it has empty default configuration,
+      // that means the configuration must be stored out of band.
+      // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
+      // @see editor_image_upload_settings_form()
+      $default_configuration = $plugin->defaultConfiguration();
+      if ($default_configuration === []) {
         continue;
       }
 

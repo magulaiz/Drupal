@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\editor\Functional;
 
 use Drupal\editor\Entity\Editor;
@@ -16,9 +18,7 @@ use Drupal\Tests\BrowserTestBase;
 class EditorLoadingTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['filter', 'editor', 'editor_test', 'node'];
 
@@ -48,6 +48,9 @@ class EditorLoadingTest extends BrowserTestBase {
    */
   protected $privilegedUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -127,17 +130,13 @@ class EditorLoadingTest extends BrowserTestBase {
   /**
    * Tests loading of text editors.
    */
-  public function testLoading() {
+  public function testLoading(): void {
     // Only associate a text editor with the "Full HTML" text format.
     $editor = Editor::create([
       'format' => 'full_html',
       'editor' => 'unicorn',
       'image_upload' => [
         'status' => FALSE,
-        'scheme' => 'public',
-        'directory' => 'inline-images',
-        'max_size' => '',
-        'max_dimensions' => ['width' => '', 'height' => ''],
       ],
     ]);
     $editor->save();
@@ -150,9 +149,9 @@ class EditorLoadingTest extends BrowserTestBase {
     [, $editor_settings_present, $editor_js_present, $body] = $this->getThingsToCheck('body');
     $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
     $this->assertFalse($editor_js_present, 'No Text Editor JavaScript.');
-    $this->assertCount(1, $body, 'A body field exists.');
+    $this->assertSession()->elementsCount('xpath', $body, 1);
     $this->assertSession()->elementNotExists('css', 'select.js-filter-list');
-    $this->drupalLogout($this->normalUser);
+    $this->drupalLogout();
 
     // The privileged user:
     // - has access to 2 text formats (and the fallback format);
@@ -174,21 +173,20 @@ class EditorLoadingTest extends BrowserTestBase {
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertSame($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
-    $this->assertCount(1, $body, 'A body field exists.');
+    $this->assertSession()->elementsCount('xpath', $body, 1);
     $this->assertSession()->elementsCount('css', 'select.js-filter-list', 1);
     $select = $this->assertSession()->elementExists('css', 'select.js-filter-list');
     $this->assertSame('edit-body-0-value', $select->getAttribute('data-editor-for'));
 
-    // Load the editor image dialog form and make sure it does not fatal.
-    $this->drupalGet('editor/dialog/image/full_html');
-    $this->assertSession()->statusCodeEquals(200);
-
-    $this->drupalLogout($this->privilegedUser);
+    $this->drupalLogout();
 
     // Also associate a text editor with the "Plain Text" text format.
     $editor = Editor::create([
       'format' => 'plain_text',
       'editor' => 'unicorn',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     $editor->save();
 
@@ -212,7 +210,7 @@ class EditorLoadingTest extends BrowserTestBase {
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertSame($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
-    $this->assertCount(1, $body, 'A body field exists.');
+    $this->assertSession()->elementsCount('xpath', $body, 1);
     $this->assertSession()->elementNotExists('css', 'select.js-filter-list');
     // Verify that a single text format hidden input exists on the page and has
     // a "data-editor-for" attribute with the correct value.
@@ -236,7 +234,7 @@ class EditorLoadingTest extends BrowserTestBase {
     [, $editor_settings_present, $editor_js_present, $body] = $this->getThingsToCheck('body');
     $this->assertTrue($editor_settings_present, 'Text Editor module settings.');
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript.');
-    $this->assertCount(1, $body, 'A body field exists.');
+    $this->assertSession()->elementsCount('xpath', $body, 1);
     $this->assertSession()->fieldDisabled("edit-body-0-value");
     $this->assertSession()->fieldValueEquals("edit-body-0-value", 'This field has been disabled because you do not have sufficient permissions to edit it.');
     $this->assertSession()->elementNotExists('css', 'select.js-filter-list');
@@ -247,17 +245,13 @@ class EditorLoadingTest extends BrowserTestBase {
   /**
    * Tests supported element types.
    */
-  public function testSupportedElementTypes() {
+  public function testSupportedElementTypes(): void {
     // Associate the unicorn text editor with the "Full HTML" text format.
     $editor = Editor::create([
       'format' => 'full_html',
       'editor' => 'unicorn',
       'image_upload' => [
         'status' => FALSE,
-        'scheme' => 'public',
-        'directory' => 'inline-images',
-        'max_size' => '',
-        'max_dimensions' => ['width' => '', 'height' => ''],
       ],
     ]);
     $editor->save();
@@ -276,7 +270,7 @@ class EditorLoadingTest extends BrowserTestBase {
     [, $editor_settings_present, $editor_js_present, $field] = $this->getThingsToCheck('field-text', 'input');
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
-    $this->assertCount(1, $field, 'A text field exists.');
+    $this->assertSession()->elementsCount('xpath', $field, 1);
     // Verify that a single text format selector exists on the page and has the
     // "editor" class and a "data-editor-for" attribute with the correct value.
     $this->assertSession()->elementsCount('css', 'select.js-filter-list', 1);
@@ -289,13 +283,16 @@ class EditorLoadingTest extends BrowserTestBase {
     Editor::create([
       'format' => 'full_html',
       'editor' => 'trex',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ])->save();
 
     $this->drupalGet('node/1/edit');
     [, $editor_settings_present, $editor_js_present, $field] = $this->getThingsToCheck('field-text', 'input');
     $this->assertFalse($editor_settings_present, "Text Editor module's JavaScript settings are not on the page.");
     $this->assertFalse($editor_js_present, 'Text Editor JavaScript is not present.');
-    $this->assertCount(1, $field, 'A text field exists.');
+    $this->assertSession()->elementsCount('xpath', $field, 1);
     // Verify that a single text format selector exists on the page but without
     // the "editor" class or a "data-editor-for" attribute with the expected
     // value.
@@ -305,7 +302,7 @@ class EditorLoadingTest extends BrowserTestBase {
     $this->assertNotSame('edit-field-text-0-value', $select->getAttribute('data-editor-for'));
   }
 
-  protected function getThingsToCheck($field_name, $type = 'textarea') {
+  protected function getThingsToCheck($field_name, $type = 'textarea'): array {
     $settings = $this->getDrupalSettings();
     return [
       // JavaScript settings.
@@ -313,9 +310,9 @@ class EditorLoadingTest extends BrowserTestBase {
       // Editor.module's JS settings present.
       isset($settings['editor']),
       // Editor.module's JS present.
-      strpos($this->getSession()->getPage()->getContent(), $this->getModulePath('editor') . '/js/editor.js') !== FALSE,
+      str_contains($this->getSession()->getPage()->getContent(), $this->getModulePath('editor') . '/js/editor.js'),
       // Body field.
-      $this->xpath('//' . $type . '[@id="edit-' . $field_name . '-0-value"]'),
+      '//' . $type . '[@id="edit-' . $field_name . '-0-value"]',
     ];
   }
 

@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words textalternativeformview */
+/* cspell:ignore imagetextalternative mediaimagetextalternative */
+/* cspell:ignore mediaimagetextalternativeediting textalternativeformview */
 
 import { Plugin, icons } from 'ckeditor5/src/core';
 import {
@@ -8,7 +9,7 @@ import {
   clickOutsideHandler,
 } from 'ckeditor5/src/ui';
 
-import { getSelectedDrupalMediaWidget } from '../utils';
+import { getClosestSelectedDrupalMediaWidget, isDrupalMedia } from '../utils';
 import {
   getBalloonPositionData,
   repositionContextualBalloon,
@@ -23,21 +24,21 @@ import TextAlternativeFormView from './ui/textalternativeformview';
  */
 export default class MediaImageTextAlternativeUi extends Plugin {
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get requires() {
     return [ContextualBalloon];
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get pluginName() {
     return 'MediaImageTextAlternativeUi';
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   init() {
     this._createButton();
@@ -45,7 +46,7 @@ export default class MediaImageTextAlternativeUi extends Plugin {
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   destroy() {
     super.destroy();
@@ -58,14 +59,13 @@ export default class MediaImageTextAlternativeUi extends Plugin {
    */
   _createButton() {
     const editor = this.editor;
-    const t = editor.t;
 
     editor.ui.componentFactory.add('mediaImageTextAlternative', (locale) => {
       const command = editor.commands.get('mediaImageTextAlternative');
       const view = new ButtonView(locale);
 
       view.set({
-        label: t('Override media image text alternative'),
+        label: Drupal.t('Override media image alternative text'),
         icon: icons.lowVision,
         tooltip: true,
       });
@@ -106,7 +106,13 @@ export default class MediaImageTextAlternativeUi extends Plugin {
 
     this.listenTo(this._form, 'submit', () => {
       editor.execute('mediaImageTextAlternative', {
-        newValue: this._form.labeledInput.fieldView.element.value,
+        // The "decorative toggle" allows users to opt-in to empty alt
+        // attributes for the very rare edge cases where that is valid. This is
+        // indicated by specifying two double quotes as the alternative text.
+        // See https://www.w3.org/WAI/tutorials/images/decorative .
+        newValue: this._form.decorativeToggle.isOn
+          ? '""'
+          : this._form.labeledInput.fieldView.element.value,
       });
 
       this._hideForm(true);
@@ -122,9 +128,10 @@ export default class MediaImageTextAlternativeUi extends Plugin {
       cancel();
     });
 
-    // Reposition the balloon or hide the form if an image widget is no longer selected.
+    // Reposition the balloon or hide the form if a media widget is no longer
+    // selected.
     this.listenTo(editor.ui, 'update', () => {
-      if (!getSelectedDrupalMediaWidget(viewDocument.selection)) {
+      if (!getClosestSelectedDrupalMediaWidget(viewDocument.selection)) {
         this._hideForm(true);
       } else if (this._isVisible) {
         repositionContextualBalloon(editor);
@@ -147,9 +154,12 @@ export default class MediaImageTextAlternativeUi extends Plugin {
     if (this._isVisible) {
       return;
     }
-
     const editor = this.editor;
     const command = editor.commands.get('mediaImageTextAlternative');
+    const decorativeToggle = this._form.decorativeToggle;
+    const metadataRepository = editor.plugins.get(
+      'DrupalMediaMetadataRepository',
+    );
     const labeledInput = this._form.labeledInput;
 
     this._form.disableCssTransitions();
@@ -161,6 +171,14 @@ export default class MediaImageTextAlternativeUi extends Plugin {
       });
     }
 
+    // This implementation, populating double quotes, differs from drupalImage.
+    // In drupalImage, an image either has alt text or it is decorative, so the
+    // 'decorative' state can be represented by an empty string. In drupalMedia,
+    // an image can inherit alt text from the media entity (represented by an
+    // empty string), can have overridden alt text (represented by user-entered
+    // text), or can be designated decorative (represented by double quotes).
+    decorativeToggle.isOn = command.value === '""';
+
     // Make sure that each time the panel shows up, the field remains in sync with the value of
     // the command. If the user typed in the input, then canceled the balloon (`labeledInput#value`
     // stays unaltered) and re-opened it without changing the value of the command, they would see the
@@ -169,7 +187,30 @@ export default class MediaImageTextAlternativeUi extends Plugin {
     labeledInput.fieldView.element.value = command.value || '';
     labeledInput.fieldView.value = labeledInput.fieldView.element.value;
 
-    this._form.labeledInput.fieldView.select();
+    this._form.defaultAltText = '';
+    const modelElement = editor.model.document.selection.getSelectedElement();
+
+    // Make sure that each time the panel shows up, the default alt text remains
+    // in sync with the value from the metadata repository.
+    if (isDrupalMedia(modelElement)) {
+      metadataRepository
+        .getMetadata(modelElement)
+        .then((metadata) => {
+          this._form.defaultAltText = metadata.imageSourceMetadata
+            ? metadata.imageSourceMetadata.alt
+            : '';
+          labeledInput.infoText = Drupal.t(
+            `Leave blank to use the default alternative text: "${this._form.defaultAltText}".`,
+          );
+        })
+        .catch((e) => {
+          // There isn't any UI indication for errors because this should be
+          // always called after the Drupal Media has been upcast, which would
+          // already display an error in the UI.
+          // @see module:drupalMedia/mediaimagetextalternative/mediaimagetextalternativeediting~MediaImageTextAlternativeEditing
+          console.warn(e.toString());
+        });
+    }
 
     this._form.enableCssTransitions();
   }

@@ -15,10 +15,87 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines the Migration plugin.
  *
- * The migration plugin represents one single migration and acts like a
- * container for the information about a single migration such as the source,
- * process and destination plugins.
+ * A migration plugin instance that represents one single migration and acts
+ * like a container for the information about a single migration such as the
+ * source, process and destination plugins.
+ *
+ * The configuration of a migration is defined using YAML format and placed in
+ * the directory MODULENAME/migrations.
+ *
+ * Available definition keys:
+ * - id: The migration ID.
+ * - label: The human-readable label for the migration.
+ * - source: The definition for a migrate source plugin.
+ * - process: The definition for the migrate process pipelines for the
+ *   destination properties.
+ * - destination: The definition a migrate destination plugin.
+ * - audit: (optional) Audit the migration for conflicts with existing content.
+ * - deriver: (optional) The fully qualified path to a deriver class.
+ * - idMap: (optional) The definition for a migrate idMap plugin.
+ * - migration_dependencies: (optional) An array with two keys 'required' and
+ *   'optional' listing the migrations that this migration depends on. The
+ *   required migrations must be run first and completed successfully. The
+ *   optional migrations will be executed if they are present.
+ * - migration_tags: (optional) An array of tags for this migration.
+ * - provider: (optional) The name of the module that provides the plugin.
+ *
+ * Example with all keys:
+ *
+ * @code
+ * id: d7_taxonomy_term_example
+ * label: Taxonomy terms
+ * audit: true
+ * migration_tags:
+ *   - Drupal 7
+ *   - Content
+ *   - Term example
+ * deriver: Drupal\taxonomy\Plugin\migrate\D7TaxonomyTermDeriver
+ * provider: custom_module
+ * source:
+ *   plugin: d7_taxonomy_term
+ * process:
+ *   tid: tid
+ *   vid:
+ *     plugin: migration_lookup
+ *     migration: d7_taxonomy_vocabulary
+ *     source: vid
+ *   name: name
+ *   'description/value': description
+ *   'description/format': format
+ *   weight: weight
+ *   parent_id:
+ *   -
+ *     plugin: skip_on_empty
+ *     method: process
+ *     source: parent
+ *   -
+ *     plugin: migration_lookup
+ *     migration: d7_taxonomy_term
+ *   parent:
+ *    plugin: default_value
+ *    default_value: 0
+ *    source: '@parent_id'
+ * destination:
+ *   plugin: entity:taxonomy_term
+ * migration_dependencies:
+ *   required:
+ *     - d7_taxonomy_vocabulary
+ *   optional:
+ *     - d7_field_instance
+ * @endcode
+ *
+ * For additional configuration keys, refer to these Migrate classes.
+ *
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\destination\Config
+ * @see \Drupal\migrate\Plugin\migrate\destination\EntityConfigBase
+ * @see \Drupal\migrate\Plugin\migrate\destination\EntityContentBase
+ * @see \Drupal\Core\Plugin\PluginBase
+ *
+ * @link https://www.drupal.org/docs/8/api/migrate-api Migrate API handbook. @endlink
  */
+#[\AllowDynamicProperties]
 class Migration extends PluginBase implements MigrationInterface, RequirementsInterface, ContainerFactoryPluginInterface {
 
   /**
@@ -34,13 +111,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * @var string
    */
   protected $label;
-
-  /**
-   * The plugin ID for the row.
-   *
-   * @var string
-   */
-  protected $row;
 
   /**
    * The source configuration, with at least a 'plugin' key.
@@ -108,16 +178,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $idMapPlugin;
 
   /**
-   * The source identifiers.
-   *
-   * An array of source identifiers: the keys are the name of the properties,
-   * the values are dependent on the ID map plugin.
-   *
-   * @var array
-   */
-  protected $sourceIds = [];
-
-  /**
    * The destination identifiers.
    *
    * An array of destination identifiers: the keys are the name of the
@@ -128,19 +188,11 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $destinationIds = [];
 
   /**
-   * Specify value of source_row_status for current map row. Usually set by
-   * MigrateFieldHandler implementations.
+   * The source_row_status for the current map row.
    *
    * @var int
    */
   protected $sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
-
-  /**
-   * Track time of last import if TRUE.
-   *
-   * @var bool
-   */
-  protected $trackLastImported = FALSE;
 
   /**
    * These migrations must be already executed before this migration can run.
@@ -154,6 +206,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    *
    * @var array
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected $migration_tags = [];
 
   /**
@@ -175,33 +228,21 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    *
    * The migration_dependencies value is structured like this:
    * @code
-   * array(
-   *   'required' => array(
+   * [
+   *   'required' => [
    *     // An array of migration IDs that must be run before this migration.
-   *   ),
-   *   'optional' => array(
+   *   ],
+   *   'optional' => [
    *     // An array of migration IDs that, if they exist, must be run before
    *     // this migration.
-   *   ),
-   * );
+   *   ],
+   * ];
    * @endcode
    *
    * @var array
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected $migration_dependencies = [];
-
-  /**
-   * The migration's configuration dependencies.
-   *
-   * These store any dependencies on modules or other configuration (including
-   * other migrations) that must be available before the migration can be
-   * created.
-   *
-   * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
-   *
-   * @var array
-   */
-  protected $dependencies = [];
 
   /**
    * The migration plugin manager for loading other migration plugins.
@@ -282,6 +323,11 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
     foreach (NestedArray::mergeDeepArray([$plugin_definition, $configuration], TRUE) as $key => $value) {
       $this->$key = $value;
     }
+
+    $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
+    if (count($this->migration_dependencies) !== 2 || !is_array($this->migration_dependencies['required']) || !is_array($this->migration_dependencies['optional'])) {
+      throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
+    }
   }
 
   /**
@@ -337,14 +383,13 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   /**
    * {@inheritdoc}
    */
-  public function getProcessPlugins(array $process = NULL) {
-    if (!isset($process)) {
-      $process = $this->getProcess();
-    }
+  public function getProcessPlugins(?array $process = NULL) {
+    $process = isset($process) ? $this->getProcessNormalized($process) : $this->getProcess();
     $index = serialize($process);
     if (!isset($this->processPlugins[$index])) {
       $this->processPlugins[$index] = [];
-      foreach ($this->getProcessNormalized($process) as $property => $configurations) {
+
+      foreach ($process as $property => $configurations) {
         $this->processPlugins[$index][$property] = [];
         foreach ($configurations as $configuration) {
           if (isset($configuration['source'])) {
@@ -419,7 +464,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function getRequirements(): array {
     return $this->requirements;
@@ -545,6 +590,9 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
       // Invalidate the destination plugin.
       unset($this->destinationPlugin);
     }
+    elseif ($property_name === 'migration_dependencies') {
+      $value = ($value ?: []) + ['required' => [], 'optional' => []];
+    }
     $this->{$property_name} = $value;
     return $this;
   }
@@ -573,6 +621,34 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   }
 
   /**
+   * Add required migration dependencies.
+   *
+   * @param string[] $required_dependencies
+   *   An array of migration IDs to be added to the required migration
+   *   dependencies.
+   *
+   * @return $this
+   */
+  public function addRequiredDependencies(array $required_dependencies): MigrationInterface {
+    $this->migration_dependencies['required'] = array_unique(array_merge($this->migration_dependencies['required'], $required_dependencies));
+    return $this;
+  }
+
+  /**
+   * Add optional migration dependencies.
+   *
+   * @param string[] $optional_dependencies
+   *   An array of migration IDs to be added to the optional migration
+   *   dependencies.
+   *
+   * @return $this
+   */
+  public function addOptionalDependencies(array $optional_dependencies): MigrationInterface {
+    $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $optional_dependencies));
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function mergeProcessOfProperty($property, array $process_of_property) {
@@ -590,30 +666,26 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function isTrackLastImported() {
-    return $this->trackLastImported;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setTrackLastImported($track_last_imported) {
-    $this->trackLastImported = (bool) $track_last_imported;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
+   * Get the dependencies for this migration.
+   *
+   * @return array
+   *   The dependencies for this migration.
    */
   public function getMigrationDependencies() {
+    if (func_num_args() > 0) {
+      @trigger_error('Calling ' . __METHOD__ . ' with the $expand parameter is deprecated in drupal:11.0.0 and is removed drupal:12.0.0. See https://www.drupal.org/node/3442785', E_USER_DEPRECATED);
+    }
+
     $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
     if (count($this->migration_dependencies) !== 2 || !is_array($this->migration_dependencies['required']) || !is_array($this->migration_dependencies['optional'])) {
       throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
     }
     $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
-    return $this->migration_dependencies;
+
+    return array_map(
+      [$this->migrationPluginManager, 'expandPluginIds'],
+      $this->migration_dependencies
+    );
   }
 
   /**
@@ -674,13 +746,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   public function getSourceConfiguration() {
     return $this->source;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getTrackLastImported() {
-    return $this->trackLastImported;
   }
 
   /**

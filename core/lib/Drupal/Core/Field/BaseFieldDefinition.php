@@ -256,7 +256,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * {@inheritdoc}
    */
   public function getCardinality() {
-    // @todo: Allow to control this.
+    // @todo Allow to control this.
     return $this->definition['cardinality'] ?? 1;
   }
 
@@ -371,8 +371,9 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *   An array of display options. Refer to
    *   \Drupal\Core\Field\FieldDefinitionInterface::getDisplayOptions() for
    *   a list of supported keys. The options should include at least a 'weight',
-   *   or specify 'type' = 'hidden'. The 'default_widget' / 'default_formatter'
-   *   for the field type will be used if no 'type' is specified.
+   *   or specify 'region' = 'hidden'. The 'default_widget' /
+   *   'default_formatter' for the field type will be used if no 'type' is
+   *   specified.
    *
    * @return static
    *   The object itself for chaining.
@@ -485,7 +486,8 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *
    * @return array
    *   The initial value for the field, as a numerically indexed array of items,
-   *   each item being a property/value array (array() for no default value).
+   *   each item being a property/value array. An empty array when there is no
+   *   default value.
    */
   public function getInitialValue() {
     return $this->normalizeValue($this->definition['initial_value'], $this->getMainPropertyName());
@@ -564,8 +566,8 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
       $items = $entity->get($this->getName());
       return \Drupal::service('plugin.manager.field.field_type')->createFieldItem($items, 0);
     }
-    // @todo: Allow setting custom options provider, see
-    // https://www.drupal.org/node/2002138.
+    // @todo Allow setting custom options provider.
+    //   https://www.drupal.org/node/2002138
   }
 
   /**
@@ -609,7 +611,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     // Do not serialize the statically cached property definitions.
     $vars = get_object_vars($this);
     unset($vars['propertyDefinitions'], $vars['typedDataManager']);

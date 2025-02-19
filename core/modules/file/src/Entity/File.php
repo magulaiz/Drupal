@@ -2,47 +2,60 @@
 
 namespace Drupal\file\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\ContentEntityDeleteForm;
+use Drupal\Core\Entity\EntityListBuilder;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\file\FileAccessControlHandler;
 use Drupal\file\FileInterface;
+use Drupal\file\FileStorage;
+use Drupal\file\FileStorageSchema;
+use Drupal\file\FileViewsData;
 use Drupal\user\EntityOwnerTrait;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Defines the file entity class.
  *
  * @ingroup file
- *
- * @ContentEntityType(
- *   id = "file",
- *   label = @Translation("File"),
- *   label_collection = @Translation("Files"),
- *   label_singular = @Translation("file"),
- *   label_plural = @Translation("files"),
- *   label_count = @PluralTranslation(
- *     singular = "@count file",
- *     plural = "@count files",
- *   ),
- *   handlers = {
- *     "storage" = "Drupal\file\FileStorage",
- *     "storage_schema" = "Drupal\file\FileStorageSchema",
- *     "access" = "Drupal\file\FileAccessControlHandler",
- *     "views_data" = "Drupal\file\FileViewsData",
- *   },
- *   base_table = "file_managed",
- *   entity_keys = {
- *     "id" = "fid",
- *     "label" = "filename",
- *     "langcode" = "langcode",
- *     "uuid" = "uuid",
- *     "owner" = "uid",
- *   }
- * )
  */
+#[ContentEntityType(
+  id: 'file',
+  label: new TranslatableMarkup('File'),
+  label_collection: new TranslatableMarkup('Files'),
+  label_singular: new TranslatableMarkup('file'),
+  label_plural: new TranslatableMarkup('files'),
+  entity_keys: [
+    'id' => 'fid',
+    'label' => 'filename',
+    'langcode' => 'langcode',
+    'uuid' => 'uuid',
+    'owner' => 'uid',
+  ],
+  handlers: [
+    'storage' => FileStorage::class,
+    'storage_schema' => FileStorageSchema::class,
+    'access' => FileAccessControlHandler::class,
+    'views_data' => FileViewsData::class,
+    'list_builder' => EntityListBuilder::class,
+    'form' => ['delete' => ContentEntityDeleteForm::class],
+    'route_provider' => ['html' => FileRouteProvider::class],
+  ],
+  links: [
+    'delete-form' => '/file/{file}/delete',
+  ],
+  base_table: 'file_managed',
+  label_count: [
+    'singular' => '@count file',
+    'plural' => '@count files',
+  ],
+)]
 class File extends ContentEntityBase implements FileInterface {
 
   use EntityChangedTrait;
@@ -103,7 +116,8 @@ class File extends ContentEntityBase implements FileInterface {
    * {@inheritdoc}
    */
   public function getSize() {
-    return $this->get('filesize')->value;
+    $filesize = $this->get('filesize')->value;
+    return isset($filesize) ? (int) $filesize : NULL;
   }
 
   /**
@@ -117,7 +131,8 @@ class File extends ContentEntityBase implements FileInterface {
    * {@inheritdoc}
    */
   public function getCreatedTime() {
-    return $this->get('created')->value;
+    $created = $this->get('created')->value;
+    return isset($created) ? (int) $created : NULL;
   }
 
   /**
@@ -159,14 +174,7 @@ class File extends ContentEntityBase implements FileInterface {
 
     // Automatically detect filemime if not set.
     if (!isset($values['filemime']) && isset($values['uri'])) {
-      $guesser = \Drupal::service('file.mime_type.guesser');
-      if ($guesser instanceof MimeTypeGuesserInterface) {
-        $values['filemime'] = $guesser->guessMimeType($values['uri']);
-      }
-      else {
-        $values['filemime'] = $guesser->guess($values['uri']);
-        @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
-      }
+      $values['filemime'] = \Drupal::service('file.mime_type.guesser')->guessMimeType($values['uri']);
     }
   }
 
@@ -206,7 +214,7 @@ class File extends ContentEntityBase implements FileInterface {
       try {
         \Drupal::service('file_system')->delete($entity->getFileUri());
       }
-      catch (FileException $e) {
+      catch (FileException) {
         // Ignore and continue.
       }
     }
@@ -274,6 +282,22 @@ class File extends ContentEntityBase implements FileInterface {
    */
   public static function getDefaultEntityOwner() {
     return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function invalidateTagsOnSave($update) {
+    $tags = $this->getListCacheTagsToInvalidate();
+    // Always invalidate the 404 or 403 response cache because while files do
+    // not have a canonical URL as such, they may be served via routes such as
+    // private files.
+    // Creating or updating an entity may change a cached 403 or 404 response.
+    $tags = Cache::mergeTags($tags, ['4xx-response']);
+    if ($update) {
+      $tags = Cache::mergeTags($tags, $this->getCacheTagsToInvalidate());
+    }
+    Cache::invalidateTags($tags);
   }
 
 }

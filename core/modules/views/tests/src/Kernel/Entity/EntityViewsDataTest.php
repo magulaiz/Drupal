@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Entity;
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -44,9 +46,7 @@ class EntityViewsDataTest extends KernelTestBase {
   protected $commonBaseFields;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'user',
@@ -89,19 +89,19 @@ class EntityViewsDataTest extends KernelTestBase {
 
     // Base fields for the test entity types.
     $this->commonBaseFields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Name'))
-      ->setDescription(t('The name of the test entity.'))
+      ->setLabel('Name')
+      ->setDescription('The name of the test entity.')
       ->setTranslatable(TRUE)
       ->setSetting('max_length', 32);
 
     $this->commonBaseFields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Authored on'))
-      ->setDescription(t('Time the entity was created'))
+      ->setLabel('Authored on')
+      ->setDescription('Time the entity was created')
       ->setTranslatable(TRUE);
 
     $this->commonBaseFields['user_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('User ID'))
-      ->setDescription(t('The ID of the associated user.'))
+      ->setLabel('User ID')
+      ->setDescription('The ID of the associated user.')
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
       // Default EntityTest entities to have the root user as the owner, to
@@ -147,14 +147,14 @@ class EntityViewsDataTest extends KernelTestBase {
    * @param \Drupal\Core\Field\BaseFieldDefinition[] $base_fields
    *   An array of base field definitions
    */
-  protected function setUpEntityType(EntityTypeInterface $definition, array $base_fields = []) {
+  protected function setUpEntityType(EntityTypeInterface $definition, array $base_fields = []): void {
     // Replace the cache backend in the entity type manager so it returns
     // our test entity type in addition to the existing ones.
     $definitions = $this->entityTypeManager->getDefinitions();
     $definitions[$definition->id()] = $definition;
 
     $cache_backend = $this->prophesize(CacheBackendInterface::class);
-    $cache_data = new \StdClass();
+    $cache_data = new \stdClass();
     $cache_data->data = $definitions;
     $cache_backend->get('entity_type')->willReturn($cache_data);
     $this->entityTypeManager->setCacheBackend($cache_backend->reveal(), 'entity_type', ['entity_types']);
@@ -168,7 +168,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests base tables.
    */
-  public function testBaseTables() {
+  public function testBaseTables(): void {
     $data = $this->entityTypeManager->getHandler('entity_test', 'views_data')->getViewsData();
 
     $this->assertEquals('entity_test', $data['entity_test']['table']['entity type']);
@@ -180,7 +180,7 @@ class EntityViewsDataTest extends KernelTestBase {
     $this->assertEquals(['entity_test_list_cache_context'], $data['entity_test']['table']['base']['cache_contexts']);
     $this->assertEquals('Entity test', $data['entity_test']['table']['base']['title']);
 
-    // TODO: change these to assertArrayNotHasKey().
+    // @todo Change these to assertArrayNotHasKey().
     $this->assertFalse(isset($data['entity_test']['table']['defaults']));
 
     $this->assertFalse(isset($data['entity_test_mul_property_data']));
@@ -191,7 +191,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests data_table support.
    */
-  public function testDataTable() {
+  public function testDataTable(): void {
     $entity_type = $this->baseEntityType
       ->set('data_table', 'entity_test_mul_property_data')
       ->set('id', 'entity_test_mul')
@@ -202,8 +202,8 @@ class EntityViewsDataTest extends KernelTestBase {
 
     // Tests the join definition between the base and the data table.
     $data = $this->entityTypeManager->getHandler('entity_test_mul', 'views_data')->getViewsData();
-    // TODO: change the base table in the entity type definition to match the
-    // changed entity ID.
+    // @todo Change the base table in the entity type definition to match the
+    //   changed entity ID.
     $base_views_data = $data['entity_test'];
 
     // Ensure that the base table is set to the data table.
@@ -227,7 +227,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests revision table without data table support.
    */
-  public function testRevisionTableWithoutDataTable() {
+  public function testRevisionTableWithoutDataTable(): void {
     $entity_type = $this->baseEntityType
       ->set('revision_table', 'entity_test_mulrev_revision')
       ->set('revision_data_table', NULL)
@@ -256,12 +256,17 @@ class EntityViewsDataTest extends KernelTestBase {
     $this->assertCount(1, $revision_data['table']['join']);
     $this->assertEquals(['entity_test' => ['left_field' => 'revision_id', 'field' => 'revision_id', 'type' => 'INNER']], $revision_data['table']['join']);
     $this->assertFalse(isset($data['data_table']));
+
+    $this->assertEquals('entity_test', $revision_data['id']['relationship']['base']);
+    $this->assertEquals('id', $revision_data['id']['relationship']['base field']);
+    $this->assertEquals('entity_test', $revision_data['revision_id']['relationship']['base']);
+    $this->assertEquals('revision_id', $revision_data['revision_id']['relationship']['base field']);
   }
 
   /**
    * Tests revision table with data table support.
    */
-  public function testRevisionTableWithRevisionDataTableAndDataTable() {
+  public function testRevisionTableWithRevisionDataTableAndDataTable(): void {
     $entity_type = $this->baseEntityType
       ->set('data_table', 'entity_test_mul_property_data')
       ->set('revision_table', 'entity_test_mulrev_revision')
@@ -279,6 +284,7 @@ class EntityViewsDataTest extends KernelTestBase {
 
     $this->assertEquals('entity_test_mulrev', $data['entity_test_mulrev_property_revision']['table']['entity type']);
     $this->assertEquals('Entity test revision', $data['entity_test_mulrev_revision']['table']['group']);
+    $this->assertTrue($data['entity_test_mulrev_revision']['table']['entity revision']);
     $this->assertEquals('entity_test', $data['entity_test']['table']['provider']);
 
     // Ensure the join information is set up properly.
@@ -294,22 +300,31 @@ class EntityViewsDataTest extends KernelTestBase {
     ], $revision_field_data['table']['join']);
 
     $revision_base_data = $data['entity_test_mulrev_revision'];
-    $this->assertCount(1, $revision_base_data['table']['join']);
+    $this->assertCount(2, $revision_base_data['table']['join']);
     $this->assertEquals([
       'entity_test_mulrev_property_revision' => [
         'left_field' => 'revision_id',
         'field' => 'revision_id',
         'type' => 'INNER',
       ],
+      'entity_test_mul_property_data' => [
+        'left_field' => 'revision_id',
+        'field' => 'revision_id',
+      ],
     ], $revision_base_data['table']['join']);
 
     $this->assertFalse(isset($data['data_table']));
+
+    $this->assertEquals('entity_test_mul_property_data', $revision_field_data['id']['relationship']['base']);
+    $this->assertEquals('id', $revision_field_data['id']['relationship']['base field']);
+    $this->assertEquals('entity_test_mul_property_data', $revision_field_data['revision_id']['relationship']['base']);
+    $this->assertEquals('revision_id', $revision_field_data['revision_id']['relationship']['base field']);
   }
 
   /**
    * Tests revision table with data table support.
    */
-  public function testRevisionTableWithRevisionDataTable() {
+  public function testRevisionTableWithRevisionDataTable(): void {
     $entity_type = $this->baseEntityType
       ->set('revision_table', 'entity_test_mulrev_revision')
       ->set('revision_data_table', 'entity_test_mulrev_property_revision')
@@ -326,6 +341,7 @@ class EntityViewsDataTest extends KernelTestBase {
 
     $this->assertEquals('entity_test_mulrev', $data['entity_test_mulrev_property_revision']['table']['entity type']);
     $this->assertEquals('Entity test revision', $data['entity_test_mulrev_revision']['table']['group']);
+    $this->assertTrue($data['entity_test_mulrev_revision']['table']['entity revision']);
     $this->assertEquals('entity_test', $data['entity_test']['table']['provider']);
 
     // Ensure the join information is set up properly.
@@ -341,21 +357,30 @@ class EntityViewsDataTest extends KernelTestBase {
     ], $revision_field_data['table']['join']);
 
     $revision_base_data = $data['entity_test_mulrev_revision'];
-    $this->assertCount(1, $revision_base_data['table']['join']);
+    $this->assertCount(2, $revision_base_data['table']['join']);
     $this->assertEquals([
       'entity_test_mulrev_property_revision' => [
         'left_field' => 'revision_id',
         'field' => 'revision_id',
         'type' => 'INNER',
       ],
+      'entity_test_mulrev_field_data' => [
+        'left_field' => 'revision_id',
+        'field' => 'revision_id',
+      ],
     ], $revision_base_data['table']['join']);
     $this->assertFalse(isset($data['data_table']));
+
+    $this->assertEquals('entity_test_mulrev_field_data', $revision_field_data['id']['relationship']['base']);
+    $this->assertEquals('id', $revision_field_data['id']['relationship']['base field']);
+    $this->assertEquals('entity_test_mulrev_field_data', $revision_field_data['revision_id']['relationship']['base']);
+    $this->assertEquals('revision_id', $revision_field_data['revision_id']['relationship']['base field']);
   }
 
   /**
    * Tests fields on the base table.
    */
-  public function testBaseTableFields() {
+  public function testBaseTableFields(): void {
     $data = $this->entityTypeManager->getHandler('entity_test', 'views_data')->getViewsData();
 
     $this->assertNumericField($data['entity_test']['id']);
@@ -395,7 +420,8 @@ class EntityViewsDataTest extends KernelTestBase {
     $this->assertEquals([
       'left_field' => 'id',
       'field' => 'entity_id',
-      'extra' => [[
+      'extra' => [
+        [
           'field' => 'deleted',
           'value' => 0,
           'numeric' => TRUE,
@@ -407,7 +433,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests fields on the data table.
    */
-  public function testDataTableFields() {
+  public function testDataTableFields(): void {
     $entity_test_type = new ConfigEntityType([
       'class' => ConfigEntityBase::class,
       'id' => 'entity_test_bundle',
@@ -483,7 +509,8 @@ class EntityViewsDataTest extends KernelTestBase {
     $this->assertEquals([
       'left_field' => 'id',
       'field' => 'entity_id',
-      'extra' => [[
+      'extra' => [
+        [
           'field' => 'deleted',
           'value' => 0,
           'numeric' => TRUE,
@@ -495,7 +522,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests fields on the revision table.
    */
-  public function testRevisionTableFields() {
+  public function testRevisionTableFields(): void {
     $entity_type = $this->baseEntityType
       ->set('id', 'entity_test_mulrev')
       ->set('base_table', 'entity_test_mulrev')
@@ -512,16 +539,16 @@ class EntityViewsDataTest extends KernelTestBase {
     $base_field_definitions['user_id']->setRevisionable(TRUE);
 
     $base_field_definitions['non_rev_field'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Non Revisionable Field'))
-      ->setDescription(t('A non-revisionable test field.'))
+      ->setLabel('Non Revisionable Field')
+      ->setDescription('A non-revisionable tes field.')
       ->setRevisionable(FALSE)
       ->setTranslatable(TRUE)
       ->setCardinality(1)
       ->setReadOnly(TRUE);
 
     $base_field_definitions['non_mul_field'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Non translatable'))
-      ->setDescription(t('A non-translatable string field'))
+      ->setLabel('Non translatable')
+      ->setDescription('A non-translatable string field')
       ->setRevisionable(TRUE);
 
     $this->setUpEntityType($entity_type, $base_field_definitions);
@@ -548,7 +575,8 @@ class EntityViewsDataTest extends KernelTestBase {
     // table.
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['revision_id']));
 
-    // Also ensure that field_data only fields don't appear on the revision table.
+    // Also ensure that field_data only fields don't appear on the revision
+    // table.
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['id']));
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['name']));
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['description']));
@@ -583,6 +611,11 @@ class EntityViewsDataTest extends KernelTestBase {
     $this->assertNumericField($data['entity_test_mulrev_property_revision']['id']);
     $this->assertViewsDataField($data['entity_test_mulrev_property_revision']['id'], 'id');
 
+    $this->assertEquals('entity_test_mulrev_property_data', $data['entity_test_mulrev_property_revision']['id']['relationship']['base']);
+    $this->assertEquals('id', $data['entity_test_mulrev_property_revision']['id']['relationship']['base field']);
+    $this->assertEquals('entity_test_mulrev_property_data', $data['entity_test_mulrev_property_revision']['revision_id']['relationship']['base']);
+    $this->assertEquals('revision_id', $data['entity_test_mulrev_property_revision']['revision_id']['relationship']['base field']);
+
     $this->assertLanguageField($data['entity_test_mulrev_property_revision']['langcode']);
     $this->assertViewsDataField($data['entity_test_mulrev_property_revision']['langcode'], 'langcode');
     $this->assertEquals('Translation language', $data['entity_test_mulrev_property_revision']['langcode']['title']);
@@ -608,7 +641,8 @@ class EntityViewsDataTest extends KernelTestBase {
     $this->assertEquals([
       'left_field' => 'id',
       'field' => 'entity_id',
-      'extra' => [[
+      'extra' => [
+        [
           'field' => 'deleted',
           'value' => 0,
           'numeric' => TRUE,
@@ -621,13 +655,26 @@ class EntityViewsDataTest extends KernelTestBase {
     $this->assertEquals([
       'left_field' => 'revision_id',
       'field' => 'entity_id',
-      'extra' => [[
+      'extra' => [
+        [
           'field' => 'deleted',
           'value' => 0,
           'numeric' => TRUE,
         ],
       ],
     ], $data['entity_test_mulrev_revision__string']['table']['join']['entity_test_mulrev_property_revision']);
+  }
+
+  /**
+   * Tests EntityViewsData deprecations.
+   *
+   * @group legacy
+   */
+  public function testDeprecations(): void {
+    $this->baseEntityType->setHandlerClass('views_data', EntityViewsDataWithDeprecations::class);
+    $this->setUpEntityType($this->baseEntityType, $this->commonBaseFields);
+    $this->expectDeprecation('Drupal\views\EntityViewsData::getFieldStorageDefinitions() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No replacement is provided. See https://www.drupal.org/node/3240278');
+    $this->entityTypeManager->getHandler('entity_test', 'views_data')->getViewsData();
   }
 
   /**
@@ -737,7 +784,7 @@ class EntityViewsDataTest extends KernelTestBase {
    * @internal
    */
   protected function assertLanguageField(array $data): void {
-    $this->assertEquals('field', $data['field']['id']);
+    $this->assertEquals('field_language', $data['field']['id']);
     $this->assertEquals('language', $data['filter']['id']);
     $this->assertEquals('language', $data['argument']['id']);
     $this->assertEquals('standard', $data['sort']['id']);
@@ -751,7 +798,8 @@ class EntityViewsDataTest extends KernelTestBase {
   protected function assertEntityReferenceField(array $data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('numeric', $data['filter']['id']);
-    $this->assertEquals('numeric', $data['argument']['id']);
+    $this->assertEquals('entity_target_id', $data['argument']['id']);
+    $this->assertEquals('user', $data['argument']['target_entity_type_id']);
     $this->assertEquals('standard', $data['sort']['id']);
   }
 
@@ -792,6 +840,25 @@ class TestEntityType extends ContentEntityType {
 }
 
 /**
+ * Extend EntityViewsData as a module would do.
+ *
+ * Include calls to deprecated methods.
+ */
+class EntityViewsDataWithDeprecations extends EntityViewsData {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getViewsData() {
+    // Deprecated method.
+    // @phpstan-ignore-next-line
+    $this->getFieldStorageDefinitions();
+    return [];
+  }
+
+}
+
+/**
  * Generic entity class for our test entity types.
  *
  * Allows mocked base field definitions.
@@ -817,7 +884,7 @@ class ViewsTestEntity extends ContentEntityBase {
    *   The array of base field definitions to mock. These are added to the
    *   defaults ones from the parent class.
    */
-  public static function setMockedBaseFieldDefinitions(string $entity_type_id, array $definitions) {
+  public static function setMockedBaseFieldDefinitions(string $entity_type_id, array $definitions): void {
     static::$mockedBaseFieldDefinitions[$entity_type_id] = $definitions;
   }
 

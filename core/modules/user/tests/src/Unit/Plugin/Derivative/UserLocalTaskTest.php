@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Unit\Plugin\Derivative;
 
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -22,28 +24,37 @@ class UserLocalTaskTest extends UnitTestCase {
    */
   protected $deriver;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
     $prophecy = $this->prophesize(EntityTypeInterface::class);
-    $prophecy->get('field_ui_base_route')->willReturn(NULL);
-    $entity_no_bundle_type = $prophecy->reveal();
+    $prophecy->hasLinkTemplate('entity-permissions-form')->willReturn(FALSE);
+    $entity_no_link_template = $prophecy->reveal();
 
     $prophecy = $this->prophesize(EntityTypeInterface::class);
-    $prophecy->get('field_ui_base_route')->willReturn('field_ui.base_route');
-    $prophecy->getBundleEntityType()->willReturn(NULL);
-    $entity_bundle_type = $prophecy->reveal();
+    $prophecy->hasLinkTemplate('entity-permissions-form')->willReturn(TRUE);
+    $prophecy->getBundleOf()->willReturn(NULL);
+    $entity_no_bundle_of = $prophecy->reveal();
 
     $prophecy = $this->prophesize(EntityTypeInterface::class);
+    $prophecy->hasLinkTemplate('entity-permissions-form')->willReturn(TRUE);
+    $prophecy->getBundleOf()->willReturn('content_entity_type_id');
+    $entity_bundle_of = $prophecy->reveal();
+
+    $prophecy = $this->prophesize(EntityTypeInterface::class);
+    $prophecy->hasLinkTemplate('entity-permissions-form')->willReturn(FALSE);
     $prophecy->get('field_ui_base_route')->willReturn('field_ui.base_route');
-    $prophecy->getBundleEntityType()->willReturn('field_ui_bundle_type');
-    $field_ui_bundle_type = $prophecy->reveal();
+    $content_entity_type = $prophecy->reveal();
 
     $prophecy = $this->prophesize(EntityTypeManagerInterface::class);
     $prophecy->getDefinitions()->willReturn([
-      'case_no_bundle_type' => $entity_no_bundle_type,
-      'case_bundle_type' => $entity_bundle_type,
-      'case_field_ui' => $field_ui_bundle_type,
+      'entity_no_link_template_id' => $entity_no_link_template,
+      'entity_no_bundle_of_id' => $entity_no_bundle_of,
+      'entity_bundle_of_id' => $entity_bundle_of,
+      'content_entity_type_id' => $content_entity_type,
     ]);
     $entity_type_manager = $prophecy->reveal();
 
@@ -53,12 +64,12 @@ class UserLocalTaskTest extends UnitTestCase {
   /**
    * Tests the derivatives generated for local tasks.
    *
-   * @covers \Drupal\user\Plugin\Derivative\UserLocalTask::getDerivativeDefinitions()
+   * @covers \Drupal\user\Plugin\Derivative\UserLocalTask::getDerivativeDefinitions
    */
-  public function testGetDerivativeDefinitions() {
+  public function testGetDerivativeDefinitions(): void {
     $expected = [
-      'permissions_field_ui_bundle_type' => [
-        'route_name' => 'entity.field_ui_bundle_type.permission_form',
+      'permissions_entity_bundle_of_id' => [
+        'route_name' => 'entity.entity_bundle_of_id.entity_permissions_form',
         'weight' => 10,
         'title' => $this->getStringTranslationStub()->translate('Manage permissions'),
         'base_route' => 'field_ui.base_route',

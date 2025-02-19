@@ -1,40 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\Random;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
-use Drupal\Tests\Traits\PhpUnitWarnings;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\VarDumper\VarDumper;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Provides a base class and helpers for Drupal unit tests.
  *
- * Using Symfony's dump() function() in Unit tests will produce output on the
+ * Module tests extending UnitTestCase must exist in the
+ * Drupal\Tests\your_module\Unit namespace and live in the
+ * modules/your_module/tests/src/Unit directory.
+ *
+ * Tests for core/lib/Drupal classes extending UnitTestCase must exist in the
+ * \Drupal\Tests\Core namespace and live in the core/lib/tests/Drupal/Tests/Core
+ * directory.
+ *
+ * Using Symfony's dump() function in Unit tests will produce output on the
  * command line.
  *
  * @ingroup testing
  */
 abstract class UnitTestCase extends TestCase {
 
-  use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
+  use ProphecyTrait;
   use ExpectDeprecationTrait;
-
-  /**
-   * The random generator.
-   *
-   * @var \Drupal\Component\Utility\Random
-   */
-  protected $randomGenerator;
+  use RandomGeneratorTrait;
 
   /**
    * The app root.
@@ -46,7 +49,7 @@ abstract class UnitTestCase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public static function setUpBeforeClass() {
+  public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
   }
@@ -54,7 +57,7 @@ abstract class UnitTestCase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Ensure that an instantiated container in the global state of \Drupal from
     // a previous test does not leak into this test.
@@ -67,56 +70,7 @@ abstract class UnitTestCase extends TestCase {
     FileCacheFactory::setPrefix('prefix');
 
     $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
-  }
-
-  /**
-   * Generates a unique random string containing letters and numbers.
-   *
-   * @param int $length
-   *   Length of random string to generate.
-   *
-   * @return string
-   *   Randomly generated unique string.
-   *
-   * @see \Drupal\Component\Utility\Random::name()
-   */
-  public function randomMachineName($length = 8) {
-    return $this->getRandomGenerator()->name($length, TRUE);
-  }
-
-  /**
-   * Gets the random generator for the utility methods.
-   *
-   * @return \Drupal\Component\Utility\Random
-   *   The random generator
-   */
-  protected function getRandomGenerator() {
-    if (!is_object($this->randomGenerator)) {
-      $this->randomGenerator = new Random();
-    }
-    return $this->randomGenerator;
-  }
-
-  /**
-   * Asserts if two arrays are equal by sorting them first.
-   *
-   * @param array $expected
-   *   An expected results array.
-   * @param array $actual
-   *   The actual array value.
-   * @param string $message
-   *   An optional error message.
-   *
-   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
-   *   ::assertEquals, ::assertEqualsCanonicalizing, or ::assertSame instead.
-   *
-   * @see https://www.drupal.org/node/3136304
-   */
-  protected function assertArrayEquals(array $expected, array $actual, $message = NULL) {
-    @trigger_error(__METHOD__ . "() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::assertEquals(), ::assertEqualsCanonicalizing(), or ::assertSame() instead. See https://www.drupal.org/node/3136304", E_USER_DEPRECATED);
-    ksort($expected);
-    ksort($actual);
-    $this->assertEquals($expected, $actual, !empty($message) ? $message : '');
+    chdir($this->root);
   }
 
   /**
@@ -130,9 +84,8 @@ abstract class UnitTestCase extends TestCase {
    *   configuration object names and whose values are key => value arrays for
    *   the configuration object in question. Defaults to an empty array.
    *
-   * @return \PHPUnit\Framework\MockObject\MockBuilder
-   *   A MockBuilder object for the ConfigFactory with the desired return
-   *   values.
+   * @return \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\Config\ConfigFactoryInterface
+   *   A mock configuration factory object.
    */
   public function getConfigFactoryStub(array $configs = []) {
     $config_get_map = [];
@@ -186,32 +139,6 @@ abstract class UnitTestCase extends TestCase {
   }
 
   /**
-   * Returns a stub config storage that returns the supplied configuration.
-   *
-   * @param array $configs
-   *   An associative array of configuration settings whose keys are
-   *   configuration object names and whose values are key => value arrays
-   *   for the configuration object in question.
-   *
-   * @return \Drupal\Core\Config\StorageInterface
-   *   A mocked config storage.
-   */
-  public function getConfigStorageStub(array $configs) {
-    $config_storage = $this->createMock('Drupal\Core\Config\NullStorage');
-    $config_storage->expects($this->any())
-      ->method('listAll')
-      ->will($this->returnValue(array_keys($configs)));
-
-    foreach ($configs as $name => $config) {
-      $config_storage->expects($this->any())
-        ->method('read')
-        ->with($this->equalTo($name))
-        ->will($this->returnValue($config));
-    }
-    return $config_storage;
-  }
-
-  /**
    * Returns a stub translation manager that just returns the passed string.
    *
    * @return \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\StringTranslation\TranslationInterface
@@ -222,6 +149,7 @@ abstract class UnitTestCase extends TestCase {
     $translation->expects($this->any())
       ->method('translate')
       ->willReturnCallback(function ($string, array $args = [], array $options = []) use ($translation) {
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         return new TranslatableMarkup($string, $args, $options, $translation);
       });
     $translation->expects($this->any())
@@ -252,7 +180,7 @@ abstract class UnitTestCase extends TestCase {
     $container->expects($this->any())
       ->method('get')
       ->with('cache_tags.invalidator')
-      ->will($this->returnValue($cache_tags_validator));
+      ->willReturn($cache_tags_validator);
 
     \Drupal::setContainer($container);
     return $container;

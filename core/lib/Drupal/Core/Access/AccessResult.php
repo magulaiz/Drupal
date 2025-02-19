@@ -143,7 +143,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
     if ($conjunction == 'AND' && !empty($permissions)) {
       $access = TRUE;
       foreach ($permissions as $permission) {
-        if (!$permission_access = $account->hasPermission($permission)) {
+        if (!$account->hasPermission($permission)) {
           $access = FALSE;
           break;
         }
@@ -151,7 +151,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
     }
     else {
       foreach ($permissions as $permission) {
-        if ($permission_access = $account->hasPermission($permission)) {
+        if ($account->hasPermission($permission)) {
           $access = TRUE;
           break;
         }
@@ -319,7 +319,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
     }
     else {
       $result = static::neutral();
-      if (!$this->isNeutral() || ($this->getCacheMaxAge() === 0 && $other->isNeutral()) || ($this->getCacheMaxAge() !== 0 && $other instanceof CacheableDependencyInterface && $other->getCacheMaxAge() !== 0)) {
+      if ($this->getCacheMaxAge() === 0  || ($other instanceof CacheableDependencyInterface && $other->getCacheMaxAge() !== 0)) {
         $merge_other = TRUE;
       }
 

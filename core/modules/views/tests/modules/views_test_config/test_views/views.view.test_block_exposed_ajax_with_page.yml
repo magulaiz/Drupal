@@ -6,7 +6,7 @@ dependencies:
   module:
     - node
 id: test_block_exposed_ajax_with_page
-label: ''
+label: test_block_exposed_ajax_with_page
 module: views
 description: ''
 tag: ''
@@ -35,7 +35,7 @@ display:
           field: type
           id: type
           table: node_field_data
-          plugin_id: in_operator
+          plugin_id: bundle
           entity_type: node
           entity_field: type
       pager:

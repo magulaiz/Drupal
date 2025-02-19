@@ -106,7 +106,7 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
   public function getByFields(array $field_names) {
     $this->groupViolationOffsets();
     $violations = [];
-    foreach (array_intersect_key($this->violationOffsetsByField, array_flip($field_names)) as $field_name => $offsets) {
+    foreach (array_intersect_key($this->violationOffsetsByField, array_flip($field_names)) as $offsets) {
       foreach ($offsets as $offset) {
         $violations[] = $this->get($offset);
       }
@@ -160,7 +160,7 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
   /**
    * {@inheritdoc}
    */
-  public function filterByFieldAccess(AccountInterface $account = NULL) {
+  public function filterByFieldAccess(?AccountInterface $account = NULL) {
     $filtered_fields = [];
     foreach ($this->getFieldNames() as $field_name) {
       if (!$this->entity->get($field_name)->access('edit', $account)) {
@@ -168,6 +168,20 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
       }
     }
     return $this->filterByFields($filtered_fields);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function findByCodes(string|array $codes): static {
+    $violations = [];
+    foreach ($this as $violation) {
+      if (in_array($violation->getCode(), $codes, TRUE)) {
+        $violations[] = $violation;
+      }
+    }
+
+    return new static($this->getEntity(), $violations);
   }
 
   /**
@@ -188,7 +202,7 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
   /**
    * {@inheritdoc}
    */
-  public function add(ConstraintViolationInterface $violation) {
+  public function add(ConstraintViolationInterface $violation): void {
     parent::add($violation);
     $this->violationOffsetsByField = NULL;
     $this->entityViolationOffsets = NULL;
@@ -197,7 +211,7 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
   /**
    * {@inheritdoc}
    */
-  public function remove($offset) {
+  public function remove($offset): void {
     parent::remove($offset);
     $this->violationOffsetsByField = NULL;
     $this->entityViolationOffsets = NULL;
@@ -206,7 +220,7 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
   /**
    * {@inheritdoc}
    */
-  public function set($offset, ConstraintViolationInterface $violation) {
+  public function set($offset, ConstraintViolationInterface $violation): void {
     parent::set($offset, $violation);
     $this->violationOffsetsByField = NULL;
     $this->entityViolationOffsets = NULL;

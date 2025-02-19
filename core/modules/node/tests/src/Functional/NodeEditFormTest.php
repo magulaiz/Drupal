@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\NodeInterface;
@@ -39,12 +41,13 @@ class NodeEditFormTest extends NodeTestBase {
   protected $nodeStorage;
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'node', 'datetime'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -64,7 +67,7 @@ class NodeEditFormTest extends NodeTestBase {
   /**
    * Checks node edit functionality.
    */
-  public function testNodeEdit() {
+  public function testNodeEdit(): void {
     $this->drupalLogin($this->webUser);
 
     $title_key = 'title[0][value]';
@@ -84,9 +87,10 @@ class NodeEditFormTest extends NodeTestBase {
     $this->clickLink('Edit');
     $this->assertSession()->addressEquals($node->toUrl('edit-form'));
 
-    // Check that the title and body fields are displayed with the correct values.
+    // Check that the title and body fields are displayed with the correct
+    // values.
     // @todo Ideally assertLink would support HTML, but it doesn't.
-    $this->assertSession()->responseContains('Edit<span class="visually-hidden">(active tab)</span>');
+    $this->assertSession()->responseContains('Edit');
     $this->assertSession()->fieldValueEquals($title_key, $edit[$title_key]);
     $this->assertSession()->fieldValueEquals($body_key, $edit[$body_key]);
 
@@ -97,7 +101,8 @@ class NodeEditFormTest extends NodeTestBase {
     // Stay on the current page, without reloading.
     $this->submitForm($edit, 'Save');
 
-    // Check that the title and body fields are displayed with the updated values.
+    // Check that the title and body fields are displayed with the updated
+    // values.
     $this->assertSession()->pageTextContains($edit[$title_key]);
     $this->assertSession()->pageTextContains($edit[$body_key]);
 
@@ -123,8 +128,9 @@ class NodeEditFormTest extends NodeTestBase {
     $this->assertSame($node->getOwnerId(), $revised_node->getOwnerId(), 'The node author has been preserved.');
     // Ensure that the revision authors are different since the revisions were
     // made by different users.
-    $first_node_version = node_revision_load($node->getRevisionId());
-    $second_node_version = node_revision_load($revised_node->getRevisionId());
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
+    $first_node_version = $node_storage->loadRevision($node->getRevisionId());
+    $second_node_version = $node_storage->loadRevision($revised_node->getRevisionId());
     $this->assertNotSame($first_node_version->getRevisionUser()->id(), $second_node_version->getRevisionUser()->id(), 'Each revision has a distinct user.');
 
     // Check if the node revision checkbox is rendered on node edit form.
@@ -151,7 +157,6 @@ class NodeEditFormTest extends NodeTestBase {
     $this->drupalGet("node/" . $node->id() . "/edit");
     $edit = ['status[value]' => FALSE];
     $this->submitForm($edit, 'Save');
-    $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $this->assertFalse($node->isPublished(), 'Node is unpublished');
   }
@@ -159,7 +164,7 @@ class NodeEditFormTest extends NodeTestBase {
   /**
    * Tests changing a node's "authored by" field.
    */
-  public function testNodeEditAuthoredBy() {
+  public function testNodeEditAuthoredBy(): void {
     $this->drupalLogin($this->adminUser);
 
     // Create node to edit.
@@ -199,7 +204,6 @@ class NodeEditFormTest extends NodeTestBase {
     // Save the node without making any changes.
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm([], 'Save');
-    $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $this->assertSame($this->webUser->id(), $node->getOwner()->id());
 
@@ -212,7 +216,6 @@ class NodeEditFormTest extends NodeTestBase {
     // author ID.
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm([], 'Save');
-    $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $this->assertSame($this->webUser->id(), $node->getOwner()->id());
   }
@@ -220,7 +223,7 @@ class NodeEditFormTest extends NodeTestBase {
   /**
    * Tests the node meta information.
    */
-  public function testNodeMetaInformation() {
+  public function testNodeMetaInformation(): void {
     // Check that regular users (i.e. without the 'administer nodes' permission)
     // can not see the meta information.
     $this->drupalLogin($this->webUser);
@@ -262,7 +265,7 @@ class NodeEditFormTest extends NodeTestBase {
    * @param string $form_element_name
    *   The name of the form element to populate.
    */
-  protected function checkVariousAuthoredByValues(NodeInterface $node, $form_element_name) {
+  protected function checkVariousAuthoredByValues(NodeInterface $node, $form_element_name): void {
     // Try to change the 'authored by' field to an invalid user name.
     $edit = [
       $form_element_name => 'invalid-name',
@@ -276,7 +279,6 @@ class NodeEditFormTest extends NodeTestBase {
     $edit[$form_element_name] = '';
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
-    $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $uid = $node->getOwnerId();
     // Most SQL database drivers stringify fetches but entities are not
@@ -295,7 +297,6 @@ class NodeEditFormTest extends NodeTestBase {
     // logged in).
     $edit[$form_element_name] = $this->webUser->getAccountName();
     $this->submitForm($edit, 'Save');
-    $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $this->assertSame($this->webUser->id(), $node->getOwnerId(), 'Node authored by normal user.');
   }

@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 
@@ -12,12 +13,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_user",
- *   source_module = "user"
- * )
  */
+#[MigrateSource(
+  id: 'd7_user',
+  source_module: 'user',
+)]
 class User extends FieldableEntity {
 
   /**
@@ -76,7 +76,7 @@ class User extends FieldableEntity {
       ->fetchCol();
     $row->setSourceProperty('roles', $roles);
 
-    $row->setSourceProperty('data', unserialize($row->getSourceProperty('data')));
+    $row->setSourceProperty('data', unserialize($row->getSourceProperty('data') ?? ''));
 
     // If this entity was translated using Entity Translation, we need to get
     // its source language to get the field values in the right language.

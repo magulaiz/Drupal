@@ -14,6 +14,8 @@ use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore abempty
+
 /**
  * Defines an object that holds information about a URL.
  *
@@ -210,7 +212,7 @@ class Url implements TrustedCallbackInterface {
     // passed is a relative URI reference rather than an absolute URI,
     // because these are URI reserved characters that a scheme name may not
     // start with.
-    if ((strpos($user_input, '/') !== 0) && (strpos($user_input, '#') !== 0) && (strpos($user_input, '?') !== 0)) {
+    if (!str_starts_with($user_input, '/') && !str_starts_with($user_input, '#') && !str_starts_with($user_input, '?')) {
       throw new \InvalidArgumentException("The user-entered string '$user_input' must begin with a '/', '?', or '#'.");
     }
 
@@ -242,7 +244,7 @@ class Url implements TrustedCallbackInterface {
    *   you may use entity:{entity_type}/{entity_id} URIs. The internal: scheme
    *   should be avoided except when processing actual user input that may or
    *   may not correspond to a Drupal route. Normally use Url::fromRoute() for
-   *   code linking to any any Drupal page.
+   *   code linking to any Drupal page.
    * @param array $options
    *   (optional) An associative array of additional URL options, with the
    *   following elements:
@@ -284,7 +286,7 @@ class Url implements TrustedCallbackInterface {
       throw new \InvalidArgumentException("The URI '$uri' is malformed.");
     }
     // We support protocol-relative URLs.
-    if (strpos($uri, '//') === 0) {
+    if (str_starts_with($uri, '//')) {
       $uri_parts['scheme'] = '';
     }
     elseif (empty($uri_parts['scheme'])) {
@@ -480,8 +482,12 @@ class Url implements TrustedCallbackInterface {
    *   would get an access denied running the same request via the normal page
    *   flow.
    *
-   * @throws \Drupal\Core\Routing\MatchingRouteNotFoundException
-   *   Thrown when the request cannot be matched.
+   * @throws Symfony\Component\Routing\Exception\NoConfigurationException
+   *   If no routing configuration could be found.
+   * @throws Symfony\Component\Routing\Exception\ResourceNotFoundException
+   *   If no matching resource could be found.
+   * @throws Symfony\Component\Routing\Exception\MethodNotAllowedException
+   *   If a matching resource was found but the request method is not allowed.
    */
   public static function createFromRequest(Request $request) {
     // We use the router without access checks because URL objects might be
@@ -493,7 +499,7 @@ class Url implements TrustedCallbackInterface {
   }
 
   /**
-   * Sets this Url to encapsulate an unrouted URI.
+   * Sets this URL to encapsulate an unrouted URI.
    *
    * @return $this
    */
@@ -535,18 +541,20 @@ class Url implements TrustedCallbackInterface {
   }
 
   /**
-   * Indicates if this Url is external.
+   * Indicates if this URL is external.
    *
    * @return bool
+   *   TRUE if the URL is external, FALSE otherwise.
    */
   public function isExternal() {
     return $this->external;
   }
 
   /**
-   * Indicates if this Url has a Drupal route.
+   * Indicates if this URL has a Drupal route.
    *
    * @return bool
+   *   TRUE if there is a Drupal route for the URL, FALSE otherwise.
    */
   public function isRouted() {
     return !$this->unrouted;
@@ -556,13 +564,14 @@ class Url implements TrustedCallbackInterface {
    * Returns the route name.
    *
    * @return string
+   *   The name of the route.
    *
-   * @throws \UnexpectedValueException.
+   * @throws \UnexpectedValueException
    *   If this is a URI with no corresponding route.
    */
   public function getRouteName() {
     if ($this->unrouted) {
-      throw new \UnexpectedValueException('External URLs do not have an internal route name.');
+      throw new \UnexpectedValueException($this->getUri() . ' has no corresponding route.');
     }
 
     return $this->routeName;
@@ -572,8 +581,9 @@ class Url implements TrustedCallbackInterface {
    * Returns the route parameters.
    *
    * @return array
+   *   An associative array of route parameters.
    *
-   * @throws \UnexpectedValueException.
+   * @throws \UnexpectedValueException
    *   If this is a URI with no corresponding route.
    */
   public function getRouteParameters() {
@@ -592,7 +602,7 @@ class Url implements TrustedCallbackInterface {
    *
    * @return $this
    *
-   * @throws \UnexpectedValueException.
+   * @throws \UnexpectedValueException
    *   If this is a URI with no corresponding route.
    */
   public function setRouteParameters($parameters) {
@@ -613,7 +623,7 @@ class Url implements TrustedCallbackInterface {
    *
    * @return $this
    *
-   * @throws \UnexpectedValueException.
+   * @throws \UnexpectedValueException
    *   If this is a URI with no corresponding route.
    */
   public function setRouteParameter($key, $value) {
@@ -725,7 +735,7 @@ class Url implements TrustedCallbackInterface {
    * Sets the value of the absolute option for this Url.
    *
    * @param bool $absolute
-   *   (optional) Whether to make this Url absolute or not. Defaults to TRUE.
+   *   (optional) Whether to make this URL absolute or not. Defaults to TRUE.
    *
    * @return $this
    */
@@ -764,23 +774,6 @@ class Url implements TrustedCallbackInterface {
   }
 
   /**
-   * Returns the route information for a render array.
-   *
-   * @return array
-   *   An associative array suitable for a render array.
-   */
-  public function toRenderArray() {
-    $render_array = [
-      '#url' => $this,
-      '#options' => $this->getOptions(),
-    ];
-    if (!$this->unrouted) {
-      $render_array['#access_callback'] = [get_class(), 'renderAccess'];
-    }
-    return $render_array;
-  }
-
-  /**
    * Returns the internal path (system path) for this route.
    *
    * This path will not include any prefixes, fragments, or query strings.
@@ -788,7 +781,7 @@ class Url implements TrustedCallbackInterface {
    * @return string
    *   The internal path for this route.
    *
-   * @throws \UnexpectedValueException.
+   * @throws \UnexpectedValueException
    *   If this is a URI with no corresponding system path.
    */
   public function getInternalPath() {
@@ -819,7 +812,7 @@ class Url implements TrustedCallbackInterface {
    *   returned, i.e. TRUE means access is explicitly allowed, FALSE means
    *   access is either explicitly forbidden or "no opinion".
    */
-  public function access(AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access(?AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($this->isRouted()) {
       return $this->accessManager()->checkNamedRoute($this->getRouteName(), $this->getRouteParameters(), $account, $return_as_object);
     }
@@ -827,20 +820,8 @@ class Url implements TrustedCallbackInterface {
   }
 
   /**
-   * Checks a Url render element against applicable access check services.
-   *
-   * @param array $element
-   *   A render element as returned from \Drupal\Core\Url::toRenderArray().
-   *
-   * @return bool
-   *   Returns TRUE if the current user has access to the url, otherwise FALSE.
-   */
-  public static function renderAccess(array $element) {
-    return $element['#url']->access();
-  }
-
-  /**
    * @return \Drupal\Core\Access\AccessManagerInterface
+   *   The access manager service.
    */
   protected function accessManager() {
     if (!isset($this->accessManager)) {
@@ -883,7 +864,7 @@ class Url implements TrustedCallbackInterface {
    *
    * @return $this
    */
-  public function setUrlGenerator(UrlGeneratorInterface $url_generator = NULL) {
+  public function setUrlGenerator(?UrlGeneratorInterface $url_generator = NULL) {
     $this->urlGenerator = $url_generator;
     $this->internalPath = NULL;
     return $this;
@@ -906,7 +887,7 @@ class Url implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['renderAccess'];
+    return [];
   }
 
 }

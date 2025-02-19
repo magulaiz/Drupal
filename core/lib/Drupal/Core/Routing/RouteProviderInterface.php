@@ -3,14 +3,11 @@
 namespace Drupal\Core\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Cmf\Component\Routing\RouteProviderInterface as RouteProviderBaseInterface;
 
 /**
- * Extends the router provider interface.
- *
- * @see \Symfony\Cmf\Component\Routing
+ * Defines the route provider interface.
  */
-interface RouteProviderInterface extends RouteProviderBaseInterface {
+interface RouteProviderInterface {
 
   /**
    * Finds routes that may potentially match the request.
@@ -20,7 +17,7 @@ interface RouteProviderInterface extends RouteProviderBaseInterface {
    * RouteObjectInterface to link to a content document.
    *
    * This method may not throw an exception based on implementation specific
-   * restrictions on the url. That case is considered a not found - returning
+   * restrictions on the URL. That case is considered a not found - returning
    * an empty array. Exceptions are only used to abort the whole request in
    * case something is seriously broken, like the storage backend being down.
    *
@@ -72,7 +69,7 @@ interface RouteProviderInterface extends RouteProviderBaseInterface {
    *   The list of names to retrieve, In case of null, the provider will
    *   determine what routes to return
    *
-   * @return \Symfony\Component\Routing\Route[]
+   * @return \Symfony\Component\Routing\Route|\Symfony\Component\Routing\Alias[]
    *   Iterable list with the keys being the names from the $names array
    */
   public function getRoutesByNames($names);
@@ -106,5 +103,19 @@ interface RouteProviderInterface extends RouteProviderBaseInterface {
    * Resets the route provider object.
    */
   public function reset();
+
+  /**
+   * Gets aliases for a route name.
+   *
+   * The aliases can be found using the ::getAliases() method of the returned
+   * route collection.
+   *
+   * @param string $route_name
+   *   The route name.
+   *
+   * @return iterable<\Symfony\Component\Routing\Alias>
+   *   Iterable list of aliases for the given route name.
+   */
+  public function getRouteAliases(string $route_name): iterable;
 
 }
