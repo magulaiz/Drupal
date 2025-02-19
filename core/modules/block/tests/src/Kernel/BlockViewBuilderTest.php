@@ -252,7 +252,7 @@ class BlockViewBuilderTest extends KernelTestBase {
 
     $default_keys = ['entity_view', 'block', 'test_block'];
     $default_contexts = [];
-    $default_tags = ['block_view', 'config:block.block.test_block'];
+    $default_tags = ['config:block_list'];
     $default_max_age = Cache::PERMANENT;
 
     // hook_block_build_alter() adds an additional cache key.
