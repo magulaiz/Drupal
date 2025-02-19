@@ -170,6 +170,20 @@ class LinkUriTest extends KernelTestBase {
   }
 
   /**
+   * Tests disabling route validation with Query Parameters in LinkUri::transform().
+   *
+   * @covers ::transform
+   */
+  public function testDisablingRouteValidationWithQueryParams(): void {
+
+    $value = 'http://example.com?query=test';
+    $expected = 'http://example.com?query=test';
+
+    $actual = $this->doTransform($value, ['validate_route' => false]);
+    $this->assertSame($expected, $actual);
+  }
+  
+  /**
    * Transforms a link path into an 'internal:' or 'entity:' URI.
    *
    * @param string $value
