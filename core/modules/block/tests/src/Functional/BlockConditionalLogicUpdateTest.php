@@ -45,7 +45,7 @@ class BlockConditionalLogicUpdateTest extends UpdatePathTestBase {
 
     $this->assertNull(Block::load('claro_content')->get('condition_logic'));
     $this->runUpdates();
-    $this->assertSame('and', Block::load('claro_content')->get('condition_logic'));
+    $this->assertSame('and', Block::load('claro_content')->get('settings')['condition_logic']);
   }
 
 }

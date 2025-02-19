@@ -41,7 +41,7 @@ function block_post_update_make_weight_integer(array &$sandbox = []): void {
 function block_post_update_move_custom_block_library(&$sandbox = NULL): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'block', function (BlockInterface $block): bool {
     $settings = $block->get('settings');
-    if (\array_key_exists('condition_logic', $settings) === FALSE) {
+    if (\array_key_exists('condition_logic', $settings) === FALSE && $block->uuid() !== NULL) {
       $settings['condition_logic'] = 'and';
       $block->set('settings', $settings);
       return TRUE;
