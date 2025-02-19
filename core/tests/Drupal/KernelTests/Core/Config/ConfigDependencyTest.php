@@ -660,7 +660,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
   /**
    * @covers ::getEntityTypeIdByName
    */
-  public function testgetEntityTypeIdByName(): void {
+  public function testGetEntityTypeIdByName(): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
