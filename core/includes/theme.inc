@@ -16,6 +16,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeHelper;
+use Drupal\Core\Theme\ThemeCommonElements;
 use Drupal\Core\Theme\ThemeSettings;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
@@ -84,11 +85,11 @@ function _system_default_theme_features() {
 /**
  * Allows themes and/or theme engines to easily discover overridden templates.
  *
- * @param $cache
+ * @param array $cache
  *   The existing cache of theme hooks to test against.
- * @param $extension
+ * @param string $extension
  *   The extension that these templates will have.
- * @param $path
+ * @param string $path
  *   The path to search.
  */
 function drupal_find_theme_templates($cache, $extension, $path) {
@@ -198,9 +199,9 @@ function drupal_find_theme_templates($cache, $extension, $path) {
  * To only retrieve the default global theme setting, an empty string should be
  * given for $theme.
  *
- * @param $setting_name
+ * @param string $setting_name
  *   The name of the setting to be retrieved.
- * @param $theme
+ * @param string $theme
  *   The name of a given theme; defaults to the current theme.
  *
  * @return mixed
@@ -285,8 +286,6 @@ function theme_get_setting($setting_name, $theme = NULL) {
 /**
  * Converts theme settings to configuration.
  *
- * @see system_theme_settings_submit()
- *
  * @param array $theme_settings
  *   An array of theme settings from system setting form or a Drupal 7 variable.
  * @param \Drupal\Core\Config\Config $config
@@ -294,6 +293,8 @@ function theme_get_setting($setting_name, $theme = NULL) {
  *
  * @return \Drupal\Core\Config\Config
  *   The Config object with updated data.
+ *
+ * @see system_theme_settings_submit()
  */
 function theme_settings_convert_to_config(array $theme_settings, Config $config) {
   foreach ($theme_settings as $key => $value) {
@@ -824,8 +825,8 @@ function template_preprocess_table(&$variables): void {
 
         // Track responsive classes for each column as needed. Only the header
         // cells for a column are marked up with the responsive classes by a
-        // module developer or themer. The responsive classes on the header cells
-        // must be transferred to the content cells.
+        // module developer or themer. The responsive classes on the header
+        // cells must be transferred to the content cells.
         if (!empty($cell['class']) && is_array($cell['class'])) {
           if (in_array(RESPONSIVE_PRIORITY_MEDIUM, $cell['class'])) {
             $responsive_classes[$responsive_index] = RESPONSIVE_PRIORITY_MEDIUM;
@@ -1059,20 +1060,23 @@ function template_preprocess_maintenance_task_list(&$variables): void {
  *
  * See the @link themeable Default theme implementations topic @endlink for
  * details.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is
+ *   no replacement, default preprocess variables are added for all theme hooks
+ *   directly in \Drupal\Core\Theme\ThemeManager.
+ *
+ * @see https://www.drupal.org/node/2340341
  */
 function template_preprocess(&$variables, $hook, $info) {
-  // Merge in variables that don't depend on hook and don't change during a
-  // single page request.
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['default_variables'] = &drupal_static(__FUNCTION__);
+  @trigger_error('template_preprocess() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement, default preprocess variables are added for all theme hooks directly in \Drupal\Core\Theme\ThemeManager. See https://www.drupal.org/node/2340341', E_USER_DEPRECATED);
+
+  $themeManager = \Drupal::service('theme.manager');
+  // ThemeManager::getDefaultTemplateVariables() is not on the interface, it is
+  // internal and only public for backwards compatibility, verify it really
+  // exists.
+  if (method_exists($themeManager, 'getDefaultTemplateVariables')) {
+    $variables += $themeManager->getDefaultTemplateVariables();
   }
-  $default_variables = &$drupal_static_fast['default_variables'];
-  if (!isset($default_variables)) {
-    $default_variables = _template_preprocess_default_variables();
-  }
-  $variables += $default_variables;
 
   // When theming a render element, merge its #attributes into
   // $variables['attributes'].
@@ -1082,31 +1086,6 @@ function template_preprocess(&$variables, $hook, $info) {
       $variables['attributes'] = AttributeHelper::mergeCollections($variables['attributes'], $variables[$key]['#attributes']);
     }
   }
-}
-
-/**
- * Returns hook-independent variables to template_preprocess().
- */
-function _template_preprocess_default_variables() {
-  // Variables that don't depend on a database connection.
-  $variables = [
-    'attributes' => [],
-    'title_attributes' => [],
-    'content_attributes' => [],
-    'title_prefix' => [],
-    'title_suffix' => [],
-    'db_is_active' => !defined('MAINTENANCE_MODE'),
-    'is_admin' => FALSE,
-    'logged_in' => FALSE,
-  ];
-
-  // Give modules a chance to alter the default template variables.
-  \Drupal::moduleHandler()->alter('template_preprocess_default_variables', $variables);
-
-  // Tell all templates where they are located.
-  $variables['directory'] = \Drupal::theme()->getActiveTheme()->getPath();
-
-  return $variables;
 }
 
 /**
@@ -1245,12 +1224,12 @@ function template_preprocess_page(&$variables): void {
  * variables from within preprocess functions, when wanting to base the
  * additional suggestions or classes on the path of the current page.
  *
- * @param $args
+ * @param array $args
  *   An array of path arguments.
- * @param $base
+ * @param string $base
  *   A string identifying the base 'thing' from which more specific suggestions
  *   are derived. For example, 'page' or 'html'.
- * @param $delimiter
+ * @param string $delimiter
  *   The string used to delimit increasingly specific information. The default
  *   of '__' is appropriate for theme hook suggestions. '-' is appropriate for
  *   extra classes.
@@ -1461,7 +1440,8 @@ function template_preprocess_field_multiple_value_form(&$variables): void {
 
   if ($variables['multiple']) {
     $table_id = Html::getUniqueId($element['#field_name'] . '_values');
-    $order_class = $element['#field_name'] . '-delta-order';
+    // Using table id allows handing nested content with the same field names.
+    $order_class = $table_id . '-delta-order';
     $header_attributes = new Attribute(['class' => ['label']]);
     if (!empty($element['#required'])) {
       $header_attributes['class'][] = 'js-form-required';
@@ -1804,153 +1784,13 @@ function _field_multiple_value_form_sort_helper($a, $b) {
 
 /**
  * Provides theme registration for themes across .inc files.
+ *
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\Core\Theme\ThemeCommonElements::commonElements() instead,
+ *
+ * @see https://www.drupal.org/node/3488470
  */
-function drupal_common_theme() {
-  return [
-    // From theme.inc.
-    'html' => [
-      'render element' => 'html',
-    ],
-    'page' => [
-      'render element' => 'page',
-    ],
-    'page_title' => [
-      'variables' => ['title' => NULL],
-    ],
-    'region' => [
-      'render element' => 'elements',
-    ],
-    'time' => [
-      'variables' => ['timestamp' => NULL, 'text' => NULL, 'attributes' => []],
-    ],
-    'datetime_form' => [
-      'render element' => 'element',
-    ],
-    'datetime_wrapper' => [
-      'render element' => 'element',
-    ],
-    'status_messages' => [
-      'variables' => ['status_headings' => [], 'message_list' => NULL],
-    ],
-    'links' => [
-      'variables' => ['links' => [], 'attributes' => ['class' => ['links']], 'heading' => [], 'set_active_class' => FALSE],
-    ],
-    'dropbutton_wrapper' => [
-      'variables' => ['children' => NULL],
-    ],
-    'image' => [
-      // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
-      // allows the alt attribute to be omitted in some cases. Therefore,
-      // default the alt attribute to an empty string, but allow code providing
-      // variables to image.html.twig templates to pass explicit NULL for it to
-      // be omitted. Usually, neither omission nor an empty string satisfies
-      // accessibility requirements, so it is strongly encouraged for code
-      // building variables for image.html.twig templates to pass a meaningful
-      // value for the alt variable.
-      // - https://www.w3.org/TR/REC-html40/struct/objects.html#h-13.8
-      // - https://www.w3.org/TR/xhtml1/dtds.html
-      // - http://dev.w3.org/html5/spec/Overview.html#alt
-      // The title attribute is optional in all cases, so it is omitted by
-      // default.
-      'variables' => ['uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => [], 'sizes' => NULL, 'srcset' => [], 'style_name' => NULL],
-    ],
-    'breadcrumb' => [
-      'variables' => ['links' => []],
-    ],
-    'table' => [
-      'variables' => ['header' => NULL, 'rows' => NULL, 'footer' => NULL, 'attributes' => [], 'caption' => NULL, 'colgroups' => [], 'sticky' => FALSE, 'responsive' => TRUE, 'empty' => ''],
-    ],
-    'tablesort_indicator' => [
-      'variables' => ['style' => NULL],
-    ],
-    'mark' => [
-      'variables' => ['status' => MARK_NEW],
-    ],
-    'item_list' => [
-      'variables' => ['items' => [], 'title' => '', 'list_type' => 'ul', 'wrapper_attributes' => [], 'attributes' => [], 'empty' => NULL, 'context' => []],
-    ],
-    'feed_icon' => [
-      'variables' => ['url' => NULL, 'title' => NULL, 'attributes' => []],
-    ],
-    'progress_bar' => [
-      'variables' => ['label' => NULL, 'percent' => NULL, 'message' => NULL],
-    ],
-    'indentation' => [
-      'variables' => ['size' => 1],
-    ],
-    // From theme.maintenance.inc.
-    'maintenance_page' => [
-      'render element' => 'page',
-    ],
-    'install_page' => [
-      'render element' => 'page',
-    ],
-    'maintenance_task_list' => [
-      'variables' => ['items' => NULL, 'active' => NULL, 'variant' => NULL],
-    ],
-    'authorize_report' => [
-      'variables' => ['messages' => [], 'attributes' => []],
-      'includes' => ['core/includes/theme.maintenance.inc'],
-      'template' => 'authorize-report',
-    ],
-    'pager' => [
-      'render element' => 'pager',
-    ],
-    'menu' => [
-      'variables' => ['menu_name' => NULL, 'items' => [], 'attributes' => []],
-    ],
-    'menu_local_task' => [
-      'render element' => 'element',
-    ],
-    'menu_local_action' => [
-      'render element' => 'element',
-    ],
-    'menu_local_tasks' => [
-      'variables' => ['primary' => [], 'secondary' => []],
-    ],
-    // From form.inc.
-    'input' => [
-      'render element' => 'element',
-    ],
-    'select' => [
-      'render element' => 'element',
-    ],
-    'fieldset' => [
-      'render element' => 'element',
-    ],
-    'details' => [
-      'render element' => 'element',
-    ],
-    'radios' => [
-      'render element' => 'element',
-    ],
-    'checkboxes' => [
-      'render element' => 'element',
-    ],
-    'form' => [
-      'render element' => 'element',
-    ],
-    'textarea' => [
-      'render element' => 'element',
-    ],
-    'form_element' => [
-      'render element' => 'element',
-    ],
-    'form_element_label' => [
-      'render element' => 'element',
-    ],
-    'vertical_tabs' => [
-      'render element' => 'element',
-    ],
-    'container' => [
-      'render element' => 'element',
-    ],
-    // From field system.
-    'field' => [
-      'render element' => 'element',
-    ],
-    'field_multiple_value_form' => [
-      'render element' => 'element',
-    ],
-  ];
+function drupal_common_theme(): array {
+  @trigger_error('drupal_common_theme() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Theme\ThemeCommonElements::commonElements() instead. See https://www.drupal.org/node/3488470', E_USER_DEPRECATED);
+  return ThemeCommonElements::commonElements();
 }

@@ -90,7 +90,8 @@ class CssOptimizer implements AssetOptimizerInterface {
     // Store base path.
     $this->rewriteFileURIBasePath = $css_base_path . '/';
 
-    // Anchor all paths in the CSS with its base URL, ignoring external and absolute paths and paths starting with '#'.
+    // Anchor all paths in the CSS with its base URL, ignoring external and
+    // absolute paths and paths starting with '#'.
     return preg_replace_callback('/url\(\s*[\'"]?(?![a-z]+:|\/+|#|%23)([^\'")]+)[\'"]?\s*\)/i', [$this, 'rewriteFileURI'], $contents);
   }
 
@@ -109,11 +110,11 @@ class CssOptimizer implements AssetOptimizerInterface {
    * it is not on the AssetOptimizerInterface, so any future refactoring can
    * make it protected.
    *
-   * @param $file
+   * @param string $file
    *   Name of the stylesheet to be processed.
-   * @param $optimize
+   * @param bool|null $optimize
    *   Defines if CSS contents should be compressed or not.
-   * @param $reset_base_path
+   * @param bool $reset_base_path
    *   Used internally to facilitate recursive resolution of @import commands.
    *
    * @return string
@@ -151,7 +152,8 @@ class CssOptimizer implements AssetOptimizerInterface {
       if ($encoding = (Unicode::encodingFromBOM($contents))) {
         $contents = mb_substr(Unicode::convertToUtf8($contents, $encoding), 1);
       }
-      // If no BOM, check for fallback encoding. Per CSS spec the regex is very strict.
+      // If no BOM, check for fallback encoding. Per CSS spec the regex is very
+      // strict.
       elseif (preg_match('/^@charset "([^"]+)";/', $contents, $matches)) {
         if ($matches[1] !== 'utf-8' && $matches[1] !== 'UTF-8') {
           $contents = substr($contents, strlen($matches[0]));
@@ -203,9 +205,9 @@ class CssOptimizer implements AssetOptimizerInterface {
   /**
    * Processes the contents of a stylesheet for aggregation.
    *
-   * @param $contents
+   * @param string $contents
    *   The contents of the stylesheet.
-   * @param $optimize
+   * @param bool $optimize
    *   (optional) Boolean whether CSS contents should be minified. Defaults to
    *   FALSE.
    *
