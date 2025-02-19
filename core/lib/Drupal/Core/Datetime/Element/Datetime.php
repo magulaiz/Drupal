@@ -245,6 +245,12 @@ class Datetime extends DateElementBase {
     if ($element['#date_date_element'] != 'none') {
 
       $date_format = $element['#date_date_element'] != 'none' ? static::getHtml5DateFormat($element) : '';
+      // With a datetime-local input, the date value is always normalized to
+      // the format Y-m-d\TH:i
+      // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local
+      // 'html_datetime' returned by static::getHtml5DateFormat($element) is not
+      // a valid format.
+      // @see https://www.drupal.org/project/drupal/issues/3505318
       if ($element['#date_date_element'] === 'datetime-local') {
         $date_format = DateFormat::load('html_date')->getPattern() . '\T' . DateFormat::load('html_time')->getPattern();
       }

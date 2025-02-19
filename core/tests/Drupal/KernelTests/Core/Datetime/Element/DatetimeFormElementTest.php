@@ -85,6 +85,10 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
   }
 
   /**
+   * Checks that we have no errors on form submit.
+   *
+   * Test only applied to 'datetime-local' date element.
+   *
    * @covers ::validateDatetime
    */
   public function testDatetimeLocalNoExceptionMetOnSubmit(): void {
@@ -95,6 +99,10 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
   }
 
   /**
+   * Checks expected values are returned by ::valueCallback().
+   *
+   * Test only applied to 'datetime-local' date element.
+   *
    * @covers ::valueCallback
    */
   public function testDatetimeLocalValueCallback(): void {
@@ -121,6 +129,10 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
   }
 
   /**
+   * Checks expected values are returned by ::processDatetime().
+   *
+   * Test only applied to 'datetime-local' date element.
+   *
    * @covers ::processDatetime
    */
   public function testDatetimeLocalProcessDatetime(): void {
