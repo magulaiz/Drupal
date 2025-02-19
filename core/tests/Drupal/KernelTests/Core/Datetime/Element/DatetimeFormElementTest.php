@@ -13,6 +13,8 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\Tests\EntityViewTrait;
 
 /**
+ * Tests static callbacks returns and form submission with datetime elements.
+ *
  * @coversDefaultClass \Drupal\Core\Datetime\Element\Datetime
  * @group Datetime
  */
@@ -85,13 +87,17 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
   }
 
   /**
-   * Checks that we have no errors on form submit.
-   *
-   * Test only applied to 'datetime-local' date element.
+   * Checks we have no errors on form submit.
    *
    * @covers ::validateDatetime
    */
-  public function testDatetimeLocalNoExceptionMetOnSubmit(): void {
+  public function testNoErrorMetOnFormSubmit(): void {
+    // No error expected when form elements have no value.
+    $form_state = new FormState();
+    $this->formBuilder->submitForm($this, $form_state);
+    $this->assertEmpty($form_state->getErrors());
+
+    // No error expected when a datetime-local element has a valid value.
     $form_state = new FormState();
     $form_state->setValue('datetime_local_picker', ['date' => '2025-02-18T12:00']);
     $this->formBuilder->submitForm($this, $form_state);
