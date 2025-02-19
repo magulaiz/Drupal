@@ -179,10 +179,10 @@ class LinkUriTest extends KernelTestBase {
     $value = 'http://example.com?query=test';
     $expected = 'http://example.com?query=test';
 
-    $actual = $this->doTransform($value, ['validate_route' => false]);
+    $actual = $this->doTransform($value, ['validate_route' => FALSE]);
     $this->assertSame($expected, $actual);
   }
-  
+
   /**
    * Transforms a link path into an 'internal:' or 'entity:' URI.
    *
