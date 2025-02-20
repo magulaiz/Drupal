@@ -133,4 +133,10 @@ function comment_update_10200(&$sandbox = NULL): void {
     ];
     $connection->schema()->changeField('comment_field_data', 'subject', 'subject', $new);
   }
+
+  $entityDefinitionUpdateManager = \Drupal::entityDefinitionUpdateManager();
+  $fieldStorageDefinition = $entityDefinitionUpdateManager->getFieldStorageDefinition('subject', 'comment');
+  $fieldStorageDefinition->setSetting('max_length', 255);
+  $entityDefinitionUpdateManager->updateFieldStorageDefinition($fieldStorageDefinition);
+
 }
