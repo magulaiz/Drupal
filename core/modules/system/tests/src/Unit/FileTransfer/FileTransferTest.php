@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Unit\FileTransfer;
 
-use Drupal\Tests\system\Functional\FileTransfer\MockTestConnection;
-use Drupal\Tests\system\Functional\FileTransfer\TestFileTransfer;
+use Drupal\Tests\system\Kernel\FileTransfer\MockTestConnection;
+use Drupal\Tests\system\Kernel\FileTransfer\TestFileTransfer;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
 class FileTransferTest extends UnitTestCase {
 
   /**
-   * @var \Drupal\Tests\system\Functional\FileTransfer\TestFileTransfer
+   * @var \Drupal\Tests\system\Kernel\FileTransfer\TestFileTransfer
    */
   protected TestFileTransfer $testConnection;
 
