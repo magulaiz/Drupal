@@ -87,9 +87,12 @@
             const $summary = $that.find('> summary');
             // We're only interested in the summary's first child node to prevent
             // duplicate text in the title.
-            const title = $summary.length && $summary[0].childNodes.length ? $summary[0].firstChild.textContent : '';
+            const title =
+              $summary.length && $summary[0].childNodes.length
+                ? $summary[0].firstChild.textContent
+                : '';
             const verticalTab = new Drupal.verticalTab({
-              title: title,
+              title,
               details: $that,
             });
             tabList.append(verticalTab.item);
