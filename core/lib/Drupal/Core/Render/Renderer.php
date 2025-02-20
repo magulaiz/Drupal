@@ -602,7 +602,7 @@ class Renderer implements RendererInterface {
    * Loads an element's default values based on its type.
    *
    * @param array $element
-   *  The render array representing the element.
+   *   The render array representing the element.
    */
   protected function loadElementDefaults(array &$element): void {
     if (isset($element['#type']) && empty($element['#defaults_loaded'])) {
