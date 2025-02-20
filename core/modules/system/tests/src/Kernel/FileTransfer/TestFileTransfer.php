@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\FileTransfer;
 
-use Drupal\Core\FileTransfer\ChmodInterface;
 use Drupal\Core\FileTransfer\FileTransfer;
 
 /**
  * Mock FileTransfer object for test case.
  */
-class TestFileTransfer extends FileTransfer implements ChmodInterface {
+class TestFileTransfer extends FileTransfer {
 
   /**
    * {@inheritdoc}
    */
-  protected $hostname = '';
+  protected $host = '';
 
   /**
    * {@inheritdoc}
@@ -31,13 +30,6 @@ class TestFileTransfer extends FileTransfer implements ChmodInterface {
    * {@inheritdoc}
    */
   protected $port = 0;
-
-  /**
-   * The connection.
-   *
-   * @var \Drupal\Tests\system\Kernel\FileTransfer\MockTestConnection
-   */
-  protected MockTestConnection $connection;
 
   /**
    * This is for testing the CopyRecursive logic.
@@ -57,7 +49,7 @@ class TestFileTransfer extends FileTransfer implements ChmodInterface {
   /**
    * {@inheritdoc}
    */
-  public function connect() {
+  public function connect(): void {
     $this->connection = new MockTestConnection();
     // Access the connection via the property. The property used to be set via a
     // magic method and this can cause problems if coded incorrectly.
@@ -68,48 +60,48 @@ class TestFileTransfer extends FileTransfer implements ChmodInterface {
   /**
    * {@inheritdoc}
    */
-  protected function copyFileJailed($source, $destination) {
+  protected function copyFileJailed($source, $destination): void {
     $this->connection->run("copyFile $source $destination");
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function removeDirectoryJailed($directory) {
+  protected function removeDirectoryJailed($directory): void {
     $this->connection->run("rmdir $directory");
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function createDirectoryJailed($directory) {
+  protected function createDirectoryJailed($directory): void {
     $this->connection->run("mkdir $directory");
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function removeFileJailed($destination) {
+  protected function removeFileJailed($destination): void {
     $this->connection->run("rm $destination");
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isDirectory($path) {
+  public function isDirectory($path): bool {
     return $this->shouldIsDirectoryReturnTrue;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isFile($path) {
+  public function isFile($path): false {
     return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function chmodJailed($path, $mode, $recursive) {}
+  public function chmodJailed($path, $mode, $recursive): void {}
 
 }
