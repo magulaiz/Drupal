@@ -20,12 +20,12 @@ use Drupal\system\Entity\Action;
 /**
  * Tests Content Entity Translate action.
  *
- * @covers \Drupal\content_translation\Plugin\Action\TranslateAction
+ * @covers \Drupal\content_translation\Plugin\Action\CreateEntityTranslationAction
  *
  * @group action
  * @group content_translation
  */
-class TranslateActionTest extends KernelTestBase {
+class CreateEntityTranslationActionTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -138,7 +138,7 @@ class TranslateActionTest extends KernelTestBase {
   /**
    * Tests Content Entity Translate action.
    */
-  public function testTranslateAction(): void {
+  public function testCreateEntityTranslationAction(): void {
     // Create a translate action config.
     $action = Action::create([
       'id' => 'translate_action',

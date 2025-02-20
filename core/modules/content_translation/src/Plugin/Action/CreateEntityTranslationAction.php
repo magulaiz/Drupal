@@ -6,6 +6,8 @@ namespace Drupal\content_translation\Plugin\Action;
 
 use Drupal\content_translation\ContentTranslationManagerInterface;
 use Drupal\content_translation\Plugin\Action\Derivative\ContentEntityTranslatableActionDeriver;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -27,7 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   action_label: new TranslatableMarkup('Translate'),
   deriver: ContentEntityTranslatableActionDeriver::class
 )]
-class TranslateAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
+class CreateEntityTranslationAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   public function __construct(
     array $configuration,
@@ -113,19 +115,12 @@ class TranslateAction extends ConfigurableActionBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function execute($entity = NULL): void {
-    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-    if ($entity === NULL || !$entity->isTranslatable()) {
-      return;
-    }
-
     $target_langcodes = array_filter($this->configuration['target_langcodes']);
-    if (empty($target_langcodes)) {
-      return;
-    }
 
     $source_langcode = $this->configuration['source_langcode'];
     $content_translation_manager = $this->contentTranslationManager;
 
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $source_translation = $entity->hasTranslation($source_langcode) ? $entity->getTranslation($source_langcode) : $entity;
     // Avoid "Invalid translation language (und) specified" errors.
     $source_translation_metadata = $content_translation_manager->getTranslationMetadata($source_translation);
@@ -186,7 +181,17 @@ class TranslateAction extends ConfigurableActionBase implements ContainerFactory
   /**
    * {@inheritdoc}
    */
-  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE): bool {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE): bool|AccessResultInterface  {
+    // Make sure the entity a content entity and is translatable.
+    if (!($object instanceof ContentEntityInterface && $object->getEntityType()->isTranslatable())) {
+      return $return_as_object ? AccessResult::forbidden() : FALSE;
+    }
+
+    // Make sure the target languages are set.
+    if (empty(array_filter($this->configuration['target_langcodes']))) {
+      return $return_as_object ? AccessResult::forbidden() : FALSE;
+    }
+
     /** @var \Drupal\Core\Entity\ContentEntityInterface $object */
     return $object->access('update', $account, $return_as_object);
   }

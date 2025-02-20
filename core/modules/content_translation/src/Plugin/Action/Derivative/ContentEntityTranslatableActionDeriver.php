@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 /**
  * Provides an action deriver that finds translatable content entity types.
  *
- * @see \Drupal\content_translation\Plugin\Action\TranslateAction
+ * @see \Drupal\content_translation\Plugin\Action\CreateEntityTranslationAction
  */
 class ContentEntityTranslatableActionDeriver extends EntityActionDeriverBase {
 
