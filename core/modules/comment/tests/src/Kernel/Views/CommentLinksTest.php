@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Kernel\Views;
 
 use Drupal\comment\CommentManagerInterface;
+use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -39,6 +40,14 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
     parent::setUp($import_test_views);
 
     $this->installEntitySchema('entity_test');
+
+    // Create the comment type for entity_test.
+    CommentType::create([
+      'id' => 'entity_test_comment',
+      'label' => 'foo',
+      'description' => '',
+      'target_entity_type_id' => 'entity_test',
+    ])->save();
   }
 
   /**
@@ -54,7 +63,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
       'entity_type' => 'entity_test',
       'field_name' => 'comment',
       'entity_id' => $host->id(),
-      'comment_type' => 'entity_test',
+      'comment_type' => 'entity_test_comment',
       'status' => 0,
     ]);
     $comment->save();
@@ -139,7 +148,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
       'uid' => $this->adminUser->id(),
       'entity_type' => 'entity_test',
       'entity_id' => $host->id(),
-      'comment_type' => 'entity_test',
+      'comment_type' => 'entity_test_comment',
       'field_name' => $field_storage_comment->getName(),
       'status' => 0,
     ]);
