@@ -35,7 +35,7 @@ class BlockBaseTest extends KernelTestBase {
     $form = [];
     $form_state = new FormState();
     $form = $block->buildConfigurationForm($form, $form_state);
-    self::assertArrayHasKey('context_mapping', $form);
+    $this->assertArrayHasKey('context_mapping', $form);
 
     // Check that context mapping is stored in block's configuration.
     $context_mapping = [
@@ -43,7 +43,7 @@ class BlockBaseTest extends KernelTestBase {
     ];
     $form_state->setValue('context_mapping', $context_mapping);
     $block->submitConfigurationForm($form, $form_state);
-    self::assertEquals($context_mapping, $block->getConfiguration()['context_mapping'] ?? NULL);
+    $this->assertEquals($context_mapping, $block->getConfiguration()['context_mapping'] ?? NULL);
   }
 
 }
