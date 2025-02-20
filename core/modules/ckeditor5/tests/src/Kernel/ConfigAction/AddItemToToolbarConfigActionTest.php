@@ -13,7 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * @covers \Drupal\ckeditor5\Plugin\ConfigAction\AddItemToToolbar
- * @covers ckeditor5_config_action_alter()
+ * @covers \Drupal\ckeditor5\Hook\Ckeditor5Hooks::configActionAlter()
  * @group ckeditor5
  * @group Recipe
  */
@@ -66,17 +66,12 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
    * @param string[] $expected_toolbar_items
    *   The items which should be in the editor toolbar, in the expected order.
    *
-   * @testWith ["sourceEditing", ["heading", "bold", "italic",
-   *   "sourceEditing"]]
-   *   [{"item_name": "sourceEditing"}, ["heading", "bold", "italic",
-   *   "sourceEditing"]]
-   *   [{"item_name": "sourceEditing", "position": 1}, ["heading",
-   *   "sourceEditing", "bold", "italic"]]
-   *   [{"item_name": "sourceEditing", "position": 1, "replace": true},
-   *   ["heading", "sourceEditing", "italic"]]
+   * @testWith ["sourceEditing", ["heading", "bold", "italic", "sourceEditing"]]
+   *   [{"item_name": "sourceEditing"}, ["heading", "bold", "italic", "sourceEditing"]]
+   *   [{"item_name": "sourceEditing", "position": 1}, ["heading", "sourceEditing", "bold", "italic"]]
+   *   [{"item_name": "sourceEditing", "position": 1, "replace": true}, ["heading", "sourceEditing", "italic"]]
    *   [{"item_name": "bold"}, ["heading", "bold", "italic"]]
-   *   [{"item_name": "bold", "allow_duplicate": true}, ["heading", "bold",
-   *   "italic", "bold"]]
+   *   [{"item_name": "bold", "allow_duplicate": true}, ["heading", "bold", "italic", "bold"]]
    */
   public function testAddItemToToolbar(string|array $action, array $expected_toolbar_items): void {
     $recipe = $this->createRecipe([
