@@ -181,7 +181,7 @@ class CreateEntityTranslationAction extends ConfigurableActionBase implements Co
   /**
    * {@inheritdoc}
    */
-  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE): bool|AccessResultInterface  {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE): bool|AccessResultInterface {
     // Make sure the entity a content entity and is translatable.
     if (!($object instanceof ContentEntityInterface && $object->getEntityType()->isTranslatable())) {
       return $return_as_object ? AccessResult::forbidden() : FALSE;
