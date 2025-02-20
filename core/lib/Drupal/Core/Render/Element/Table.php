@@ -115,7 +115,6 @@ class Table extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#header' => [],
       '#rows' => [],
@@ -129,10 +128,10 @@ class Table extends FormElementBase {
       '#multiple' => TRUE,
       '#js_select' => TRUE,
       '#process' => [
-        [$class, 'processTable'],
+        [static::class, 'processTable'],
       ],
       '#element_validate' => [
-        [$class, 'validateTable'],
+        [static::class, 'validateTable'],
       ],
       // Properties for tabledrag support.
       // The value is a list of arrays that are passed to
@@ -142,7 +141,7 @@ class Table extends FormElementBase {
       '#tabledrag' => [],
       // Render properties.
       '#pre_render' => [
-        [$class, 'preRenderTable'],
+        [static::class, 'preRenderTable'],
       ],
       '#theme' => 'table',
     ];
@@ -152,7 +151,8 @@ class Table extends FormElementBase {
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    // If #multiple is FALSE, the regular default value of radio buttons is used.
+    // If #multiple is FALSE, the regular default value of radio buttons is
+    // used.
     if (!empty($element['#tableselect']) && !empty($element['#multiple'])) {
       // Contrary to #type 'checkboxes', the default value of checkboxes in a
       // table is built from the array keys (instead of array values) of the
@@ -262,8 +262,9 @@ class Table extends FormElementBase {
           $row['select'] += [
             '#type' => $element['#multiple'] ? 'checkbox' : 'radio',
             '#id' => HtmlUtility::getUniqueId('edit-' . implode('-', $element_parents)),
-            // @todo If rows happen to use numeric indexes instead of string keys,
-            //   this results in a first row with $key === 0, which is always FALSE.
+            // @todo If rows happen to use numeric indexes instead of string
+            //   keys, this results in a first row with $key === 0, which is
+            //   always FALSE.
             '#return_value' => $key,
             '#attributes' => $element['#attributes'],
             '#wrapper_attributes' => [
@@ -335,54 +336,56 @@ class Table extends FormElementBase {
    *
    * Simple example usage:
    * @code
-   * $form['table'] = array(
+   * $form['table'] = [
    *   '#type' => 'table',
-   *   '#header' => array($this->t('Title'), array('data' => $this->t('Operations'), 'colspan' => '1')),
+   *   '#header' => [$this->t('Title'), ['data' => $this->t('Operations'), 'colspan' => '1']],
    *   // Optionally, to add tableDrag support:
-   *   '#tabledrag' => array(
-   *     array(
+   *   '#tabledrag' => [
+   *     [
    *       'action' => 'order',
    *       'relationship' => 'sibling',
    *       'group' => 'thing-weight',
-   *     ),
-   *   ),
-   * );
+   *     ],
+   *   ],
+   * ];
    * foreach ($things as $row => $thing) {
    *   $form['table'][$row]['#weight'] = $thing['weight'];
    *
-   *   $form['table'][$row]['title'] = array(
+   *   $form['table'][$row]['title'] = [
    *     '#type' => 'textfield',
    *     '#default_value' => $thing['title'],
-   *   );
+   *   ];
    *
    *   // Optionally, to add tableDrag support:
    *   $form['table'][$row]['#attributes']['class'][] = 'draggable';
-   *   $form['table'][$row]['weight'] = array(
+   *   $form['table'][$row]['weight'] = [
    *     '#type' => 'textfield',
-   *     '#title' => $this->t('Weight for @title', array('@title' => $thing['title'])),
+   *     '#title' => $this->t('Weight for @title', ['@title' => $thing['title']]),
    *     '#title_display' => 'invisible',
    *     '#size' => 4,
    *     '#default_value' => $thing['weight'],
-   *     '#attributes' => array('class' => array('thing-weight')),
+   *     '#attributes' => ['class' => ['thing-weight']],
    *   );
    *
    *   // The amount of link columns should be identical to the 'colspan'
    *   // attribute in #header above.
-   *   $form['table'][$row]['edit'] = array(
+   *   $form['table'][$row]['edit'] = [
    *     '#type' => 'link',
    *     '#title' => $this->t('Edit'),
    *     '#url' => Url::fromRoute('entity.test_entity.edit_form', ['test_entity' => $row]),
-   *   );
+   *   ];
    * }
    * @endcode
    *
    * @param array $element
-   *   A structured array containing two sub-levels of elements. Properties used:
+   *   A structured array containing two sub-levels of elements. Properties
+   *   used:
    *   - #tabledrag: The value is a list of $options arrays that are passed to
    *     drupal_attach_tabledrag(). The HTML ID of the table is added to each
    *     $options array.
    *
    * @return array
+   *   Associative array of rendered child elements for a table.
    *
    * @see template_preprocess_table()
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
@@ -422,9 +425,10 @@ class Table extends FormElementBase {
       $element['#attached']['library'][] = 'core/drupal.tableheader';
       $element['#attributes']['class'][] = 'sticky-header';
     }
-    // If the table has headers and it should react responsively to columns hidden
-    // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
-    // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
+    // If the table has headers and it should react responsively to columns
+    // hidden with the classes represented by the constants
+    // RESPONSIVE_PRIORITY_MEDIUM and RESPONSIVE_PRIORITY_LOW, add the
+    // tableresponsive behaviors.
     if (count($element['#header']) && $element['#responsive']) {
       $element['#attached']['library'][] = 'core/drupal.tableresponsive';
       // Add 'responsive-enabled' class to the table to identify it for JS.

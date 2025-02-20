@@ -34,10 +34,9 @@ class Link extends RenderElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#pre_render' => [
-        [$class, 'preRenderLink'],
+        [static::class, 'preRenderLink'],
       ],
     ];
   }
@@ -68,8 +67,8 @@ class Link extends RenderElementBase {
     // in #options.
     $element += ['#options' => []];
     // However, within the scope of renderable elements, #attributes is a valid
-    // way to specify attributes, too. Take them into account, but do not override
-    // attributes from #options.
+    // way to specify attributes, too. Take them into account, but do not
+    // override attributes from #options.
     if (isset($element['#attributes'])) {
       $element['#options'] += ['attributes' => []];
       $element['#options']['attributes'] += $element['#attributes'];
@@ -126,24 +125,24 @@ class Link extends RenderElementBase {
    * A typical example comes from node links, which are stored in a renderable
    * array similar to this:
    * @code
-   * $build['links'] = array(
+   * $build['links'] = [
    *   '#theme' => 'links__node',
-   *   '#pre_render' => array(Link::class, 'preRenderLinks'),
-   *   'comment' => array(
+   *   '#pre_render' => [Link::class, 'preRenderLinks'],
+   *   'comment' => [
    *     '#theme' => 'links__node__comment',
-   *     '#links' => array(
+   *     '#links' => [
    *       // An array of links associated with node comments, suitable for
    *       // passing in to links.html.twig.
    *     ),
    *   ),
-   *   'translation' => array(
+   *   'translation' => [
    *     '#theme' => 'links__node__translation',
-   *     '#links' => array(
+   *     '#links' => [
    *       // An array of links associated with node translation, suitable for
    *       // passing in to links.html.twig.
-   *     ),
-   *   ),
-   * );
+   *     ],
+   *   ],
+   * ];
    * @endcode
    *
    * In this example, the links are grouped by functionality, which can be

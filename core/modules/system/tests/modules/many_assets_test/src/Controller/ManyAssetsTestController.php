@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\many_assets_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 
+/**
+ * Provides a controller for testing asset loading order.
+ */
 class ManyAssetsTestController extends ControllerBase {
 
   /**

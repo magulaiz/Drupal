@@ -25,7 +25,7 @@ interface LinkGeneratorInterface {
    * However, for links enclosed in translatable text you should use t() and
    * embed the HTML anchor tag directly in the translated string. For example:
    * @code
-   * $text = t('Visit the <a href=":url">content types</a> page', array(':url' => Url::fromRoute('entity.node_type.collection')->toString()));
+   * $text = t('Visit the <a href=":url">content types</a> page', [':url' => Url::fromRoute('entity.node_type.collection')->toString()]);
    * @endcode
    * This keeps the context of the link title ('settings' in the example) for
    * translators.
@@ -40,9 +40,9 @@ interface LinkGeneratorInterface {
    *   The URL object used for the link. Amongst its options, the following may
    *   be set to affect the generated link:
    *   - attributes: An associative array of HTML attributes to apply to the
-   *     anchor tag. If element 'class' is included, it must be an array; 'title'
-   *     must be a string; other elements are more flexible, as they just need
-   *     to work as an argument for the constructor of the class
+   *     anchor tag. If element 'class' is included, it must be an array;
+   *     'title' must be a string; other elements are more flexible, as they
+   *     just need to work as an argument for the constructor of the class
    *     Drupal\Core\Template\Attribute($options['attributes']).
    *   - language: An optional language object. If the path being linked to is
    *     internal to the site, $options['language'] is used to determine whether
