@@ -13,6 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * @covers \Drupal\ckeditor5\Plugin\ConfigAction\AddItemToToolbar
+ * @covers ckeditor5_config_action_alter()
  * @group ckeditor5
  * @group Recipe
  */
@@ -65,12 +66,17 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
    * @param string[] $expected_toolbar_items
    *   The items which should be in the editor toolbar, in the expected order.
    *
-   * @testWith ["sourceEditing", ["heading", "bold", "italic", "sourceEditing"]]
-   *   [{"item_name": "sourceEditing"}, ["heading", "bold", "italic", "sourceEditing"]]
-   *   [{"item_name": "sourceEditing", "position": 1}, ["heading", "sourceEditing", "bold", "italic"]]
-   *   [{"item_name": "sourceEditing", "position": 1, "replace": true}, ["heading", "sourceEditing", "italic"]]
+   * @testWith ["sourceEditing", ["heading", "bold", "italic",
+   *   "sourceEditing"]]
+   *   [{"item_name": "sourceEditing"}, ["heading", "bold", "italic",
+   *   "sourceEditing"]]
+   *   [{"item_name": "sourceEditing", "position": 1}, ["heading",
+   *   "sourceEditing", "bold", "italic"]]
+   *   [{"item_name": "sourceEditing", "position": 1, "replace": true},
+   *   ["heading", "sourceEditing", "italic"]]
    *   [{"item_name": "bold"}, ["heading", "bold", "italic"]]
-   *   [{"item_name": "bold", "allow_duplicate": true}, ["heading", "bold", "italic", "bold"]]
+   *   [{"item_name": "bold", "allow_duplicate": true}, ["heading", "bold",
+   *   "italic", "bold"]]
    */
   public function testAddItemToToolbar(string|array $action, array $expected_toolbar_items): void {
     $recipe = $this->createRecipe([
@@ -93,6 +99,28 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
     if (in_array('sourceEditing', $expected_toolbar_items, TRUE)) {
       $this->assertSame([], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
     }
+  }
+
+  /**
+   * Tests adding multiple items to an editor toolbar.
+   */
+  public function testAddMultipleItemsToToolbar(): void {
+    /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
+    $manager = $this->container->get('plugin.manager.config_action');
+    $manager->applyAction('editor:addItemsToToolbar', 'editor.editor.filter_test', [
+      'sourceEditing',
+      [
+        'item_name' => 'italic',
+        'allow_duplicate' => TRUE,
+        'position' => 0,
+      ],
+    ]);
+    /** @var array{toolbar: array{items: string[]}, plugins: array<string, array<mixed>>} $settings */
+    $settings = Editor::load('filter_test')?->getSettings();
+    $items = $settings['toolbar']['items'];
+    $this->assertSame('italic', $items[0]);
+    $this->assertContains('italic', array_slice($items, 1));
+    $this->assertSame('sourceEditing', end($items));
   }
 
   public function testAddNonExistentItem(): void {

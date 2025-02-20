@@ -45,12 +45,7 @@ final class AddItemToToolbar implements ConfigActionPluginInterface, ContainerFa
     // - An associative array (add one item to the toolbar, with options)
     // - An indexed array (add multiple items to the toolbar, each of which
     //   could be one of the previous two forms)
-    if (is_string($value)) {
-      $value = [
-        ['item_name' => $value],
-      ];
-    }
-    elseif (is_array($value) && !array_is_list($value)) {
+    if (is_string($value) || (is_array($value) && !array_is_list($value))) {
       $value = [$value];
     }
     assert(is_array($value) && array_is_list($value));
@@ -62,6 +57,9 @@ final class AddItemToToolbar implements ConfigActionPluginInterface, ContainerFa
       throw new ConfigActionException(sprintf('The %s config action only works with editors that use CKEditor 5.', $this->pluginId));
     }
     foreach ($value as $item) {
+      if (is_string($item)) {
+        $item = ['item_name' => $item];
+      }
       $this->applySingle($editor, $item);
     }
     $editor->save();
