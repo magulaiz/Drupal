@@ -180,6 +180,8 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
     // Approve the comment.
     $comment->setPublished();
     $comment->save();
+    // Clear the comment access static cache (reply operation).
+    $this->container->get('entity_type.manager')->getAccessControlHandler('comment')->resetCache();
     $view = Views::getView('test_comment');
     $view->preview();
 
