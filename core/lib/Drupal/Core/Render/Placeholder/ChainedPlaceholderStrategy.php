@@ -4,6 +4,11 @@ namespace Drupal\Core\Render\Placeholder;
 
 /**
  * Renders placeholders using a chain of placeholder strategies.
+ *
+ * Render arrays may specify an allowlist of placeholder strategies by using
+ * $element['#placeholder_strategy'][ClassName::class] = TRUE at the same level
+ * as #lazy_builder. When this is set, placeholder strategies not specified will
+ * be skipped.
  */
 class ChainedPlaceholderStrategy implements PlaceholderStrategyInterface {
 
@@ -43,13 +48,31 @@ class ChainedPlaceholderStrategy implements PlaceholderStrategyInterface {
     // placeholders. The order of placeholder strategies is well defined and
     // this uses a variation of the "chain of responsibility" design pattern.
     foreach ($this->placeholderStrategies as $strategy) {
-      $processed_placeholders = $strategy->processPlaceholders($placeholders);
+      $candidate_placeholders = [];
+      foreach ($placeholders as $key => $placeholder) {
+        if (!isset($placeholder['#placeholder_strategy']) || !empty($placeholder['#placeholder_strategy'][$strategy::class])) {
+          $candidate_placeholders[$key] = $placeholder;
+        }
+      }
+
+      $processed_placeholders = $strategy->processPlaceholders($candidate_placeholders);
       assert(array_intersect_key($processed_placeholders, $placeholders) === $processed_placeholders, 'Processed placeholders must be a subset of all placeholders.');
       $placeholders = array_diff_key($placeholders, $processed_placeholders);
       $new_placeholders += $processed_placeholders;
 
       if (empty($placeholders)) {
         break;
+      }
+    }
+
+    if (!empty($placeholders)) {
+      foreach ($this->placeholderStrategies as $strategy) {
+        $strategies[$strategy::class] = TRUE;
+      }
+      foreach ($placeholders as $placeholder) {
+        if (isset($placeholder['#placeholder_strategy'])) {
+          assert(array_diff_key($placeholder['#placeholder_strategy'], $strategies), 'A placeholder could not be replaced and specified a placeholder strategy that does not exist');
+        }
       }
     }
 

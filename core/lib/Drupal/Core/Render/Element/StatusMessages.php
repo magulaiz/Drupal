@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Placeholder\SingleFlushStrategy;
 
 /**
  * Provides a messages element.
@@ -52,6 +53,11 @@ class StatusMessages extends RenderElementBase {
     $build = [
       '#lazy_builder' => [static::class . '::renderMessages', [$element['#display']]],
       '#create_placeholder' => TRUE,
+      // Prevent this placeholder being handled by strategies other than
+      // SingleFLushStrategy so that it is not handled by big pipe. Messages
+      // are very quick to render and this allows pages without other
+      // placeholders to avoid  loading big pipe's JavaScript altogether.
+      '#placeholder_strategy' => [SingleFlushStrategy::class => TRUE],
     ];
 
     // Directly create a placeholder as we need this to be placeholdered
