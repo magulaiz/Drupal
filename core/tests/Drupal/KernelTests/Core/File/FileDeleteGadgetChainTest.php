@@ -22,12 +22,17 @@ class FileDeleteGadgetChainTest extends KernelTestBase {
     file_put_contents('public://canary.txt', 'now you see me');
     // ./phpggc --public-properties Drupal/FD1 public://canary.txt
     $payload = 'O:34:"Drupal\Core\Config\StorageComparer":1:{s:18:"targetCacheStorage";O:39:"Drupal\Component\PhpStorage\FileStorage":1:{s:9:"directory";s:19:"public://canary.txt";}}';
+
+    // Not using $this->expectException(\TypeError::class) because we want to
+    // check whether the file still exists after the payload is unserialized.
     try {
       unserialize($payload);
     }
-    catch (\TypeError $e) {
-      // TypeError: Cannot assign Drupal\Component\PhpStorage\FileStorage to property Drupal\Core\Config\StorageComparer::$targetCacheStorage of type Drupal\Core\Cache\CacheBackendInterface
+    catch (\Exception $e) {
+      $this->assertInstanceOf(\TypeError::class, $e);
+      $this->assertStringContainsString('Cannot assign Drupal\Component\PhpStorage\FileStorage to property Drupal\Core\Config\StorageComparer::$targetCacheStorage', $e->getMessage());
     }
+
     $this->assertTrue(file_exists('public://canary.txt'));
     unlink('public://canary.txt');
   }
