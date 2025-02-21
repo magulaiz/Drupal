@@ -69,6 +69,18 @@ class HookCollectorPassTest extends BrowserTestBase {
     $this->drupalGet('admin/modules');
     $this->submitForm(['modules[config_install_fail_test][enable]' => TRUE], 'Install');
     $this->assertSession()->responseContains('Unable to install Configuration install fail test, <em class="placeholder">config_test.dynamic.dotted.default, language/fr/config_test.dynamic.dotted.default</em> already exist in active configuration.');
+
+    // If this file is removed then this test needs to be updated to trigger
+    // the container rebuild error from https://www.drupal.org/i/3505049
+    $config_module_file = $this->root . '/core/modules/config/tests/config_test/config_test.module';
+    $this->assertTrue(file_exists($config_module_file));
+    // Confirm that the file still has a bare container call.
+    $bare_container = "declare(strict_types=1);
+
+\Drupal::getContainer()->getParameter('site.path');
+";
+    $file_content = file_get_contents($config_module_file);
+    $this->assertTrue(str_contains($file_content, $bare_container));
   }
 
 }
