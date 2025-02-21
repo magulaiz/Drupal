@@ -9,6 +9,7 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\block_content\Plugin\Derivative\BlockContent as DerivativeBlockContent;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests block content plugin deriver.
@@ -20,7 +21,13 @@ class BlockContentDeriverTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'block_content', 'system', 'user'];
+  protected static $modules = [
+    'block',
+    'block_content',
+    'language',
+    'system',
+    'user',
+  ];
 
   /**
    * The definition array of the base plugin.
@@ -53,6 +60,9 @@ class BlockContentDeriverTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    // Enable an additional language.
+    ConfigurableLanguage::createFromLangcode('es')->save();
+
     $this->installEntitySchema('user');
     $this->installEntitySchema('block_content');
 
@@ -119,6 +129,33 @@ class BlockContentDeriverTest extends KernelTestBase {
 
     $plugin = $blockPluginManager->createInstance('block_content:' . $blockContentNoLabel->uuid());
     $this->assertNull($plugin->getPluginDefinition()['admin_label']);
+  }
+
+  /**
+   * Tests derivatives are generated for non-default languages.
+   */
+  public function testGetDerivativesWithOtherLanguages(): void {
+    $this->assertEquals('en', \Drupal::service('language_manager')->getDefaultLanguage()->getId());
+    $blockContentType = BlockContentType::create([
+      'id' => 'basic',
+      'label' => 'Basic Block',
+    ]);
+    $blockContentType->save();
+    $enBlock = BlockContent::create([
+      'info' => 'Basic prototype',
+      'type' => 'basic',
+    ]);
+    $enBlock->save();
+    $esBlock = BlockContent::create([
+      'info' => 'Basic prototype',
+      'type' => 'basic',
+      'langcode' => 'es',
+    ]);
+    $esBlock->save();
+    /** @var \Drupal\Core\Block\BlockManagerInterface $block_manager */
+    $block_manager = $this->container->get('plugin.manager.block');
+    $this->assertTrue($block_manager->hasDefinition(\sprintf('block_content:%s', $enBlock->uuid())));
+    $this->assertTrue($block_manager->hasDefinition(\sprintf('block_content:%s', $esBlock->uuid())));
   }
 
 }

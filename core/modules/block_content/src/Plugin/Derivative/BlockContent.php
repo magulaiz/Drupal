@@ -54,7 +54,6 @@ class BlockContent extends DeriverBase implements ContainerDeriverInterface {
     // of loading the entities.
     $block_contents = $this->blockContentStorage->getAggregateQuery()
       ->condition('reusable', TRUE)
-      ->condition('langcode', $this->languageManager->getDefaultLanguage()->getId())
       ->groupBy('uuid')
       ->groupBy('info')
       ->accessCheck(FALSE)
