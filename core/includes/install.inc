@@ -10,6 +10,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\InstallRequirementsInterface;
 use Drupal\Core\Installer\InstallerKernel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -802,9 +803,9 @@ function install_profile_info($profile, $langcode = 'en') {
 /**
  * Checks a module or profile requirements via a class that implements RequirementsInterface.
  *
- * @param string $extension
+ * @param string $extension_name
  *   Machine name of the module or profile to check.
- * @param string $path
+ * @param string $extension_path
  *   The path to the module or profile.
  *
  * @return array
@@ -812,8 +813,8 @@ function install_profile_info($profile, $langcode = 'en') {
  *
  * @internal
  */
-function install_check_class_requirements(string $extension, string $path): array {
-  $dir = \Drupal::root() . "/$path/src/Install/Requirements";
+function install_check_class_requirements(string $extension_name, string $extension_path): array {
+  $dir = \Drupal::root() . "/$extension_path/src/Install/Requirements";
   $requirements = [];
   if (is_dir($dir)) {
     $fileSystemIterator = new FilesystemIterator($dir);
@@ -823,9 +824,9 @@ function install_check_class_requirements(string $extension, string $path): arra
         $requirements_path = $dir . '/' . $filename;
         require_once $requirements_path;
 
-        $namespace = "Drupal\\$extension\\Install\\Requirements";
+        $namespace = "Drupal\\$extension_name\\Install\\Requirements";
         $class_name = $namespace . '\\' . $fileInfo->getBasename('.php');
-        if (class_exists($class_name) && class_implements($class_name, 'Drupal\Core\Extension\InstallRequirementsInterface')) {
+        if (class_exists($class_name) && class_implements($class_name, InstallRequirementsInterface::class)) {
           $requirements = $class_name::getRequirements();
         }
       }
