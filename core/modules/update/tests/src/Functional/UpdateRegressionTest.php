@@ -53,12 +53,21 @@ class UpdateRegressionTest extends BrowserTestBase {
     // update the config directly through the config storage.
     /** @var \Drupal\Core\Config\CachedStorage $configStorage */
     $configStorage = \Drupal::service('config.storage');
-    $updateSettings = $configStorage->read('update.settings');
-    $updateSettings['notification']['emails'] = '';
-    $configStorage->write('update.settings', $updateSettings);
 
+    // 'notification.emails' being a string.
+    $updateSettings = $configStorage->read('update.settings');
+    $updateSettings['notification']['emails'] = 'llama@drupal.org';
+    $configStorage->write('update.settings', $updateSettings);
     $this->drupalGet(Url::fromRoute('update.settings'));
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->fieldValueEquals('update_notify_emails', 'llama@drupal.org');
+
+    // 'notification.emails' being NULL.
+    $updateSettings['notification']['emails'] = NULL;
+    $configStorage->write('update.settings', $updateSettings);
+    $this->drupalGet(Url::fromRoute('update.settings'));
+    $this->assertSession()->fieldValueEquals('update_notify_emails', '');
+
   }
 
 }
