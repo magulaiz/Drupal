@@ -85,8 +85,10 @@
           $details.each(function () {
             const $that = $(this);
             const $summary = $that.find('> summary');
-            // We're only interested in the summary's first child node to prevent
-            // duplicate text in the title.
+            // Summary elements often have 2 child nodes: a text title and a
+            // dynamic summary wrapped in <span>. To set the vertical tab title,
+            // we only want to copy the summary title, which is the first child
+            // node.
             const title =
               $summary.length && $summary[0].childNodes.length
                 ? $summary[0].firstChild.textContent
