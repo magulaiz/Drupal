@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Hook;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
+
+// cspell:ignore suis
 
 /**
  * Tests services in .module files.
@@ -54,6 +57,16 @@ class HookCollectorPassTest extends BrowserTestBase {
       'modules[config_test][enable]' => TRUE,
     ], 'Install');
     $this->assertSession()->responseContains('Module <em class="placeholder">Configuration test</em> has been installed.');
+
+    // Test that collection configuration clashes during a module install are
+    // reported correctly.
+    \Drupal::service('module_installer')->install(['language']);
+    $this->rebuildContainer();
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+    \Drupal::languageManager()
+      ->getLanguageConfigOverride('fr', 'config_test.dynamic.dotted.default')
+      ->set('label', 'Je suis Charlie')
+      ->save();
 
     $this->drupalGet('admin/modules');
     $this->submitForm(['modules[config_install_fail_test][enable]' => TRUE], 'Install');
