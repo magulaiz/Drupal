@@ -28,7 +28,7 @@ class FileDeleteGadgetChainTest extends KernelTestBase {
     try {
       unserialize($payload);
     }
-    catch (\Exception $e) {
+    catch (\Throwable $e) {
       $this->assertInstanceOf(\TypeError::class, $e);
       $this->assertStringContainsString('Cannot assign Drupal\Component\PhpStorage\FileStorage to property Drupal\Core\Config\StorageComparer::$targetCacheStorage', $e->getMessage());
     }
