@@ -46,7 +46,7 @@ class UpdateRegressionTest extends BrowserTestBase {
    *
    * @see https://www.drupal.org/project/drupal/issues/3353778
    */
-  public function testNotificationEmailsAsStringDoesntThrowAnErrorFromIssue3353778(): void {
+  public function testNotificationEmailsAsStringDoesNotThrowAnErrorFromIssue3353778(): void {
 
     // We cannot use the config factory to update the config because
     // the config schema checker will throw an exception. Instead, we
