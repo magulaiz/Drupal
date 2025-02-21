@@ -32,6 +32,7 @@ class CreateEntityTranslationActionTest extends KernelTestBase {
    */
   protected static $modules = [
     'content_translation',
+    'content_translation_test',
     'field',
     'language',
     'node',
@@ -60,6 +61,13 @@ class CreateEntityTranslationActionTest extends KernelTestBase {
   protected RendererInterface $renderer;
 
   /**
+   * The state service.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -68,6 +76,7 @@ class CreateEntityTranslationActionTest extends KernelTestBase {
     $this->contentTranslationManager = $this->container->get('content_translation.manager');
     $this->languageManager = $this->container->get('language_manager');
     $this->renderer = $this->container->get('renderer');
+    $this->state = $this->container->get('state');
 
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
@@ -170,6 +179,7 @@ class CreateEntityTranslationActionTest extends KernelTestBase {
       ],
     ]);
     $page_node->save();
+    $this->assertNull($this->container->get('state')->get('content_translation_test.translation_created'));
 
     $this->assertFalse($page_node->hasTranslation('fr'));
     $this->assertFalse($article_node->hasTranslation('fr'));
@@ -177,6 +187,7 @@ class CreateEntityTranslationActionTest extends KernelTestBase {
     // Make sure only fr translation is created.
     $this->executeActionOnEntities($action, [$page_node]);
 
+    $this->assertTrue($this->state->get('content_translation_test.translation_created'));
     $this->assertTrue($page_node->hasTranslation('fr'));
     $this->assertFalse($page_node->hasTranslation('es'));
     $fr_page_translation = $page_node->getTranslation('fr');
