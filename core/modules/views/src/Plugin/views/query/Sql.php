@@ -882,7 +882,7 @@ class Sql extends QueryPluginBase {
       $alias = $table . '_' . $field;
     }
 
-    // Make sure an alias is assigned
+    // Make sure an alias is assigned.
     $alias = $alias ?: $field;
 
     // PostgreSQL truncates aliases to 63 characters:

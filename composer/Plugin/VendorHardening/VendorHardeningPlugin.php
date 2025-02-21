@@ -213,7 +213,7 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
   protected function findBinOverlap(array $binaries, array $clean_paths): array {
     // Make a filesystem model to explore. This is a keyed array that looks like
     // all the places that will be removed by cleanup. 'tests/src' becomes
-    // $filesystem['tests']['src'] = TRUE;
+    // "$filesystem['tests']['src'] = TRUE;".
     $filesystem = [];
     foreach ($clean_paths as $clean_path) {
       $clean_pieces = explode("/", $clean_path);

@@ -123,7 +123,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
     $view->destroy();
 
-    // Get the original dataset
+    // Get the original dataset.
     $data_set = $this->dataSet();
     // Adds a new data point in the views_test_data table.
     $query = Database::getConnection()->insert('views_test_data')
@@ -141,7 +141,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
-    // Change the filtering
+    // Change the filtering.
     $view->displayHandlers->get('default')->overrideOption('filters', [
       'name' => [
         'id' => 'name',

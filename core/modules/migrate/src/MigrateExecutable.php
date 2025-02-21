@@ -557,7 +557,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       $usage = $this->attemptMemoryReclaim();
       $pct_memory = $usage / $this->memoryLimit;
       // Use a lower threshold - we don't want to be in a situation where we
-      // keep coming back here and trimming a tiny amount
+      // keep coming back here and trimming a tiny amount.
       if ($pct_memory > (0.90 * $threshold)) {
         $this->message->display(
           $this->t(
