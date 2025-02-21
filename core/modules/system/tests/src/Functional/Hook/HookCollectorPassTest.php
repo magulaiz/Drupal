@@ -56,16 +56,6 @@ class HookCollectorPassTest extends BrowserTestBase {
     ], 'Install');
     $this->assertSession()->responseContains('Module <em class="placeholder">Configuration test</em> has been installed.');
 
-    // Test that collection configuration clashes during a module install are
-    // reported correctly.
-    \Drupal::service('module_installer')->install(['language']);
-    $this->rebuildContainer();
-    ConfigurableLanguage::createFromLangcode('fr')->save();
-    \Drupal::languageManager()
-      ->getLanguageConfigOverride('fr', 'config_test.dynamic.dotted.default')
-      ->set('label', 'Je suis Charlie')
-      ->save();
-
     $this->drupalGet('admin/modules');
     $this->submitForm(['modules[config_install_fail_test][enable]' => TRUE], 'Install');
     $this->assertSession()->responseContains('Unable to install Configuration install fail test, <em class="placeholder">config_test.dynamic.dotted.default, language/fr/config_test.dynamic.dotted.default</em> already exist in active configuration.');
