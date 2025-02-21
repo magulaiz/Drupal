@@ -91,7 +91,7 @@ class HookCollectorPass implements CompilerPassInterface {
     $definition->setArgument('$groupIncludes', $groupIncludes);
     foreach ($collector->moduleImplements as $hook => $moduleImplements) {
       foreach ($collector->moduleImplementsAlters as $alter) {
-        $alter($moduleImplements, $hook);
+        $alter($moduleImplements, (string) $hook);
       }
       $priority = 0;
       foreach ($moduleImplements as $module => $v) {
