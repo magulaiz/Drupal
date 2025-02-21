@@ -75,14 +75,14 @@ class HookCollectorPassTest extends BrowserTestBase {
     // If this file is removed then this test needs to be updated to trigger
     // the container rebuild error from https://www.drupal.org/i/3505049
     $config_module_file = $this->root . '/core/modules/config/tests/config_test/config_test.module';
-    $this->assertTrue(file_exists($config_module_file));
+    $this->assertFileExists($config_module_file, 'This test depends on a container call in a .module file');
     // Confirm that the file still has a bare container call.
     $bare_container = "declare(strict_types=1);
 
 \Drupal::getContainer()->getParameter('site.path');
 ";
     $file_content = file_get_contents($config_module_file);
-    $this->assertTrue(str_contains($file_content, $bare_container));
+    $this->assertStringContainsString($bare_container, $file_content, 'config_test.module container test feature is missing.');
   }
 
 }
