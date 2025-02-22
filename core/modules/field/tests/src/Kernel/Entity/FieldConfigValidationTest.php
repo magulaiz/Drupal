@@ -9,6 +9,7 @@ use Drupal\field\FieldStorageConfigInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Tests validation of field_config entities.
@@ -16,6 +17,8 @@ use Drupal\field\Entity\FieldStorageConfig;
  * @group field
  */
 class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
+
+  use ContentTypeCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -33,6 +36,9 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
 
     $this->installEntitySchema('node');
     $this->installConfig('node');
+
+    $this->createContentType(['type' => 'one']);
+    $this->createContentType(['type' => 'another']);
 
     EntityTestBundle::create(['id' => 'one'])->save();
     EntityTestMulBundle::create(['id' => 'one'])->save();
