@@ -13,6 +13,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\image\ImageConfigUpdater;
 
 /**
  * Hook implementations for image.
@@ -363,6 +364,15 @@ class ImageHooks {
     if ($uuid && ($file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $uuid))) {
       \Drupal::service('file.usage')->delete($file, 'image', 'default_image', $field->uuid());
     }
+  }
+
+  /**
+   * Implements hook_ENTITY_TYPE_presave() for 'field_config'.
+   */
+  #[Hook('field_config_presave')]
+  public function fieldConfigPresave(FieldConfigInterface $field): void {
+    $config_updater = \Drupal::classResolver(ImageConfigUpdater::class);
+    $config_updater->updateField($field);
   }
 
   /**
