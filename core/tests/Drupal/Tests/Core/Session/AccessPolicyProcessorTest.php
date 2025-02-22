@@ -367,6 +367,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
    * Sets up the access policy processor.
    *
    * @return \Drupal\Core\Session\AccessPolicyProcessorInterface
+   *   The access policy processor.
    */
   protected function setUpAccessPolicyProcessor(
     ?VariationCacheInterface $variation_cache = NULL,
@@ -550,6 +551,11 @@ class UserContextAccessPolicy extends AccessPolicyBase {
 
 class CacheItem {
 
+  /**
+   * The cache data.
+   *
+   * @var \Drupal\Core\Session\CalculatedPermissions
+   */
   public $data;
 
   public function __construct($data) {

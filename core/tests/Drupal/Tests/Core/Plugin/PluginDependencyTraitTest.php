@@ -177,8 +177,18 @@ class TestPluginDependency {
     getPluginDependencies as public;
   }
 
+  /**
+   * The module handler.
+   *
+   * @var Drupal\Core\Extension\ModuleHandlerInterface
+   */
   protected $moduleHandler;
 
+  /**
+   * The theme handler.
+   *
+   * @var Drupal\Core\Extension\ThemeHandlerInterface
+   */
   protected $themeHandler;
 
   public function setModuleHandler(ModuleHandlerInterface $module_handler): void {
@@ -199,6 +209,7 @@ class TestPluginDependency {
 
   /**
    * @return array[]
+   *   The dependencies.
    */
   public function getDependencies() {
     return $this->dependencies;
