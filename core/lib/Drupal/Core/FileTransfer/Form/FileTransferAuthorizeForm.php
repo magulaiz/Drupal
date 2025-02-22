@@ -89,8 +89,8 @@ class FileTransferAuthorizeForm extends FormBase {
      * Here we create two submit buttons. For a JS enabled client, they will
      * only ever see submit_process. However, if a client doesn't have JS
      * enabled, they will see submit_connection on the first form (when picking
-     * what filetransfer type to use, and submit_process on the second one (which
-     * leads to the actual operation).
+     * what filetransfer type to use, and submit_process on the second one
+     * (which leads to the actual operation).
      */
     $form['submit_connection'] = [
       '#prefix' => "<br style='clear:both'/>",
@@ -119,8 +119,9 @@ class FileTransferAuthorizeForm extends FormBase {
           ],
         ],
       ];
-      // We can't use #prefix on the container itself since then the header won't
-      // be hidden and shown when the containers are being manipulated via JS.
+      // We can't use #prefix on the container itself since then the header
+      // won't be hidden and shown when the containers are being manipulated via
+      // JS.
       $form['connection_settings'][$name]['header'] = [
         '#markup' => '<h4>' . $this->t('@backend connection settings', ['@backend' => $backend['title']]) . '</h4>',
       ];
@@ -234,8 +235,8 @@ class FileTransferAuthorizeForm extends FormBase {
    *   Array of settings for the FileTransfer.
    *
    * @return \Drupal\Core\FileTransfer\FileTransfer|bool
-   *   An instantiated FileTransfer object for the requested method and settings,
-   *   or FALSE if there was an error finding or instantiating it.
+   *   An instantiated FileTransfer object for the requested method and
+   *   settings, or FALSE if there was an error finding or instantiating it.
    */
   protected function getFiletransfer($backend, $settings = []) {
     $filetransfer = FALSE;
