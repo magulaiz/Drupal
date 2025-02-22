@@ -24,9 +24,9 @@ trait ExtensionFormTrait {
   /**
    * Module Handler.
    *
-   * @var ModuleHandlerInterface $module_handler
-   *   The module handler.
+   * @var Drupal\Core\Extension\ModuleHandlerInterface
    */
+  protected ModuleHandlerInterface $moduleHandler;
 
   /**
    * Helper function for building a list of modules to install.
