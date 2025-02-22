@@ -253,7 +253,7 @@ class ThemeController extends ControllerBase {
 
       // Check if the specified theme is one recognized by the system.
       // Or try to install the theme.
-      if (isset($theme) || $this->themeInstaller->install([$theme])) {
+      if ($this->themeInstaller->install([$theme])) {
         $themes = $this->themeHandler->listInfo();
 
         // Set the default theme.
