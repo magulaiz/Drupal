@@ -28,6 +28,6 @@ function image_post_update_add_resize_policy(&$sandbox = []): void {
   $field_config_updater->setDeprecationsEnabled(FALSE);
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
   $config_entity_updater->update($sandbox, 'field_config', function (FieldConfigInterface $field) use ($field_config_updater): bool {
-    return $field_config_updater->needsEntitySettingUpdate($field);
+    return $field_config_updater->needsResizePolicySettingUpdate($field);
   });
 }

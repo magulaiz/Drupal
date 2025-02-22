@@ -16,17 +16,13 @@ class ImageConfigUpdater implements ContainerInjectionInterface {
 
   /**
    * Flag determining whether deprecations should be triggered.
-   *
-   * @var bool
    */
-  protected $deprecationsEnabled = TRUE;
+  protected bool $deprecationsEnabled = TRUE;
 
   /**
    * Stores which deprecations were triggered.
-   *
-   * @var bool
    */
-  protected $triggeredDeprecations = [];
+  protected array $triggeredDeprecations = [];
 
   /**
    * ImageConfigUpdater constructor.
@@ -62,7 +58,7 @@ class ImageConfigUpdater implements ContainerInjectionInterface {
    */
   public function updateField(FieldConfigInterface $field): bool {
     $changed = FALSE;
-    if ($this->needsEntitySettingUpdate($field)) {
+    if ($this->needsResizePolicySettingUpdate($field)) {
       $field->setSetting('resize_policy', ImageResizePolicy::ResizeLargerImages->value);
       $changed = TRUE;
     }
@@ -78,7 +74,7 @@ class ImageConfigUpdater implements ContainerInjectionInterface {
    * @return bool
    *   TRUE if the field has not the new setting.
    */
-  public function needsEntitySettingUpdate(FieldConfigInterface $field): bool {
+  public function needsResizePolicySettingUpdate(FieldConfigInterface $field): bool {
     $needs_update = FALSE;
     if ($field->getType() === 'image' && $field->getSetting('resize_policy') === NULL) {
       $needs_update = TRUE;
