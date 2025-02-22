@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\form_test\Form;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -28,26 +27,26 @@ class FormTestVerticalTabsWithSummaryForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
 
     $form['information'] = [
-        '#type' => 'vertical_tabs',
-        '#default_tab' => 'edit-tab1',
+      '#type' => 'vertical_tabs',
+      '#default_tab' => 'edit-tab1',
     ];
     $form['tab1'] = [
-        '#type' => 'details',
-        '#title' => $this->t('Tab 1'),
-        '#group' => 'information',
+      '#type' => 'details',
+      '#title' => $this->t('Tab 1'),
+      '#group' => 'information',
     ];
     $form['tab1']['field1'] = [
-        '#type' => 'textfield',
-        '#title' => $this->t('Field 1'),
+      '#type' => 'textfield',
+      '#title' => $this->t('Field 1'),
     ];
     $form['tab2'] = [
-        '#type' => 'details',
-        '#title' => $this->t('Tab 2'),
-        '#group' => 'information',
+      '#type' => 'details',
+      '#title' => $this->t('Tab 2'),
+      '#group' => 'information',
     ];
     $form['tab2']['field2'] = [
-        '#type' => 'textfield',
-        '#title' => $this->t('Field 2'),
+      '#type' => 'textfield',
+      '#title' => $this->t('Field 2'),
     ];
 
     $form['actions']['#type'] = 'actions';
