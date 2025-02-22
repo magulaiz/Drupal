@@ -302,7 +302,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state): void {
     // Config schema dictates that the description value
     // cannot be empty string. So, if it is empty, make it NULL.
     if ($form_state->hasValue('description') && trim($form_state->getValue('description')) === '') {
