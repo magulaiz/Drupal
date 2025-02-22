@@ -50,17 +50,17 @@ class ExtensionConfirmForm extends ConfirmFormBase {
   protected $cancelRoute;
 
   /**
-    * The experimental theme.
-    *
-    * @var string
-    */
+   * The experimental theme.
+   *
+   * @var string
+   */
   protected $experimentalTheme;
 
   /**
-    * The default theme.
-    *
-    * @var string
-    */
+   * The default theme.
+   *
+   * @var string
+   */
   protected $setDefaultTheme;
 
   public function __construct(
