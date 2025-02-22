@@ -16,7 +16,7 @@ class UniqueFieldCombinationConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     assert($constraint instanceof UniqueFieldCombinationConstraint);
 
     if (!is_array($value)) {

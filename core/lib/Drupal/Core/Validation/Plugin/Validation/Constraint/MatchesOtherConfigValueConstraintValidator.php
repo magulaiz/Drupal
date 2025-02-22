@@ -46,7 +46,7 @@ class MatchesOtherConfigValueConstraintValidator extends ConstraintValidator imp
   /**
    * {@inheritdoc}
    */
-  public function validate(mixed $value, Constraint $constraint) {
+  public function validate(mixed $value, Constraint $constraint):void {
     if (!$constraint instanceof MatchesOtherConfigValueConstraint) {
       throw new UnexpectedTypeException($constraint, MatchesOtherConfigValueConstraint::class);
     }
