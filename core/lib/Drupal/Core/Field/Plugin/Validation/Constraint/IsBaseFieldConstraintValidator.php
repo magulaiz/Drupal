@@ -26,7 +26,7 @@ class IsBaseFieldConstraintValidator extends ConstraintValidator implements Cont
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get(EntityFieldManagerInterface::class),
     );

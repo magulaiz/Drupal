@@ -36,7 +36,7 @@ class MatchesOtherConfigValueConstraintValidator extends ConstraintValidator imp
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get(ConfigFactoryInterface::class),
       $container->get(TypedConfigManagerInterface::class)

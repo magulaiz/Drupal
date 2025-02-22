@@ -40,7 +40,7 @@ class StringPartsConstraint extends Constraint {
   /**
    * {@inheritdoc}
    */
-  public function getRequiredOptions() {
+  public function getRequiredOptions(): array {
     return ['separator', 'parts'];
   }
 

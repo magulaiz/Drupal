@@ -16,6 +16,9 @@ use Symfony\Component\Validator\Constraint;
  */
 class UniqueFieldCombinationConstraint extends Constraint {
 
+  /**
+   * @var string $message The error message.
+   */
   public $message = 'A @entity_type with this combination of values for the fields @field_name_list (%field_value_list) already exists.';
 
   /**
@@ -28,14 +31,14 @@ class UniqueFieldCombinationConstraint extends Constraint {
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOption() {
+  public function getDefaultOption(): string {
     return 'fields';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getRequiredOptions() {
+  public function getRequiredOptions(): array {
     return ['fields'];
   }
 

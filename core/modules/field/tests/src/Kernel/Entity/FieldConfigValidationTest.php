@@ -33,8 +33,6 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
 
     $this->installEntitySchema('node');
     $this->installConfig('node');
-    $this->createContentType(['type' => 'one']);
-    $this->createContentType(['type' => 'another']);
 
     EntityTestBundle::create(['id' => 'one'])->save();
     EntityTestMulBundle::create(['id' => 'one'])->save();

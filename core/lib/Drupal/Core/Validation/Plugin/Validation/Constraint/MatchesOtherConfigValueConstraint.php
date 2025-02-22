@@ -48,7 +48,7 @@ class MatchesOtherConfigValueConstraint extends Constraint {
   /**
    * {@inheritdoc}
    */
-  public function getRequiredOptions() {
+  public function getRequiredOptions(): array {
     return ['prefix', 'id', 'propertyPath'];
   }
 
