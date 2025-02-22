@@ -5,12 +5,28 @@ namespace Drupal\system\Form;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Extension\ExtensionLifecycle;
+use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Provides functionality used by module and theme forms.
  */
 trait ExtensionFormTrait {
   use ModulesEnabledTrait;
+
+  /**
+   * Module extension list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected ModuleExtensionList $moduleExtensionList;
+
+  /**
+   * Module Handler.
+   *
+   * @var ModuleHandlerInterface $module_handler
+   *   The module handler.
+   */
 
   /**
    * Helper function for building a list of modules to install.
