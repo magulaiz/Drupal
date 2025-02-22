@@ -8,6 +8,11 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Tests for automated_cron.
+ *
+ * @group automated_cron
+ */
 class AutomatedCronTest extends KernelTestBase {
 
   /**
@@ -18,9 +23,9 @@ class AutomatedCronTest extends KernelTestBase {
   /**
    * Tests that automated cron runs cron on an HTTP request.
    *
-   * @covers \Drupal\automated_cron\EventSubscriber::onTerminate
+   * @covers \Drupal\automated_cron\EventSubscriber\AutomatedCron::onTerminate
    */
-  public function testRunsCronOnHttpRequest() {
+  public function testRunsCronOnHttpRequest(): void {
     // Set automated_cron interval and times.
     // Any interval > 0 should work.
     $this->config('automated_cron.settings')->set('interval', 10800)->save();
