@@ -43,6 +43,11 @@ class InstallTasksTest extends UnitTestCase {
 
     return new class($connection) extends Tasks {
 
+      /**
+       * The database connection.
+       *
+       * @var \Drupal\Core\Database\Connection
+       */
       private $connection;
 
       public function __construct(Connection $connection) {
@@ -112,7 +117,7 @@ class InstallTasksTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerNameAndMinimumVersion(): array {
+  public static function providerNameAndMinimumVersion(): array {
     return [
       [
         TRUE,
@@ -130,7 +135,7 @@ class InstallTasksTest extends UnitTestCase {
   /**
    * @covers ::name
    */
-  public function testNameWithNoConnection() {
+  public function testNameWithNoConnection(): void {
     $tasks = $this->createTasksNoConnection();
     $this->assertSame('MySQL, MariaDB, Percona Server, or equivalent', $tasks->name());
   }

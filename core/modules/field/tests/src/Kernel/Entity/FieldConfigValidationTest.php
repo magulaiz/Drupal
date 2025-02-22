@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel\Entity;
 
 use Drupal\entity_test\Entity\EntityTestMulBundle;
@@ -12,7 +14,6 @@ use Drupal\field\Entity\FieldStorageConfig;
  * Tests validation of field_config entities.
  *
  * @group field
- * @group #slow
  */
 class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
 
@@ -29,6 +30,11 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->installEntitySchema('node');
+    $this->installConfig('node');
+    $this->createContentType(['type' => 'one']);
+    $this->createContentType(['type' => 'another']);
 
     EntityTestBundle::create(['id' => 'one'])->save();
     EntityTestMulBundle::create(['id' => 'one'])->save();
@@ -168,6 +174,7 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
    * Tests validation of a field_config's default value.
    */
   public function testMultilineTextFieldDefaultValue(): void {
+    $this->installEntitySchema('user');
     // First, create a field storage for which a complex default value exists.
     $this->enableModules(['text', 'user']);
     $text_field_storage_config = FieldStorageConfig::create([

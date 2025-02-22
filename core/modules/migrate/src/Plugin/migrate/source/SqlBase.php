@@ -63,7 +63,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * For a complete example on migrating data from an SQL source, refer to
  * https://www.drupal.org/docs/8/api/migrate-api/migrating-data-from-sql-source
  *
- * @see https://www.drupal.org/docs/8/api/database-api
+ * @see https://www.drupal.org/docs/drupal-apis/database-api
  * @see \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase
  */
 abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface, RequirementsInterface {
@@ -116,7 +116,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
     return new static(
       $configuration,
       $plugin_id,
@@ -133,7 +133,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    *   The query string.
    */
   public function __toString() {
-    return (string) $this->query();
+    return (string) $this->prepareQuery();
   }
 
   /**
@@ -265,13 +265,13 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       // The rules for determining what conditions to add to the query are as
       // follows (applying first applicable rule):
       // 1. If the map is joinable, join it. We will want to accept all rows
-      //    which are either not in the map, or marked in the map as NEEDS_UPDATE.
-      //    Note that if high water fields are in play, we want to accept all rows
-      //    above the high water mark in addition to those selected by the map
-      //    conditions, so we need to OR them together (but AND with any existing
-      //    conditions in the query). So, ultimately the SQL condition will look
-      //    like (original conditions) AND (map IS NULL OR map needs update
-      //    OR above high water).
+      //    which are either not in the map, or marked in the map as
+      //    NEEDS_UPDATE. Note that if high water fields are in play, we want to
+      //    accept all rows above the high water mark in addition to those
+      //    selected by the map conditions, so we need to OR them together (but
+      //    AND with any existing conditions in the query). So, ultimately the
+      //    SQL condition will look like (original conditions) AND (map IS NULL
+      //    OR map needs update OR above high water).
       $conditions = $this->query->orConditionGroup();
       $condition_added = FALSE;
       $added_fields = [];
@@ -333,7 +333,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       }
       // If the query has a group by, our added fields need it too, to keep the
       // query valid.
-      // @see https://dev.mysql.com/doc/refman/5.7/en/group-by-handling.html
+      // @see https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html
       $group_by = $this->query->getGroupBy();
       if ($group_by && $added_fields) {
         foreach ($added_fields as $added_field) {
@@ -383,7 +383,13 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   }
 
   /**
+   * Prepares query object to retrieve data from the source database.
+   *
+   * This method should not be called directly. It is called automatically from
+   * SqlBase::prepareQuery().
+   *
    * @return \Drupal\Core\Database\Query\SelectInterface
+   *   A Select query object with the source data.
    */
   abstract public function query();
 
@@ -391,7 +397,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    * Gets the source count using countQuery().
    */
   protected function doCount() {
-    return (int) $this->query()->countQuery()->execute()->fetchField();
+    return (int) $this->prepareQuery()->countQuery()->execute()->fetchField();
   }
 
   /**
@@ -469,7 +475,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     return array_diff(parent::__sleep(), ['database']);
   }
 

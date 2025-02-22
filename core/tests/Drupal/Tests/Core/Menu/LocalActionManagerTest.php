@@ -137,7 +137,7 @@ class LocalActionManagerTest extends UnitTestCase {
   /**
    * @covers ::getTitle
    */
-  public function testGetTitle() {
+  public function testGetTitle(): void {
     $local_action = $this->createMock('Drupal\Core\Menu\LocalActionInterface');
     $local_action->expects($this->once())
       ->method('getTitle')
@@ -156,7 +156,7 @@ class LocalActionManagerTest extends UnitTestCase {
    *
    * @dataProvider getActionsForRouteProvider
    */
-  public function testGetActionsForRoute($route_appears, array $plugin_definitions, array $expected_actions) {
+  public function testGetActionsForRoute($route_appears, array $plugin_definitions, array $expected_actions): void {
     $this->discovery->expects($this->any())
       ->method('getDefinitions')
       ->willReturn($plugin_definitions);
@@ -380,6 +380,9 @@ class LocalActionManagerTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing LocalActionManager.
+ */
 class TestLocalActionManager extends LocalActionManager {
 
   public function __construct(ArgumentResolverInterface $argument_resolver, Request $request, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, AccessManagerInterface $access_manager, AccountInterface $account, DiscoveryInterface $discovery, FactoryInterface $factory) {
