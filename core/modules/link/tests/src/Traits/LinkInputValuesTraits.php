@@ -2,50 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\link\Kernel;
-
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\link\LinkItemInterface;
+namespace Drupal\Tests\link\Traits;
 
 /**
- * Tests the default 'link' field formatter.
- *
- * The formatter is tested with several forms of complex query parameters. And
- * each form is tested with different display settings.
- *
- * @group link
+ * Provides test values for the Link field.
  */
-abstract class LinkFormatterDisplayTestBase extends FieldKernelTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['link'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    FieldStorageConfig::create([
-      'entity_type' => 'entity_test',
-      'field_name' => 'field_test',
-      'type' => 'link',
-    ])->save();
-
-    FieldConfig::create([
-      'entity_type' => 'entity_test',
-      'field_name' => 'field_test',
-      'bundle' => 'entity_test',
-      'settings' => [
-        'title' => DRUPAL_OPTIONAL,
-        'link_type' => LinkItemInterface::LINK_GENERIC,
-      ],
-    ])->save();
-  }
+trait LinkInputValuesTraits {
 
   /**
    * Link field values use for test.
@@ -53,7 +15,7 @@ abstract class LinkFormatterDisplayTestBase extends FieldKernelTestBase {
    * @return array
    *   Values to use at link field setter.
    */
-  protected function getTestValues(): array {
+  protected function getLinkInputValues(): array {
     $test_values = [
       // External links.
       0 => [
@@ -96,13 +58,5 @@ abstract class LinkFormatterDisplayTestBase extends FieldKernelTestBase {
     ksort($test_values, SORT_NUMERIC);
     return $test_values;
   }
-
-  /**
-   * Provides case name, link field display settings and expected results.
-   *
-   * @return \Generator
-   *   Test cases.
-   */
-  abstract protected function getTestCases(): \Generator;
 
 }

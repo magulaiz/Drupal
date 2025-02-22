@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace Drupal\Tests\link\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\link\LinkItemInterface;
+use Drupal\Tests\field\Kernel\FieldKernelTestBase;
+use Drupal\Tests\link\Traits\LinkInputValuesTraits;
 
 // cspell:ignore Fragm
 
@@ -16,24 +21,54 @@ use Drupal\entity_test\Entity\EntityTest;
  *
  * @group link
  */
-class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
+class LinkSeparateFormatterDisplayTest extends FieldKernelTestBase {
+
+  use LinkInputValuesTraits;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['link'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    FieldStorageConfig::create([
+      'entity_type' => 'entity_test',
+      'field_name' => 'field_test',
+      'type' => 'link',
+    ])->save();
+
+    FieldConfig::create([
+      'entity_type' => 'entity_test',
+      'field_name' => 'field_test',
+      'bundle' => 'entity_test',
+      'settings' => [
+        'title' => DRUPAL_OPTIONAL,
+        'link_type' => LinkItemInterface::LINK_GENERIC,
+      ],
+    ])->save();
+  }
 
   /**
    * Tests that links are rendered correctly.
    *
    * Run tests without dataProvider to improve speed.
    *
-   * @see \Drupal\Tests\link\Kernel\LinkFormatterDisplayTestBase::getTestValues()
+   * @see \Drupal\Tests\link\Traits\LinkInputValuesTraits::getLinkInputValues()
    * @see self::getTestCases()
    */
   public function testLinkSeparateFormatter(): void {
     // Create an entity with link field values provided.
     $entity = EntityTest::create();
-    $entity->field_test->setValue($this->getTestValues());
+    $entity->field_test->setValue($this->getLinkInputValues());
 
     foreach ($this->getTestCases() as $case_name => $case_options) {
       [$display_settings, $expected_results] = array_values($case_options);
-      $this->assertEquals(count($this->getTestValues()), count($expected_results), "Each field delta have expected result. Case name: '$case_name'");
+      $this->assertEquals(count($this->getLinkInputValues()), count($expected_results), "Each field delta have expected result. Case name: '$case_name'");
 
       // Render link field with 'link_separate' formatter and custom
       // display settings. Hide field label.
@@ -49,7 +84,7 @@ class LinkSeparateFormatterDisplayTest extends LinkFormatterDisplayTestBase {
       // Check results.
       foreach ($expected_results as $delta => $expected_result) {
         $rendered_delta = trim($field_deltas_display[$delta]);
-        $this->assertEquals($expected_result, $rendered_delta, "Test case failed. Case name: '$case_name'. Delta: '$delta'. Uri: '{$this->getTestValues()[$delta]['uri']}'");
+        $this->assertEquals($expected_result, $rendered_delta, "Test case failed. Case name: '$case_name'. Delta: '$delta'. Uri: '{$this->getLinkInputValues()[$delta]['uri']}'");
       }
     }
   }
