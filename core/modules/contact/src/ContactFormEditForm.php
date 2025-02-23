@@ -135,7 +135,7 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
   /**
    * {@inheritdoc}
    */
-  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state): void {
     // Config schema dictates that the reply, redirect, and message values
     // cannot be empty strings. So, if they're empty, make them NULL.
     if ($form_state->hasValue('reply') && trim($form_state->getValue('reply')) === '') {

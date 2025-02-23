@@ -21,7 +21,7 @@ function contact_removed_post_updates(): array {
 /**
  * Updates Contact form's message, redirect and reply from '' to NULL.
  */
-function contact_post_update_set_empty_values_to_null(&$sandbox = []) {
+function contact_post_update_set_empty_values_to_null(&$sandbox = []): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)
     ->update($sandbox, 'contact_form', function (ContactFormInterface $contact_form): bool {
       $updated = FALSE;
