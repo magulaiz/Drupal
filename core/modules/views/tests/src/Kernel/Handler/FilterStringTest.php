@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
@@ -15,6 +16,9 @@ use Drupal\views\Views;
  */
 class FilterStringTest extends ViewsKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['system'];
 
   /**
@@ -107,6 +111,45 @@ class FilterStringTest extends ViewsKernelTestBase {
     $resultset = [
       [
         'name' => 'Ringo',
+      ],
+    ];
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
+    $view->destroy();
+
+    // Get the original dataset
+    $data_set = $this->dataSet();
+    // Adds a new data point in the views_test_data table.
+    $query = Database::getConnection()->insert('views_test_data')
+      ->fields(array_keys($data_set[0]));
+    $query->values([
+      'name' => 'Ringo%',
+      'age' => 31,
+      'job' => 'Drummer',
+      'created' => gmmktime(6, 30, 10, 1, 1, 2000),
+      'status' => 1,
+      'description' => NULL,
+    ]);
+    $query->execute();
+
+    $view = Views::getView('test_view');
+    $view->setDisplay();
+
+    // Change the filtering
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'name' => [
+        'id' => 'name',
+        'table' => 'views_test_data',
+        'field' => 'name',
+        'relationship' => 'none',
+        'operator' => '=',
+        'value' => 'Ringo%',
+      ],
+    ]);
+
+    $this->executeView($view);
+    $resultset = [
+      [
+        'name' => 'Ringo%',
       ],
     ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
@@ -848,7 +891,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  protected function getGroupedExposedFilters() {
+  protected function getGroupedExposedFilters(): array {
     $filters = [
       'name' => [
         'id' => 'name',

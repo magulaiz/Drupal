@@ -77,6 +77,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    * Data provider for all the composer.json provided by Drupal core.
    *
    * @return array
+   *   An array of composer.json file paths.
    */
   public static function providerTestComposerJson(): array {
     $data = [];
@@ -134,6 +135,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    * Data provider for the scaffold files test for Drupal core.
    *
    * @return array
+   *   An array of scaffold file mappings.
    */
   public static function providerTestExpectedScaffoldFiles() {
     return [
@@ -217,11 +219,11 @@ class ComposerIntegrationTest extends UnitTestCase {
    *
    * @return string
    */
-  protected static function getContentHash($composerFileContents)
+  protected static function getContentHash($composerFileContents): string
   {
     $content = json_decode($composerFileContents, true);
 
-    $relevantKeys = array(
+    $relevantKeys = [
       'name',
       'version',
       'require',
@@ -233,9 +235,9 @@ class ComposerIntegrationTest extends UnitTestCase {
       'prefer-stable',
       'repositories',
       'extra',
-    );
+    ];
 
-    $relevantContent = array();
+    $relevantContent = [];
 
     foreach (array_intersect($relevantKeys, array_keys($content)) as $key) {
       $relevantContent[$key] = $content[$key];

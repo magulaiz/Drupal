@@ -16,14 +16,11 @@ use Drupal\Tests\BrowserTestBase;
  * Tests that the block configuration UI exists and stores data correctly.
  *
  * @group block
- * @group #slow
  */
 class BlockUiTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',
@@ -36,8 +33,6 @@ class BlockUiTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
-
-  protected $regions;
 
   /**
    * The submitted block values used by this test.
@@ -55,6 +50,8 @@ class BlockUiTest extends BrowserTestBase {
 
   /**
    * An administrative user to configure the test environment.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $adminUser;
 
@@ -249,9 +246,9 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->responseContains($expected_text);
 
     // Test context mapping form element is not visible if there are no valid
-    // context options for the block (the test_context_aware_no_valid_context_options
-    // block has one context defined which is not available for it on the
-    // Block Layout interface).
+    // context options for the block (the
+    // test_context_aware_no_valid_context_options block has one context defined
+    // which is not available for it on the Block Layout interface).
     $this->drupalGet('admin/structure/block/add/test_context_aware_no_valid_context_options/stark');
     $this->assertSession()->fieldNotExists('edit-settings-context-mapping-email');
 

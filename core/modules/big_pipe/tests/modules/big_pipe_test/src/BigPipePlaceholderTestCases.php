@@ -1,8 +1,6 @@
 <?php
 
-/**
- * @file
- */
+declare(strict_types=1);
 
 // cspell:ignore divpiggydiv timecurrent timetime
 
@@ -430,6 +428,9 @@ class BigPipePlaceholderTestCases {
 
 }
 
+/**
+ * Provides a placeholder for the BigPipe placeholder test cases.
+ */
 class BigPipePlaceholderTestCase {
 
   /**
