@@ -7,7 +7,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * Validates that the entity can have comments.
+ * Validates that the entity is commentable.
  */
 class IsCommentableConstraintValidator extends ConstraintValidator {
 
