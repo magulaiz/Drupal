@@ -48,9 +48,6 @@ class Rss extends RssPluginBase {
    */
   protected $entityTypeId = 'comment';
 
-  /**
-   * {@inheritdoc}
-   */
   public function preRender($result) {
     $cids = [];
 
@@ -71,12 +68,6 @@ class Rss extends RssPluginBase {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   *
-   * Renders the RSS feed item for a comment, including its title, description,
-   * and additional RSS elements.
-   */
   public function render($row) {
     global $base_url;
 

@@ -267,9 +267,6 @@ class FilterHtml extends FilterBase {
     $scanner = new Scanner('<body>' . $html);
     $parser = new class($scanner, $events) extends Tokenizer {
 
-      /**
-       * {@inheritdoc}
-       */
       public function setTextMode($textMode, $untilTag = NULL) {
         // Do nothing, we never enter text mode.
       }

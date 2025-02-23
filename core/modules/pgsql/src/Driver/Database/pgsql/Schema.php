@@ -72,7 +72,7 @@ class Schema extends DatabaseSchema {
    *   - idx for indexes
    *   - key for constraints
    *   - pkey for primary keys
-   *   - seq for sequences.
+   *   - seq for sequences
    *
    * @param string $table_identifier_part
    *   The first argument used to build the identifier string. This usually
