@@ -16,6 +16,11 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 class EntityTypeExistsConstraint extends SymfonyConstraint {
 
+  /**
+   * The required interface that the entity type must implement.
+   *
+   * @var string
+   */
   public string $requiredInterface;
 
   /**
