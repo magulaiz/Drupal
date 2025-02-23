@@ -21,6 +21,6 @@ class IsCommentableConstraint extends SymfonyConstraint {
    *
    * @var string
    */
-  public $message = "The '@entity_type_id' entity is not commentable";
+  public $message = "The '@entity_type_id' entity cannot have comments.";
 
 }
