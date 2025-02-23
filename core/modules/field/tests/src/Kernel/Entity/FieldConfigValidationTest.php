@@ -23,6 +23,11 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
   /**
    * {@inheritdoc}
    */
+  protected static $modules = ['field', 'entity_test', 'user', 'node', 'text'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected static array $propertiesWithOptionalValues = [
     'default_value',
     'description',
@@ -36,6 +41,9 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
 
     $this->installEntitySchema('node');
     $this->installConfig('node');
+
+    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('entity_test_with_bundle');
 
     $this->createContentType(['type' => 'one']);
     $this->createContentType(['type' => 'another']);
