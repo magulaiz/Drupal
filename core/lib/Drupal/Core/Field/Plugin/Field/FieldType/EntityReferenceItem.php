@@ -764,6 +764,9 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     foreach ($common_references as $entity_type) {
       $options[$entity_type->id()] = [
         'label' => $entity_type->getLabel(),
+        'description' => new TranslatableMarkup('A reference to a(n) @item', [
+          '@item' => $entity_type->getSingularLabel(),
+        ]),
         'field_storage_config' => [
           'settings' => [
             'target_type' => $entity_type->id(),
