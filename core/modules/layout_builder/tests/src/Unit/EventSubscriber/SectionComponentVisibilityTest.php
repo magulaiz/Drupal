@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\Unit\EventSubscriber;
 
 use Drupal\Component\Plugin\Context\Context;

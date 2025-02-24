@@ -228,6 +228,7 @@ fcgi
 fdiv
 fieldable
 fieldapi
+fieldbody
 fieldblock
 fieldgroup
 fieldgroups
