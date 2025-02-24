@@ -541,7 +541,8 @@ class AccessResultTest extends UnitTestCase {
     $this->assertSame(['node:20011988'], $access->getCacheTags());
     $this->assertSame(1500, $access->getCacheMaxAge());
 
-    // andIf(); 1st has custom tags, max-age, 2nd has custom contexts and max-age.
+    // andIf(); 1st has custom tags, max-age, 2nd has custom contexts and
+    // max-age.
     $access = AccessResult::allowed()->cachePerUser()->setCacheMaxAge(43200);
     $other = AccessResult::forbidden()->addCacheTags(['node:14031991'])->setCacheMaxAge(86400);
     $this->assertInstanceOf(AccessResult::class, $access->inheritCacheability($other));
@@ -940,6 +941,7 @@ class AccessResultTest extends UnitTestCase {
    * Provides data for the testAllowedIfHasPermissions() method.
    *
    * @return array
+   *   An array of test scenarios with permissions, logic, and expected result.
    */
   public static function providerTestAllowedIfHasPermissions() {
     $access_result = AccessResult::allowedIf(FALSE);
@@ -971,6 +973,9 @@ class AccessResultTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing AccessResult.
+ */
 class UncacheableTestAccessResult implements AccessResultInterface {
 
   /**
