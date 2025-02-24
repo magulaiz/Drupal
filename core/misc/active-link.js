@@ -29,10 +29,12 @@
           const [key, value] = entries[i];
 
           if (typeof value === 'string') {
-            object[key] = value
-              .replace(/[\u007F-\uFFFF\u003c\u003e\u0022\u0027\u0026]/g, (chr) => {
+            object[key] = value.replace(
+              /[\u007F-\uFFFF\u003c\u003e\u0022\u0027\u0026]/g,
+              (chr) => {
                 return '&u' + ('0000' + chr.charCodeAt(0).toString(16)).substr(-4);
-              });
+              }
+            );
           }
           else if (typeof value === 'object') {
             object[key] = jsonEncode(value, false);
