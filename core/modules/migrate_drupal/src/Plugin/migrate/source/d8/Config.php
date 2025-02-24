@@ -3,11 +3,15 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d8;
 
 use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
  * Drupal 8+ configuration source from database.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ * \Drupal\migrate\Plugin\migrate\source\ConfigEntity instead.
  *
  * Available configuration keys:
  * - collections: (optional) The collection of configuration storage to retrieve
@@ -53,6 +57,14 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
   source_module: 'system',
 )]
 class Config extends DrupalSqlBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\migrate\Plugin\migrate\source\ContentEntity instead. See https://www.drupal.org/node/3508578', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
+  }
 
   /**
    * {@inheritdoc}
