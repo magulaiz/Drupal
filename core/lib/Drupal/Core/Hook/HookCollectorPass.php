@@ -323,7 +323,7 @@ class HookCollectorPass implements CompilerPassInterface {
       if ($container?->hasParameter("$module.hooks_converted")) {
         $skip_procedural = $container->getParameter("$module.hooks_converted");
       }
-      $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, $skip_procedural);
+      $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, $skip_procedural, $container);
     }
     return $collector;
   }
@@ -340,8 +340,10 @@ class HookCollectorPass implements CompilerPassInterface {
    *   matched first.
    * @param bool $skip_procedural
    *   Skip the procedural check for the current module.
+   * @param \Symfony\Component\DependencyInjection\ContainerBuilder|null $container
+   *   The container.
    */
-  protected function collectModuleHookImplementations($dir, $module, $module_preg, bool $skip_procedural): void {
+  protected function collectModuleHookImplementations($dir, $module, $module_preg, bool $skip_procedural, ?ContainerBuilder $container = NULL): void {
     $hook_file_cache = FileCacheFactory::get('hook_implementations');
     $procedural_hook_file_cache = FileCacheFactory::get('procedural_hook_implementations:' . $module_preg);
 
@@ -372,7 +374,7 @@ class HookCollectorPass implements CompilerPassInterface {
           $class = str_replace('/', '\\', $class);
           $attributes = [];
           if (class_exists($class)) {
-            $reflectionClass = new \ReflectionClass($class);
+            $reflectionClass = $container?->getReflectionClass($class) ?? new \ReflectionClass($class);
             $reflections = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
             $reflections[] = $reflectionClass;
             $attributes = self::getAttributeInstances($attributes, $reflections);
