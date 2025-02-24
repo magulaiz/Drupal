@@ -117,7 +117,7 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
    * {@inheritdoc}
    */
   public function getMessage() {
-    return $this->message ?? '';
+    return $this->message;
   }
 
   /**
@@ -149,7 +149,7 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
    * {@inheritdoc}
    */
   public function getRedirectPath() {
-    return $this->redirect ?? '';
+    return $this->redirect;
   }
 
   /**
@@ -178,7 +178,7 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
    * {@inheritdoc}
    */
   public function getReply() {
-    return $this->reply ?? '';
+    return $this->reply;
   }
 
   /**

@@ -43,9 +43,9 @@ class ContactFormUpdatePathTest extends UpdatePathTestBase {
     $this->assertNull($form->get('message'));
     $this->assertNull($form->get('redirect'));
     $this->assertNull($form->get('reply'));
-    $this->assertSame('', $form->getMessage());
-    $this->assertSame('', $form->getRedirectPath());
-    $this->assertSame('', $form->getReply());
+    $this->assertSame(NULL, $form->getMessage());
+    $this->assertSame(NULL, $form->getRedirectPath());
+    $this->assertSame(NULL, $form->getReply());
   }
 
 }
