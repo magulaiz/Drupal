@@ -22,7 +22,7 @@ class FormAlter extends Hook {
   public const string SUFFIX = 'alter';
 
   /**
-   * Constructs a Hook attribute object.
+   * Constructs a FormAlter attribute object.
    *
    * @param string $form_id
    *   The ID of the form that this implementation alters.
