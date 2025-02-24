@@ -1338,13 +1338,15 @@
       const parseHTML = (htmlString) => {
         const fragment = document.createDocumentFragment();
         // Create a temporary template element.
-        const template = fragment.appendChild(document.createElement('template'));
+        const template = fragment.appendChild(
+          document.createElement('template')
+        );
 
         // Set the innerHTML of the template to the provided HTML string.
         template.innerHTML = htmlString;
 
         // Return the contents of the temporary template.
-        return template.content;
+        return template.content.childNodes;
       };
 
       let $newContent = $(parseHTML(response.data));
