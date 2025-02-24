@@ -105,9 +105,9 @@ class Hook {
   /**
    * The class the hook implementation is in.
    *
-   * @var string
+   * @var class-string|null
    */
-  public string $class = '';
+  public ?string $class = NULL;
 
   /**
    * Constructs a Hook attribute object.
@@ -130,7 +130,7 @@ class Hook {
     public string $hook,
     public string $method = '',
     public ?string $module = NULL,
-    public Order|ComplexOrder|NULL $order = NULL,
+    public Order|ComplexOrder|null $order = NULL,
   ) {}
 
   /**

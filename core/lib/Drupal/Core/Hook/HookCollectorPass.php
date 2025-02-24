@@ -73,7 +73,7 @@ class HookCollectorPass implements CompilerPassInterface {
     // List of modules implementing hooks with the implementation details.
     $implementations = [];
     // List of modules implementing hooks, used for
-    // hook_module_implementations_alter.
+    // hook_module_implements_alter().
     $legacyImplementations = [];
     // Groups of hooks that should be ordered together.
     $orderGroups = [];
@@ -150,7 +150,7 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Gather ordering information.
    *
-   * @param \Drupal\Core\Hook\Attributes\Hook $hook
+   * @param \Drupal\Core\Hook\Attribute\Hook $hook
    *   The hook with ordering information.
    * @param array $orderAttributes
    *   All attributes related to ordering.
@@ -159,8 +159,8 @@ class HookCollectorPass implements CompilerPassInterface {
    */
   protected function gatherOrderInformation(Hook $hook, array &$orderAttributes, array &$orderGroups): void {
     $orderAttributes[] = $hook;
-    if ($hook->order instanceof ComplexOrder && ($group = $hook->order->group)) {
-      $group[] = $hook->hook;
+    if ($hook->order instanceof ComplexOrder && $hook->order->group) {
+      $group = [...$hook->order->group, $hook->hook];
       foreach ($group as $extraHook) {
         $orderGroups[$extraHook] = array_merge($orderGroups[$extraHook] ?? [], $group);
       }
@@ -176,9 +176,9 @@ class HookCollectorPass implements CompilerPassInterface {
    *   The container.
    * @param \Drupal\Core\Hook\HookCollectorPass $collector
    *   The collector.
-   * @param array $implementations
-   *   All implementations.
-   * @param array $legacyImplementations
+   * @param array<string, array<string, array<class-string, list<string>>>> $implementations
+   *   All implementations, as method names keyed by hook, module and class.
+   * @param array<string, array<string, ''>> $legacyImplementations
    *   Modules that implement legacy hooks.
    * @param array $orderGroups
    *   Groups of hooks to reorder.
