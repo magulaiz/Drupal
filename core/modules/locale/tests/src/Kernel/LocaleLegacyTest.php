@@ -28,7 +28,7 @@ class LocaleLegacyTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
 
     $language = Language::$defaultValues;
@@ -50,7 +50,7 @@ class LocaleLegacyTest extends KernelTestBase {
   /**
    * Tests locale_system_set_config_langcodes().
    */
-  public function testLocaleSystemSetConfigLangcodes() {
+  public function testLocaleSystemSetConfigLangcodes(): void {
     $this->assertNull($this->config('locale_test.no_translation')->get('langcode'));
     $this->assertNull($this->config('locale_test.translation')->get('langcode'));
     $this->expectDeprecation('locale_system_set_config_langcodes() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\locale\LocaleConfigManager::updateDefaultConfigLangcodes() instead. See https://www.drupal.org/node/3350114');
