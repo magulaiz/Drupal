@@ -132,16 +132,13 @@ class ComponentPluginManager extends DefaultPluginManager implements Categorizin
    * {@inheritdoc}
    */
   public function getDefinitions(): array {
-    $definitions = parent::getDefinitions();
-
     $development_settings = $this->keyValueFactory->get('development_settings');
     $twig_debug = $development_settings->get('twig_debug', FALSE);
     $twig_cache_disable = $development_settings->get('twig_cache_disable', FALSE);
     if ($twig_debug || $twig_cache_disable) {
       return $this->findDefinitions();
     }
-
-    return $definitions;
+    return parent::getDefinitions();
   }
 
   /**
