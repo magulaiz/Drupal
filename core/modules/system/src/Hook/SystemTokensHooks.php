@@ -34,7 +34,7 @@ class SystemTokensHooks {
       'description' => $this->t('Tokens for site logo properties.'),
       'needs-data' => 'site-logo',
     ];
-    $types['date'] = ['name' => $this->t("Dates"), 'description' => t("Tokens related to times and dates.")];
+    $types['date'] = ['name' => $this->t("Dates"), 'description' => $this->t("Tokens related to times and dates.")];
     // Site-wide global tokens.
     $site['name'] = ['name' => $this->t("Name"), 'description' => $this->t("The name of the site.")];
     $site['slogan'] = ['name' => $this->t("Slogan"), 'description' => $this->t("The slogan of the site.")];
@@ -373,7 +373,7 @@ class SystemTokensHooks {
     $build = [
       '#theme' => 'image',
       '#uri' => $logo_path,
-      '#alt' => t('The site logo'),
+      '#alt' => $this->t('The site logo'),
     ];
     return \Drupal::service('renderer')->renderInIsolation($build);
   }
