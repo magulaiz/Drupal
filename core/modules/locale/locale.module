@@ -219,7 +219,7 @@ function locale_system_set_config_langcodes() {
   @trigger_error(
     'locale_system_set_config_langcodes() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0.'
     . 'Use \Drupal\locale\LocaleConfigManager::updateDefaultConfigLangcodes() instead.'
-    . 'See https://www.drupal.org/node/3350114.',
+    . 'See https://www.drupal.org/node/3350114',
     E_USER_DEPRECATED
   );
   \Drupal::service('locale.config_manager')->updateDefaultConfigLangcodes();
