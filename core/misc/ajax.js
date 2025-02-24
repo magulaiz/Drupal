@@ -1339,7 +1339,7 @@
         const fragment = document.createDocumentFragment();
         // Create a temporary template element.
         const template = fragment.appendChild(
-          document.createElement('template')
+          document.createElement('template'),
         );
 
         // Set the innerHTML of the template to the provided HTML string.
