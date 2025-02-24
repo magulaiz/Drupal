@@ -53,9 +53,16 @@ class ComponentPluginManagerTest extends ComponentKernelTestBase {
   /**
    * Test component definitions caching depending on twig debug/cache settings.
    *
+   * @param bool $twigDebug
+   *   Whether twig debug is enabled.
+   * @param bool $cacheEnabled
+   *   Whether cache is enabled.
+   * @param bool $expectCacheGet
+   *   Whether we expect the cache to be called.
+   *
    * @dataProvider providerTestComponentCachingDependingOnDevelopmentSettings
    */
-  public function testComponentCachingDependingOnDevelopmentSettings(bool $twigDebug, bool $cacheEnabled, int $expectedCacheGets): void {
+  public function testComponentCachingDependingOnDevelopmentSettings(bool $twigDebug, bool $cacheEnabled, bool $expectCacheGet): void {
     // Set the development settings.
     $developmentSettings = $this->keyValue->get('development_settings');
     $developmentSettings->set('twig_debug', $twigDebug);
@@ -63,10 +70,13 @@ class ComponentPluginManagerTest extends ComponentKernelTestBase {
 
     // Set the cache backend as a spy mock.
     $cacheBackend = $this->createMock(CacheBackendInterface::class);
-    $cacheBackend->expects($this->exactly($expectedCacheGets))->method('get')->with('cache_key');
+    $cacheBackend->expects($expectCacheGet ? $this->once() : $this->never())
+      ->method('get')
+      ->with('cache_key');
     $this->manager->setCacheBackend($cacheBackend, 'cache_key');
 
-    // Make two calls to getDefinitions() to ensure cache is called if needed.
+    // Make two calls to getDefinitions() to ensure the
+    // cache is/isn't called if it should/shouldn't be.
     $this->manager->getDefinitions();
     $this->manager->getDefinitions();
   }
@@ -76,10 +86,10 @@ class ComponentPluginManagerTest extends ComponentKernelTestBase {
    */
   public static function providerTestComponentCachingDependingOnDevelopmentSettings(): array {
     return [
-      'Debug enabled, cache enabled' => [TRUE, TRUE, 0],
-      'Debug enabled, cache disabled' => [TRUE, FALSE, 0],
-      'Debug disabled, cache enabled' => [FALSE, TRUE, 1],
-      'Debug disabled, cache disabled' => [FALSE, FALSE, 0],
+      'Debug enabled, cache enabled' => [TRUE, TRUE, FALSE],
+      'Debug enabled, cache disabled' => [TRUE, FALSE, FALSE],
+      'Debug disabled, cache enabled' => [FALSE, TRUE, TRUE],
+      'Debug disabled, cache disabled' => [FALSE, FALSE, FALSE],
     ];
   }
 
