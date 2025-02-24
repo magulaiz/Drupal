@@ -51,10 +51,14 @@ class LocaleLegacyTest extends KernelTestBase {
    * Tests locale_system_set_config_langcodes().
    */
   public function testLocaleSystemSetConfigLangcodes(): void {
-    $this->assertNull($this->config('locale_test.no_translation')->get('langcode'));
-    $this->assertNull($this->config('locale_test.translation')->get('langcode'));
-    $this->expectDeprecation('locale_system_set_config_langcodes() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\locale\LocaleConfigManager::updateDefaultConfigLangcodes() instead. See https://www.drupal.org/node/3350114');
-    \Drupal::service('locale.config_manager')->updateDefaultConfigLangcodes();
+    $this->assertEquals('en', $this->config('locale_test.no_translation')->get('langcode'));
+    $this->assertEquals('en', $this->config('locale_test.translation')->get('langcode'));
+    $this->expectDeprecation(
+      'locale_system_set_config_langcodes() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0.'
+      . 'Use \Drupal\locale\LocaleConfigManager::updateDefaultConfigLangcodes() instead.'
+      . 'See https://www.drupal.org/node/3350114'
+    );
+    locale_system_set_config_langcodes();
     $this->assertEquals('hu', $this->config('locale_test.no_translation')->get('langcode'));
     $this->assertEquals('hu', $this->config('locale_test.translation')->get('langcode'));
   }
