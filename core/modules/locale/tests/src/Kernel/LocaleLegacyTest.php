@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\locale\Kernel;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -14,6 +16,12 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * @group legacy
  */
 class LocaleLegacyTest extends KernelTestBase {
+
+  /**
+   * The modules to enable for this test.
+   *
+   * @var string[]
+   */
 
   protected static $modules = ['language', 'locale', 'locale_test'];
 
