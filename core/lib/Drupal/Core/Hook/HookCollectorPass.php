@@ -103,7 +103,7 @@ class HookCollectorPass implements CompilerPassInterface {
               continue;
             }
             if ($class !== ProceduralCall::class) {
-              self::checkForProceduralOnlyHooks($hook);
+              self::checkForProceduralOnlyHooks($hook, $class);
             }
             // Set properties on hook class that are needed for registration.
             $hook->set(... compact('class', 'method', 'module'));
@@ -185,7 +185,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *   All implementations, as method names keyed by hook, module and class.
    * @param array<string, array<string, ''>> $legacyImplementationMap
    *   List of hooks and modules formatted for hook_module_implements_alter().
-   * @param array $orderGroups
+   * @param array<string, list<string>> $orderGroups
    *   Groups of hooks to reorder.
    */
   protected static function registerImplementations(ContainerBuilder $container, HookCollectorPass $collector, array $implementations, array $legacyImplementationMap, array $orderGroups): void {
@@ -241,7 +241,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *   The container.
    * @param array $hookAttributesWithOrder
    *   All attributes that contain ordering information.
-   * @param array $orderGroups
+   * @param array<string, list<string>> $orderGroups
    *   Groups to order by.
    * @param array $implementations
    *   Hook implementations.
@@ -488,10 +488,10 @@ class HookCollectorPass implements CompilerPassInterface {
    *
    * @param \Drupal\Core\Hook\Attribute\Hook $hook
    *   The hook to check.
-   * @param string $class
+   * @param class-string $class
    *   The class the hook is implemented on.
    */
-  public static function checkForProceduralOnlyHooks(Hook $hook, string $class = ''): void {
+  public static function checkForProceduralOnlyHooks(Hook $hook, string $class): void {
     $staticDenyHooks = [
       'hook_info',
       'install',
@@ -505,9 +505,6 @@ class HookCollectorPass implements CompilerPassInterface {
     ];
 
     if (in_array($hook->hook, $staticDenyHooks) || preg_match('/^(post_update_|preprocess_|update_\d+$)/', $hook->hook)) {
-      if (!$class) {
-        $class = $hook->class;
-      }
       throw new \LogicException("The hook $hook->hook on class $class does not support attributes and must remain procedural.");
     }
   }
