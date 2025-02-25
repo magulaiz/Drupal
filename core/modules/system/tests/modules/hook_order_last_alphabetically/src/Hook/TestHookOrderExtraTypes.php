@@ -18,14 +18,14 @@ use Drupal\Core\Hook\Attribute\Hook;
  *
  * Each method pair tests one hook ordering permutation.
  */
-class TestHookOrderGroup {
+class TestHookOrderExtraTypes {
 
   /**
-   * This pair tests OrderAfter with Group.
+   * This pair tests OrderAfter with ExtraTypes.
    */
   #[Hook('custom_hook_extra_types2_alter')]
   public static function customHookExtraTypes(): void {
-    $GLOBALS['HookOrderGroupExtraTypes'] = 'HookOrderGroupExtraTypes';
+    $GLOBALS['HookOrderExtraTypes'] = 'HookOrderExtraTypes';
   }
 
 }

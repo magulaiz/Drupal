@@ -77,8 +77,8 @@ class HookCollectorPass implements CompilerPassInterface {
     // List of hooks and modules formatted for hook_module_implements_alter().
     $legacyImplementationMap = [];
 
-    // Groups of hooks that should be ordered together.
-    $orderGroups = [];
+    // Hooks that should be ordered together when extra types are involved.
+    $orderExtraTypes = [];
 
     // Hook attributes that contain ordering information.
     $hookAttributesWithOrder = [];
@@ -115,7 +115,7 @@ class HookCollectorPass implements CompilerPassInterface {
             // Reverse lookup for modules implementing hooks.
             $moduleFinder[$class][$hook->method] = $hook->module;
             if ($hook->order) {
-              $this->gatherOrderInformation($hook, $hookAttributesWithOrder, $orderGroups);
+              $this->gatherOrderInformation($hook, $hookAttributesWithOrder, $orderExtraTypes);
             }
           }
         }
@@ -138,16 +138,16 @@ class HookCollectorPass implements CompilerPassInterface {
     // but before registration to ensure this ordering directive takes
     // precedence.
     foreach ($process_after[ReOrderHook::class] as $hook) {
-      $this->gatherOrderInformation($hook, $hookAttributesWithOrder, $orderGroups);
+      $this->gatherOrderInformation($hook, $hookAttributesWithOrder, $orderExtraTypes);
     }
-    $orderGroups = array_map('array_unique', $orderGroups);
+    $orderExtraTypes = array_map('array_unique', $orderExtraTypes);
 
     // @todo investigate whether this if() is needed after ModuleHandler::add()
     // is removed.
     // @see https://www.drupal.org/project/drupal/issues/3481778
     if (count($container->getDefinitions()) > 1) {
-      static::registerImplementations($container, $collector, $implementations, $legacyImplementationMap, $orderGroups);
-      static::reOrderImplementations($container, $hookAttributesWithOrder, $orderGroups, $implementations, $moduleFinder);
+      static::registerImplementations($container, $collector, $implementations, $legacyImplementationMap, $orderExtraTypes);
+      static::reOrderImplementations($container, $hookAttributesWithOrder, $orderExtraTypes, $implementations, $moduleFinder);
     }
     return $implementations;
   }
@@ -159,15 +159,15 @@ class HookCollectorPass implements CompilerPassInterface {
    *   The hook with ordering information.
    * @param array $hookAttributesWithOrder
    *   All attributes with ordering information.
-   * @param array $orderGroups
-   *   Groups to order by.
+   * @param array<string, list<string>> $orderExtraTypes
+   *   Extra types to order together with.
    */
-  protected function gatherOrderInformation(Hook $hook, array &$hookAttributesWithOrder, array &$orderGroups): void {
+  protected function gatherOrderInformation(Hook $hook, array &$hookAttributesWithOrder, array &$orderExtraTypes): void {
     $hookAttributesWithOrder[] = $hook;
-    if ($hook->order instanceof ComplexOrder && $hook->order->group) {
-      $group = [...$hook->order->group, $hook->hook];
-      foreach ($group as $extraHook) {
-        $orderGroups[$extraHook] = array_merge($orderGroups[$extraHook] ?? [], $group);
+    if ($hook->order instanceof ComplexOrder && $hook->order->extraTypes) {
+      $extraTypes = [...$hook->order->extraTypes, $hook->hook];
+      foreach ($extraTypes as $extraHook) {
+        $orderExtraTypes[$extraHook] = array_merge($orderExtraTypes[$extraHook] ?? [], $extraTypes);
       }
     }
   }
@@ -185,10 +185,10 @@ class HookCollectorPass implements CompilerPassInterface {
    *   All implementations, as method names keyed by hook, module and class.
    * @param array<string, array<string, ''>> $legacyImplementationMap
    *   List of hooks and modules formatted for hook_module_implements_alter().
-   * @param array<string, list<string>> $orderGroups
-   *   Groups of hooks to reorder.
+   * @param array<string, list<string>> $orderExtraTypes
+   *   Extra types to order a hook with.
    */
-  protected static function registerImplementations(ContainerBuilder $container, HookCollectorPass $collector, array $implementations, array $legacyImplementationMap, array $orderGroups): void {
+  protected static function registerImplementations(ContainerBuilder $container, HookCollectorPass $collector, array $implementations, array $legacyImplementationMap, array $orderExtraTypes): void {
     $container->register(ProceduralCall::class, ProceduralCall::class)
       ->addArgument($collector->includes);
     $groupIncludes = [];
@@ -201,7 +201,7 @@ class HookCollectorPass implements CompilerPassInterface {
     }
 
     foreach ($legacyImplementationMap as $hook => $moduleImplements) {
-      $extraHooks = $orderGroups[$hook] ?? [];
+      $extraHooks = $orderExtraTypes[$hook] ?? [];
       foreach ($extraHooks as $extraHook) {
         $moduleImplements += $legacyImplementationMap[$extraHook] ?? [];
       }
@@ -230,7 +230,7 @@ class HookCollectorPass implements CompilerPassInterface {
 
     $definition = $container->getDefinition('module_handler');
     $definition->setArgument('$groupIncludes', $groupIncludes);
-    $definition->setArgument('$orderGroups', $orderGroups);
+    $definition->setArgument('$orderedExtraTypes', $orderExtraTypes);
     $container->setParameter('hook_implementations_map', $map ?? []);
   }
 
@@ -241,8 +241,8 @@ class HookCollectorPass implements CompilerPassInterface {
    *   The container.
    * @param array $hookAttributesWithOrder
    *   All attributes that contain ordering information.
-   * @param array<string, list<string>> $orderGroups
-   *   Groups to order by.
+   * @param array<string, list<string>> $orderExtraTypes
+   *   Extra types to order together with.
    * @param array $implementations
    *   Hook implementations.
    * @param array $moduleFinder
@@ -250,13 +250,13 @@ class HookCollectorPass implements CompilerPassInterface {
    *   is the module. This is not necessarily the same as the module the class
    *   is in because the implementation might be on behalf of another module.
    */
-  protected static function reOrderImplementations(ContainerBuilder $container, array $hookAttributesWithOrder, array $orderGroups, array $implementations, array $moduleFinder): void {
+  protected static function reOrderImplementations(ContainerBuilder $container, array $hookAttributesWithOrder, array $orderExtraTypes, array $implementations, array $moduleFinder): void {
     $hookPriority = new HookPriority($container);
     foreach ($hookAttributesWithOrder as $hookAttributeWithOrder) {
       assert($hookAttributeWithOrder instanceof Hook);
-      // ::process() adds the hook serving as key to the order group so it
-      // does not need to be added if there's a group for the hook.
-      $hooks = $orderGroups[$hookAttributeWithOrder->hook] ?? [$hookAttributeWithOrder->hook];
+      // ::process() adds the hook serving as key to the order extraTypes so it
+      // does not need to be added if there's a extraTypes for the hook.
+      $hooks = $orderExtraTypes[$hookAttributeWithOrder->hook] ?? [$hookAttributeWithOrder->hook];
       $combinedHook = implode(':', $hooks);
       if ($hookAttributeWithOrder->order instanceof ComplexOrder) {
         // Verify the correct structure of
