@@ -17,7 +17,7 @@ class EntityTypeExistsConstraintValidator extends ConstraintValidator {
   public function validate($value, Constraint $constraint): void {
     assert($constraint instanceof EntityTypeExistsConstraint);
 
-    if (!is_string($value)) {
+    if (!is_string($value) || $value === '') {
       $this->context->addViolation($constraint->valueIsNoStringMessage);
       return;
     }

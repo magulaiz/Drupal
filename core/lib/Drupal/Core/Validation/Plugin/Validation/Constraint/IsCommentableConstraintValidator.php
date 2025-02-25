@@ -17,7 +17,7 @@ class IsCommentableConstraintValidator extends ConstraintValidator {
   public function validate($value, Constraint $constraint): void {
     assert($constraint instanceof IsCommentableConstraint);
 
-    if (!is_string($value)) {
+    if (!is_string($value) || $value === '') {
       $this->context->addViolation($constraint->valueIsNoStringMessage);
       return;
     }
