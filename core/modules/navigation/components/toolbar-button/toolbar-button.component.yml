@@ -37,7 +37,6 @@ props:
           - primary
           - small-offset
           - weight--400
-          - icon-only
     extra_classes:
       type: array
       title: Extra classes.
