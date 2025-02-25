@@ -6,15 +6,15 @@ namespace Drupal\block_content\Access;
 // requires a trait and an interface from it in its own block_content specific
 // block plugin. Dynamically define that trait and interface if they don't
 // exist.
-// @codingStandardsIgnoreStart
 if (!trait_exists(RefinableDependentAccessTrait::class)) {
+  // phpcs:ignore Drupal.Classes.ClassFileName.NoMatch
   trait RefinableDependentAccessTrait {}
 }
 
 if (!interface_exists(RefinableDependentAccessInterface::class)) {
   interface RefinableDependentAccessInterface {}
 }
-// @codingStandardsIgnoreEnd
+
 
 namespace Drupal\layout_builder\Plugin\Block;
 
