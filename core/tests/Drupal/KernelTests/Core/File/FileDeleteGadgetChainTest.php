@@ -11,7 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Tests protection against SA-CORE-2024-006 File Delete Gadget Chain.
  *
- * @group config
+ * @group file
  */
 class FileDeleteGadgetChainTest extends KernelTestBase {
 
