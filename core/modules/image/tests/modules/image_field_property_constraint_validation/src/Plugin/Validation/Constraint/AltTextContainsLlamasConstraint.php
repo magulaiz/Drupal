@@ -17,6 +17,11 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 final class AltTextContainsLlamasConstraint extends SymfonyConstraint {
 
+  /**
+   * The error message.
+   *
+   * @var string
+   */
   public string $message = 'Alternative text must contain some llamas.';
 
 }

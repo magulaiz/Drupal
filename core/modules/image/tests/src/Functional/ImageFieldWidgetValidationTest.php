@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\image\Functional;
 
-use Drupal\field\Entity\FieldConfig;
-
 /**
  * Tests the image field widget validation.
  *
@@ -18,9 +16,13 @@ class ImageFieldWidgetValidationTest extends ImageFieldTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'image_field_property_constraint_validation',
   ];
+
   /**
    * Tests file widget element.
    */
