@@ -42,7 +42,7 @@ class CachePreWarmerTest extends UnitTestCase {
     $this->assertFalse($prewarmer->preWarmAllCaches());
   }
 
-  protected function setupCacheServices() {
+  protected function setupCacheServices(): void {
     $this->classResolver = $this->createMock(ClassResolverInterface::class);
 
     $services = [
@@ -112,6 +112,8 @@ class CachePreWarmerTest extends UnitTestCase {
     foreach ($this->preWarmableServices as $service) {
       $this->assertTrue($service->warmed);
     }
+
+    $this->assertFalse($preWarmer->preWarmAllCaches());
   }
 
 }
