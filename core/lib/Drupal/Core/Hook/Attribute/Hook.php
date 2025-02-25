@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Hook\Attribute;
 
 use Drupal\Core\Hook\ComplexOrder;
+use Drupal\Core\Hook\HookOperation;
 use Drupal\Core\Hook\Order;
 
 /**
@@ -100,14 +101,7 @@ use Drupal\Core\Hook\Order;
  * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class Hook {
-
-  /**
-   * The class the hook implementation is in.
-   *
-   * @var class-string|null
-   */
-  public ?string $class = NULL;
+class Hook extends HookOperation {
 
   /**
    * Constructs a Hook attribute object.
@@ -127,11 +121,13 @@ class Hook {
    *   (optional) Set the order of the implementation.
    */
   public function __construct(
-    public string $hook,
-    public string $method = '',
-    public ?string $module = NULL,
-    public Order|ComplexOrder|null $order = NULL,
-  ) {}
+    string $hook,
+    ?string $method = '',
+    ?string $module = NULL,
+    Order|ComplexOrder|null $order = NULL,
+  ) {
+    parent::__construct(... compact('hook', 'method', 'module', 'order'));
+  }
 
   /**
    * Set necessary parameters for the hook attribute.

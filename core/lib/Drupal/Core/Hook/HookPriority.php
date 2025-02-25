@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Hook;
 
-use Drupal\Core\Hook\Attribute\Hook;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -21,7 +20,7 @@ class HookPriority {
    *
    * @param string $event
    *   Listeners to this event will be ordered.
-   * @param \Drupal\Core\Hook\Attribute\Hook $hook
+   * @param \Drupal\Core\Hook\HookOperation $hook
    *   The hook attribute. Most of the order parameter is ignored by this
    *   class, only $hook->order->value is used. The rest is preprocessed by
    *   HookCollectorPass and passed in $other_specifiers.
@@ -31,7 +30,7 @@ class HookPriority {
    *
    * @internal
    */
-  public function change(string $event, Hook $hook, ?array $other_specifiers = NULL): void {
+  public function change(string $event, HookOperation $hook, ?array $other_specifiers = NULL): void {
     foreach ($this->container->findTaggedServiceIds('kernel.event_listener') as $id => $tags) {
       foreach ($tags as $key => $tag) {
         if ($tag['event'] === $event) {
