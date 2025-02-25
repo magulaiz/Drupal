@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\FileTransfer;
+namespace Drupal\Tests\system\Kernel\FileTransfer;
 
 use Drupal\Core\FileTransfer\FileTransfer;
 
@@ -36,44 +36,72 @@ class TestFileTransfer extends FileTransfer {
    *
    * @var bool
    */
-  public $shouldIsDirectoryReturnTrue = FALSE;
+  public bool $shouldIsDirectoryReturnTrue = FALSE;
 
+  /**
+   * {@inheritdoc}
+   */
   public static function factory($jail, $settings) {
     assert(is_array($settings));
     return new TestFileTransfer($jail);
   }
 
-  public function connect() {
+  /**
+   * {@inheritdoc}
+   */
+  public function connect(): void {
     $this->connection = new MockTestConnection();
     // Access the connection via the property. The property used to be set via a
     // magic method and this can cause problems if coded incorrectly.
     $this->connection->connectionString = 'test://' . urlencode($this->username) . ':' . urlencode($this->password) . "@$this->host:$this->port/";
+
   }
 
-  public function copyFileJailed($source, $destination) {
+  /**
+   * {@inheritdoc}
+   */
+  protected function copyFileJailed($source, $destination): void {
     $this->connection->run("copyFile $source $destination");
   }
 
-  protected function removeDirectoryJailed($directory) {
+  /**
+   * {@inheritdoc}
+   */
+  protected function removeDirectoryJailed($directory): void {
     $this->connection->run("rmdir $directory");
   }
 
-  public function createDirectoryJailed($directory) {
+  /**
+   * {@inheritdoc}
+   */
+  protected function createDirectoryJailed($directory): void {
     $this->connection->run("mkdir $directory");
   }
 
-  public function removeFileJailed($destination) {
+  /**
+   * {@inheritdoc}
+   */
+  protected function removeFileJailed($destination): void {
     $this->connection->run("rm $destination");
   }
 
-  public function isDirectory($path) {
+  /**
+   * {@inheritdoc}
+   */
+  public function isDirectory($path): bool {
     return $this->shouldIsDirectoryReturnTrue;
   }
 
-  public function isFile($path) {
+  /**
+   * {@inheritdoc}
+   */
+  public function isFile($path): false {
     return FALSE;
   }
 
-  public function chmodJailed($path, $mode, $recursive) {}
+  /**
+   * {@inheritdoc}
+   */
+  public function chmodJailed($path, $mode, $recursive): void {}
 
 }
