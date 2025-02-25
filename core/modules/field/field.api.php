@@ -391,7 +391,7 @@ function hook_field_formatter_info_alter(array &$info): void {
  *
  * @ingroup field_info
  */
-function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mode) {
+function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mode): ?int {
   $weights = [];
 
   foreach (my_module_entity_additions($entity_type, $bundle, $context, $context_mode) as $addition) {
