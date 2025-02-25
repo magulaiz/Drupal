@@ -47,7 +47,7 @@ class CommentTypeValidationTest extends ConfigEntityValidationTestBase {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function testRequiredPropertyValuesMissing(?array $additional_expected_validation_errors_when_missing = NULL): void {
     parent::testRequiredPropertyValuesMissing([
