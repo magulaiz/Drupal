@@ -123,14 +123,15 @@ class SiteInformationForm extends ConfigFormBase {
       '#description' => $this->t("The <em>From</em> address in automated emails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this email being flagged as spam.)"),
       '#required' => TRUE,
     ];
-    $form['base_url'] = [
+    $form['site_base_url'] = [
       '#type' => 'details',
       '#title' => $this->t('Base URL'),
       '#open' => TRUE,
     ];
-    $form['base_url']['site_base_url'] = [
-      '#type' => 'textfield',
+    $form['site_base_url']['base_url'] = [
+      '#type' => 'url',
       '#title' => $this->t('Base URL'),
+      '#config_target' => 'system.site:page.base_url',
       '#default_value' => $site_config->get('page.base_url'),
       '#size' => 40,
       '#description' => $this->t('Specify a base URL, in https://example.org format'),
@@ -216,7 +217,7 @@ class SiteInformationForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('system.site')
-      ->set('page.base_url', $form_state->getValue('site_base_url'))
+      ->set('page.base_url', $form_state->getValue('base_url'))
       ->set('page.front', $form_state->getValue('site_frontpage'))
       ->save();
 
