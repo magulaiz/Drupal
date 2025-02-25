@@ -4,31 +4,33 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Hook\Attribute;
 
+use Drupal\Core\Hook\HookOperation;
+
 /**
  * Attribute for removing an implementation.
  *
  * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class RemoveHook extends Hook {
+class RemoveHook extends HookOperation {
 
   /**
-   * Constructs a Hook attribute object.
+   * Constructs a RemoveHook object.
    *
    * @param string $hook
-   *   The short hook name, without the 'hook_' prefix.
+   *   The hook parameter of the #Hook being modified.
    * @param class-string $class
-   *   The class the implementation to remove is in.
+   *   The class the implementation to modify is in.
    * @param string $method
-   *   The method name of the implementation to remove.
+   *   The method name of the #Hook being modified. If the hook attribute is
+   *   on a class and does not have method set, then use __invoke.
    */
   public function __construct(
     string $hook,
     string $class,
     string $method,
   ) {
-    parent::__construct($hook, method: $method);
-    $this->class = $class;
+    parent::__construct(... compact('hook', 'method', 'class'));
   }
 
 }

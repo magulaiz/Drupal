@@ -97,7 +97,7 @@ class HookCollectorPass implements CompilerPassInterface {
       foreach ($collector->moduleHooks[$module] ?? [] as $class => $methods) {
         foreach ($methods as $method => $hooks) {
           foreach ($hooks as $hook) {
-            assert($hook instanceof Hook);
+            assert($hook instanceof HookOperation);
             if (isset($process_after[get_class($hook)])) {
               $process_after[get_class($hook)][] = $hook;
               continue;
@@ -126,10 +126,10 @@ class HookCollectorPass implements CompilerPassInterface {
     // registering the hooks. This must happen after all collection, but before
     // registration to ensure the hook it is removing has already been
     // discovered.
-    foreach ($process_after[RemoveHook::class] as $hook) {
-      if ($module = ($moduleFinder[$hook->class][$hook->method] ?? '')) {
-        unset($legacyImplementationMap[$hook->hook][$module]);
-        unset($implementations[$hook->hook][$module][$hook->class][$hook->method]);
+    foreach ($process_after[RemoveHook::class] as $removeHook) {
+      if ($module = ($moduleFinder[$removeHook->class][$removeHook->method] ?? '')) {
+        unset($legacyImplementationMap[$removeHook->hook][$module]);
+        unset($implementations[$removeHook->hook][$module][$removeHook->class][$removeHook->method]);
       }
     }
 
@@ -137,8 +137,8 @@ class HookCollectorPass implements CompilerPassInterface {
     // before registering the hooks. This must happen after all collection,
     // but before registration to ensure this ordering directive takes
     // precedence.
-    foreach ($process_after[ReOrderHook::class] as $hook) {
-      $this->gatherOrderInformation($hook, $hookAttributesWithOrder, $orderExtraTypes);
+    foreach ($process_after[ReOrderHook::class] as $reOrderHook) {
+      $this->gatherOrderInformation($reOrderHook, $hookAttributesWithOrder, $orderExtraTypes);
     }
     $orderExtraTypes = array_map('array_unique', $orderExtraTypes);
 
@@ -155,14 +155,14 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Gather ordering information.
    *
-   * @param \Drupal\Core\Hook\Attribute\Hook $hook
+   * @param \Drupal\Core\Hook\HookOperation $hook
    *   The hook with ordering information.
    * @param array $hookAttributesWithOrder
    *   All attributes with ordering information.
    * @param array<string, list<string>> $orderExtraTypes
    *   Extra types to order together with.
    */
-  protected function gatherOrderInformation(Hook $hook, array &$hookAttributesWithOrder, array &$orderExtraTypes): void {
+  protected function gatherOrderInformation(HookOperation $hook, array &$hookAttributesWithOrder, array &$orderExtraTypes): void {
     $hookAttributesWithOrder[] = $hook;
     if ($hook->order instanceof ComplexOrder && $hook->order->extraTypes) {
       $extraTypes = [...$hook->order->extraTypes, $hook->hook];
@@ -253,7 +253,7 @@ class HookCollectorPass implements CompilerPassInterface {
   protected static function reOrderImplementations(ContainerBuilder $container, array $hookAttributesWithOrder, array $orderExtraTypes, array $implementations, array $moduleFinder): void {
     $hookPriority = new HookPriority($container);
     foreach ($hookAttributesWithOrder as $hookAttributeWithOrder) {
-      assert($hookAttributeWithOrder instanceof Hook);
+      assert($hookAttributeWithOrder instanceof HookOperation);
       // ::process() adds the hook serving as key to the order extraTypes so it
       // does not need to be added if there's a extraTypes for the hook.
       $hooks = $orderExtraTypes[$hookAttributeWithOrder->hook] ?? [$hookAttributeWithOrder->hook];
@@ -488,7 +488,7 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Checks for hooks which can't be supported in classes.
    *
-   * @param \Drupal\Core\Hook\Attribute\Hook $hook
+   * @param \Drupal\Core\Hook\Hook $hook
    *   The hook to check.
    * @param class-string $class
    *   The class the hook is implemented on.
@@ -524,7 +524,7 @@ class HookCollectorPass implements CompilerPassInterface {
    */
   protected static function getAttributeInstances(array $attributes, array $reflections): array {
     foreach ($reflections as $reflection) {
-      if ($reflection_attributes = $reflection->getAttributes(Hook::class, \ReflectionAttribute::IS_INSTANCEOF)) {
+      if ($reflection_attributes = $reflection->getAttributes(HookOperation::class, \ReflectionAttribute::IS_INSTANCEOF)) {
         $method = $reflection instanceof \ReflectionMethod ? $reflection->getName() : '__invoke';
         $attributes[$method] = array_map(fn (\ReflectionAttribute $ra) => $ra->newInstance(), $reflection_attributes);
       }
