@@ -14,6 +14,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
  * \Drupal\migrate\Plugin\migrate\source\ConfigEntity instead.
+ * @see https://www.drupal.org/node/3508578
  *
  * Available configuration keys:
  * - collections: (optional) The collection of configuration storage to retrieve
