@@ -135,7 +135,7 @@
     background: linktext;
   }
 }
-.toolbar-button--icon-only::before {
+[class*="toolbar-button--icon"]:not([data-icon-text])::before {
   content: "";
 }
 .toolbar-button--primary {
