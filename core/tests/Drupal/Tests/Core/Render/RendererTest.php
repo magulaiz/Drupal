@@ -571,7 +571,7 @@ class RendererTest extends RendererTestBase {
     ];
 
     $this->renderer->renderInIsolation($build);
-    $this->assertEmpty($build['#defaults_loaded'], "A lazy builder that did not set a type had no type defaults loaded.");
+    $this->assertArrayNotHasKey('#defaults_loaded', $build, "A lazy builder that did not set a type had no type defaults loaded.");
 
     $build = [
       '#lazy_builder' => [
