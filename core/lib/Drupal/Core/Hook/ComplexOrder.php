@@ -37,14 +37,14 @@ abstract readonly class ComplexOrder {
    *       [Bar::class, 'someOtherMethod'],
    *     ]
    *   @endcode
-   * @param array $group
+   * @param array $extraTypes
    *   A list of hooks to be ordered together. Ordering by attributes happens
    *   at build time by setting up the order of the listeners of a hook
    *   correctly. However, ModuleHandlerInterface::alter() can be called with
    *   multiple hooks runtime. If the hook defined on this method/class
    *   requires ordering relative to other such hooks then this parameter can
-   *   be used to order relative to implementations of all hooks in the group.
-   *   Include all alter hooks to be ordered against in the group even if no
+   *   be used to order relative to implementations of all hooks in the set.
+   *   Include all alter hooks to be ordered against in the set even if no
    *   single alter() call includes all of them. For example, this can be used
    *   to order a hook_form_BASE_FORM_ID_alter() implementation relative to
    *   multiple hook_form_FORM_ID_alter() implementations as
@@ -53,7 +53,7 @@ abstract readonly class ComplexOrder {
   public function __construct(
     public array $modules = [],
     public array $classesAndMethods = [],
-    public array $group = [],
+    public array $extraTypes = [],
   ) {
     if (!$this->modules && !$this->classesAndMethods) {
       throw new \LogicException('Order must provide either modules or class-method pairs to order against.');
