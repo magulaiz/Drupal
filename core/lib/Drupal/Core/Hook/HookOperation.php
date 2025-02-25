@@ -21,10 +21,6 @@ abstract class HookOperation {
    *   on a class and does not have method set, then use __invoke.
    * @param class-string $class
    *   (optional) The class the implementation to modify is in.
-   * @param string|null $module
-   *   (optional) The module this implementation is for. This allows one module
-   *   to implement a hook on behalf of another module. Defaults to the module
-   *   the implementation is in.
    * @param \Drupal\Core\Hook\Order|\Drupal\Core\Hook\ComplexOrder|null $order
    *   (optional) Set the order of the implementation.
    */
@@ -32,7 +28,6 @@ abstract class HookOperation {
     public string $hook,
     public string $method,
     public ?string $class = '',
-    public ?string $module = NULL,
     public Order|ComplexOrder|null $order = NULL,
   ) {}
 
