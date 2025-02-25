@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\migrate\Plugin\migrate\source;
 
-use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\migrate\Attribute\MigrateSource;
-use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\migrate\Row;
 
 /**
