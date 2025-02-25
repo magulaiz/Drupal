@@ -558,10 +558,7 @@ class RendererTest extends RendererTestBase {
    * @covers ::doRender
    */
   public function testElementDefaultsAdded(): void {
-    $build = [
-      '#type' => 'details'
-    ];
-
+    $build = ['#type' => 'details'];
     $this->renderer->renderInIsolation($build);
     $this->assertTrue($build['#defaults_loaded'], "An element with a type had said type's defaults loaded.");
 
