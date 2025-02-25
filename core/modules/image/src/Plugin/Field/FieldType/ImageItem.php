@@ -376,7 +376,7 @@ class ImageItem extends FileItem {
       try {
         $file_system->move($tmp_file, $destination);
       }
-      catch (FileException $e) {
+      catch (FileException) {
         // Ignore failed move.
       }
       if ($path = $random->image($file_system->realpath($destination), $min_resolution, $max_resolution)) {
@@ -420,8 +420,9 @@ class ImageItem extends FileItem {
     if (!empty($element['x']['#value']) || !empty($element['y']['#value'])) {
       foreach (['x', 'y'] as $dimension) {
         if (!$element[$dimension]['#value']) {
-          // We expect the field name placeholder value to be wrapped in $this->t()
-          // here, so it won't be escaped again as it's already marked safe.
+          // We expect the field name placeholder value to be wrapped in
+          // $this->t() here, so it won't be escaped again as it's already
+          // marked safe.
           $form_state->setError($element[$dimension], new TranslatableMarkup('Both a height and width value must be specified in the @name field.', ['@name' => $element['#title']]));
           return;
         }

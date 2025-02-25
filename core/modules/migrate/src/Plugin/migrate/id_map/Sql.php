@@ -207,13 +207,13 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * Retrieves the hash of the source identifier values.
    *
-   * @internal
-   *
    * @param array $source_id_values
    *   The source identifiers
    *
    * @return string
    *   A hash containing the hashed values of the source identifiers.
+   *
+   * @internal
    */
   public function getSourceIdsHash(array $source_id_values) {
     // When looking up the destination ID we require an array with both the
@@ -560,7 +560,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $query->condition("map.$destination_id", $destination_id_values[$field_name], '=');
     }
     $result = $query->execute()->fetchAssoc();
-    return $result ? $result : [];
+    return $result ?: [];
   }
 
   /**
@@ -657,7 +657,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     try {
       return $query->execute()->fetchAll(\PDO::FETCH_NUM);
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // It's possible that the query will cause an exception to be thrown. For
       // example, the URL alias migration uses a dummy node ID of 'INVALID_NID'
       // to cause the lookup to return no results. On PostgreSQL this causes an
@@ -824,7 +824,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     try {
       $count = (int) $query->countQuery()->execute()->fetchField();
     }
-    catch (DatabaseException $e) {
+    catch (DatabaseException) {
       // The table does not exist, therefore there are no records.
       $count = 0;
     }
