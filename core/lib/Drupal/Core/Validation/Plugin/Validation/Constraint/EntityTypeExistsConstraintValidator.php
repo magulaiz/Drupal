@@ -18,7 +18,8 @@ class EntityTypeExistsConstraintValidator extends ConstraintValidator {
     assert($constraint instanceof EntityTypeExistsConstraint);
 
     if (!is_string($value)) {
-      throw new UnexpectedTypeException($value, 'string');
+      $this->context->addViolation($constraint->valueIsNoStringMessage);
+      return;
     }
 
     $entity_types = \Drupal::entityTypeManager()->getDefinitions();

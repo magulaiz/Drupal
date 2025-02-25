@@ -18,7 +18,8 @@ class IsCommentableConstraintValidator extends ConstraintValidator {
     assert($constraint instanceof IsCommentableConstraint);
 
     if (!is_string($value)) {
-      throw new UnexpectedTypeException($value, 'string');
+      $this->context->addViolation($constraint->valueIsNoStringMessage);
+      return;
     }
 
     if (!_comment_entity_uses_integer_id($value)) {
