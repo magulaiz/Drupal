@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\PreWarmablePluginManagerTrait;
 use Drupal\Core\PreWarm\PreWarmableInterface;
+use Drupal\views\Plugin\views\ViewsPluginInterface;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -37,7 +38,7 @@ class ViewsPluginManager extends DefaultPluginManager implements PreWarmableInte
     // Special handling until all views plugins have attribute classes.
     $attribute_name_candidate = 'Drupal\views\Attribute\Views' . Container::camelize($type);
     $plugin_definition_attribute_name = class_exists($attribute_name_candidate) ? $attribute_name_candidate : Plugin::class;
-    parent::__construct("Plugin/views/$type", $namespaces, $module_handler, 'Drupal\views\Plugin\views\ViewsPluginInterface', $plugin_definition_attribute_name, $plugin_definition_annotation_name);
+    parent::__construct("Plugin/views/$type", $namespaces, $module_handler, ViewsPluginInterface::class, $plugin_definition_attribute_name, $plugin_definition_annotation_name);
 
     $this->defaults += [
       'parent' => 'parent',
