@@ -211,13 +211,13 @@ class HookCollectorPassTest extends KernelTestBase {
   /**
    * Tests hook ordering with attributes.
    */
-  public function testHookOrderGroup(): void {
+  public function testHookOrderExtraTypes(): void {
     $module_installer = $this->container->get('module_installer');
     $this->assertTrue($module_installer->install(['hook_order_first_alphabetically']));
     $this->assertTrue($module_installer->install(['hook_order_last_alphabetically']));
-    $this->assertFalse(isset($GLOBALS['HookOrderGroupExtraTypes']));
-    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingOrderGroupsExtraTypes']));
-    $this->assertFalse(isset($GLOBALS['HookRanTestingOrderGroupsExtraTypes']));
+    $this->assertFalse(isset($GLOBALS['HookOrderExtraTypes']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingOrderExtraTypes']));
+    $this->assertFalse(isset($GLOBALS['HookRanTestingOrderExtraTypes']));
     $module_handler = $this->container->get('module_handler');
     $hooks = [
       'custom_hook',
@@ -226,9 +226,9 @@ class HookCollectorPassTest extends KernelTestBase {
     ];
     $data = ['hi'];
     $module_handler->alter($hooks, $data);
-    $this->assertTrue(isset($GLOBALS['HookOrderGroupExtraTypes']));
-    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingOrderGroupsExtraTypes']));
-    $this->assertTrue(isset($GLOBALS['HookRanTestingOrderGroupsExtraTypes']));
+    $this->assertTrue(isset($GLOBALS['HookOrderExtraTypes']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingOrderExtraTypes']));
+    $this->assertTrue(isset($GLOBALS['HookRanTestingOrderExtraTypes']));
   }
 
   /**

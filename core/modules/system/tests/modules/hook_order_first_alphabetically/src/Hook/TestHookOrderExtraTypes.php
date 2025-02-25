@@ -19,23 +19,23 @@ use Drupal\Core\Hook\OrderAfter;
  *
  * Each method pair tests one hook ordering permutation.
  */
-class TestHookOrderGroup {
+class TestHookOrderExtraTypes {
 
   /**
-   * This pair tests OrderAfter with Group.
+   * This pair tests OrderAfter with ExtraTypes.
    */
   #[Hook('custom_hook_extra_types1_alter',
     order: new OrderAfter(
       modules: ['hook_order_last_alphabetically'],
-      group: ['custom_hook_extra_types2_alter'],
+      extraTypes: ['custom_hook_extra_types2_alter'],
     )
   )]
   public static function customHookExtraTypes(): void {
-    // This should be run after so HookOrderGroupExtraTypes should not be set.
-    if (!isset($GLOBALS['HookOrderGroupExtraTypes'])) {
-      $GLOBALS['HookOutOfOrderTestingOrderGroupsExtraTypes'] = 'HookOutOfOrderTestingOrderGroupsExtraTypes';
+    // This should be run after so HookOrderExtraTypes should not be set.
+    if (!isset($GLOBALS['HookOrderExtraTypes'])) {
+      $GLOBALS['HookOutOfOrderTestingOrderExtraTypes'] = 'HookOutOfOrderTestingOrderExtraTypes';
     }
-    $GLOBALS['HookRanTestingOrderGroupsExtraTypes'] = 'HookRanTestingOrderGroupsExtraTypes';
+    $GLOBALS['HookRanTestingOrderExtraTypes'] = 'HookRanTestingOrderExtraTypes';
   }
 
 }

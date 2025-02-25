@@ -80,16 +80,16 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   An array keyed by hook, classname, method and the value is the module.
    * @param array $groupIncludes
    *   An array of .inc files to get helpers from.
-   * @param array $orderGroups
-   *   A multidimensional array of hooks that have been ordered and the group
-   *   of hooks they have been ordered against. This is stored separately from
-   *   $hookImplementationsMap to prevent ordering again since this group has
-   *   already been fully ordered in HookCollectorPass.
+   * @param array $orderedExtraTypes
+   *   A multidimensional array of hooks that have been ordered and the
+   *   extra_types they have been ordered against. This is stored separately
+   *   from $hookImplementationsMap to prevent ordering again since this set
+   *   has already been fully ordered in HookCollectorPass.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, array $module_list, protected EventDispatcherInterface $eventDispatcher, protected array $hookImplementationsMap, protected array $groupIncludes = [], protected array $orderGroups = []) {
+  public function __construct($root, array $module_list, protected EventDispatcherInterface $eventDispatcher, protected array $hookImplementationsMap, protected array $groupIncludes = [], protected array $orderedExtraTypes = []) {
     $this->root = $root;
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
@@ -447,16 +447,16 @@ class ModuleHandler implements ModuleHandlerInterface {
         foreach ($extra_hooks as $extra_hook) {
           $hook_listeners = $this->findListenersForAlter($extra_hook, $hook_listeners, $extra_modules);
         }
-        // Second, gather implementations grouped together. These are only used
-        // for ordering because the group might contain hooks not included in
+        // Second, gather implementations ordered together. These are only used
+        // for ordering because the set might contain hooks not included in
         // this alter() call. \Drupal\Core\Hook\HookPriority::change()
-        // registers the implementations of a grouped hook.
+        // registers the implementations of combined hooks.
         foreach (array_merge($extra_hooks, [$type . '_alter']) as $extra_hook) {
-          if (isset($this->orderGroups[$extra_hook])) {
-            $group = $this->orderGroups[$extra_hook];
-            $extra_listeners = $this->findListenersForAlter(implode(':', $group));
+          if (isset($this->orderedExtraTypes[$extra_hook])) {
+            $orderedHooks = $this->orderedExtraTypes[$extra_hook];
+            $extra_listeners = $this->findListenersForAlter(implode(':', $orderedHooks));
             // Remove already ordered hooks.
-            $extra_hooks = array_diff($extra_hooks, $group);
+            $extra_hooks = array_diff($extra_hooks, $orderedHooks);
           }
         }
       }
