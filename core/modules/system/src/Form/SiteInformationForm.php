@@ -134,7 +134,7 @@ class SiteInformationForm extends ConfigFormBase {
       '#config_target' => 'system.site:page.base_url',
       '#default_value' => $site_config->get('page.base_url'),
       '#size' => 40,
-      '#description' => $this->t('Specify a base URL, in https://example.org format'),
+      '#description' => $this->t('Specify a base URL, in https://example.org format.'),
     ];
     $form['front_page'] = [
       '#type' => 'details',
