@@ -165,7 +165,7 @@ class HookCollectorPass implements CompilerPassInterface {
   protected function gatherOrderInformation(HookOperation $hook, array &$hookOrderOperations, array &$orderExtraTypes): void {
     $hookOrderOperations[] = $hook;
     if ($hook->order instanceof ComplexOrder && $hook->order->extraTypes) {
-      $extraTypes = [...$hook->order->extraTypes, $hook->hook];
+      $extraTypes = [... $hook->order->extraTypes, $hook->hook];
       foreach ($extraTypes as $extraHook) {
         $orderExtraTypes[$extraHook] = array_merge($orderExtraTypes[$extraHook] ?? [], $extraTypes);
       }
