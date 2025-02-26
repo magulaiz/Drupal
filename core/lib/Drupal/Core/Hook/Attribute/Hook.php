@@ -126,7 +126,7 @@ class Hook extends HookOperation {
     public ?string $module = NULL,
     Order|ComplexOrder|null $order = NULL,
   ) {
-    parent::__construct(... compact('hook', 'method', 'order'));
+    parent::__construct($hook, $method, order: $order);
   }
 
   /**

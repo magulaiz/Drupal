@@ -30,7 +30,7 @@ class RemoveHook extends HookOperation {
     string $class,
     string $method,
   ) {
-    parent::__construct(... compact('hook', 'method', 'class'));
+    parent::__construct($hook, $method, $class);
   }
 
 }
