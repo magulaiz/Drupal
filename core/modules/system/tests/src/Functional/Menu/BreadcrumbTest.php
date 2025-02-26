@@ -30,7 +30,7 @@ class BreadcrumbTest extends BrowserTestBase {
   public static $testViews = ['test_menu_link'];
 
   /**
-   * {@inehritdoc}
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',
