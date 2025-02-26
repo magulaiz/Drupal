@@ -15,7 +15,6 @@ services:
         '@request_stack',
         '@extension.list.module',
         '@current_user',
-        '%renderer.config%',
         '@navigation.entity_route_helper',
       ]
   Drupal\navigation\NavigationRenderer: '@navigation.renderer'
@@ -40,11 +39,6 @@ services:
         '@cache.discovery',
       ]
   Drupal\navigation\EntityRouteHelper: '@navigation.entity_route_helper'
-
-  navigation.user_lazy_builder:
-    class: Drupal\navigation\UserLazyBuilder
-    arguments: ['@current_user']
-  Drupal\navigation\UserLazyBuilders: '@navigation.user_lazy_builder'
 
   plugin.manager.top_bar_item:
     class: Drupal\navigation\TopBarItemManager

@@ -105,7 +105,7 @@ use Drupal\migrate\Row;
  * In this example, the constant 'foo' is defined with a value of 'bar'. It is
  * later used in the process pipeline to set the value of the field baz.
  *
- * @see \Drupal\migrate\Annotation\MigrateSource
+ * @see \Drupal\migrate\Attribute\MigrateSource
  * @see \Drupal\migrate\Plugin\MigrateIdMapInterface
  * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate\Plugin\MigrateSourceInterface
@@ -527,6 +527,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * Checks if the source is countable or using the iterator_count function.
    *
    * @return int
+   *   The count of available source records.
    */
   protected function doCount() {
     $iterator = $this->getIterator();

@@ -156,9 +156,8 @@ class UrlHelper {
   /**
    * Parses a URL string into its path, query, and fragment components.
    *
-   * This function splits both internal paths like @code node?b=c#d @endcode and
-   * external URLs like @code https://example.com/a?b=c#d @endcode into their
-   * component parts. See
+   * This function splits both internal paths like "node?b=c#d" and external
+   * URLs like "https://example.com/a?b=c#d" into their component parts. See
    * @link http://tools.ietf.org/html/rfc3986#section-3 RFC 3986 @endlink for an
    * explanation of what the component parts are.
    *
@@ -410,8 +409,8 @@ class UrlHelper {
         // We found a colon, possibly a protocol. Verify.
         $protocol = substr($uri, 0, $colon_position);
         // If a colon is preceded by a slash, question mark or hash, it cannot
-        // possibly be part of the URL scheme. This must be a relative URL, which
-        // inherits the (safe) protocol of the base document.
+        // possibly be part of the URL scheme. This must be a relative URL,
+        // which inherits the (safe) protocol of the base document.
         if (preg_match('![/?#]!', $protocol)) {
           break;
         }

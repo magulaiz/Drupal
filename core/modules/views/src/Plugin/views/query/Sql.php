@@ -536,8 +536,8 @@ class Sql extends QueryPluginBase {
       }
     }
 
-    // Check this again to make sure we don't blow up existing aliases for already
-    // adjusted joins.
+    // Check this again to make sure we don't blow up existing aliases for
+    // already adjusted joins.
     if (isset($this->tableQueue[$alias])) {
       return $alias;
     }
@@ -630,9 +630,9 @@ class Sql extends QueryPluginBase {
     }
 
     // If the relationship is the primary table, this actually be a relationship
-    // link back from an alias. We store all aliases along with the primary table
-    // to detect this state, because eventually it'll hit a table we already
-    // have and that's when we want to stop.
+    // link back from an alias. We store all aliases along with the primary
+    // table to detect this state, because eventually it'll hit a table we
+    // already have and that's when we want to stop.
     if ($relationship == $this->view->storage->get('base_table') && !empty($this->tables[$relationship][$table])) {
       return $this->tables[$relationship][$table]['alias'];
     }
@@ -780,7 +780,8 @@ class Sql extends QueryPluginBase {
         $this->ensureTable($join->leftTable, $relationship);
       }
 
-      // First, if this is our link point/anchor table, just use the relationship
+      // First, if this is our link point/anchor table, just use the
+      // relationship
       if ($join->leftTable == $this->relationships[$relationship]['table']) {
         $join->leftTable = $relationship;
       }
@@ -881,7 +882,7 @@ class Sql extends QueryPluginBase {
     }
 
     // Make sure an alias is assigned
-    $alias = $alias ? $alias : $field;
+    $alias = $alias ?: $field;
 
     // PostgreSQL truncates aliases to 63 characters:
     // https://www.drupal.org/node/571548.
@@ -1337,10 +1338,9 @@ class Sql extends QueryPluginBase {
       $distinct = TRUE;
     }
 
-    /**
-     * An optimized count query includes just the base field instead of all the fields.
-     * Determine of this query qualifies by checking for a groupby or distinct.
-     */
+    // An optimized count query includes just the base field instead of all the
+    // fields. Determine of this query qualifies by checking for a groupby or
+    // distinct.
     if ($get_count && !$this->groupby) {
       foreach ($this->fields as $field) {
         if (!empty($field['distinct']) || !empty($field['function'])) {
@@ -1563,7 +1563,8 @@ class Sql extends QueryPluginBase {
         $view->pager->preExecute($query);
 
         if (!empty($this->limit) || !empty($this->offset)) {
-          // We can't have an offset without a limit, so provide a very large limit instead.
+          // We can't have an offset without a limit, so provide a very large
+          // limit instead.
           $limit = intval(!empty($this->limit) ? $this->limit : 999999);
           $offset = intval(!empty($this->offset) ? $this->offset : 0);
           $query->range($offset, $limit);
@@ -1749,6 +1750,7 @@ class Sql extends QueryPluginBase {
    * Gets all the involved entities of the view.
    *
    * @return \Drupal\Core\Entity\EntityInterface[]
+   *   The involved entities.
    */
   protected function getAllEntities() {
     $entities = [];
