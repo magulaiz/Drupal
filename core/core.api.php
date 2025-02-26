@@ -1251,7 +1251,8 @@
  *   https://www.drupal.org/docs/theming-drupal
  * - Modules: Modules add to or alter the behavior and functionality of Drupal,
  *   by using one or more of the methods listed below. For more information
- *   about creating modules, see https://www.drupal.org/docs/creating-custom-modules
+ *   about creating modules, see
+ *   https://www.drupal.org/docs/creating-custom-modules
  * - Installation profiles: Installation profiles can be used to
  *   create distributions, which are complete specific-purpose packages of
  *   Drupal including additional modules, themes, and data. For more
@@ -1632,13 +1633,13 @@
  * - On a method, use the attribute with the hook name:
  *   @code
  *   #[Hook('user_cancel')]
- *   public method userCancel(...)
+ *   public function userCancel(...) {}
  *   @endcode
  * - On a class, specify the method name as well as the hook name:
  *   @code
  *   #[Hook('user_cancel', method: 'userCancel')]
  *   class Hooks {
- *     method userCancel(...) {}
+ *     public function userCancel(...) {}
  *   }
  *   @endcode
  * - On a class with an __invoke method, which is taken to be the hook
@@ -1646,7 +1647,7 @@
  *   @code
  *   #[Hook('user_cancel')]
  *   class Hooks {
- *     method __invoke(...) {}
+ *     public function __invoke(...) {}
  *   }
  *   @endcode
  *
@@ -1658,12 +1659,9 @@
  * - hook_module_implements_alter()
  *
  * Install hooks:
- * - hook_cache_flush()
  * - hook_install()
- * - hook_module_preinstall()
- * - hook_module_preuninstall()
- * - hook_modules_installed()
- * - hook_modules_uninstalled()
+ * - hook_install_tasks()
+ * - hook_install_tasks_alter()
  * - hook_post_update_NAME()
  * - hook_schema()
  * - hook_uninstall()
@@ -1672,7 +1670,6 @@
  *
  * Theme hooks:
  * - hook_preprocess_HOOK()
- * - hook_process_HOOK()
  *
  * @subsection procedural-hooks Procedural hook implementation
  *
@@ -2056,7 +2053,7 @@ function hook_queue_info_alter(&$queues) {
 }
 
 /**
- * Alter the information provided in \Drupal\Core\Condition\ConditionManager::getDefinitions().
+ * Alter the information provided in ConditionManager::getDefinitions().
  *
  * @param array $definitions
  *   The array of condition definitions.
@@ -2082,7 +2079,7 @@ function hook_condition_info_alter(array &$definitions) {
  * this hook. All core modules use MailManagerInterface->mail() for messaging,
  * it is best practice but not mandatory in contributed modules.
  *
- * @param $message
+ * @param array $message
  *   An array containing the message data. Keys in this array include:
  *   - 'id':
  *     The MailManagerInterface->mail() id of the message. Look at module source
@@ -2134,9 +2131,9 @@ function hook_mail_alter(&$message) {
  * unlike hook_mail_alter(), is only called on the $module argument to
  * MailManagerInterface->mail(), not all modules.
  *
- * @param $key
+ * @param string $key
  *   An identifier of the mail.
- * @param $message
+ * @param array $message
  *   An array to be filled in. Elements in this array include:
  *   - id: An ID to identify the mail sent. Look at module source code or
  *     MailManagerInterface->mail() for possible id values.
@@ -2157,13 +2154,13 @@ function hook_mail_alter(&$message) {
  *   - headers: Associative array containing mail headers, such as From,
  *     Sender, MIME-Version, Content-Type, etc.
  *     MailManagerInterface->mail() pre-fills several headers in this array.
- * @param $params
+ * @param array $params
  *   An array of parameters supplied by the caller of
  *   MailManagerInterface->mail().
  *
  * @see \Drupal\Core\Mail\MailManagerInterface::mail()
  */
-function hook_mail($key, &$message, $params) {
+function hook_mail($key, &$message, $params): void {
   $account = $params['account'];
   $context = $params['context'];
   $variables = [
@@ -2218,7 +2215,7 @@ function hook_mail_backend_info_alter(&$info) {
 /**
  * Alter the default country list.
  *
- * @param $countries
+ * @param string[][] $countries
  *   The associative array of countries keyed by two-letter country code.
  *
  * @see \Drupal\Core\Locale\CountryManager::getList()
@@ -2255,8 +2252,6 @@ function hook_layout_alter(&$definitions) {
 /**
  * Flush all persistent and static caches.
  *
- * Only procedural implementations are supported for this hook.
- *
  * This hook asks your module to clear all of its static caches,
  * in order to ensure a clean environment for subsequently
  * invoked data rebuilds.
@@ -2274,7 +2269,7 @@ function hook_layout_alter(&$definitions) {
  * @see drupal_flush_all_caches()
  * @see hook_rebuild()
  */
-function hook_cache_flush() {
+function hook_cache_flush(): void {
   if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
     _update_cache_clear();
   }
@@ -2295,7 +2290,7 @@ function hook_cache_flush() {
  * @see hook_cache_flush()
  * @see drupal_flush_all_caches()
  */
-function hook_rebuild() {
+function hook_rebuild(): void {
   $themes = \Drupal::service('theme_handler')->listInfo();
   foreach ($themes as $theme) {
     _block_rehash($theme->getName());
@@ -2345,7 +2340,7 @@ function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\Config
  *
  * For adding new data types use configuration schema YAML files instead.
  *
- * @param $definitions
+ * @param array $definitions
  *   Associative array of configuration type definitions keyed by schema type
  *   names. The elements are themselves array with information about the type.
  *
@@ -2619,9 +2614,8 @@ function hook_validation_constraint_alter(array &$definitions) {
  * Making the expensive service lazy means that the class is only dependent on
  * the proxy service, and not on all the dependencies of the lazy service.
  *
- * To define a service as lazy, add @code lazy: true @endcode to the service
- * definition, and use the @code core/scripts/generate-proxy.sh @endcode script
- * to generate the proxy class.
+ * To define a service as lazy, add "lazy: true" to the service definition, and
+ * use the "core/scripts/generate-proxy.sh" script to generate the proxy class.
  *
  * @see core/scripts/generate-proxy.sh
  */

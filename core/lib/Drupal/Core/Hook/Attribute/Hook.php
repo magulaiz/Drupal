@@ -12,13 +12,13 @@ namespace Drupal\Core\Hook\Attribute;
  * - On a method, use this attribute with the hook name:
  *   @code
  *   #[Hook('user_cancel')]
- *   public method userCancel(...)
+ *   public function userCancel(...) {}
  *   @endcode
  * - On a class, specifying the method name:
  *   @code
  *   #[Hook('user_cancel', method: 'userCancel')]
  *   class Hooks {
- *     method userCancel(...) {}
+ *     public function userCancel(...) {}
  *   }
  *   @endcode
  * - On a class with an __invoke method, which is taken to be the hook
@@ -26,7 +26,7 @@ namespace Drupal\Core\Hook\Attribute;
  *   @code
  *   #[Hook('user_cancel')]
  *   class Hooks {
- *     method __invoke(...) {}
+ *     public function __invoke(...) {}
  *   }
  *   @endcode
  *
@@ -52,7 +52,7 @@ namespace Drupal\Core\Hook\Attribute;
  *   form ID without modifying any existing implementations.
  *
  * The following hooks may not have multiple implementations by a single module:
- * - hook_library_build_info()
+ * - hook_library_info_build()
  * - hook_mail()
  * - hook_help()
  * - hook_node_update_index()
@@ -66,12 +66,9 @@ namespace Drupal\Core\Hook\Attribute;
  * - hook_module_implements_alter()
  *
  * Install hooks:
- * - hook_cache_flush()
  * - hook_install()
- * - hook_module_preinstall()
- * - hook_module_preuninstall()
- * - hook_modules_installed()
- * - hook_modules_uninstalled()
+ * - hook_install_tasks()
+ * - hook_install_tasks_alter()
  * - hook_post_update_NAME()
  * - hook_schema()
  * - hook_uninstall()
@@ -80,7 +77,6 @@ namespace Drupal\Core\Hook\Attribute;
  *
  * Theme hooks:
  * - hook_preprocess_HOOK()
- * - hook_process_HOOK()
  *
  * @section sec_backwards_compatibility Backwards-compatibility
  *
@@ -104,20 +100,14 @@ class Hook {
    *   parameter is not required. If this attribute is on a class and this
    *   parameter is omitted, the class must have an __invoke() method, which is
    *   taken as the hook implementation.
-   * @param int|null $priority
-   *   (optional) The priority of this implementation relative to other
-   *   implementations of this hook. Hook implementations with higher priority
-   *   are executed first. If omitted, the module order is used to order the
-   *   hook implementations.
    * @param string|null $module
-   *   (optional) The module this implementation is for. This allows one module to
-   *   implement a hook on behalf of another module. Defaults to the module the
-   *   implementation is in.
+   *   (optional) The module this implementation is for. This allows one module
+   *   to implement a hook on behalf of another module. Defaults to the module
+   *   the implementation is in.
    */
   public function __construct(
     public string $hook,
     public string $method = '',
-    public ?int $priority = NULL,
     public ?string $module = NULL,
   ) {}
 

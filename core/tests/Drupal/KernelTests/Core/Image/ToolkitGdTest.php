@@ -242,9 +242,9 @@ class ToolkitGdTest extends KernelTestBase {
           'arguments' => [],
           'height' => 20,
           'width' => 40,
-          // Grayscale corners are a bit funky. Each of the corners are a shade of
-          // gray. The values of these were determined simply by looking at the
-          // final image to see what desaturated colors end up being.
+          // Grayscale corners are a bit funky. Each of the corners are a shade
+          // of gray. The values of these were determined simply by looking at
+          // the final image to see what desaturated colors end up being.
           'corners' => [
             array_fill(0, 3, 76) + [3 => 0],
             array_fill(0, 3, 149) + [3 => 0],
@@ -348,7 +348,7 @@ class ToolkitGdTest extends KernelTestBase {
 
     // Check that saved image reloads without raising PHP errors.
     $image_reloaded = $this->imageFactory->get($file_path);
-    $this->assertInstanceOf(\GDImage::class, $image_reloaded->getToolkit()->getImage());
+    $this->assertInstanceOf(\GdImage::class, $image_reloaded->getToolkit()->getImage());
   }
 
   /**
@@ -515,11 +515,9 @@ class ToolkitGdTest extends KernelTestBase {
   public function testGetRequirements(): void {
     $this->assertEquals([
       'version' => [
-        'title' => t('GD library'),
+        'title' => 'GD library',
         'value' => gd_info()['GD Version'],
-        'description' => t("Supported image file formats: %formats.", [
-          '%formats' => implode(', ', ['GIF', 'JPEG', 'PNG', 'WEBP']),
-        ]),
+        'description' => sprintf("Supported image file formats: %s.", implode(', ', ['GIF', 'JPEG', 'PNG', 'WEBP'])),
       ],
     ], $this->imageFactory->get()->getToolkit()->getRequirements());
   }
