@@ -382,7 +382,7 @@ class AttributeTest extends UnitTestCase {
     $data['safe-object-xss1'] = [['title' => Markup::create($string)], ' title="&quot;&gt; alert(123)&quot;"'];
     $data['non-safe-object-xss1'] = [['title' => $string], ' title="' . Html::escape($string) . '"'];
     $string = '&quot;><script>alert(123)</script>';
-    $data['safe-object-xss2'] = [['title' => Markup::create($string)], ' title="&quot;&gt;alert(123)"'];
+    $data['safe-object-xss2'] = [['title' => Markup::create($string)], ' title="&quot;&gt; alert(123)"'];
     $data['non-safe-object-xss2'] = [['title' => $string], ' title="' . Html::escape($string) . '"'];
 
     return $data;
