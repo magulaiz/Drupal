@@ -50,7 +50,7 @@ class JsonTest extends TestCase {
     // Characters that must be escaped.
     // We check for unescaped " separately.
     $this->htmlUnsafe = ['<', '>', '\'', '&'];
-    // The following are the encoded forms of: < > ' & ".
+    // The following are the encoded forms of '<', '>', "'", '&', and '"'.
     $this->htmlUnsafeEscaped = ['\u003C', '\u003E', '\u0027', '\u0026', '\u0022'];
   }
 
