@@ -77,7 +77,7 @@ class ConfigSync extends FormBase {
     protected RendererInterface $renderer,
     protected ModuleExtensionList $moduleExtensionList,
     protected ImportStorageTransformer $importTransformer,
-    protected ThemeExtensionList $themeExtensionList
+    protected ThemeExtensionList $themeExtensionList,
   ) {
   }
 
@@ -293,7 +293,7 @@ class ConfigSync extends FormBase {
 
         batch_set($batch_builder->toArray());
       }
-      catch (ConfigImporterException $e) {
+      catch (ConfigImporterException) {
         // There are validation errors.
         $this->messenger()->addError($this->t('The configuration cannot be imported because it failed validation for the following reasons:'));
         foreach ($config_importer->getErrors() as $message) {

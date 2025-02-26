@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\render_placeholder_message_test;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -8,6 +10,9 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\RenderContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Provides a controller for testing render placeholders and message ordering.
+ */
 class RenderPlaceholderMessageTestController implements TrustedCallbackInterface, ContainerInjectionInterface {
 
   /**

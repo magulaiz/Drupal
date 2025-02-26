@@ -19,12 +19,15 @@
       "modules/media/tests/fixtures/oembed/*",
       "modules/migrate_drupal/tests/fixtures/drupal6.php",
       "modules/migrate_drupal/tests/fixtures/drupal7.php",
+      "modules/navigation/assets/**",
       "modules/search/tests/UnicodeTest.txt",
       "modules/system/tests/logo.svgz",
       "node_modules/*",
       "profiles/demo_umami/modules/demo_umami_content/default_content/languages/es/**/*",
+      "tests/fixtures/config_install/*",
       "tests/fixtures/files/*",
       "tests/Drupal/Tests/Component/Annotation/Doctrine/**",
+      "tests/PHPStan/vendor/**",
       "themes/olivero/fonts/**",
       "COPYRIGHT.txt",
       "MAINTAINERS.txt",
@@ -67,7 +70,8 @@
       "hte",
       "ist",
       "please",
-      "queuing"
+      "queuing",
+      "writeable"
     ],
     "overrides": [
       {

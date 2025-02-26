@@ -34,7 +34,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   /**
    * {@inheritdoc}
    */
-  public function getPossibleValues(AccountInterface $account = NULL) {
+  public function getPossibleValues(?AccountInterface $account = NULL) {
     // Flatten options firstly, because Possible Options may contain group
     // arrays.
     $flatten_options = OptGroup::flattenOptions($this->getPossibleOptions($account));
@@ -44,14 +44,14 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   /**
    * {@inheritdoc}
    */
-  public function getPossibleOptions(AccountInterface $account = NULL) {
+  public function getPossibleOptions(?AccountInterface $account = NULL) {
     return $this->getSettableOptions($account);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSettableValues(AccountInterface $account = NULL) {
+  public function getSettableValues(?AccountInterface $account = NULL) {
     // Flatten options firstly, because Settable Options may contain group
     // arrays.
     $flatten_options = OptGroup::flattenOptions($this->getSettableOptions($account));
@@ -61,7 +61,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   /**
    * {@inheritdoc}
    */
-  public function getSettableOptions(AccountInterface $account = NULL) {
+  public function getSettableOptions(?AccountInterface $account = NULL) {
     $allowed_options = options_allowed_values($this->getFieldDefinition()->getFieldStorageDefinition(), $this->getEntity());
     return $allowed_options;
   }
@@ -336,10 +336,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   /**
    * #element_validate callback for options field allowed values.
    *
-   * @param $element
+   * @param array $element
    *   An associative array containing the properties and children of the
    *   generic form element.
-   * @param $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form for the form this element belongs to.
    *
    * @see \Drupal\Core\Render\Element\FormElementBase::processPattern()
@@ -444,10 +444,12 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * @param string $option
    *   The option value entered by the user.
    *
-   * @return string
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string|null
    *   The error message if the specified value is invalid, NULL otherwise.
    */
-  protected static function validateAllowedValue($option) {}
+  protected static function validateAllowedValue($option) {
+    return NULL;
+  }
 
   /**
    * Generates a string representation of an array of 'allowed values'.

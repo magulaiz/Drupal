@@ -79,7 +79,7 @@ class EntityUser extends EntityContentBase {
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
+   *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
@@ -97,7 +97,7 @@ class EntityUser extends EntityContentBase {
    * @param \Drupal\Core\Session\AccountSwitcherInterface|null $account_switcher
    *   The account switcher service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager, PasswordInterface $password, AccountSwitcherInterface $account_switcher = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager, PasswordInterface $password, ?AccountSwitcherInterface $account_switcher = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles, $entity_field_manager, $field_type_manager, $account_switcher);
     $this->password = $password;
   }
@@ -105,7 +105,7 @@ class EntityUser extends EntityContentBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
     $entity_type = static::getEntityTypeId($plugin_id);
     return new static(
       $configuration,
@@ -123,6 +123,7 @@ class EntityUser extends EntityContentBase {
 
   /**
    * {@inheritdoc}
+   *
    * @throws \Drupal\migrate\MigrateException
    */
   public function import(Row $row, array $old_destination_id_values = []) {
@@ -139,9 +140,9 @@ class EntityUser extends EntityContentBase {
   protected function save(ContentEntityInterface $entity, array $old_destination_id_values = []) {
     // Do not overwrite the root account password.
     if ($entity->id() != 1) {
-      // Set the pre_hashed password so that the PasswordItem field does not hash
-      // already hashed passwords. If the md5_passwords configuration option is
-      // set we need to rehash the password and prefix with a U.
+      // Set the pre_hashed password so that the PasswordItem field does not
+      // hash already hashed passwords. If the md5_passwords configuration
+      // option is set we need to rehash the password and prefix with a U.
       // @see \Drupal\Core\Field\Plugin\Field\FieldType\PasswordItem::preSave()
       $entity->pass->pre_hashed = TRUE;
       if (isset($this->configuration['md5_passwords'])) {

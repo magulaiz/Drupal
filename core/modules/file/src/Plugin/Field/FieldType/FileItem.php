@@ -33,7 +33,21 @@ use Drupal\file\Validation\FileValidatorSettingsTrait;
   default_widget: "file_generic",
   default_formatter: "file_default",
   list_class: FileFieldItemList::class,
-  constraints: ["ReferenceAccess" => [], "FileValidation" => []]
+  constraints: ["ReferenceAccess" => [], "FileValidation" => []],
+  column_groups: [
+    'target_id' => [
+      'label' => new TranslatableMarkup('File'),
+      'translatable' => TRUE,
+    ],
+    'display' => [
+      'label' => new TranslatableMarkup('Display'),
+      'translatable' => TRUE,
+    ],
+    'description' => [
+      'label' => new TranslatableMarkup('Description'),
+      'translatable' => TRUE,
+    ],
+  ],
 )]
 class FileItem extends EntityReferenceItem {
 
@@ -219,8 +233,8 @@ class FileItem extends EntityReferenceItem {
    * Form API callback.
    *
    * Removes slashes from the beginning and end of the destination value and
-   * ensures that the file directory path is not included at the beginning of the
-   * value.
+   * ensures that the file directory path is not included at the beginning of
+   * the value.
    *
    * This function is assigned as an #element_validate callback in
    * fieldSettingsForm().
