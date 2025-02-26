@@ -9,8 +9,6 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class TaxonomyHooks {
 
-  use StringTranslationTrait;
-
   /**
    * Implements hook_local_tasks_alter().
    *
