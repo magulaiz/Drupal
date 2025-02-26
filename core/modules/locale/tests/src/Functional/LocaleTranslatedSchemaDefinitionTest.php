@@ -105,4 +105,28 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefNotExists('fr/update.php/run', 'No link to run updates.');
   }
 
+  /**
+   * Tests that strings are correctly deleted.
+   */
+  public function testDeleteStrings(): void {
+    /** @var \Drupal\locale\StringDatabaseStorage $stringStorage */
+    $stringStorage = \Drupal::service('locale.storage');
+
+    $source = $stringStorage->createString([
+      'source' => 'Revision ID',
+    ])->save();
+
+    $stringStorage->createTranslation([
+      'lid' => $source->lid,
+      'language' => 'fr',
+      'translation' => 'Translated Revision ID',
+    ])->save();
+
+    $this->assertNotEmpty($stringStorage->findString(['lid' => $source->lid]), 'String has been created');
+
+    $stringStorage->deleteStrings(['lid' => $source->lid]);
+
+    $this->assertEmpty($stringStorage->findString(['lid' => $source->lid]), 'String has been deleted');
+  }
+
 }
