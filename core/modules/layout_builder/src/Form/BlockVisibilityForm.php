@@ -18,6 +18,8 @@ use Drupal\layout_builder\SectionComponentTrait;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Provides a form for applying visibility conditions to a block.
@@ -76,6 +78,17 @@ class BlockVisibilityForm extends FormBase {
   protected $layoutTempstoreRepository;
 
   /**
+   * The HTTP kernel.
+   *
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
+   */
+  protected $httpKernel;
+
+  const BYPASS_SUBREQUEST_DATA = [
+    'ajax_page_state',
+  ];
+
+  /**
    * Constructs a BlockVisibilityForm object.
    *
    * @param \Drupal\Core\Executable\ExecutableManagerInterface $condition_manager
@@ -84,11 +97,14 @@ class BlockVisibilityForm extends FormBase {
    *   The form builder.
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
    *   The layout tempstore repository.
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface
+   *    The HTTP kernel.
    */
-  public function __construct(ExecutableManagerInterface $condition_manager, FormBuilderInterface $form_builder, LayoutTempstoreRepositoryInterface $layout_tempstore_repository) {
+  public function __construct(ExecutableManagerInterface $condition_manager, FormBuilderInterface $form_builder, LayoutTempstoreRepositoryInterface $layout_tempstore_repository, HttpKernelInterface $http_kernel) {
     $this->conditionManager = $condition_manager;
     $this->formBuilder = $form_builder;
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
+    $this->httpKernel = $http_kernel;
   }
 
   /**
@@ -98,7 +114,8 @@ class BlockVisibilityForm extends FormBase {
     return new static(
       $container->get('plugin.manager.condition'),
       $container->get('form_builder'),
-      $container->get('layout_builder.tempstore_repository')
+      $container->get('layout_builder.tempstore_repository'),
+      $container->get('http_kernel')
     );
   }
 
@@ -242,6 +259,14 @@ class BlockVisibilityForm extends FormBase {
       ],
     ];
 
+    $form['actions']['settings_rebuild'] = [
+      '#type' => 'hidden',
+      '#value' => $this->t('Condition settings rebuild'),
+      '#ajax' => [
+        'callback' => '::ajaxSettingsRebuild',
+      ],
+    ];
+
     $form['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockUpdateHighlightId($this->uuid);
 
     if ($this->isAjax()) {
@@ -249,6 +274,85 @@ class BlockVisibilityForm extends FormBase {
       $form['actions']['submit']['#ajax']['event'] = 'click';
       $form['update_operator']['#ajax']['callback'] = '::ajaxSubmit';
       $form['update_operator']['#ajax']['event'] = 'click';
+
+      // Allow condition plugins settings forms use ajax elements with ajax form rebuild possibility.
+      // @see core/lib/Drupal/Core/Form/FormBuilder::buildForm():343
+      if ($form_state->isMethodType('POST') && ($input = $form_state->getUserInput())
+        && isset($input['_triggering_element_name']) && str_starts_with($input['_triggering_element_name'], 'settings[')) {
+
+        // Make form API recognize & process ajax input submit that actually
+        // belong to another 'layout_builder_configure_visibility' form.
+        $form_state->setProcessInput();
+        $form_state->setProgrammed();
+
+        $current_request = $this->getRequest();
+
+        $parameters = $this->getParameters($input['plugin_id']);
+        $parameters['ajax_form'] = TRUE;
+        $parameters['operator'] = $input['operator'];
+
+        $url = new Url('layout_builder.add_visibility', $parameters);
+
+        // Set all proxy submit input data so form API can actually process the form.
+        $subrequest_data = [
+          '_drupal_ajax' => 1,
+          '_wrapper_format' => 'drupal_ajax',
+          'ajax_form' => 1,
+          '_triggering_element_name' => $input['_triggering_element_name'],
+          'form_build_id' =>  $input['form_build_id'],
+          'form_token' =>  $input['form_token'],
+          'form_id' =>  $input['form_id'],
+          'condition' =>  $input['condition'],
+          'settings' =>  $input['settings'],
+          'operator' =>  $input['operator'],
+        ];
+
+        foreach (static::BYPASS_SUBREQUEST_DATA as $key) {
+          if ($current_request->request->has($key)) {
+            $subrequest_data += [
+              $key => $current_request->request->all($key),
+            ];
+          }
+        }
+
+        // Make separate http subrequest to plugin settings form imitating real http request.
+        $subrequest = Request::create(
+          $url->toString(),
+          'POST',
+          $subrequest_data,
+          $current_request->cookies->all(),
+          [],
+          $current_request->server->all()
+        );
+
+        // Grab ajax response from slave form & proxy it as host ajax response.
+        $response = $this->httpKernel->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
+
+        if (!$response instanceof AjaxResponse) {
+          throw new \UnexpectedValueException(sprintf(
+            'Unexpected response of %s type for the condition form.',
+            get_class($response)
+          ));
+        }
+
+        $form_state->setResponse($response);
+        $form_state->setTriggeringElement($form['actions']['settings_rebuild']);
+
+        // Allow condition settings forms use ajax inputs with form rebuild logic.
+        // @see core/lib/Drupal/Core/Form/FormBuilder::buildForm():343
+        $current_request->attributes->set('form_id', 'layout_builder_block_visibility');
+      }
+    }
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function ajaxSettingsRebuild(array $form, FormStateInterface $form_state) {
+    if ($response = $form_state->getResponse()) {
+      return $response;
     }
 
     return $form;

@@ -203,6 +203,12 @@ class ConfigureVisibilityForm extends FormBase {
       '#button_type' => 'primary',
     ];
 
+    // Used if condition form has ajax fields & requires rebuild from the parent form.
+    $form['plugin_id'] = [
+      '#type' => 'hidden',
+      '#value' => $plugin_id,
+    ];
+
     // If one is not already present, add a hidden field with the value of
     // the operator field from BlockVisibilityForm - the form that precedes
     // this one when adding/updating a visibility condition.
@@ -240,6 +246,14 @@ class ConfigureVisibilityForm extends FormBase {
         'data-dialog-type' => 'dialog',
         'data-dialog-renderer' => 'off_canvas',
       ];
+
+      $input = $form_state->getUserInput();
+
+      // Process form as ajax submit.
+      if (!empty($input['settings']) && !empty($input['_triggering_element_name'])
+        && $this->getRequest()->get('ajax_form')) {
+        $this->getRequest()->query->set('ajax_form', TRUE);
+      }
     }
 
     return $form;
