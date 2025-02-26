@@ -87,6 +87,8 @@ class PerformanceData {
 
   /**
    * The original return value.
+   *
+   * @var mixed
    */
   protected $returnValue;
 
@@ -228,6 +230,7 @@ class PerformanceData {
    *   List of cids keyed by operation and bin.
    *
    * @return void
+   *   No return value.
    */
   public function setCacheOperations(array $cacheOperations): void {
     $this->cacheOperations = $cacheOperations;
