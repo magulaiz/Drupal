@@ -11,6 +11,7 @@ use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
  *
  * @group OpenTelemetry
  * @group #slow
+ * @requires extension apcu
  */
 class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
 
@@ -19,6 +20,9 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
    */
   protected $profile = 'demo_umami';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $user = $this->drupalCreateUser();
@@ -35,10 +39,38 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'authenticatedFrontPage');
-    $this->assertSame(15, $performance_data->getQueryCount());
-    $this->assertSame(43, $performance_data->getCacheGetCount());
-    $this->assertSame(0, $performance_data->getCacheSetCount());
-    $this->assertSame(0, $performance_data->getCacheDeleteCount());
+
+    $expected_queries = [
+      'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
+      'SELECT * FROM "users_field_data" "u" WHERE "u"."uid" = "10" AND "u"."default_langcode" = 1',
+      'SELECT "roles_target_id" FROM "user__roles" WHERE "entity_id" = "10"',
+      'SELECT "config"."name" AS "name" FROM "config" "config" WHERE ("collection" = "") AND ("name" LIKE "language.entity.%" ESCAPE ' . "'\\\\'" . ') ORDER BY "collection" ASC, "name" ASC',
+    ];
+    $recorded_queries = $performance_data->getQueries();
+    $this->assertSame($expected_queries, $recorded_queries);
+
+    $expected = [
+      'QueryCount' => 4,
+      'CacheGetCount' => 40,
+      'CacheGetCountByBin' => [
+        'config' => 22,
+        'discovery' => 5,
+        'data' => 7,
+        'bootstrap' => 4,
+        'dynamic_page_cache' => 2,
+      ],
+      'CacheSetCount' => 0,
+      'CacheDeleteCount' => 0,
+      'CacheTagChecksumCount' => 0,
+      'CacheTagIsValidCount' => 10,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 2,
+      'ScriptCount' => 1,
+      'ScriptBytes' => 123850,
+      'StylesheetCount' => 2,
+      'StylesheetBytes' => 43600,
+    ];
+    $this->assertMetrics($expected, $performance_data);
   }
 
 }

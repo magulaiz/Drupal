@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\link\Functional;
 
 use Drupal\Component\Utility\Html;
@@ -19,15 +21,14 @@ use Drupal\Tests\Traits\Core\PathAliasTestTrait;
  * Tests link field widgets and formatters.
  *
  * @group link
+ * @group #slow
  */
 class LinkFieldTest extends BrowserTestBase {
 
   use PathAliasTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'entity_test',
@@ -73,7 +74,7 @@ class LinkFieldTest extends BrowserTestBase {
    *
    * This is being as one to avoid multiple Drupal install.
    */
-  public function testLinkField() {
+  public function testLinkField(): void {
     $this->doTestURLValidation();
     $this->doTestLinkTitle();
     $this->doTestLinkFormatter();
@@ -85,7 +86,7 @@ class LinkFieldTest extends BrowserTestBase {
   /**
    * Tests link field URL validation.
    */
-  protected function doTestURLValidation() {
+  protected function doTestURLValidation(): void {
     $field_name = $this->randomMachineName();
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
@@ -179,6 +180,9 @@ class LinkFieldTest extends BrowserTestBase {
       'entity:user/999999' => 'entity:user/999999',
     ];
 
+    // Add to array url with complex query parameters.
+    $valid_internal_entries += $this->getUrlWithComplexQueryInputList();
+
     // Define some invalid URLs.
     $validation_error_1 = "The path '@link_path' is invalid.";
     $validation_error_2 = 'Manually entered paths should start with one of the following characters: / ? #';
@@ -196,7 +200,8 @@ class LinkFieldTest extends BrowserTestBase {
       'entity:user/invalid-parameter' => $validation_error_1,
     ];
 
-    // Test external and internal URLs for 'link_type' = LinkItemInterface::LINK_GENERIC.
+    // Test external and internal URLs for
+    // 'link_type' = LinkItemInterface::LINK_GENERIC.
     $this->assertValidEntries($field_name, $valid_external_entries + $valid_internal_entries);
     $this->assertInvalidEntries($field_name, $invalid_external_entries + $invalid_internal_entries);
 
@@ -269,7 +274,7 @@ class LinkFieldTest extends BrowserTestBase {
   /**
    * Tests the link title settings of a link field.
    */
-  protected function doTestLinkTitle() {
+  protected function doTestLinkTitle(): void {
     $field_name = $this->randomMachineName();
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
@@ -394,7 +399,7 @@ class LinkFieldTest extends BrowserTestBase {
   /**
    * Tests the default 'link' formatter.
    */
-  protected function doTestLinkFormatter() {
+  protected function doTestLinkFormatter(): void {
     $field_name = $this->randomMachineName();
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
@@ -462,7 +467,7 @@ class LinkFieldTest extends BrowserTestBase {
     // Not using generatePermutations(), since that leads to 32 cases, which
     // would not test actual link field formatter functionality but rather
     // the link generator and options/attributes. Only 'url_plain' has a
-    // dependency on 'url_only', so we have a total of ~10 cases.
+    // dependency on 'url_only'.
     $options = [
       'trim_length' => [NULL, 6],
       'rel' => [NULL, 'nofollow'],
@@ -546,12 +551,191 @@ class LinkFieldTest extends BrowserTestBase {
   }
 
   /**
+   * Tests the default 'link' formatter with complex query parameters.
+   */
+  public function testLinkFormatterQueryParametersDuplication(): void {
+    $test_urls = $this->getUrlWithComplexQuery();
+    $field_name = $this->randomMachineName();
+    // Create a field with settings to validate.
+    $this->fieldStorage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'link',
+      'cardinality' => count($test_urls),
+    ]);
+    $this->fieldStorage->save();
+    FieldConfig::create([
+      'field_storage' => $this->fieldStorage,
+      'label' => 'Read more about this entity',
+      'bundle' => 'entity_test',
+      'settings' => [
+        'title' => DRUPAL_OPTIONAL,
+        'link_type' => LinkItemInterface::LINK_GENERIC,
+      ],
+    ])->save();
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay('entity_test', 'entity_test', 'default')
+      ->setComponent($field_name, [
+        'type' => 'link_default',
+      ])
+      ->save();
+    $display_options = [
+      'type' => 'link',
+      'label' => 'hidden',
+    ];
+    $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
+      ->setComponent($field_name, $display_options)
+      ->save();
+
+    // Create an entity with link field values provided
+    // by $this->getUrlWithComplexQuery().
+    $entity = EntityTest::create();
+    $links = [];
+    // Prepare values for field.
+    foreach ($test_urls as $key => $test_url) {
+      $links[$key] = [
+        'uri' => 'internal:' . $test_url['inputByUser'],
+        'title' => $test_url['inputByUser'],
+      ];
+    }
+    $entity->{$field_name}->setValue($links);
+    $entity->save();
+
+    // Verify that the link is output according to the formatter settings.
+    // Not using generatePermutations(), since that leads to 32 cases, which
+    // would not test actual link field formatter functionality but rather
+    // the link generator and options/attributes. Only 'url_plain' has a
+    // dependency on 'url_only'.
+    $options = [
+      'trim_length' => [NULL, 6],
+      'rel' => [NULL, 'nofollow'],
+      'target' => [NULL, '_blank'],
+      'url_only' => [
+        ['url_only' => FALSE],
+        ['url_only' => FALSE, 'url_plain' => TRUE],
+        ['url_only' => TRUE],
+        ['url_only' => TRUE, 'url_plain' => TRUE],
+      ],
+    ];
+    foreach ($options as $setting => $values) {
+      foreach ($values as $new_value) {
+        // Update the field formatter settings.
+        if (!is_array($new_value)) {
+          $display_options['settings'] = [$setting => $new_value];
+        }
+        else {
+          $display_options['settings'] = $new_value;
+        }
+        $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
+          ->setComponent($field_name, $display_options)
+          ->save();
+
+        $output = $this->renderTestEntity($entity->id());
+        foreach ($test_urls as $test_url) {
+          $url = $test_url['renderedHref'];
+          $title = $test_url['inputByUser'];
+          switch ($setting) {
+            case 'trim_length':
+              $title = isset($new_value) ? Unicode::truncate($title, $new_value, FALSE, TRUE) : $title;
+              $this->assertStringContainsString('<a href="' . $url . '">' . Html::escape($title) . '</a>', $output);
+              break;
+
+            case 'rel':
+              $rel = isset($new_value) ? ' rel="' . $new_value . '"' : '';
+              $this->assertStringContainsString('<a href="' . $url . '"' . $rel . '>' . Html::escape($title) . '</a>', $output);
+              break;
+
+            case 'target':
+              $target = isset($new_value) ? ' target="' . $new_value . '"' : '';
+              $this->assertStringContainsString('<a href="' . $url . '"' . $target . '>' . Html::escape($title) . '</a>', $output);
+              break;
+
+            case 'url_only':
+              // In this case, $new_value is an array.
+              if (!$new_value['url_only']) {
+                $this->assertStringContainsString('<a href="' . $url . '">' . Html::escape($title) . '</a>', $output);
+                break;
+              }
+              if (empty($new_value['url_plain'])) {
+                $this->assertStringContainsString('<a href="' . $url . '">' . $url . '</a>', $output);
+                break;
+              }
+              $this->assertStringNotContainsString('<a href="' . $url . '">' . $url . '</a>', $output);
+              $this->assertStringContainsString($url, $output);
+              break;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Get array of url with complex query parameters for render check.
+   *
+   * @return array
+   *   The URLs to test.
+   */
+  protected function getUrlWithComplexQuery(): array {
+    $test_urls = [
+      [
+        'inputByUser' => '?a[]=1&a[]=2',
+        'renderedHref' => '?a%5B0%5D=1&amp;a%5B1%5D=2',
+      ],
+      [
+        'inputByUser' => '?b[0]=1&b[1]=2',
+        'renderedHref' => '?b%5B0%5D=1&amp;b%5B1%5D=2',
+      ],
+      // UrlHelper::buildQuery will change order of params.
+      [
+        'inputByUser' => '?c[]=1&d=3&c[]=2',
+        'renderedHref' => '?c%5B0%5D=1&amp;c%5B1%5D=2&amp;d=3',
+      ],
+      [
+        'inputByUser' => '?e[f][g]=h',
+        'renderedHref' => '?e%5Bf%5D%5Bg%5D=h',
+      ],
+      [
+        'inputByUser' => '?i[j[k]]=l',
+        'renderedHref' => '?i%5Bj%5Bk%5D=l',
+      ],
+
+      // Query string replace value.
+      [
+        'inputByUser' => '?x=1&x=2',
+        'renderedHref' => '?x=2',
+      ],
+      [
+        'inputByUser' => '?z[0]=1&z[0]=2',
+        'renderedHref' => '?z%5B0%5D=2',
+      ],
+    ];
+    return $test_urls;
+  }
+
+  /**
+   * Get list of url with complex query parameters for input check.
+   *
+   * @return array
+   *   The URLs with complex query parameters.
+   */
+  protected function getUrlWithComplexQueryInputList(): array {
+    $test_urls = $this->getUrlWithComplexQuery();
+    $list_urls = [];
+    foreach ($test_urls as $test_url) {
+      $list_urls[$test_url['inputByUser']] = Html::escape($test_url['inputByUser']);
+    }
+
+    return $list_urls;
+  }
+
+  /**
    * Tests the 'link_separate' formatter.
    *
    * This test is mostly the same as testLinkFormatter(), but they cannot be
    * merged, since they involve different configuration and output.
    */
-  protected function doTestLinkSeparateFormatter() {
+  protected function doTestLinkSeparateFormatter(): void {
     $field_name = $this->randomMachineName();
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
@@ -630,7 +814,7 @@ class LinkFieldTest extends BrowserTestBase {
             $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
-            $expected .= '</div>';
+            $expected .= PHP_EOL . '</div>';
             $this->assertStringContainsString($expected, $output);
 
             $url = $url2;
@@ -639,7 +823,7 @@ class LinkFieldTest extends BrowserTestBase {
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
-            $expected .= '</div>';
+            $expected .= PHP_EOL . '</div>';
             $this->assertStringContainsString($expected, $output);
 
             $url = $url3;
@@ -648,7 +832,7 @@ class LinkFieldTest extends BrowserTestBase {
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
-            $expected .= '</div>';
+            $expected .= PHP_EOL . '</div>';
             $this->assertStringContainsString($expected, $output);
             break;
 
@@ -678,7 +862,7 @@ class LinkFieldTest extends BrowserTestBase {
    * a link and also which LinkItemInterface::LINK_* is (EXTERNAL, GENERIC,
    * INTERNAL).
    */
-  protected function doTestLinkTypeOnLinkWidget() {
+  protected function doTestLinkTypeOnLinkWidget(): void {
 
     $link_type = LinkItemInterface::LINK_EXTERNAL;
     $field_name = $this->randomMachineName();
@@ -716,7 +900,7 @@ class LinkFieldTest extends BrowserTestBase {
   /**
    * Tests editing a link to a non-node entity.
    */
-  protected function doTestEditNonNodeEntityLink() {
+  protected function doTestEditNonNodeEntityLink(): void {
 
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_test_storage = $entity_type_manager->getStorage('entity_test');
@@ -778,7 +962,7 @@ class LinkFieldTest extends BrowserTestBase {
   /**
    * Tests <nolink> and <none> as link uri.
    */
-  public function testNoLinkUri() {
+  public function testNoLinkUri(): void {
     $field_name = $this->randomMachineName();
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
@@ -872,7 +1056,7 @@ class LinkFieldTest extends BrowserTestBase {
    * @return string
    *   The rendered HTML output.
    */
-  protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE) {
+  protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE): string {
     if ($reset) {
       $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     }

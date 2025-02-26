@@ -71,13 +71,13 @@ class UrlHelper {
    * compress a string into a URL-safe query parameter which will be shorter
    * than if it was used directly.
    *
-   * @see \Drupal\Component\Utility\UrlHelper::uncompressQueryParameter()
-   *
    * @param string $data
    *   The data to compress.
    *
    * @return string
    *   The data compressed into a URL-safe string.
+   *
+   * @see \Drupal\Component\Utility\UrlHelper::uncompressQueryParameter()
    */
   public static function compressQueryParameter(string $data): string {
     // Use 'base64url' encoding. Note that the '=' sign is only used for padding
@@ -90,19 +90,26 @@ class UrlHelper {
   /**
    * Takes a compressed parameter and converts it back to the original.
    *
-   * @see \Drupal\Component\Utility\UrlHelper::compressQueryParameter()
-   *
    * @param string $compressed
    *   A string as compressed by
    *   \Drupal\Component\Utility\UrlHelper::compressQueryParameter().
    *
-   * @return string|bool
-   *   The uncompressed data or FALSE on failure.
+   * @return string
+   *   The uncompressed data, or the original string if it cannot be
+   *   uncompressed.
+   *
+   * @see \Drupal\Component\Utility\UrlHelper::compressQueryParameter()
    */
-  public static function uncompressQueryParameter(string $compressed): string|bool {
+  public static function uncompressQueryParameter(string $compressed): string {
     // Because this comes from user data, suppress the PHP warning that
     // gzcompress() throws if the base64-encoded string is invalid.
-    return @gzuncompress(base64_decode(str_replace(['-', '_'], ['+', '/'], $compressed)));
+    $return = @gzuncompress(base64_decode(str_replace(['-', '_'], ['+', '/'], $compressed)));
+
+    // If we failed to uncompress the query parameter, it may be a stale link
+    // from before compression was implemented with the URL parameter
+    // uncompressed already, or it may be an incorrectly formatted URL.
+    // In either case, pass back the original string to the caller.
+    return $return === FALSE ? $compressed : $return;
   }
 
   /**
@@ -149,9 +156,8 @@ class UrlHelper {
   /**
    * Parses a URL string into its path, query, and fragment components.
    *
-   * This function splits both internal paths like @code node?b=c#d @endcode and
-   * external URLs like @code https://example.com/a?b=c#d @endcode into their
-   * component parts. See
+   * This function splits both internal paths like "node?b=c#d" and external
+   * URLs like "https://example.com/a?b=c#d" into their component parts. See
    * @link http://tools.ietf.org/html/rfc3986#section-3 RFC 3986 @endlink for an
    * explanation of what the component parts are.
    *
@@ -403,8 +409,8 @@ class UrlHelper {
         // We found a colon, possibly a protocol. Verify.
         $protocol = substr($uri, 0, $colon_position);
         // If a colon is preceded by a slash, question mark or hash, it cannot
-        // possibly be part of the URL scheme. This must be a relative URL, which
-        // inherits the (safe) protocol of the base document.
+        // possibly be part of the URL scheme. This must be a relative URL,
+        // which inherits the (safe) protocol of the base document.
         if (preg_match('![/?#]!', $protocol)) {
           break;
         }
