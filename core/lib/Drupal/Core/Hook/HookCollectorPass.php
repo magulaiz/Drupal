@@ -107,7 +107,7 @@ class HookCollectorPass implements CompilerPassInterface {
               self::checkForProceduralOnlyHooks($hook, $class);
             }
             // Set properties on hook class that are needed for registration.
-            $hook->set(... compact('class', 'method', 'module'));
+            $hook->set($class, $module, $method);
             // Store a list of modules implementing hooks for simplifying
             // registration and hook_module_implements_alter execution.
             $legacyImplementationMap[$hook->hook][$hook->module] = '';

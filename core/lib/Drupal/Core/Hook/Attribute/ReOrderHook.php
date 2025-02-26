@@ -35,7 +35,7 @@ class ReOrderHook extends HookOperation {
     string $method,
     Order|ComplexOrder $order,
   ) {
-    parent::__construct(... compact('hook', 'method', 'class', 'order'));
+    parent::__construct($hook, $method, $class, $order);
   }
 
 }
