@@ -61,7 +61,7 @@ final class NavigationMenuLinkTree extends MenuLinkTree {
             $overview['title'] = $this->t('Overview');
             $overview['below'] = [];
             $build['#items'][$plugin_id]['below'][$route_name]['below'] = [
-              $route_name => $overview
+              $route_name => $overview,
             ] + $build['#items'][$plugin_id]['below'][$route_name]['below'];
           }
         }
