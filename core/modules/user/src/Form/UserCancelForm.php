@@ -138,6 +138,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     // attempt to cancel the own account.
     if (!$form_state->isValueEmpty('access') && $form_state->isValueEmpty('user_cancel_confirm') && $this->entity->id() != $this->currentUser()->id()) {
       user_cancel($form_state->getValues(), $this->entity->id(), $form_state->getValue('user_cancel_method'));
+
       $form_state->setRedirectUrl($this->entity->toUrl('collection'));
     }
     else {

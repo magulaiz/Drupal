@@ -621,6 +621,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertTrue($status, 'Users deleted and not found in the database.');
 
     // Ensure that admin account was not cancelled.
+    $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
     $admin_user = $user_storage->load($admin_user->id());
     $this->assertTrue($admin_user->isActive(), 'Administrative user is found in the database and enabled.');
 
