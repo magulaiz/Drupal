@@ -51,7 +51,11 @@ class LocaleLegacyTest extends KernelTestBase {
   }
 
   /**
-   * Tests locale_system_set_config_langcodes().
+   * Tests the deprecation of locale_system_set_config_langcodes().
+   *
+   * @group legacy
+   *
+   * @see locale_system_set_config_langcodes()
    */
   public function testLocaleSystemSetConfigLangcodes(): void {
     $this->assertEquals('en', $this->config('locale_test.no_translation')->get('langcode'));
