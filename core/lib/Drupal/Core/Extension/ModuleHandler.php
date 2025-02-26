@@ -442,7 +442,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       $extra_modules = FALSE;
       $extra_listeners = [];
       if (isset($extra_types)) {
-        $extra_hooks = array_map(fn ($x) => $x . '_alter', $extra_types);
+        $extra_hooks = array_map(static fn ($x) => $x . '_alter', $extra_types);
         // First get the listeners implementing extra hooks.
         foreach ($extra_hooks as $extra_hook) {
           $hook_listeners = $this->findListenersForAlter($extra_hook, $hook_listeners, $extra_modules);
