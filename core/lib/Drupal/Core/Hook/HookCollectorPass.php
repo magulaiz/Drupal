@@ -252,7 +252,7 @@ class HookCollectorPass implements CompilerPassInterface {
         // Verify the correct structure of
         // $hookOrderOperation->order->classesAndMethods and create specifiers
         // for HookPriority::change() while at it.
-        $otherSpecifiers = array_map(fn ($pair) => is_array($pair) ? $pair[0] . '::' . $pair[1] : throw new \LogicException('classesAndMethods needs to be an array of arrays'), $hookOrderOperation->order->classesAndMethods);
+        $otherSpecifiers = array_map(static fn ($pair) => is_array($pair) ? $pair[0] . '::' . $pair[1] : throw new \LogicException('classesAndMethods needs to be an array of arrays'), $hookOrderOperation->order->classesAndMethods);
         // Collect classes and methods for
         // self::registerComplexHookImplementations().
         $classesAndMethods = $hookOrderOperation->order->classesAndMethods;
@@ -303,7 +303,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *   @see https://www.drupal.org/project/drupal/issues/3481778
    */
   public static function collectAllHookImplementations(array $module_filenames, ?ContainerBuilder $container = NULL): static {
-    $modules = array_map(fn ($x) => preg_quote($x, '/'), array_keys($module_filenames));
+    $modules = array_map(static fn ($x) => preg_quote($x, '/'), array_keys($module_filenames));
     // Longer modules first.
     usort($modules, fn($a, $b) => strlen($b) - strlen($a));
     $module_preg = '/^(?<function>(?<module>' . implode('|', $modules) . ')_(?!preprocess_)(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
@@ -517,7 +517,7 @@ class HookCollectorPass implements CompilerPassInterface {
     foreach ($reflections as $reflection) {
       if ($reflection_attributes = $reflection->getAttributes(HookOperation::class, \ReflectionAttribute::IS_INSTANCEOF)) {
         $method = $reflection instanceof \ReflectionMethod ? $reflection->getName() : '__invoke';
-        $attributes[$method] = array_map(fn (\ReflectionAttribute $ra) => $ra->newInstance(), $reflection_attributes);
+        $attributes[$method] = array_map(static fn (\ReflectionAttribute $ra) => $ra->newInstance(), $reflection_attributes);
       }
     }
     return $attributes;
