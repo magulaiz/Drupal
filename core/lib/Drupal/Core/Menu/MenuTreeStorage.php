@@ -687,7 +687,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         }
       }
     }
-    catch (RouteNotFoundException $e) {
+    catch (RouteNotFoundException) {
       // No such route, we cannot remove defaults from the route parameters.
     }
     // Sort the route parameters so that the query string will be the same.
