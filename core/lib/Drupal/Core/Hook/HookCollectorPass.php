@@ -115,7 +115,7 @@ class HookCollectorPass implements CompilerPassInterface {
             // Reverse lookup for modules implementing hooks.
             $moduleFinder[$class][$hook->method] = $hook->module;
             if ($hook->order) {
-              $this->gatherOrderInformation($hook, $hookOrderOperations, $orderExtraTypes);
+              $hookOrderOperations[] = $hook;
             }
           }
         }
@@ -133,12 +133,21 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
-    // Loop over all ReOrderHook attributes and remove them from the maps
+    // Loop over all ReOrderHook attributes and gather order information
     // before registering the hooks. This must happen after all collection,
     // but before registration to ensure this ordering directive takes
     // precedence.
     foreach ($process_after[ReOrderHook::class] as $reOrderHook) {
-      $this->gatherOrderInformation($reOrderHook, $hookOrderOperations, $orderExtraTypes);
+      $hookOrderOperations[] = $reOrderHook;
+    }
+
+    foreach ($hookOrderOperations as $hookWithOrder) {
+      if ($hookWithOrder->order instanceof ComplexOrder && $hookWithOrder->order->extraTypes) {
+        $extraTypes = [... $hookWithOrder->order->extraTypes, $hookWithOrder->hook];
+        foreach ($extraTypes as $extraHook) {
+          $orderExtraTypes[$extraHook] = array_merge($orderExtraTypes[$extraHook] ?? [], $extraTypes);
+        }
+      }
     }
     $orderExtraTypes = array_map('array_unique', $orderExtraTypes);
 
@@ -150,26 +159,6 @@ class HookCollectorPass implements CompilerPassInterface {
       static::reOrderImplementations($container, $hookOrderOperations, $orderExtraTypes, $implementations, $moduleFinder);
     }
     return $implementations;
-  }
-
-  /**
-   * Gather ordering information.
-   *
-   * @param \Drupal\Core\Hook\HookOperation $hook
-   *   The hook with ordering information.
-   * @param array $hookOrderOperations
-   *   All attributes with ordering information.
-   * @param array<string, list<string>> $orderExtraTypes
-   *   Extra types to order together with.
-   */
-  protected function gatherOrderInformation(HookOperation $hook, array &$hookOrderOperations, array &$orderExtraTypes): void {
-    $hookOrderOperations[] = $hook;
-    if ($hook->order instanceof ComplexOrder && $hook->order->extraTypes) {
-      $extraTypes = [... $hook->order->extraTypes, $hook->hook];
-      foreach ($extraTypes as $extraHook) {
-        $orderExtraTypes[$extraHook] = array_merge($orderExtraTypes[$extraHook] ?? [], $extraTypes);
-      }
-    }
   }
 
   /**
