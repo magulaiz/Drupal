@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Hook;
 
 /**
- * Base class for attributes that affect other hook implementations.
+ * Base class for attributes that affect or define hook implementations.
  *
  * @internal
  */
@@ -15,14 +15,16 @@ abstract class HookOperation {
    * Constructs a HookOperation object.
    *
    * @param string $hook
-   *   The hook parameter of the implementation.
+   *   The hook being implemented or modified.
    * @param string $method
-   *   The method name of the implementation. If the hook attribute is
-   *   on a class and does not have method set, then use __invoke.
+   *   The method for the hook being implemented or modified.
+   *   This is required when modifying existing hook implementations it is
+   *   optional otherwise. See \Drupal\Core\Hook\Attribute\Hook for more
+   *   information.
    * @param class-string $class
-   *   (optional) The class the implementation to modify is in.
+   *   (optional) The class of the hook being implemented or modified.
    * @param \Drupal\Core\Hook\Order|\Drupal\Core\Hook\ComplexOrder|null $order
-   *   (optional) Set the order of the implementation.
+   *   (optional) Set the order of the hook referenced.
    */
   public function __construct(
     public string $hook,
