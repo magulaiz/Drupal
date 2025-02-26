@@ -257,6 +257,7 @@ keypresses
 kinberg
 kolkata
 lamoids
+languageswitcher
 libc
 lified
 lightninggreen
