@@ -201,10 +201,10 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
 
     // Ensure a conditional request with If-Modified-Since newer than
-    // Last-Modified returns 200 OK.
+    // Last-Modified returns 200 OK. We mustn't set If-None-Match header
+    // in this case, since it would take precedence over If-Modified-Since.
     $this->drupalGet('', [], [
       'If-Modified-Since' => gmdate(DateTimePlus::RFC7231, strtotime($last_modified) + 1),
-      'If-None-Match' => $etag,
     ]);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
@@ -258,7 +258,8 @@ class PageCacheTest extends BrowserTestBase {
     // of the Cache-Control header, even if they are explicitly passed in to
     // the response header bag in a different order.
     $this->assertCacheMaxAge(300);
-    $this->assertSession()->responseHeaderEquals('Expires', 'Sun, 19 Nov 1978 05:00:00 GMT');
+    $responseDate = \DateTime::createFromFormat(DateTimePlus::RFC7231, $this->getSession()->getResponseHeader('Date'));
+    $this->assertSession()->responseHeaderEquals('Expires', $responseDate->modify('+300 seconds')->format(DatetimePlus::RFC7231));
     $this->assertSession()->responseHeaderEquals('Foo', 'bar');
 
     // Check cache.
@@ -266,7 +267,8 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderContains('Vary', 'cookie');
     $this->assertCacheMaxAge(300);
-    $this->assertSession()->responseHeaderEquals('Expires', 'Sun, 19 Nov 1978 05:00:00 GMT');
+    $responseDate = \DateTime::createFromFormat(DateTimePlus::RFC7231, $this->getSession()->getResponseHeader('Date'));
+    $this->assertSession()->responseHeaderEquals('Expires', $responseDate->modify('+300 seconds')->format(DatetimePlus::RFC7231));
     $this->assertSession()->responseHeaderEquals('Foo', 'bar');
 
     // Check replacing default headers.

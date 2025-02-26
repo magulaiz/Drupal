@@ -34,6 +34,7 @@ class EntityBundleListCacheTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
     EntityTestBundle::create([
       'id' => 'bundle_a',
       'label' => 'Bundle A',
@@ -42,6 +43,11 @@ class EntityBundleListCacheTest extends BrowserTestBase {
       'id' => 'bundle_b',
       'label' => 'Bundle B',
     ])->save();
+
+    // Set some page cache max-age so that responses are cacheable.
+    $this->config('system.performance')
+      ->set('cache.page.max_age', 300)
+      ->save();
   }
 
   /**

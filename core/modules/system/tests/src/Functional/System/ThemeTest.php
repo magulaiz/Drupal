@@ -63,6 +63,11 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->node = $this->drupalCreateNode();
     $this->drupalPlaceBlock('local_tasks_block');
+
+    // Set some page cache max-age so that responses are cacheable.
+    $this->config('system.performance')
+      ->set('cache.page.max_age', 300)
+      ->save();
   }
 
   /**

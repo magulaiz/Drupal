@@ -145,6 +145,11 @@ final class LinksetControllerTest extends LinksetControllerTestBase {
     ], $options);
 
     $this->httpKernel = $this->container->get('http_kernel');
+
+    // Set some page cache max-age so that responses are cacheable.
+    $this->config('system.performance')
+      ->set('cache.page.max_age', 300)
+      ->save();
   }
 
   /**

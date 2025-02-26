@@ -189,6 +189,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->entityStorage = $this->container->get('entity_type.manager')
       ->getStorage(static::$entityTypeId);
 
+    // Set some page cache max-age so that responses are cacheable.
+    $this->config('system.performance')
+      ->set('cache.page.max_age', 300)
+      ->save();
+
     // Create an entity.
     $this->entity = $this->createEntity();
 
@@ -615,6 +620,11 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       foreach ($headers as $header => $value) {
         if (str_starts_with($header, 'X-Drupal-Assertion-') || in_array($header, $ignored_headers)) {
           unset($headers[$header]);
+        }
+        if ($header === 'Etag') {
+          // Remove the weak ETag prefix,
+          // since Nginx may add it in some circumstances.
+          $headers[$header] = preg_replace('/^W\//', '', $headers[$header]);
         }
       }
       return $headers;

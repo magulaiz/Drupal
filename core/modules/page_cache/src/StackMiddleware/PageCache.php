@@ -2,6 +2,7 @@
 
 namespace Drupal\page_cache\StackMiddleware;
 
+use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -283,8 +284,22 @@ class PageCache implements HttpKernelInterface {
     // The getExpires method could return NULL if Expires header is not set, so
     // the returned value needs to be checked before calling getTimestamp.
     elseif ($expires = $response->getExpires()) {
-      $date = $expires->getTimestamp();
-      $expire = ($date > $request_time) ? $date : Cache::PERMANENT;
+      $expires_timestamp = $expires->getTimestamp();
+      if ($expires_timestamp > $request_time) {
+        $expire = $expires_timestamp;
+      }
+      else {
+        $response->headers->set(static::HEADER,
+          // The special value '19-Nov-1978 05:00:00 UTC' is a special value
+          // used by FinishResponseSubscriber to indicate that the response
+          // is not cacheable (mostly due to a max_age = 0 or the response not
+          // being an instance of CacheableResponseInterface). So, simply saying
+          // "Expires header in the past" would be misleading in this case.
+          $expires == \DateTime::createFromFormat('j-M-Y H:i:s T', '19-Nov-1978 05:00:00 UTC')
+            ? 'UNCACHEABLE (Not cacheable)'
+            : 'UNCACHEABLE (Expires header in the past)');
+        return FALSE;
+      }
     }
     else {
       $expire = Cache::PERMANENT;
@@ -317,7 +332,25 @@ class PageCache implements HttpKernelInterface {
   protected function get(Request $request, $allow_invalid = FALSE) {
     $cid = $this->getCacheId($request);
     if ($cache = $this->cache->get($cid, $allow_invalid)) {
-      return $cache->data;
+      /** @var \Symfony\Component\HttpFoundation\Response $cached_response */
+      $cached_response = $cache->data;
+      // Set conditional response headers.
+      if ($if_modified_since = $request->headers->get('If-Modified-Since')) {
+        $if_modified_since = \DateTime::createFromFormat(DateTimePlus::RFC7231, $if_modified_since);
+        $if_none_match = $request->headers->get('If-None-Match');
+        // If-None-Match takes precedence over If-Modified-Since.
+        if ($if_none_match !== NULL) {
+          // Strip the weak validator prefix.
+          $if_none_match = preg_replace('/^W\//', '', $if_none_match);
+          if ($if_none_match === $cached_response->getEtag()) {
+            $cached_response->setNotModified();
+          }
+        }
+        elseif ($cached_response->getLastModified() > $if_modified_since) {
+          $cached_response->setNotModified();
+        }
+      }
+      return $cached_response;
     }
     return FALSE;
   }
