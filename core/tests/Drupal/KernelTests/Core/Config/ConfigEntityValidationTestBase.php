@@ -48,9 +48,9 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    * strong UI presence. For example: REST resource configuration entities and
    * entity view displays.
    *
-   * @see \Drupal\Core\Entity\EntityInterface::label()
-   *
    * @var bool
+   *
+   * @see \Drupal\Core\Entity\EntityInterface::label()
    */
   protected bool $hasLabel = TRUE;
 
@@ -496,6 +496,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    * @todo Remove this optional parameter in https://www.drupal.org/project/drupal/issues/2820364#comment-15333069
    *
    * @return void
+   *   No return value.
    */
   public function testRequiredPropertyKeysMissing(?array $additional_expected_validation_errors_when_missing = NULL): void {
     $config_entity_properties = array_keys($this->entity->getEntityType()->getPropertiesToExport());
@@ -541,6 +542,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    * @todo Remove this optional parameter in https://www.drupal.org/project/drupal/issues/2820364#comment-15333069
    *
    * @return void
+   *   No return value.
    */
   public function testRequiredPropertyValuesMissing(?array $additional_expected_validation_errors_when_missing = NULL): void {
     $config_entity_properties = array_keys($this->entity->getEntityType()->getPropertiesToExport());
@@ -631,7 +633,9 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   /**
    * Determines the config entity mapping properties with required keys.
    *
-   * This refers only to the top-level properties of the config entity which are expected to be mappings, and of those mappings, only the ones which have required keys.
+   * This refers only to the top-level properties of the config entity which are
+   * expected to be mappings, and of those mappings, only the ones which have
+   * required keys.
    *
    * @return string[]
    *   An array of key-value pairs, with:

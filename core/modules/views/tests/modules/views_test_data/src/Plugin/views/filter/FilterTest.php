@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views_test_data\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
+/**
+ * Provides a test filter plugin for Views.
+ */
 #[ViewsFilter("test_filter")]
 class FilterTest extends FilterPluginBase {
 
@@ -29,7 +34,7 @@ class FilterTest extends FilterPluginBase {
 
     $form['test_enable'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Controls whether the filter plugin should be active'),
+      '#title' => 'Controls whether the filter plugin should be active',
       '#default_value' => $this->options['test_enable'],
     ];
   }

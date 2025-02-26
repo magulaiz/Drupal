@@ -6,6 +6,7 @@ use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\State\StateInterface;
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
@@ -43,12 +44,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_node",
- *   source_module = "node"
- * )
  */
+#[MigrateSource(
+  id: 'd6_node',
+  source_module: 'node',
+)]
 class Node extends DrupalSqlBase {
 
   /**
@@ -186,7 +186,7 @@ class Node extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    // format = 0 can happen when the body field is hidden. Set the format to 1
+    // Format = 0 can happen when the body field is hidden. Set the format to 1
     // to avoid migration map issues (since the body field isn't used anyway).
     if ($row->getSourceProperty('format') === '0') {
       $row->setSourceProperty('format', $this->filterDefaultFormat);
