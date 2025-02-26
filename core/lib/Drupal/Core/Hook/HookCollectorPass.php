@@ -508,6 +508,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *   A list of Hook attribute instances.
    */
   protected static function getAttributeInstances(\ReflectionClass $reflectionClass): array {
+    $attributes = [];
     $reflections = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
     $reflections[] = $reflectionClass;
     foreach ($reflections as $reflection) {
