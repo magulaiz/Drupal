@@ -52,6 +52,8 @@ class HookCollectorPassTest extends KernelTestBase {
 
   /**
    * Test that ordering works.
+   *
+   * @group legacy
    */
   public function testOrdering(): void {
     $container = new ContainerBuilder();
@@ -80,6 +82,23 @@ class HookCollectorPassTest extends KernelTestBase {
     // For the hook order2 or any hook but order1, however, all1 fires first
     // and all2 second.
     $this->assertLessThan($priorities['drupal_hook.order2']['order'], $priorities['drupal_hook.order2']['module_handler_test_all2_order2']);
+  }
+
+  /**
+   * Test LegacyModuleImplementsAlter.
+   */
+  public function testLegacyModuleImplementsAlter(): void {
+    $container = new ContainerBuilder();
+    $module_filenames = [
+      'module_implements_alter_test_legacy' => ['pathname' => "core/tests/Drupal/Tests/Core/Extension/modules/module_implements_alter_test_legacy/module_implements_alter_test_legacy.info.yml"],
+    ];
+    include_once 'core/tests/Drupal/Tests/Core/Extension/modules/module_implements_alter_test_legacy/module_implements_alter_test_legacy.module';
+    $container->setParameter('container.modules', $module_filenames);
+    $container->setDefinition('module_handler', new Definition());
+    (new HookCollectorPass())->process($container);
+
+    // This test will also fail if the deprecation notice shows up.
+    $this->assertFalse(isset($GLOBALS['ShouldNotRunLegacyModuleImplementsAlter']));
   }
 
   /**
