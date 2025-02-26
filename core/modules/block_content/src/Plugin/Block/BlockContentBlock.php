@@ -99,6 +99,8 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    *   The block content UUID lookup service.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
+   *   The entity repository.
    */
   public function __construct(
     array $configuration,
