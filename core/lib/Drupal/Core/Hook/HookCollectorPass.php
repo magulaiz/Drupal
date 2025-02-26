@@ -364,9 +364,7 @@ class HookCollectorPass implements CompilerPassInterface {
           $attributes = [];
           if (class_exists($class)) {
             $reflectionClass = $container?->getReflectionClass($class) ?? new \ReflectionClass($class);
-            $reflections = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
-            $reflections[] = $reflectionClass;
-            $attributes = self::getAttributeInstances($attributes, $reflections);
+            $attributes = self::getAttributeInstances($reflectionClass);
             $hook_file_cache->set($filename, ['class' => $class, 'attributes' => $attributes]);
           }
         }
@@ -503,15 +501,15 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Get attribute instances from class and method reflections.
    *
-   * @param array $attributes
-   *   The current attributes.
-   * @param array $reflections
-   *   A list of class and method reflections.
+   * @param \ReflectionClass $reflectionClass
+   *   A reflected class.
    *
    * @return array
    *   A list of Hook attribute instances.
    */
-  protected static function getAttributeInstances(array $attributes, array $reflections): array {
+  protected static function getAttributeInstances(\ReflectionClass $reflectionClass): array {
+    $reflections = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
+    $reflections[] = $reflectionClass;
     foreach ($reflections as $reflection) {
       if ($reflection_attributes = $reflection->getAttributes(HookOperation::class, \ReflectionAttribute::IS_INSTANCEOF)) {
         $method = $reflection instanceof \ReflectionMethod ? $reflection->getName() : '__invoke';
