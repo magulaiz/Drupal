@@ -151,7 +151,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       $this->logger('user')->info('Sent account cancellation request to %name %email.', ['%name' => $this->entity->label(), '%email' => '<' . $this->entity->getEmail() . '>']);
 
       $messenger = $this->messenger();
-      if ($this->entity->id() == $this->currentUser()) {
+      if ($this->entity->id() == $this->currentUser()->id()) {
         $messenger->addStatus($this->t('A confirmation request to cancel your account has been sent to your email address.'));
       }
       else {

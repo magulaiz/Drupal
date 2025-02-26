@@ -249,7 +249,7 @@ class UserCancelTest extends BrowserTestBase {
     // Confirm account cancellation.
     $timestamp = time();
     $this->submitForm([], 'Confirm');
-    $this->assertSession()->pageTextContains("A confirmation request to cancel the account {$account->getAccountName()} has been sent to the user's email address.");
+    $this->assertSession()->pageTextContains("A confirmation request to cancel your account has been sent to your email address.");
 
     // Confirm account cancellation request.
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
