@@ -81,7 +81,8 @@ trait FieldUiTestTrait {
       // Test Breadcrumbs.
       $this->getSession()->getPage()->findLink($label);
 
-      // Ensure that each array key in $storage_edit is prefixed with field_storage.
+      // Ensure that each array key in $storage_edit is prefixed with
+      // field_storage.
       $prefixed_storage_edit = [];
       foreach ($storage_edit as $key => $value) {
         if (str_starts_with($key, 'field_storage')) {
@@ -264,6 +265,24 @@ trait FieldUiTestTrait {
       ]);
     $element = $this->getSession()->getPage()->find('xpath', $xpath);
     $this->assertSession()->assert($element === NULL, sprintf('A field "%s" appears on this page, but it should not.', $label));
+  }
+
+  /**
+   * Asserts that a header cell appears on a table.
+   *
+   * @param string $table_id
+   *   The HTML attribute value to target a given table.
+   * @param string $label
+   *   The cell label.
+   */
+  protected function assertTableHeaderExistsByLabel(string $table_id, string $label): void {
+    $expression = '//table[@id=:id]//tr//th[1 and text() = :label]';
+    $xpath = $this->assertSession()->buildXPathQuery($expression, [
+      ':id' => $table_id,
+      ':label' => $label,
+    ]);
+    $element = $this->getSession()->getPage()->find('xpath', $xpath);
+    $this->assertSession()->assert($element !== NULL, sprintf('Table header not found by label: "%s".', $label));
   }
 
 }
