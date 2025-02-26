@@ -97,8 +97,8 @@ class BlockVisibilityForm extends FormBase {
    *   The form builder.
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
    *   The layout tempstore repository.
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface
-   *    The HTTP kernel.
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   *   The HTTP kernel.
    */
   public function __construct(ExecutableManagerInterface $condition_manager, FormBuilderInterface $form_builder, LayoutTempstoreRepositoryInterface $layout_tempstore_repository, HttpKernelInterface $http_kernel) {
     $this->conditionManager = $condition_manager;
@@ -299,12 +299,12 @@ class BlockVisibilityForm extends FormBase {
           '_wrapper_format' => 'drupal_ajax',
           'ajax_form' => 1,
           '_triggering_element_name' => $input['_triggering_element_name'],
-          'form_build_id' =>  $input['form_build_id'],
-          'form_token' =>  $input['form_token'],
-          'form_id' =>  $input['form_id'],
-          'condition' =>  $input['condition'],
-          'settings' =>  $input['settings'],
-          'operator' =>  $input['operator'],
+          'form_build_id' => $input['form_build_id'],
+          'form_token' => $input['form_token'],
+          'form_id' => $input['form_id'],
+          'condition' => $input['condition'],
+          'settings' => $input['settings'],
+          'operator' => $input['operator'],
         ];
 
         foreach (static::BYPASS_SUBREQUEST_DATA as $key) {
