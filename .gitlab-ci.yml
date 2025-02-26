@@ -366,6 +366,12 @@ default:
     # Output a copy in junit.
     - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > $CI_PROJECT_DIR/phpstan-quality-report.json || EXIT_CODE=$?
     - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist --no-progress --error-format=junit > $CI_PROJECT_DIR/phpstan-junit.xml || true
+    # When the PHPStan scan fails, output a human readable copy of the errors,
+    # and regenerate a full baseline.
+    # In order to regenerate a baseline artifact that can be copied and pasted
+    # to a MR branch, we first need to void the current baseline file, then
+    # run PHPStan with the --generate-baseline option, and finally edit the
+    # generated file to convert absolute paths into relative ones.
     - |
       if [ -n "$EXIT_CODE" ]; then
         # Output a copy in plain text for human logs.
