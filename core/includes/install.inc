@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Dependency;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\InstallRequirementsInterface;
 use Drupal\Core\Installer\InstallerKernel;
@@ -618,7 +619,7 @@ function drupal_check_profile($profile) {
         $requirements = array_merge($requirements, $function('install'));
       }
 
-      $requirements = array_merge($requirements, install_check_class_requirements($module, $module_path));
+      $requirements = array_merge($requirements, install_check_class_requirements($module_list[$module]));
     }
   }
 
@@ -628,8 +629,8 @@ function drupal_check_profile($profile) {
     $requirements = array_merge($requirements, $function('install'));
   }
 
-  $profile_path = \Drupal::service('extension.list.profile')->getPath($profile);
-  $requirements = array_merge($requirements, install_check_class_requirements($profile, $profile_path));
+  $extension = \Drupal::service('extension.list.profile')->get($profile);
+  $requirements = array_merge($requirements, install_check_class_requirements($extension));
 
   return $requirements;
 }
@@ -666,6 +667,7 @@ function drupal_requirements_severity(&$requirements) {
 function drupal_check_module($module) {
   /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
   $module_list = \Drupal::service('extension.list.module');
+  $extension = $module_list->get($module);
   $module_path = $module_list->getPath($module);
   $file = DRUPAL_ROOT . '/' . $module_path . "/$module.install";
   if (is_file($file)) {
@@ -673,7 +675,7 @@ function drupal_check_module($module) {
   }
   // Check requirements
   $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']) ?? [];
-  $requirements = array_merge($requirements, install_check_class_requirements($module, $module_path));
+  $requirements = array_merge($requirements, install_check_class_requirements($extension));
 
   if (!empty($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {
     // Print any error messages
@@ -803,17 +805,17 @@ function install_profile_info($profile, $langcode = 'en') {
 /**
  * Checks a module or profile requirements via a class that implements RequirementsInterface.
  *
- * @param string $extension_name
- *   Machine name of the module or profile to check.
- * @param string $extension_path
- *   The path to the module or profile.
+ * @param \Drupal\Core\Extension $extension
+ *   The extension to check install requirements for.
  *
  * @return array
  *   The requirements.
  *
  * @internal
  */
-function install_check_class_requirements(string $extension_name, string $extension_path): array {
+function install_check_class_requirements(Extension $extension): array {
+  $extension_path = $extension->getPath();
+  $extension_name = $extension->getName();
   $dir = \Drupal::root() . "/$extension_path/src/Install/Requirements";
   $requirements = [];
   if (is_dir($dir)) {
