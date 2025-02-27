@@ -43,8 +43,8 @@ class NodeViewsData extends EntityViewsData {
     ModuleHandlerInterface $module_handler,
     TranslationInterface $translation_manager,
     EntityFieldManagerInterface $entity_field_manager,
-    protected ?ModuleExtensionList $moduleExtensionList = NULL
-    ) {
+    protected ?ModuleExtensionList $moduleExtensionList = NULL,
+  ) {
     parent::__construct($entity_type, $storage_controller, $entity_type_manager, $module_handler, $translation_manager, $entity_field_manager);
     if ($this->moduleExtensionList === NULL) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $moduleExtensionList argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3493129', E_USER_DEPRECATED);
@@ -139,7 +139,6 @@ class NodeViewsData extends EntityViewsData {
     ];
 
     // Bogus fields for aliasing purposes.
-
     // @todo Add similar support to any date field
     // @see https://www.drupal.org/node/2337507
     $data['node_field_data']['created_fulldate'] = [
