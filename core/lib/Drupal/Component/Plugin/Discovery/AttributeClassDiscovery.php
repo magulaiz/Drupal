@@ -77,6 +77,15 @@ class AttributeClassDiscovery implements DiscoveryInterface {
           foreach ($iterator as $fileinfo) {
             assert($fileinfo instanceof \SplFileInfo);
             if ($fileinfo->getExtension() === 'php') {
+              if ($cached = $this->fileCache->get($fileinfo->getPathName())) {
+                if (isset($cached['id'])) {
+                  // Explicitly unserialize this to create a new object
+                  // instance.
+                  $definitions[$cached['id']] = unserialize($cached['content']);
+                }
+                continue;
+              }
+
               $sub_path = $iterator->getSubIterator()->getSubPath();
               $sub_path = $sub_path ? str_replace(DIRECTORY_SEPARATOR, '\\', $sub_path) . '\\' : '';
               $class = $namespace . '\\' . $sub_path . $fileinfo->getBasename('.php');
@@ -114,15 +123,6 @@ class AttributeClassDiscovery implements DiscoveryInterface {
                 }
                 continue;
               }
-              if ($cached = $this->fileCache->get($fileinfo->getPathName())) {
-                if (isset($cached['id'])) {
-                  // Explicitly unserialize this to create a new object
-                  // instance.
-                  $definitions[$cached['id']] = unserialize($cached['content']);
-                }
-                continue;
-              }
-
               ['id' => $id, 'content' => $content] = $this->parseClass($class, $fileinfo);
               if ($id) {
                 $definitions[$id] = $content;
