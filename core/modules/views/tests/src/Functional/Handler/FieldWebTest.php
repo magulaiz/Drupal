@@ -683,4 +683,36 @@ class FieldWebTest extends ViewTestBase {
     $this->assertNotSubString($output, '…', 'No ellipsis should appear if the output is not trimmed');
   }
 
+  /**
+   * Tests the aria-label attribute rendering.
+   */
+  public function testAriaLabelRendering(): void {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = \Drupal::service('renderer');
+    $view = Views::getView('test_field_output');
+    $view->initHandlers();
+
+    // Get the 'name' field handler and configure its alter options.
+    $name_field = $view->field['name'];
+    $name_field->options['alter'] = [
+      'make_link' => TRUE,
+      'path' => 'test-path',
+      'aria_label' => 'Test aria label',
+      'external' => FALSE,
+      'alt' => '',
+      'link_class' => '',
+      'target' => '',
+    ];
+
+    // Generate the view preview output and render it to a string.
+    $output = $view->preview();
+    $output = (string) $renderer->renderRoot($output);
+
+    // Verify the full HTML structure including the aria-label attribute.
+    $this->assertNotEmpty($this->xpathContent(
+      $output,
+      "//li/div[contains(@class, 'views-field') and contains(@class, 'views-field-name')]/span[contains(@class, 'field-content')]/a[@href='/test-path' and @aria-label='Test aria label']"
+    ));
+  }
+
 }
