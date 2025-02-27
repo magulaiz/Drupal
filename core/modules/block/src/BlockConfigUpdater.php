@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\block;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /**
  * Provides a BC layer for modules providing old configurations.
  *
