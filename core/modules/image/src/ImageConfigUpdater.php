@@ -21,6 +21,7 @@ class ImageConfigUpdater {
    * Stores which deprecations were triggered.
    */
   protected array $triggeredDeprecations = [];
+
   /**
    * Sets the deprecations enabling status.
    *
