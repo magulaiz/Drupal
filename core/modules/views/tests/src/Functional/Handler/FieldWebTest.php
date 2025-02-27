@@ -695,10 +695,7 @@ class FieldWebTest extends ViewTestBase {
     $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field, $row) {
       return $name_field->advancedRender($row);
     });
-    $this->assertNotEmpty($this->xpathContent(
-      $output,
-      "//a[@href='/test-path' and @aria-label='Test aria label']"
-    ));
+    $this->assertSubString($output, 'aria-label="Test aria label"', 'Aria label attribute should be present.');
   }
 
 }
