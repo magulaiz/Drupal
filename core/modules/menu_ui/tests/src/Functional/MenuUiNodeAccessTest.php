@@ -10,6 +10,8 @@ use Drupal\Tests\BrowserTestBase;
 
 /**
  * Edit a node when you don't have permission to add or edit menu links.
+ *
+ * @group menu_ui
  */
 class MenuUiNodeAccessTest extends BrowserTestBase {
 
