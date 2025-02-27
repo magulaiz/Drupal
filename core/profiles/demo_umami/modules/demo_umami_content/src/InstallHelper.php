@@ -184,17 +184,17 @@ class InstallHelper implements ContainerInjectionInterface {
     foreach ($translated_languages as $language) {
       if (file_exists($default_content_path . "$language/$filename") &&
       ($handle = fopen($default_content_path . "$language/$filename", 'r')) !== FALSE) {
-        $header = fgetcsv($handle);
+        $header = fgetcsv($handle, escape: '');
         $line_counter = 0;
-        while (($content = fgetcsv($handle)) !== FALSE) {
+        while (($content = fgetcsv($handle, escape: '')) !== FALSE) {
           $keyed_content[$language][$line_counter] = array_combine($header, $content);
           $line_counter++;
         }
         fclose($handle);
       }
       else {
-        // Language directory exists, but the file in this language was not found,
-        // remove that language from list of languages to be translated.
+        // Language directory exists, but the file in this language was not
+        // found, remove that language from list of languages to be translated.
         $key = array_search($language, $translated_languages);
         unset($translated_languages[$key]);
       }

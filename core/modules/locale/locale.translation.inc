@@ -2,9 +2,9 @@
 
 /**
  * @file
- * Common API for interface translation.
  */
 
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
 /**
@@ -54,6 +54,7 @@ const LOCALE_TRANSLATION_SOURCE_COMPARE_GT = 1;
  *
  * @see locale_translation_build_projects()
  */
+#[StopProceduralHookScan]
 function locale_translation_get_projects(array $project_names = []) {
   $projects = &drupal_static(__FUNCTION__, []);
 
@@ -103,8 +104,8 @@ function locale_translation_clear_cache_projects() {
  */
 function locale_translation_load_sources(?array $projects = NULL, ?array $langcodes = NULL) {
   $sources = [];
-  $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
-  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
+  $projects = $projects ?: array_keys(locale_translation_get_projects());
+  $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
   // Load source data from locale_translation_status cache.
   $status = locale_translation_get_status();
@@ -134,7 +135,7 @@ function locale_translation_load_sources(?array $projects = NULL, ?array $langco
 function locale_translation_build_sources(array $projects = [], array $langcodes = []) {
   $sources = [];
   $projects = locale_translation_get_projects($projects);
-  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
+  $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
   foreach ($projects as $project) {
     foreach ($langcodes as $langcode) {
@@ -242,7 +243,7 @@ function locale_translation_source_build($project, $langcode, $filename = NULL) 
   $source->timestamp = 0;
   $source->last_checked = 0;
 
-  $filename = $filename ? $filename : \Drupal::config('locale.settings')->get('translation.default_filename');
+  $filename = $filename ?: \Drupal::config('locale.settings')->get('translation.default_filename');
 
   // If the server_pattern contains a remote file path we will check for a
   // remote file. The local version of this file will only be checked if a
