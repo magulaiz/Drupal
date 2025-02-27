@@ -690,6 +690,7 @@ class FieldWebTest extends ViewTestBase {
     $view = Views::getView('test_click_sort');
     $view->setDisplay();
 
+    // Set the field to be a link with an aria-label attribute.
     $view->displayHandlers->get('default')->overrideOption('fields', [
       'name' => [
         'id' => 'name',
