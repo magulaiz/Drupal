@@ -11,7 +11,7 @@ final class BackwardsCompatibilityClassLoader {
   /**
    * Aliases a moved class to another class, instead of actually autoloading it.
    *
-   * @param $class
+   * @param string $class
    *   The classname to load.
    */
   public function loadClass(string $class): void {
