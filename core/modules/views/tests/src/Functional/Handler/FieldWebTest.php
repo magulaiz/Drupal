@@ -687,32 +687,37 @@ class FieldWebTest extends ViewTestBase {
    * Tests the aria-label attribute rendering.
    */
   public function testAriaLabelRendering(): void {
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = \Drupal::service('renderer');
-    $view = Views::getView('test_field_output');
-    $view->initHandlers();
+    $view = Views::getView('test_click_sort');
+    $view->setDisplay();
 
-    // Get the 'name' field handler and configure its alter options.
-    $name_field = $view->field['name'];
-    $name_field->options['alter'] = [
-      'make_link' => TRUE,
-      'path' => 'test-path',
-      'aria_label' => 'Test aria label',
-      'external' => FALSE,
-      'alt' => '',
-      'link_class' => '',
-      'target' => '',
-    ];
+    $view->displayHandlers->get('default')->overrideOption('fields', [
+      'name' => [
+        'id' => 'name',
+        'table' => 'views_test_data',
+        'field' => 'name',
+        'alter' => [
+          'make_link' => TRUE,
+          'path' => 'test-path',
+          'aria_label' => 'Test aria label',
+          'external' => FALSE,
+          'alt' => '',
+          'link_class' => '',
+          'target' => '',
+        ],
+      ],
+    ]);
 
-    // Generate the view preview output and render it to a string.
-    $output = $view->preview();
-    $output = (string) $renderer->renderRoot($output);
+    // Save the view configuration to ensure changes are applied.
+    $view->save();
+
+    // Visit the view's page.
+    $this->drupalGet('test_click_sort');
 
     // Verify the full HTML structure including the aria-label attribute.
-    $this->assertNotEmpty($this->xpathContent(
-      $output,
-      "//li/div[contains(@class, 'views-field') and contains(@class, 'views-field-name')]/span[contains(@class, 'field-content')]/a[@href='/test-path' and @aria-label='Test aria label']"
-    ));
+    $this->assertSession()->elementExists(
+      'xpath',
+      "//tr/td[contains(@class, 'views-field-name')]/a[@href='/test-path' and @aria-label='Test aria label']"
+    );
   }
 
 }
