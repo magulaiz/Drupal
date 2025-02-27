@@ -345,7 +345,7 @@ class Statement extends StatementWrapperIterator {
     }
 
     $rows = [];
-    if (FetchAs::Column== $mode) {
+    if (FetchAs::Column == $mode) {
       // When fetching a column's value across the entire dataset, fetch
       // through it and pick the requested column value for each row.
       if ($column_index === NULL) {
