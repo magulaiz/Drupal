@@ -521,7 +521,7 @@ class FieldWebTest extends ViewTestBase {
   }
 
   /**
-   * Tests trimming/read-more/ellipses.
+   * Tests trimming/read-more/ellipses and aria-label rendering.
    */
   public function testTextRendering(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
@@ -681,44 +681,24 @@ class FieldWebTest extends ViewTestBase {
       return $name_field->advancedRender($row);
     });
     $this->assertNotSubString($output, '…', 'No ellipsis should appear if the output is not trimmed');
-  }
 
-  /**
-   * Tests the aria-label attribute rendering.
-   */
-  public function testAriaLabelRendering(): void {
-    $view = Views::getView('test_click_sort');
-    $view->setDisplay();
-
-    // Set the field to be a link with an aria-label attribute.
-    $view->displayHandlers->get('default')->overrideOption('fields', [
-      'name' => [
-        'id' => 'name',
-        'table' => 'views_test_data',
-        'field' => 'name',
-        'alter' => [
-          'make_link' => TRUE,
-          'path' => 'test-path',
-          'aria_label' => 'Test aria label',
-          'external' => FALSE,
-          'alt' => '',
-          'link_class' => '',
-          'target' => '',
-        ],
-      ],
-    ]);
-
-    // Save the view configuration to ensure changes are applied.
-    $view->save();
-
-    // Visit the view's page.
-    $this->drupalGet('test_click_sort');
-
-    // Verify the full HTML structure including the aria-label attribute.
-    $this->assertSession()->elementExists(
-      'xpath',
-      "//tr/td[contains(@class, 'views-field-name')]/a[@href='/test-path' and @aria-label='Test aria label']"
-    );
+    // Tests for the aria-label attribute rendering.
+    $name_field->options['alter'] = [
+      'make_link' => TRUE,
+      'path' => 'test-path',
+      'aria_label' => 'Test aria label',
+      'external' => FALSE,
+      'alt' => '',
+      'link_class' => '',
+      'target' => '',
+    ];
+    $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field, $row) {
+      return $name_field->advancedRender($row);
+    });
+    $this->assertNotEmpty($this->xpathContent(
+      $output,
+      "//a[@href='/test-path' and @aria-label='Test aria label']"
+    ));
   }
 
 }
