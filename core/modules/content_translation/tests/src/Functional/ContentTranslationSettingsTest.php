@@ -219,6 +219,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/structure/types/manage/article');
     $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains('"Show language selector" is not compatible with translating content that has default language: und. Either do not hide the language selector or pick a specific language.');
 
     // Test that the order of the language list is similar to other language
     // lists, such as in Views UI.
