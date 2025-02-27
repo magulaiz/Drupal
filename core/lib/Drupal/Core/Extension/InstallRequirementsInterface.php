@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Extension;
 
+/**
+ * Provides method for checking requirements during install time.
+ */
 interface InstallRequirementsInterface {
 
   /**

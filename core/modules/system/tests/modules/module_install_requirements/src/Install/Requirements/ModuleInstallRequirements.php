@@ -6,6 +6,9 @@ namespace Drupal\module_install_requirements\Install\Requirements;
 
 use Drupal\Core\Extension\InstallRequirementsInterface;
 
+/**
+ * Provides method for checking requirements during install time.
+ */
 class ModuleInstallRequirements implements InstallRequirementsInterface {
 
   /**
