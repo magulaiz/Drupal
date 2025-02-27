@@ -70,7 +70,7 @@ class FormTestClickedButtonForm extends FormBase {
         }
 
         // Check if the argument contains "r" to restrict access.
-        if (strpos($arg, 'r') !== FALSE) {
+        if (str_contains($arg, 'r')) {
           $form[$name]['#access'] = FALSE;
         }
       }
