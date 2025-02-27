@@ -2,6 +2,7 @@
 
 namespace Drupal\Component\Plugin\Discovery;
 
+use Drupal\Component\Discovery\TraitSafeClassLoader;
 use Drupal\Component\Plugin\Attribute\AttributeInterface;
 use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Component\FileCache\FileCacheFactory;

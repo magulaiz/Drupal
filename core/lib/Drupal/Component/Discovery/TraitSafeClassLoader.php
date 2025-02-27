@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Component\Plugin\Discovery;
+namespace Drupal\Component\Discovery;
 
 /**
  * Defines a classloader that throws an exception.
