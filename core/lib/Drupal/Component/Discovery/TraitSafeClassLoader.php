@@ -14,6 +14,9 @@ namespace Drupal\Component\Discovery;
  */
 class TraitSafeClassLoader {
 
+  /**
+   * Flag indicating whether loader encountered a missing class.
+   */
   protected bool $missingClass = FALSE;
 
   public function loadClass($class): void {
