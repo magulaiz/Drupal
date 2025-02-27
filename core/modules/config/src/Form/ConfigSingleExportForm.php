@@ -107,6 +107,12 @@ class ConfigSingleExportForm extends FormBase {
     $config_type_htmx = new Htmx();
     $config_name_htmx = new Htmx();
 
+    /*
+     * - Send a POST request to the form URL.
+     * - Select the config_name <select> element from the response.
+     * - Target the config_name <select> in the rendered form for replacement.
+     * - Replace uses the outerHTML strategy, which is to replace the whole tag.
+     */
     $form_url = Url::fromRoute(
       route_name: 'config.export_single',
       route_parameters: ['config_type' => $config_type, 'config_name' => $config_name],
@@ -124,16 +130,6 @@ class ConfigSingleExportForm extends FormBase {
       '#type' => 'select',
       '#options' => $config_types,
       '#default_value' => $config_type,
-      /*
-       * - Send a POST request to the form URL.
-       * - Send the value of this select, and the hidden form builder values.
-       *   Sending the whole form is both not needed and creates validation
-       *   issues for the config_name value.
-       * - Select the config_name <select> element from the response.
-       * - Target the config_name <select> in the rendered form for replacement.
-       * - Replace using the outerHTML strategy: that is replace the whole tag.
-       * - Also select and replace the export value.
-       */
       '#htmx' => $config_type_htmx,
     ];
 
