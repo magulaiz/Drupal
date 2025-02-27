@@ -668,8 +668,7 @@ function drupal_check_module($module) {
   /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
   $module_list = \Drupal::service('extension.list.module');
   $extension = $module_list->get($module);
-  $module_path = $module_list->getPath($module);
-  $file = DRUPAL_ROOT . '/' . $module_path . "/$module.install";
+  $file = \Drupal::root() . '/' . $extension->getPath() . "/$module.install";
   if (is_file($file)) {
     require_once $file;
   }
@@ -803,7 +802,9 @@ function install_profile_info($profile, $langcode = 'en') {
 }
 
 /**
- * Checks a module or profile requirements via a class that implements RequirementsInterface.
+ * Checks a module or profile requirements.
+ *
+ * See \Drupal\Core\Extension\InstallRequirementsInterface for more information.
  *
  * @param \Drupal\Core\Extension $extension
  *   The extension to check install requirements for.
