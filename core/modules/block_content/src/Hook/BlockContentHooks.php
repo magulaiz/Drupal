@@ -20,6 +20,10 @@ class BlockContentHooks {
 
   use StringTranslationTrait;
 
+  public function __construct(
+    private readonly BlockConfigUpdater $blockConfigUpdater,
+  ) {}
+
   /**
    * Implements hook_help().
    */
@@ -166,9 +170,7 @@ class BlockContentHooks {
    */
   #[Hook('block_presave')]
   public function blockPreSave(BlockInterface $block): void {
-    /** @var \Drupal\block\BlockConfigUpdater $blockConfigUpdater */
-    $blockConfigUpdater = \Drupal::classResolver(BlockConfigUpdater::class);
-    $blockConfigUpdater->updateBlock($block);
+    $this->blockConfigUpdater->updateBlock($block);
   }
 
 }

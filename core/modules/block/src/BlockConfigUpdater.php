@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
-class BlockConfigUpdater implements ContainerInjectionInterface {
+class BlockConfigUpdater {
 
   /**
    * Flag determining whether deprecations should be triggered.
@@ -27,19 +27,6 @@ class BlockConfigUpdater implements ContainerInjectionInterface {
    * @var array
    */
   protected array $triggeredDeprecations = [];
-
-  /**
-   * BlockConfigUpdater constructor.
-   */
-  public function __construct() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container): static {
-    return new static();
-  }
 
   /**
    * Sets the deprecations enabling status.

@@ -28,7 +28,7 @@ function block_content_removed_post_updates(): array {
  */
 function block_content_post_update_remove_block_content_status_info_keys(array &$sandbox = []): void {
   /** @var \Drupal\block\BlockConfigUpdater $blockConfigUpdater */
-  $blockConfigUpdater = \Drupal::classResolver(BlockConfigUpdater::class);
+  $blockConfigUpdater = \Drupal::service(BlockConfigUpdater::class);
   $blockConfigUpdater->setDeprecationsEnabled(FALSE);
   \Drupal::classResolver(ConfigEntityUpdater::class)
     ->update($sandbox, 'block', function (BlockInterface $block) use ($blockConfigUpdater): bool {
