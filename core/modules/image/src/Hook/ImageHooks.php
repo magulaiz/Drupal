@@ -24,7 +24,7 @@ class ImageHooks {
 
   public function __construct(
     private readonly ImageConfigUpdater $imageConfigUpdater,
-  ) { }
+  ) {}
 
   /**
    * Implements hook_help().

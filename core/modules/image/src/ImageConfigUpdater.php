@@ -4,8 +4,6 @@ namespace Drupal\image;
 
 use Drupal\Core\Image\ImageResizePolicy;
 use Drupal\field\FieldConfigInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a BC layer for modules providing old configurations.
