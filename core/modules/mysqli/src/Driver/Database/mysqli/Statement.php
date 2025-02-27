@@ -31,11 +31,8 @@ class Statement extends StatementWrapperIterator {
 
   /**
    * The default fetch mode.
-   *
-   * See http://php.net/manual/pdo.constants.php for the definition of the
-   * constants used.
    */
-  protected int $defaultFetchStyle;
+  protected FetchAs $defaultFetchStyle;
 
   /**
    * Holds fetch options.
