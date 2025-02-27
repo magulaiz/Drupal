@@ -27,22 +27,6 @@ class StatementWrapperIterator extends StatementBase {
   protected object $clientStatement;
 
   /**
-   * Holds the default fetch mode.
-   */
-  protected FetchAs $defaultFetchMode = FetchAs::Object;
-
-  /**
-   * Holds fetch options.
-   *
-   * @var array{'class': class-string, 'constructor_args': array<mixed>, 'column': int}
-   */
-  protected array $fetchOptions = [
-    'class' => 'stdClass',
-    'constructor_args' => [],
-    'column' => 0,
-  ];
-
-  /**
    * Constructs a StatementWrapperIterator object.
    *
    * @param \Drupal\Core\Database\Connection $connection

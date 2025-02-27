@@ -30,20 +30,14 @@ class StatementPrefetchIterator extends StatementBase {
   protected ?object $clientStatement;
 
   /**
-   * Holds the default fetch mode.
-   */
-  protected FetchAs $defaultFetchMode = FetchAs::Object;
-
-  /**
-   * Holds fetch options.
+   * Holds the default fetch style.
    *
-   * @var array{'class': class-string, 'constructor_args': array<mixed>, 'column': int}
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * $defaultFetchMode instead.
+   *
+   * @see https://www.drupal.org/node/3488338
    */
-  protected array $fetchOptions = [
-    'class' => 'stdClass',
-    'constructor_args' => [],
-    'column' => 0,
-  ];
+  protected int $defaultFetchStyle = \PDO::FETCH_OBJ;
 
   /**
    * Constructs a StatementPrefetchIterator object.
@@ -115,11 +109,10 @@ class StatementPrefetchIterator extends StatementBase {
 
     // Fetch all the data from the reply, in order to release any lock as soon
     // as possible.
-    $data = $this->clientFetchAll(FetchAs::Associative);
     $this->result = new PrefetchedResult(
       $this->fetchMode,
       $this->fetchOptions,
-      $data,
+      $this->clientFetchAll(FetchAs::Associative),
       $this->rowCountEnabled ? $this->clientRowCount() : NULL,
     );
 
