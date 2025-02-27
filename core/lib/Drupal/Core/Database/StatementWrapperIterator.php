@@ -10,6 +10,8 @@ use Drupal\Core\Database\Statement\PdoResult;
 use Drupal\Core\Database\Statement\PdoTrait;
 use Drupal\Core\Database\Statement\StatementBase;
 
+// cSpell:ignore maxlen driverdata INOUT
+
 /**
  * StatementInterface iterator implementation.
  */
@@ -23,6 +25,22 @@ class StatementWrapperIterator extends StatementBase {
    * For a \PDO client connection, this will be a \PDOStatement object.
    */
   protected object $clientStatement;
+
+  /**
+   * Holds the default fetch mode.
+   */
+  protected FetchAs $defaultFetchMode = FetchAs::Object;
+
+  /**
+   * Holds fetch options.
+   *
+   * @var array{'class': class-string, 'constructor_args': array<mixed>, 'column': int}
+   */
+  protected array $fetchOptions = [
+    'class' => 'stdClass',
+    'constructor_args' => [],
+    'column' => 0,
+  ];
 
   /**
    * Constructs a StatementWrapperIterator object.

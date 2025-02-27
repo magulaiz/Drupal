@@ -80,7 +80,7 @@ trait PdoTrait {
    *   constructor.
    *
    * @return bool
-   *   Returns TRUE on success or FALSE on failure.
+   *   Returns true on success or false on failure.
    */
   protected function clientSetFetchMode(FetchAs $mode, int|string|null $columnOrClass = NULL, array|null $constructorArguments = NULL): bool {
     return match ($mode) {

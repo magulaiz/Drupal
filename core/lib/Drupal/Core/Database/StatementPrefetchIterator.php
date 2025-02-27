@@ -25,18 +25,25 @@ class StatementPrefetchIterator extends StatementBase {
    * The client database Statement object.
    *
    * For a \PDO client connection, this will be a \PDOStatement object.
+   * The resultset is stored as a FetchAs::Associative array.
    */
   protected ?object $clientStatement;
 
   /**
-   * Holds the default fetch style.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * $defaultFetchMode instead.
-   *
-   * @see https://www.drupal.org/node/3488338
+   * Holds the default fetch mode.
    */
-  protected int $defaultFetchStyle = \PDO::FETCH_OBJ;
+  protected FetchAs $defaultFetchMode = FetchAs::Object;
+
+  /**
+   * Holds fetch options.
+   *
+   * @var array{'class': class-string, 'constructor_args': array<mixed>, 'column': int}
+   */
+  protected array $fetchOptions = [
+    'class' => 'stdClass',
+    'constructor_args' => [],
+    'column' => 0,
+  ];
 
   /**
    * Constructs a StatementPrefetchIterator object.
