@@ -31,7 +31,7 @@ class CommentHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.comment':
         $output = '<h2>' . $this->t('About') . '</h2>';
@@ -68,6 +68,7 @@ class CommentHooks {
         $output = '<p>' . $this->t('This page provides a list of all comment types on the site and allows you to manage the fields, form and display settings for each.') . '</p>';
         return $output;
     }
+    return NULL;
   }
 
   /**
@@ -337,7 +338,7 @@ class CommentHooks {
    * Implements hook_node_update_index().
    */
   #[Hook('node_update_index')]
-  public function nodeUpdateIndex(EntityInterface $node) {
+  public function nodeUpdateIndex(EntityInterface $node): string {
     $index_comments =& drupal_static('comment_node_update_index');
     if ($index_comments === NULL) {
       // Do not index in the following three cases:
