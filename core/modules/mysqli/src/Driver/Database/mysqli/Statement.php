@@ -10,6 +10,7 @@ use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\RowCountException;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\StatementWrapperIterator;
 
 /**
@@ -44,7 +45,6 @@ class Statement extends StatementWrapperIterator {
   protected array $fetchOptions = [
     'class' => 'stdClass',
     'constructor_args' => [],
-    'object' => NULL,
     'column' => 0,
   ];
 
@@ -61,7 +61,7 @@ class Statement extends StatementWrapperIterator {
    * @param \Drupal\Core\Database\Connection $connection
    *   Drupal database connection object.
    * @param \mysqli $mysqliConnection
-   *   Client database connection object, for example \PDO.
+   *   Client database connection object.
    * @param string $queryString
    *   The SQL query string.
    * @param array $driverOpts
@@ -76,7 +76,7 @@ class Statement extends StatementWrapperIterator {
     protected array $driverOpts = [],
     protected readonly bool $rowCountEnabled = FALSE,
   ) {
-    $this->setFetchMode(\PDO::FETCH_OBJ);
+    $this->setFetchMode(FetchAs::Object);
   }
 
   /**
@@ -85,7 +85,7 @@ class Statement extends StatementWrapperIterator {
   public function execute($args = [], $options = []) {
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
-        $this->setFetchMode(\PDO::FETCH_CLASS, $options['fetch']);
+        $this->setFetchMode(FetchAs::ClassObject, $options['fetch']);
       }
       else {
         $this->setFetchMode($options['fetch']);
@@ -177,7 +177,7 @@ class Statement extends StatementWrapperIterator {
     $return = [];
     if (isset($fetch)) {
       if (is_string($fetch)) {
-        $this->setFetchMode(\PDO::FETCH_CLASS, $fetch);
+        $this->setFetchMode(FetchAs::ClassObject, $fetch);
       }
       else {
         $this->setFetchMode($fetch ?: $this->defaultFetchStyle);
@@ -197,8 +197,8 @@ class Statement extends StatementWrapperIterator {
    */
   public function fetchAllKeyed($key_index = 0, $value_index = 1) {
     $return = [];
-    $this->setFetchMode(\PDO::FETCH_ASSOC);
-    while ($record = $this->fetch(\PDO::FETCH_ASSOC)) {
+    $this->setFetchMode(FetchAs::Associative);
+    while ($record = $this->fetch(FetchAs::Associative)) {
       $cols = array_keys($record);
       $return[$record[$cols[$key_index]]] = $record[$cols[$value_index]];
     }
@@ -209,7 +209,7 @@ class Statement extends StatementWrapperIterator {
    * {@inheritdoc}
    */
   public function fetchField($index = 0) {
-    if (($ret = $this->fetch(\PDO::FETCH_NUM)) === FALSE) {
+    if (($ret = $this->fetch(FetchAs::List)) === FALSE) {
       return FALSE;
     }
     return $ret[$index] === NULL ? NULL : (string) $ret[$index];
@@ -220,13 +220,13 @@ class Statement extends StatementWrapperIterator {
    */
   public function fetchObject(?string $class_name = NULL, array $constructor_arguments = []) {
     if (isset($class_name)) {
-      $this->defaultFetchStyle = \PDO::FETCH_CLASS;
+      $this->defaultFetchStyle = FetchAs::ClassObject;
       $this->fetchOptions = [
         'class' => $class_name,
         'constructor_args' => $constructor_arguments,
       ];
     }
-    return $this->fetch($class_name ?? \PDO::FETCH_OBJ);
+    return $this->fetch($class_name ?? FetchAs::Object);
   }
 
   /**
@@ -268,25 +268,20 @@ class Statement extends StatementWrapperIterator {
    * {@inheritdoc}
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []): bool {
-    if (!in_array($mode, $this->supportedFetchModes)) {
-      @trigger_error('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use supported modes only. See https://www.drupal.org/node/3377999', E_USER_DEPRECATED);
+    if (is_int($mode)) {
+      throw new DatabaseExceptionWrapper("Passing the \$mode argument as an integer to setFetchMode() is not supported. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
     }
     $this->defaultFetchStyle = $mode;
     switch ($mode) {
-      case \PDO::FETCH_CLASS:
+      case FetchAs::ClassObject:
         $this->fetchOptions['class'] = $a1;
         if ($a2) {
           $this->fetchOptions['constructor_args'] = $a2;
         }
         break;
 
-      case \PDO::FETCH_COLUMN:
+      case FetchAs::Column:
         $this->fetchOptions['column'] = $a1;
-        break;
-
-      case \PDO::FETCH_INTO:
-        $this->fetchOptions['object'] = $a1;
-        break;
     }
     return TRUE;
   }
@@ -296,12 +291,12 @@ class Statement extends StatementWrapperIterator {
    */
   public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL) {
     if (is_string($mode)) {
-      $this->setFetchMode(\PDO::FETCH_CLASS, $mode);
-      $mode = \PDO::FETCH_CLASS;
+      $this->setFetchMode(FetchAs::ClassObject, $mode);
+      $mode = FetchAs::ClassObject;
     }
     else {
-      if (isset($mode) && !in_array($mode, $this->supportedFetchModes)) {
-        @trigger_error('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use supported modes only. See https://www.drupal.org/node/3377999', E_USER_DEPRECATED);
+      if (is_int($mode)) {
+        throw new DatabaseExceptionWrapper("Passing the \$mode argument as an integer to fetch() is not supported. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
       }
       $mode = $mode ?: $this->defaultFetchStyle;
     }
@@ -322,17 +317,11 @@ class Statement extends StatementWrapperIterator {
     }
 
     $returnValue = match($mode) {
-      \PDO::FETCH_ASSOC => $row,
-      // @phpstan-ignore-next-line
-      \PDO::FETCH_BOTH => $this->assocToBoth($row),
-      \PDO::FETCH_NUM => $this->assocToNum($row),
-      \PDO::FETCH_LAZY, \PDO::FETCH_OBJ => $this->assocToObj($row),
-      // @phpstan-ignore-next-line
-      \PDO::FETCH_CLASS | \PDO::FETCH_CLASSTYPE => $this->assocToClassType($row, $this->fetchOptions['constructor_args']),
-      \PDO::FETCH_CLASS => $this->assocToClass($row, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
-      // @phpstan-ignore-next-line
-      \PDO::FETCH_INTO => $this->assocIntoObject($row, $this->fetchOptions['object']),
-      \PDO::FETCH_COLUMN => $this->assocToColumn($row, $columnNames, $this->fetchOptions['column']),
+      FetchAs::Associative => $row,
+      FetchAs::List => $this->assocToNum($row),
+      FetchAs::Object => $this->assocToObj($row),
+      FetchAs::ClassObject => $this->assocToClass($row, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
+      FetchAs::Column=> $this->assocToColumn($row, $columnNames, $this->fetchOptions['column']),
       default => throw new DatabaseExceptionWrapper('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported.'),
     };
 
@@ -344,25 +333,25 @@ class Statement extends StatementWrapperIterator {
    * {@inheritdoc}
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
-    if (isset($mode) && !in_array($mode, $this->supportedFetchModes)) {
-      @trigger_error('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use supported modes only. See https://www.drupal.org/node/3377999', E_USER_DEPRECATED);
+    if (is_int($mode)) {
+      throw new DatabaseExceptionWrapper("Passing the \$mode argument as an integer to fetchAll() is not supported. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
     }
     if (is_string($mode)) {
-      $this->setFetchMode(\PDO::FETCH_CLASS, $mode);
-      $mode = \PDO::FETCH_CLASS;
+      $this->setFetchMode(FetchAs::ClassObject, $mode);
+      $mode = FetchAs::ClassObject;
     }
     else {
       $mode = $mode ?: $this->defaultFetchStyle;
     }
 
     $rows = [];
-    if (\PDO::FETCH_COLUMN == $mode) {
+    if (FetchAs::Column== $mode) {
       // When fetching a column's value across the entire dataset, fetch
       // through it and pick the requested column value for each row.
       if ($column_index === NULL) {
         $column_index = 0;
       }
-      while (($record = $this->fetch(\PDO::FETCH_ASSOC)) !== FALSE) {
+      while (($record = $this->fetch(FetchAs::Associative)) !== FALSE) {
         $cols = array_keys($record);
         $rows[] = $record[$cols[$column_index]];
       }
