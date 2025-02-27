@@ -22,6 +22,10 @@ class ImageHooks {
 
   use StringTranslationTrait;
 
+  public function __construct(
+    private readonly ImageConfigUpdater $imageConfigUpdater,
+  ) { }
+
   /**
    * Implements hook_help().
    */
@@ -371,8 +375,7 @@ class ImageHooks {
    */
   #[Hook('field_config_presave')]
   public function fieldConfigPresave(FieldConfigInterface $field): void {
-    $config_updater = \Drupal::classResolver(ImageConfigUpdater::class);
-    $config_updater->updateField($field);
+    $this->imageConfigUpdater->updateField($field);
   }
 
   /**

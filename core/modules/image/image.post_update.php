@@ -24,7 +24,7 @@ function image_removed_post_updates(): array {
  * Adds new resize_policy setting to existing image fields.
  */
 function image_post_update_add_resize_policy(&$sandbox = []): void {
-  $field_config_updater = \Drupal::classResolver(ImageConfigUpdater::class);
+  $field_config_updater = \Drupal::service(ImageConfigUpdater::class);
   $field_config_updater->setDeprecationsEnabled(FALSE);
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
   $config_entity_updater->update($sandbox, 'field_config', function (FieldConfigInterface $field) use ($field_config_updater): bool {
