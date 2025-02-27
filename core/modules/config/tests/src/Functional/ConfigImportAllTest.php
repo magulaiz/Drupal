@@ -114,7 +114,8 @@ class ConfigImportAllTest extends ModuleTestBase {
     $database_module_extension = \Drupal::service(ModuleExtensionList::class)->get($database_module);
     $database_module_dependencies = $database_module_extension->requires ? array_keys($database_module_extension->requires) : [];
 
-    // Ensure that only core required modules and the install profile can not be uninstalled.
+    // Ensure that only core required modules and the install profile can not be
+    // uninstalled.
     $validation_reasons = \Drupal::service('module_installer')->validateUninstall(array_keys($all_modules));
     $validation_modules = array_keys($validation_reasons);
     $this->assertEqualsCanonicalizing($expected_modules, $validation_modules);
