@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\menu_link_access_test\Hook;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Hook\Attribute\Hook;

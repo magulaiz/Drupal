@@ -17,6 +17,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\Core\Access\AccessResultInterface;
 
 /**
  * Hook implementations for menu_ui.
@@ -90,7 +91,7 @@ class MenuUiHooks {
   /**
    * Check if user is allowed to use the menu link subform.
    */
-  private function getMenuLinkContentAccess(array $defaults) {
+  private function getMenuLinkContentAccess(array $defaults): AccessResultInterface {
     if (!empty($defaults['entity_id'])) {
       $entity = MenuLinkContent::load($defaults['entity_id']);
 
