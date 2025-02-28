@@ -11,3 +11,6 @@
   font-size: 0.79rem;
   overflow-wrap: anywhere;
 }
+.layout-builder-block [tabindex="-1"] {
+  pointer-events: auto; /* Make it clickable */
+}
