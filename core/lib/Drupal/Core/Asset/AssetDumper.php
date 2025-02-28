@@ -83,7 +83,7 @@ class AssetDumper implements AssetDumperUriInterface {
           return FALSE;
         }
       }
-      catch (FileException $e) {
+      catch (FileException) {
         return FALSE;
       }
     }
