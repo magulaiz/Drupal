@@ -3482,6 +3482,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Config/Entity/ConfigEntityStorage.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Core\\\\Config\\\\Entity\\\\ConfigEntityStorage\\:\\:resetCache\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Config/Entity/ConfigEntityStorage.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Config\\\\Entity\\\\ConfigEntityType\\:\\:checkStorageClass\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -26180,12 +26186,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate/src/MigrateMessageInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\migrate\\\\Plugin\\\\Discovery\\\\AnnotatedClassDiscoveryAutomatedProviders\\:\\:prepareAnnotationDefinition\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/src/Plugin/Discovery/AnnotatedClassDiscoveryAutomatedProviders.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate\\\\Plugin\\\\MigrateDestinationInterface\\:\\:rollback\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -28064,40 +28064,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mysql/tests/src/Kernel/mysql/SchemaTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function navigation_post_update_set_logo_dimensions_default\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/navigation.post_update.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function navigation_post_update_update_permissions\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/navigation.post_update.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\navigation\\\\Form\\\\LayoutForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/src/Form/LayoutForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\navigation\\\\Form\\\\LayoutForm\\:\\:redirectOnSubmit\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/navigation/src/Form/LayoutForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\navigation\\\\Form\\\\SettingsForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/src/Form/SettingsForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\navigation\\\\NavigationContentLinks\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/src/NavigationContentLinks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\navigation\\\\Plugin\\\\SectionStorage\\\\NavigationSectionStorage\\:\\:buildLayoutRoutes\\(\\) has no return type specified\\.$#',
@@ -28176,12 +28146,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/navigation/tests/src/FunctionalJavascript/NavigationBlockUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\navigation\\\\Kernel\\\\NavigationMenuBlockTest\\:\\:testHtmlMarkup\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/tests/src/Kernel/NavigationMenuBlockTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function _node_mass_update_batch_finished\\(\\) has no return type specified\\.$#',
