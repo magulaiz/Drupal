@@ -178,8 +178,9 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function setStatus($status): void {
+  public function setStatus($status): static {
     $this->storage->setStatus($status);
+    return $this;
   }
 
   /**
@@ -946,8 +947,16 @@ class ViewUI implements ViewEntityInterface {
 
   /**
    * Passes through all unknown calls onto the storage object.
+   *
+   * @param string $method
+   *   The method name.
+   * @param array $args
+   *   The method arguments.
+   *
+   * @return mixed
+   *   The result of the method call on the storage object.
    */
-  public function __call($method, $args) {
+  public function __call(string $method, array $args): mixed {
     return call_user_func_array([$this->storage, $method], $args);
   }
 
@@ -1004,28 +1013,32 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function createDuplicate(): static {
-    return $this->storage->createDuplicate();
+    $duplicate = $this->storage->createDuplicate();
+    return new static($duplicate);
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function load($id): ?ViewEntityInterface {
-    return View::load($id);
+  public static function load($id): ?static {
+    $view = View::load($id);
+    return $view ? new static($view) : NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function loadMultiple(?array $ids = NULL): array {
-    return View::loadMultiple($ids);
+    $views = View::loadMultiple($ids);
+    return array_map(fn($view) => new static($view), $views);
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(array $values = []): ViewEntityInterface {
-    return View::create($values);
+  public static function create(array $values = []): static {
+    $view = View::create($values);
+    return new static($view);
   }
 
   /**
@@ -1038,7 +1051,7 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function save(): void {
+  public function save(): int {
     $this->storage->save();
   }
 
@@ -1066,8 +1079,9 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function enforceIsNew($value = TRUE): void {
+  public function enforceIsNew($value = TRUE): static {
     $this->storage->enforceIsNew($value);
+    return $this;
   }
 
   /**
@@ -1094,15 +1108,17 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function enable(): void {
+  public function enable(): static {
     $this->storage->enable();
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function disable(): void {
+  public function disable(): static {
     $this->storage->disable();
+    return $this;
   }
 
   /**
@@ -1122,8 +1138,9 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function setOriginalId($id): void {
+  public function setOriginalId($id): static {
     $this->storage->setOriginalId($id);
+    return $this;
   }
 
   /**
@@ -1181,8 +1198,8 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function duplicateDisplayAsType($old_display_id, $new_display_type): void {
-    $this->storage->duplicateDisplayAsType($old_display_id, $new_display_type);
+  public function duplicateDisplayAsType($old_display_id, $new_display_type): string {
+    return $this->storage->duplicateDisplayAsType($old_display_id, $new_display_type);
   }
 
   /**
@@ -1302,7 +1319,8 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function setThirdPartySetting($module, $key, $value): static {
-    return $this->storage->setThirdPartySetting($module, $key, $value);
+    $this->storage->setThirdPartySetting($module, $key, $value);
+    return $this;
   }
 
   /**
@@ -1337,7 +1355,8 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function trustData(): static {
-    return $this->storage->trustData();
+    $this->storage->trustData();
+    return $this;
   }
 
   /**
@@ -1359,14 +1378,16 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function addCacheContexts(array $cache_contexts): static {
-    return $this->storage->addCacheContexts($cache_contexts);
+    $this->storage->addCacheContexts($cache_contexts);
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
   public function mergeCacheMaxAge($max_age): static {
-    return $this->storage->mergeCacheMaxAge($max_age);
+    $this->storage->mergeCacheMaxAge($max_age);
+    return $this;
   }
 
   /**
@@ -1380,7 +1401,8 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function addCacheTags(array $cache_tags): static {
-    return $this->storage->addCacheTags($cache_tags);
+    $this->storage->addCacheTags($cache_tags);
+    return $this;
   }
 
   /**
@@ -1453,7 +1475,8 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function getOriginal(): ?static {
-    return $this->storage->getOriginal();
+    $original = $this->storage->getOriginal();
+    return $original ? new static($original) : NULL;
   }
 
   /**
