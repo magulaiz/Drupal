@@ -23,7 +23,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Symfony\Component\HttpFoundation\InputBag;
 use Drupal\views\Controller\ViewAjaxController;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\TypedData\ComplexDataInterface;
 
 /**
  * Stores UI related temporary settings.
@@ -183,7 +182,7 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function set($property_name, $value, $notify = TRUE): static {
+  public function set($property_name, $value, $notify = TRUE): self {
     if (property_exists($this->storage, $property_name)) {
       $this->storage->set($property_name, $value);
     }
@@ -197,7 +196,7 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function setSyncing($syncing): static {
-    $this->isSyncing = $syncing;
+    $this->isSyncing = (bool) $syncing;
     return $this;
   }
 
@@ -540,24 +539,24 @@ class ViewUI implements ViewEntityInterface {
   /**
    * Renders a preview of a view display.
    *
-   * This function generates a live preview of a view display, allowing users
-   * to see the output before saving changes. It handles exposed filters,
-   * query statistics, and performance details, and ensures the correct
+   * This method generates a live preview of a view display, allowing users
+   * to see the output before saving changes. It processes exposed filters,
+   * query statistics, and performance details while ensuring the correct
    * request context for AJAX-based previews.
    *
    * @param string $display_id
-   *   The ID of the display to preview.
+   *   The machine name of the display to preview.
    * @param array $args
-   *   (Optional) An array of arguments to pass to the view.
+   *   (optional) An associative array of arguments to pass to the view.
    *
-   * @return array|null
-   *   A renderable array containing the preview output or an error message
-   *   if the display ID is invalid.
+   * @return array
+   *   A renderable array containing the preview output. Returns an error
+   *   message if the display ID is invalid.
    *
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
-   *   If there is an error executing the SQL query.
+   *   Thrown if an error occurs while executing the SQL query.
    */
-  public function renderPreview($display_id, $args = []): ?array {
+  public function renderPreview(string $display_id, array $args = []): array {
     // Save the current path so it can be restored before returning from this
     // function.
     $request_stack = \Drupal::requestStack();
@@ -1278,7 +1277,7 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTypedData(): ComplexDataInterface {
+  public function getTypedData() {
     return $this->storage->getTypedData();
   }
 
