@@ -16,7 +16,7 @@ class BackwardsCompatibilityClassLoaderPass implements CompilerPassInterface {
    * {@inheritdoc}
    */
   public function process(ContainerBuilder $container): void {
-    $moved_classes = $container->getParameter('core.moved_classes');
+    $moved_classes = $container->hasParameter('core.moved_classes') ? $container->getParameter('core.moved_classes') : [];
     $modules = array_keys($container->getParameter('container.modules'));
     foreach ($modules as $module) {
       $parameter_name = $module . '.moved_classes';
@@ -27,7 +27,9 @@ class BackwardsCompatibilityClassLoaderPass implements CompilerPassInterface {
         $moved_classes = $moved_classes + $module_moved;
       }
     }
-    $container->setParameter('moved_classes', $moved_classes);
+    if (!empty($moved_classes) {
+      $container->setParameter('moved_classes', $moved_classes);
+    }
   }
 
 }
