@@ -319,8 +319,7 @@ class EditorHooks {
       }
     }
     // Access is granted.
-    $headers = file_get_content_headers($file);
-    return $headers;
+    return file_get_content_headers($file);
   }
 
   /**
