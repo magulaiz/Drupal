@@ -23,9 +23,13 @@ class MimeTypeMapFactory {
    *   The MIME type map.
    */
   public function create(): MimeTypeMapInterface {
-    $map = new MimeTypeMap();
+    $map = $this->doCreateMap();
     $this->eventDispatcher->dispatch(new MimeTypeMapLoadedEvent($map));
     return $map;
+  }
+
+  protected function doCreateMap(): MimeTypeMapInterface {
+    return new MimeTypeMap();
   }
 
 }
