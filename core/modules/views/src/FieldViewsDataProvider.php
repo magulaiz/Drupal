@@ -279,7 +279,7 @@ class FieldViewsDataProvider {
           'group' => $group,
           'title' => $label,
           'title short' => $label,
-          'help' => t('Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
+          'help' => $this->t('Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
         ];
       }
       else {
@@ -309,7 +309,7 @@ class FieldViewsDataProvider {
           if ($label != $label_name) {
             $aliases[] = [
               'base' => $base_table,
-              'group' => t('@group (historical data)', ['@group' => $group_name]),
+              'group' => $this->t('@group (historical data)', ['@group' => $group_name]),
               'title' => $label_name,
               'help' => $this->t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
             ];
@@ -323,9 +323,9 @@ class FieldViewsDataProvider {
                 'base' => $base_table,
                 'group' => $group_name,
                 'title' => $label_name,
-                'help' => t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
+                'help' => $this->t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
               ];
-              $also_known[] = t('@group: @field', ['@group' => $group_name, '@field' => $label_name]);
+              $also_known[] = $this->t('@group: @field', ['@group' => $group_name, '@field' => $label_name]);
             }
           }
           elseif ($supports_revisions && $label != $label_name) {
@@ -335,7 +335,7 @@ class FieldViewsDataProvider {
               'title' => $label_name,
               'help' => $this->t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
             ];
-            $also_known[] = t('@group (historical data): @field', ['@group' => $group_name, '@field' => $label_name]);
+            $also_known[] = $this->t('@group (historical data): @field', ['@group' => $group_name, '@field' => $label_name]);
           }
         }
       }
@@ -483,7 +483,7 @@ class FieldViewsDataProvider {
             'group' => $group,
             'title' => $title,
             'title short' => $title_short,
-            'help' => t('Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
+            'help' => $this->t('Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
           ];
         }
         else {
@@ -612,14 +612,14 @@ class FieldViewsDataProvider {
 
           // Expose additional delta column for multiple value fields.
           if ($field_storage->isMultiple()) {
-            $title_delta = t('@label (@name:delta)', ['@label' => $label, '@name' => $field_name]);
-            $title_short_delta = t('@label:delta', ['@label' => $label]);
+            $title_delta = $this->t('@label (@name:delta)', ['@label' => $label, '@name' => $field_name]);
+            $title_short_delta = $this->t('@label:delta', ['@label' => $label]);
 
             $data[$table_alias]['delta'] = [
               'group' => $group,
               'title' => $title_delta,
               'title short' => $title_short_delta,
-              'help' => t('Delta - Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
+              'help' => $this->t('Delta - Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
             ];
             $data[$table_alias]['delta']['field'] = [
               'id' => 'numeric',
@@ -629,7 +629,7 @@ class FieldViewsDataProvider {
               'table' => $table,
               'id' => 'numeric',
               'additional fields' => $additional_fields,
-              'empty field name' => t('- No value -'),
+              'empty field name' => $this->t('- No value -'),
               'field_name' => $field_name,
               'entity_type' => $entity_type_id,
             ];

@@ -33,7 +33,6 @@ trait CacheTagsChecksumTrait {
   protected $tagCache = [];
 
   /**
-<<<<<<< HEAD
    * Indicator for the existence of the database table.
    *
    * This variable is only used by the database driver for MongoDB.

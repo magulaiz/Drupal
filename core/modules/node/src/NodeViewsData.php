@@ -194,11 +194,11 @@ class NodeViewsData extends EntityViewsData {
 
     if ($this->connection->driver() == 'mongodb') {
       // @todo Find out if this is still needed.
-      $data['node']['uid']['help'] = t('The user authoring the content. If you need more fields than the uid add the content: author relationship');
+      $data['node']['uid']['help'] = $this->t('The user authoring the content. If you need more fields than the uid add the content: author relationship');
       $data['node']['uid']['filter']['id'] = 'user_name';
-      $data['node']['uid']['relationship']['title'] = t('Content author');
-      $data['node']['uid']['relationship']['help'] = t('Relate content to the user who created it.');
-      $data['node']['uid']['relationship']['label'] = t('author');
+      $data['node']['uid']['relationship']['title'] = $this->t('Content author');
+      $data['node']['uid']['relationship']['help'] = $this->t('Relate content to the user who created it.');
+      $data['node']['uid']['relationship']['label'] = $this->t('author');
       $data['node']['uid']['relationship']['base'] = 'users';
     }
 
@@ -210,8 +210,8 @@ class NodeViewsData extends EntityViewsData {
 
     if ($this->connection->driver() == 'mongodb') {
       // @todo Find out if this is still needed.
-      $data['node']['revision_uid']['help'] = t('The user who created the revision.');
-      $data['node']['revision_uid']['relationship']['label'] = t('revision user');
+      $data['node']['revision_uid']['help'] = $this->t('The user who created the revision.');
+      $data['node']['revision_uid']['relationship']['label'] = $this->t('revision user');
       $data['node']['revision_uid']['filter']['id'] = 'user_name';
     }
     else {

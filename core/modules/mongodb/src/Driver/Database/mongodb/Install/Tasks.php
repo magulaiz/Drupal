@@ -74,7 +74,7 @@ class Tasks extends InstallTasks {
    * {@inheritdoc}
    */
   public function name() {
-    return t('MongoDB');
+    return $this->t('MongoDB');
   }
 
   /**
@@ -131,16 +131,16 @@ class Tasks extends InstallTasks {
     // Add the replica set setting to the main options.
     $form['srv'] = [
       '#type' => 'checkbox',
-      '#title' => t('Use the <a href="https://www.mongodb.com/docs/manual/reference/connection-string/#std-label-connections-dns-seedlist">SRV</a> connection format'),
-      '#description' => t('MongoDB supports a DNS-constructed seed list. Using DNS to construct the available servers list allows more flexibility of deployment and the ability to change the servers in rotation without reconfiguring clients.'),
+      '#title' => $this->t('Use the <a href="https://www.mongodb.com/docs/manual/reference/connection-string/#std-label-connections-dns-seedlist">SRV</a> connection format'),
+      '#description' => $this->t('MongoDB supports a DNS-constructed seed list. Using DNS to construct the available servers list allows more flexibility of deployment and the ability to change the servers in rotation without reconfiguring clients.'),
       '#default_value' => $database['srv'] ?? '',
     ];
 
     // Add the replica set setting to the main options.
     $form['replicaset'] = [
       '#type' => 'textfield',
-      '#title' => t('Database replica set'),
-      '#description' => t('You can connect to a MongoDB database is different ways. When you connect to a replica set, you need to set this option and set the server names of the members of the replica set. For more information, see: <a href="https://www.mongodb.com/docs/manual/reference/connection-string/">Connecting to a MongoDB database</a>.'),
+      '#title' => $this->t('Database replica set'),
+      '#description' => $this->t('You can connect to a MongoDB database is different ways. When you connect to a replica set, you need to set this option and set the server names of the members of the replica set. For more information, see: <a href="https://www.mongodb.com/docs/manual/reference/connection-string/">Connecting to a MongoDB database</a>.'),
       '#default_value' => $replica_set,
       '#size' => 45,
     ];
@@ -148,12 +148,12 @@ class Tasks extends InstallTasks {
     // The primary host of the replica set.
     $form['host1'] = [
       '#type' => 'fieldset',
-      '#title' => t('Host #1'),
+      '#title' => $this->t('Host #1'),
       '#weight' => 10,
     ];
     $form['host1']['host'] = [
       '#type' => 'textfield',
-      '#title' => t('Host'),
+      '#title' => $this->t('Host'),
       '#default_value' => $database['hosts'][0]['host'] ?? $database['host1']['host'] ?? '',
       '#size' => 45,
       // Host names can be 255 characters long.
@@ -162,7 +162,7 @@ class Tasks extends InstallTasks {
     ];
     $form['host1']['port'] = [
       '#type' => 'number',
-      '#title' => t('Port number'),
+      '#title' => $this->t('Port number'),
       '#default_value' => $database['hosts'][0]['port'] ?? $database['host1']['port'] ?? '27017',
       '#min' => 0,
       '#max' => 65535,
@@ -171,12 +171,12 @@ class Tasks extends InstallTasks {
     // The secondary host of the replica set.
     $form['host2'] = [
       '#type' => 'fieldset',
-      '#title' => t('Host #2'),
+      '#title' => $this->t('Host #2'),
       '#weight' => 11,
     ];
     $form['host2']['host'] = [
       '#type' => 'textfield',
-      '#title' => t('Host'),
+      '#title' => $this->t('Host'),
       '#default_value' => $database['hosts'][1]['host'] ?? $database['host2']['host'] ?? '',
       '#size' => 45,
       // Host names can be 255 characters long.
@@ -184,7 +184,7 @@ class Tasks extends InstallTasks {
     ];
     $form['host2']['port'] = [
       '#type' => 'number',
-      '#title' => t('Port number'),
+      '#title' => $this->t('Port number'),
       '#default_value' => $database['hosts'][1]['port'] ?? $database['host2']['port'] ?? '27017',
       '#min' => 0,
       '#max' => 65535,
@@ -193,12 +193,12 @@ class Tasks extends InstallTasks {
     // The tertiary host of the replica set.
     $form['host3'] = [
       '#type' => 'fieldset',
-      '#title' => t('Host #3'),
+      '#title' => $this->t('Host #3'),
       '#weight' => 12,
     ];
     $form['host3']['host'] = [
       '#type' => 'textfield',
-      '#title' => t('Host'),
+      '#title' => $this->t('Host'),
       '#default_value' => $database['hosts'][2]['host'] ?? $database['host3']['host'] ?? '',
       '#size' => 45,
       // Host names can be 255 characters long.
@@ -206,7 +206,7 @@ class Tasks extends InstallTasks {
     ];
     $form['host3']['port'] = [
       '#type' => 'number',
-      '#title' => t('Port number'),
+      '#title' => $this->t('Port number'),
       '#default_value' => $database['hosts'][2]['port'] ?? $database['host3']['port'] ?? '27017',
       '#min' => 0,
       '#max' => 65535,

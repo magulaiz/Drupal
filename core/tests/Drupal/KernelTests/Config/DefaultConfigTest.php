@@ -211,9 +211,6 @@ class DefaultConfigTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
     $config_factory = $this->container->get('config.factory');
 
-    /** @var \Drupal\Core\Database\Connection $connection */
-    $connection = Database::getConnection();
-
     foreach ($default_config_storage->listAll() as $config_name) {
       if ($active_config_storage->exists($config_name)) {
         // If it is a config entity re-save it. This ensures that any

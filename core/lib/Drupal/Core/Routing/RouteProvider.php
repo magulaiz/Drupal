@@ -414,7 +414,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
           ':patterns[]' => $ancestors,
           ':count_parts' => count($parts),
         ])
-        ->fetchAll(FetchAs::Associative);
+          ->fetchAll(FetchAs::Associative);
       }
     }
     catch (\Exception) {

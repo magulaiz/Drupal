@@ -304,14 +304,14 @@ class ViewsViewsHooks {
           $args['@label'] = $target_entity_type->getSingularLabel();
           $pseudo_field_name = 'reverse__' . $entity_type_id . '__' . $field_name;
           $data[$target_base_table][$pseudo_field_name]['relationship'] = [
-            'title' => t('@entity using @field_name', $args),
-            'label' => t('@field_name', [
+            'title' => $this->t('@entity using @field_name', $args),
+            'label' => $this->t('@field_name', [
               '@field_name' => $field_name,
             ]),
             'group' => $target_entity_type->getLabel(),
-            'help' => t('Relate each @entity with a @field_name set to the @label.', $args),
+            'help' => $this->t('Relate each @entity with a @field_name set to the @label.', $args),
             'id' => 'entity_reverse',
-            'base' => $entity_type->getDataTable() ?: $entity_type->getBaseTable(),
+            'base' => $base_table,
             'entity_type' => $entity_type_id,
             'base field' => $entity_type->getKey('id'),
             'field_name' => $field_name,

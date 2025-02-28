@@ -28610,6 +28610,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/QueryAggregate.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Hook\\\\MongodbHooks\\:\\:t\\(\\)\\.$#',
+	'identifier' => 'method.notFound',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/mongodb/src/Hook/MongodbHooks.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\mongodb\\\\Hook\\\\MongodbHooks\\:\\:help\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -56340,6 +56346,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityDefinitionUpdateProviderTest\\:\\:updateEntityTypeToTranslatable\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityDefinitionUpdateProviderTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$dedicated_deleted_revision_table_name in isset\\(\\) always exists and is not nullable\\.$#',
+	'identifier' => 'isset.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityDefinitionUpdateProviderTest.php',
 ];
