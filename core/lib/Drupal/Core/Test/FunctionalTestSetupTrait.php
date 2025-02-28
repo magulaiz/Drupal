@@ -598,7 +598,8 @@ trait FunctionalTestSetupTrait {
    * Sets up the base URL based upon the environment variable.
    *
    * @throws \Exception
-   *   Thrown when no SIMPLETEST_BASE_URL environment variable is provided or uses an invalid scheme.
+   *   Thrown when no SIMPLETEST_BASE_URL environment variable is provided or
+   *   uses an invalid scheme.
    */
   protected function setupBaseUrl() {
     global $base_url;
@@ -671,7 +672,6 @@ trait FunctionalTestSetupTrait {
     $this->publicFilesDirectory = $this->siteDirectory . '/files';
     $this->privateFilesDirectory = $this->siteDirectory . '/private';
     $this->tempFilesDirectory = $this->siteDirectory . '/temp';
-    $this->translationFilesDirectory = $this->siteDirectory . '/translations';
 
     // Ensure the configImporter is refreshed for each test.
     $this->configImporter = NULL;
