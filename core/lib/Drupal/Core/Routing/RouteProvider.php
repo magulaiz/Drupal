@@ -5,6 +5,7 @@ namespace Drupal\Core\Routing;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Path\CurrentPathStack;
@@ -315,7 +316,8 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
         continue;
       }
       elseif ($i < (1 << $length)) {
-        // We have exhausted the masks of a given length, so decrease the length.
+        // We have exhausted the masks of a given length, so decrease the
+        // length.
         --$length;
       }
       $current = '';
@@ -382,7 +384,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
         ':patterns[]' => $ancestors,
         ':count_parts' => count($parts),
       ])
-        ->fetchAll(\PDO::FETCH_ASSOC);
+        ->fetchAll(FetchAs::Associative);
     }
     catch (\Exception) {
       $routes = [];

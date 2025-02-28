@@ -272,8 +272,9 @@ class RendererBubblingTest extends RendererTestBase {
     $data[] = [$test_element, ['bar', 'foo'], $expected_cache_item];
 
     // Ensure that bubbleable metadata has been collected from children and set
-    // correctly to the main level of the render array. That ensures that correct
-    // bubbleable metadata exists if render array gets rendered multiple times.
+    // correctly to the main level of the render array. That ensures that
+    // correct bubbleable metadata exists if render array gets rendered multiple
+    // times.
     $test_element = [
       '#cache' => [
         'keys' => ['parent'],
@@ -500,6 +501,7 @@ class RendererBubblingTest extends RendererTestBase {
    * Provides two test elements: one without, and one with the theme system.
    *
    * @return array
+   *   An array of test cases, each containing a render array with different configurations.
    */
   public static function providerTestBubblingWithPrerender() {
     $data = [];
@@ -547,7 +549,9 @@ class RendererBubblingTest extends RendererTestBase {
 
 }
 
-
+/**
+ * Test class with implemented trusted callbacks.
+ */
 class BubblingTest implements TrustedCallbackInterface {
 
   /**

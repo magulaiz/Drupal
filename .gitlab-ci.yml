@@ -347,6 +347,31 @@ default:
       - core/.eslintcache
       - core/.stylelintcache
 
+'📔 Spell-checking':
+  <<: [ *default-job-settings-lint ]
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  script:
+    - *prepare-lint-directory
+    - *cspell-cache
+    - *core-spellcheck
+    - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
+    - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
+    - mv /build/core/node_modules $CI_PROJECT_DIR/core
+  cache:
+    key:
+      files:
+        - ./core/package.json
+        - ./core/yarn.lock
+    paths:
+      - ./core/node_modules
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor'
+    paths:
+      - core/node_modules/
+
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
@@ -464,31 +489,6 @@ default:
     reports:
       codequality: gl-codequality.json
 
-'📔 Spell-checking':
-  <<: [ *default-job-settings-lint ]
-  stage: 🪄 Lint
-  variables:
-    KUBERNETES_CPU_REQUEST: "2"
-  script:
-    - *prepare-lint-directory
-    - *cspell-cache
-    - *core-spellcheck
-    - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
-    - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
-    - mv /build/core/node_modules $CI_PROJECT_DIR/core
-  cache:
-    key:
-      files:
-        - ./core/package.json
-        - ./core/yarn.lock
-    paths:
-      - ./core/node_modules
-  artifacts:
-    expire_in: 1 week
-    expose_as: 'yarn-vendor'
-    paths:
-      - core/node_modules/
-
 '📔 Validatable config':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
@@ -533,7 +533,7 @@ default:
     - vendor/bin/drush config:inspect --statistics > HEAD.json
     # Return to the MR commit being tested, conditionally install updates, always rebuild the container.
     - git checkout -f $CI_COMMIT_SHA
-    - git diff $CI_MERGE_REQUEST_DIFF_BASE_SHA $CI_COMMIT_SHA --name-only | grep -q '.install$\|.post_update\.php$' && echo '🤖 Installing DB updates…' && vendor/bin/drush updatedb --yes --quiet
+    - git diff $CI_MERGE_REQUEST_DIFF_BASE_SHA $CI_COMMIT_SHA --name-only | grep -q '.install$\|.post_update\.php$' && echo '🤖 Installing DB updates…' && vendor/bin/drush updatedb --yes
     - vendor/bin/drush cr --quiet
     # Compute statistics for coverage of validatable config for MR.
     - vendor/bin/drush config:inspect --statistics > MR.json
