@@ -44,10 +44,16 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
 
     // Test that it is possible to toggle the toolbar tray.
     $content = $page->findLink('Content');
+    $manage_link = $page->find('css', '#toolbar-item-administration');
+    $manage_link->getAttribute('aria-pressed');
+    $this->assertEquals('true', $manage_link->getAttribute('aria-pressed'));
+
     $this->assertTrue($content->isVisible(), 'Toolbar tray is open by default.');
-    $page->clickLink('Manage');
+    $manage_link->click();
+    $this->assertEquals('false', $manage_link->getAttribute('aria-pressed'));
     $this->assertFalse($content->isVisible(), 'Toolbar tray is closed after clicking the "Manage" link.');
-    $page->clickLink('Manage');
+    $manage_link->click();
+    $this->assertEquals('true', $manage_link->getAttribute('aria-pressed'));
     $this->assertTrue($content->isVisible(), 'Toolbar tray is visible again after clicking the "Manage" button a second time.');
 
     // Test toggling the toolbar tray between horizontal and vertical.
