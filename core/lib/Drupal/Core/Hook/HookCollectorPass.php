@@ -478,7 +478,7 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Checks for hooks which can't be supported in classes.
    *
-   * @param \Drupal\Core\Hook\Hook $hook
+   * @param \Drupal\Core\Hook\Attribute\Hook $hook
    *   The hook to check.
    * @param class-string $class
    *   The class the hook is implemented on.
@@ -507,8 +507,8 @@ class HookCollectorPass implements CompilerPassInterface {
    * @param \ReflectionClass $reflectionClass
    *   A reflected class.
    *
-   * @return array
-   *   A list of Hook attribute instances.
+   * @return array<string, list<\Drupal\Core\Hook\HookOperation>>
+   *   Lists of Hook attribute instances by method name.
    */
   protected static function getAttributeInstances(\ReflectionClass $reflectionClass): array {
     $attributes = [];
