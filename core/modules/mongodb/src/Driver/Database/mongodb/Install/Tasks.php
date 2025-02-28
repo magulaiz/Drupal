@@ -229,10 +229,10 @@ class Tasks extends InstallTasks {
     // using a replica set.
     $name = Database::getConnection()->getReplicaSetName();
     if ($name) {
-      $this->pass(t("The database is set up with the replica set: %name.", ['%name' => $name]));
+      $this->pass($this->t("The database is set up with the replica set: %name.", ['%name' => $name]));
     }
     else {
-      $this->fail(t('The database is not set up with a replica set.'));
+      $this->fail($this->t('The database is not set up with a replica set.'));
     }
   }
 
@@ -243,11 +243,11 @@ class Tasks extends InstallTasks {
     try {
       if (Database::getConnection()->schema()->tableExists($name)) {
         Database::getConnection()->schema()->dropTable($name);
-        $this->pass(t("The database server was able to drop the existing collection %name.", ['%name' => $name]));
+        $this->pass($this->t("The database server was able to drop the existing collection %name.", ['%name' => $name]));
       }
     }
     catch (\Exception) {
-      $this->fail(t("The database server is unable to drop the existing collection %name.", ['%name' => $name]));
+      $this->fail($this->t("The database server is unable to drop the existing collection %name.", ['%name' => $name]));
     }
   }
 
@@ -257,10 +257,10 @@ class Tasks extends InstallTasks {
   protected function checkCreateCollection($name, $definition) {
     try {
       Database::getConnection()->schema()->createTable($name, $definition);
-      $this->pass(t("The database server was able to create the collection %name.", ['%name' => $name]));
+      $this->pass($this->t("The database server was able to create the collection %name.", ['%name' => $name]));
     }
     catch (\Exception) {
-      $this->fail(t("The database server is unable to create the collection %name.", ['%name' => $name]));
+      $this->fail($this->t("The database server is unable to create the collection %name.", ['%name' => $name]));
     }
   }
 
@@ -270,10 +270,10 @@ class Tasks extends InstallTasks {
   protected function checkInsertCollection($name, $fields) {
     try {
       Database::getConnection()->insert($name)->fields($fields)->execute();
-      $this->pass(t("The database server was able to insert data into the collection %name.", ['%name' => $name]));
+      $this->pass($this->t("The database server was able to insert data into the collection %name.", ['%name' => $name]));
     }
     catch (\Exception) {
-      $this->fail(t("The database server is unable to insert data into the collection %name.", ['%name' => $name]));
+      $this->fail($this->t("The database server is unable to insert data into the collection %name.", ['%name' => $name]));
     }
   }
 
@@ -283,10 +283,10 @@ class Tasks extends InstallTasks {
   protected function checkUpdateCollection($name, array $condition = [], array $fields = []) {
     try {
       Database::getConnection()->update($name)->fields($fields)->condition($condition[0], $condition[1], $condition[2])->execute();
-      $this->pass(t("The database server was able to update data in the collection %name.", ['%name' => $name]));
+      $this->pass($this->t("The database server was able to update data in the collection %name.", ['%name' => $name]));
     }
     catch (\Exception) {
-      $this->fail(t("The database server is unable to update data in the collection %name.", ['%name' => $name]));
+      $this->fail($this->t("The database server is unable to update data in the collection %name.", ['%name' => $name]));
     }
   }
 
@@ -296,10 +296,10 @@ class Tasks extends InstallTasks {
   protected function checkDeleteCollection($name, array $condition = []) {
     try {
       Database::getConnection()->delete($name)->condition($condition[0], $condition[1], $condition[2])->execute();
-      $this->pass(t("The database server was able to delete data in the collection %name.", ['%name' => $name]));
+      $this->pass($this->t("The database server was able to delete data in the collection %name.", ['%name' => $name]));
     }
     catch (\Exception) {
-      $this->fail(t("The database server is unable to delete data in the collection %name.", ['%name' => $name]));
+      $this->fail($this->t("The database server is unable to delete data in the collection %name.", ['%name' => $name]));
     }
   }
 
@@ -309,10 +309,10 @@ class Tasks extends InstallTasks {
   protected function checkDropCollection($name) {
     try {
       Database::getConnection()->schema()->dropTable($name);
-      $this->pass(t("The database server was able to drop the collection %name.", ['%name' => $name]));
+      $this->pass($this->t("The database server was able to drop the collection %name.", ['%name' => $name]));
     }
     catch (\Exception) {
-      $this->fail(t("The database server is unable to drop the collection %name.", ['%name' => $name]));
+      $this->fail($this->t("The database server is unable to drop the collection %name.", ['%name' => $name]));
     }
   }
 
