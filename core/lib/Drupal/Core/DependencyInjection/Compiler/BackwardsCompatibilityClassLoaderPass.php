@@ -19,8 +19,10 @@ class BackwardsCompatibilityClassLoaderPass implements CompilerPassInterface {
     foreach ($modules as $module) {
       $parameter_name = $module . '.moved_classes';
       if ($container->hasParameter($parameter_name)) {
-        $moved_classes = $moved_classes + $container->getParameter($parameter_name);
-
+        $module_moved = $container->getParameter($parameter_name);
+        \assert(is_array($module_moved));
+        \assert(count($module_moved) === count(array_column($module_moved, 'class')), 'Missing class key for moved classes in ' . $module);
+        $moved_classes = $moved_classes + $module_moved;
       }
     }
     $container->setParameter('moved_classes', $moved_classes);
