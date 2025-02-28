@@ -14,7 +14,7 @@ class ActionPluginCollection extends DefaultSingleLazyPluginCollection {
    *
    * @return \Drupal\Core\Action\ActionInterface
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
+  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment, Generic.CodeAnalysis.UselessOverridingMethod
   public function &get($instance_id) {
     return parent::get($instance_id);
   }

@@ -153,6 +153,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
  */
 class StubNegotiationMiddleware extends NegotiationMiddleware {
 
+  // phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod
   public function getContentType(Request $request) {
     return parent::getContentType($request);
   }

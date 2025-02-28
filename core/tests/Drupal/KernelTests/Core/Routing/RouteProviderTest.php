@@ -778,6 +778,7 @@ class RouteProviderTest extends KernelTestBase {
 
 class TestRouteProvider extends RouteProvider {
 
+  // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod
   public function getCandidateOutlines(array $parts) {
     return parent::getCandidateOutlines($parts);
   }
