@@ -2,26 +2,28 @@
 
 namespace Drupal\views_ui;
 
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Timer;
+use Drupal\Core\Url;
+use Drupal\Core\Link;
+use Drupal\views\Views;
+use Drupal\views\Entity\View;
+use Drupal\Core\TempStore\Lock;
+use Drupal\views\ViewExecutable;
 use Drupal\Component\Utility\Xss;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Database\Database;
+use Drupal\Component\Utility\Timer;
+use Drupal\views\ViewEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\TempStore\Lock;
-use Drupal\views\Controller\ViewAjaxController;
-use Drupal\views\Views;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\views\ViewExecutable;
-use Drupal\Core\Database\Database;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\Sql;
-use Drupal\views\Entity\View;
-use Drupal\views\ViewEntityInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Symfony\Component\HttpFoundation\InputBag;
+use Drupal\views\Controller\ViewAjaxController;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\TypedData\ComplexDataInterface;
 
 /**
  * Stores UI related temporary settings.
@@ -181,20 +183,22 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function set($property_name, $value, $notify = TRUE) {
+  public function set($property_name, $value, $notify = TRUE): static {
     if (property_exists($this->storage, $property_name)) {
       $this->storage->set($property_name, $value);
     }
     else {
       $this->{$property_name} = $value;
     }
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setSyncing($syncing) {
+  public function setSyncing($syncing): static {
     $this->isSyncing = $syncing;
+    return $this;
   }
 
   /**
@@ -228,7 +232,6 @@ class ViewUI implements ViewEntityInterface {
   public function standardSubmit($form, FormStateInterface $form_state) {
     // Determine whether the values the user entered are intended to apply to
     // the current display or the default display.
-
     [$was_defaulted, $is_defaulted, $revert] = $this->getOverrideValues($form, $form_state);
 
     // Based on the user's choice in the display dropdown, determine which
@@ -477,7 +480,7 @@ class ViewUI implements ViewEntityInterface {
         }
         $id = $this->getExecutable()->addHandler($display_id, $type, $table, $field);
 
-        // Check to see if we have group by settings
+        // Check to see if we have group by settings.
         $key = $type;
         // Footer,header and empty text have a different internal handler
         // type(area).
@@ -494,11 +497,11 @@ class ViewUI implements ViewEntityInterface {
         }
 
         // Check to see if this type has settings, if so add the settings form
-        // first
+        // first.
         if ($handler && $handler->hasExtraOptions()) {
           $this->addFormToStack('handler-extra', $display_id, $type, $id);
         }
-        // Then add the form to the stack
+        // Then add the form to the stack.
         $this->addFormToStack('handler', $display_id, $type, $id);
       }
     }
@@ -507,7 +510,7 @@ class ViewUI implements ViewEntityInterface {
       unset($this->form_cache);
     }
 
-    // Store in cache
+    // Store in cache.
     $this->cacheSet();
   }
 
@@ -534,7 +537,27 @@ class ViewUI implements ViewEntityInterface {
     $this->additionalQueries = $queries;
   }
 
-  public function renderPreview($display_id, $args = []) {
+  /**
+   * Renders a preview of a view display.
+   *
+   * This function generates a live preview of a view display, allowing users
+   * to see the output before saving changes. It handles exposed filters,
+   * query statistics, and performance details, and ensures the correct
+   * request context for AJAX-based previews.
+   *
+   * @param string $display_id
+   *   The ID of the display to preview.
+   * @param array $args
+   *   (Optional) An array of arguments to pass to the view.
+   *
+   * @return array|null
+   *   A renderable array containing the preview output or an error message
+   *   if the display ID is invalid.
+   *
+   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
+   *   If there is an error executing the SQL query.
+   */
+  public function renderPreview($display_id, $args = []): ?array {
     // Save the current path so it can be restored before returning from this
     // function.
     $request_stack = \Drupal::requestStack();
@@ -589,7 +612,6 @@ class ViewUI implements ViewEntityInterface {
       }
 
       // Make view links come back to preview.
-
       // Also override the current path so we get the pager, and make sure the
       // Request object gets all of the proper values from $_SERVER.
       $request = Request::createFromGlobals();
@@ -684,7 +706,10 @@ class ViewUI implements ViewEntityInterface {
                 $query_string = strtr($query['query'], $query['args']);
                 $queries[] = [
                   '#prefix' => "\n",
-                  '#markup' => $this->t('[@time ms] @query', ['@time' => round($query['time'] * 100000, 1) / 100000.0, '@query' => $query_string]),
+                  '#markup' => $this->t('[@time ms] @query', [
+                    '@time' => round($query['time'] * 100000, 1) / 100000.0,
+                    '@query' => $query_string,
+                  ]),
                 ];
               }
 
@@ -721,9 +746,7 @@ class ViewUI implements ViewEntityInterface {
               ],
             ];
             if (isset($path)) {
-              // @todo Views should expect and store a leading /. See:
-              //   https://www.drupal.org/node/2423913
-              $path = Link::fromTextAndUrl($path->toString(), $path)->toString();
+              $path = $this->getPreviewPath($executable);
             }
             else {
               $path = $this->t('This display has no path.');
@@ -1255,8 +1278,8 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTypedData() {
-    $this->storage->getTypedData();
+  public function getTypedData(): ComplexDataInterface {
+    return $this->storage->getTypedData();
   }
 
   /**
@@ -1389,6 +1412,39 @@ class ViewUI implements ViewEntityInterface {
   public function unsetLock() {
     $this->lock = NULL;
     return $this;
+  }
+
+  /**
+   * Gets the view's preview path.
+   *
+   * @param \Drupal\views\ViewExecutable $executable
+   *   The views executable instance.
+   *
+   * @return string
+   *   The rendered preview path as a string.
+   */
+  public function getPreviewPath(ViewExecutable $executable) {
+    // @todo Views should expect and store a leading /. See:
+    //   https://www.drupal.org/node/2423913
+    $preview_path = Url::fromUserInput('/' . $executable->display_handler->getOption('path'));
+    $updated_path = $preview_path->toString();
+
+    $current_path = Link::fromTextAndUrl($executable->getUrl()->toString(), $executable->getUrl())->toString();
+    if ($executable->getUrl()->toString() !== $updated_path) {
+      $path = [
+        '#theme' => 'item_list',
+        '#list_type' => 'ul',
+        '#items' => [
+          ['#markup' => $this->t('Current path: @current_path', ['@current_path' => $current_path])],
+          ['#markup' => $this->t('New path after view is saved: @updated_path', ['@updated_path' => $updated_path])],
+        ],
+      ];
+      $path = \Drupal::service('renderer')->renderInIsolation($path);
+    }
+    else {
+      $path = Link::fromTextAndUrl($preview_path->toString(), $preview_path)->toString();
+    }
+    return $path;
   }
 
   /**

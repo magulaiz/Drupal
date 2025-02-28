@@ -64,14 +64,18 @@ display:
           field: created
           plugin_id: date
           order: DESC
-      arguments: {  }
+      arguments: null
       style:
         type: serializer
+        options:
+          uses_fields: false
+          formats:
+            json: json
       row:
         type: data_field
       query:
         type: views_query
-      display_extenders: {  }
+      display_extenders: null
     cache_metadata:
       max-age: -1
       contexts:
@@ -79,7 +83,7 @@ display:
         - request_format
         - url.query_args
         - user.permissions
-      tags: {  }
+      tags: null
   rest_export_1:
     id: rest_export_1
     display_title: serializer
@@ -90,20 +94,24 @@ display:
         type: none
       style:
         type: serializer
+        options:
+          uses_fields: false
+          formats:
+            json: json
       row:
         type: data_field
       defaults:
         access: false
         style: false
         row: false
-      display_extenders: {  }
+      display_extenders: null
       path: test/serialize/field
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_interface'
         - request_format
-      tags: {  }
+      tags: null
   rest_export_2:
     id: rest_export_2
     display_title: 'serialize - access denied'
@@ -122,7 +130,7 @@ display:
         access: false
         style: false
         row: false
-      display_extenders: {  }
+      display_extenders: null
       path: test/serialize/denied
     cache_metadata:
       max-age: -1
@@ -130,4 +138,4 @@ display:
         - 'languages:language_interface'
         - request_format
         - user.permissions
-      tags: {  }
+      tags: null
