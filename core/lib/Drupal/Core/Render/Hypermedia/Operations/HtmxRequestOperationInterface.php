@@ -17,16 +17,14 @@ interface HtmxRequestOperationInterface extends HtmxOperationInterface {
   /**
    * Configures the method and url for the request.
    *
-   * The developer experience will be simplified if this method is called
-   * by the constructor and all operation properties are set at instantiation.
-   *
-   * @see \Drupal\Core\Render\Hypermedia\Operations\HtmxRequestTrait
-   *
    * @param \Drupal\Core\Http\HttpMethod $method
    *   The request method.
    * @param \Drupal\Core\Url $url
-   *   The URL for the request.
+   *   The request URL.
+   *
+   * @return static
+   *   The instance using the trait.
    */
-  public function setRequest(HttpMethod $method, Url $url): void;
+  public function setRequest(HttpMethod $method, Url $url): static;
 
 }

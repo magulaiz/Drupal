@@ -118,12 +118,10 @@ class ConfigSingleExportForm extends FormBase {
       route_parameters: ['config_type' => $config_type, 'config_name' => $config_name],
     );
     $config_type_htmx->setRequestOperation(
-      new Replace(
-        select: 'select[data-drupal-selector="edit-config-name"]',
-        target: 'select[data-drupal-selector="edit-config-name"]',
-        url: $form_url,
-        method: HttpMethod::Post
-      )
+      (new Replace())
+        ->setRequest(HttpMethod::Post, $form_url)
+        ->select('select[data-drupal-selector="edit-config-name"]')
+        ->target('select[data-drupal-selector="edit-config-name"]')
     );
     $form['config_type'] = [
       '#title' => $this->t('Configuration type'),
@@ -135,12 +133,10 @@ class ConfigSingleExportForm extends FormBase {
 
     $default_type = $form_state->getValue('config_type', $config_type);
     $config_name_htmx->setRequestOperation(
-      new Replace(
-        select: '#edit-export-wrapper',
-        target: '#edit-export-wrapper',
-        url: $form_url,
-        method: HttpMethod::Post
-      )
+      (new Replace())
+        ->setRequest(HttpMethod::Post, $form_url)
+        ->select('#edit-export-wrapper')
+        ->target('#edit-export-wrapper')
     );
     $form['config_name'] = [
       '#title' => $this->t('Configuration name'),

@@ -2,28 +2,15 @@
 
 namespace Drupal\Core\Render\Hypermedia\Operations;
 
-use Drupal\Core\Http\HttpMethod;
 use Drupal\Core\Render\Hypermedia\HtmxInterface;
-use Drupal\Core\Url;
 
 /**
  * Replaces the target element with the element.
- *
- * There are three required properties and one optional property.
- * - select: A CSS selector used to select the element from the response that
- *   should be inserted into the DOM.
- * - target: A CSS selector used to select the existing element in the DOM to
- *   be replaced.
- * - url: A Url object used to configure the request.
- * - method: (Optional) The HTTP method to be used for the request. Defaults to
- *   HttpMethod::Get.
  */
 class Replace implements HtmxRequestOperationInterface {
   use HtmxRequestTrait;
-
-  public function __construct(protected string $select, protected string $target, Url $url, HttpMethod $method = HttpMethod::Get) {
-    $this->setRequest($method, $url);
-  }
+  use HtmxSelectTrait;
+  use HtmxTargetTrait;
 
   /**
    * {@inheritdoc}

@@ -22,16 +22,12 @@ trait HtmxRequestTrait {
   protected Url $url;
 
   /**
-   * Setter for the required properties.
-   *
-   * @param \Drupal\Core\Http\HttpMethod $method
-   *   The request method.
-   * @param \Drupal\Core\Url $url
-   *   The request URL.
+   * {@inheritdoc}
    */
-  public function setRequest(HttpMethod $method, Url $url): void {
+  public function setRequest(HttpMethod $method, Url $url): static {
     $this->method = $method;
     $this->url = $url;
+    return $this;
   }
 
   /**
