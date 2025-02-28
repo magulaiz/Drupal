@@ -252,9 +252,9 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @return array
    *   A list of default settings, keyed by the setting name.
    *
-   * Setting names defined by this method must not duplicate the setting names
-   * returned by this plugin's implementation of defaultFieldSettings(), as both
-   * lists of settings are merged.
+   *   Setting names defined by this method must not duplicate the setting names
+   *   returned by this plugin's implementation of defaultFieldSettings(), as both
+   *   lists of settings are merged.
    */
   public static function defaultStorageSettings();
 
@@ -264,9 +264,9 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @return array
    *   A list of default settings, keyed by the setting name.
    *
-   * Setting names defined by this method must not duplicate the setting names
-   * returned by this plugin's implementation of defaultStorageSettings(), as both
-   * lists of settings are merged.
+   *  Setting names defined by this method must not duplicate the setting names
+   *  returned by this plugin's implementation of defaultStorageSettings(), as both
+   *  lists of settings are merged.
    */
   public static function defaultFieldSettings();
 
