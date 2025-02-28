@@ -8,7 +8,6 @@ use Drupal\Core\Config\Entity\ConfigEntityDependency;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\AssertConfigTrait;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;

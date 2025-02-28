@@ -33,15 +33,6 @@ trait CacheTagsChecksumTrait {
   protected $tagCache = [];
 
   /**
-   * Indicator for the existence of the database table.
-   *
-   * This variable is only used by the database driver for MongoDB.
-   *
-   * @var bool
-   */
-  protected $tableExists = FALSE;
-
-  /**
    * Registered cache tags to preload.
    */
   protected array $preloadTags = [];
