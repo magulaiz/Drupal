@@ -32,7 +32,7 @@ abstract class ResultBase {
    *
    * @param \Drupal\Core\Database\FetchAs $mode
    *   One of the cases of the FetchAs enum.
-   * @param array<string,string> $fetchOptions
+   * @param array<string,mixed> $fetchOptions
    *   An array of fetch options.
    *
    * @return bool
@@ -45,7 +45,7 @@ abstract class ResultBase {
    *
    * @param \Drupal\Core\Database\FetchAs $mode
    *   One of the cases of the FetchAs enum.
-   * @param array<string,string> $fetchOptions
+   * @param array<string,mixed> $fetchOptions
    *   An array of fetch options.
    *
    * @return array|object|int|float|string|bool|null
@@ -58,7 +58,7 @@ abstract class ResultBase {
    *
    * @param \Drupal\Core\Database\FetchAs $mode
    *   One of the cases of the FetchAs enum.
-   * @param array<string,string> $fetchOptions
+   * @param array<string,mixed> $fetchOptions
    *   An array of fetch options.
    *
    * @return array
@@ -76,10 +76,12 @@ abstract class ResultBase {
    *
    * Note that this method will run the result set to the end.
    *
-   * @param int $key_index
-   *   The numeric index of the field to use as the array key.
-   * @param int $value_index
-   *   The numeric index of the field to use as the array value.
+   * @param int $keyIndex
+   *   (Optional) The numeric index of the field to use as the array key.
+   *   Defaults to 0.
+   * @param int $valueIndex
+   *   (optional) The numeric index of the field to use as the array value.
+   *   Defaults to 1.
    *
    * @return array
    *   An associative array, or an empty array if there is no result set.
@@ -99,7 +101,7 @@ abstract class ResultBase {
    *   or FetchAs::List the returned value with be an array of arrays. For any
    *   other value it will be an array of objects. If not specified, defaults to
    *   what is specified by setFetchMode().
-   * @param array<string,string> $fetchOptions
+   * @param array<string,mixed> $fetchOptions
    *   An array of fetch options.
    *
    * @return array
