@@ -88,7 +88,7 @@ class BreadcrumbFrontCacheContextsTest extends BrowserTestBase {
     // (which is not set as front page).
     $this->drupalGet($this->nodeWithAlias->path->alias);
     $breadcrumbs = $this->assertSession()->elementExists('css', '.block-system-breadcrumb-block');
-    $crumbs = $breadcrumbs->findAll('css', 'ol li');
+    $crumbs = $breadcrumbs->findAll('css', 'span a');
     $this->assertCount(1, $crumbs);
     $this->assertSame('Home', $crumbs[0]->getText());
   }
