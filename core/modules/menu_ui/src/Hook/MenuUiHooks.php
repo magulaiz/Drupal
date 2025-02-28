@@ -18,6 +18,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Hook implementations for menu_ui.
@@ -25,6 +26,10 @@ use Drupal\Core\Access\AccessResultInterface;
 class MenuUiHooks {
 
   use StringTranslationTrait;
+
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {}
 
   /**
    * Implements hook_help().
@@ -100,7 +105,7 @@ class MenuUiHooks {
     }
     else {
       // If the node has no corresponding menu link, users needs to permission to create one.
-      return \Drupal::entityTypeManager()->getAccessControlHandler('menu_link_content')->createAccess(NULL, NULL, [], TRUE);
+      return $this->entityTypeManager->getAccessControlHandler('menu_link_content')->createAccess(NULL, NULL, [], TRUE);
     }
   }
 
