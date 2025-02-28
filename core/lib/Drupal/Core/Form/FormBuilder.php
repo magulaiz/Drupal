@@ -601,6 +601,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       if ($form_state->isProgrammed()) {
         return;
       }
+
       // If $form_state->isRebuilding() returns TRUE and input has been processed
       // without validation errors, we are in a multi-step workflow that is not yet
       // complete. In this scenario, a new $form must be constructed based on the
