@@ -3,4 +3,4 @@ services:
     class: Drupal\pgsql\EntityQuery\QueryFactory
     arguments: ['@database']
     tags:
-      - { name: pgsql_entity_query_sql, provider_id: 'apgsql', priority: 100 }
+      - { name: pgsql_entity_query_sql, provider_id: 'pgsql', priority: 100 }
