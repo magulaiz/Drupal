@@ -116,7 +116,7 @@ class RenderElementTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetAttributes
    */
-  public function testSetAttributes($element, $class, $expected) {
+  public function testSetAttributes(array $element, array $class, array $expected) {
     RenderElementBase::setAttributes($element, $class);
     $this->assertSame($expected, $element);
   }
@@ -124,7 +124,7 @@ class RenderElementTest extends UnitTestCase {
   /**
    * Provides test data for testSetAttributes().
    */
-  public static function providerTestSetAttributes() {
+  public static function providerTestSetAttributes(): array {
     return [
       'No-op' => [
         'element' => [
