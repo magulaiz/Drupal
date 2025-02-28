@@ -4,7 +4,6 @@ namespace Drupal\mongodb\Lock;
 
 use Drupal\Core\Lock\DatabaseLockBackend as CoreDatabaseLockBackend;
 use Drupal\mongodb\Driver\Database\mongodb\Statement;
-use MongoDB\Driver\Exception\BulkWriteException;
 
 /**
  * The MongoDB implementation of \Drupal\Core\Lock\DatabaseLockBackend.
