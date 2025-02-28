@@ -91,7 +91,7 @@ class MenuUiHooks {
   /**
    * Check if user is allowed to use the menu link subform.
    */
-  private function getMenuLinkContentAccess(array $defaults): AccessResultInterface {
+  protected function getMenuLinkContentAccess(array $defaults): AccessResultInterface {
     if (!empty($defaults['entity_id'])) {
       $entity = MenuLinkContent::load($defaults['entity_id']);
 
