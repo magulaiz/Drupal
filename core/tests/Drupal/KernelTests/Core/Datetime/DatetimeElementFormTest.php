@@ -115,7 +115,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
       '#date_date_element' => 'HTML Date',
       '#date_time_element' => 'HTML Time',
       '#required' => TRUE,
-      '#required_error' => 'Custom required error message.'
+      '#required_error' => 'Custom required error message.',
     ];
 
     // Element without #required_error.
