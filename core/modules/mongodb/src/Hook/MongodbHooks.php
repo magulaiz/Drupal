@@ -49,6 +49,10 @@ class MongodbHooks {
         $entity_types['node']->setStorageClass('Drupal\mongodb\modules\node\NodeStorage');
       }
 
+      if (!empty($entity_types['paragraph'])) {
+        $entity_types['paragraph']->setHandlerClass('storage_schema', 'Drupal\mongodb\modules\paragraphs\ParagraphStorageSchema');
+      }
+
       if (!empty($entity_types['user'])) {
         $entity_types['user']->setStorageClass('Drupal\mongodb\modules\user\UserStorage');
       }
