@@ -40,9 +40,8 @@ class WorkspacesAliasRepository extends AliasRepository {
 
     $active_workspace = $this->workspaceManager->getActiveWorkspace();
 
-    $query = $this->connection->select('path_alias', 'base_table_2');
+    $query = $this->connection->select('path_alias', 'original_base_table');
     if ($this->connection->driver() == 'mongodb') {
-      $query = $this->connection->select('path_alias', 'base_table_2');
       $query->leftJoin('workspace_association', 'wa',
         $query->joinCondition()
           ->condition("%alias.target_entity_type_id", 'path_alias')

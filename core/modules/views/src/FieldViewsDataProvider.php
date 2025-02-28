@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldStorageConfigInterface;
 
@@ -15,6 +16,8 @@ use Drupal\field\FieldStorageConfigInterface;
  * Provide default views data for fields.
  */
 class FieldViewsDataProvider {
+
+  use StringTranslationTrait;
 
   public function __construct(
     protected readonly EntityTypeManager $entityTypeManager,
@@ -285,7 +288,7 @@ class FieldViewsDataProvider {
           $field_alias = $field_name;
         }
         else {
-          $group = t('@group (historical data)', ['@group' => $group_name]);
+          $group = $this->t('@group (historical data)', ['@group' => $group_name]);
           $field_alias = $field_name . '__revision_id';
         }
 
@@ -293,7 +296,7 @@ class FieldViewsDataProvider {
           'group' => $group,
           'title' => $label,
           'title short' => $label,
-          'help' => t('Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
+          'help' => $this->t('Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
         ];
       }
 
@@ -308,9 +311,9 @@ class FieldViewsDataProvider {
               'base' => $base_table,
               'group' => t('@group (historical data)', ['@group' => $group_name]),
               'title' => $label_name,
-              'help' => t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
+              'help' => $this->t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
             ];
-            $also_known[] = t('@group: @field', ['@group' => $group_name, '@field' => $label_name]);
+            $also_known[] = $this->t('@group: @field', ['@group' => $group_name, '@field' => $label_name]);
           }
         }
         else {
@@ -328,9 +331,9 @@ class FieldViewsDataProvider {
           elseif ($supports_revisions && $label != $label_name) {
             $aliases[] = [
               'base' => $table,
-              'group' => t('@group (historical data)', ['@group' => $group_name]),
+              'group' => $this->t('@group (historical data)', ['@group' => $group_name]),
               'title' => $label_name,
-              'help' => t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
+              'help' => $this->t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
             ];
             $also_known[] = t('@group (historical data): @field', ['@group' => $group_name, '@field' => $label_name]);
           }
@@ -353,10 +356,10 @@ class FieldViewsDataProvider {
         // help text), other patterns such as use of #markup would not be correct
         // here.
         if ($driver === 'mongodb') {
-          $data[$base_table][$field_alias]['help'] = Markup::create($data[$base_table][$field_alias]['help'] . ' ' . t('Also known as:') . ' ' . implode(', ', $also_known));
+          $data[$base_table][$field_alias]['help'] = Markup::create($data[$base_table][$field_alias]['help'] . ' ' . $this->t('Also known as:') . ' ' . implode(', ', $also_known));
         }
         else {
-          $data[$table_alias][$field_alias]['help'] = Markup::create($data[$table_alias][$field_alias]['help'] . ' ' . t('Also known as:') . ' ' . implode(', ', $also_known));
+          $data[$table_alias][$field_alias]['help'] = Markup::create($data[$table_alias][$field_alias]['help'] . ' ' . $this->t('Also known as:') . ' ' . implode(', ', $also_known));
         }
       }
 
@@ -445,12 +448,12 @@ class FieldViewsDataProvider {
       }
 
       if (count($field_columns) == 1 || $column == 'value') {
-        $title = t('@label (@name)', ['@label' => $label, '@name' => $field_name]);
+        $title = $this->t('@label (@name)', ['@label' => $label, '@name' => $field_name]);
         $title_short = $label;
       }
       else {
-        $title = t('@label (@name:@column)', ['@label' => $label, '@name' => $field_name, '@column' => $column]);
-        $title_short = t('@label:@column', ['@label' => $label, '@column' => $column]);
+        $title = $this->t('@label (@name:@column)', ['@label' => $label, '@name' => $field_name, '@column' => $column]);
+        $title_short = $this->t('@label:@column', ['@label' => $label, '@column' => $column]);
       }
 
       // Expose data for the property.
@@ -491,7 +494,7 @@ class FieldViewsDataProvider {
             $group = $group_name;
           }
           else {
-            $group = t('@group (historical data)', ['@group' => $group_name]);
+            $group = $this->t('@group (historical data)', ['@group' => $group_name]);
           }
           $column_real_name = $table_mapping->getFieldColumnName($field_storage, $column);
 
@@ -502,7 +505,7 @@ class FieldViewsDataProvider {
             'group' => $group,
             'title' => $title,
             'title short' => $title_short,
-            'help' => t('Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
+            'help' => $this->t('Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
           ];
         }
 
@@ -513,17 +516,17 @@ class FieldViewsDataProvider {
         foreach ($all_labels as $label_name => $true) {
           if ($label != $label_name) {
             if (count($field_columns) == 1 || $column == 'value') {
-              $alias_title = t('@label (@name)', ['@label' => $label_name, '@name' => $field_name]);
+              $alias_title = $this->t('@label (@name)', ['@label' => $label_name, '@name' => $field_name]);
             }
             else {
-              $alias_title = t('@label (@name:@column)', ['@label' => $label_name, '@name' => $field_name, '@column' => $column]);
+              $alias_title = $this->t('@label (@name:@column)', ['@label' => $label_name, '@name' => $field_name, '@column' => $column]);
             }
             $aliases[] = [
               'group' => $group_name,
               'title' => $alias_title,
-              'help' => t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $title]),
+              'help' => $this->t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $title]),
             ];
-            $also_known[] = t('@group: @field', ['@group' => $group_name, '@field' => $title]);
+            $also_known[] = $this->t('@group: @field', ['@group' => $group_name, '@field' => $title]);
           }
         }
         if ($aliases) {
@@ -543,10 +546,10 @@ class FieldViewsDataProvider {
           // help text), other patterns such as use of #markup would not be
           // correct here.
           if ($driver === 'mongodb') {
-            $data[$base_table][$column_real_name]['help'] = Markup::create($data[$base_table][$column_real_name]['help'] . ' ' . t('Also known as:') . ' ' . implode(', ', $also_known));
+            $data[$base_table][$column_real_name]['help'] = Markup::create($data[$base_table][$column_real_name]['help'] . ' ' . $this->t('Also known as:') . ' ' . implode(', ', $also_known));
           }
           else {
-            $data[$table_alias][$column_real_name]['help'] = Markup::create($data[$table_alias][$column_real_name]['help'] . ' ' . t('Also known as:') . ' ' . implode(', ', $also_known));
+            $data[$table_alias][$column_real_name]['help'] = Markup::create($data[$table_alias][$column_real_name]['help'] . ' ' . $this->t('Also known as:') . ' ' . implode(', ', $also_known));
           }
         }
 
@@ -580,7 +583,7 @@ class FieldViewsDataProvider {
             'additional fields' => $additional_fields,
             'field_name' => $field_name,
             'entity_type' => $entity_type_id,
-            'empty field name' => t('- No value -'),
+            'empty field name' => $this->t('- No value -'),
           ];
           $data[$table_alias][$column_real_name]['filter'] = [
             'field' => $column_real_name,

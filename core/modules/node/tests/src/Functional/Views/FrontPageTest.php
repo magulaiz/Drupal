@@ -70,7 +70,8 @@ class FrontPageTest extends ViewTestBase {
       $modules = ['node', 'user'];
     }
 
-    // Tests \Drupal\node\Plugin\views\row\RssPluginBase::calculateDependencies().
+    // Tests
+    // \Drupal\node\Plugin\views\row\RssPluginBase::calculateDependencies().
     $expected = [
       'config' => [
         'core.entity_view_mode.node.rss',

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Menu;
 
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Menu\MenuTreeStorage;
 use Drupal\KernelTests\KernelTestBase;
@@ -444,7 +445,7 @@ class MenuTreeStorageTest extends KernelTestBase {
       }
       $query->condition($field, $value);
     }
-    $all = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $all = $query->execute()->fetchAll(FetchAs::Associative);
     $this->assertCount(1, $all, "Found link $id matching all the expected properties");
     $raw = reset($all);
 

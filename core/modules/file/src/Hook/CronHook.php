@@ -38,8 +38,8 @@ class CronHook {
   public function __invoke(): void {
     $age = $this->configFactory->get('system.file')->get('temporary_maximum_age');
     $fileStorage = $this->entityTypeManager->getStorage('file');
-    // Only delete temporary files if older than $age. Note that automatic cleanup
-    // is disabled if $age set to 0.
+    // Only delete temporary files if older than $age. Note that automatic
+    // cleanup is disabled if $age set to 0.
     if ($age) {
       $timestamp = \Drupal::time()->getRequestTime() - $age;
       if (Database::getConnection()->driver() == 'mongodb') {

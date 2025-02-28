@@ -6,6 +6,7 @@ namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_test\FieldTestHelper;
@@ -60,7 +61,8 @@ class BulkDeleteTest extends FieldKernelTestBase {
    *   Each entry is the value of the "$entity" parameter the hook is expected
    *   to have been passed.
    * @param array $actual_hooks
-   *   The array of actual hook invocations recorded by FieldTestHelper::memorize().
+   *   The array of actual hook invocations recorded by
+   *   FieldTestHelper::memorize().
    */
   public function checkHooksInvocations($expected_hooks, $actual_hooks): void {
     foreach ($expected_hooks as $hook => $invocations) {
@@ -104,7 +106,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
     // Create two bundles.
     $this->bundles = ['bb_1' => 'bb_1', 'bb_2' => 'bb_2'];
     foreach ($this->bundles as $name => $desc) {
-      entity_test_create_bundle($name, $desc);
+      EntityTestHelper::createBundle($name, $desc);
     }
 
     // Create two field storages.
@@ -397,8 +399,8 @@ class BulkDeleteTest extends FieldKernelTestBase {
     }
 
     // Check hooks invocations.
-    // FieldItemInterface::delete() should have been called once for each entity in the
-    // bundle.
+    // FieldItemInterface::delete() should have been called once for each entity
+    // in the bundle.
     $actual_hooks = FieldTestHelper::memorize();
     $hooks = [];
     $hooks['field_test_field_delete'] = $this->entitiesByBundles[$bundle];

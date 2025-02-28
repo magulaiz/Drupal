@@ -11,7 +11,7 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\Tests\rest\Functional\ResourceTestBase;
 
 /**
- * ResourceTestBase for MenuLinkContent entity.
+ * Resource test base for MenuLinkContent entity.
  */
 abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
 

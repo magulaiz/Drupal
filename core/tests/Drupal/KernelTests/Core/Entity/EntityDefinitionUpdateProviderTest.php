@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
@@ -136,18 +137,6 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
         'new_base_field_value' => 'foo',
       ];
 
-      if ($create_entity_translation) {
-        $expected[] = [
-          'bundle' => $entity->bundle(),
-          'deleted' => '1',
-          'entity_id' => '2',
-          'revision_id' => '2',
-          'langcode' => 'ro',
-          'delta' => '0',
-          'new_base_field_value' => 'foo-ro',
-        ];
-      }
-
       // Check that the deleted field's data is preserved in the dedicated
       // 'deleted' table.
       $result = $this->database->select($dedicated_deleted_table_name, 't')
@@ -155,7 +144,7 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
         ->orderBy('revision_id', 'ASC')
         ->orderBy('langcode', 'ASC')
         ->execute()
-        ->fetchAll(\PDO::FETCH_ASSOC);
+        ->fetchAll(FetchAs::Associative);
       $this->assertSameSize($expected, $result);
 
       // Use assertEquals and not assertSame here to prevent that a different
@@ -171,51 +160,82 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
             'bundle' => $entity->bundle(),
             'deleted' => '1',
             'entity_id' => '2',
-            'revision_id' => '3',
-            'langcode' => 'en',
+            'revision_id' => '2',
+            'langcode' => 'ro',
             'delta' => '0',
-            'new_base_field_value' => 'bar',
+            'new_base_field_value' => 'foo-ro',
           ];
-
-          if ($create_entity_translation) {
-            $expected[] = [
-              'bundle' => $entity->bundle(),
-              'deleted' => '1',
-              'entity_id' => '2',
-              'revision_id' => '3',
-              'langcode' => 'ro',
-              'delta' => '0',
-              'new_base_field_value' => 'bar-ro',
-            ];
-          }
         }
 
-        $result = $this->database->select($dedicated_deleted_revision_table_name, 't')
+        // Check that the deleted field's data is preserved in the dedicated
+        // 'deleted' table.
+        $result = $this->database->select($dedicated_deleted_table_name, 't')
           ->fields('t')
           ->orderBy('revision_id', 'ASC')
           ->orderBy('langcode', 'ASC')
           ->execute()
-          ->fetchAll(\PDO::FETCH_ASSOC);
+          ->fetchAll(FetchAs::Associative);
         $this->assertSameSize($expected, $result);
 
         // Use assertEquals and not assertSame here to prevent that a different
         // sequence of the columns in the table will affect the check.
         $this->assertEquals($expected, $result);
-      }
 
-      // Check that the field storage definition is marked for purging.
-      $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
-      $this->assertArrayHasKey($storage_definition->getUniqueStorageIdentifier(), $deleted_storage_definitions, 'The base field is marked for purging.');
+        if ($create_entity_revision) {
+          $dedicated_deleted_revision_table_name = $table_mapping->getDedicatedRevisionTableName($storage_definition, TRUE);
+          $this->assertTrue($schema_handler->tableExists($dedicated_deleted_revision_table_name), 'A dedicated revision table was created for the deleted new_base_field.');
 
-      // Purge field data, and check that the storage definition has been
-      // completely removed once the data is purged.
-      field_purge_batch(10);
-      $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
-      $this->assertEmpty($deleted_storage_definitions, 'The base field has been deleted.');
-      $this->assertFalse($schema_handler->tableExists($dedicated_deleted_table_name), 'A dedicated field table was deleted after new_base_field was purged.');
+          if ($base_field_revisionable) {
+            $expected[] = [
+              'bundle' => $entity->bundle(),
+              'deleted' => '1',
+              'entity_id' => '2',
+              'revision_id' => '3',
+              'langcode' => 'en',
+              'delta' => '0',
+              'new_base_field_value' => 'bar',
+            ];
 
-      if (isset($dedicated_deleted_revision_table_name)) {
-        $this->assertFalse($schema_handler->tableExists($dedicated_deleted_revision_table_name), 'A dedicated field revision table was deleted after new_base_field was purged.');
+            if ($create_entity_translation) {
+              $expected[] = [
+                'bundle' => $entity->bundle(),
+                'deleted' => '1',
+                'entity_id' => '2',
+                'revision_id' => '3',
+                'langcode' => 'ro',
+                'delta' => '0',
+                'new_base_field_value' => 'bar-ro',
+              ];
+            }
+          }
+
+          $result = $this->database->select($dedicated_deleted_revision_table_name, 't')
+            ->fields('t')
+            ->orderBy('revision_id', 'ASC')
+            ->orderBy('langcode', 'ASC')
+            ->execute()
+            ->fetchAll(\PDO::FETCH_ASSOC);
+          $this->assertSameSize($expected, $result);
+
+          // Use assertEquals and not assertSame here to prevent that a different
+          // sequence of the columns in the table will affect the check.
+          $this->assertEquals($expected, $result);
+        }
+
+        // Check that the field storage definition is marked for purging.
+        $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
+        $this->assertArrayHasKey($storage_definition->getUniqueStorageIdentifier(), $deleted_storage_definitions, 'The base field is marked for purging.');
+
+        // Purge field data, and check that the storage definition has been
+        // completely removed once the data is purged.
+        field_purge_batch(10);
+        $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
+        $this->assertEmpty($deleted_storage_definitions, 'The base field has been deleted.');
+        $this->assertFalse($schema_handler->tableExists($dedicated_deleted_table_name), 'A dedicated field table was deleted after new_base_field was purged.');
+
+        if (isset($dedicated_deleted_revision_table_name)) {
+          $this->assertFalse($schema_handler->tableExists($dedicated_deleted_revision_table_name), 'A dedicated field revision table was deleted after new_base_field was purged.');
+        }
       }
     }
   }

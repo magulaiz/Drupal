@@ -9,7 +9,7 @@ use Drupal\mongodb\Driver\Database\mongodb\Statement;
 /**
  * Cache tags invalidations checksum implementation that uses the database.
  */
-class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTagsInvalidatorInterface {
+class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTagsInvalidatorInterface, CacheTagsChecksumPreloadInterface {
 
   use CacheTagsChecksumTrait;
 
