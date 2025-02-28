@@ -62,3 +62,11 @@ html[data-admin-toolbar-animating][data-admin-toolbar="expanded"] .toolbar-block
   border-radius: 50%;
   background-color: currentColor;
 }
+html:not([data-admin-toolbar="expanded"]) :is(.layout-builder__add-block a),
+html[data-admin-toolbar-animating][data-admin-toolbar="expanded"] :is(.layout-builder__add-block a) {
+  color: transparent; /* Makes text invisible instead of text-indent */
+  position: relative;
+  display: inline-block;
+  -webkit-text-decoration: none;
+  text-decoration: none; /* Keeps it clickable */
+}
