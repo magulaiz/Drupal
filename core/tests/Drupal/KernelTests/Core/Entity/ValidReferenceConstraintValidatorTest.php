@@ -180,7 +180,7 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
     $this->assertCount(0, $violations);
 
     // No invalid target was found, so the referencing entity was not reloaded.
-    $this->assertFalse($this->container->get('entity.memory_cache')->get('values:'.$referencing_entity->getEntityTypeId().':'.$referencing_entity->id()));
+    $this->assertFalse($this->container->get('entity.memory_cache')->get('values:' . $referencing_entity->getEntityTypeId() . ':' . $referencing_entity->id()));
 
     // Check that users without access are able pass the validation for fields
     // with pre-existing content.
@@ -214,7 +214,7 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
     $this->assertEquals(sprintf('This entity (node: %s) cannot be referenced.', $different_bundle_node->id()), $violations[0]->getMessage());
 
     // An invalid target was found, so the referencing entity had to be reloaded.
-    $this->assertNotFalse($this->container->get('entity.memory_cache')->get('values:'.$referencing_entity->getEntityTypeId().':'.$referencing_entity->id()));
+    $this->assertNotFalse($this->container->get('entity.memory_cache')->get('values:' . $referencing_entity->getEntityTypeId() . ':' . $referencing_entity->id()));
 
     // Delete the last node and check that the pre-existing reference is not
     // valid anymore.
