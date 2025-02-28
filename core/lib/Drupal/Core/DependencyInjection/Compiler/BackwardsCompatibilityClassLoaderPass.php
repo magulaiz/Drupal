@@ -27,7 +27,7 @@ class BackwardsCompatibilityClassLoaderPass implements CompilerPassInterface {
         $moved_classes = $moved_classes + $module_moved;
       }
     }
-    if (!empty($moved_classes) {
+    if (!empty($moved_classes)) {
       $container->setParameter('moved_classes', $moved_classes);
     }
   }
