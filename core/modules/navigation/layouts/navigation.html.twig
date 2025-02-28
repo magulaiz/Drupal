@@ -33,7 +33,7 @@
 </div>
 
 <aside
-  {{ attributes.addClass('admin-toolbar').setAttribute('id', 'admin-toolbar').setAttribute('data-drupal-admin-styles', true) }}
+  {{ attributes.addClass('admin-toolbar').setAttribute('id', 'admin-toolbar').setAttribute('data-drupal-admin-styles', true).setAttribute('aria-label', 'Administrative side bar'|t) }}
 >
   {# This lil' div will get the Drupal.displace() attributes added to it via JS. #}
   <div class="admin-toolbar__displace-placeholder"></div>
@@ -41,8 +41,7 @@
   <div class="admin-toolbar__scroll-wrapper">
     {% set title_menu = 'admin-toolbar-title'|clean_unique_id %}
     {# @todo - We should get rid of this ID below. #}
-    <nav {{ region_attributes.content.setAttribute('id', 'menu-builder').addClass('admin-toolbar__content').setAttribute('aria-labelledby', title_menu) }}>
-      <h3 id="{{ title_menu }}" class="visually-hidden">{{ 'Administrative toolbar content'|t }}</h3>
+    <div {{ region_attributes.content.setAttribute('id', 'menu-builder').addClass('admin-toolbar__content') }}>
       {# @todo - Needs to be placed here so we can have the header footer on mobile. #}
       <div class="admin-toolbar__header">
         {% if not content.settings.hide_logo %}
@@ -72,16 +71,15 @@
 
       {{ content.content_top }}
       {{ content.content }}
-    </nav>
+    </div>
 
     {% set title_menu_footer = 'admin-toolbar-footer'|clean_unique_id %}
-    <nav {{ region_attributes.footer.setAttribute('id', 'menu-footer').addClass('admin-toolbar__footer').setAttribute('aria-labelledby', title_menu_footer) }}>
-      <h3 id="{{ title_menu_footer }}" class="visually-hidden">{{ 'Administrative toolbar footer'|t }}</h3>
+    <div {{ region_attributes.footer.setAttribute('id', 'menu-footer').addClass('admin-toolbar__footer') }}>
       {{ content.footer }}
       <button aria-controls="admin-toolbar" class="admin-toolbar__expand-button" type="button">
         <span class="visually-hidden" data-toolbar-text>{{ 'Collapse sidebar'|t }}</span>
       </button>
-    </nav>
+    </div>
   </div>
 </aside>
 <div class="admin-toolbar-overlay" aria-controls="admin-toolbar" data-drupal-admin-styles></div>
