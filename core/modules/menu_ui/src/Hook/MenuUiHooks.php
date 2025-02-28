@@ -27,6 +27,12 @@ class MenuUiHooks {
 
   use StringTranslationTrait;
 
+  /**
+   * Constructs a new MenuUiHooks object.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   */
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
   ) {}
@@ -95,6 +101,11 @@ class MenuUiHooks {
 
   /**
    * Check if user is allowed to use the menu link subform.
+   *
+   * @param array $defaults
+   *   An array that contains default values for the menu link form.
+   *
+   * @see menu_ui_get_menu_link_defaults()
    */
   protected function getMenuLinkContentAccess(array $defaults): AccessResultInterface {
     if (!empty($defaults['entity_id'])) {
