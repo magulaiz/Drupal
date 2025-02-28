@@ -6,7 +6,10 @@ namespace Drupal\Core\Database\Statement;
 
 use Drupal\Core\Database\FetchModeTrait;
 
-class PrefetchedResult extends DqlResultBase {
+/**
+ * Class for prefetched results of a data query language (DQL) statement.
+ */
+class PrefetchedResult extends ResultBase {
 
   use FetchModeTrait;
 

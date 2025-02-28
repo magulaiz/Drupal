@@ -6,7 +6,10 @@ namespace Drupal\Core\Database\Statement;
 
 use Drupal\Core\Database\FetchModeTrait;
 
-class PdoResult extends DqlResultBase {
+/**
+ * Class for PDO-provided results of a data query language (DQL) statement.
+ */
+class PdoResult extends ResultBase {
 
   use FetchModeTrait;
   use PdoTrait;

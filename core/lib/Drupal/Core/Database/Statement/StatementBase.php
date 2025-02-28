@@ -36,7 +36,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   /**
    * The results of a data query language (DQL) statement.
    */
-  protected ?DqlResultBase $result = NULL;
+  protected ?ResultBase $result = NULL;
 
   /**
    * Holds the default fetch mode.

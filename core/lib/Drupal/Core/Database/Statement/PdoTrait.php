@@ -85,11 +85,11 @@ trait PdoTrait {
   protected function clientSetFetchMode(FetchAs $mode, int|string|null $columnOrClass = NULL, array|null $constructorArguments = NULL): bool {
     return match ($mode) {
       FetchAs::Column => $this->getClientStatement()->setFetchMode(
-        $this->fetchAsToPdo(FetchAs::Column),
+        \PDO::FETCH_COLUMN,
         $columnOrClass ?? $this->fetchOptions['column'],
       ),
       FetchAs::ClassObject => $this->getClientStatement()->setFetchMode(
-        $this->fetchAsToPdo(FetchAs::ClassObject),
+        \PDO::FETCH_CLASS,
         $columnOrClass ?? $this->fetchOptions['class'],
         $constructorArguments ?? $this->fetchOptions['constructor_args'],
       ),
@@ -192,11 +192,11 @@ trait PdoTrait {
   protected function clientFetchAll(?FetchAs $mode = NULL, int|string|null $columnOrClass = NULL, array|null $constructorArguments = NULL): array {
     return match ($mode) {
       FetchAs::Column => $this->getClientStatement()->fetchAll(
-        $this->fetchAsToPdo(FetchAs::Column),
+        \PDO::FETCH_COLUMN,
         $columnOrClass ?? $this->fetchOptions['column'],
       ),
       FetchAs::ClassObject => $this->getClientStatement()->fetchAll(
-        $this->fetchAsToPdo(FetchAs::ClassObject),
+        \PDO::FETCH_CLASS,
         $columnOrClass ?? $this->fetchOptions['class'],
         $constructorArguments ?? $this->fetchOptions['constructor_args'],
       ),
