@@ -79,7 +79,7 @@ class AssetDumper implements AssetDumperUriInterface {
     }
     if (extension_loaded('brotli') && \Drupal::config('system.performance')->get($file_extension . '.brotli')) {
       try {
-        if (!file_exists($uri . '.br') && !$this->fileSystem->saveData(brotli_compress($data, 11, BROTLI_TEXT), $uri . '.br', FileSystemInterface::EXISTS_REPLACE)) {
+        if (!file_exists($uri . '.br') && !$this->fileSystem->saveData(brotli_compress($data, 11, BROTLI_TEXT), $uri . '.br', FileExists::Replace)) {
           return FALSE;
         }
       }
