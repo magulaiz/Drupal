@@ -272,13 +272,9 @@ class UserEditTest extends BrowserTestBase {
     $this->drupalLogin($admin);
     $this->drupalGet("user/" . $admin->id() . "/edit");
 
-    // Ensure the status field is present but disabled for self-editing.
-    $this->assertSession()->fieldExists('edit-status-0');
-    $this->assertSession()->fieldDisabled('edit-status-0');
-    $this->assertSession()->fieldDisabled('edit-status-1');
-
-    // Verify that an explanation message is displayed.
-    $this->assertNotNull($this->getSession()->getPage()->findById('edit-status--wrapper--description'));
+    // Ensure the status field is not rendered.
+    $this->assertSession()->fieldNotExists('edit-status-0');
+    $this->assertSession()->fieldNotExists('edit-status-1');
 
     // Test editing another user to ensure the status field is enabled.
     $this->drupalGet("user/" . $user->id() . "/edit");
