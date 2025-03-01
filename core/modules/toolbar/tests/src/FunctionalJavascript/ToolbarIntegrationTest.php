@@ -104,10 +104,11 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
    * Uses `waitFor()` to pause until either the condition is met or the timeout
    * of `1` second has passed.
    *
-   * @param NodeElement $element
+   * @param \Behat\Mink\Element\NodeElement $element
    *   The element to be tested.
    * @param bool $expected
    *   The expected value of `aria-pressed`, as a boolean.
+   *
    * @throws ExpectationFailedException
    */
   private function waitAndAssertAriaPressedState(NodeElement $element, $expected): void {
