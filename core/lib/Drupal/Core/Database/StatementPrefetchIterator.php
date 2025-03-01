@@ -22,22 +22,78 @@ class StatementPrefetchIterator extends StatementBase {
   use PdoTrait;
 
   /**
-   * The client database Statement object.
+   * Main data store.
    *
-   * For a \PDO client connection, this will be a \PDOStatement object.
    * The resultset is stored as a FetchAs::Associative array.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * the methods provided by Drupal\Core\Database\Statement\PrefetchedResult
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3510455
    */
-  protected ?object $clientStatement;
+  protected array $data = [];
+
+  /**
+   * The list of column names in this result set.
+   *
+   * @var string[]
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * the methods provided by Drupal\Core\Database\Statement\PrefetchedResult
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3510455
+   */
+  protected ?array $columnNames = NULL;
+
+  /**
+   * The number of rows matched by the last query.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * the methods provided by Drupal\Core\Database\Statement\PrefetchedResult
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3510455
+   */
+  protected ?int $rowCount = NULL;
 
   /**
    * Holds the default fetch style.
    *
    * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * $defaultFetchMode instead.
+   * $fetchMode instead.
    *
    * @see https://www.drupal.org/node/3488338
    */
   protected int $defaultFetchStyle = \PDO::FETCH_OBJ;
+
+  /**
+   * Holds the default fetch mode.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * $fetchMode instead.
+   *
+   * @see https://www.drupal.org/node/3510455
+   */
+  protected FetchAs $defaultFetchMode = FetchAs::Object;
+
+  /**
+   * Holds fetch options.
+   *
+   * @var array{'class': class-string, 'constructor_args': array<mixed>, 'column': int}
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * the methods provided by Drupal\Core\Database\Statement\PrefetchedResult
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3510455
+   */
+  protected array $fetchOptions = [
+    'class' => 'stdClass',
+    'constructor_args' => [],
+    'column' => 0,
+  ];
 
   /**
    * Constructs a StatementPrefetchIterator object.
@@ -71,6 +127,7 @@ class StatementPrefetchIterator extends StatementBase {
       @trigger_error("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
     }
 
+    // Dispatch an event informing that the statement execution begins.
     if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
       $startEvent = new StatementExecutionStartEvent(
         spl_object_id($this),
@@ -89,6 +146,7 @@ class StatementPrefetchIterator extends StatementBase {
       $return = $this->clientExecute($args, $options);
     }
     catch (\Exception $e) {
+      // On execution failure, dispatch an event informing of the situation.
       if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionFailureEvent::class)) {
         $this->connection->dispatchEvent(new StatementExecutionFailureEvent(
           $startEvent->statementObjectId,
@@ -108,16 +166,14 @@ class StatementPrefetchIterator extends StatementBase {
     }
 
     // Fetch all the data from the reply, in order to release any lock as soon
-    // as possible.
+    // as possible. Then, destroy the client statement. See the documentation
+    // of \Drupal\sqlite\Driver\Database\sqlite\Statement for an explanation.
     $this->result = new PrefetchedResult(
       $this->fetchMode,
       $this->fetchOptions,
       $this->clientFetchAll(FetchAs::Associative),
       $this->rowCountEnabled ? $this->clientRowCount() : NULL,
     );
-
-    // Destroy the statement as soon as possible. See the documentation of
-    // \Drupal\sqlite\Driver\Database\sqlite\Statement for an explanation.
     unset($this->clientStatement);
     $this->markResultsetIterable($return);
 
@@ -133,6 +189,7 @@ class StatementPrefetchIterator extends StatementBase {
       }
     }
 
+    // Dispatch an event informing that the statement execution succeeded.
     if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
       $this->connection->dispatchEvent(new StatementExecutionEndEvent(
         $startEvent->statementObjectId,
@@ -167,40 +224,6 @@ class StatementPrefetchIterator extends StatementBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
-    if (is_int($mode)) {
-      @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $mode = $this->pdoToFetchAs($mode);
-    }
-    // @todo Remove backwards compatibility statement below in drupal:12.0.0.
-    // @phpstan-ignore property.deprecated
-    $this->defaultFetchStyle = $this->fetchAsToPdo($mode);
-    return parent::setFetchMode($mode, $a1, $a2);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetch($fetch_style = NULL, $cursor_orientation = \PDO::FETCH_ORI_NEXT, $cursor_offset = NULL) {
-    if (is_int($fetch_style)) {
-      @trigger_error("Passing the \$fetch_style argument as an integer to fetch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $fetch_style = $this->pdoToFetchAs($fetch_style);
-    }
-
-    // \PDOStatement is picky about the number of arguments in some cases so we
-    // need to pass the exact number of arguments we were given.
-    $row = match(func_num_args()) {
-      0 => parent::fetch(),
-      1 => parent::fetch($fetch_style),
-      2 => parent::fetch($fetch_style, $cursor_orientation),
-      default => parent::fetch($fetch_style, $cursor_orientation, $cursor_offset),
-    };
-    return $row;
-  }
-
-  /**
    * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
    *   ::fetchField() instead.
    *
@@ -209,28 +232,6 @@ class StatementPrefetchIterator extends StatementBase {
   public function fetchColumn($index = 0) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ::fetchField() instead. See https://www.drupal.org/node/3490312', E_USER_DEPRECATED);
     return $this->fetchField($index);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
-    if (is_int($mode)) {
-      @trigger_error("Passing the \$mode argument as an integer to fetchAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $mode = $this->pdoToFetchAs($mode);
-    }
-    return parent::fetchAll($mode, $column_index, $constructor_arguments);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAllAssoc($key, $fetch = NULL) {
-    if (is_int($fetch)) {
-      @trigger_error("Passing the \$fetch argument as an integer to fetchAllAssoc() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $fetch = $this->pdoToFetchAs($fetch);
-    }
-    return parent::fetchAllAssoc($key, $fetch);
   }
 
 }

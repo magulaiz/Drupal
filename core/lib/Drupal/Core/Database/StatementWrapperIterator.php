@@ -20,11 +20,31 @@ class StatementWrapperIterator extends StatementBase {
   use PdoTrait;
 
   /**
-   * The client database Statement object.
+   * Holds the default fetch mode.
    *
-   * For a \PDO client connection, this will be a \PDOStatement object.
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * $fetchMode instead.
+   *
+   * @see https://www.drupal.org/node/3510455
    */
-  protected object $clientStatement;
+  protected FetchAs $defaultFetchMode = FetchAs::Object;
+
+  /**
+   * Holds fetch options.
+   *
+   * @var array{'class': class-string, 'constructor_args': array<mixed>, 'column': int}
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+   * the methods provided by Drupal\Core\Database\Statement\PrefetchedResult
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3510455
+   */
+  protected array $fetchOptions = [
+    'class' => 'stdClass',
+    'constructor_args' => [],
+    'column' => 0,
+  ];
 
   /**
    * Constructs a StatementWrapperIterator object.
@@ -69,6 +89,7 @@ class StatementWrapperIterator extends StatementBase {
       }
     }
 
+    // Dispatch an event informing that the statement execution begins.
     if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
       $startEvent = new StatementExecutionStartEvent(
         spl_object_id($this),
@@ -91,6 +112,7 @@ class StatementWrapperIterator extends StatementBase {
       $this->markResultsetIterable($return);
     }
     catch (\Exception $e) {
+      // On execution failure, dispatch an event informing of the situation.
       if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionFailureEvent::class)) {
         $this->connection->dispatchEvent(new StatementExecutionFailureEvent(
           $startEvent->statementObjectId,
@@ -108,6 +130,7 @@ class StatementWrapperIterator extends StatementBase {
       throw $e;
     }
 
+    // Dispatch an event informing that the statement execution succeeded.
     if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
       $this->connection->dispatchEvent(new StatementExecutionEndEvent(
         $startEvent->statementObjectId,
@@ -121,55 +144,6 @@ class StatementWrapperIterator extends StatementBase {
     }
 
     return $return;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAllAssoc($key, $fetch = NULL) {
-    if (is_int($fetch)) {
-      @trigger_error("Passing the \$fetch argument as an integer to fetchAllAssoc() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $fetch = $this->pdoToFetchAs($fetch);
-    }
-    return parent::fetchAllAssoc($key, $fetch);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
-    if (is_int($mode)) {
-      @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $mode = $this->pdoToFetchAs($mode);
-    }
-    return parent::setFetchMode($mode, $a1, $a2);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL) {
-    if (is_int($mode)) {
-      @trigger_error("Passing the \$mode argument as an integer to fetch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $mode = $this->pdoToFetchAs($mode);
-    }
-
-    $row = match(func_num_args()) {
-      0 => parent::fetch(),
-      default => parent::fetch($mode),
-    };
-    return $row;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
-    if (is_int($mode)) {
-      @trigger_error("Passing the \$mode argument as an integer to fetchAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $mode = $this->pdoToFetchAs($mode);
-    }
-    return parent::fetchAll($mode, $column_index, $constructor_arguments);
   }
 
 }
