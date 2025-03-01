@@ -143,7 +143,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   public function fetch($mode = NULL, $cursorOrientation = NULL, $cursorOffset = NULL) {
     if (is_int($mode)) {
       @trigger_error("Passing the \$mode argument as an integer to fetch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      $fetch_style = $this->pdoToFetchAs($fetch_style);
+      $mode = $this->pdoToFetchAs($mode);
     }
     assert($mode === NULL || $mode instanceof FetchAs);
 
