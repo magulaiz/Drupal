@@ -101,7 +101,7 @@ class PrefetchedResult extends ResultBase {
     $value = $this->columnNames[$valueIndex];
 
     $result = [];
-    while ($row = $this->fetch(FetchAs::Associative)) {
+    while ($row = $this->fetch(FetchAs::Associative, $this->fetchOptions)) {
       $result[$row[$key]] = $row[$value];
     }
     return $result;
