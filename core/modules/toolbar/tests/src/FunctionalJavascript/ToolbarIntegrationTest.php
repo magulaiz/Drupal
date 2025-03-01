@@ -111,7 +111,7 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
    *
    * @throws ExpectationFailedException
    */
-  private function waitAndAssertAriaPressedState(NodeElement $element, $expected): void {
+  private function waitAndAssertAriaPressedState(NodeElement $element, bool $expected): void {
     $this->assertTrue(
       $this
         ->getSession()
