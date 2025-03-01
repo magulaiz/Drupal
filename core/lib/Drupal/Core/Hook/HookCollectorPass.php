@@ -90,33 +90,33 @@ class HookCollectorPass implements CompilerPassInterface {
 
     // These attributes need to be processed after all hooks have been
     // processed.
-    $process_after = [
+    $processAfter = [
       RemoveHook::class => [],
       ReOrderHook::class => [],
     ];
     foreach (array_keys($container->getParameter('container.modules')) as $module) {
       foreach ($collector->moduleHooks[$module] ?? [] as $class => $methods) {
         foreach ($methods as $method => $hooks) {
-          foreach ($hooks as $hook) {
-            assert($hook instanceof HookOperation);
-            if (isset($process_after[get_class($hook)])) {
-              $process_after[get_class($hook)][] = $hook;
+          foreach ($hooks as $hookAttribute) {
+            assert($hookAttribute instanceof HookOperation);
+            if (isset($processAfter[get_class($hookAttribute)])) {
+              $processAfter[get_class($hookAttribute)][] = $hookAttribute;
               continue;
             }
             if ($class !== ProceduralCall::class) {
-              self::checkForProceduralOnlyHooks($hook, $class);
+              self::checkForProceduralOnlyHooks($hookAttribute, $class);
             }
             // Set properties on hook class that are needed for registration.
-            $hook->set($class, $module, $method);
+            $hookAttribute->set($class, $module, $method);
             // Store a list of modules implementing hooks for simplifying
             // registration and hook_module_implements_alter execution.
-            $legacyImplementationMap[$hook->hook][$hook->module] = '';
+            $legacyImplementationMap[$hookAttribute->hook][$hookAttribute->module] = '';
             // Store the implementation details for registering the hook.
-            $implementations[$hook->hook][$hook->module][$class][$hook->method] = $hook->method;
+            $implementations[$hookAttribute->hook][$hookAttribute->module][$class][$hookAttribute->method] = $hookAttribute->method;
             // Reverse lookup for modules implementing hooks.
-            $moduleFinder[$class][$hook->method] = $hook->module;
-            if ($hook->order) {
-              $hookOrderOperations[] = $hook;
+            $moduleFinder[$class][$hookAttribute->method] = $hookAttribute->module;
+            if ($hookAttribute->order) {
+              $hookOrderOperations[] = $hookAttribute;
             }
           }
         }
@@ -127,7 +127,7 @@ class HookCollectorPass implements CompilerPassInterface {
     // registering the hooks. This must happen after all collection, but before
     // registration to ensure the hook it is removing has already been
     // discovered.
-    foreach ($process_after[RemoveHook::class] as $removeHook) {
+    foreach ($processAfter[RemoveHook::class] as $removeHook) {
       if ($module = ($moduleFinder[$removeHook->class][$removeHook->method] ?? '')) {
         unset($legacyImplementationMap[$removeHook->hook][$module]);
         unset($implementations[$removeHook->hook][$module][$removeHook->class][$removeHook->method]);
@@ -138,7 +138,7 @@ class HookCollectorPass implements CompilerPassInterface {
     // before registering the hooks. This must happen after all collection,
     // but before registration to ensure this ordering directive takes
     // precedence.
-    foreach ($process_after[ReOrderHook::class] as $reOrderHook) {
+    foreach ($processAfter[ReOrderHook::class] as $reOrderHook) {
       $hookOrderOperations[] = $reOrderHook;
     }
 
@@ -256,9 +256,9 @@ class HookCollectorPass implements CompilerPassInterface {
         // Collect classes and methods for
         // self::registerComplexHookImplementations().
         $classesAndMethods = $hookOrderOperation->order->classesAndMethods;
-        foreach ($hookOrderOperation->order->modules as $modules) {
+        foreach ($hookOrderOperation->order->modules as $module) {
           foreach ($hooks as $hook) {
-            foreach ($implementations[$hook][$modules] ?? [] as $class => $methods) {
+            foreach ($implementations[$hook][$module] ?? [] as $class => $methods) {
               foreach ($methods as $method) {
                 $classesAndMethods[] = [$class, $method];
                 $otherSpecifiers[] = "$class::$method";
@@ -478,12 +478,12 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Checks for hooks which can't be supported in classes.
    *
-   * @param \Drupal\Core\Hook\Attribute\Hook $hook
+   * @param \Drupal\Core\Hook\Attribute\Hook $hookAttribute
    *   The hook to check.
    * @param class-string $class
    *   The class the hook is implemented on.
    */
-  public static function checkForProceduralOnlyHooks(Hook $hook, string $class): void {
+  public static function checkForProceduralOnlyHooks(Hook $hookAttribute, string $class): void {
     $staticDenyHooks = [
       'hook_info',
       'install',
@@ -496,8 +496,8 @@ class HookCollectorPass implements CompilerPassInterface {
       'install_tasks_alter',
     ];
 
-    if (in_array($hook->hook, $staticDenyHooks) || preg_match('/^(post_update_|preprocess_|update_\d+$)/', $hook->hook)) {
-      throw new \LogicException("The hook $hook->hook on class $class does not support attributes and must remain procedural.");
+    if (in_array($hookAttribute->hook, $staticDenyHooks) || preg_match('/^(post_update_|preprocess_|update_\d+$)/', $hookAttribute->hook)) {
+      throw new \LogicException("The hook $hookAttribute->hook on class $class does not support attributes and must remain procedural.");
     }
   }
 
@@ -515,9 +515,9 @@ class HookCollectorPass implements CompilerPassInterface {
     $reflections = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
     $reflections[] = $reflectionClass;
     foreach ($reflections as $reflection) {
-      if ($reflection_attributes = $reflection->getAttributes(HookOperation::class, \ReflectionAttribute::IS_INSTANCEOF)) {
+      if ($reflectionAttributes = $reflection->getAttributes(HookOperation::class, \ReflectionAttribute::IS_INSTANCEOF)) {
         $method = $reflection instanceof \ReflectionMethod ? $reflection->getName() : '__invoke';
-        $attributes[$method] = array_map(static fn (\ReflectionAttribute $ra) => $ra->newInstance(), $reflection_attributes);
+        $attributes[$method] = array_map(static fn (\ReflectionAttribute $ra) => $ra->newInstance(), $reflectionAttributes);
       }
     }
     return $attributes;
