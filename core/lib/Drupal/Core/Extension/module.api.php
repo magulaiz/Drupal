@@ -1130,7 +1130,7 @@ function hook_requirements($phase): array {
   if ($phase == 'runtime') {
     $requirements['drupal'] = [
       'title' => t('Drupal'),
-      'value' => \Drupal::VERSION,
+      'value' => \Drupal::version(),
       'severity' => REQUIREMENT_INFO,
     ];
   }
