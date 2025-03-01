@@ -28,10 +28,10 @@ class PrefetchedResult extends ResultBase {
    *
    * @param \Drupal\Core\Database\Statement\FetchAs $fetchMode
    *   The fetch mode.
-   * @param array $fetchOptions
+   * @param array{class: class-string, constructor_args: list<mixed>, column: int, cursor_orientation?: int, cursor_offset?: int} $fetchOptions
    *   The fetch options.
    * @param array $data
-   *   Data.
+   *   The prefetched data, in FetchAs::Associative format.
    * @param int|null $rowCount
    *   The row count.
    */
@@ -56,15 +56,18 @@ class PrefetchedResult extends ResultBase {
   /**
    * {@inheritdoc}
    */
-  public function setFetchMode(FetchAs $mode, array $fetchOptions = []): bool {
-    // @todo fix this.
+  public function setFetchMode(FetchAs $mode, array $fetchOptions): bool {
+    // We do not really need to do anything here, since calls to any of this
+    // class' methods require an explicit fetch mode to be passed in, and we
+    // have no longer an active client statement to which we may want to pass
+    // the default fetch mode. Just return TRUE.
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function fetch(FetchAs $mode, array $fetchOptions = []): array|object|int|float|string|bool|NULL {
+  public function fetch(FetchAs $mode, array $fetchOptions): array|object|int|float|string|bool|NULL {
     $this->currentRowIndex++;
     if (!isset($this->data[$this->currentRowIndex])) {
       $this->currentRowIndex = NULL;

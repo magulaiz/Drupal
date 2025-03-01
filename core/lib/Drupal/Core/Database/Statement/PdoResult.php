@@ -14,6 +14,17 @@ class PdoResult extends ResultBase {
   use FetchModeTrait;
   use PdoTrait;
 
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\Core\Database\Statement\FetchAs $fetchMode
+   *   The fetch mode.
+   * @param array{class: class-string, constructor_args: list<mixed>, column: int, cursor_orientation?: int, cursor_offset?: int} $fetchOptions
+   *   The fetch options.
+   * @param \PDOStatement $clientStatement
+   *   The PDO Statement object. PDO does not provide a separate object for
+   *   results, se we need to fetch data from the Statement.
+   */
   public function __construct(
     FetchAs $fetchMode,
     array $fetchOptions,
@@ -32,7 +43,7 @@ class PdoResult extends ResultBase {
   /**
    * {@inheritdoc}
    */
-  public function setFetchMode(FetchAs $mode, array $fetchOptions = []): bool {
+  public function setFetchMode(FetchAs $mode, array $fetchOptions): bool {
     return match ($mode) {
       FetchAs::ClassObject => $this->clientSetFetchMode($mode, $fetchOptions['class'], $fetchOptions['constructor_args'] ?? NULL),
       FetchAs::Column => $this->clientSetFetchMode($mode, $fetchOptions['column']),
@@ -43,9 +54,13 @@ class PdoResult extends ResultBase {
   /**
    * {@inheritdoc}
    */
-  public function fetch(FetchAs $mode, array $fetchOptions = []): array|object|int|float|string|bool|NULL {
-    // @todo setFetchMode is temporary.
-    $this->setFetchMode($mode, $fetchOptions);
+  public function fetch(FetchAs $mode, array $fetchOptions): array|object|int|float|string|bool|NULL {
+    if (isset($fetchOptions['cursor_orientation'])) {
+      if (isset($fetchOptions['cursor_offset'])) {
+        return $this->clientFetch($mode, $fetchOptions['cursor_orientation'], $fetchOptions['cursor_offset']);
+      }
+      return $this->clientFetch($mode, $fetchOptions['cursor_orientation']);
+    }
     return $this->clientFetch($mode);
   }
 
