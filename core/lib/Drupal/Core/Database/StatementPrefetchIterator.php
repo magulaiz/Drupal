@@ -79,23 +79,6 @@ class StatementPrefetchIterator extends StatementBase {
   protected FetchAs $defaultFetchMode = FetchAs::Object;
 
   /**
-   * Holds fetch options.
-   *
-   * @var array{'class': class-string, 'constructor_args': array<mixed>, 'column': int}
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
-   * the methods provided by Drupal\Core\Database\Statement\PrefetchedResult
-   * instead.
-   *
-   * @see https://www.drupal.org/node/3510455
-   */
-  protected array $fetchOptions = [
-    'class' => 'stdClass',
-    'constructor_args' => [],
-    'column' => 0,
-  ];
-
-  /**
    * Constructs a StatementPrefetchIterator object.
    *
    * @param object $clientConnection
