@@ -57,7 +57,7 @@ class FilterQuote extends FilterBase {
       // Replace <blockquote> tag with a <q> tag.
       $qTag = $dom->createElement('q');
       foreach ($element->childNodes as $childElement) {
-        $qTag->appendChild($childElement->cloneNode(true));
+        $qTag->appendChild($childElement->cloneNode(TRUE));
       }
       $element->replaceWith($qTag);
     }
