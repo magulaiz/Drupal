@@ -116,7 +116,7 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
       $this
         ->getSession()
         ->getPage()
-        ->waitFor(1, function() use ($element, $expected): bool {
+        ->waitFor(1, function () use ($element, $expected): bool {
           $actual = $element->getAttribute('aria-pressed');
 
           // Check for $expected == TRUE.
