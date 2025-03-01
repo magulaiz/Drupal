@@ -53,7 +53,7 @@ abstract class ResultBase {
    *
    * @param \Drupal\Core\Database\FetchAs $mode
    *   One of the cases of the FetchAs enum.
-   * @param array{class: class-string, constructor_args: list<mixed>, column: int, cursor_orientation?: int, cursor_offset?: int} $fetchOptions
+   * @param array{class?: class-string, constructor_args?: list<mixed>, column?: int, cursor_orientation?: int, cursor_offset?: int} $fetchOptions
    *   An array of fetch options.
    *
    * @return array|object|int|float|string|bool|null
@@ -66,7 +66,7 @@ abstract class ResultBase {
    *
    * @param \Drupal\Core\Database\FetchAs $mode
    *   One of the cases of the FetchAs enum.
-   * @param array{class: class-string, constructor_args: list<mixed>, column: int, cursor_orientation?: int, cursor_offset?: int} $fetchOptions
+   * @param array{class?: class-string, constructor_args?: list<mixed>, column?: int, cursor_orientation?: int, cursor_offset?: int} $fetchOptions
    *   An array of fetch options.
    *
    * @return array
@@ -109,7 +109,7 @@ abstract class ResultBase {
    *   or FetchAs::List the returned value with be an array of arrays. For any
    *   other value it will be an array of objects. If not specified, defaults to
    *   what is specified by setFetchMode().
-   * @param array{class: class-string, constructor_args: list<mixed>, column: int, cursor_orientation?: int, cursor_offset?: int} $fetchOptions
+   * @param array{class?: class-string, constructor_args?: list<mixed>, column?: int, cursor_orientation?: int, cursor_offset?: int} $fetchOptions
    *   An array of fetch options.
    *
    * @return array
