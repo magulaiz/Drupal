@@ -55,6 +55,9 @@ class PdoResult extends ResultBase {
    * {@inheritdoc}
    */
   public function fetch(FetchAs $mode, array $fetchOptions): array|object|int|float|string|bool|NULL {
+    if (!empty($fetchOptions)) {
+      $this->setFetchMode($mode, $fetchOptions);
+    }
     if (isset($fetchOptions['cursor_orientation'])) {
       if (isset($fetchOptions['cursor_offset'])) {
         return $this->clientFetch($mode, $fetchOptions['cursor_orientation'], $fetchOptions['cursor_offset']);
@@ -86,8 +89,11 @@ class PdoResult extends ResultBase {
    * {@inheritdoc}
    */
   public function fetchAllAssoc(string $column, FetchAs $mode, array $fetchOptions): array {
+    if (!empty($fetchOptions)) {
+      $this->setFetchMode($mode, $fetchOptions);
+    }
     $result = [];
-    while ($rowAssoc = $this->fetch(FetchAs::Associative, $fetchOptions)) {
+    while ($rowAssoc = $this->fetch(FetchAs::Associative, [])) {
       $result[$rowAssoc[$column]] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
     }
     return $result;
