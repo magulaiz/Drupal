@@ -27,9 +27,9 @@ abstract readonly class ComplexOrder {
   /**
    * Constructs a ComplexOrder object.
    *
-   * @param array $modules
+   * @param list<string> $modules
    *   A list of modules.
-   * @param array $classesAndMethods
+   * @param list<array{class-string, string}> $classesAndMethods
    *   A list of classes and methods, for example:
    *   @code
    *     [
