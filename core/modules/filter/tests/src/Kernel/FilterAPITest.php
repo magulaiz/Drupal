@@ -103,6 +103,8 @@ class FilterAPITest extends EntityKernelTestBase {
           'br' => FALSE,
           'strong' => FALSE,
           'a' => ['href' => TRUE, 'hreflang' => TRUE],
+          'blockquote' => FALSE,
+          'q' => FALSE,
           '*' => ['style' => FALSE, 'on*' => FALSE, 'lang' => TRUE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]],
         ],
       ],
@@ -110,7 +112,7 @@ class FilterAPITest extends EntityKernelTestBase {
     );
     $this->assertSame(
       $filtered_html_format->getFilterTypes(),
-      [FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE],
+      [FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE, FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE],
       'FilterFormatInterface::getFilterTypes() works as expected for the filtered_html format.'
     );
 

@@ -44,7 +44,7 @@ class FilterQuote extends FilterBase {
    * @return string
    *   The transformed text.
    */
-  private function transformBlockquotes($text) {
+  private function transformBlockquotes($text): string {
     $dom = Html::load($text);
     $xpath = new \DOMXPath($dom);
     foreach ($xpath->query('//blockquote') as $element) {
