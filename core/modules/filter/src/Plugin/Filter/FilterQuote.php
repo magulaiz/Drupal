@@ -10,7 +10,7 @@ use Drupal\filter\Plugin\FilterBase;
 use Drupal\filter\Plugin\FilterInterface;
 
 /**
- * Provides a filter to correct faulty and chopped off HTML.
+ * Provides a filter to distinguish between long and short quotes.
  */
 #[Filter(
   id: "filter_quote",
