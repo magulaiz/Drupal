@@ -1,0 +1,7 @@
+core_sdc_form.form:
+  path: '/sdc-form'
+  defaults:
+    _form: 'Drupal\core_sdc_form\Form\SdcForm'
+    _title: 'SDC form'
+  requirements:
+    _access: 'TRUE'

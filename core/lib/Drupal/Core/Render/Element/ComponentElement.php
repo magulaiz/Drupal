@@ -104,6 +104,9 @@ class ComponentElement extends RenderElementBase {
     $template .= sprintf('{%% embed \'%s\' %%}', $id);
     $template .= PHP_EOL;
     foreach ($slots as $slot_name => $slot_value) {
+      if (str_starts_with($slot_name, '#')) {
+        continue;
+      }
       if (\is_scalar($slot_value)) {
         $slot_value = [
           "#plain_text" => (string) $slot_value,

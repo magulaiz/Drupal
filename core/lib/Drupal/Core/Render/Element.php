@@ -78,7 +78,8 @@ class Element {
     $i = 0;
     $sortable = FALSE;
     foreach ($elements as $key => $value) {
-      if (is_int($key) || $key === '' || $key[0] !== '#') {
+      if (is_int($key) || $key === '' || $key[0] !== '#' || (isset($elements['#type']) && $elements['#type'] === 'component' && $key == '#slots')) {
+//      if (is_int($key) || $key === '' || $key[0] !== '#') {
         if (is_array($value)) {
           if (isset($value['#weight'])) {
             $weight = $value['#weight'];
