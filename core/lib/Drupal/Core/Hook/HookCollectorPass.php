@@ -148,7 +148,7 @@ class HookCollectorPass implements CompilerPassInterface {
       if ($container?->hasParameter("$module.hooks_converted")) {
         $skip_procedural = $container->getParameter("$module.hooks_converted");
       }
-      $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, $skip_procedural);
+      $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, $skip_procedural, $container);
     }
     return $collector;
   }
@@ -165,8 +165,10 @@ class HookCollectorPass implements CompilerPassInterface {
    *   matched first.
    * @param bool $skip_procedural
    *   Skip the procedural check for the current module.
+   * @param \Symfony\Component\DependencyInjection\ContainerBuilder|null $container
+   *   The container.
    */
-  protected function collectModuleHookImplementations($dir, $module, $module_preg, bool $skip_procedural): void {
+  protected function collectModuleHookImplementations(string $dir, string $module, string $module_preg, bool $skip_procedural, ?ContainerBuilder $container = NULL): void {
     $hook_file_cache = FileCacheFactory::get('hook_implementations');
     $procedural_hook_file_cache = FileCacheFactory::get('procedural_hook_implementations:' . $module_preg);
 
@@ -196,7 +198,7 @@ class HookCollectorPass implements CompilerPassInterface {
           $class = $namespace . '/' . $fileinfo->getBasename('.php');
           $class = str_replace('/', '\\', $class);
           if (class_exists($class)) {
-            $attributes = static::getHookAttributesInClass($class);
+            $attributes = static::getHookAttributesInClass($class, $container);
             $hook_file_cache->set($filename, ['class' => $class, 'attributes' => $attributes]);
           }
           else {
@@ -260,13 +262,15 @@ class HookCollectorPass implements CompilerPassInterface {
    *
    * @param string $class
    *   The class.
+   * @param \Symfony\Component\DependencyInjection\ContainerBuilder|null $container
+   *   The container.
    *
    * @return \Drupal\Core\Hook\Attribute\Hook[]
    *   An array of Hook attributes on this class. The $method property is
    *   guaranteed to be set.
    */
-  protected static function getHookAttributesInClass(string $class): array {
-    $reflection_class = new \ReflectionClass($class);
+  protected static function getHookAttributesInClass(string $class, ?ContainerBuilder $container = NULL): array {
+    $reflection_class = $container?->getReflectionClass($class) ?? new \ReflectionClass($class);
     $class_implementations = [];
     // Check for #[Hook] on the class itself.
     foreach ($reflection_class->getAttributes(Hook::class, \ReflectionAttribute::IS_INSTANCEOF) as $reflection_attribute) {
