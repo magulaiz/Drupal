@@ -2,17 +2,19 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\Exception\InvalidLinkTemplateException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Entity\Attribute\EntityType;
 use Drupal\Core\Plugin\Discovery\AttributeDiscoveryWithAnnotations;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Parameter;
 
 /**
  * Manages entity type plugin definitions.
@@ -272,12 +274,12 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   /**
    * {@inheritdoc}
    */
-  public function createHandlerInstance($class, ?EntityTypeInterface $definition = NULL) {
-    if (is_subclass_of($class, 'Drupal\Core\Entity\EntityHandlerInterface')) {
-      $handler = $class::createInstance($this->container, $definition);
+  public function createHandlerInstance($handler_class, ?EntityTypeInterface $definition = NULL) {
+    if (is_subclass_of($handler_class, 'Drupal\Core\Entity\EntityHandlerInterface')) {
+      $handler = $handler_class::createInstance($this->container, $definition);
     }
     else {
-      $handler = new $class($definition);
+      $handler = new $handler_class($definition);
     }
     if (method_exists($handler, 'setModuleHandler')) {
       $handler->setModuleHandler($this->moduleHandler);
@@ -285,8 +287,68 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
     if (method_exists($handler, 'setStringTranslation')) {
       $handler->setStringTranslation($this->stringTranslation);
     }
+    if (method_exists($handler, 'setEntityFactory')) {
+      // Why is this even possible, core never does this.
+      if (!$definition) {
+        throw new \LogicException("Entity definition is not passed for $handler_class.");
+      }
+      $entity_type_id = $definition->id();
+      $handler->setEntityFactory(fn ($values = [], $bundle = FALSE, $translations = [], $entity_class = '') => $this->getEntityObject($entity_type_id, $entity_class ?: $definition->getClass(), $values, $bundle, $translations));
+    }
 
     return $handler;
+  }
+
+  protected function getEntityObject($entity_type_id, $entity_class, $values, $bundle, $translations): EntityInterface {
+    if (!$this->container->has($entity_class)) {
+      /** @var \Drupal\Core\DrupalKernel $kernel */
+      $kernel = $this->container->get('kernel');
+      $container = $kernel->getCachedContainerBuilder();
+      $this->registerEntityClass($container, $entity_type_id, $entity_class);
+      foreach ($this->getDefinitions() as $entity_type) {
+        $this->registerEntityClass($container, $entity_type->id(), $entity_type->getClass());
+      }
+      $this->container = $kernel->mergeContainers();
+    }
+    $map = [
+      'entity_type' => [$entity_type_id],
+      'values' => [$values],
+      'bundle' => [$bundle],
+      'translations' => [$translations],
+    ];
+    foreach ($map as $name => &$data) {
+      $data[] = $this->container->getPluginParameter('entity_storage', $name);
+      $this->container->setPluginParameter('entity_storage', $name, $data[0]);
+    }
+    $entity = $this->container->get($entity_class);
+    assert($entity instanceof EntityInterface);
+    foreach ($map as $name => $saved) {
+      $this->container->setPluginParameter('entity_storage', $name, $saved[1]);
+    }
+    return $entity;
+  }
+
+  protected function registerEntityClass(ContainerBuilder $container, string $entity_type_id, string $entity_class): void {
+    if (!$container->has($entity_class)) {
+      $reflection = $container->getReflectionClass($entity_class);
+      $constructor = $reflection->getConstructor();
+      $service_definition = $container
+        ->register($entity_class, $entity_class)
+        ->setAutowired(TRUE)
+        ->setShared(FALSE);
+      $arguments = [];
+      foreach ($constructor->getParameters() as $parameter) {
+        $name = $parameter->getName();
+        // These common parameters can't be autowired as they are dynamically set
+        // so in the name of simplicity set them up automatically.
+        if (in_array($name, ['entity_type', 'values', 'bundle', 'translations'])) {
+          $id = "drupal_plugin.entity_storage.$name";
+          $arguments['$' . $name] = new Parameter($id);
+          $container->setParameter($id, $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : NULL);
+        }
+        $service_definition->setArguments($arguments);
+      }
+    }
   }
 
 }

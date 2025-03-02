@@ -23,6 +23,13 @@ abstract class EntityHandlerBase {
   protected $moduleHandler;
 
   /**
+   * An entity factory closure.
+   *
+   * @var \Closure
+   */
+  protected \Closure $entityFactory;
+
+  /**
    * Gets the module handler.
    *
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
@@ -46,6 +53,16 @@ abstract class EntityHandlerBase {
   public function setModuleHandler(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;
     return $this;
+  }
+
+  /**
+   * Sets the entity factory.
+   *
+   * @param \Closure $factory
+   *   The entity factory.
+   */
+  public function setEntityFactory(\Closure $factory): void {
+    $this->entityFactory = $factory;
   }
 
 }

@@ -352,6 +352,20 @@ class Container implements ContainerInterface, ResetInterface {
   /**
    * {@inheritdoc}
    */
+  public function setPluginParameter(string $plugin_type, string $name, mixed $value): void {
+    $this->parameters["drupal_plugin.$plugin_type.$name"] = $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginParameter(string $plugin_type, string $name): mixed {
+    return $this->hasParameter("drupal_plugin.$plugin_type.$name") ? $this->getParameter("drupal_plugin.$plugin_type.$name") : NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function initialized($id): bool {
     if (isset($this->aliases[$id])) {
       $id = $this->aliases[$id];

@@ -12,7 +12,7 @@ use Drupal\entity_test\Entity\EntityTest;
  * Defines the test entity class.
  */
 #[ContentEntityType(
-  id: 'entity_test_translatable_UI_skip',
+  id: 'entity_test_translatable_ui_skip',
   label: new TranslatableMarkup('Test entity - Translatable skip UI check'),
   entity_keys: [
     'id' => 'id',

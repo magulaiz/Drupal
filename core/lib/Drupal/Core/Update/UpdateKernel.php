@@ -35,7 +35,7 @@ class UpdateKernel extends DrupalKernel {
   /**
    * {@inheritdoc}
    */
-  protected function initializeContainer() {
+  protected function initializeContainer(?array $container_definition = NULL) {
     // Always force a container rebuild, in order to be able to override some
     // services, see \Drupal\Core\Update\UpdateServiceProvider.
     $this->containerNeedsRebuild = TRUE;
