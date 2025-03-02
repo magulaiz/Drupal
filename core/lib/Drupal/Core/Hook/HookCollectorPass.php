@@ -514,7 +514,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *
    * @internal
    */
-  public function getImplementations($paths): array {
+  public function getImplementations(array $paths): array {
     $container = new ContainerBuilder();
     $container->setParameter('container.modules', $paths);
     return $this->process($container);
