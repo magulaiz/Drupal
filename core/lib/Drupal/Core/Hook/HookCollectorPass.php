@@ -129,8 +129,13 @@ class HookCollectorPass implements CompilerPassInterface {
     // discovered.
     foreach ($processAfter[RemoveHook::class] as $removeHook) {
       if ($module = ($moduleFinder[$removeHook->class][$removeHook->method] ?? '')) {
-        unset($legacyImplementationMap[$removeHook->hook][$module]);
         unset($implementations[$removeHook->hook][$module][$removeHook->class][$removeHook->method]);
+        // A module can implement a hook  more than one time so confirm no
+        // more implementations before removing from the
+        // $legacyImplementationMap.
+        if (!isset($implementations[$removeHook->hook][$module])) {
+          unset($legacyImplementationMap[$removeHook->hook][$module]);
+        }
       }
     }
 
