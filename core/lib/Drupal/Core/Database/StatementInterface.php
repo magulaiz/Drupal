@@ -75,6 +75,9 @@ interface StatementInterface extends \Traversable {
    * @param list<mixed> $a2
    *   If $mode is FetchAs::ClassObject, the optional arguments to pass to the
    *   constructor.
+   *
+   * @return bool
+   *   TRUE if successful, FALSE if not.
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []);
 

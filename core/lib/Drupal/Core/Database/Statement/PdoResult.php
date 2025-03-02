@@ -1,0 +1,102 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\Core\Database\Statement;
+
+use Drupal\Core\Database\FetchModeTrait;
+
+/**
+ * Class for PDO-provided results of a data query language (DQL) statement.
+ */
+class PdoResult extends ResultBase {
+
+  use FetchModeTrait;
+  use PdoTrait;
+
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\Core\Database\Statement\FetchAs $fetchMode
+   *   The fetch mode.
+   * @param array{class: class-string, constructor_args: list<mixed>, column: int, cursor_orientation?: int, cursor_offset?: int} $fetchOptions
+   *   The fetch options.
+   * @param \PDOStatement $clientStatement
+   *   The PDO Statement object. PDO does not provide a separate object for
+   *   results, se we need to fetch data from the Statement.
+   */
+  public function __construct(
+    FetchAs $fetchMode,
+    array $fetchOptions,
+    protected readonly \PDOStatement $clientStatement,
+  ) {
+    parent::__construct($fetchMode, $fetchOptions);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rowCount(): ?int {
+    return $this->clientRowCount();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setFetchMode(FetchAs $mode, array $fetchOptions): bool {
+    return match ($mode) {
+      FetchAs::ClassObject => $this->clientSetFetchMode($mode, $fetchOptions['class'], $fetchOptions['constructor_args'] ?? NULL),
+      FetchAs::Column => $this->clientSetFetchMode($mode, $fetchOptions['column']),
+      default => $this->clientSetFetchMode($mode),
+    };
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fetch(FetchAs $mode, array $fetchOptions): array|object|int|float|string|bool|NULL {
+    if (!empty($fetchOptions)) {
+      $this->setFetchMode($mode, $fetchOptions);
+    }
+    if (isset($fetchOptions['cursor_orientation'])) {
+      if (isset($fetchOptions['cursor_offset'])) {
+        return $this->clientFetch($mode, $fetchOptions['cursor_orientation'], $fetchOptions['cursor_offset']);
+      }
+      return $this->clientFetch($mode, $fetchOptions['cursor_orientation']);
+    }
+    return $this->clientFetch($mode);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fetchAll(FetchAs $mode, array $fetchOptions): array {
+    return $this->clientFetchAll($mode, $fetchOptions['column'] ?? $fetchOptions['class'] ?? NULL, $fetchOptions['constructor_args'] ?? NULL);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fetchAllKeyed(int $keyIndex = 0, int $valueIndex = 1): array {
+    $result = [];
+    while ($record = $this->fetch(FetchAs::List, [])) {
+      $result[$record[$keyIndex]] = $record[$valueIndex];
+    }
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fetchAllAssoc(string $column, FetchAs $mode, array $fetchOptions): array {
+    if (!empty($fetchOptions)) {
+      $this->setFetchMode($mode, $fetchOptions);
+    }
+    $result = [];
+    while ($rowAssoc = $this->fetch(FetchAs::Associative, [])) {
+      $result[$rowAssoc[$column]] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
+    }
+    return $result;
+  }
+
+}
