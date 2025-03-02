@@ -109,7 +109,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               }
               try {
                 $class_exists = \class_exists($class, TRUE);
-                if (!$class_exists || $autoloader->hasMissingClass()) {
+                if (!$class_exists || $autoloader->hasMissingTrait()) {
                   self::$skipClasses[$class] = TRUE;
                   $autoloader->reset();
                   continue;
