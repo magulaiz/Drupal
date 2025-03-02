@@ -97,9 +97,9 @@ class HookCollectorPass implements CompilerPassInterface {
       ReOrderHook::class => [],
     ];
     foreach (array_keys($container->getParameter('container.modules')) as $module) {
-      foreach ($collector->moduleHooks[$module] ?? [] as $class => $methods) {
-        foreach ($methods as $method => $hooks) {
-          foreach ($hooks as $hookAttribute) {
+      foreach ($collector->moduleHooks[$module] ?? [] as $class => $attributesByMethod) {
+        foreach ($attributesByMethod as $method => $attributes) {
+          foreach ($attributes as $hookAttribute) {
             assert($hookAttribute instanceof HookOperation);
             if (isset($processAfter[get_class($hookAttribute)])) {
               $processAfter[get_class($hookAttribute)][] = $hookAttribute;
