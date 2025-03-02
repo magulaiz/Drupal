@@ -42,7 +42,7 @@ class FieldInstanceSettingsTest extends MigrateTestCase {
   /**
    * Provides data to testTransformImageSettings().
    */
-  public static function providerTestTransformImageSettings() {
+  public static function providerTestTransformImageSettings(): array {
     $data['settings']['referenceable_types'] = [
       'article' => 0,
       'page' => 0,
