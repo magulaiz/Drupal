@@ -161,6 +161,7 @@ class HookCollectorPass implements CompilerPassInterface {
         }
       }
     }
+    $implementations = static::removeEmptyArraysRecursively($implementations);
 
     // Loop over all ReOrderHook attributes and gather order information
     // before registering the hooks. This must happen after all collection,
@@ -619,6 +620,34 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
     $container->setParameter('hook_implementations_map', $map);
+  }
+
+  /**
+   * Removes empty sub-arrays recursively, preserving keys.
+   *
+   * This is different from NestedArray::filter() or regular array_filter():
+   *   - It only removes empty arrays, not other empty-ish values.
+   *   - It reliably removes empty parent arrays, after all children have been
+   *     removed. See https://www.drupal.org/project/drupal/issues/3381640.
+   *
+   * @param array $array
+   *   Array which may or may not contain other arrays as values.
+   *
+   * @return array
+   *   Filtered array, with empty arrays removed.
+   *
+   * @see \Drupal\Component\Utility\NestedArray::filter()
+   */
+  protected static function removeEmptyArraysRecursively(array $array): array {
+    foreach ($array as $key => $value) {
+      if (is_array($value)) {
+        $value = self::removeEmptyArraysRecursively($value);
+        if ($value === []) {
+          unset($array[$key]);
+        }
+      }
+    }
+    return $array;
   }
 
 }
