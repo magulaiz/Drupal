@@ -510,7 +510,7 @@ class HookCollectorPass implements CompilerPassInterface {
    * This method is only to be used by ModuleHandler.
    *
    * @todo remove when ModuleHandler::add() is removed.
-   * @see https://www.drupal.org/project/drupal/issues/3481778
+   *   See https://www.drupal.org/project/drupal/issues/3481778
    *
    * @internal
    */
