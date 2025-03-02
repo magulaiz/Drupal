@@ -452,7 +452,7 @@ class MigrateSourceTest extends MigrateTestCase {
   /**
    * @covers ::preRollback
    */
-  public function testPreRollback() {
+  public function testPreRollback(): void {
     $this->migrationConfiguration['id'] = 'test_migration';
     $plugin_id = 'test_migration';
     $migration = $this->getMigration();
