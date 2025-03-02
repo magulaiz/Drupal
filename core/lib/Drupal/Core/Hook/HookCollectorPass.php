@@ -234,7 +234,7 @@ class HookCollectorPass implements CompilerPassInterface {
       // first.
       $priority = 0;
       foreach ($moduleImplements as $module => $v) {
-        foreach ($implementations[$hook][$module] ?? [] as $class => $method_hooks) {
+        foreach ($implementations[$hook][$module] ?? [] as $class => $methods) {
           if ($container->hasDefinition($class)) {
             $definition = $container->findDefinition($class);
           }
@@ -243,7 +243,7 @@ class HookCollectorPass implements CompilerPassInterface {
               ->register($class, $class)
               ->setAutowired(TRUE);
           }
-          foreach ($method_hooks as $method) {
+          foreach ($methods as $method) {
             $map[$hook][$class][$method] = $module;
             $priority = self::addTagToDefinition($definition, $hook, $method, $priority);
           }
