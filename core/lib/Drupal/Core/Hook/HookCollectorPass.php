@@ -80,9 +80,6 @@ class HookCollectorPass implements CompilerPassInterface {
     // List of modules implementing hooks with the implementation details.
     $implementations = [];
 
-    // List of hooks and modules formatted for hook_module_implements_alter().
-    $legacyImplementationMap = [];
-
     // Hooks that should be ordered together when extra types are involved.
     $orderExtraTypes = [];
 
@@ -118,9 +115,6 @@ class HookCollectorPass implements CompilerPassInterface {
             }
             // Set properties on hook class that are needed for registration.
             $hookAttribute->set($class, $module, $method);
-            // Store a list of modules implementing hooks for simplifying
-            // registration and hook_module_implements_alter execution.
-            $legacyImplementationMap[$hookAttribute->hook][$hookAttribute->module] = '';
             // Store the implementation details for registering the hook.
             $implementations[$hookAttribute->hook][$hookAttribute->module][$class][$hookAttribute->method] = $hookAttribute->method;
             // Reverse lookup for modules implementing hooks.
@@ -142,26 +136,17 @@ class HookCollectorPass implements CompilerPassInterface {
         // Remove the hook implementation for the defined class, method, and
         // hook.
         unset($implementations[$removeHook->hook][$module][$removeHook->class][$removeHook->method]);
-        // Check if the given module has implemented the hook on more than one
-        // method for the class.
-        // Hook removal is very rare so it is more efficient to do the check
-        // here.
-        if ($implementations[$removeHook->hook][$module][$removeHook->class]) {
-          // Remove the class from the implementation map if the hook has no
-          // more implementations.
-          unset($implementations[$removeHook->hook][$module][$removeHook->class]);
-        }
-        // A module can implement a hook on more than one class so we confirm
-        // there are no more implementations before removing from the
-        // $legacyImplementationMap.
-        // We do not need to clear further empty arrays since we handle this
-        // state before registering the hooks.
-        if (empty($implementations[$removeHook->hook][$module])) {
-          unset($legacyImplementationMap[$removeHook->hook][$module]);
-        }
       }
     }
     $implementations = static::removeEmptyArraysRecursively($implementations);
+
+    // List of hooks and modules formatted for hook_module_implements_alter().
+    $legacyImplementationMap = [];
+    foreach ($implementations as $hook => $implementationsByModule) {
+      foreach ($implementationsByModule as $module => $implementationsByClass) {
+        $legacyImplementationMap[$hook][$module] = '';
+      }
+    }
 
     // Loop over all ReOrderHook attributes and gather order information
     // before registering the hooks. This must happen after all collection,
