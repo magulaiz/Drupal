@@ -11,6 +11,9 @@ use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a filter to distinguish between long and short quotes.
+ *
+ * Short quotes will be wrapped in a <q> tag whereas long quotes will be wrapped
+ * in a <blockquote> tag.
  */
 #[Filter(
   id: "filter_quote",
