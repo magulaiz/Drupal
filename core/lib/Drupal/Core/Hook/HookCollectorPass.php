@@ -211,19 +211,19 @@ class HookCollectorPass implements CompilerPassInterface {
     }
 
     // List of hooks and modules formatted for hook_module_implements_alter().
-    $legacyImplementationMap = [];
+    $moduleImplementsMap = [];
     foreach ($implementations as $hook => $implementationsByModule) {
       foreach ($implementationsByModule as $module => $implementationsByClass) {
-        $legacyImplementationMap[$hook][$module] = '';
+        $moduleImplementsMap[$hook][$module] = '';
       }
     }
 
-    foreach ($legacyImplementationMap as $hook => $moduleImplements) {
+    foreach ($moduleImplementsMap as $hook => $moduleImplements) {
       $extraHooks = $orderExtraTypes[$hook] ?? [];
       // Add implementations to the array we pass to legacy ordering
       // when the definition specifies that they should be ordered together.
       foreach ($extraHooks as $extraHook) {
-        $moduleImplements += $legacyImplementationMap[$extraHook] ?? [];
+        $moduleImplements += $moduleImplementsMap[$extraHook] ?? [];
       }
       // Process all hook_module_implements_alter() for build time ordering.
       foreach ($collector->moduleImplementsAlters as $alter) {
