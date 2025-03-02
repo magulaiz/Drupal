@@ -101,8 +101,8 @@ class ViewListBuilder extends ConfigEntityListBuilder {
           ],
         ],
         'tags' => [
-         'data' => [
-           '#plain_text' => $view->get('tag'),
+          'data' => [
+            '#plain_text' => $view->get('tag'),
           ],
         ],
         'displays' => [
@@ -143,7 +143,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
         ],
       ],
       'tags' => [
-       'data' => $this->t('Tags'),
+        'data' => $this->t('Tags'),
         '#attributes' => [
           'class' => ['views-ui-tags'],
         ],
