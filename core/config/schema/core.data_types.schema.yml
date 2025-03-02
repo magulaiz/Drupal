@@ -535,7 +535,8 @@ field_config_base:
   type: config_entity
   constraints:
     UniqueFieldCombination: [entity_type, bundle, field_name]
-    ImmutableProperties: [field_name, entity_type, bundle, field_type]
+    # @todo Probably here, but errors on array as argument instead of proper config entity interface
+    # ImmutableProperties: [field_name, entity_type, bundle, field_type]
   mapping:
     id:
       type: string
