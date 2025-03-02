@@ -140,14 +140,6 @@ class HookCollectorPass implements CompilerPassInterface {
     }
     $implementations = static::removeEmptyArraysRecursively($implementations);
 
-    // List of hooks and modules formatted for hook_module_implements_alter().
-    $legacyImplementationMap = [];
-    foreach ($implementations as $hook => $implementationsByModule) {
-      foreach ($implementationsByModule as $module => $implementationsByClass) {
-        $legacyImplementationMap[$hook][$module] = '';
-      }
-    }
-
     // Loop over all ReOrderHook attributes and gather order information
     // before registering the hooks. This must happen after all collection,
     // but before registration to ensure this ordering directive takes
@@ -170,7 +162,7 @@ class HookCollectorPass implements CompilerPassInterface {
     // is removed.
     // @see https://www.drupal.org/project/drupal/issues/3481778
     if (count($container->getDefinitions()) > 1) {
-      static::registerImplementations($container, $collector, $implementations, $legacyImplementationMap, $orderExtraTypes);
+      static::registerImplementations($container, $collector, $implementations, $orderExtraTypes);
       static::reOrderImplementations($container, $hookOrderOperations, $orderExtraTypes, $implementations, $moduleFinder);
     }
     return $implementations;
@@ -187,12 +179,10 @@ class HookCollectorPass implements CompilerPassInterface {
    *   The collector.
    * @param array<string, array<string, array<class-string, list<string>>>> $implementations
    *   All implementations, as method names keyed by hook, module and class.
-   * @param array<string, array<string, ''>> $legacyImplementationMap
-   *   List of hooks and modules formatted for hook_module_implements_alter().
    * @param array<string, list<string>> $orderExtraTypes
    *   Extra types to order a hook with.
    */
-  protected static function registerImplementations(ContainerBuilder $container, HookCollectorPass $collector, array $implementations, array $legacyImplementationMap, array $orderExtraTypes): void {
+  protected static function registerImplementations(ContainerBuilder $container, HookCollectorPass $collector, array $implementations, array $orderExtraTypes): void {
     $container->register(ProceduralCall::class, ProceduralCall::class)
       ->addArgument($collector->includes);
 
@@ -208,7 +198,14 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
-    // Register all implementations.
+    // List of hooks and modules formatted for hook_module_implements_alter().
+    $legacyImplementationMap = [];
+    foreach ($implementations as $hook => $implementationsByModule) {
+      foreach ($implementationsByModule as $module => $implementationsByClass) {
+        $legacyImplementationMap[$hook][$module] = '';
+      }
+    }
+
     foreach ($legacyImplementationMap as $hook => $moduleImplements) {
       $extraHooks = $orderExtraTypes[$hook] ?? [];
       // Add implementations to the array we pass to legacy ordering
