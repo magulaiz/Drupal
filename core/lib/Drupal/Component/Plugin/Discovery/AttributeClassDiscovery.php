@@ -108,11 +108,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
                 continue;
               }
               try {
-                // Suppress deprecation errors when checking whether classes
-                // exist.
-                set_error_handler(static fn(int $errno) => $errno === E_USER_DEPRECATED);
                 $class_exists = \class_exists($class, TRUE);
-                restore_error_handler();
                 if (!$class_exists || $autoloader->hasMissingClass()) {
                   self::$skipClasses[$class] = TRUE;
                   $autoloader->reset();
@@ -122,7 +118,6 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               catch (\Error $e) {
                 self::$skipClasses[$class] = TRUE;
                 $autoloader->reset();
-                restore_error_handler();
                 if (!preg_match('/(Class|Interface) .* not found$/', $e->getMessage())) {
                   spl_autoload_unregister([$autoloader, 'loadClass']);
                   throw $e;
