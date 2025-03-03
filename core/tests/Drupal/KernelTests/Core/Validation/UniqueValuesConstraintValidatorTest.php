@@ -334,4 +334,38 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $this->assertEquals('field_test_text.0', $violations[0]->getPropertyPath());
   }
 
+  /**
+   * Tests the UniqueField validation constraint validator with regards to accent-insensitivity.
+   *
+   * Case 6: Attempt to create another entity with an existing unique field value
+   * where only the accent differs, which should still trigger a validation error.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *
+   * @covers ::validate
+   */
+  public function testValidationAccentSensitive(): void {
+    // Create an entity with the non-accented version of the string.
+    $definition = [
+      'user_id' => 0,
+      'field_test_text' => ['cafe'],
+    ];
+    $entity = EntityTestUniqueConstraint::create($definition);
+    $entity->save();
+
+    // Create another entity with the accented version of the string.
+    $definition = [
+      'user_id' => 0,
+      'field_test_text' => ['café'],
+    ];
+    $entity = EntityTestUniqueConstraint::create($definition);
+
+    // Validate the entity.
+    $violations = $entity->validate();
+
+    // Assert that a violation exists.
+    $this->assertCount(1, $violations, 'Validation error expected for accent-insensitive uniqueness.');
+    $this->assertEquals('field_test_text.0', $violations[0]->getPropertyPath(), 'Violation occurred on the expected field.');
+  }
+
 }

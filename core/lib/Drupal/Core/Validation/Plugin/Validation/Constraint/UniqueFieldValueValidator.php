@@ -123,25 +123,46 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
     }
   }
 
+  // cspell:ignore théâtre TRANSLIT
+
   /**
-   * Perform a case-insensitive array intersection, but keep original capitalization.
+   * Perform a case and accent-insensitive array intersection while preserving original formatting.
+   *
+   * This method normalizes strings by removing diacritical marks and converting to lowercase
+   * before comparison, but returns the original values with their formatting intact.
    *
    * @param array $orig_values
-   *   The original values to be returned.
+   *   The original values to be returned. These values maintain their original
+   *   capitalization and accents in the result.
    * @param array $comp_values
-   *   The values to intersect $orig_values with.
+   *   The values to intersect with $orig_values. The comparison is done in a
+   *   case and accent-insensitive manner.
    *
    * @return array
-   *   Elements of $orig_values contained in $comp_values when ignoring
-   *   capitalization.
+   *   Elements of $orig_values that match elements in $comp_values when ignoring
+   *   capitalization and diacritical marks. The returned values preserve their
+   *   original formatting.
+   *
+   * @code
+   *   $result = caseInsensitiveArrayIntersect(['café', 'théâtre'], ['CAFE', 'THEATRE']);
+   *   // Returns: ['café', 'théâtre']
+   * @endcode
    */
   private function caseInsensitiveArrayIntersect(array $orig_values, array $comp_values): array {
-    $lowercase_comp_values = array_map('strtolower', $comp_values);
-    $intersect_map = array_map(fn (string $x) => in_array(strtolower($x), $lowercase_comp_values, TRUE) ? $x : NULL, $orig_values);
+    $normalize = static function (string $value): string {
+      $decomposed = iconv("UTF-8", "ASCII//TRANSLIT", $value);
+      return strtolower(preg_replace('/\p{Mn}/u', '', $decomposed));
+    };
+    // Normalize and lowercase comparison values
+    $normalized_comp_values = array_map($normalize, $comp_values);
 
-    return array_filter($intersect_map, function ($x) {
-      return $x !== NULL;
-    });
+    // Create intersection using same normalization
+    $intersect_map = array_map(function ($value) use ($normalize, $normalized_comp_values) {
+      $normalized = $normalize($value);
+      return in_array($normalized, $normalized_comp_values, TRUE) ? $value : NULL;
+    }, $orig_values);
+
+    return array_filter($intersect_map, static fn($x) => $x !== NULL);
   }
 
   /**
