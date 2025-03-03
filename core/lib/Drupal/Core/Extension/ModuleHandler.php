@@ -80,7 +80,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   An array keyed by hook, classname, method and the value is the module.
    * @param array $groupIncludes
    *   An array of .inc files to get helpers from.
-   * @param array $orderedExtraTypes
+   * @param array<string, list<string>> $orderedExtraTypes
    *   A multidimensional array of hooks that have been ordered and the
    *   extra_types they have been ordered against. This is stored separately
    *   from $hookImplementationsMap to prevent ordering again since this set
@@ -89,7 +89,14 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, array $module_list, protected EventDispatcherInterface $eventDispatcher, protected array $hookImplementationsMap, protected array $groupIncludes = [], protected array $orderedExtraTypes = []) {
+  public function __construct(
+    $root,
+    array $module_list,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected array $hookImplementationsMap,
+    protected array $groupIncludes = [],
+    protected array $orderedExtraTypes = [],
+  ) {
     $this->root = $root;
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
@@ -606,12 +613,12 @@ class ModuleHandler implements ModuleHandlerInterface {
    *
    * @param string $hook
    *   The extra hook or combination hook to check for.
-   * @param array $hook_listeners
+   * @param array<string, list<callable>> $hook_listeners
    *   Hook listeners for the current hook_alter.
-   * @param bool $extra_modules
+   * @param bool|null $extra_modules
    *   Whether there are extra modules to order.
    *
-   * @return array
+   * @return array<string, list<callable>>
    *   The hook listeners.
    */
   public function findListenersForAlter(string $hook, array $hook_listeners = [], ?bool &$extra_modules = NULL): array {

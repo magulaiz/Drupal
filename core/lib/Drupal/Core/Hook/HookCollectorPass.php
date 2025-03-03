@@ -63,11 +63,17 @@ class HookCollectorPass implements CompilerPassInterface {
    * A list of attributes for hook implementations.
    *
    * Keys are module, class and method. Values are Hook attributes.
+   *
+   * @var array<string, array<class-string, array<string, list<\Drupal\Core\Hook\HookOperation>>>>
    */
   protected array $moduleHooks = [];
 
   /**
    * {@inheritdoc}
+   *
+   * @return array<string, array<string, array<class-string, array<string, string>>>>
+   *   Hook implementation method names
+   *   keyed by hook, module, class and method.
    */
   public function process(ContainerBuilder $container): array {
     $collector = static::collectAllHookImplementations($container->getParameter('container.modules'), $container);
@@ -101,6 +107,11 @@ class HookCollectorPass implements CompilerPassInterface {
             assert($hookAttribute instanceof HookOperation);
             if (isset($processAfter[get_class($hookAttribute)])) {
               $processAfter[get_class($hookAttribute)][] = $hookAttribute;
+              continue;
+            }
+            if (!($hookAttribute instanceof Hook)) {
+              // This is an unsupported attribute class, the code below would
+              // not work.
               continue;
             }
             if ($class !== ProceduralCall::class) {
@@ -234,16 +245,18 @@ class HookCollectorPass implements CompilerPassInterface {
    *
    * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
    *   The container.
-   * @param array $hookOrderOperations
+   * @param list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations
    *   All attributes that contain ordering information.
    * @param array<string, list<string>> $orderExtraTypes
-   *   Extra types to order together with.
-   * @param array $implementations
-   *   Hook implementations.
-   * @param array $moduleFinder
-   *   An array keyed by the class and method of a hook implementation, value
-   *   is the module. This is not necessarily the same as the module the class
-   *   is in because the implementation might be on behalf of another module.
+   *   Lists of extra hooks to order together with, keyed by hook name.
+   * @param array<string, array<string, array<class-string, list<string>>>> $implementations
+   *   Hook implementations, as method names by hook, module and class.
+   * @param array<class-string, array<string, string>> $moduleFinder
+   *   Lookup map to find the module for each hook implementation.
+   *   Array keys are the class and method of the hook implementation, array
+   *   values are module names.
+   *   The module name can be different from the module the class is in,
+   *   because an implementation can be on behalf of another module.
    */
   protected static function reOrderImplementations(ContainerBuilder $container, array $hookOrderOperations, array $orderExtraTypes, array $implementations, array $moduleFinder): void {
     $hookPriority = new HookPriority($container);
@@ -257,7 +270,12 @@ class HookCollectorPass implements CompilerPassInterface {
         // Verify the correct structure of
         // $hookOrderOperation->order->classesAndMethods and create specifiers
         // for HookPriority::change() while at it.
-        $otherSpecifiers = array_map(static fn ($pair) => is_array($pair) ? $pair[0] . '::' . $pair[1] : throw new \LogicException('classesAndMethods needs to be an array of arrays'), $hookOrderOperation->order->classesAndMethods);
+        $otherSpecifiers = array_map(
+          static fn ($pair) => is_array($pair)
+            ? $pair[0] . '::' . $pair[1]
+            : throw new \LogicException('classesAndMethods needs to be an array of arrays'),
+          $hookOrderOperation->order->classesAndMethods
+        );
         // Collect classes and methods for
         // self::registerComplexHookImplementations().
         $classesAndMethods = $hookOrderOperation->order->classesAndMethods;
@@ -557,10 +575,10 @@ class HookCollectorPass implements CompilerPassInterface {
    *
    * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
    *   The container.
-   * @param array $classesAndMethods
+   * @param list<array{class-string, string}> $classesAndMethods
    *   A list of class-and-method pairs.
-   * @param array $moduleFinder
-   *   A module finder array, see ::reOrderImplementations() for explanation.
+   * @param array<class-string, array<string, string>> $moduleFinder
+   *   Module names by class and method of hook implementations.
    * @param string $combinedHook
    *   A string made form list of hooks separated by :
    */
