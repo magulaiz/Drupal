@@ -87,10 +87,10 @@ const INSTALL_TASK_RUN_IF_NOT_COMPLETED = 3;
  * an error is thrown, (b) a new page needs to be displayed, or (c) the
  * installation finishes (whichever happens first).
  *
- * @param $class_loader
+ * @param \Composer\Autoload\ClassLoader $class_loader
  *   The class loader. Normally Composer's ClassLoader, as included by the
  *   front controller, but may also be decorated.
- * @param $settings
+ * @param array $settings
  *   An optional array of installation settings. Leave this empty for a normal,
  *   interactive, browser-based installation intended to occur over multiple
  *   page requests. Alternatively, if an array of settings is passed in, the
@@ -249,7 +249,7 @@ function install_state_defaults() {
     // The server URL where the interface translation files can be downloaded.
     // Tokens in the pattern will be replaced by appropriate values for the
     // required translation file.
-    'server_pattern' => 'https://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po',
+    'server_pattern' => \Drupal::TRANSLATION_DEFAULT_SERVER_PATTERN,
     // Installation tasks can set this to TRUE to force the page request to
     // end (even if there is no themeable output), in the case of an interactive
     // installation. This is needed only rarely; for example, it would be used
@@ -285,10 +285,10 @@ function install_state_defaults() {
  * This function performs commands that must run at the beginning of every page
  * request. It throws an exception if the installation should not proceed.
  *
- * @param $class_loader
+ * @param \Composer\Autoload\ClassLoader $class_loader
  *   The class loader. Normally Composer's ClassLoader, as included by the
  *   front controller, but may also be decorated.
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state. This is
  *   modified with information gleaned from the beginning of the page request.
  *
@@ -547,7 +547,7 @@ function install_begin_request($class_loader, &$install_state) {
  * user, or until a page redirect is required. Otherwise, tasks will be
  * attempted until the installation is finished.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state. This is
  *   passed along to each task, so it can be modified if necessary.
  * @param callable|null $callback
@@ -602,10 +602,10 @@ function install_run_tasks(&$install_state, ?callable $callback = NULL) {
 /**
  * Runs an individual installation task.
  *
- * @param $task
+ * @param array $task
  *   An array of information about the task to be run as returned by
  *   hook_install_tasks().
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state. This is
  *   passed in by reference so that it can be modified by the task.
  *
@@ -703,7 +703,7 @@ function install_run_task($task, &$install_state) {
  * the page request evolves (for example, if an installation profile hasn't
  * been selected yet, we don't yet know which profile tasks need to be run).
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  *
  * @return array
@@ -739,7 +739,7 @@ function install_tasks_to_perform($install_state) {
  * You can override this using hook_install_tasks() or
  * hook_install_tasks_alter().
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  *
  * @return array
@@ -923,7 +923,7 @@ function install_tasks($install_state) {
  * The output of this function is a list suitable for sending to
  * maintenance-task-list.html.twig.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  *
  * @return array
@@ -996,7 +996,7 @@ function install_get_form($form_id, array &$install_state) {
  *
  * The output of this function is suitable for sending to install_goto().
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  *
  * @return string
@@ -1011,7 +1011,7 @@ function install_redirect_url($install_state) {
 /**
  * Returns the complete URL redirected to during an installation request.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  *
  * @return string
@@ -1031,9 +1031,9 @@ function install_full_redirect_url($install_state) {
  * title, but otherwise this function takes care of theming the overall page
  * output during every step of the installation.
  *
- * @param $output
+ * @param array $output
  *   The content to display on the main part of the page.
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  */
 function install_display_output($output, $install_state) {
@@ -1089,7 +1089,7 @@ function install_display_output($output, $install_state) {
 /**
  * Verifies the requirements for installing Drupal.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  *
  * @return array
@@ -1108,7 +1108,7 @@ function install_verify_requirements(&$install_state) {
 /**
  * Installation task; install the base functionality Drupal needs to bootstrap.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  */
 function install_base_system(&$install_state) {
@@ -1225,7 +1225,7 @@ function install_database_errors($database, $settings_file) {
 /**
  * Selects which profile to install.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state. The chosen
  *   profile will be added here, if it was not already selected previously, as
  *   will a list of all available profiles.
@@ -1344,7 +1344,7 @@ function install_find_translations() {
 /**
  * Selects which language to use during installation.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state. The chosen
  *   langcode will be added here, if it was not already selected previously, as
  *   will a list of all available languages.
@@ -1405,7 +1405,7 @@ function install_select_language(&$install_state) {
  * @param array $install_state
  *   An array of information about the current installation state.
  *
- * @return string
+ * @return array
  *   A themed status report, or an exception if there are requirement errors.
  *   Upon successful download the page is reloaded and no output is returned.
  */
@@ -1423,6 +1423,7 @@ function install_download_translation(&$install_state) {
   if ($install_state['interactive']) {
     install_goto(install_redirect_url($install_state));
   }
+  return [];
 }
 
 /**
@@ -1528,7 +1529,7 @@ function _install_get_version_info($version) {
 /**
  * Loads information about the chosen profile during installation.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state. The loaded
  *   profile information will be added here.
  */
@@ -1569,7 +1570,7 @@ function install_bootstrap_full() {
 /**
  * Installs required modules via a batch process.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  *
  * @return array
@@ -1664,7 +1665,7 @@ function install_core_entity_type_definitions() {
  * because an installation profile typically installs 1-3 themes only (default
  * theme, base theme, admin theme).
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  */
 function install_profile_themes(&$install_state) {
@@ -1680,7 +1681,7 @@ function install_profile_themes(&$install_state) {
 /**
  * Installs the install profile.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  */
 function install_install_profile(&$install_state) {
@@ -1703,7 +1704,7 @@ function install_install_profile(&$install_state) {
 /**
  * Prepares the system for import and downloads additional translations.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  *
  * @return array
@@ -1716,6 +1717,13 @@ function install_download_additional_translations_operations(&$install_state) {
   if (!($language = ConfigurableLanguage::load($langcode))) {
     // Create the language if not already shipped with a profile.
     $language = ConfigurableLanguage::createFromLangcode($langcode);
+
+    $standard_languages = LanguageManager::getStandardLanguageList();
+    if (isset($standard_languages[$langcode])) {
+      // Use the localized language label since the site is being installed
+      // with that language.
+      $language->setName($standard_languages[$langcode][1]);
+    }
   }
   $language->save();
 
@@ -1754,7 +1762,7 @@ function install_download_additional_translations_operations(&$install_state) {
 /**
  * Imports languages via a batch process during installation.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  *
  * @return array|null
@@ -1828,8 +1836,8 @@ function _install_prepare_import($langcodes, $server_pattern) {
       // version number.
       if (isset($matches[1]) && $version = $matches[1]) {
         $info = _install_get_version_info($version);
-        // Picking the first file does not necessarily result in the right file. So
-        // we check if at least the major version number is available.
+        // Picking the first file does not necessarily result in the right file.
+        // So we check if at least the major version number is available.
         if ($info['major']) {
           $core = $info['major'] . '.x';
           $data = [
@@ -1858,7 +1866,7 @@ function _install_prepare_import($langcodes, $server_pattern) {
  * If other projects besides Drupal core have been installed, their translation
  * will be imported here.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  *
  * @return array
@@ -1896,7 +1904,7 @@ function install_finish_translations(&$install_state) {
 /**
  * Performs final installation steps and displays a 'finished' page.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  */
 function install_finished(&$install_state) {
@@ -1909,11 +1917,6 @@ function install_finished(&$install_state) {
   // This would normally happen upon KernelEvents::TERMINATE, but since the
   // installer does not use an HttpKernel, that event is never triggered.
   \Drupal::service('router.builder')->rebuild();
-
-  // Run cron to populate update status tables (if available) so that users
-  // will be warned if they've installed an out of date Drupal version.
-  // Will also trigger indexing of profile-supplied content or feeds.
-  \Drupal::service('cron')->run();
 
   if ($install_state['interactive']) {
     // Load current user and perform final login tasks.
@@ -2442,7 +2445,7 @@ function install_config_import_batch() {
  * @param array $install_state
  *   An array of information about the current installation state.
  *
- * @return string
+ * @return string|null
  *   A themed status report, or an exception if there are requirement errors.
  *   Upon successful download the page is reloaded and no output is returned.
  *
@@ -2453,6 +2456,7 @@ function install_config_download_translations(&$install_state) {
   if ($needs_download) {
     return install_download_translation($install_state);
   }
+  return NULL;
 }
 
 /**
@@ -2565,7 +2569,7 @@ function _install_config_locale_overrides() {
  *   The configuration to process.
  * @param array $langcodes
  *   The langcodes available on the site.
- * @param $context
+ * @param array $context
  *   The batch context.
  */
 function _install_config_locale_overrides_process_batch(array $names, array $langcodes, &$context) {

@@ -86,18 +86,17 @@ class Select extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#multiple' => FALSE,
       '#sort_options' => FALSE,
       '#sort_start' => NULL,
       '#process' => [
-        [$class, 'processSelect'],
-        [$class, 'processAjaxForm'],
+        [static::class, 'processSelect'],
+        [static::class, 'processAjaxForm'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderSelect'],
+        [static::class, 'preRenderSelect'],
       ],
       '#theme' => 'select',
       '#theme_wrappers' => ['form_element'],
@@ -131,8 +130,9 @@ class Select extends FormElementBase {
       $element['#attributes']['name'] = $element['#name'] . '[]';
     }
     // A non-#multiple select needs special handling to prevent user agents from
-    // preselecting the first option without intention. #multiple select lists do
-    // not get an empty option, as it would not make sense, user interface-wise.
+    // preselecting the first option without intention. #multiple select lists
+    // do not get an empty option, as it would not make sense, user
+    // interface-wise.
     else {
       // If the element is set to #required through #states, override the
       // element's #required setting.
