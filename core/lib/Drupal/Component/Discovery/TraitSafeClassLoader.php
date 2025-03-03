@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Component\Discovery;
 
 /**
- * Defines a classloader that throws an exception.
+ * Defines a classloader that handles missing traits.
  *
- * This is not really a classloader, but exists to work around a PHP limitation
+ * This does not really load classes, but exists to work around a PHP limitation
  * when it attempts to load a class that relies on a trait that does not exist.
  * This is a common situation with Drupal plugins, which may be intended to be
  * dormant unless certain other modules are installed.
