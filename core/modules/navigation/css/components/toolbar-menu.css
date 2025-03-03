@@ -145,3 +145,21 @@
 .toolbar-menu__link--3:hover::after {
   background-color: currentColor;
 }
+.admin-toolbar__scroll-wrapper .admin-toolbar__content .contextual {
+  inset-inline: 10% auto !important;
+  transform-origin: top left !important;
+  width: 3.4375rem !important;
+  max-width: 3.4375rem !important;
+}
+.admin-toolbar__scroll-wrapper .admin-toolbar__content .contextual .trigger {
+  float: left !important;
+}
+.admin-toolbar__scroll-wrapper .admin-toolbar__content .contextual .contextual-links {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  white-space: normal !important;
+}
+.admin-toolbar__scroll-wrapper .admin-toolbar__content .contextual .contextual-links a {
+  font-size: xx-small;
+  word-break: break-word !important;
+}
