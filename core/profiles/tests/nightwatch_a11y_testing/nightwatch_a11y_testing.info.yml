@@ -6,7 +6,6 @@ hidden: true
 install:
   - block
   - comment
-  - ckeditor5
   - contact
   - image
   - node
