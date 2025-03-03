@@ -32,9 +32,9 @@ class StringFilter extends CoreStringFilter {
    */
   public function opEqual($field) {
     if ($this->view->getDatabaseDriver() == 'mongodb') {
-      $condition = $this->query->getConnection()->condition('AND');
+      $condition = $this->connection->condition('AND');
       $condition->condition($field, NULL, 'IS NOT NULL');
-      $condition->condition($field, $this->value, $this->operator());
+      $condition->condition($field, $this->connection->escapeLike($this->value), $this->operator());
       $this->query->addCondition($this->options['group'], $condition);
     }
     else {
