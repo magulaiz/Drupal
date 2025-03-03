@@ -72,8 +72,7 @@ class HookCollectorPass implements CompilerPassInterface {
    * {@inheritdoc}
    *
    * @return array<string, array<string, array<class-string, array<string, string>>>>
-   *   Hook implementation method names
-   *   keyed by hook, module, class and method.
+   *   Hook implementation method names keyed by hook, module, class and method.
    */
   public function process(ContainerBuilder $container): array {
     $collector = static::collectAllHookImplementations($container->getParameter('container.modules'), $container);
