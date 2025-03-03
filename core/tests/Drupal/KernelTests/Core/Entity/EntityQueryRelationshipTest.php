@@ -235,6 +235,10 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
    * @dataProvider providerTestInvalidFieldName
    */
   public function testInvalidFieldName(string $field_name): void {
+    if (\Drupal::database()->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support entity queries with relationships.');
+    }
+
     $this->expectException(QueryException::class);
     $this->expectExceptionMessage("'non_existent_field_name' not found");
 
