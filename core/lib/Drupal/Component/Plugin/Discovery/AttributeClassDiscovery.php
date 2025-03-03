@@ -22,6 +22,9 @@ class AttributeClassDiscovery implements DiscoveryInterface {
 
   /**
    * An array of classes to skip.
+   *
+   * This variable has to be static because once a class has been autoloaded by
+   * PHP, it cannot be unregistered again.
    */
   protected static array $skipClasses = [];
 
@@ -104,19 +107,35 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               // find something. Because the classloader will result in the
               // class being successfully autoloaded, store an array of classes
               // to skip if this method is called again.
+              // However, if discovery runs twice in a request, first without
+              // the module that defines the missing trait, and second after it
+              // has been installed, we want the plugin to be discovered in the
+              // second case. Therefore if a module has been added to skipped
+              // classes already, check if the namespace in which the missing
+              // trait resides is available, and allow discovery if so.
+              // @todo remove this workaround once PHP treats missing traits as
+              // catchable fatal errors.
+              // @see https://github.com/php/php-src/issues/17959
               if (array_key_exists($class, self::$skipClasses)) {
-                continue;
+                $missing_traits = self::$skipClasses[$class];
+                foreach ($missing_traits as $missing_trait) {
+                  $missing_trait_namespace = implode('\\', array_slice(explode('\\', $missing_trait), 0, 2));
+                  if (!isset($this->getPluginNamespaces()[$missing_trait_namespace])) {
+                    $autoloader->reset();
+                    continue 2;
+                  }
+                }
               }
               try {
                 $class_exists = \class_exists($class, TRUE);
                 if (!$class_exists || $autoloader->hasMissingTrait()) {
-                  self::$skipClasses[$class] = TRUE;
+                  self::$skipClasses[$class] = $autoloader->getMissingTraits();
                   $autoloader->reset();
                   continue;
                 }
               }
               catch (\Error $e) {
-                self::$skipClasses[$class] = TRUE;
+                self::$skipClasses[$class] = $autoloader->getMissingTraits();
                 $autoloader->reset();
                 if (!preg_match('/(Class|Interface) .* not found$/', $e->getMessage())) {
                   spl_autoload_unregister([$autoloader, 'loadClass']);
@@ -128,7 +147,9 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               if ($id) {
                 $definitions[$id] = $content;
                 // Explicitly serialize this to create a new object instance.
-                $this->fileCache->set($fileinfo->getPathName(), ['id' => $id, 'content' => serialize($content)]);
+                if (!isset(self::$skipClasses[$class])) {
+                  $this->fileCache->set($fileinfo->getPathName(), ['id' => $id, 'content' => serialize($content)]);
+                }
               }
               else {
                 // Store a NULL object, so that the file is not parsed again.

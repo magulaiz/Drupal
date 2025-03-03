@@ -17,7 +17,7 @@ class TraitSafeClassLoader {
   /**
    * Flag indicating whether there was an attempt to load a missing trait.
    */
-  protected bool $missingTrait = FALSE;
+  protected array $missingTraits = [];
 
   /**
    * Aliases trait to a stub trait and sets the missing trait flag.
@@ -31,7 +31,7 @@ class TraitSafeClassLoader {
    */
   public function loadClass(string $class): void {
     if (str_ends_with($class, 'Trait')) {
-      $this->missingTrait = TRUE;
+      $this->missingTraits[] = $class;
       class_alias(StubTrait::class, $class, TRUE);
     }
   }
@@ -43,14 +43,24 @@ class TraitSafeClassLoader {
    *   TRUE if there was an attempt to load a missing trait, otherwise FALSE.
    */
   public function hasMissingTrait(): bool {
-    return $this->missingTrait;
+    return \count($this->missingTraits) > 0;
+  }
+
+  /**
+   * Returns all recorded missing traits since the last reset.
+   *
+   * @return string[]
+   *   An array of traits recorded as missing.
+   */
+  public function getMissingTraits(): array {
+    return $this->missingTraits;
   }
 
   /**
    * Resets the missing trait flag to FALSE.
    */
   public function reset(): void {
-    $this->missingTrait = FALSE;
+    $this->missingTraits = [];
   }
 
 }
