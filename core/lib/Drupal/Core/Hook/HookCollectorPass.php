@@ -125,7 +125,7 @@ class HookCollectorPass implements CompilerPassInterface {
             // Store the implementation details for registering the hook.
             $implementations[$hookAttribute->hook][$hookAttribute->module][$class][$hookAttribute->method] = $hookAttribute->method;
             // Reverse lookup for modules implementing hooks.
-            $moduleFinder[$class][$hookAttribute->method] = $hookAttribute->module;
+            $moduleFinder[$class][$hookAttribute->method][$hookAttribute->hook] = $hookAttribute->module;
             if ($hookAttribute->order) {
               $hookOrderOperations[] = $hookAttribute;
             }
@@ -139,7 +139,7 @@ class HookCollectorPass implements CompilerPassInterface {
     // registration to ensure the hook it is removing has already been
     // discovered.
     foreach ($processAfter[RemoveHook::class] as $removeHook) {
-      if ($module = ($moduleFinder[$removeHook->class][$removeHook->method] ?? '')) {
+      if ($module = ($moduleFinder[$removeHook->class][$removeHook->method][$removeHook->hook] ?? '')) {
         unset($implementations[$removeHook->hook][$module][$removeHook->class][$removeHook->method]);
         // A module can implement a hook  more than one time so confirm no
         // more implementations before removing from the
@@ -251,10 +251,10 @@ class HookCollectorPass implements CompilerPassInterface {
    *   Lists of extra hooks to order together with, keyed by hook name.
    * @param array<string, array<string, array<class-string, list<string>>>> $implementations
    *   Hook implementations, as method names by hook, module and class.
-   * @param array<class-string, array<string, string>> $moduleFinder
+   * @param array<class-string, array<array<string, string>>> $moduleFinder
    *   Lookup map to find the module for each hook implementation.
-   *   Array keys are the class and method of the hook implementation, array
-   *   values are module names.
+   *   Array keys are the class, method, and hook, array values are module
+   *   names.
    *   The module name can be different from the module the class is in,
    *   because an implementation can be on behalf of another module.
    */
@@ -577,8 +577,9 @@ class HookCollectorPass implements CompilerPassInterface {
    *   The container.
    * @param list<array{class-string, string}> $classesAndMethods
    *   A list of class-and-method pairs.
-   * @param array<class-string, array<string, string>> $moduleFinder
-   *   Module names by class and method of hook implementations.
+   * @param array<class-string, array<array<string, string>>> $moduleFinder
+   *   Array keys are the class, method, and hook, array values are module
+   *   names.
    * @param string $combinedHook
    *   A string made form list of hooks separated by :
    */
@@ -588,6 +589,9 @@ class HookCollectorPass implements CompilerPassInterface {
     foreach ($classesAndMethods as [$class, $method]) {
       // Ordering against not installed modules is possible.
       if (isset($moduleFinder[$class][$method])) {
+        if (count(array_unique($moduleFinder[$class][$method])) > 1) {
+          throw new \LogicException('Complex ordering can only work when all implementations on a single method are for the same module.');
+        }
         $map[$combinedHook][$class][$method] = $moduleFinder[$class][$method];
         $priority = self::addTagToDefinition($container->findDefinition($class), $combinedHook, $method, $priority);
       }
