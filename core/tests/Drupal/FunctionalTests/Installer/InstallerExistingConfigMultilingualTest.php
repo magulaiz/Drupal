@@ -22,7 +22,12 @@ class InstallerExistingConfigMultilingualTest extends InstallerConfigDirectoryTe
    * {@inheritdoc}
    */
   protected function getConfigLocation(): string {
-    return __DIR__ . '/../../../fixtures/config_install/multilingual';
+    if (\Drupal::database()->driver() === 'mongodb') {
+      return __DIR__ . '/../../../../modules/mongodb/tests/fixtures/config_install/multilingual';
+    }
+    else {
+      return __DIR__ . '/../../../fixtures/config_install/multilingual';
+    }
   }
 
   /**
