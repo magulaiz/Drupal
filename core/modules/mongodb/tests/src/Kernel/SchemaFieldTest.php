@@ -67,7 +67,7 @@ class SchemaFieldTest extends SchemaTestBase {
   /**
    * @covers ::fieldExists
    */
-  public function testFieldExists() {
+  public function testFieldExists(): void {
     $this->assertFalse($this->schema->tableExists(static::TEST_TABLE1['name']), 'The table does not exist in the MongoDB database.');
     $this->assertFalse($this->schema->tableExists(static::TEST_TABLE2['name']), 'The table does not exist in the MongoDB database.');
 
@@ -117,7 +117,7 @@ class SchemaFieldTest extends SchemaTestBase {
    * @covers ::fieldExists
    * @dataProvider providerEmbeddedFieldExists
    */
-  public function testEmbeddedFieldExists($embedded_table_name, $field_name, $expected_result) {
+  public function testEmbeddedFieldExists($embedded_table_name, $field_name, $expected_result): void {
     $embedded_tables_data = [
       static::TEST_TABLE1['name'] => [static::TEST_TABLE2],
       static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4],
@@ -2584,7 +2584,7 @@ class SchemaFieldTest extends SchemaTestBase {
    * @covers ::fieldExists
    * @dataProvider providerAddField
    */
-  public function testAddField($base_table_data, $embedded_tables_data, $table_name_to_add_field, $field_data, $base_table_with_embedded_tables_and_added_field) {
+  public function testAddField($base_table_data, $embedded_tables_data, $table_name_to_add_field, $field_data, $base_table_with_embedded_tables_and_added_field): void {
     $this->assertFalse($this->schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
     foreach ($embedded_tables_data as $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {

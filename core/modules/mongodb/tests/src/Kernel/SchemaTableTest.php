@@ -933,7 +933,7 @@ class SchemaTableTest extends SchemaTestBase {
    * @covers ::createEmbeddedTable
    * @dataProvider providerCreateTable
    */
-  public function testCreateTable($base_table_data, $embedded_tables_data, $embedded_validation, $expected_indexes) {
+  public function testCreateTable($base_table_data, $embedded_tables_data, $embedded_validation, $expected_indexes): void {
     $this->assertFalse($this->schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
 
     // Call the to be tested methods: Schema::createTable() and

@@ -457,7 +457,7 @@ class SchemaTestBase extends KernelTestBase {
    * @param array|null $table_schema
    *   (optional) The table schema.
    */
-  protected function checkTableIndexes($table_name, $table_schema = NULL) {
+  protected function checkTableIndexes($table_name, $table_schema = NULL): void {
     // Test the primary key
     if (!empty($table_schema['primary key'])) {
       $this->assertTrue($this->schema->constraintExists($table_name, 'pkey'), 'The primary key index does exists for the table.');
@@ -511,7 +511,7 @@ class SchemaTestBase extends KernelTestBase {
    * @param array $embedded_table_schema
    *   The embedded table schema.
    */
-  protected function checkEmbeddedTableIndexes($parent_table_name, $embedded_table_name, $embedded_table_schema) {
+  protected function checkEmbeddedTableIndexes($parent_table_name, $embedded_table_name, $embedded_table_schema): void {
     // Make sure the table information gets reloaded from the database.
     $this->tableInformation->load(TRUE);
 
@@ -594,7 +594,7 @@ class SchemaTestBase extends KernelTestBase {
    * @param array $database_fields
    *   The database fields for the index to test.
    */
-  protected function checkIndexFields(array $schema_fields, array $database_fields) {
+  protected function checkIndexFields(array $schema_fields, array $database_fields): void {
     // Test if all schema index fields exists in the database index.
     $database_field_keys = array_keys($database_fields);
     foreach ($schema_fields as $schema_field) {
@@ -618,7 +618,7 @@ class SchemaTestBase extends KernelTestBase {
    * @param array $embedded_tables_data
    *   The embedded table data.
    */
-  protected function checkTableNumberOfIndexes($base_table_data, $embedded_tables_data = []) {
+  protected function checkTableNumberOfIndexes($base_table_data, $embedded_tables_data = []): void {
     $indexes = $this->schema->getTableIndexesFromDatabase($base_table_data['name']);
 
     $index_count = 0;
@@ -660,7 +660,7 @@ class SchemaTestBase extends KernelTestBase {
    * @param array $expected_indexes
    *   An array of arrays, with the inner array having the data for an expected index (name and key).
    */
-  protected function checkExpectedIndexesAgainstDatabase($table, $expected_indexes) {
+  protected function checkExpectedIndexesAgainstDatabase($table, $expected_indexes): void {
     $database_indexes = $this->schema->getTableIndexesFromDatabase($table);
 
     // Check that all expected indexes exist in the database.

@@ -30410,54 +30410,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewXmlCookieTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\AliasedFieldsTest\\:\\:testSelectAliasedFields\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/AliasedFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\AliasedFieldsTest\\:\\:testSelectAliasedFieldsWithGroupBy\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/AliasedFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\AliasedFieldsTest\\:\\:testSelectAliasedFieldsWithOrderByAge\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/AliasedFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\AliasedFieldsTest\\:\\:testSelectAliasedFieldsWithOrderByName\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/AliasedFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\InsertTest\\:\\:testEmbeddedEmbeddedInsert\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/InsertTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\InsertTest\\:\\:testEmbeddedInsert\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/InsertTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\InsertTest\\:\\:testInsert\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/InsertTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testAddField\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testAddFieldForEmbeddedTableDoesNotExist\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -30543,18 +30495,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testDropFieldForTableDoesNotExist\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testEmbeddedFieldExists\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testFieldExists\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
@@ -30812,12 +30752,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testCreateTable\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testCreateTableForTableExists\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -30884,36 +30818,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkEmbeddedTableIndexes\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkExpectedIndexesAgainstDatabase\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkIndexFields\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkTableIndexes\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkTableNumberOfIndexes\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkTableSchema\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -30924,72 +30828,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testDeleteCondition\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testDeleteConditionAndInsert\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testDeleteConditionMultiple\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testDeleteConditionOr\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testUpdateEmbeddedEmbeddedTableData\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testUpdateEmbeddedEmbeddedTableData2\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testUpdateEmbeddedTableData\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testUpdateEmbeddedTableDataDeleteOldData\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testUpdateEmbeddedTableNoFieldsException\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\mongodb\\\\DatabaseExceptionWrapperTest\\:\\:testPrepareStatementFailOnExecution\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/mongodb/DatabaseExceptionWrapperTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\mongodb\\\\DatabaseExceptionWrapperTest\\:\\:testPrepareStatementFailOnPreparation\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/mongodb/DatabaseExceptionWrapperTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\mysql\\\\Driver\\\\Database\\\\mysql\\\\Connection\\:\\:createDatabase\\(\\) has no return type specified\\.$#',

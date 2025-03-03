@@ -115,7 +115,7 @@ class InsertTest extends DatabaseTestBase {
    *
    * @dataProvider providerInsert
    */
-  public function testInsert($table, $fields, $expected) {
+  public function testInsert($table, $fields, $expected): void {
     $connection = $this->container->get('database');
 
     $last_inserted_id = $connection->insert($table)->fields($fields)->execute();
@@ -130,7 +130,7 @@ class InsertTest extends DatabaseTestBase {
    *
    * @dataProvider providerInsert
    */
-  public function testEmbeddedInsert($table_name, $fields, $expected) {
+  public function testEmbeddedInsert($table_name, $fields, $expected): void {
     $connection = $this->container->get('database');
     $module_handler = $this->container->get('module_handler');
 
@@ -185,7 +185,7 @@ class InsertTest extends DatabaseTestBase {
    *
    * @dataProvider providerInsert
    */
-  public function testEmbeddedEmbeddedInsert($table_name, $fields, $expected) {
+  public function testEmbeddedEmbeddedInsert($table_name, $fields, $expected): void {
     $connection = $this->container->get('database');
     $module_handler = $this->container->get('module_handler');
     $base_table_name = 'test_people';

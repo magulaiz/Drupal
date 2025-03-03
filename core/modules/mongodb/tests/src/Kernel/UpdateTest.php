@@ -129,7 +129,7 @@ class UpdateTest extends DatabaseTestBase {
    *
    * @dataProvider providerUpdate
    */
-  public function testUpdateEmbeddedTableData($fields, $expected) {
+  public function testUpdateEmbeddedTableData($fields, $expected): void {
     $connection = $this->container->get('database');
 
     $query = $connection->update('test_people');
@@ -160,7 +160,7 @@ class UpdateTest extends DatabaseTestBase {
    *
    * @dataProvider providerUpdate
    */
-  public function testUpdateEmbeddedTableDataDeleteOldData($fields, $expected) {
+  public function testUpdateEmbeddedTableDataDeleteOldData($fields, $expected): void {
     $connection = $this->container->get('database');
     $query = $connection->update('test_people');
     $query->fields(['embedded_test' => $query->embeddedTableData()->fields($fields)])
@@ -188,7 +188,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Tests updates the embedded, embedded table data.
    */
-  public function testUpdateEmbeddedEmbeddedTableData() {
+  public function testUpdateEmbeddedEmbeddedTableData(): void {
     $connection = $this->container->get('database');
     $module_handler = $this->container->get('module_handler');
 
@@ -258,7 +258,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Tests updates the embedded, embedded table data.
    */
-  public function testUpdateEmbeddedEmbeddedTableData2() {
+  public function testUpdateEmbeddedEmbeddedTableData2(): void {
     $connection = $this->container->get('database');
     $module_handler = $this->container->get('module_handler');
 
@@ -360,7 +360,7 @@ class UpdateTest extends DatabaseTestBase {
    *
    * @dataProvider providerDeleteCondition
    */
-  public function testDeleteCondition($field, $value, $operator, $expected) {
+  public function testDeleteCondition($field, $value, $operator, $expected): void {
     $connection = $this->container->get('database');
     $connection->update('test_people')
       ->condition('job', 'Chatters')
@@ -383,7 +383,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Tests updates the embedded table data and deletes the old data.
    */
-  public function testDeleteConditionMultiple() {
+  public function testDeleteConditionMultiple(): void {
     $connection = $this->container->get('database');
 
     $connection->update('test_people')
@@ -408,7 +408,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Tests updates the embedded table data and deletes the old data.
    */
-  public function testDeleteConditionOr() {
+  public function testDeleteConditionOr(): void {
     $connection = $this->container->get('database');
 
     $condition = $connection->condition('OR');
@@ -435,7 +435,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Tests updates the embedded table data twice.
    */
-  public function testDeleteConditionAndInsert() {
+  public function testDeleteConditionAndInsert(): void {
     $connection = $this->container->get('database');
 
     // MongoDB does not allow a table variable to be changed twice in one
@@ -453,7 +453,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Tests no fields exception on update on an embedded table.
    */
-  public function testUpdateEmbeddedTableNoFieldsException() {
+  public function testUpdateEmbeddedTableNoFieldsException(): void {
     $connection = $this->container->get('database');
 
     // The table update should result in a NoFieldsException being thrown.
