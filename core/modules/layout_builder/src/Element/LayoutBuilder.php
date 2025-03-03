@@ -170,7 +170,10 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
         $title = $this->t('Add section <span class="visually-hidden">at start of layout</span>');
       }
       else {
-        $title = $this->t('Add section <span class="visually-hidden">between @first and @second</span>', ['@first' => $delta, '@second' => $delta + 1]);
+        $title = $this->t('Add section <span class="visually-hidden">between @first and @second</span>', [
+          '@first' => $delta,
+          '@second' => $delta + 1,
+        ]);
       }
     }
 
@@ -178,7 +181,8 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
       'link' => [
         '#type' => 'link',
         '#title' => $title,
-        '#url' => Url::fromRoute('layout_builder.choose_section',
+        '#url' => Url::fromRoute(
+          'layout_builder.choose_section',
           [
             'section_storage_type' => $storage_type,
             'section_storage' => $storage_id,
@@ -250,7 +254,7 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
               // links that were cached before the 'move' link was added.
               // @see layout_builder.links.contextual.yml
               'metadata' => [
-                'operations' => 'move:update:remove',
+                'operations' => 'move:update:remove:visibility',
               ],
             ],
           ];
@@ -260,8 +264,12 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
       $build[$region]['layout_builder_add_block']['link'] = [
         '#type' => 'link',
         // Add one to the current delta since it is zero-indexed.
-        '#title' => $this->t('Add block <span class="visually-hidden">in @section, @region region</span>', ['@section' => $section_label, '@region' => $region_labels[$region]]),
-        '#url' => Url::fromRoute('layout_builder.choose_block',
+        '#title' => $this->t('Add block <span class="visually-hidden">in @section, @region region</span>', [
+          '@section' => $section_label,
+          '@region' => $region_labels[$region],
+        ]),
+        '#url' => Url::fromRoute(
+          'layout_builder.choose_block',
           [
             'section_storage_type' => $storage_type,
             'section_storage' => $storage_id,
