@@ -108,7 +108,7 @@ class HookCollectorPass implements CompilerPassInterface {
               $processAfter[get_class($hookAttribute)][] = $hookAttribute;
               continue;
             }
-            if (!($hookAttribute instanceof Hook)) {
+            if (!$hookAttribute instanceof Hook) {
               // This is an unsupported attribute class, the code below would
               // not work.
               continue;
