@@ -260,7 +260,12 @@ class FilterTest extends ViewTestBase {
 
     // Add Role exposed filter.
     $this->drupalGet('admin/structure/views/nojs/add-handler/user_list_view/page_1/filter');
-    $this->submitForm(['name[user__roles.roles_target_id]' => TRUE], 'Add and configure filter criteria');
+    if (\Drupal::database()->driver() === 'mongodb') {
+      $this->submitForm(['name[users.roles_target_id]' => TRUE], 'Add and configure filter criteria');
+    }
+    else {
+      $this->submitForm(['name[user__roles.roles_target_id]' => TRUE], 'Add and configure filter criteria');
+    }
     $edit = ['options[expose_button][checkbox][checkbox]' => TRUE];
     $this->drupalGet('admin/structure/views/nojs/handler/user_list_view/page_1/filter/roles_target_id');
     $this->submitForm($edit, 'Expose filter');
