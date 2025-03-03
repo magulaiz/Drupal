@@ -37,7 +37,7 @@ abstract readonly class ComplexOrder {
    *       [Bar::class, 'someOtherMethod'],
    *     ]
    *   @endcode
-   * @param array $extraTypes
+   * @param list<string> $extraTypes
    *   A list of hooks to be ordered together. Ordering by attributes happens
    *   at build time by setting up the order of the listeners of a hook
    *   correctly. However, ModuleHandlerInterface::alter() can be called with
