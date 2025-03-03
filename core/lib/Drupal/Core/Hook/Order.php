@@ -9,14 +9,10 @@ namespace Drupal\Core\Hook;
  */
 enum Order: int {
 
-  /**
-   * This implementation should fire first.
-   */
+  // This implementation should fire first.
   case First = 1;
 
-  /**
-   * This implementation should fire last.
-   */
+  // This implementation should fire last.
   case Last = 0;
 
 }

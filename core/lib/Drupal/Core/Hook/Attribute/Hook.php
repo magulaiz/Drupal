@@ -108,7 +108,7 @@ class Hook extends HookOperation {
    *
    * @param string $hook
    *   The short hook name, without the 'hook_' prefix.
-   * @param ?string $method
+   * @param string $method
    *   (optional) The method name. If this attribute is on a method, this
    *   parameter is not required. If this attribute is on a class and this
    *   parameter is omitted, the class must have an __invoke() method, which is
@@ -122,7 +122,7 @@ class Hook extends HookOperation {
    */
   public function __construct(
     string $hook,
-    ?string $method = '',
+    string $method = '',
     public ?string $module = NULL,
     Order|ComplexOrder|null $order = NULL,
   ) {

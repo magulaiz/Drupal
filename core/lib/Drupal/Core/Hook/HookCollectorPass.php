@@ -550,7 +550,7 @@ class HookCollectorPass implements CompilerPassInterface {
    * @param \Symfony\Component\DependencyInjection\Definition $definition
    *   The service definition.
    * @param string|int $hook
-   *   The name of the hook
+   *   The name of the hook.
    * @param string $method
    *   The method.
    * @param int $priority
@@ -579,7 +579,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *   Array keys are the class, method, and hook, array values are module
    *   names.
    * @param string $combinedHook
-   *   A string made form list of hooks separated by :
+   *   A string made form list of hooks separated by :.
    */
   protected static function registerComplexHookImplementations(ContainerBuilder $container, array $classesAndMethods, array $moduleFinder, string $combinedHook): void {
     $map = $container->getParameter('hook_implementations_map');
