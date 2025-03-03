@@ -302,7 +302,12 @@ class HookCollectorPass implements CompilerPassInterface {
         // $hookOrderOperation->order->classesAndMethods and create specifiers
         // for HookPriority::change() while at it.
         $otherSpecifiers = array_map(
-          static fn ($pair) => is_array($pair) ? $pair[0] . '::' . $pair[1] : throw new \LogicException('classesAndMethods needs to be an array of arrays'),
+          static function ($pair) {
+            if (!is_array($pair)) {
+              return throw new \LogicException('classesAndMethods needs to be an array of arrays');
+            }
+            return $pair[0] . '::' . $pair[1];
+          },
           $hookOrderOperation->order->classesAndMethods
         );
         // Collect classes and methods for
