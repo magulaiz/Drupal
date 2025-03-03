@@ -1111,7 +1111,7 @@ services:
     tags:
       - { name: backend_overridable }
   pgsql.entity.query.sql:
-    class: Drupal\Core\Entity\Query\Sql\pgsql\QueryFactory
+    class: Drupal\pgsql\EntityQuery\QueryFactory
     arguments: ['@database']
     tags:
       - { name: pgsql_entity_query_sql, provider_id: 'core', priority: 0, global: TRUE }
