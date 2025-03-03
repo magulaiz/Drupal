@@ -162,7 +162,7 @@ class FilterDateTest extends ViewTestBase {
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
     $view->destroy();
 
-     // Test offset for between operator with no result.
+    // Test offset for between operator with no result.
     $view->initHandlers();
     $view->filter['created']->operator = 'between';
     $view->filter['created']->value['type'] = 'offset';

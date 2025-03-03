@@ -195,7 +195,7 @@ class Date extends NumericFilter {
       // Keep sign.
       $a = '***CURRENT_TIME***' . sprintf('%+d', $a);
       // Keep sign for max, store original for checking.
-      $b_original = $b; // Save the raw offset in seconds.
+      $b_original = $b;
       // Keep sign.
       $b = '***CURRENT_TIME***' . sprintf('%+d', $b);
       // If min and max are the same and max has no time part (whole days only).
