@@ -1589,8 +1589,8 @@ function trim_with_ellipsis(string $input, int $length, int $side): string {
   }
   elseif (strlen($input) > $length) {
       return match($side) {
-        \STR_PAD_RIGHT => substr($input, 0, $length - 3) . '...',
-        default => '...' . substr($input, -$length + 3),
+        \STR_PAD_RIGHT => substr($input, 0, $length - 1) . '…',
+        default => '…' . substr($input, -$length + 1),
       };
   }
   return $input;
