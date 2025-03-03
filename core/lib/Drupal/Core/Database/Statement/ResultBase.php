@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database\Statement;
 
+use Drupal\Core\Database\FetchModeTrait;
+
 /**
  * Base class for results of a data query language (DQL) statement.
  */
 abstract class ResultBase {
+
+  use FetchModeTrait;
 
   /**
    * Constructor.

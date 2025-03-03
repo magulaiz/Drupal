@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database\Statement;
 
-use Drupal\Core\Database\FetchModeTrait;
-
 /**
  * Class for PDO-provided results of a data query language (DQL) statement.
  */
 class PdoResult extends ResultBase {
 
-  use FetchModeTrait;
   use PdoTrait;
 
   /**
