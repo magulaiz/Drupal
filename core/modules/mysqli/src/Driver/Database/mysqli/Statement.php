@@ -9,14 +9,13 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
-use Drupal\Core\Database\RowCountException;
 use Drupal\Core\Database\Statement\FetchAs;
-use Drupal\Core\Database\StatementWrapperIterator;
+use Drupal\Core\Database\Statement\StatementBase;
 
 /**
  * MySQLi implementation of \Drupal\Core\Database\Query\StatementInterface.
  */
-class Statement extends StatementWrapperIterator {
+class Statement extends StatementBase {
 
   /**
    * Holds the index position of named parameters.
@@ -30,34 +29,11 @@ class Statement extends StatementWrapperIterator {
   protected array $paramsPositions;
 
   /**
-   * The default fetch mode.
-   */
-  protected FetchAs $defaultFetchStyle;
-
-  /**
-   * Holds fetch options.
-   *
-   * @var string[]
-   */
-  protected array $fetchOptions = [
-    'class' => 'stdClass',
-    'constructor_args' => [],
-    'column' => 0,
-  ];
-
-  /**
-   * The mysqli result object.
-   *
-   * Stores results of a data selection query.
-   */
-  protected ?\mysqli_result $mysqliResult;
-
-  /**
    * Constructs a Statement object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   Drupal database connection object.
-   * @param \mysqli $mysqliConnection
+   * @param \mysqli $clientConnection
    *   Client database connection object.
    * @param string $queryString
    *   The SQL query string.
@@ -67,12 +43,13 @@ class Statement extends StatementWrapperIterator {
    *   (optional) Enables counting the rows affected. Defaults to FALSE.
    */
   public function __construct(
-    protected readonly Connection $connection,
-    protected readonly \mysqli $mysqliConnection,
-    protected string $queryString,
+    Connection $connection,
+    \mysqli $clientConnection,
+    string $queryString,
     protected array $driverOpts = [],
-    protected readonly bool $rowCountEnabled = FALSE,
+    bool $rowCountEnabled = FALSE,
   ) {
+    parent::__construct($connection, $clientConnection, $queryString, $rowCountEnabled);
     $this->setFetchMode(FetchAs::Object);
   }
 
@@ -89,6 +66,7 @@ class Statement extends StatementWrapperIterator {
       }
     }
 
+    // Dispatch an event informing that the statement execution begins.
     if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
       $startEvent = new StatementExecutionStartEvent(
         spl_object_id($this),
@@ -108,8 +86,8 @@ class Statement extends StatementWrapperIterator {
         $this->paramsPositions = array_flip(array_keys($args));
         $converter = new NamedPlaceholderConverter();
         $converter->parse($this->queryString, $args);
-        [$this->queryString, $args] = [$converter->getConvertedSQL(), $converter->getConvertedParameters()];
-        $this->clientStatement = $this->mysqliConnection->prepare($this->queryString);
+        [$convertedQueryString, $args] = [$converter->getConvertedSQL(), $converter->getConvertedParameters()];
+        $this->clientStatement = $this->clientConnection->prepare($convertedQueryString);
       }
       else {
         // Transform the $args to positional.
@@ -123,11 +101,16 @@ class Statement extends StatementWrapperIterator {
       // In mysqli, the results of the statement execution are returned in a
       // different object than the statement itself.
       $return = $this->clientStatement->execute($args);
+      $this->result = new Result(
+        $this->fetchMode,
+        $this->fetchOptions,
+        $this->clientStatement->get_result(),
+        $this->clientConnection,
+      );
       $this->markResultsetIterable($return);
-      $result = $this->clientStatement->get_result();
-      $this->mysqliResult = $result !== FALSE ? $result : NULL;
     }
     catch (\Exception $e) {
+      // On execution failure, dispatch an event informing of the situation.
       if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionFailureEvent::class)) {
         $this->connection->dispatchEvent(new StatementExecutionFailureEvent(
           $startEvent->statementObjectId,
@@ -145,6 +128,7 @@ class Statement extends StatementWrapperIterator {
       throw $e;
     }
 
+    // Dispatch an event informing that the statement execution succeeded.
     if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
       $this->connection->dispatchEvent(new StatementExecutionEndEvent(
         $startEvent->statementObjectId,
@@ -158,208 +142,6 @@ class Statement extends StatementWrapperIterator {
     }
 
     return $return;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getQueryString() {
-    return $this->queryString;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAllAssoc($key, $fetch = NULL) {
-    $return = [];
-    if (isset($fetch)) {
-      if (is_string($fetch)) {
-        $this->setFetchMode(FetchAs::ClassObject, $fetch);
-      }
-      else {
-        $this->setFetchMode($fetch ?: $this->defaultFetchStyle);
-      }
-    }
-
-    while ($record = $this->fetch()) {
-      $record_key = is_object($record) ? $record->$key : $record[$key];
-      $return[$record_key] = $record;
-    }
-
-    return $return;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAllKeyed($key_index = 0, $value_index = 1) {
-    $return = [];
-    $this->setFetchMode(FetchAs::Associative);
-    while ($record = $this->fetch(FetchAs::Associative)) {
-      $cols = array_keys($record);
-      $return[$record[$cols[$key_index]]] = $record[$cols[$value_index]];
-    }
-    return $return;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchField($index = 0) {
-    if (($ret = $this->fetch(FetchAs::List)) === FALSE) {
-      return FALSE;
-    }
-    return $ret[$index] === NULL ? NULL : (string) $ret[$index];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchObject(?string $class_name = NULL, array $constructor_arguments = []) {
-    if (isset($class_name)) {
-      $this->defaultFetchStyle = FetchAs::ClassObject;
-      $this->fetchOptions = [
-        'class' => $class_name,
-        'constructor_args' => $constructor_arguments,
-      ];
-    }
-    return $this->fetch($class_name ?? FetchAs::Object);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function rowCount() {
-    // SELECT query should not use this method.
-    if ($this->rowCountEnabled) {
-      // @todo The most accurate value to return for Drupal here is the first
-      //   occurrence of an integer in the string stored by the connection's
-      //   $info property.
-      //   This is something like 'Rows matched: 1  Changed: 1  Warnings: 0' for
-      //   UPDATE or DELETE operations, and
-      //   'Records: 2  Duplicates: 1  Warnings: 0' for INSERT ones.
-      //   This however requires a regex parsing of the string which is
-      //   expensive; $affected_rows would be less accurate but much faster. We
-      //   would need Drupal to be less strict in testing, and never rely on
-      //   this value in runtime (which would be healthy anyway).
-      if ($this->mysqliConnection->info !== NULL) {
-        $matches = [];
-        if (preg_match('/\s(\d+)\s/', $this->mysqliConnection->info, $matches) === 1) {
-          return (int) $matches[0];
-        }
-        else {
-          throw new DatabaseExceptionWrapper('Invalid data in the $info property of the mysqli connection - ' . $this->mysqliConnection->info);
-        }
-      }
-      elseif ($this->mysqliConnection->affected_rows !== NULL) {
-        return $this->mysqliConnection->affected_rows;
-      }
-      throw new DatabaseExceptionWrapper('Unable to retrieve affected rows data');
-    }
-    else {
-      throw new RowCountException();
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setFetchMode($mode, $a1 = NULL, $a2 = []): bool {
-    if (is_int($mode)) {
-      throw new DatabaseExceptionWrapper("Passing the \$mode argument as an integer to setFetchMode() is not supported. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-    }
-    $this->defaultFetchStyle = $mode;
-    switch ($mode) {
-      case FetchAs::ClassObject:
-        $this->fetchOptions['class'] = $a1;
-        if ($a2) {
-          $this->fetchOptions['constructor_args'] = $a2;
-        }
-        break;
-
-      case FetchAs::Column:
-        $this->fetchOptions['column'] = $a1;
-    }
-    return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL) {
-    if (is_string($mode)) {
-      $this->setFetchMode(FetchAs::ClassObject, $mode);
-      $mode = FetchAs::ClassObject;
-    }
-    else {
-      if (is_int($mode)) {
-        throw new DatabaseExceptionWrapper("Passing the \$mode argument as an integer to fetch() is not supported. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-      }
-      $mode = $mode ?: $this->defaultFetchStyle;
-    }
-
-    $mysqli_row = $this->mysqliResult->fetch_assoc();
-
-    if (!$mysqli_row) {
-      $this->markResultsetFetchingComplete();
-      return FALSE;
-    }
-
-    $columnNames = array_keys($mysqli_row);
-
-    // Stringify all non-NULL column values.
-    $row = [];
-    foreach ($mysqli_row as $column => $value) {
-      $row[$column] = $value === NULL ? NULL : (string) $value;
-    }
-
-    $returnValue = match($mode) {
-      FetchAs::Associative => $row,
-      FetchAs::List => $this->assocToNum($row),
-      FetchAs::Object => $this->assocToObj($row),
-      FetchAs::ClassObject => $this->assocToClass($row, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
-      FetchAs::Column=> $this->assocToColumn($row, $columnNames, $this->fetchOptions['column']),
-      default => throw new DatabaseExceptionWrapper('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported.'),
-    };
-
-    $this->setResultsetCurrentRow($returnValue);
-    return $returnValue;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
-    if (is_int($mode)) {
-      throw new DatabaseExceptionWrapper("Passing the \$mode argument as an integer to fetchAll() is not supported. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
-    }
-    if (is_string($mode)) {
-      $this->setFetchMode(FetchAs::ClassObject, $mode);
-      $mode = FetchAs::ClassObject;
-    }
-    else {
-      $mode = $mode ?: $this->defaultFetchStyle;
-    }
-
-    $rows = [];
-    if (FetchAs::Column == $mode) {
-      // When fetching a column's value across the entire dataset, fetch
-      // through it and pick the requested column value for each row.
-      if ($column_index === NULL) {
-        $column_index = 0;
-      }
-      while (($record = $this->fetch(FetchAs::Associative)) !== FALSE) {
-        $cols = array_keys($record);
-        $rows[] = $record[$cols[$column_index]];
-      }
-    }
-    else {
-      while (($row = $this->fetch($mode)) !== FALSE) {
-        $rows[] = $row;
-      }
-    }
-
-    return $rows;
   }
 
 }
