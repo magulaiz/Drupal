@@ -67,7 +67,7 @@ class StatementWrapperIterator extends StatementBase {
       }
     }
 
-    $startEvent = $this->dispatchStatementExecutionStartEvent($args);
+    $startEvent = $this->dispatchStatementExecutionStartEvent($args ?? []);
 
     try {
       $return = $this->clientExecute($args, $options);

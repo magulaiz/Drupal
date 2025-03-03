@@ -100,9 +100,9 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   /**
    * Dispatches an event informing that the statement execution begins.
    *
-   * @param array|null $args
+   * @param array $args
    *   An array of values with as many elements as there are bound parameters in
-   *   the SQL statement being executed. This can be NULL.
+   *   the SQL statement being executed. This can be empty.
    *
    * @return \Drupal\Core\Database\Event\StatementExecutionStartEvent|null
    *   The dispatched event or NULL if event dispatching is not enabled.
@@ -114,7 +114,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
         $this->connection->getKey(),
         $this->connection->getTarget(),
         $this->getQueryString(),
-        $args ?? [],
+        $args,
         $this->connection->findCallerFromDebugBacktrace()
       );
       $this->connection->dispatchEvent($startEvent);
