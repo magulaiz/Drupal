@@ -33,9 +33,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class HookCollectorPass implements CompilerPassInterface {
 
   /**
-   * A list of include files.
+   * A map of include files by function name.
    *
    * (This is required only for BC.)
+   *
+   * @var array<string, string>
    */
   protected array $includes = [];
 
@@ -43,6 +45,8 @@ class HookCollectorPass implements CompilerPassInterface {
    * A list of functions implementing hook_module_implements_alter().
    *
    * (This is required only for BC.)
+   *
+   * @var list<callable-string>
    */
   protected array $moduleImplementsAlters = [];
 
@@ -50,11 +54,15 @@ class HookCollectorPass implements CompilerPassInterface {
    * A list of functions implementing hook_hook_info().
    *
    * (This is required only for BC.)
+   *
+   * @var list<callable-string>
    */
   private array $hookInfo = [];
 
   /**
-   * A list of .inc files.
+   * Include files, keyed by the $group part of "/$module.$group.inc".
+   *
+   * @var array<string, list<string>>
    */
   private array $groupIncludes = [];
 
@@ -339,7 +347,7 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Collects all hook implementations.
    *
-   * @param array $module_list
+   * @param array<string, array{pathname: string}> $module_list
    *   An associative array. Keys are the module names, values are relevant
    *   info yml file path.
    * @param list<string> $skipProceduralModules

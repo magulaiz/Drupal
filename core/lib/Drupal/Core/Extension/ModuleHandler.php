@@ -61,7 +61,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * Hook and module keyed list of listeners.
    *
-   * @var array
+   * @var array<string, array<string, list<callable>>>
    */
   protected array $invokeMap = [];
 
@@ -70,13 +70,13 @@ class ModuleHandler implements ModuleHandlerInterface {
    *
    * @param string $root
    *   The app root.
-   * @param array $module_list
+   * @param array<string, array{type: string, pathname: string, filename: string}> $module_list
    *   An associative array whose keys are the names of installed modules and
    *   whose values are Extension class parameters. This is normally the
    *   %container.modules% parameter being set up by DrupalKernel.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
-   * @param array $hookImplementationsMap
+   * @param array<string, array<class-string, array<string, string>>> $hookImplementationsMap
    *   An array keyed by hook, classname, method and the value is the module.
    * @param array<string, list<string>> $groupIncludes
    *   Lists of *.inc file paths that contain procedural implementations, keyed
@@ -494,12 +494,12 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * Reorder modules for alters.
    *
-   * @param array $modules
+   * @param list<string> $modules
    *   A list of modules.
    * @param string $hook
-   *   The hook being worked on, for example form_alter.
+   *   The hook being worked on, for example 'form_alter'.
    *
-   * @return array
+   * @return list<string>
    *   The list, potentially reordered and changed by
    *   hook_module_implements_alter().
    */
@@ -575,7 +575,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @param string $hook
    *   The name of the hook.
    *
-   * @return array
+   * @return array<string, list<callable>>
    *   A list of event listeners implementing this hook.
    */
   protected function getHookListeners(string $hook): array {
