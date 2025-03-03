@@ -2,9 +2,6 @@
 
 namespace Drupal\Core\Database;
 
-use Drupal\Core\Database\Event\StatementExecutionEndEvent;
-use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
-use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\Statement\PdoTrait;
 use Drupal\Core\Database\Statement\PrefetchedResult;
@@ -110,18 +107,7 @@ class StatementPrefetchIterator extends StatementBase {
       @trigger_error("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
     }
 
-    // Dispatch an event informing that the statement execution begins.
-    if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
-      $startEvent = new StatementExecutionStartEvent(
-        spl_object_id($this),
-        $this->connection->getKey(),
-        $this->connection->getTarget(),
-        $this->getQueryString(),
-        $args ?? [],
-        $this->connection->findCallerFromDebugBacktrace()
-      );
-      $this->connection->dispatchEvent($startEvent);
-    }
+    $startEvent = $this->dispatchStatementExecutionStartEvent($args);
 
     // Prepare and execute the statement.
     try {
@@ -129,21 +115,7 @@ class StatementPrefetchIterator extends StatementBase {
       $return = $this->clientExecute($args, $options);
     }
     catch (\Exception $e) {
-      // On execution failure, dispatch an event informing of the situation.
-      if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionFailureEvent::class)) {
-        $this->connection->dispatchEvent(new StatementExecutionFailureEvent(
-          $startEvent->statementObjectId,
-          $startEvent->key,
-          $startEvent->target,
-          $startEvent->queryString,
-          $startEvent->args,
-          $startEvent->caller,
-          $startEvent->time,
-          get_class($e),
-          $e->getCode(),
-          $e->getMessage(),
-        ));
-      }
+      $this->dispatchStatementExecutionFailureEvent($startEvent, $e);
       unset($this->clientStatement);
       throw $e;
     }
@@ -172,18 +144,7 @@ class StatementPrefetchIterator extends StatementBase {
       }
     }
 
-    // Dispatch an event informing that the statement execution succeeded.
-    if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
-      $this->connection->dispatchEvent(new StatementExecutionEndEvent(
-        $startEvent->statementObjectId,
-        $startEvent->key,
-        $startEvent->target,
-        $startEvent->queryString,
-        $startEvent->args,
-        $startEvent->caller,
-        $startEvent->time
-      ));
-    }
+    $this->dispatchStatementExecutionEndEvent($startEvent);
 
     return $return;
   }

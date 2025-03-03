@@ -2,15 +2,10 @@
 
 namespace Drupal\Core\Database;
 
-use Drupal\Core\Database\Event\StatementExecutionEndEvent;
-use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
-use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\Statement\PdoResult;
 use Drupal\Core\Database\Statement\PdoTrait;
 use Drupal\Core\Database\Statement\StatementBase;
-
-// cSpell:ignore maxlen driverdata INOUT
 
 /**
  * StatementInterface iterator implementation.
@@ -72,18 +67,7 @@ class StatementWrapperIterator extends StatementBase {
       }
     }
 
-    // Dispatch an event informing that the statement execution begins.
-    if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
-      $startEvent = new StatementExecutionStartEvent(
-        spl_object_id($this),
-        $this->connection->getKey(),
-        $this->connection->getTarget(),
-        $this->getQueryString(),
-        $args ?? [],
-        $this->connection->findCallerFromDebugBacktrace()
-      );
-      $this->connection->dispatchEvent($startEvent);
-    }
+    $startEvent = $this->dispatchStatementExecutionStartEvent($args);
 
     try {
       $return = $this->clientExecute($args, $options);
@@ -95,36 +79,11 @@ class StatementWrapperIterator extends StatementBase {
       $this->markResultsetIterable($return);
     }
     catch (\Exception $e) {
-      // On execution failure, dispatch an event informing of the situation.
-      if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionFailureEvent::class)) {
-        $this->connection->dispatchEvent(new StatementExecutionFailureEvent(
-          $startEvent->statementObjectId,
-          $startEvent->key,
-          $startEvent->target,
-          $startEvent->queryString,
-          $startEvent->args,
-          $startEvent->caller,
-          $startEvent->time,
-          get_class($e),
-          $e->getCode(),
-          $e->getMessage(),
-        ));
-      }
+      $this->dispatchStatementExecutionFailureEvent($startEvent, $e);
       throw $e;
     }
 
-    // Dispatch an event informing that the statement execution succeeded.
-    if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
-      $this->connection->dispatchEvent(new StatementExecutionEndEvent(
-        $startEvent->statementObjectId,
-        $startEvent->key,
-        $startEvent->target,
-        $startEvent->queryString,
-        $startEvent->args,
-        $startEvent->caller,
-        $startEvent->time
-      ));
-    }
+    $this->dispatchStatementExecutionEndEvent($startEvent);
 
     return $return;
   }
