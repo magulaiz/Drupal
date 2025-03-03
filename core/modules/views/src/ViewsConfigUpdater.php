@@ -302,7 +302,6 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     return FALSE;
   }
 
-
   /**
    * Checks for table style views needing a default CSS table class value.
    *
