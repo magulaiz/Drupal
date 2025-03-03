@@ -218,6 +218,7 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
+    $tagsInfoByClass = [];
     foreach ($moduleImplementsMap as $hook => $moduleImplements) {
       $extraHooks = $orderExtraTypes[$hook] ?? [];
       // Add implementations to the array we pass to legacy ordering
@@ -235,20 +236,31 @@ class HookCollectorPass implements CompilerPassInterface {
       $priority = 0;
       foreach ($moduleImplements as $module => $v) {
         foreach ($implementations[$hook][$module] ?? [] as $class => $methods) {
-          if ($container->hasDefinition($class)) {
-            $definition = $container->findDefinition($class);
-          }
-          else {
-            $definition = $container
-              ->register($class, $class)
-              ->setAutowired(TRUE);
-          }
           foreach ($methods as $method) {
+            $tagsInfoByClass[$class][] = [
+              'event' => "drupal_hook.$hook",
+              'method' => $method,
+              'priority' => $priority,
+            ];
+            --$priority;
             $map[$hook][$class][$method] = $module;
-            $priority = self::addTagToDefinition($definition, $hook, $method, $priority);
           }
         }
         unset($implementations[$hook][$module]);
+      }
+    }
+
+    foreach ($tagsInfoByClass as $class => $tagsInfo) {
+      if ($container->hasDefinition($class)) {
+        $definition = $container->findDefinition($class);
+      }
+      else {
+        $definition = $container
+          ->register($class, $class)
+          ->setAutowired(TRUE);
+      }
+      foreach ($tagsInfo as $tag_info) {
+        $definition->addTag('kernel.event_listener', $tag_info);
       }
     }
 
