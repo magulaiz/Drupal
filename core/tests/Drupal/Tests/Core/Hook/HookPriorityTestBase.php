@@ -10,6 +10,9 @@ use Drupal\Core\Hook\HookPriority;
 use Drupal\Core\Hook\Order;
 use Drupal\Tests\UnitTestCase;
 
+/**
+ * Base class for testing HookPriority.
+ */
 abstract class HookPriorityTestBase extends UnitTestCase {
 
   /**
