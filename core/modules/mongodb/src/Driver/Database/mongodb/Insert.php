@@ -3,6 +3,7 @@
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\Core\Database\Query\Insert as QueryInsert;
+use Drupal\Core\Database\Statement\FetchAs;
 
 /**
  * MongoDB implementation of \Drupal\Core\Database\Query\Insert.
@@ -52,7 +53,7 @@ class Insert extends QueryInsert {
       $this->insertFields = $cursor->getFields();
 
       // Move the result from the SELECT query into $this->insertValues.
-      $this->insertValues = $cursor->fetchAll(\PDO::FETCH_NUM);
+      $this->insertValues = $cursor->fetchAll(FetchAs::List);
     }
 
     // If validation fails, simply return NULL. Note that validation routines

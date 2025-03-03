@@ -214,7 +214,7 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
             ->orderBy('revision_id', 'ASC')
             ->orderBy('langcode', 'ASC')
             ->execute()
-            ->fetchAll(\PDO::FETCH_ASSOC);
+            ->fetchAll(FetchAs::Associative);
           $this->assertSameSize($expected, $result);
 
           // Use assertEquals and not assertSame here to prevent that a different

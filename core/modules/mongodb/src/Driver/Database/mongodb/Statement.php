@@ -3,6 +3,7 @@
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\StatementPrefetchIterator;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
@@ -181,9 +182,10 @@ class Statement extends StatementPrefetchIterator {
 
     if (!empty($options['fetch'])) {
       if (is_string($options['fetch'])) {
-        // \PDO::FETCH_PROPS_LATE tells __construct() to run before properties
-        // are added to the object.
-        $this->setFetchMode(\PDO::FETCH_CLASS, $options['fetch']);
+        // Default to an object. Note: db fields will be added to the object
+        // before the constructor is run. If you need to assign fields after
+        // the constructor is run. See https://www.drupal.org/node/315092.
+        $this->setFetchMode(FetchAs::ClassObject, $options['fetch']);
       }
       else {
         $this->setFetchMode($options['fetch']);

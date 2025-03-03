@@ -4,6 +4,7 @@ namespace Drupal\mongodb\Plugin\views\query;
 
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\ConditionInterface;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
 use Drupal\views\Plugin\views\filter\LatestRevision;
 use Drupal\views\Plugin\views\query\Sql;
@@ -1079,7 +1080,7 @@ class ViewsQuery extends Sql {
         }
 
         $result = $query->execute();
-        $result->setFetchMode(\PDO::FETCH_CLASS, 'Drupal\views\ResultRow');
+        $result->setFetchMode(FetchAs::ClassObject, 'Drupal\views\ResultRow');
 
         // Setup the result row objects.
         $view->result = iterator_to_array($result);

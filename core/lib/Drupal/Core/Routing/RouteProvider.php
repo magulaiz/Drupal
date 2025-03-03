@@ -407,7 +407,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
         );
 
         $statement = new Statement($this->connection, $cursor, ['name', 'route', 'fit']);
-        $routes = $statement->execute()->fetchAll(\PDO::FETCH_ASSOC);
+        $routes = $statement->execute()->fetchAll(FetchAs::Associative);
       }
       else {
         $routes = $this->connection->query("SELECT [name], [route], [fit] FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE [pattern_outline] IN ( :patterns[] ) AND [number_parts] >= :count_parts", [

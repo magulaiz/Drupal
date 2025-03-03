@@ -3,6 +3,7 @@
 namespace Drupal\mongodb\Menu;
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Menu\MenuTreeStorage as CoreMenuTreeStorage;
 
@@ -157,7 +158,7 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
     $query->fields($this->table, ['mlid', 'id']);
     $query->condition('menu_name', $original['menu_name']);
     $query->condition('parent', $original['id']);
-    $children = $this->safeExecuteSelect($query)->fetchAll(\PDO::FETCH_ASSOC);
+    $children = $this->safeExecuteSelect($query)->fetchAll(FetchAs::Associative);
 
     foreach ($children as $child) {
       // Get the mlid and id values from the child and remove them for the
@@ -234,7 +235,7 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
     //   https://www.drupal.org/node/2302043
     $subquery->fields($this->table, ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9']);
     $subquery->condition('id', $id);
-    $result = current($subquery->execute()->fetchAll(\PDO::FETCH_ASSOC));
+    $result = current($subquery->execute()->fetchAll(FetchAs::Associative));
     $ids = array_filter($result);
     if ($ids) {
       // MongoDB needs integer values to be real integer.
@@ -352,7 +353,7 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
       }
     }
 
-    return $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+    return $this->safeExecuteSelect($query)->fetchAllAssoc('id', FetchAs::Associative);
   }
 
   /**
