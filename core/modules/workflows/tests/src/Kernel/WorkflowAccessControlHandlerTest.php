@@ -121,6 +121,7 @@ class WorkflowAccessControlHandlerTest extends KernelTestBase {
    * Data provider for ::testCheckAccess.
    *
    * @return array
+   *   An array of test data.
    */
   public static function checkAccessProvider() {
     $originalContainer = \Drupal::hasContainer() ? \Drupal::getContainer() : NULL;
