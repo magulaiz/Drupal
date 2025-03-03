@@ -195,6 +195,54 @@ class WorkspaceAssociationTest extends KernelTestBase {
   }
 
   /**
+   * Tests the count of revisions returned for tracked entities listing.
+   *
+   * @param string $entity_type_id
+   *   The ID of the entity type to test.
+   * @param array $entity_values
+   *   An array of values for the entities created in this test.
+   *
+   * @covers ::getTrackedEntitiesForListing
+   *
+   * @dataProvider getEntityTypeIdsForListing
+   */
+  public function testWorkspaceAssociationForListing(string $entity_type_id, array $entity_values): void {
+    $this->switchToWorkspace($this->workspaces['stage']->id());
+
+    foreach ($entity_values as $entity_value) {
+      $this->createEntity($entity_type_id, $entity_value);
+    }
+
+    /** @var \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association */
+    $workspace_association = \Drupal::service('workspaces.association');
+
+    // The default behavior uses a pager with 50 items per page.
+    $tracked_items = $workspace_association->getTrackedEntitiesForListing($this->workspaces['stage']->id());
+    $this->assertEquals(count($tracked_items[$entity_type_id]), 50);
+
+    // Verifies that all items are returned, not broken into pages.
+    $tracked_items_no_pager = $workspace_association->getTrackedEntitiesForListing($this->workspaces['stage']->id(), NULL, FALSE);
+    $this->assertEquals(count($tracked_items_no_pager[$entity_type_id]), 51);
+  }
+
+  /**
+   * The data provider for ::testWorkspaceAssociationForListing().
+   *
+   * Returns 51 items, because default behavior uses a pager for more than 50.
+   */
+  public static function getEntityTypeIdsForListing(): array {
+    for ($i = 1; $i <= 51; ++$i) {
+      $entity_values[] = ['name' => "Test entity {$i}"];
+    }
+    return [
+      [
+        'entity_type_id' => 'entity_test_mulrevpub',
+        'entity_values' => $entity_values,
+      ],
+    ];
+  }
+
+  /**
    * Checks the workspace associations for a test scenario.
    *
    * @param string $entity_type_id
