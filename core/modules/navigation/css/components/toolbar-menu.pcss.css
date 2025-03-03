@@ -167,3 +167,26 @@
     }
   }
 }
+
+.admin-toolbar__scroll-wrapper{
+  .admin-toolbar__content{
+    .contextual {
+      inset-inline: 10% auto !important;
+      transform-origin: top left !important;
+      width: 55px !important; 
+      max-width: 55px !important;
+      .trigger{
+        float: left !important;
+      }
+      .contextual-links{
+        width: 100% !important; 
+        box-sizing: border-box !important;
+        white-space: normal !important;
+        a {
+          font-size: xx-small;
+          word-break: break-word !important;
+        }
+      }
+    }
+  }
+}
