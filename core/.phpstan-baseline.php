@@ -28610,12 +28610,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/QueryAggregate.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Hook\\\\MongodbHooks\\:\\:t\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/mongodb/src/Hook/MongodbHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\mongodb\\\\Hook\\\\MongodbHooks\\:\\:help\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
