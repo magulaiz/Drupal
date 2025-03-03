@@ -271,9 +271,7 @@ class HookCollectorPass implements CompilerPassInterface {
         // $hookOrderOperation->order->classesAndMethods and create specifiers
         // for HookPriority::change() while at it.
         $otherSpecifiers = array_map(
-          static fn ($pair) => is_array($pair)
-            ? $pair[0] . '::' . $pair[1]
-            : throw new \LogicException('classesAndMethods needs to be an array of arrays'),
+          static fn ($pair) => is_array($pair) ? $pair[0] . '::' . $pair[1] : throw new \LogicException('classesAndMethods needs to be an array of arrays'),
           $hookOrderOperation->order->classesAndMethods
         );
         // Collect classes and methods for
@@ -592,7 +590,7 @@ class HookCollectorPass implements CompilerPassInterface {
         if (count(array_unique($moduleFinder[$class][$method])) > 1) {
           throw new \LogicException('Complex ordering can only work when all implementations on a single method are for the same module.');
         }
-        $map[$combinedHook][$class][$method] = $moduleFinder[$class][$method];
+        $map[$combinedHook][$class][$method] = reset($moduleFinder[$class][$method]);
         $priority = self::addTagToDefinition($container->findDefinition($class), $combinedHook, $method, $priority);
       }
     }
