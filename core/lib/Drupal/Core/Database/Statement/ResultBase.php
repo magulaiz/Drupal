@@ -72,7 +72,13 @@ abstract class ResultBase {
    * @return array
    *   An array of results.
    */
-  abstract public function fetchAll(FetchAs $mode, array $fetchOptions): array;
+  public function fetchAll(FetchAs $mode, array $fetchOptions): array {
+    $result = [];
+    while ($rowAssoc = $this->fetch(FetchAs::Associative, $fetchOptions)) {
+      $result[] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
+    }
+    return $result;
+  }
 
   /**
    * Returns the entire result set as a single associative array.
@@ -94,7 +100,13 @@ abstract class ResultBase {
    * @return array
    *   An associative array, or an empty array if there is no result set.
    */
-  abstract public function fetchAllKeyed(int $keyIndex = 0, int $valueIndex = 1): array;
+  public function fetchAllKeyed(int $keyIndex = 0, int $valueIndex = 1): array {
+    $result = [];
+    while ($record = $this->fetch(FetchAs::List, [])) {
+      $result[$record[$keyIndex]] = $record[$valueIndex];
+    }
+    return $result;
+  }
 
   /**
    * Returns the result set as an associative array keyed by the given column.
@@ -115,6 +127,12 @@ abstract class ResultBase {
    * @return array
    *   An associative array, or an empty array if there is no result set.
    */
-  abstract public function fetchAllAssoc(string $column, FetchAs $mode, array $fetchOptions): array;
+  public function fetchAllAssoc(string $column, FetchAs $mode, array $fetchOptions): array {
+    $result = [];
+    while ($rowAssoc = $this->fetch(FetchAs::Associative, [])) {
+      $result[$rowAssoc[$column]] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
+    }
+    return $result;
+  }
 
 }
