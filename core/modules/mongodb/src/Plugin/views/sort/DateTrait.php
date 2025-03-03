@@ -30,6 +30,10 @@ trait DateTrait {
         $formula = $this->getDateFormat('Ymd');
         break;
 
+      case 'week':
+        $formula = $this->getDateFormat('W');
+        break;
+
       case 'month':
         $formula = $this->getDateFormat('Ym');
         break;
