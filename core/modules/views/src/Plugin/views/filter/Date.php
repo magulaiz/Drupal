@@ -21,6 +21,7 @@ class Date extends NumericFilter {
 
     // Value is already set up properly, we're just adding our new field to it.
     $options['value']['contains']['type']['default'] = 'date';
+
     return $options;
   }
 
@@ -180,25 +181,36 @@ class Date extends NumericFilter {
    * {@inheritdoc}
    */
   protected function opBetween($field) {
-
     $a = intval(strtotime($this->value['min'], 0));
     $b = intval(strtotime($this->value['max'], 0));
 
+    if ($this->value['type'] == 'date') {
+      // Check if the max value lacks a time component (i.e., user selected only a date).
+      if (date('H:i:s', strtotime($this->value['max'])) == '00:00:00') {
+        $b = intval(strtotime($this->value['max'] . ' +1 day', 0)) - 1;
+      }
+    }
+
     if ($this->value['type'] == 'offset') {
-      $request_time = $this->getCurrentTime();
       // Keep sign.
-      // $a = '***CURRENT_TIME***' . sprintf('%+d', $a);.
-      $a = $request_time + $a;
+      $a = '***CURRENT_TIME***' . sprintf('%+d', $a);
+      // Keep sign for max, store original for checking.
+      $b_original = $b; // Save the raw offset in seconds.
       // Keep sign.
-      // $b = '***CURRENT_TIME***' . sprintf('%+d', $b);.
-      $b = $request_time + $b;
+      $b = '***CURRENT_TIME***' . sprintf('%+d', $b);
+      // If min and max are the same and max has no time part (whole days only).
+      if ($this->value['min'] === $this->value['max'] && ($b_original % 86400 === 0)) {
+        // Convert offset to days.
+        $offset_days = intdiv($b_original, 86400);
+        // Set $b to the end of that day (23:59:59).
+        $b = '***CURRENT_TIME***' . sprintf('%+d', ($offset_days * 86400) + 86399);
+      }
     }
     // This is safe because we are manually scrubbing the values. It is
     // necessary to do it this way because $a and $b are formulas when using an
     // offset.
     $operator = strtoupper($this->operator);
     $this->query->addWhereExpression($this->options['group'], "$field $operator $a AND $b");
-
   }
 
   /**
@@ -213,15 +225,6 @@ class Date extends NumericFilter {
     // This is safe because we are manually scrubbing the value. It is necessary
     // to do it this way because $value is a formula when using an offset.
     $this->query->addWhereExpression($this->options['group'], "$field $this->operator $value");
-  }
-
-  /**
-   * Get Current_Time.
-   *
-   * @return int
-   */
-  public function getCurrentTime() {
-    return time();
   }
 
 }
