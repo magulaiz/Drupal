@@ -36,7 +36,7 @@ class ModuleInstallConfigTestSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $table = $definition->get('data_table');
+    $table = $definition->get('base_table');
     if (!$this->connection->schema()->tableExists($table)) {
       $this->keyValue->get('module_installer_config_subscriber')->set('node_tables_missing', TRUE);
     }
