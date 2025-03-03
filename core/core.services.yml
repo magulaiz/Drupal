@@ -1113,8 +1113,6 @@ services:
   pgsql.entity.query.sql:
     class: Drupal\pgsql\EntityQuery\QueryFactory
     arguments: ['@database']
-    tags:
-      - { name: pgsql_entity_query_sql, provider_id: 'core', priority: 0, global: TRUE }
     deprecated: The "%service_id%" service is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Install the pgsql module to replace this service. See https://www.drupal.org/node/3488580
   entity.query.null:
     class: Drupal\Core\Entity\Query\Null\QueryFactory
