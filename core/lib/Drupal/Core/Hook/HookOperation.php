@@ -29,7 +29,7 @@ abstract class HookOperation {
   public function __construct(
     public string $hook,
     public string $method,
-    public ?string $class = '',
+    public ?string $class = NULL,
     public Order|ComplexOrder|null $order = NULL,
   ) {}
 
