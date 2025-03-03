@@ -8,11 +8,14 @@ use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Hook implementations for MongoDB.
  */
 class MongodbHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_help().
