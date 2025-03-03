@@ -35,7 +35,7 @@ class WebAssert extends MinkWebAssert {
    * Constructor.
    *
    * @param \Behat\Mink\Session $session
-   *   The Behat session object;
+   *   The Behat session object.
    * @param string $base_url
    *   The base URL of the site under test.
    */
@@ -53,6 +53,7 @@ class WebAssert extends MinkWebAssert {
    *   Whether to include the query string in the return value.
    *
    * @return string
+   *   The cleaned URL with the base URL removed and formatted consistently.
    */
   protected function cleanUrl(string|Url $url, bool $include_query = FALSE) {
     if ($url instanceof Url) {
@@ -769,6 +770,7 @@ class WebAssert extends MinkWebAssert {
    *   A url string, or object.
    *
    * @return void
+   *   No return value.
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    */

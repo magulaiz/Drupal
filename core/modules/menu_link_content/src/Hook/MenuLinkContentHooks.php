@@ -3,6 +3,7 @@
 namespace Drupal\menu_link_content\Hook;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\path_alias\PathAliasInterface;
 use Drupal\system\MenuInterface;
 use Drupal\Core\Url;
@@ -14,18 +15,20 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class MenuLinkContentHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.menu_link_content':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Custom Menu Links module allows users to create menu links. These links can be translated if multiple languages are used for the site.');
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Custom Menu Links module allows users to create menu links. These links can be translated if multiple languages are used for the site.');
         if (\Drupal::moduleHandler()->moduleExists('menu_ui')) {
-          $output .= ' ' . t('It is required by the Menu UI module, which provides an interface for managing menus and menu links. For more information, see the <a href=":menu-help">Menu UI module help page</a> and the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>.', [
+          $output .= ' ' . $this->t('It is required by the Menu UI module, which provides an interface for managing menus and menu links. For more information, see the <a href=":menu-help">Menu UI module help page</a> and the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>.', [
             ':menu-help' => Url::fromRoute('help.page', [
               'name' => 'menu_ui',
             ])->toString(),
@@ -33,11 +36,12 @@ class MenuLinkContentHooks {
           ]);
         }
         else {
-          $output .= ' ' . t('For more information, see the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>. If you install the Menu UI module, it provides an interface for managing menus and menu links.', [':drupal-org-help' => 'https://www.drupal.org/documentation/modules/menu_link']);
+          $output .= ' ' . $this->t('For more information, see the <a href=":drupal-org-help">online documentation for the Custom Menu Links module</a>. If you install the Menu UI module, it provides an interface for managing menus and menu links.', [':drupal-org-help' => 'https://www.drupal.org/documentation/modules/menu_link']);
         }
         $output .= '</p>';
         return $output;
     }
+    return NULL;
   }
 
   /**
@@ -101,8 +105,8 @@ class MenuLinkContentHooks {
     $entity_type_id = $entity->getEntityTypeId();
     foreach ($entity->uriRelationships() as $rel) {
       $url = $entity->toUrl($rel);
-      // Entities can provide uri relationships that are not routed, in this case
-      // getRouteParameters() will throw an exception.
+      // Entities can provide uri relationships that are not routed, in this
+      // case getRouteParameters() will throw an exception.
       if (!$url->isRouted()) {
         continue;
       }

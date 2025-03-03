@@ -606,6 +606,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    *   (optional) The methods to mock.
    *
    * @return \Drupal\Core\Entity\EntityInterface&\PHPUnit\Framework\MockObject\MockObject
+   *   A mock entity instance with the specified methods mocked.
    */
   protected function getMockEntity(string $class = EntityBaseTest::class, array $arguments = [], array $methods = []): EntityInterface&MockObject {
     // Ensure the entity is passed at least an array of values and an entity
@@ -624,6 +625,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
 
 }
 
+/**
+ * A simple entity class for testing key value entity storage.
+ */
 class EntityBaseTest extends EntityBase {
 
   /**

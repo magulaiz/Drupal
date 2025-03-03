@@ -84,8 +84,8 @@ function form_select_options($element, $choices = NULL) {
     unset($choices['#sort_start']);
   }
 
-  // array_key_exists() accommodates the rare event where $element['#value'] is NULL.
-  // isset() fails in this situation.
+  // array_key_exists() accommodates the rare event where $element['#value'] is
+  // NULL. isset() fails in this situation.
   $value_valid = \array_key_exists('#value', $element);
   $value_is_array = $value_valid && is_array($element['#value']);
   // Check if the element is multiple select and no value has been selected.
@@ -357,7 +357,7 @@ function template_preprocess_input(&$variables): void {
  * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #action, #method, #attributes, #children
+ *     Properties used: #action, #method, #attributes, #children.
  */
 function template_preprocess_form(&$variables): void {
   $element = $variables['element'];
@@ -670,7 +670,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *   \Drupal::messenger()->addMessage($message);
  *   // Providing data for the redirected page is done through the session.
  *   foreach ($results as $result) {
- *     $items[] = t('Loaded node %title.', ['%title' => $result)];
+ *     $items[] = t('Loaded node %title.', ['%title' => $result]);
  *   }
  *   $session = \Drupal::getRequest()->getSession();
  *   $session->set('my_batch_results', $items);
@@ -702,7 +702,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *     Example:
  *     @code
  *     [
- *       ['callback_batch_operation_1', [$arg1)],
+ *       ['callback_batch_operation_1', [$arg1]],
  *       ['callback_batch_operation_2', [$arg2_1, $arg2_2]],
  *     ]
  *     @endcode
@@ -711,8 +711,10 @@ function template_preprocess_form_element_label(&$variables): void {
  *   - init_message: Message displayed while the processing is initialized.
  *     Defaults to t('Initializing.').
  *   - progress_message: Message displayed while processing the batch. Available
- *     placeholders are @current, @remaining, @total, @percentage, @estimate and
- *     @elapsed. Defaults to t('Completed @current of @total.').
+ *     placeholders are "@current", "@remaining", "@total", "@percentage",
+ *     phpcs:ignore Drupal.Commenting.FunctionComment.ParamCommentFullStop
+ *     "@estimate" and "@elapsed". Defaults to "t('Completed @current of
+ *     @total.')".
  *   - error_message: Message displayed if an error occurred while processing
  *     the batch. Defaults to t('An error has occurred.').
  *   - finished: Name of an implementation of callback_batch_finished(). This is
@@ -934,7 +936,8 @@ function batch_process($redirect = NULL, ?Url $url = NULL, $redirect_callback = 
       // Store the batch.
       \Drupal::service(BatchStorageInterface::class)->create($batch);
 
-      // Set the batch number in the session to guarantee that it will stay alive.
+      // Set the batch number in the session to guarantee that it will stay
+      // alive.
       $session = \Drupal::request()->getSession();
       $batches = $session->get('batches', []);
       $batches[$batch['id']] = TRUE;
