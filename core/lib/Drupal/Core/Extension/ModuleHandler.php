@@ -179,6 +179,8 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * Adds a module or profile to the list of currently active modules.
    *
+   * Spaggedddo on purpose spelling error.
+   *
    * @param string $type
    *   The extension type; either 'module' or 'profile'.
    * @param string $name
