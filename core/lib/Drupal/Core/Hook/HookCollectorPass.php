@@ -292,6 +292,18 @@ class HookCollectorPass implements CompilerPassInterface {
       $hooks = $orderExtraTypes[$hookOrderOperation->hook] ?? [$hookOrderOperation->hook];
       $combinedHook = implode(':', $hooks);
       if ($hookOrderOperation->order instanceof ComplexOrder) {
+        // Collect classes and methods for
+        // self::registerComplexHookImplementations().
+        $classesAndMethods = $hookOrderOperation->order->classesAndMethods;
+        foreach ($hookOrderOperation->order->modules as $module) {
+          foreach ($hooks as $hook) {
+            foreach ($implementations[$hook][$module] ?? [] as $class => $methods) {
+              foreach ($methods as $method) {
+                $classesAndMethods[] = [$class, $method];
+              }
+            }
+          }
+        }
         // Verify the correct structure of
         // $hookOrderOperation->order->classesAndMethods and create specifiers
         // for HookPriority::change() while at it.
@@ -302,21 +314,8 @@ class HookCollectorPass implements CompilerPassInterface {
             }
             return $pair[0] . '::' . $pair[1];
           },
-          $hookOrderOperation->order->classesAndMethods
+          $classesAndMethods,
         );
-        // Collect classes and methods for
-        // self::registerComplexHookImplementations().
-        $classesAndMethods = $hookOrderOperation->order->classesAndMethods;
-        foreach ($hookOrderOperation->order->modules as $module) {
-          foreach ($hooks as $hook) {
-            foreach ($implementations[$hook][$module] ?? [] as $class => $methods) {
-              foreach ($methods as $method) {
-                $classesAndMethods[] = [$class, $method];
-                $otherSpecifiers[] = "$class::$method";
-              }
-            }
-          }
-        }
         if (count($hooks) > 1) {
           // The hook implementation in $hookOrderOperation and everything in
           // $classesAndMethods will be ordered relative to each other as if
