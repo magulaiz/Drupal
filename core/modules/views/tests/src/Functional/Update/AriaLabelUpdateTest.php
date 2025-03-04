@@ -11,6 +11,7 @@ use Drupal\views\Entity\View;
  * Tests the upgrade path for adding aria labels to views field handler.
  *
  * @group Update
+ * @group legacy
  *
  * @see views_post_update_add_aria_label()
  */
