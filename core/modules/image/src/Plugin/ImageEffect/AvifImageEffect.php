@@ -10,7 +10,7 @@ use Drupal\image\Attribute\ImageEffect;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Converts an image resource to AVIF, with fallback to WEBP.
+ * Converts an image resource to AVIF, with fallback.
  */
 #[ImageEffect(
   id: "image_convert_avif",
@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AvifImageEffect extends ConvertImageEffect {
 
   /**
-   * The image toolkit manager
+   * The image toolkit manager.
    *
    * @var \Drupal\Core\ImageToolkit\ImageToolkitManager
    */
