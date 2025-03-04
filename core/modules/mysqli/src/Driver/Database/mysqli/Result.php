@@ -95,41 +95,4 @@ class Result extends ResultBase {
     return $this->assocToFetchMode($row, $mode, $fetchOptions);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAll(FetchAs $mode, array $fetchOptions): array {
-    // @todo EXACT COPY OF PrefetchedResult, move both to ResultBase.
-    $result = [];
-    while ($rowAssoc = $this->fetch(FetchAs::Associative, $fetchOptions)) {
-      $result[] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
-    }
-    return $result;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAllKeyed(int $keyIndex = 0, int $valueIndex = 1): array {
-    // @todo EXACT COPY OF PdoResult, move both to ResultBase.
-    $result = [];
-    while ($record = $this->fetch(FetchAs::List, [])) {
-      $result[$record[$keyIndex]] = $record[$valueIndex];
-    }
-    return $result;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAllAssoc(string $column, FetchAs $mode, array $fetchOptions): array {
-    // @todo NEAR COPY OF PdoResult and PrefetchedResult, refactor common
-    // code both to ResultBase.
-    $result = [];
-    while ($rowAssoc = $this->fetch(FetchAs::Associative, [])) {
-      $result[$rowAssoc[$column]] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
-    }
-    return $result;
-  }
-
 }
