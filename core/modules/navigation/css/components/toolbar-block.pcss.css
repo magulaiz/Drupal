@@ -70,10 +70,9 @@
 .layout-builder__add-block a {
   html:not([data-admin-toolbar="expanded"]) &,
   html[data-admin-toolbar-animating][data-admin-toolbar="expanded"] & {
-    color: transparent; /* Makes text invisible instead of text-indent */
     position: relative;
     display: inline-block;
     text-decoration: none; /* Keeps it clickable */
+    color: transparent; /* Makes text invisible instead of text-indent */
   }
 }
-
