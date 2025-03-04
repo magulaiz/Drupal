@@ -197,6 +197,10 @@ class HookCollectorPass implements CompilerPassInterface {
   protected static function registerImplementations(ContainerBuilder $container, HookCollectorPass $collector, array $implementations, array $legacyImplementationMap, array $orderExtraTypes): void {
     $container->register(ProceduralCall::class, ProceduralCall::class)
       ->addArgument($collector->includes);
+
+    // Gather includes for each hook_hook_info group.
+    // We store this in $groupIncludes so moduleHandler can ensure the files
+    // are included runtime when the hooks are invoked.
     $groupIncludes = [];
     foreach ($collector->hookInfo as $function) {
       foreach ($function() as $hook => $info) {
@@ -206,14 +210,19 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
+    // Register all implementations.
     foreach ($legacyImplementationMap as $hook => $moduleImplements) {
       $extraHooks = $orderExtraTypes[$hook] ?? [];
       foreach ($extraHooks as $extraHook) {
         $moduleImplements += $legacyImplementationMap[$extraHook] ?? [];
       }
+      // Process all hook_module_implements_alter() for build time ordering.
       foreach ($collector->moduleImplementsAlters as $alter) {
         $alter($moduleImplements, $hook);
       }
+      // Start at 0 for the first hook. We decrease the priority after each
+      // hook that is registered. Symfony priorities run higher priorities
+      // first.
       $priority = 0;
       foreach ($moduleImplements as $module => $v) {
         foreach ($implementations[$hook][$module] ?? [] as $class => $method_hooks) {
@@ -234,6 +243,7 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
+    // Pass necessary parameters to moduleHandler.
     $definition = $container->getDefinition('module_handler');
     $definition->setArgument('$groupIncludes', $groupIncludes);
     $definition->setArgument('$orderedExtraTypes', $orderExtraTypes);
