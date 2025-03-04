@@ -251,7 +251,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *   Lists of extra hooks to order together with, keyed by hook name.
    * @param array<string, array<string, array<class-string, list<string>>>> $implementations
    *   Hook implementations, as method names by hook, module and class.
-   * @param array<class-string, array<array<string, string>>> $moduleFinder
+   * @param array<class-string, array<string, array<string, string>>> $moduleFinder
    *   Lookup map to find the module for each hook implementation.
    *   Array keys are the class, method, and hook, array values are module
    *   names.
@@ -575,7 +575,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *   The container.
    * @param list<array{class-string, string}> $classesAndMethods
    *   A list of class-and-method pairs.
-   * @param array<class-string, array<array<string, string>>> $moduleFinder
+   * @param array<class-string, array<string, array<string, string>>> $moduleFinder
    *   Array keys are the class, method, and hook, array values are module
    *   names.
    * @param string $combinedHook
