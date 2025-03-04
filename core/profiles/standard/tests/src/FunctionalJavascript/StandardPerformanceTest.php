@@ -149,8 +149,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
       ],
       'CacheSetCount' => 47,
       'CacheDeleteCount' => 0,
-      'CacheTagChecksumCount' => 39,
-      'CacheTagIsValidCount' => 41,
+      'CacheTagChecksumCount' => 40,
+      'CacheTagIsValidCount' => 42,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 22,
       'CacheTagGroupedLookups' => [
