@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Test;
 
 use Drupal\KernelTests\AssertContentTrait;
@@ -16,7 +18,7 @@ class AssertContentTraitTest extends UnitTestCase {
   /**
    * @covers ::getTextContent
    */
-  public function testGetTextContent() {
+  public function testGetTextContent(): void {
 
     $raw_content = <<<EOT
 

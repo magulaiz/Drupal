@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\RenderElement;
+
 /**
  * Provides a messages element.
  *
@@ -13,10 +15,9 @@ namespace Drupal\Core\Render\Element;
  *   '#type' => 'status_messages',
  * ];
  * @endcode
- *
- * @RenderElement("status_messages")
  */
-class StatusMessages extends RenderElement {
+#[RenderElement('status_messages')]
+class StatusMessages extends RenderElementBase {
 
   /**
    * {@inheritdoc}
@@ -74,10 +75,10 @@ class StatusMessages extends RenderElement {
    *   Limit the messages returned by type. Defaults to NULL, meaning all types.
    *   Passed on to \Drupal\Core\Messenger\Messenger::deleteByType(). These
    *   values are supported:
-   *   - NULL
-   *   - 'status'
-   *   - 'warning'
-   *   - 'error'
+   *   - NULL.
+   *   - 'status'.
+   *   - 'warning'.
+   *   - 'error'.
    *
    * @return array
    *   A renderable array containing the messages.

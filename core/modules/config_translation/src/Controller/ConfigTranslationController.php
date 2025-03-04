@@ -147,7 +147,7 @@ class ConfigTranslationController extends ControllerBase {
       $original_langcode = $mapper->getLangcode();
       $operations_access = TRUE;
     }
-    catch (ConfigMapperLanguageException $exception) {
+    catch (ConfigMapperLanguageException) {
       $items = [];
       foreach ($mapper->getConfigNames() as $config_name) {
         $langcode = $mapper->getLangcodeFromConfig($config_name);
@@ -163,7 +163,7 @@ class ConfigTranslationController extends ControllerBase {
           '#items' => $items,
         ],
       ];
-      $this->messenger()->addWarning($this->renderer->renderPlain($message));
+      $this->messenger()->addWarning($this->renderer->renderInIsolation($message));
 
       $original_langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
       $operations_access = FALSE;
@@ -177,7 +177,8 @@ class ConfigTranslationController extends ControllerBase {
     }
 
     // We create a fake request object to pass into
-    // ConfigMapperInterface::populateFromRouteMatch() for the different languages.
+    // ConfigMapperInterface::populateFromRouteMatch() for the different
+    // languages.
     // Creating a separate request for each language and route is neither easily
     // possible nor performant.
     $fake_request = $request->duplicate();

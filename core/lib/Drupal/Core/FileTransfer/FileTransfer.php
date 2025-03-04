@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\FileTransfer;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Defines the base FileTransfer class.
  *
@@ -10,8 +12,18 @@ namespace Drupal\Core\FileTransfer;
  * to the server using some backend (for example FTP or SSH). To keep security,
  * the password should always be asked from the user and never stored. For
  * safety, all methods operate only inside a "jail", by default the Drupal root.
+ *
+ * The following properties are managed by magic methods:
+ *
+ * @property string|false|null $chroot
+ *   Path to connection chroot.
+ * @property object|false|null $connection
+ *   The instantiated connection object.
  */
+#[\AllowDynamicProperties]
 abstract class FileTransfer {
+
+  use StringTranslationTrait;
 
   /**
    * The username for this file transfer.
@@ -49,23 +61,9 @@ abstract class FileTransfer {
   protected $jail;
 
   /**
-   * Path to connection chroot.
-   *
-   * @var string|false|null
-   */
-  private $chrootPath;
-
-  /**
-   * The instantiated connection object.
-   *
-   * @var object|false|null
-   */
-  private $connectionHandle;
-
-  /**
    * Constructs a Drupal\Core\FileTransfer\FileTransfer object.
    *
-   * @param $jail
+   * @param string $jail
    *   The full path where all file operations performed by this object will
    *   be restricted to. This prevents the FileTransfer classes from being
    *   able to touch other parts of the filesystem.
@@ -94,6 +92,7 @@ abstract class FileTransfer {
    *
    * @throws \Drupal\Core\FileTransfer\FileTransferException
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn
   public static function factory($jail, $settings) {
     throw new FileTransferException('FileTransfer::factory() static method not overridden by FileTransfer subclass.');
   }
@@ -114,12 +113,12 @@ abstract class FileTransfer {
   public function __get($name) {
     if ($name == 'connection') {
       $this->connect();
-      return $this->connectionHandle;
+      return $this->connection;
     }
 
     if ($name == 'chroot') {
       $this->setChroot();
-      return $this->chrootPath;
+      return $this->chroot;
     }
   }
 
@@ -128,10 +127,10 @@ abstract class FileTransfer {
    */
   public function __set(string $name, $value): void {
     if ($name == 'connection') {
-      $this->connectionHandle = $value;
+      $this->connection = $value;
     }
     elseif ($name == 'chroot') {
-      $this->chrootPath = $value;
+      $this->chroot = $value;
     }
   }
 
@@ -140,10 +139,10 @@ abstract class FileTransfer {
    */
   public function __isset(string $name): bool {
     if ($name == 'connection') {
-      return isset($this->connectionHandle);
+      return isset($this->connection);
     }
     if ($name == 'chroot') {
-      return isset($this->chrootPath);
+      return isset($this->chroot);
     }
     return FALSE;
   }
@@ -153,10 +152,10 @@ abstract class FileTransfer {
    */
   public function __unset(string $name): void {
     if ($name == 'connection') {
-      unset($this->connectionHandle);
+      unset($this->connection);
     }
     elseif ($name == 'chroot') {
-      unset($this->chrootPath);
+      unset($this->chroot);
     }
   }
 
@@ -293,8 +292,8 @@ abstract class FileTransfer {
     // Strip out windows drive letter if its there.
     $path = preg_replace('|^([a-z]{1}):|i', '', $path);
     if ($strip_chroot) {
-      if ($this->chrootPath && str_starts_with($path, $this->chrootPath)) {
-        $path = ($path == $this->chrootPath) ? '' : substr($path, strlen($this->chrootPath));
+      if ($this->chroot && str_starts_with($path, $this->chroot)) {
+        $path = ($path == $this->chroot) ? '' : substr($path, strlen($this->chroot));
       }
     }
     return $path;
@@ -312,7 +311,7 @@ abstract class FileTransfer {
   public function sanitizePath($path) {
     // Windows path sanitization.
     $path = str_replace('\\', '/', $path);
-    if (substr($path, -1) == '/') {
+    if (str_ends_with($path, '/')) {
       $path = substr($path, 0, -1);
     }
     return $path;
@@ -382,7 +381,7 @@ abstract class FileTransfer {
    * Checks if a particular path is a directory.
    *
    * @param string $path
-   *   The path to check
+   *   The path to check.
    *
    * @return bool
    *   TRUE if the specified path is a directory, FALSE otherwise.
@@ -451,26 +450,26 @@ abstract class FileTransfer {
   public function getSettingsForm() {
     $form['username'] = [
       '#type' => 'textfield',
-      '#title' => t('Username'),
+      '#title' => $this->t('Username'),
     ];
     $form['password'] = [
       '#type' => 'password',
-      '#title' => t('Password'),
-      '#description' => t('Your password is not saved in the database and is only used to establish a connection.'),
+      '#title' => $this->t('Password'),
+      '#description' => $this->t('Your password is not saved in the database and is only used to establish a connection.'),
     ];
     $form['advanced'] = [
       '#type' => 'details',
-      '#title' => t('Advanced settings'),
+      '#title' => $this->t('Advanced settings'),
     ];
     $form['advanced']['hostname'] = [
       '#type' => 'textfield',
-      '#title' => t('Host'),
+      '#title' => $this->t('Host'),
       '#default_value' => 'localhost',
-      '#description' => t('The connection will be created between your web server and the machine hosting the web server files. In the vast majority of cases, this will be the same machine, and "localhost" is correct.'),
+      '#description' => $this->t('The connection will be created between your web server and the machine hosting the web server files. In the vast majority of cases, this will be the same machine, and "localhost" is correct.'),
     ];
     $form['advanced']['port'] = [
       '#type' => 'textfield',
-      '#title' => t('Port'),
+      '#title' => $this->t('Port'),
       '#default_value' => NULL,
     ];
     return $form;
