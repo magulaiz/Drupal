@@ -60,23 +60,11 @@ class PhpUnitTestDiscovery {
    * @param string|null $directory
    *   (optional) Limit discovered tests to a specific directory.
    *
-   * @return array<class-string,array<'name'|'description'|'group'|'groups'|'type'|'file'|'tests_count',string|array>>
-   *   An array of tests keyed by the group name. If a test belongs to multiple
-   *   groups, it will appear under all group keys it belongs to.
-   *
-   * @code
-   *     $groups['block'] => [
-   *       'Drupal\Tests\block\Functional\BlockTest' => [
-   *         'name' => 'Drupal\Tests\block\Functional\BlockTest',
-   *         'description' => 'Tests block UI CRUD functionality.',
-   *         'group' => 'block',
-   *         'groups' => ['block', 'group2', 'group3'],
-   *         'type' => 'PHPUnit-Functional',
-   *         'file' => '{root}/core/modules/block/tests/src/Functional/BlockTest.php',
-   *         'tests_count' => 3,
-   *       ],
-   *     ];
-   * @endcode
+   * @return array<string<array<class-string, array{name: class-string, description: string, group: string|int, groups: list<string|int>, type: string, file: string, tests_count: positive-int}>>>
+   *   An array of test groups keyed by the group name. Each test group is an
+   *   array of test class information arrays as returned by
+   *   ::getTestClassInfo(), keyed by test class. If a test class belongs to
+   *   multiple groups, it will appear under all group keys it belongs to.
    */
   public function getTestClasses(?string $extension = NULL, array $types = [], ?string $directory = NULL): array {
     $this->warnings = [];
@@ -226,7 +214,7 @@ class PhpUnitTestDiscovery {
    * @param string $testSuite
    *   The test suite of this test class.
    *
-   * @return array<'name'|'description'|'group'|'groups'|'type'|'file'|'tests_count',string|array>
+   * @return array{name: class-string, description: string, group: string|int, groups: list<string|int>, type: string, file: string, tests_count: positive-int}
    *   The test class information.
    */
   private function getTestClassInfo(Test $testClass, string $testSuite): array {
