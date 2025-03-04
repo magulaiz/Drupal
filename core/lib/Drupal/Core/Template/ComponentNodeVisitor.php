@@ -57,7 +57,7 @@ class ComponentNodeVisitor implements NodeVisitorInterface {
       $print_nodes[] = new PrintNode(new ConstantExpression(sprintf('<!-- %s Component start: %s -->', $emoji, $component_id), $line), $line);
     }
     $print_nodes[] = new PrintNode(new FunctionExpression(
-      new TwigFunction('attach_library', [$env->getExtension(TwigExtension::class), 'attachLibrary']),
+      new TwigFunction('attach_library', [$env->getExtension(\Drupal::service('twig.extension')::class), 'attachLibrary']),
       new Nodes([new ConstantExpression($component->getLibraryName(), $line)]),
       $line
     ), $line);
