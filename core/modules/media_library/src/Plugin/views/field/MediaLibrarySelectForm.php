@@ -164,9 +164,9 @@ class MediaLibrarySelectForm extends FieldPluginBase {
 
     $maximum_limit_reached = $available_slots > 0 && $selected_count > $available_slots;
 
-    if($maximum_limit_reached || $form_state->hasAnyErrors()) {
-        // Avoid duplicate
-        \Drupal::messenger()->deleteByType('error');
+    if ($maximum_limit_reached || $form_state->hasAnyErrors()) {
+      // Avoid duplicate
+      \Drupal::messenger()->deleteByType('error');
     }
 
     if ($maximum_limit_reached) {
@@ -197,7 +197,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function viewsFormValidate(array &$form, FormStateInterface $form_state) {
-  $selected = array_filter($form_state->getValue($this->options['id'], []));
+    $selected = array_filter($form_state->getValue($this->options['id'], []));
     if (empty($selected)) {
       $form_state->setErrorByName('', $this->t('No items selected.'));
     }
