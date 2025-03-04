@@ -288,9 +288,9 @@ abstract class StylePluginBase extends PluginBase {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
-    // Only fields-based views can handle grouping.  Style plugins can also exclude
-    // themselves from being groupable by setting their "usesGrouping" property
-    // to FALSE.
+    // Only fields-based views can handle grouping.  Style plugins can also
+    // exclude themselves from being groupable by setting their "usesGrouping"
+    // property to FALSE.
     // @todo Document "usesGrouping" in docs.php when docs.php is written.
     if ($this->usesFields() && $this->usesGrouping()) {
       $options = ['' => $this->t('- None -')];
@@ -622,10 +622,12 @@ abstract class StylePluginBase extends PluginBase {
             $set[$grouping]['rows'] = [];
           }
 
-          // Move the set reference into the row set of the group we just determined.
+          // Move the set reference into the row set of the group we just
+          // determined.
           $set = &$set[$grouping]['rows'];
         }
-        // Add the row to the hierarchically positioned row set we just determined.
+        // Add the row to the hierarchically positioned row set we just
+        // determined.
         $set[$index] = $row;
       }
     }
@@ -655,7 +657,7 @@ abstract class StylePluginBase extends PluginBase {
    * Renders all of the fields for a given style and store them on the object.
    *
    * @param array $result
-   *   The result array from $view->result
+   *   The result array from $view->result.
    */
   protected function renderFields(array $result) {
     if (!$this->usesFields()) {
@@ -761,7 +763,7 @@ abstract class StylePluginBase extends PluginBase {
    * #pre_render callback for view row field rendering.
    *
    * @param array $data
-   *   The element to #pre_render
+   *   The element to #pre_render.
    *
    * @return array
    *   The processed element.
