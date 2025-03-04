@@ -22,13 +22,7 @@ class UpdateCountriesTest extends KernelTestBase {
   /**
    * Test the update script's functionality.
    */
-  public function testUpdateCountriesScript() {
-    // Debug: Check if the database connection is available.
-    $connection = \Drupal::database();
-    if (!$connection) {
-      $this->fail('Database connection is not available.');
-    }
-
+  public function testUpdateCountriesScript(): void {
     $fs = new Filesystem();
     $jsonFile = DRUPAL_ROOT . '/territories.json';
 
@@ -51,7 +45,7 @@ class UpdateCountriesTest extends KernelTestBase {
       file_put_contents($jsonFile, json_encode($mockJson));
 
       // Run the update script.
-      $output = shell_exec("php " . DRUPAL_ROOT . "/core/scripts/update-countries.sh");
+      shell_exec("php " . DRUPAL_ROOT . "/core/scripts/update-countries.sh");
 
       // Check if expected updates were made.
       $countryManager = \Drupal::service('country_manager');
