@@ -284,7 +284,6 @@ class HookCollectorPass implements CompilerPassInterface {
     $definition->setArgument('$orderedExtraTypes', $orderExtraTypes);
     $container->setParameter('hook_implementations_map', $map ?? []);
 
-    $hookPriority = new HookPriority($container);
     foreach ($hookOrderOperations as $hookOrderOperation) {
       assert($hookOrderOperation instanceof HookOperation);
       // ::process() adds the hook serving as key to the order extraTypes so it
@@ -389,8 +388,11 @@ class HookCollectorPass implements CompilerPassInterface {
         $changed_indexes = [$index_this];
       }
       foreach ($changed_indexes as $index) {
-        [$id, $key] = explode('.', $index);
-        $hookPriority->set($id, (int) $key, $priorities[$index]);
+        [$id1, $key1] = explode('.', $index);
+        $definition = $container->findDefinition($id1);
+        $tags = $definition->getTags();
+        $tags['kernel.event_listener'][$key1]['priority'] = $priorities[$index];
+        $definition->setTags($tags);
       }
     }
   }
