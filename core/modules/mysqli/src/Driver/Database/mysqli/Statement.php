@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Drupal\mysqli\Driver\Database\mysqli;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Event\StatementExecutionEndEvent;
-use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
-use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\Statement\StatementBase;
 
