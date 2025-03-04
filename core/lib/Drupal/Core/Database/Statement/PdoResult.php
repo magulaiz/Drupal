@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database\Statement;
 
-use Drupal\Core\Database\FetchModeTrait;
-
 /**
  * Class for PDO-provided results of a data query language (DQL) statement.
  */
 class PdoResult extends ResultBase {
 
-  use FetchModeTrait;
   use PdoTrait;
 
   /**
@@ -72,31 +69,6 @@ class PdoResult extends ResultBase {
    */
   public function fetchAll(FetchAs $mode, array $fetchOptions): array {
     return $this->clientFetchAll($mode, $fetchOptions['column'] ?? $fetchOptions['class'] ?? NULL, $fetchOptions['constructor_args'] ?? NULL);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAllKeyed(int $keyIndex = 0, int $valueIndex = 1): array {
-    $result = [];
-    while ($record = $this->fetch(FetchAs::List, [])) {
-      $result[$record[$keyIndex]] = $record[$valueIndex];
-    }
-    return $result;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAllAssoc(string $column, FetchAs $mode, array $fetchOptions): array {
-    if (!empty($fetchOptions)) {
-      $this->setFetchMode($mode, $fetchOptions);
-    }
-    $result = [];
-    while ($rowAssoc = $this->fetch(FetchAs::Associative, [])) {
-      $result[$rowAssoc[$column]] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
-    }
-    return $result;
   }
 
 }

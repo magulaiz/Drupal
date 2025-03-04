@@ -81,17 +81,6 @@ class PrefetchedResult extends ResultBase {
   /**
    * {@inheritdoc}
    */
-  public function fetchAll(FetchAs $mode, array $fetchOptions): array {
-    $result = [];
-    while ($rowAssoc = $this->fetch(FetchAs::Associative, $fetchOptions)) {
-      $result[] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
-    }
-    return $result;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function fetchAllKeyed(int $keyIndex = 0, int $valueIndex = 1): array {
     if (!isset($this->columnNames[$keyIndex]) || !isset($this->columnNames[$valueIndex])) {
       return [];
@@ -103,17 +92,6 @@ class PrefetchedResult extends ResultBase {
     $result = [];
     while ($row = $this->fetch(FetchAs::Associative, $this->fetchOptions)) {
       $result[$row[$key]] = $row[$value];
-    }
-    return $result;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function fetchAllAssoc(string $column, FetchAs $mode, array $fetchOptions): array {
-    $result = [];
-    while ($rowAssoc = $this->fetch(FetchAs::Associative, $fetchOptions)) {
-      $result[$rowAssoc[$column]] = $this->assocToFetchMode($rowAssoc, $mode, $fetchOptions);
     }
     return $result;
   }

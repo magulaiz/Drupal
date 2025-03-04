@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Core\Database\Statement;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
+use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\FetchModeTrait;
 use Drupal\Core\Database\RowCountException;
 use Drupal\Core\Database\StatementInterface;
@@ -13,7 +16,7 @@ use Drupal\Core\Database\StatementIteratorTrait;
 /**
  * StatementInterface base implementation.
  *
- * This class is meant to be generic enough for any type of database clients,
+ * This class is meant to be generic enough for any type of database client,
  * even if all Drupal core database drivers currently use PDO clients. We
  * implement \Iterator instead of \IteratorAggregate to allow iteration to be
  * kept in sync with the underlying database resultset cursor. PDO is not able
@@ -117,6 +120,77 @@ abstract class StatementBase implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   abstract public function execute($args = [], $options = []);
+
+  /**
+   * Dispatches an event informing that the statement execution begins.
+   *
+   * @param array $args
+   *   An array of values with as many elements as there are bound parameters in
+   *   the SQL statement being executed. This can be empty.
+   *
+   * @return \Drupal\Core\Database\Event\StatementExecutionStartEvent|null
+   *   The dispatched event or NULL if event dispatching is not enabled.
+   */
+  protected function dispatchStatementExecutionStartEvent(array $args): ?StatementExecutionStartEvent {
+    if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
+      $startEvent = new StatementExecutionStartEvent(
+        spl_object_id($this),
+        $this->connection->getKey(),
+        $this->connection->getTarget(),
+        $this->getQueryString(),
+        $args,
+        $this->connection->findCallerFromDebugBacktrace()
+      );
+      $this->connection->dispatchEvent($startEvent);
+      return $startEvent;
+    }
+    return NULL;
+  }
+
+  /**
+   * Dispatches an event informing that the statement execution succeeded.
+   *
+   * @param \Drupal\Core\Database\Event\StatementExecutionStartEvent|null $startEvent
+   *   The start event or NULL if event dispatching is not enabled.
+   */
+  protected function dispatchStatementExecutionEndEvent(?StatementExecutionStartEvent $startEvent): void {
+    if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
+      $this->connection->dispatchEvent(new StatementExecutionEndEvent(
+        $startEvent->statementObjectId,
+        $startEvent->key,
+        $startEvent->target,
+        $startEvent->queryString,
+        $startEvent->args,
+        $startEvent->caller,
+        $startEvent->time
+      ));
+    }
+  }
+
+  /**
+   * Dispatches an event informing of the statement execution failure.
+   *
+   * @param \Drupal\Core\Database\Event\StatementExecutionStartEvent|null $startEvent
+   *   The start event or NULL if event dispatching is not enabled.
+   * @param \Exception $e
+   *   The statement exception thrown.
+   */
+  protected function dispatchStatementExecutionFailureEvent(?StatementExecutionStartEvent $startEvent, \Exception $e): void {
+    if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionFailureEvent::class)) {
+      $this->connection->dispatchEvent(new StatementExecutionFailureEvent(
+        $startEvent->statementObjectId,
+        $startEvent->key,
+        $startEvent->target,
+        $startEvent->queryString,
+        $startEvent->args,
+        $startEvent->caller,
+        $startEvent->time,
+        get_class($e),
+        $e->getCode(),
+        $e->getMessage(),
+      ));
+    }
+  }
 
   /**
    * {@inheritdoc}

@@ -55,6 +55,7 @@ class ConnectionTest extends UnitTestCase {
    * Provides test data.
    *
    * @return array
+   *   An array of test data.
    */
   public static function providerVersionAndIsMariaDb(): array {
     return [
