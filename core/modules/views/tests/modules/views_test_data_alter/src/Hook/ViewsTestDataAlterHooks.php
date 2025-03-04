@@ -21,6 +21,7 @@ class ViewsTestDataAlterHooks {
     // respects the handler plugin ID specified in the
     // configuration.
     $data['node_field_data']['status']['filter']['id'] = 'numeric';
+    $data['node_field_data']['status']['filter']['ids'] = ['boolean'];
   }
 
 }
