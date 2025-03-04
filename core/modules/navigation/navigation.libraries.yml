@@ -122,4 +122,9 @@ internal.user-block:
   dependencies:
     - core/drupal
     - core/drupalSettings
+
+internal.preview-editable-areas:
+  js:
+    js/toolbar-preview-editable-areas.js: {}
+  dependencies:
     - core/once
