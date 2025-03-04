@@ -145,7 +145,7 @@ class EntityViewsDataTest extends KernelTestBase {
    * @param \Drupal\Core\Entity\EntityTypeInterface $definition
    *   An entity type definition to add to the entity type manager.
    * @param \Drupal\Core\Field\BaseFieldDefinition[] $base_fields
-   *   An array of base field definitions
+   *   An array of base field definitions.
    */
   protected function setUpEntityType(EntityTypeInterface $definition, array $base_fields = []): void {
     // Replace the cache backend in the entity type manager so it returns
@@ -575,7 +575,8 @@ class EntityViewsDataTest extends KernelTestBase {
     // table.
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['revision_id']));
 
-    // Also ensure that field_data only fields don't appear on the revision table.
+    // Also ensure that field_data only fields don't appear on the revision
+    // table.
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['id']));
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['name']));
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['description']));

@@ -323,7 +323,7 @@ EOF
    * Checks that the permissions are like expected.
    *
    * @param array $actual_permissions
-   *   The actual permissions
+   *   The actual permissions.
    *
    * @internal
    */
@@ -341,6 +341,9 @@ EOF
 
 }
 
+/**
+ * Provider for testing permissions callbacks.
+ */
 class TestPermissionCallbacks {
 
   public function singleDescription() {
