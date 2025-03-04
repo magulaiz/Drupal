@@ -174,8 +174,7 @@ class HookCollectorPass implements CompilerPassInterface {
     // is removed.
     // @see https://www.drupal.org/project/drupal/issues/3481778
     if (count($container->getDefinitions()) > 1) {
-      static::registerImplementations($container, $collector, $implementations, $orderExtraTypes);
-      static::reOrderImplementations($container, $hookOrderOperations, $orderExtraTypes, $implementations, $moduleFinder);
+      static::registerImplementations($container, $collector, $implementations, $orderExtraTypes, $hookOrderOperations, $moduleFinder);
     }
     return $implementations;
   }
@@ -193,8 +192,23 @@ class HookCollectorPass implements CompilerPassInterface {
    *   All implementations, as method names keyed by hook, module and class.
    * @param array<string, list<string>> $orderExtraTypes
    *   Extra types to order a hook with.
+   * @param list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations
+   *   All attributes that contain ordering information.
+   * @param array<class-string, array<string, array<string, string>>> $moduleFinder
+   *   Lookup map to find the module for each hook implementation.
+   *   Array keys are the class, method, and hook, array values are module
+   *   names.
+   *   The module name can be different from the module the class is in,
+   *   because an implementation can be on behalf of another module.
    */
-  protected static function registerImplementations(ContainerBuilder $container, HookCollectorPass $collector, array $implementations, array $orderExtraTypes): void {
+  protected static function registerImplementations(
+    ContainerBuilder $container,
+    HookCollectorPass $collector,
+    array $implementations,
+    array $orderExtraTypes,
+    array $hookOrderOperations,
+    array $moduleFinder,
+  ): void {
     $container->register(ProceduralCall::class, ProceduralCall::class)
       ->addArgument($collector->includes);
 
@@ -269,27 +283,7 @@ class HookCollectorPass implements CompilerPassInterface {
     $definition->setArgument('$groupIncludes', $groupIncludes);
     $definition->setArgument('$orderedExtraTypes', $orderExtraTypes);
     $container->setParameter('hook_implementations_map', $map ?? []);
-  }
 
-  /**
-   * Reorder hook implementations specifying an order.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-   *   The container.
-   * @param list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations
-   *   All attributes that contain ordering information.
-   * @param array<string, list<string>> $orderExtraTypes
-   *   Lists of extra hooks to order together with, keyed by hook name.
-   * @param array<string, array<string, array<class-string, list<string>>>> $implementations
-   *   Hook implementations, as method names by hook, module and class.
-   * @param array<class-string, array<string, array<string, string>>> $moduleFinder
-   *   Lookup map to find the module for each hook implementation.
-   *   Array keys are the class, method, and hook, array values are module
-   *   names.
-   *   The module name can be different from the module the class is in,
-   *   because an implementation can be on behalf of another module.
-   */
-  protected static function reOrderImplementations(ContainerBuilder $container, array $hookOrderOperations, array $orderExtraTypes, array $implementations, array $moduleFinder): void {
     $hookPriority = new HookPriority($container);
     foreach ($hookOrderOperations as $hookOrderOperation) {
       assert($hookOrderOperation instanceof HookOperation);
