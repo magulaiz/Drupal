@@ -136,7 +136,8 @@ class ComponentPluginManager extends DefaultPluginManager implements Categorizin
     $twig_debug = $development_settings->get('twig_debug', FALSE);
     $twig_cache_disable = $development_settings->get('twig_cache_disable', FALSE);
     if ($twig_debug || $twig_cache_disable) {
-      return $this->findDefinitions();
+      $this->definitions = $this->findDefinitions();
+      return $this->definitions;
     }
     return parent::getDefinitions();
   }
