@@ -327,7 +327,20 @@ class HookCollectorPass implements CompilerPassInterface {
           // their service definition and added to the
           // hook_implementations_map container parameter.
           $classesAndMethods[] = [$hookOrderOperation->class, $hookOrderOperation->method];
-          self::registerComplexHookImplementations($container, $classesAndMethods, $moduleFinder, $combinedHook);
+
+          $map1 = $container->getParameter('hook_implementations_map');
+          $priority1 = 0;
+          foreach ($classesAndMethods as [$class1, $method1]) {
+            // Ordering against not installed modules is possible.
+            if (isset($moduleFinder[$class1][$method1])) {
+              if (count(array_unique($moduleFinder[$class1][$method1])) > 1) {
+                throw new \LogicException('Complex ordering can only work when all implementations on a single method are for the same module.');
+              }
+              $map1[$combinedHook][$class1][$method1] = reset($moduleFinder[$class1][$method1]);
+              $priority1 = self::addTagToDefinition($container->findDefinition($class1), $combinedHook, $method1, $priority1);
+            }
+          }
+          $container->setParameter('hook_implementations_map', $map1);
         }
       }
       else {
@@ -664,35 +677,6 @@ class HookCollectorPass implements CompilerPassInterface {
       'priority' => $priority--,
     ]);
     return $priority;
-  }
-
-  /**
-   * Register complex hook implementations.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-   *   The container.
-   * @param list<array{class-string, string}> $classesAndMethods
-   *   A list of class-and-method pairs.
-   * @param array<class-string, array<string, array<string, string>>> $moduleFinder
-   *   Array keys are the class, method, and hook, array values are module
-   *   names.
-   * @param string $combinedHook
-   *   A string made form list of hooks separated by :.
-   */
-  protected static function registerComplexHookImplementations(ContainerBuilder $container, array $classesAndMethods, array $moduleFinder, string $combinedHook): void {
-    $map = $container->getParameter('hook_implementations_map');
-    $priority = 0;
-    foreach ($classesAndMethods as [$class, $method]) {
-      // Ordering against not installed modules is possible.
-      if (isset($moduleFinder[$class][$method])) {
-        if (count(array_unique($moduleFinder[$class][$method])) > 1) {
-          throw new \LogicException('Complex ordering can only work when all implementations on a single method are for the same module.');
-        }
-        $map[$combinedHook][$class][$method] = reset($moduleFinder[$class][$method]);
-        $priority = self::addTagToDefinition($container->findDefinition($class), $combinedHook, $method, $priority);
-      }
-    }
-    $container->setParameter('hook_implementations_map', $map);
   }
 
 }
