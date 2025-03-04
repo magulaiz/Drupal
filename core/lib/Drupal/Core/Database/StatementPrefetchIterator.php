@@ -3,7 +3,6 @@
 namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\Statement\FetchAs;
-use Drupal\Core\Database\Statement\PdoTrait;
 use Drupal\Core\Database\Statement\PrefetchedResult;
 use Drupal\Core\Database\Statement\StatementBase;
 
@@ -15,8 +14,6 @@ use Drupal\Core\Database\Statement\StatementBase;
  * manipulate those results.
  */
 class StatementPrefetchIterator extends StatementBase {
-
-  use PdoTrait;
 
   /**
    * Main data store.

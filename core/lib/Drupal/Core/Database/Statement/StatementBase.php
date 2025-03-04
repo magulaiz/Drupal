@@ -16,7 +16,7 @@ use Drupal\Core\Database\StatementIteratorTrait;
 /**
  * StatementInterface base implementation.
  *
- * This class is meant to be generic enough for any type of database clients,
+ * This class is meant to be generic enough for any type of database client,
  * even if all Drupal core database drivers currently use PDO clients. We
  * implement \Iterator instead of \IteratorAggregate to allow iteration to be
  * kept in sync with the underlying database resultset cursor. PDO is not able

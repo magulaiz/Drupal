@@ -4,15 +4,12 @@ namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Database\Statement\PdoResult;
-use Drupal\Core\Database\Statement\PdoTrait;
 use Drupal\Core\Database\Statement\StatementBase;
 
 /**
  * StatementInterface iterator implementation.
  */
 class StatementWrapperIterator extends StatementBase {
-
-  use PdoTrait;
 
   /**
    * Holds the default fetch mode.
