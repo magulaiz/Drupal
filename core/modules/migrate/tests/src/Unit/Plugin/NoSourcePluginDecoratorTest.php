@@ -47,7 +47,7 @@ class NoSourcePluginDecoratorTest extends UnitTestCase {
   /**
    * Provides data for testGetDefinitions().
    */
-  public static function providerGetDefinitions() {
+  public static function providerGetDefinitions(): array {
     return [
       'source exists' => [
         [
