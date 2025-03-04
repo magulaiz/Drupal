@@ -260,7 +260,6 @@ class HookCollectorPass implements CompilerPassInterface {
             $map[$hook][$class][$method] = $module;
           }
         }
-        unset($implementations[$hook][$module]);
       }
     }
 
