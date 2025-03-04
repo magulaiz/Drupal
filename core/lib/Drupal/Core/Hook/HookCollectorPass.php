@@ -329,7 +329,69 @@ class HookCollectorPass implements CompilerPassInterface {
       else {
         $otherSpecifiers = NULL;
       }
-      $hookPriority->change("drupal_hook.$combinedHook", $hookOrderOperation, $otherSpecifiers);
+
+      foreach ($container->findTaggedServiceIds('kernel.event_listener') as $id => $tags) {
+        foreach ($tags as $key => $tag) {
+          if ($tag['event'] === "drupal_hook.$combinedHook") {
+            $index = "$id.$key";
+            $priority = $tag['priority'];
+            // Symfony documents event listener priorities to be integers,
+            // HookCollectorPass sets them to be integers, ::set() only
+            // accepts integers.
+            assert(is_int($priority));
+            $priorities[$index] = $priority;
+            $specifier = "$id::" . $tag['method'];
+            if ($specifier === "$hookOrderOperation->class::$hookOrderOperation->method") {
+              $index_this = $index;
+            }
+            // $other_specifiers is defined for before and after, for these
+            // compare only the priority of those. For first and last the
+            // priority of every other hook matters.
+            elseif (!isset($otherSpecifiers) || in_array($specifier, $otherSpecifiers)) {
+              $priorities_other[$specifier] = $priority;
+            }
+          }
+        }
+      }
+      if (!isset($index_this) || !isset($priorities) || !isset($priorities_other)) {
+        return;
+      }
+
+      $shouldBeLarger = (bool) $hookOrderOperation->order->value;
+      // The priority of the hook being changed.
+      $priority_this = $priorities[$index_this];
+      // The priority of the hook being compared to.
+      $priority_other = $shouldBeLarger ? max($priorities_other) : min($priorities_other);
+      // If the order is correct there is nothing to do. If the two priorities
+      // are the same then the order is undefined and so it can't be correct.
+      // If they are not the same and $priority_this is already larger exactly
+      // when $shouldBeLarger says then it's the correct order.
+      if ($priority_this !== $priority_other && ($shouldBeLarger === ($priority_this > $priority_other))) {
+        return;
+      }
+      $priority_new = $priority_other + ($shouldBeLarger ? 1 : -1);
+      // For first and last this new priority is already larger/smaller
+      // than all existing priorities but for before / after it might belong to
+      // an already existing hook. In this case set the new priority temporarily
+      // to be halfway between $priority_other and $priority_new then give all
+      // hook implementations new, integer priorities keeping this new order.
+      // This ensures the hook implementation being changed is in the right order
+      // relative to both $priority_other and the hook whose priority was
+      // $priority_new.
+      if (in_array($priority_new, $priorities)) {
+        $priorities[$index_this] = $priority_other + ($shouldBeLarger ? 0.5 : -0.5);
+        asort($priorities);
+        $changed_indexes = array_keys($priorities);
+        $priorities = array_combine($changed_indexes, range(1, count($changed_indexes)));
+      }
+      else {
+        $priorities[$index_this] = $priority_new;
+        $changed_indexes = [$index_this];
+      }
+      foreach ($changed_indexes as $index) {
+        [$id, $key] = explode('.', $index);
+        $hookPriority->set($id, (int) $key, $priorities[$index]);
+      }
     }
   }
 
