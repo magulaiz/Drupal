@@ -17,7 +17,7 @@ class CommonTestHooks {
    * Implements hook_TYPE_alter().
    */
   #[Hook('drupal_alter_alter')]
-  public function drupalAlterAlter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
+  public function drupalAlterAlter(&$data, &$arg2 = NULL, &$arg3 = NULL): void {
     // Alter first argument.
     if (is_array($data)) {
       $data['foo'] = 'Drupal';
@@ -49,12 +49,12 @@ class CommonTestHooks {
    * Implements hook_TYPE_alter().
    *
    * This is to verify that
-   * \Drupal::moduleHandler()->alter(array(TYPE1, TYPE2), ...) allows
+   * \Drupal::moduleHandler()->alter([TYPE1, TYPE2], ...) allows
    * hook_module_implements_alter() to affect the order in which module
    * implementations are executed.
    */
   #[Hook('drupal_alter_foo_alter', module: 'block')]
-  public function blockDrupalAlterFooAlter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
+  public function blockDrupalAlterFooAlter(&$data, &$arg2 = NULL, &$arg3 = NULL): void {
     $data['foo'] .= ' block';
   }
 
@@ -80,7 +80,7 @@ class CommonTestHooks {
    * Implements hook_library_info_build().
    */
   #[Hook('library_info_build')]
-  public function libraryInfoBuild() {
+  public function libraryInfoBuild(): array {
     $libraries = [];
     if (\Drupal::state()->get('common_test.library_info_build_test')) {
       $libraries['dynamic_library'] = ['version' => '1.0', 'css' => ['base' => ['common_test.css' => []]]];
@@ -92,7 +92,7 @@ class CommonTestHooks {
    * Implements hook_library_info_alter().
    */
   #[Hook('library_info_alter')]
-  public function libraryInfoAlter(&$libraries, $module) {
+  public function libraryInfoAlter(&$libraries, $module): void {
     if ($module === 'core' && isset($libraries['loadjs'])) {
       // Change the version of loadjs to 0.0.
       $libraries['loadjs']['version'] = '0.0';
@@ -108,13 +108,13 @@ class CommonTestHooks {
   /**
    * Implements hook_cron().
    *
-   * System module should handle if a module does not catch an exception and keep
-   * cron going.
+   * System module should handle if a module does not catch an exception and
+   * keep cron going.
    *
    * @see common_test_cron_helper()
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     throw new \Exception('Uncaught exception');
   }
 
@@ -124,7 +124,7 @@ class CommonTestHooks {
    * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
    */
   #[Hook('page_attachments')]
-  public function pageAttachments(array &$page) {
+  public function pageAttachments(array &$page): void {
     $page['#attached']['library'][] = 'core/foo';
     $page['#attached']['library'][] = 'core/bar';
     $page['#cache']['tags'] = ['example'];
@@ -148,9 +148,9 @@ class CommonTestHooks {
    * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
    */
   #[Hook('page_attachments_alter')]
-  public function pageAttachmentsAlter(array &$page) {
-    // Remove a library that was added in common_test_page_attachments(), to test
-    // that this hook can do what it claims to do.
+  public function pageAttachmentsAlter(array &$page): void {
+    // Remove a library that was added in common_test_page_attachments(), to
+    // test that this hook can do what it claims to do.
     if (isset($page['#attached']['library']) && ($index = array_search('core/bar', $page['#attached']['library'])) && $index !== FALSE) {
       unset($page['#attached']['library'][$index]);
     }
@@ -171,7 +171,7 @@ class CommonTestHooks {
    * @see \Drupal\KernelTests\Core\Asset\AttachedAssetsTest::testAlter()
    */
   #[Hook('js_alter')]
-  public function jsAlter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language) {
+  public function jsAlter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language): void {
     // Attach alter.js above tableselect.js.
     $alter_js = \Drupal::service('extension.list.module')->getPath('common_test') . '/alter.js';
     if (array_key_exists($alter_js, $javascript) && array_key_exists('core/misc/tableselect.js', $javascript)) {
@@ -185,7 +185,7 @@ class CommonTestHooks {
    * @see \Drupal\system\Tests\Common\JavaScriptTest::testHeaderSetting()
    */
   #[Hook('js_settings_alter')]
-  public function jsSettingsAlter(&$settings, AttachedAssetsInterface $assets) {
+  public function jsSettingsAlter(&$settings, AttachedAssetsInterface $assets): void {
     // Modify an existing setting.
     if (array_key_exists('pluralDelimiter', $settings)) {
       $settings['pluralDelimiter'] = '☃';

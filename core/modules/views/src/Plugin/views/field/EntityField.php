@@ -232,8 +232,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
         $this->limit_values = TRUE;
       }
 
-      // Otherwise, we only limit values if the user hasn't selected "all", 0, or
-      // the value matching field cardinality.
+      // Otherwise, we only limit values if the user hasn't selected "all", 0,
+      // or the value matching field cardinality.
       if ((($this->options['delta_limit'] > 0) && ($this->options['delta_limit'] != $cardinality)) || intval($this->options['delta_offset'])) {
         $this->limit_values = TRUE;
       }
@@ -270,7 +270,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       }
       $options += is_array($this->options['group_columns']) ? $this->options['group_columns'] : [];
 
-      // Go through the list and determine the actual column name from field api.
+      // Go through the list and determine the actual column name from field
+      // api.
       $fields = [];
       $table_mapping = $this->getTableMapping();
       $field_definition = $this->getFieldStorageDefinition();
@@ -357,7 +358,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    *   The field storage definition used by this handler.
    *
    * @throws \Exception
-   *   If no field storage definition was found for the given entity type and field name.
+   *   If no field storage definition was found for the given entity type and
+   *   field name.
    */
   protected function getFieldStorageDefinition() {
     $entity_type_id = $this->definition['entity_type'];
@@ -714,6 +716,9 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitGroupByForm(&$form, FormStateInterface $form_state) {
     parent::submitGroupByForm($form, $form_state);
     $item = &$form_state->get('handler')->options;
@@ -749,6 +754,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       }
       return $this->renderer->render($build);
     }
+    return NULL;
   }
 
   /**
@@ -966,10 +972,16 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     return $processed_entity;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function render_item($count, $item) {
     return $this->renderer->render($item['rendered']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function documentSelfTokens(&$tokens) {
     $field = $this->getFieldDefinition();
     foreach ($field->getColumns() as $id => $column) {
@@ -977,6 +989,9 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function addSelfTokens(&$tokens, $item) {
     $field = $this->getFieldDefinition();
     foreach ($field->getColumns() as $id => $column) {

@@ -141,9 +141,9 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
           );
           unset($attached['feed']);
         }
-        // 'html_head_link' is a special case of 'html_head' which can be present
-        // as a head element, but also as a Link: HTTP header depending on
-        // settings in the render array. Processing it can add to both the
+        // 'html_head_link' is a special case of 'html_head' which can be
+        // present as a head element, but also as a Link: HTTP header depending
+        // on settings in the render array. Processing it can add to both the
         // 'html_head' and 'http_header' keys of '#attached', so we must address
         // it before 'html_head'.
         if (!empty($attached['html_head_link'])) {
@@ -328,7 +328,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    *   - The header value.
    *   - (optional) Whether to replace a current value with the new one, or add
    *     it to the others. If the value is not replaced, it will be appended,
-   *     resulting in a header like this: 'Header: value1,value2'
+   *     resulting in a header like this: 'Header: value1,value2'.
    */
   protected function setHeaders(HtmlResponse $response, array $headers) {
     foreach ($headers as $values) {

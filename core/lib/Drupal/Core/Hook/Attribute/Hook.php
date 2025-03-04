@@ -12,13 +12,13 @@ namespace Drupal\Core\Hook\Attribute;
  * - On a method, use this attribute with the hook name:
  *   @code
  *   #[Hook('user_cancel')]
- *   public method userCancel(...)
+ *   public function userCancel(...) {}
  *   @endcode
  * - On a class, specifying the method name:
  *   @code
  *   #[Hook('user_cancel', method: 'userCancel')]
  *   class Hooks {
- *     method userCancel(...) {}
+ *     public function userCancel(...) {}
  *   }
  *   @endcode
  * - On a class with an __invoke method, which is taken to be the hook
@@ -26,7 +26,7 @@ namespace Drupal\Core\Hook\Attribute;
  *   @code
  *   #[Hook('user_cancel')]
  *   class Hooks {
- *     method __invoke(...) {}
+ *     public function __invoke(...) {}
  *   }
  *   @endcode
  *
@@ -52,7 +52,7 @@ namespace Drupal\Core\Hook\Attribute;
  *   form ID without modifying any existing implementations.
  *
  * The following hooks may not have multiple implementations by a single module:
- * - hook_library_build_info()
+ * - hook_library_info_build()
  * - hook_mail()
  * - hook_help()
  * - hook_node_update_index()
@@ -67,6 +67,8 @@ namespace Drupal\Core\Hook\Attribute;
  *
  * Install hooks:
  * - hook_install()
+ * - hook_install_tasks()
+ * - hook_install_tasks_alter()
  * - hook_post_update_NAME()
  * - hook_schema()
  * - hook_uninstall()
@@ -75,7 +77,6 @@ namespace Drupal\Core\Hook\Attribute;
  *
  * Theme hooks:
  * - hook_preprocess_HOOK()
- * - hook_process_HOOK()
  *
  * @section sec_backwards_compatibility Backwards-compatibility
  *
@@ -100,9 +101,9 @@ class Hook {
    *   parameter is omitted, the class must have an __invoke() method, which is
    *   taken as the hook implementation.
    * @param string|null $module
-   *   (optional) The module this implementation is for. This allows one module to
-   *   implement a hook on behalf of another module. Defaults to the module the
-   *   implementation is in.
+   *   (optional) The module this implementation is for. This allows one module
+   *   to implement a hook on behalf of another module. Defaults to the module
+   *   the implementation is in.
    */
   public function __construct(
     public string $hook,

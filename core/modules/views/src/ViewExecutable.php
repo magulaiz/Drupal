@@ -8,6 +8,7 @@ use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayRouterInterface;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\Plugin\ViewsPluginManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -219,7 +220,7 @@ class ViewExecutable {
    *
    * @var \Drupal\views\Plugin\views\query\QueryPluginBase
    */
-  public $query = NULL;
+  public ?QueryPluginBase $query = NULL;
 
   /**
    * The used pager plugin used by the current executed view.
@@ -1297,7 +1298,8 @@ class ViewExecutable {
       $this->exposed_widgets = $exposed_form->renderExposedForm();
       if (!empty($this->build_info['abort'])) {
         $this->built = TRUE;
-        // Don't execute the query, $form_state, but rendering will still be executed to display the empty text.
+        // Don't execute the query, $form_state, but rendering will still be
+        // executed to display the empty text.
         $this->executed = TRUE;
         return empty($this->build_info['fail']);
       }
@@ -1456,7 +1458,8 @@ class ViewExecutable {
       return TRUE;
     }
 
-    // Don't allow to use deactivated displays, but display them on the live preview.
+    // Don't allow to use deactivated displays, but display them on the live
+    // preview.
     if (!$this->display_handler->isEnabled() && empty($this->live_preview)) {
       $this->build_info['fail'] = TRUE;
       return FALSE;
