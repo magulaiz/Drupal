@@ -233,6 +233,7 @@ class HookCollectorPass implements CompilerPassInterface {
     }
 
     $tagsInfoByClass = [];
+    $map = [];
     foreach ($moduleImplementsMap as $hook => $moduleImplements) {
       $extraHooks = $orderExtraTypes[$hook] ?? [];
       // Add implementations to the array we pass to legacy ordering
@@ -281,7 +282,7 @@ class HookCollectorPass implements CompilerPassInterface {
     $definition = $container->getDefinition('module_handler');
     $definition->setArgument('$groupIncludes', $groupIncludes);
     $definition->setArgument('$orderedExtraTypes', $orderExtraTypes);
-    $container->setParameter('hook_implementations_map', $map ?? []);
+    $container->setParameter('hook_implementations_map', $map);
 
     foreach ($hookOrderOperations as $hookOrderOperation) {
       assert($hookOrderOperation instanceof HookOperation);
