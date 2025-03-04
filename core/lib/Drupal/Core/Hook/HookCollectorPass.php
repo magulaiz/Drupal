@@ -232,8 +232,7 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
-    $tagsInfoByClass = [];
-    $map = [];
+    $alteredImplementations = [];
     foreach ($moduleImplementsMap as $hook => $moduleImplements) {
       $extraHooks = $orderExtraTypes[$hook] ?? [];
       // Add implementations to the array we pass to legacy ordering
@@ -245,22 +244,28 @@ class HookCollectorPass implements CompilerPassInterface {
       foreach ($collector->moduleImplementsAlters as $alter) {
         $alter($moduleImplements, $hook);
       }
-      // Start at 0 for the first hook. We decrease the priority after each
-      // hook that is registered. Symfony priorities run higher priorities
-      // first.
-      $priority = 0;
       foreach ($moduleImplements as $module => $v) {
         foreach ($implementations[$hook][$module] ?? [] as $class => $methods) {
           foreach ($methods as $method) {
-            $tagsInfoByClass[$class][] = [
-              'event' => "drupal_hook.$hook",
-              'method' => $method,
-              'priority' => $priority,
-            ];
-            --$priority;
-            $map[$hook][$class][$method] = $module;
+            $alteredImplementations[$hook]["$class::$method"] = $module;
           }
         }
+      }
+    }
+
+    $map = [];
+    $tagsInfoByClass = [];
+    foreach ($alteredImplementations as $hook => $hookImplementations) {
+      $priority = 0;
+      foreach ($hookImplementations as $class_and_method => $module) {
+        [$class, $method] = explode('::', $class_and_method);
+        $tagsInfoByClass[$class][] = [
+          'event' => "drupal_hook.$hook",
+          'method' => $method,
+          'priority' => $priority,
+        ];
+        --$priority;
+        $map[$hook][$class][$method] = $module;
       }
     }
 
