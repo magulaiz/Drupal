@@ -197,20 +197,14 @@ class WorkspaceAssociationTest extends KernelTestBase {
   /**
    * Tests the count of revisions returned for tracked entities listing.
    *
-   * @param string $entity_type_id
-   *   The ID of the entity type to test.
-   * @param array $entity_values
-   *   An array of values for the entities created in this test.
-   *
    * @covers ::getTrackedEntitiesForListing
-   *
-   * @dataProvider getEntityTypeIdsForListing
    */
-  public function testWorkspaceAssociationForListing(string $entity_type_id, array $entity_values): void {
+  public function testWorkspaceAssociationForListing(): void {
     $this->switchToWorkspace($this->workspaces['stage']->id());
+    $entity_type_id = 'entity_test_mulrevpub';
 
-    foreach ($entity_values as $entity_value) {
-      $this->createEntity($entity_type_id, $entity_value);
+    for ($i = 1; $i <= 51; ++$i) {
+      $this->createEntity($entity_type_id, ['name' => "Test entity {$i}"]);
     }
 
     /** @var \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association */
@@ -218,28 +212,11 @@ class WorkspaceAssociationTest extends KernelTestBase {
 
     // The default behavior uses a pager with 50 items per page.
     $tracked_items = $workspace_association->getTrackedEntitiesForListing($this->workspaces['stage']->id());
-    $this->assertEquals(count($tracked_items[$entity_type_id]), 50);
+    $this->assertEquals(50, count($tracked_items[$entity_type_id]));
 
     // Verifies that all items are returned, not broken into pages.
     $tracked_items_no_pager = $workspace_association->getTrackedEntitiesForListing($this->workspaces['stage']->id(), NULL, FALSE);
-    $this->assertEquals(count($tracked_items_no_pager[$entity_type_id]), 51);
-  }
-
-  /**
-   * The data provider for ::testWorkspaceAssociationForListing().
-   *
-   * Returns 51 items, because default behavior uses a pager for more than 50.
-   */
-  public static function getEntityTypeIdsForListing(): array {
-    for ($i = 1; $i <= 51; ++$i) {
-      $entity_values[] = ['name' => "Test entity {$i}"];
-    }
-    return [
-      [
-        'entity_type_id' => 'entity_test_mulrevpub',
-        'entity_values' => $entity_values,
-      ],
-    ];
+    $this->assertEquals(51, count($tracked_items_no_pager[$entity_type_id]));
   }
 
   /**
