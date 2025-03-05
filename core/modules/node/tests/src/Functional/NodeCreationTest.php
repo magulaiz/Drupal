@@ -13,14 +13,13 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
  * Create a node and test saving it.
  *
  * @group node
- * @group #slow
  */
 class NodeCreationTest extends NodeTestBase {
 
   use ContentTypeCreationTrait;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * Enable dummy module that implements hook_ENTITY_TYPE_insert() for
    * exceptions (function node_test_exception_node_insert() ).
@@ -106,7 +105,8 @@ class NodeCreationTest extends NodeTestBase {
     $this->assertSession()->pageTextContains($node->getOwner()->getAccountName());
     $this->assertSession()->pageTextContains($this->container->get('date.formatter')->format($node->getCreatedTime()));
 
-    // Check if the node revision checkbox is not rendered on node creation form.
+    // Check if the node revision checkbox is not rendered on node creation
+    // form.
     $admin_user = $this->drupalCreateUser([
       'administer nodes',
       'create page content',

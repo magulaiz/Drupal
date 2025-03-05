@@ -22,9 +22,7 @@ class ImageDimensionsTest extends BrowserTestBase {
   }
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['image', 'image_module_test'];
 
@@ -33,6 +31,9 @@ class ImageDimensionsTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected $profile = 'testing';
 
   /**
@@ -111,7 +112,8 @@ class ImageDimensionsTest extends BrowserTestBase {
     $this->assertEquals(60, $image_file->getWidth());
     $this->assertEquals(120, $image_file->getHeight());
 
-    // Scale an image that is higher than it is wide (rotated by previous effect).
+    // Scale an image that is higher than it is wide (rotated by previous
+    // effect).
     $effect = [
       'id' => 'image_scale',
       'data' => [
@@ -227,6 +229,7 @@ class ImageDimensionsTest extends BrowserTestBase {
     $style->save();
     // @todo Uncomment this once
     //   https://www.drupal.org/project/drupal/issues/2670966 is resolved.
+    // phpcs:ignore
     // $this->assertEquals('<img src="' . $url . '" width="41" height="41" alt="" class="image-style-test" />', $this->getImageTag($variables));
     $this->assertFileDoesNotExist($generated_uri);
     $this->drupalGet($this->getAbsoluteUrl($url));

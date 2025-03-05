@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
+use Drupal\entity_test\EntityTestHelper;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -22,7 +24,6 @@ use GuzzleHttp\RequestOptions;
  * JSON:API integration test for the "Comment" content entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class CommentTest extends ResourceTestBase {
 
@@ -82,7 +83,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access comments', 'view test entity']);
@@ -108,7 +109,7 @@ class CommentTest extends ResourceTestBase {
   protected function createEntity() {
     // Create a "bar" bundle for the "entity_test" entity type and create.
     $bundle = 'bar';
-    entity_test_create_bundle($bundle, NULL, 'entity_test');
+    EntityTestHelper::createBundle($bundle, NULL, 'entity_test');
 
     // Create a comment field on this bundle.
     $this->addDefaultCommentField('entity_test', 'bar', 'comment');
@@ -151,10 +152,10 @@ class CommentTest extends ResourceTestBase {
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
+            'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
           ],
         ],
-        'version' => '1.0',
+        'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
       ],
       'links' => [
         'self' => ['href' => $self_url],
@@ -294,10 +295,10 @@ class CommentTest extends ResourceTestBase {
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
     switch ($method) {
-      case 'GET';
+      case 'GET':
         return "The 'access comments' permission is required and the comment must be published.";
 
-      case 'POST';
+      case 'POST':
         return "The 'post comments' permission is required.";
 
       case 'PATCH':
@@ -383,7 +384,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPatchIndividual(): void {
+  protected function doTestPatchIndividual(): void {
     // Ensure ::getModifiedEntityForPatchTesting() can pick an alternative value
     // for the 'entity_id' field.
     EntityTest::create([
@@ -391,7 +392,7 @@ class CommentTest extends ResourceTestBase {
       'type' => 'bar',
     ])->save();
 
-    parent::testPatchIndividual();
+    parent::doTestPatchIndividual();
   }
 
 }

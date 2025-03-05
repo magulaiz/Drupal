@@ -34,9 +34,7 @@ class SessionHttpsTest extends BrowserTestBase {
   protected $secureSessionName;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['session_test'];
 
@@ -124,7 +122,7 @@ class SessionHttpsTest extends BrowserTestBase {
    *
    * Note that the parents $session_id and $loggedInUser is not updated.
    */
-  protected function loginHttp(AccountInterface $account) {
+  protected function loginHttp(AccountInterface $account): void {
     $guzzle_cookie_jar = $this->getGuzzleCookieJar();
     $post = [
       'form_id' => 'user_login_form',
@@ -175,7 +173,7 @@ class SessionHttpsTest extends BrowserTestBase {
    *
    * Note that the parents $session_id and $loggedInUser is not updated.
    */
-  protected function loginHttps(AccountInterface $account) {
+  protected function loginHttps(AccountInterface $account): void {
     $guzzle_cookie_jar = $this->getGuzzleCookieJar();
     $post = [
       'form_id' => 'user_login_form',
@@ -270,7 +268,7 @@ class SessionHttpsTest extends BrowserTestBase {
   /**
    * Builds a URL for submitting a mock HTTPS request to HTTP test environments.
    *
-   * @param $url
+   * @param string $url
    *   A Drupal path such as 'user/login'.
    *
    * @return string
@@ -283,7 +281,7 @@ class SessionHttpsTest extends BrowserTestBase {
   /**
    * Builds a URL for submitting a mock HTTP request to HTTPS test environments.
    *
-   * @param $url
+   * @param string $url
    *   A Drupal path such as 'user/login'.
    *
    * @return string

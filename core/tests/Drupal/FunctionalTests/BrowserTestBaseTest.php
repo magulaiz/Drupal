@@ -21,16 +21,13 @@ use PHPUnit\Framework\ExpectationFailedException;
  * Tests BrowserTestBase functionality.
  *
  * @group browsertestbase
- * @group #slow
  */
 class BrowserTestBaseTest extends BrowserTestBase {
   use PathAliasTestTrait;
   use CronRunTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'test_page_test',
@@ -636,7 +633,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
-   * Test if setting an invalid scheme in SIMPLETEST_BASE_URL throws an exception.
+   * Tests an invalid scheme in SIMPLETEST_BASE_URL throws an exception.
    */
   public function testSimpleTestBaseUrlValidation(): void {
     putenv('SIMPLETEST_BASE_URL=mysql://user:pass@localhost/database');

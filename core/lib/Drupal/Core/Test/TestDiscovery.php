@@ -55,10 +55,9 @@ class TestDiscovery {
    *
    * @param string $root
    *   The app root.
-   * @param $class_loader
+   * @param class-string $class_loader
    *   The class loader. Normally Composer's ClassLoader, as included by the
-   *   front controller, but may also be decorated; e.g.,
-   *   \Symfony\Component\ClassLoader\ApcClassLoader.
+   *   front controller, but may also be decorated.
    */
   public function __construct($root, $class_loader) {
     $this->root = $root;
@@ -243,10 +242,10 @@ class TestDiscovery {
    * @param string $namespace_prefix
    *   The namespace prefix to use for discovered classes. Must contain a
    *   trailing namespace separator (backslash).
-   *   For example: 'Drupal\\node\\Tests\\'
+   *   For example: 'Drupal\\node\\Tests\\'.
    * @param string $path
    *   The directory path to scan.
-   *   For example: '/path/to/drupal/core/modules/node/tests/src'
+   *   For example: '/path/to/drupal/core/modules/node/tests/src'.
    *
    * @return array
    *   An associative array whose keys are fully-qualified class names and whose

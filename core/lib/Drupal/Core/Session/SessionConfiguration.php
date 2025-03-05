@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Session;
 
-use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -22,26 +21,17 @@ class SessionConfiguration implements SessionConfigurationInterface {
    *
    * @param array $options
    *   An associative array of session ini settings.
-   * @param \Drupal\Core\Site\Settings $settings
-   *   The settings instance.
    *
    * @see \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage::__construct()
    * @see http://php.net/manual/session.configuration.php
    * @see https://www.php.net/manual/session.security.ini.php
    */
-  public function __construct($options = [], protected ?Settings $settings = NULL) {
-    // Provide sensible defaults for sid_length, sid_bits_per_character and
-    // name_suffix.
+  public function __construct($options = []) {
+    // Provide sensible defaults for name_suffix.
     // @see core/assets/scaffold/files/default.services.yml
     $this->options = $options + [
-      'sid_length' => 48,
-      'sid_bits_per_character' => 6,
       'name_suffix' => '',
     ];
-    if (!isset($this->settings)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $settings argument is deprecated in drupal:11.1.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3462570', E_USER_DEPRECATED);
-      $this->settings = \Drupal::service('settings');
-    }
   }
 
   /**
@@ -114,9 +104,6 @@ class SessionConfiguration implements SessionConfigurationInterface {
       // Replace "core" out of session_name so core scripts redirect properly,
       // specifically install.php.
       $session_name = preg_replace('#/core$#', '', $session_name);
-      // Create unique session name for different sites served on the same
-      // host name and base path.
-      return substr(hash_hmac('sha256', $session_name, $this->settings->getHashSalt()), 0, 32);
     }
 
     return substr(hash('sha256', $session_name), 0, 32);
@@ -128,15 +115,15 @@ class SessionConfiguration implements SessionConfigurationInterface {
    * The Set-Cookie response header and its domain attribute are defined in RFC
    * 2109, RFC 2965 and RFC 6265 each one superseding the previous version.
    *
-   * @see http://tools.ietf.org/html/rfc2109
-   * @see http://tools.ietf.org/html/rfc2965
-   * @see http://tools.ietf.org/html/rfc6265
-   *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
    *
    * @return string|null
    *   The session cookie domain, or NULL if the calculated value is invalid.
+   *
+   * @see http://tools.ietf.org/html/rfc2109
+   * @see http://tools.ietf.org/html/rfc2965
+   * @see http://tools.ietf.org/html/rfc6265
    */
   protected function getCookieDomain(Request $request) {
     if (isset($this->options['cookie_domain'])) {

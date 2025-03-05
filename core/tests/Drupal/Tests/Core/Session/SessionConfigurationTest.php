@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Session;
 
-use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @coversDefaultClass \Drupal\Core\Session\SessionConfiguration
  * @group Session
- * @runTestsInSeparateProcesses
  */
 class SessionConfigurationTest extends UnitTestCase {
 
@@ -19,12 +17,12 @@ class SessionConfigurationTest extends UnitTestCase {
    * Constructs a partially mocked SUT.
    *
    * @return \Drupal\Core\Session\SessionConfiguration|\PHPUnit\Framework\MockObject\MockObject
+   *   A mock object of SessionConfiguration with specific methods overridden.
    */
-  protected function createSessionConfiguration($options = [], string $hash_salt = 'some_salt') {
-    $settings = new Settings(['hash_salt' => $hash_salt]);
+  protected function createSessionConfiguration($options = []) {
     return $this->getMockBuilder('Drupal\Core\Session\SessionConfiguration')
       ->onlyMethods(['drupalValidTestUa'])
-      ->setConstructorArgs([$options, $settings])
+      ->setConstructorArgs([$options])
       ->getMock();
   }
 
@@ -173,8 +171,8 @@ class SessionConfigurationTest extends UnitTestCase {
    *
    * @dataProvider providerTestGeneratedSessionName
    */
-  public function testGeneratedSessionName(string $uri, string $hash_salt, string $expected_name): void {
-    $config = $this->createSessionConfiguration([], $hash_salt);
+  public function testGeneratedSessionName($uri, $expected_name): void {
+    $config = $this->createSessionConfiguration();
 
     $request = Request::create($uri);
     $options = $config->getOptions($request);
@@ -190,27 +188,27 @@ class SessionConfigurationTest extends UnitTestCase {
    */
   public static function providerTestGeneratedSessionName() {
     $data = [
-      ['http://example.com/path/index.php', 'example_hash_salt', 'SESS', 'example.com'],
-      ['http://www.example.com/path/index.php', 'example_hash_salt', 'SESS', 'www.example.com'],
-      ['http://subdomain.example.com/path/index.php', 'example_hash_salt', 'SESS', 'subdomain.example.com'],
-      ['http://example.com:8080/path/index.php', 'example_hash_salt', 'SESS', 'example.com'],
-      ['https://example.com/path/index.php', 'example_hash_salt', 'SSESS', 'example.com'],
-      ['http://example.com/path/core/install.php', 'example_hash_salt', 'SESS', 'example.com'],
-      ['http://localhost/path/index.php', 'example_hash_salt', 'SESS', 'localhost'],
-      ['http://127.0.0.1/path/index.php', 'example_hash_salt', 'SESS', '127.0.0.1'],
-      ['http://127.0.0.1:8888/path/index.php', 'example_hash_salt', 'SESS', '127.0.0.1'],
-      ['https://127.0.0.1/path/index.php', 'example_hash_salt', 'SSESS', '127.0.0.1'],
-      ['https://127.0.0.1:8443/path/index.php', 'example_hash_salt', 'SSESS', '127.0.0.1'],
-      ['http://1.1.1.1/path/index.php', 'example_hash_salt', 'SESS', '1.1.1.1'],
-      ['https://1.1.1.1/path/index.php', 'example_hash_salt', 'SSESS', '1.1.1.1'],
-      ['http://[::1]/path/index.php', 'example_hash_salt', 'SESS', '[::1]'],
-      ['http://[::1]:8888/path/index.php', 'example_hash_salt', 'SESS', '[::1]'],
-      ['https://[::1]/path/index.php', 'example_hash_salt', 'SSESS', '[::1]'],
-      ['https://[::1]:8443/path/index.php', 'example_hash_salt', 'SSESS', '[::1]'],
+      ['http://example.com/path/index.php', 'SESS', 'example.com'],
+      ['http://www.example.com/path/index.php', 'SESS', 'www.example.com'],
+      ['http://subdomain.example.com/path/index.php', 'SESS', 'subdomain.example.com'],
+      ['http://example.com:8080/path/index.php', 'SESS', 'example.com'],
+      ['https://example.com/path/index.php', 'SSESS', 'example.com'],
+      ['http://example.com/path/core/install.php', 'SESS', 'example.com'],
+      ['http://localhost/path/index.php', 'SESS', 'localhost'],
+      ['http://127.0.0.1/path/index.php', 'SESS', '127.0.0.1'],
+      ['http://127.0.0.1:8888/path/index.php', 'SESS', '127.0.0.1'],
+      ['https://127.0.0.1/path/index.php', 'SSESS', '127.0.0.1'],
+      ['https://127.0.0.1:8443/path/index.php', 'SSESS', '127.0.0.1'],
+      ['http://1.1.1.1/path/index.php', 'SESS', '1.1.1.1'],
+      ['https://1.1.1.1/path/index.php', 'SSESS', '1.1.1.1'],
+      ['http://[::1]/path/index.php', 'SESS', '[::1]'],
+      ['http://[::1]:8888/path/index.php', 'SESS', '[::1]'],
+      ['https://[::1]/path/index.php', 'SSESS', '[::1]'],
+      ['https://[::1]:8443/path/index.php', 'SSESS', '[::1]'],
     ];
 
     return array_map(function ($record) {
-      return [$record[0], $record[1], $record[2] . substr(hash_hmac('sha256', $record[3], $record[1]), 0, 32)];
+      return [$record[0], $record[1] . substr(hash('sha256', $record[2]), 0, 32)];
     }, $data);
   }
 
@@ -263,52 +261,18 @@ class SessionConfigurationTest extends UnitTestCase {
   }
 
   /**
-   * Test if session name depends on hash_salt.
-   *
-   * @covers ::getOptions
-   */
-  public function testSessionNameDependsOnHashSalt() {
-    $uri = "http://example.com/path/index.php";
-    $request = Request::create($uri);
-
-    $config_1 = $this->createSessionConfiguration([], 'hash_salt_1');
-    $options_1 = $config_1->getOptions($request);
-
-    $config_2 = $this->createSessionConfiguration([], 'hash_salt_2');
-    $options_2 = $config_2->getOptions($request);
-
-    $this->assertNotEquals($options_1['name'], $options_2['name']);
-  }
-
-  /**
    * Tests constructor's default settings.
    *
    * @covers ::__construct
-   *
-   * @dataProvider providerTestConstructorDefaultSettings
    */
-  public function testConstructorDefaultSettings(array $options, int $expected_sid_length, int $expected_sid_bits_per_character, string $expected_name_suffix): void {
-    $config = $this->createSessionConfiguration($options);
+  public function testConstructorDefaultSettings(): void {
+    $config = $this->createSessionConfiguration([]);
     $options = $config->getOptions(Request::createFromGlobals());
-    $this->assertSame($expected_sid_length, $options['sid_length']);
-    $this->assertSame($expected_sid_bits_per_character, $options['sid_bits_per_character']);
-    $this->assertSame($expected_name_suffix, $options['name_suffix']);
-  }
+    $this->assertSame('', $options['name_suffix']);
 
-  /**
-   * Data provider for the constructor test.
-   *
-   * @return array
-   *   Test data
-   */
-  public static function providerTestConstructorDefaultSettings() {
-    return [
-      [[], 48, 6, ''],
-      [['sid_length' => 100], 100, 6, ''],
-      [['sid_bits_per_character' => 5], 48, 5, ''],
-      [['name_suffix' => 'some-suffix'], 48, 6, 'some-suffix'],
-      [['sid_length' => 100, 'sid_bits_per_character' => 5, 'name_suffix' => 'some-suffix'], 100, 5, 'some-suffix'],
-    ];
+    $config = $this->createSessionConfiguration(['name_suffix' => 'some-suffix']);
+    $options = $config->getOptions(Request::createFromGlobals());
+    $this->assertSame('some-suffix', $options['name_suffix']);
   }
 
 }
