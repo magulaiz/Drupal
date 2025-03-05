@@ -33,8 +33,8 @@ class LanguageTestController implements ContainerInjectionInterface {
    *   The config factory.
    */
   public function __construct(
-    protected HttpKernelInterface $httpKernel, 
-    protected LanguageManagerInterface $languageManager, 
+    protected HttpKernelInterface $httpKernel,
+    protected LanguageManagerInterface $languageManager,
     protected ConfigFactoryInterface $configFactory,
   ) {}
 
@@ -43,8 +43,8 @@ class LanguageTestController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('http_kernel'), 
-      $container->get('language_manager'), 
+      $container->get('http_kernel'),
+      $container->get('language_manager'),
       $container->get('config.factory'),
     );
   }
