@@ -32,14 +32,21 @@ class LanguageTestController implements ContainerInjectionInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    */
-  public function __construct(protected HttpKernelInterface $httpKernel, protected LanguageManagerInterface $languageManager, protected ConfigFactoryInterface $configFactory) {
-  }
+  public function __construct(
+    protected HttpKernelInterface $httpKernel, 
+    protected LanguageManagerInterface $languageManager, 
+    protected ConfigFactoryInterface $configFactory,
+  ) {}
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('http_kernel'), $container->get('language_manager'), $container->get('config.factory'));
+    return new static(
+      $container->get('http_kernel'), 
+      $container->get('language_manager'), 
+      $container->get('config.factory'),
+    );
   }
 
   /**
@@ -132,7 +139,7 @@ class LanguageTestController implements ContainerInjectionInterface {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   The domain redirect response object.
    */
-  public function redirectToDomain(Request $request, string $langcode) {
+  public function redirectToDomain(Request $request, string $langcode): RedirectResponse {
     $domain = $this->configFactory->get('language.negotiation')->get('url.domains.' . $langcode);
     if (!$domain) {
       // The domain doesn't exist, so fallback to generic prefix.
