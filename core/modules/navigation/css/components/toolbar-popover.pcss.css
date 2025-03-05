@@ -31,6 +31,7 @@
   gap: var(--admin-toolbar-space-8);
   inset-block-start: var(--admin-toolbar-sidebar-header);
   inset-inline-start: 0;
+  margin-top: var(--admin-toolbar-space-12);
   /* Hide the drop-shadow on the left side. */
   clip-path: inset(0 -10rem 0 0);
 
