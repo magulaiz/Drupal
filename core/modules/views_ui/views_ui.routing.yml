@@ -47,22 +47,30 @@ views_ui.reports_plugins:
     _permission: 'administer views'
 
 entity.view.enable:
-  path: '/admin/structure/views/view/{view}/enable'
+  path: '/admin/structure/views/view/{view}/enable/{js}'
   defaults:
     _controller: '\Drupal\views_ui\Controller\ViewsUIController::ajaxOperation'
     op: enable
+    js: 'ajax'
   requirements:
     _entity_access: view.enable
     _csrf_token: 'TRUE'
+    js: 'nojs|ajax'
+  options:
+    _csrf_exclude_parameters: ['js']
 
 entity.view.disable:
-  path: '/admin/structure/views/view/{view}/disable'
+  path: '/admin/structure/views/view/{view}/disable/{js}'
   defaults:
     _controller: '\Drupal\views_ui\Controller\ViewsUIController::ajaxOperation'
     op: disable
+    js: 'ajax'
   requirements:
     _entity_access: view.disable
     _csrf_token: 'TRUE'
+    js: 'nojs|ajax'
+  options:
+    _csrf_exclude_parameters: ['js']
 
 entity.view.duplicate_form:
   path: '/admin/structure/views/view/{view}/duplicate'
