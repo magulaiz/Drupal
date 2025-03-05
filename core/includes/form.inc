@@ -391,7 +391,11 @@ function template_preprocess_textarea(&$variables): void {
   $variables['wrapper_attributes'] = new Attribute();
   $variables['attributes'] = new Attribute($element['#attributes']);
   $variables['value'] = $element['#value'];
-  $variables['resizable'] = !empty($element['#resizable']) ? $element['#resizable'] : NULL;
+  $resizable = !empty($element['#resizable']) ? $element['#resizable'] : NULL;
+  $variables['resizable'] = $resizable;
+  if ($resizable) {
+    $variables['attributes']->addClass('resize-' . $resizable);
+  }
   $variables['required'] = !empty($element['#required']) ? $element['#required'] : NULL;
 }
 
@@ -672,7 +676,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *   foreach ($results as $result) {
  *     $items[] = t('Loaded node %title.', ['%title' => $result]);
  *   }
- *   $session = \Drupal::getRequest()->getSession();
+ *   $session = \Drupal::request()->getSession();
  *   $session->set('my_batch_results', $items);
  * }
  * @endcode
