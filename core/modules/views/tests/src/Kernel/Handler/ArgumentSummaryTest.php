@@ -153,7 +153,7 @@ class ArgumentSummaryTest extends ViewsKernelTestBase {
   /**
    * Tests that the active link is set correctly.
    */
-  public function testActiveLink() {
+  public function testActiveLink(): void {
     require_once $this->root . '/core/modules/views/views.theme.inc';
 
     // We need at least one node.
