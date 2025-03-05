@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Components;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Plugin\Discovery\DirectoryWithMetadataPluginDiscovery;
 use Drupal\Core\Render\Component\Exception\ComponentNotFoundException;
-use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
  * Tests the component plugin manager.
@@ -17,7 +18,12 @@ class ComponentPluginManagerTest extends ComponentKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'sdc_test', 'sdc_test_replacements'];
+  protected static $modules = [
+    'system',
+    'sdc_test',
+    'sdc_test_replacements',
+    'sdc_test_plugin_manager',
+  ];
 
   /**
    * {@inheritdoc}
@@ -57,28 +63,45 @@ class ComponentPluginManagerTest extends ComponentKernelTestBase {
    *   Whether twig debug is enabled.
    * @param bool $cacheEnabled
    *   Whether cache is enabled.
-   * @param bool $expectCacheGet
-   *   Whether we expect the cache to be called.
+   * @param bool $expectCached
+   *   Whether we expect the definitions are cached or not.
    *
    * @dataProvider providerTestComponentCachingDependingOnDevelopmentSettings
    */
-  public function testComponentCachingDependingOnDevelopmentSettings(bool $twigDebug, bool $cacheEnabled, bool $expectCacheGet): void {
-    // Set the development settings.
-    $developmentSettings = $this->keyValue->get('development_settings');
-    $developmentSettings->set('twig_debug', $twigDebug);
-    $developmentSettings->set('twig_cache_disable', !$cacheEnabled);
+  public function testComponentCachingDependingOnDevelopmentSettings(bool $twigDebug, bool $cacheEnabled, bool $expectCached): void {
+    // Set the manager to a local variable, so we can type hint it.
+    /** @var \Drupal\sdc_test_plugin_manager\Theme\TestComponentPluginManager $manager */
+    $manager = $this->manager;
 
-    // Set the cache backend as a spy mock.
-    $cacheBackend = $this->createMock(CacheBackendInterface::class);
-    $cacheBackend->expects($expectCacheGet ? $this->once() : $this->never())
-      ->method('get')
-      ->with('cache_key');
-    $this->manager->setCacheBackend($cacheBackend, 'cache_key');
+    $firstObtainedDefinitions = $manager->getDefinitions();
 
-    // Make two calls to getDefinitions() to ensure the
-    // cache is/isn't called if it should/shouldn't be.
-    $this->manager->getDefinitions();
-    $this->manager->getDefinitions();
+    // Set a mock discovery in the manager.
+    $discovery = $this->createMock(DirectoryWithMetadataPluginDiscovery::class);
+    $discovery->method('getDefinitions')
+      ->willReturn(array_slice($firstObtainedDefinitions, 0, -1, TRUE));
+    $manager->setDiscovery($discovery);
+
+    // Set a mock container in the manager.
+    $container = $this->createMock(ContainerBuilder::class);
+    $container->method('getParameter')
+      ->with('twig.config')
+      ->willReturn([
+        'debug' => $twigDebug,
+        'cache' => $cacheEnabled,
+      ]);
+    $manager->setContainer($container);
+
+    // Assert over definition keys, since it's the cleanest
+    // way to check if the definitions are the same after we
+    // removed one of them.
+    $firstObtainedDefinitionKeys = array_keys($firstObtainedDefinitions);
+    $secondObtainedDefinitionKeys = array_keys($manager->getDefinitions());
+    if ($expectCached) {
+      $this->assertEquals($firstObtainedDefinitionKeys, $secondObtainedDefinitionKeys);
+    }
+    else {
+      $this->assertNotEquals($firstObtainedDefinitionKeys, $secondObtainedDefinitionKeys);
+    }
   }
 
   /**
