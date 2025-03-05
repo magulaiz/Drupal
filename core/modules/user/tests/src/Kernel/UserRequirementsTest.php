@@ -23,6 +23,8 @@ class UserRequirementsTest extends KernelTestBase {
 
   /**
    * Module handler for invoking user requirements.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
