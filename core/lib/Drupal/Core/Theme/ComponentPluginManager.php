@@ -125,7 +125,6 @@ class ComponentPluginManager extends DefaultPluginManager implements Categorizin
   }
 
   /**
-core/lib/Drupal/Core/Theme/ComponentPluginManager.php
    * {@inheritdoc}
    */
   public function getDefinitions(): array {
@@ -140,7 +139,6 @@ core/lib/Drupal/Core/Theme/ComponentPluginManager.php
   }
 
   /**
- core/lib/Drupal/Core/Theme/ComponentPluginManager.php
    * Gets a component for rendering.
    *
    * @param string $component_id
