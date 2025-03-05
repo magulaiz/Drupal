@@ -72,7 +72,6 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
 
     $container = new Container();
     $container->set('router.request_context', $this->requestContext);
-    $container->set('string_translation', $this->getStringTranslationStub());
     \Drupal::setContainer($container);
   }
 

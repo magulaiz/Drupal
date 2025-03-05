@@ -18,7 +18,6 @@ use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\LocalRedirectResponse;
 use Drupal\Core\Routing\RequestContext;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -164,8 +163,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * @see \Drupal\big_pipe\Render\Placeholder\BigPipeStrategy
  */
 class BigPipe {
-
-  use StringTranslationTrait;
 
   /**
    * The BigPipe placeholder replacements start signal.
@@ -599,7 +596,7 @@ EOF;
               // instead, then return a 400 response to the client with the
               // error message. We don't throw an exception, because this is a
               // client error rather than a server error.
-              $message = $this->t('Redirects to external URLs are not allowed by default, use \Drupal\Core\Routing\TrustedRedirectResponse for "@url".', ['@url' => $response->getTargetUrl()]);
+              $message = 'Redirects to external URLs are not allowed by default, use \Drupal\Core\Routing\TrustedRedirectResponse for it.';
               $this->logger->error($message);
               $ajax_response->addCommand(new MessageCommand($message));
             }

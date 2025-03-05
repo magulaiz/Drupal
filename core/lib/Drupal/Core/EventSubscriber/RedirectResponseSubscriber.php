@@ -6,7 +6,6 @@ use Drupal\Component\HttpFoundation\SecuredRedirectResponse;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Routing\LocalRedirectResponse;
 use Drupal\Core\Routing\RequestContext;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -19,8 +18,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * Allows manipulation of the response object when performing a redirect.
  */
 class RedirectResponseSubscriber implements EventSubscriberInterface {
-
-  use StringTranslationTrait;
 
   /**
    * Whether to ignore the destination query parameter when redirecting.
@@ -88,7 +85,7 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
           // then return a 400 response to the client with the error message.
           // We don't throw an exception, because this is a client error rather
           // than a server error.
-          $message = $this->t('Redirects to external URLs are not allowed by default, use \Drupal\Core\Routing\TrustedRedirectResponse for "@url".', ['@url' => $response->getTargetUrl()]);
+          $message = 'Redirects to external URLs are not allowed by default, use \Drupal\Core\Routing\TrustedRedirectResponse for it.';
           /** @var \Psr\Log\LoggerInterface $logger */
           $logger = ($this->loggerClosure)();
           $logger->error($message);
