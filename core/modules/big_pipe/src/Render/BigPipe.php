@@ -165,7 +165,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class BigPipe {
 
-  trait StringTranslationTrait;
+  use StringTranslationTrait;
 
   /**
    * The BigPipe placeholder replacements start signal.

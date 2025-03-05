@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class RedirectResponseSubscriber implements EventSubscriberInterface {
 
-  trait StringTranslationTrait;
+  use StringTranslationTrait;
 
   /**
    * Whether to ignore the destination query parameter when redirecting.
