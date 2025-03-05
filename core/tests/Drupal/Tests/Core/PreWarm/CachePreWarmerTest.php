@@ -44,14 +44,11 @@ class CachePreWarmerTest extends UnitTestCase {
     for ($i = 0; $i < 4; $i++) {
       $serviceId = 'service' . $i;
       $serviceMock = $this->createMock(PrewarmableInterface::class);
-      $this->warmedMap->attach($serviceMock, 0);
+      $this->warmedMap[$serviceMock] = 0;
 
       $serviceMock->method('preWarm')
         ->willReturnCallback(function () use ($serviceMock) {
-          $this->warmedMap->offsetSet(
-            $serviceMock,
-            1 + $this->warmedMap[$serviceMock]
-          );
+          $this->warmedMap[$serviceMock] = 1 + $this->warmedMap[$serviceMock];
         });
 
       $returnMap[] = [$serviceId, $serviceMock];
