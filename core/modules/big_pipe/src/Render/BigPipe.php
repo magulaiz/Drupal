@@ -18,6 +18,7 @@ use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\LocalRedirectResponse;
 use Drupal\Core\Routing\RequestContext;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -163,6 +164,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * @see \Drupal\big_pipe\Render\Placeholder\BigPipeStrategy
  */
 class BigPipe {
+
+  trait StringTranslationTrait;
 
   /**
    * The BigPipe placeholder replacements start signal.
