@@ -834,10 +834,9 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    */
   public static function breakString($str, $force_int = FALSE) {
     $operator = NULL;
-    // Initialize $value as an empty array by default.
     $value = [];
 
-    // Remove + and , characters from start and end of string.
+    // Remove whitespace, + and , characters from start and end of string.
     $str = trim($str, " \n\r\t\v\0,+");
     if ($str !== '') {
       // Check for 'or' operators (plus signs or spaces) along with a comma.
