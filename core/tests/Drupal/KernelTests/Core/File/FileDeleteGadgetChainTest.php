@@ -23,10 +23,9 @@ class FileDeleteGadgetChainTest extends KernelTestBase {
     // ./phpggc --public-properties Drupal/FD1 public://canary.txt
     $payload = 'O:34:"Drupal\Core\Config\StorageComparer":1:{s:18:"targetCacheStorage";O:39:"Drupal\Component\PhpStorage\FileStorage":1:{s:9:"directory";s:19:"public://canary.txt";}}';
 
-    // Not using $this->expectException(\TypeError::class) because we want to
-    // check whether the file still exists after the payload is unserialized.
     try {
       unserialize($payload);
+      $this->fail('No exception was thrown');
     }
     catch (\Throwable $e) {
       $this->assertInstanceOf(\TypeError::class, $e);
