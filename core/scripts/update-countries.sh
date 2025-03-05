@@ -12,8 +12,6 @@
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
 
-define('DRUPAL_ROOT', dirname(__DIR__, 2));
-
 // Load the autoloader.
 $autoloader = require_once DRUPAL_ROOT . '/autoload.php';
 
