@@ -19,7 +19,7 @@ class EntityQueryServiceDeprecation extends KernelTestBase {
    *
    * @group legacy
    */
-  public function testPostgresServiceDeprecation(): void {
+  public function testPostgresServiceDeprecated(): void {
     $running_driver = $this->container->get('database')->driver();
     if ($running_driver === 'pgsql') {
       $this->markTestSkipped('The service is not deprecated for pgsql database driver.');
