@@ -12,7 +12,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
@@ -22,6 +21,7 @@ use Drupal\Core\Plugin\Component;
 use Drupal\Core\Render\Component\Exception\ComponentNotFoundException;
 use Drupal\Core\Render\Component\Exception\IncompatibleComponentSchema;
 use Drupal\Core\Plugin\Discovery\DirectoryWithMetadataPluginDiscovery;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a plugin manager to deal with components.
@@ -63,8 +63,8 @@ class ComponentPluginManager extends DefaultPluginManager implements Categorizin
    *   The compatibility checker.
    * @param \Drupal\Core\Theme\Component\ComponentValidator $componentValidator
    *   The component validator.
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $keyValueFactory
-   *   The key value factory.
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The container.
    * @param string $appRoot
    *   The application root.
    */
@@ -78,7 +78,7 @@ class ComponentPluginManager extends DefaultPluginManager implements Categorizin
     protected FileSystemInterface $fileSystem,
     protected SchemaCompatibilityChecker $compatibilityChecker,
     protected ComponentValidator $componentValidator,
-    protected KeyValueFactoryInterface $keyValueFactory,
+    protected ContainerInterface $container,
     protected string $appRoot,
   ) {
     // We are skipping the call to the parent constructor to avoid initializing
@@ -132,12 +132,13 @@ class ComponentPluginManager extends DefaultPluginManager implements Categorizin
    * {@inheritdoc}
    */
   public function getDefinitions(): array {
-    $development_settings = $this->keyValueFactory->get('development_settings');
-    $twig_debug = $development_settings->get('twig_debug', FALSE);
-    $twig_cache_disable = $development_settings->get('twig_cache_disable', FALSE);
-    if ($twig_debug || $twig_cache_disable) {
+    $twig_config = $this->container->getParameter('twig.config');
+    $twig_debug = $twig_config['debug'] ?? NULL;
+    $twig_cache = $twig_config['cache'] ?? NULL;
+    if ($twig_debug === TRUE || $twig_cache === FALSE) {
       return $this->findDefinitions();
     }
+
     return parent::getDefinitions();
   }
 
