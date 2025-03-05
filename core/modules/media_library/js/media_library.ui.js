@@ -410,7 +410,7 @@
         return;
       }
       window.addEventListener('dialog:afterclose', () => {
-        Drupal.MediaLibrary.currentSelection = [];
+        Drupal.MediaLibrary.currentSelection.length = 0;
       });
     },
   };
