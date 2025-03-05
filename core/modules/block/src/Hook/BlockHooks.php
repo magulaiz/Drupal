@@ -21,6 +21,9 @@ class BlockHooks {
 
   use StringTranslationTrait;
 
+  /**
+   * Constructs BlockHooks object.
+   */
   public function __construct(
     private readonly BlockConfigUpdater $blockConfigUpdater,
   ) {}

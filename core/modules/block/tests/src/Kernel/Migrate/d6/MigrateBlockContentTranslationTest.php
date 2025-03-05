@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Kernel\Migrate\d6;
 
+use Drupal\block\BlockConfigUpdater;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use Drupal\block\Hook\BlockHooks;
 
@@ -50,7 +51,7 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal6TestBase {
       'd6_block',
       'd6_block_translation',
     ]);
-    $blockRebuild = new BlockHooks();
+    $blockRebuild = new BlockHooks($this->container->get(BlockConfigUpdater::class));
     $blockRebuild->rebuild();
   }
 

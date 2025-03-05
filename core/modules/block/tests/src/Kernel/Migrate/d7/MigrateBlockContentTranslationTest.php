@@ -53,7 +53,7 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal7TestBase {
       'd7_block',
       'd7_block_translation',
     ]);
-    $blockRebuild = new BlockHooks();
+    $blockRebuild = new BlockHooks($this->container->get(BlockHooks::class));
     $blockRebuild->rebuild();
   }
 
