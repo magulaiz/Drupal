@@ -22,14 +22,9 @@ class CachePreWarmerTest extends UnitTestCase {
   protected MockObject|ClassResolverInterface $classResolver;
 
   /**
-   * @var array<\Drupal\Core\PreWarm\PreWarmableInterface|\PHPUnit\Framework\MockObject\MockObject>
+   * @var \SplObjectStorage<\Drupal\Core\PreWarm\PreWarmableInterface|\PHPUnit\Framework\MockObject\MockObject>
    */
-  protected array $preWarmableServices;
-
-  /**
-   * @var int
-   */
-  protected int $warmedCount = 0;
+  protected \SplObjectStorage $warmedMap;
 
   public function testNoServices(): void {
     $classResolver = $this->createMock(ClassResolverInterface::class);
@@ -44,23 +39,22 @@ class CachePreWarmerTest extends UnitTestCase {
 
   protected function setupCacheServices(): void {
     $this->classResolver = $this->createMock(ClassResolverInterface::class);
+    $this->warmedMap = new \SplObjectStorage();
 
-    $services = [
-      'service1',
-      'service2',
-      'service3',
-      'service4',
-    ];
-    $returnMap = [];
-    foreach ($services as $serviceId) {
-      $this->preWarmableServices[$serviceId] = $this->createMock(PrewarmableInterface::class);
-      $this->preWarmableServices[$serviceId]->method('preWarm')
-        ->willReturnCallback(function () use ($serviceId) {
-          $this->preWarmableServices[$serviceId]->warmed = TRUE;
-          $this->warmedCount++;
+    for ($i = 0; $i < 4; $i++) {
+      $serviceId = 'service' . $i;
+      $serviceMock = $this->createMock(PrewarmableInterface::class);
+      $this->warmedMap->attach($serviceMock, 0);
+
+      $serviceMock->method('preWarm')
+        ->willReturnCallback(function () use ($serviceMock) {
+          $this->warmedMap->offsetSet(
+            $serviceMock,
+            1 + $this->warmedMap[$serviceMock]
+          );
         });
 
-      $returnMap[] = [$serviceId, $this->preWarmableServices[$serviceId]];
+      $returnMap[] = [$serviceId, $serviceMock];
     }
 
     $this->classResolver->method('getInstanceFromDefinition')
@@ -73,11 +67,15 @@ class CachePreWarmerTest extends UnitTestCase {
   public function testPreWarmOnlyOne(): void {
     $this->setupCacheServices();
 
-    $preWarmer = new CachePreWarmer($this->classResolver, array_keys($this->preWarmableServices));
+    $preWarmer = new CachePreWarmer($this->classResolver, ['service0', 'service1', 'service2', 'service3']);
 
-    $preWarmer->preWarmOneCache();
+    $this->assertTrue($preWarmer->preWarmOneCache());
 
-    $this->assertEquals(1, $this->warmedCount);
+    $warmed = 0;
+    foreach ($this->warmedMap as $service) {
+      $warmed += $this->warmedMap[$service];
+    }
+    $this->assertEquals(1, $warmed);
   }
 
   /**
@@ -86,15 +84,14 @@ class CachePreWarmerTest extends UnitTestCase {
   public function testPreWarmByOne(): void {
     $this->setupCacheServices();
 
-    $preWarmer = new CachePreWarmer($this->classResolver, array_keys($this->preWarmableServices));
+    $preWarmer = new CachePreWarmer($this->classResolver, ['service0', 'service1', 'service2', 'service3']);
 
     while ($preWarmer->preWarmOneCache()) {
 
     }
 
-    $this->assertEquals(4, $this->warmedCount);
-    foreach ($this->preWarmableServices as $service) {
-      $this->assertTrue($service->warmed);
+    foreach ($this->warmedMap as $service) {
+      $this->assertEquals(1, $this->warmedMap[$service]);
     }
   }
 
@@ -104,13 +101,12 @@ class CachePreWarmerTest extends UnitTestCase {
   public function testPreWarmAll(): void {
     $this->setupCacheServices();
 
-    $preWarmer = new CachePreWarmer($this->classResolver, array_keys($this->preWarmableServices));
+    $preWarmer = new CachePreWarmer($this->classResolver, ['service0', 'service1', 'service2', 'service3']);
 
-    $preWarmer->preWarmAllCaches();
+    $this->assertTrue($preWarmer->preWarmAllCaches());
 
-    $this->assertEquals(4, $this->warmedCount);
-    foreach ($this->preWarmableServices as $service) {
-      $this->assertTrue($service->warmed);
+    foreach ($this->warmedMap as $service) {
+      $this->assertEquals(1, $this->warmedMap[$service]);
     }
 
     $this->assertFalse($preWarmer->preWarmAllCaches());
