@@ -88,6 +88,9 @@ class BlockContentTypeTest extends ConfigEntityResourceTestBase {
         'links' => [
           'self' => ['href' => $self_url],
         ],
+        'meta' => [
+          'arity' => 0
+        ],
         'attributes' => [
           'dependencies' => [],
           'description' => 'Provides a competitive alternative to the "basic" type',
