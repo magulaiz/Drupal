@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\custom_module\Kernel;
+namespace Drupal\Tests\KernelTests\Scripts;
 
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Filesystem\Filesystem;
@@ -10,7 +10,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Tests the update-countries script.
  *
- * @group custom_module
+ * @group Scripts
  */
 class UpdateCountriesTest extends KernelTestBase {
 
