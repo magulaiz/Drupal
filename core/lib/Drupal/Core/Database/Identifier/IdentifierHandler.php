@@ -31,16 +31,9 @@ class IdentifierHandler {
    *   double quotation mark.
    */
   public function __construct(
-    protected string $tablePrefix,
-    protected array $identifierQuotes = ['"', '"'],
+    public readonly string $tablePrefix,
+    public readonly array $identifierQuotes = ['"', '"'],
   ) {
-  }
-
-  /**
-   * @todo fill in.
-   */
-  public function getTablePrefix(): string {
-    return $this->tablePrefix;
   }
 
   /**
@@ -98,7 +91,7 @@ class IdentifierHandler {
     if (!$this->hasIdentifier($original_name, IdentifierType::Table)) {
       $table_name = $this->resolvePlatformTableIdentifier($original_name);
       $this->setIdentifier($original_name, $table_name, IdentifierType::Table, FALSE);
-      $this->setIdentifier($original_name, $this->getTablePrefix() . $table_name, IdentifierType::PrefixedTable, FALSE);
+      $this->setIdentifier($original_name, $this->tablePrefix . $table_name, IdentifierType::PrefixedTable, FALSE);
     }
     [$start_quote, $end_quote] = $this->identifierQuotes;
     $table = $prefixed ? $this->identifiers['identifier'][$original_name][IdentifierType::PrefixedTable->value] : $this->identifiers['identifier'][$original_name][IdentifierType::Table->value];

@@ -169,9 +169,10 @@ abstract class Connection {
    */
   public function __get($name): mixed {
     if (in_array($name, ['prefix', 'escapedTables', 'escapedFields', 'escapedAliases', 'identifierQuotes'])) {
-      @trigger_error("Connection::\${$name} should not be accessed in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/1234567", E_USER_DEPRECATED);
+      @trigger_error("Accessing Connection::\${$name} is deprecated in drupal:11.9.0 and the property is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/1234567", E_USER_DEPRECATED);
       return [];
     }
+    return NULL;
   }
 
   /**
@@ -309,7 +310,7 @@ abstract class Connection {
    */
   public function getPrefix(): string {
     // @trigger_error(__METHOD__ . '() is deprecated in drupal:9.x.0 and is removed from drupal:10.0.0. @todo. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
-    return $this->identifierHandler->getTablePrefix();
+    return $this->identifierHandler->tablePrefix;
   }
 
   /**
