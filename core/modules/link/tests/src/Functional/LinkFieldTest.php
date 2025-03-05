@@ -200,7 +200,8 @@ class LinkFieldTest extends BrowserTestBase {
       'entity:user/invalid-parameter' => $validation_error_1,
     ];
 
-    // Test external and internal URLs for 'link_type' = LinkItemInterface::LINK_GENERIC.
+    // Test external and internal URLs for
+    // 'link_type' = LinkItemInterface::LINK_GENERIC.
     $this->assertValidEntries($field_name, $valid_external_entries + $valid_internal_entries);
     $this->assertInvalidEntries($field_name, $invalid_external_entries + $invalid_internal_entries);
 
@@ -813,7 +814,7 @@ class LinkFieldTest extends BrowserTestBase {
             $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
-            $expected .= '</div>';
+            $expected .= PHP_EOL . '</div>';
             $this->assertStringContainsString($expected, $output);
 
             $url = $url2;
@@ -822,7 +823,7 @@ class LinkFieldTest extends BrowserTestBase {
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
-            $expected .= '</div>';
+            $expected .= PHP_EOL . '</div>';
             $this->assertStringContainsString($expected, $output);
 
             $url = $url3;
@@ -831,7 +832,7 @@ class LinkFieldTest extends BrowserTestBase {
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
-            $expected .= '</div>';
+            $expected .= PHP_EOL . '</div>';
             $this->assertStringContainsString($expected, $output);
             break;
 

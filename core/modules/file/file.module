@@ -23,6 +23,7 @@ use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\FileInterface;
 use Drupal\file\IconMimeTypes;
+use Drupal\file\Upload\FileUploadHandlerInterface;
 use Drupal\file\Upload\FormUploadedFile;
 
 /**
@@ -205,8 +206,8 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     $destination = 'temporary://';
   }
 
-  /** @var \Drupal\file\Upload\FileUploadHandler $file_upload_handler */
-  $file_upload_handler = \Drupal::service('file.upload_handler');
+  /** @var \Drupal\file\Upload\FileUploadHandlerInterface $file_upload_handler */
+  $file_upload_handler = \Drupal::service(FileUploadHandlerInterface::class);
   /** @var \Drupal\Core\Render\RendererInterface $renderer */
   $renderer = \Drupal::service('renderer');
   $files = [];
@@ -317,8 +318,8 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
 
     foreach ($remove_fids as $fid) {
       // If it's a temporary file we can safely remove it immediately, otherwise
-      // it's up to the implementing module to remove usages of files to have them
-      // removed.
+      // it's up to the implementing module to remove usages of files to have
+      // them removed.
       if ($element['#files'][$fid] && $element['#files'][$fid]->isTemporary()) {
         $element['#files'][$fid]->delete();
       }
