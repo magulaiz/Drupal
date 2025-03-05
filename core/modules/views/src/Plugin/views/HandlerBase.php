@@ -845,7 +845,8 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
         // Replace plus signs with spaces and split.
         $value = explode(' ', str_replace('+', ' ', $str));
       }
-      // Check for 'and' operators (commas) or if the string is one word.
+      // Check for 'and' operators (commas) or if the string has only one
+      // word without any delimiters.
       else {
         $operator = 'and';
         $value = explode(',', $str);
