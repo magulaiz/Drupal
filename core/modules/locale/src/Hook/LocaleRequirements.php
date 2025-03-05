@@ -45,7 +45,7 @@ class LocaleRequirements {
           if ($available_updates) {
             $requirements['locale_translation'] = [
               'title' => $this->t('Translation update status'),
-              'value' => Link::fromTextAndUrl(t('Updates available'), Url::fromRoute('locale.translate_status'))->toString(),
+              'value' => Link::fromTextAndUrl($this->t('Updates available'), Url::fromRoute('locale.translate_status'))->toString(),
               'severity' => REQUIREMENT_WARNING,
               'description' => $this->t('Updates available for: @languages. See the <a href=":updates">Available translation updates</a> page for more information.', ['@languages' => implode(', ', $available_updates), ':updates' => Url::fromRoute('locale.translate_status')->toString()]),
             ];
@@ -70,7 +70,7 @@ class LocaleRequirements {
       else {
         $requirements['locale_translation'] = [
           'title' => $this->t('Translation update status'),
-          'value' => Link::fromTextAndUrl(t('Can not determine status'), Url::fromRoute('locale.translate_status'))->toString(),
+          'value' => Link::fromTextAndUrl($this->t('Can not determine status'), Url::fromRoute('locale.translate_status'))->toString(),
           'severity' => REQUIREMENT_WARNING,
           'description' => $this->t('No translation status is available. See the <a href=":updates">Available translation updates</a> page for more information.', [':updates' => Url::fromRoute('locale.translate_status')->toString()]),
         ];
