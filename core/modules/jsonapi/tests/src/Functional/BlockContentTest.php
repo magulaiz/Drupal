@@ -156,7 +156,7 @@ class BlockContentTest extends ResourceTestBase {
           'self' => ['href' => $self_url->toString()],
         ],
         'meta' => [
-          'arity' => 0
+          'arity' => 0,
         ],
         'attributes' => [
           'body' => [
