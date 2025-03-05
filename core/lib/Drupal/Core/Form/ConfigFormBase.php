@@ -50,6 +50,23 @@ abstract class ConfigFormBase extends FormBase {
   }
 
   /**
+   * Returns the typed config manager service.
+   *
+   * @return \Drupal\Core\Config\TypedConfigManagerInterface
+   *   The typed config manager service.
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0.
+   *   This method is no longer used by Drupal core. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3477616
+   */
+  protected function typedConfigManager() {
+    @trigger_error('typedConfigManager() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. This method is no longer in use instead $this->typedConfigManager to be used. See https://www.drupal.org/project/drupal/issues/3477616', E_USER_DEPRECATED);
+    return $this->typedConfigManager;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
