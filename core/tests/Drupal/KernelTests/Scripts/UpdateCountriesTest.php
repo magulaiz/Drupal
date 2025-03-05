@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\KernelTests\Scripts;
+namespace Drupal\KernelTests\Scripts;
 
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Filesystem\Filesystem;
