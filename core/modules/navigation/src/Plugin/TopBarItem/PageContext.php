@@ -85,21 +85,23 @@ class PageContext extends TopBarItemBase implements ContainerFactoryPluginInterf
       return $build;
     }
 
-    $build += [
-      [
-        '#type' => 'component',
-        '#component' => 'navigation:title',
-        '#props' => [
-          'icon' => 'database',
-          'html_tag' => 'span',
-          'modifiers' => ['ellipsis', 'xs'],
-          'extra_classes' => ['top-bar__title'],
+    if ($label = $entity->label()) {
+      $build += [
+        [
+          '#type' => 'component',
+          '#component' => 'navigation:title',
+          '#props' => [
+            'icon' => 'database',
+            'html_tag' => 'span',
+            'modifiers' => ['ellipsis', 'xs'],
+            'extra_classes' => ['top-bar__title'],
+          ],
+          '#slots' => [
+            'content' => $label,
+          ],
         ],
-        '#slots' => [
-          'content' => $entity->label(),
-        ],
-      ],
-    ];
+      ];
+    }
 
     if ($label = $this->getBadgeLabel($entity)) {
       $build += [
