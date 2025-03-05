@@ -340,7 +340,7 @@ class UrlHelper {
    * @throws \InvalidArgumentException
    *   Exception thrown when either $url or $base_url are not fully qualified.
    */
-  public static function externalIsTrustedLocal($url, $base_url): bool {
+  public static function externalIsTrustedLocal(string $url, string $base_url): bool {
     return static::externalIsLocal($url, $base_url) ||
       in_array(parse_url($url, PHP_URL_HOST), static::getLocalTrustedDomains(), TRUE);
   }
