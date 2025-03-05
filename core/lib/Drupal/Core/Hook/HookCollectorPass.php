@@ -226,8 +226,8 @@ class HookCollectorPass implements CompilerPassInterface {
     // Register all implementations.
     foreach ($legacyImplementationMap as $hook => $moduleImplements) {
       $extraHooks = $orderExtraTypes[$hook] ?? [];
-      // Add implementations to the array we pass to HMIA when the definition
-      // specifies that they should be ordered together.
+      // Add implementations to the array we pass to legacy ordering
+      // when the definition specifies that they should be ordered together.
       foreach ($extraHooks as $extraHook) {
         $moduleImplements += $legacyImplementationMap[$extraHook] ?? [];
       }
