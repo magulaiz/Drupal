@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Database\Identifier;
 
 /**
- * @todo
+ * @todo fill in.
  */
 class IdentifierHandler {
 
@@ -37,14 +37,14 @@ class IdentifierHandler {
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   public function getTablePrefix(): string {
     return $this->tablePrefix;
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   protected function setIdentifier(string $identifier, string $platform_identifier, IdentifierType $type, bool $isAlias): void {
     if (!$isAlias) {
@@ -58,14 +58,14 @@ class IdentifierHandler {
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   protected function hasIdentifier(string $identifier, IdentifierType $type): bool {
     return isset($this->identifiers['identifier'][$identifier][$type->value]);
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   public function getPlatformIdentifierName(string $original_name, bool $quoted = TRUE): string {
     if (!$this->hasIdentifier($original_name, IdentifierType::Generic)) {
@@ -77,7 +77,7 @@ class IdentifierHandler {
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   public function getPlatformDatabaseName(string $original_name, bool $quoted = TRUE): string {
     $original_name = (string) preg_replace('/[^A-Za-z0-9_]+/', '', $original_name);
@@ -91,7 +91,7 @@ class IdentifierHandler {
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   public function getPlatformTableName(string $original_name, bool $prefixed = FALSE, bool $quoted = FALSE): string {
     $original_name = (string) preg_replace('/[^A-Za-z0-9_.]+/', '', $original_name);
@@ -106,7 +106,7 @@ class IdentifierHandler {
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   public function getPlatformColumnName(string $original_name, bool $quoted = TRUE): string {
     if ($original_name === '') {
@@ -125,7 +125,7 @@ class IdentifierHandler {
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   public function getPlatformAliasName(string $original_name, IdentifierType $type = IdentifierType::Generic, bool $quoted = TRUE): string {
     $original_name = (string) preg_replace('/[^A-Za-z0-9_]+/', '', $original_name);
@@ -141,35 +141,35 @@ class IdentifierHandler {
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   protected function resolvePlatformGenericIdentifier(string $identifier): string {
     return $identifier;
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   protected function resolvePlatformDatabaseIdentifier(string $identifier): string {
     return $identifier;
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   protected function resolvePlatformTableIdentifier(string $identifier): string {
     return $identifier;
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   protected function resolvePlatformColumnIdentifier(string $identifier): string {
     return $identifier;
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   protected function resolvePlatformAliasIdentifier(string $identifier, int $type = 0): string {
     return $identifier;

@@ -112,7 +112,7 @@ abstract class Connection {
   protected array $tablePlaceholderReplacements;
 
   /**
-   * @todo
+   * @todo fill in.
    */
   protected IdentifierHandler $identifierHandler;
 
@@ -167,9 +167,9 @@ abstract class Connection {
    *
    * @todo Remove the method in Drupal 1x.
    */
-  public function __get($name) {
+  public function __get($name): mixed {
     if (in_array($name, ['prefix', 'escapedTables', 'escapedFields', 'escapedAliases', 'identifierQuotes'])) {
-      @trigger_error("Connection::\${$name} should not be accessed in drupal:9.x.0 and is removed from drupal:10.0.0. This is no longer used. See https://www.drupal.org/node/1234567", E_USER_DEPRECATED);
+      @trigger_error("Connection::\${$name} should not be accessed in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/1234567", E_USER_DEPRECATED);
       return [];
     }
   }
@@ -319,7 +319,7 @@ abstract class Connection {
    *   A single prefix.
    */
   protected function setPrefix($prefix) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.x.0 and is removed from drupal:10.0.0. @todo. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. @todo. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
   }
 
   /**
@@ -374,42 +374,6 @@ abstract class Connection {
       $i++;
     }
     return strtr($sql, $identifiers);
-  }
-
-  /**
-   * Find the prefix for a table.
-   *
-   * This function is for when you want to know the prefix of a table. This
-   * is not used in prefixTables due to performance reasons.
-   *
-   * @param string $table
-   *   (optional) The table to find the prefix for.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
-   * Instead, you should just use Connection::getPrefix().
-   *
-   * @see https://www.drupal.org/node/3260849
-   */
-  public function tablePrefix($table = 'default') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, you should just use Connection::getPrefix(). See https://www.drupal.org/node/3260849', E_USER_DEPRECATED);
-    return $this->identifierHandler->getTablePrefix();
-  }
-
-  /**
-   * Gets a list of individually prefixed table names.
-   *
-   * @return array
-   *   An array of un-prefixed table names, keyed by their fully qualified table
-   *   names (i.e. prefix + table_name).
-   *
-   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is
-   *   no replacement.
-   *
-   * @see https://www.drupal.org/node/3257198
-   */
-  public function getUnprefixedTablesMap() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3257198', E_USER_DEPRECATED);
-    return $this->unprefixedTablesMap;
   }
 
   /**
@@ -826,7 +790,7 @@ abstract class Connection {
   }
 
   /**
-   * @todo
+   * @todo fill in.
    */
   public function getIdentifierHandler(): IdentifierHandler {
     return $this->identifierHandler;

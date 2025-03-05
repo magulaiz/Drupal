@@ -8,7 +8,6 @@ use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\ExceptionHandler;
 use Drupal\Core\Database\Identifier\IdentifierHandler;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
@@ -69,6 +68,21 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * {@inheritdoc}
    */
   protected $transactionalDDLSupport = TRUE;
+
+  /**
+   * An array of transaction savepoints.
+   *
+   * The main use for this array is to store information about transaction
+   * savepoints opened to to mimic MySql's InnoDB functionality, which provides
+   * an inherent savepoint before any query in a transaction.
+   *
+   * @var array<string,Transaction>
+   *
+   * @see ::addSavepoint()
+   * @see ::releaseSavepoint()
+   * @see ::rollbackSavepoint()
+   */
+  protected array $savepoints = [];
 
   /**
    * Constructs a connection object.

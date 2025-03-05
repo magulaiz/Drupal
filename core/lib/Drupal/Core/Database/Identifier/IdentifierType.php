@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Enum for database identifier types.
- */
-
 declare(strict_types=1);
 
 namespace Drupal\Core\Database\Identifier;
