@@ -8,6 +8,9 @@ use Drupal\Core\Access\AccessResult;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Drupal\Core\Access\CsrfAccessCheck;
+use Drupal\Core\Access\CsrfTokenGenerator;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\SessionConfigurationInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -38,24 +41,36 @@ class CsrfAccessCheckTest extends UnitTestCase {
   protected $routeMatch;
 
   /**
+   * The session configuration.
+   *
+   * @var \Drupal\Core\Session\SessionConfigurationInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $sessionConfiguration;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
 
-    $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
+    $this->csrfToken = $this->getMockBuilder(CsrfTokenGenerator::class)
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->routeMatch = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
+    $this->routeMatch = $this->createMock(RouteMatchInterface::class);
 
-    $this->accessCheck = new CsrfAccessCheck($this->csrfToken);
+    $this->sessionConfiguration = $this->createMock(SessionConfigurationInterface::class);
+    $this->accessCheck = new CsrfAccessCheck($this->csrfToken, $this->sessionConfiguration);
   }
 
   /**
    * Tests the access() method with a valid token.
    */
   public function testAccessTokenPass(): void {
+    $this->sessionConfiguration->expects($this->once())
+      ->method('hasSession')
+      ->willReturn(TRUE);
+
     $this->csrfToken->expects($this->once())
       ->method('validate')
       ->with('test_query', 'test-path/42')
@@ -72,13 +87,39 @@ class CsrfAccessCheckTest extends UnitTestCase {
   }
 
   /**
+   * Tests the access() method for anonymous users.
+   */
+  public function testAccessTokenAnonymousPass(): void {
+    $this->sessionConfiguration->expects($this->once())
+      ->method('hasSession')
+      ->willReturn(FALSE);
+    $this->routeMatch->expects($this->once())
+      ->method('getRawParameters')
+      ->will($this->returnValue(['node' => 42]));
+
+    $route = new Route('/test-path/{node}', [], ['_csrf_token' => 'TRUE']);
+    $request = Request::create('/test-path/42?token=test_query');
+    $this->csrfToken->expects($this->never())
+      ->method('validate');
+    $this->assertEquals(AccessResult::allowed()->setCacheMaxAge(0), $this->accessCheck->access($route, $request, $this->routeMatch));
+  }
+
+  /**
    * @covers ::access
    */
   public function testCsrfTokenInvalid(): void {
+    $this->sessionConfiguration->expects($this->once())
+      ->method('hasSession')
+      ->willReturn(TRUE);
+
     $this->csrfToken->expects($this->once())
       ->method('validate')
       ->with('test_query', 'test-path')
       ->willReturn(FALSE);
+
+    $this->sessionConfiguration->expects($this->once())
+      ->method('hasSession')
+      ->willReturn(TRUE);
 
     $this->routeMatch->expects($this->once())
       ->method('getRawParameters')

@@ -23,14 +23,16 @@ use Drupal\KernelTests\KernelTestBase;
 class UrlTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
+   * The modules list.
+   *
+   * @var array
    */
   protected static $modules = ['common_test', 'url_alter_test'];
 
   /**
    * Confirms that invalid URLs are filtered in link generating functions.
    */
-  public function testLinkXSS(): void {
+  public function testLinkXss(): void {
     // Test link generator.
     $text = $this->randomMachineName();
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
@@ -51,19 +53,84 @@ class UrlTest extends KernelTestBase {
    */
   public function testLinkBubbleableMetadata(): void {
     \Drupal::service('module_installer')->install(['user']);
+    // Fake a started session.
+    \Drupal::request()->cookies->add(['SESS' . substr(hash('sha256', $this->getDatabasePrefix()), 0, 32) => '']);
 
     $cases = [
-      ['Regular link', 'internal:/user', [], ['contexts' => [], 'tags' => [], 'max-age' => Cache::PERMANENT], []],
-      ['Regular link, absolute', 'internal:/user', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => [], 'max-age' => Cache::PERMANENT], []],
-      ['Route processor link', 'route:system.run_cron', [], ['contexts' => ['session'], 'tags' => [], 'max-age' => Cache::PERMANENT], ['placeholders' => []]],
-      ['Route processor link, absolute', 'route:system.run_cron', ['absolute' => TRUE], ['contexts' => ['url.site', 'session'], 'tags' => [], 'max-age' => Cache::PERMANENT], ['placeholders' => []]],
-      ['Path processor link', 'internal:/user/1', [], ['contexts' => [], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT], []],
-      ['Path processor link, absolute', 'internal:/user/1', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT], []],
+      [
+        'Regular link',
+        'internal:/user',
+        [],
+        [
+          'contexts' => [],
+          'tags' => [],
+          'max-age' => Cache::PERMANENT,
+        ],
+        [],
+      ],
+      [
+        'Regular link, absolute',
+        'internal:/user',
+        ['absolute' => TRUE],
+        [
+          'contexts' => ['url.site'],
+          'tags' => [],
+          'max-age' => Cache::PERMANENT,
+        ],
+        [],
+      ],
+      [
+        'Route processor link',
+        'route:system.run_cron',
+        [],
+        [
+          'contexts' => ['session'],
+          'tags' => [],
+          'max-age' => Cache::PERMANENT,
+        ],
+        ['placeholders' => []],
+      ],
+      [
+        'Route processor link, absolute',
+        'route:system.run_cron',
+        ['absolute' => TRUE],
+        [
+          'contexts' => ['url.site', 'session'],
+          'tags' => [],
+          'max-age' => Cache::PERMANENT,
+        ],
+        ['placeholders' => []],
+      ],
+      [
+        'Path processor link',
+        'internal:/user/1',
+        [],
+        [
+          'contexts' => [],
+          'tags' => ['user:1'],
+          'max-age' => Cache::PERMANENT,
+        ],
+        [],
+      ],
+      [
+        'Path processor link, absolute',
+        'internal:/user/1',
+        ['absolute' => TRUE],
+        [
+          'contexts' => ['url.site'],
+          'tags' => ['user:1'],
+          'max-age' => Cache::PERMANENT,
+        ],
+        [],
+      ],
     ];
 
     foreach ($cases as $case) {
       [$title, $uri, $options, $expected_cacheability, $expected_attachments] = $case;
-      $expected_cacheability['contexts'] = Cache::mergeContexts($expected_cacheability['contexts'], ['languages:language_interface', 'theme', 'user.permissions']);
+      $expected_cacheability['contexts'] = Cache::mergeContexts(
+        $expected_cacheability['contexts'],
+        ['languages:language_interface', 'theme', 'user.permissions']
+      );
       $link = [
         '#type' => 'link',
         '#title' => $title,
@@ -140,6 +207,7 @@ class UrlTest extends KernelTestBase {
     $l = Link::fromTextAndUrl('foo', Url::fromUri('https://www.drupal.org'))->toString();
 
     // Test a renderable array passed to the link generator.
+    // @codingStandardsIgnoreLine
     $renderer->executeInRenderContext(new RenderContext(), function () use ($l) {
       $renderable_text = ['#markup' => 'foo'];
       $l_renderable_text = \Drupal::service('link_generator')->generate($renderable_text, Url::fromUri('https://www.drupal.org'));
@@ -170,7 +238,7 @@ class UrlTest extends KernelTestBase {
    *
    * @param string $attribute
    *   Attribute to be checked.
-   * @param string $link
+   * @param \Drupal\Core\Render\RenderableInterface|string $link
    *   URL to search.
    * @param string $class
    *   Element class to search for.
@@ -215,7 +283,12 @@ class UrlTest extends KernelTestBase {
     // Multiple exclusions.
     $result = $original;
     unset($result['a'], $result['b']['e'], $result['c']);
-    $this->assertEquals(UrlHelper::filterQueryParameters($original, ['a', 'b[e]', 'c']), $result, "'a', 'b[e]', 'c' were removed.");
+    $this->assertEquals(
+      UrlHelper::filterQueryParameters(
+        $original,
+        ['a', 'b[e]', 'c']
+      ), $result, "'a', 'b[e]', 'c' were removed."
+    );
   }
 
   /**
