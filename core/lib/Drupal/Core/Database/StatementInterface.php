@@ -31,7 +31,7 @@ interface StatementInterface extends \Traversable {
    * @param $options
    *   An array of options for this query.
    *
-   * @return
+   * @return bool
    *   TRUE on success, or FALSE on failure.
    */
   public function execute($args = [], $options = []);
@@ -39,7 +39,7 @@ interface StatementInterface extends \Traversable {
   /**
    * Gets the query string of this statement.
    *
-   * @return
+   * @return string
    *   The query string, in its form with placeholders.
    */
   public function getQueryString();
@@ -53,10 +53,10 @@ interface StatementInterface extends \Traversable {
   public function getConnectionTarget(): string;
 
   /**
-   * Returns the number of rows affected by the last SQL statement.
+   * Returns the number of rows matched by the last SQL statement.
    *
-   * @return
-   *   The number of rows affected by the last DELETE, INSERT, or UPDATE
+   * @return int
+   *   The number of rows matched by the last DELETE, INSERT, or UPDATE
    *   statement executed or throws \Drupal\Core\Database\RowCountException
    *   if the last executed statement was SELECT.
    *
@@ -97,8 +97,8 @@ interface StatementInterface extends \Traversable {
    * @param $cursor_offset
    *   Not implemented in all database drivers, don't use.
    *
-   * @return
-   *   A result, formatted according to $mode.
+   * @return array|object|false
+   *   A result, formatted according to $mode, or FALSE on failure.
    */
   public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL);
 
@@ -108,7 +108,7 @@ interface StatementInterface extends \Traversable {
    * @param $index
    *   The numeric index of the field to return. Defaults to the first field.
    *
-   * @return
+   * @return mixed
    *   A single field from the next record, or FALSE if there is no next record.
    */
   public function fetchField($index = 0);
@@ -120,7 +120,7 @@ interface StatementInterface extends \Traversable {
    * or stdClass if not specified.
    *
    * phpcs:disable Drupal.Commenting
-   * @todo Remove PHPCS overrides https://www.drupal.org/node/3194677.
+   * @todo Remove PHPCS overrides https://www.drupal.org/node/3354672.
    *
    * @param string|null $class_name
    *   Name of the created class.
@@ -141,7 +141,7 @@ interface StatementInterface extends \Traversable {
    * associative arrays. For some reason \PDOStatement does not have a
    * corresponding array helper method, so one is added.
    *
-   * @return
+   * @return array|bool
    *   An associative array, or FALSE if there is no next row.
    */
   public function fetchAssoc();
@@ -156,7 +156,7 @@ interface StatementInterface extends \Traversable {
    * @param $constructor_arguments
    *   If $mode is \PDO::FETCH_CLASS, the arguments to pass to the constructor.
    *
-   * @return
+   * @return array
    *   An array of results.
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL);
@@ -169,7 +169,7 @@ interface StatementInterface extends \Traversable {
    * @param $index
    *   The index of the column number to fetch.
    *
-   * @return
+   * @return array
    *   An indexed array, or an empty array if there is no result set.
    */
   public function fetchCol($index = 0);
@@ -189,7 +189,7 @@ interface StatementInterface extends \Traversable {
    * @param $value_index
    *   The numeric index of the field to use as the array value.
    *
-   * @return
+   * @return array
    *   An associative array, or an empty array if there is no result set.
    */
   public function fetchAllKeyed($key_index = 0, $value_index = 1);
@@ -203,12 +203,12 @@ interface StatementInterface extends \Traversable {
    * @param $key
    *   The name of the field on which to index the array.
    * @param $fetch
-   *   The fetchmode to use. If set to \PDO::FETCH_ASSOC, \PDO::FETCH_NUM, or
+   *   The fetch mode to use. If set to \PDO::FETCH_ASSOC, \PDO::FETCH_NUM, or
    *   \PDO::FETCH_BOTH the returned value with be an array of arrays. For any
    *   other value it will be an array of objects. By default, the fetch mode
    *   set for the query will be used.
    *
-   * @return
+   * @return array
    *   An associative array, or an empty array if there is no result set.
    */
   public function fetchAllAssoc($key, $fetch = NULL);

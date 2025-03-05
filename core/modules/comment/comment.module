@@ -34,9 +34,9 @@ use Drupal\user\RoleInterface;
  * Comments changed after this time may be marked new, updated, or read,
  * depending on their state for the current user. Defaults to 30 days ago.
  *
- * @todo Remove when https://www.drupal.org/node/1029708 lands.
+ * @todo Remove when https://www.drupal.org/node/2006632 lands.
  */
-define('COMMENT_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
+define('COMMENT_NEW_LIMIT', ((int) $_SERVER['REQUEST_TIME']) - 30 * 24 * 60 * 60);
 
 /**
  * Implements hook_help().
@@ -683,7 +683,7 @@ function comment_preprocess_field(&$variables) {
     $variables['comment_display_mode'] = $element[0]['#comment_display_mode'];
     $variables['comment_type'] = $element[0]['#comment_type'];
 
-    // Append additional attributes (eg. RDFa) from the first field item.
+    // Append additional attributes from the first field item.
     $variables['attributes'] += $variables['items'][0]['attributes']->storage();
 
     // Create separate variables for the comments and comment form.

@@ -29,7 +29,6 @@ class Config {
       'coder_sniffer/DrupalPractice/Test',
     ],
     'doctrine/instantiator' => ['tests'],
-    'easyrdf/easyrdf' => ['scripts'],
     'egulias/email-validator' => ['documentation', 'tests'],
     'guzzlehttp/promises' => ['tests'],
     'guzzlehttp/psr7' => ['tests'],
@@ -85,7 +84,7 @@ class Config {
   /**
    * The root package.
    *
-   * @var Composer\Package\RootPackageInterface
+   * @var \Composer\Package\RootPackageInterface
    */
   protected $rootPackage;
 

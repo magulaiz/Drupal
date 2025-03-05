@@ -28,10 +28,13 @@ class CssOptimizerUnitTest extends UnitTestCase {
   /**
    * The file URL generator mock.
    *
-   * @var \Drupal\Core\File\FileUrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $fileUrlGenerator;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
@@ -66,6 +69,19 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'basename' => 'css_input_without_import.css',
         ],
         file_get_contents($absolute_path . 'css_input_without_import.css.optimized.css'),
+      ],
+      [
+        [
+          'group' => -100,
+          'type' => 'file',
+          'weight' => 0.012,
+          'media' => 'screen',
+          'preprocess' => TRUE,
+          'data' => $path . 'css_input_simple.css',
+          'browsers' => ['IE' => TRUE, '!IE' => TRUE],
+          'basename' => 'css_input_simple.css',
+        ],
+        file_get_contents($absolute_path . 'css_input_simple_with_media.css.optimized.css'),
       ],
       // File. Tests:
       // - Proper URLs in imported files. (https://www.drupal.org/node/265719)

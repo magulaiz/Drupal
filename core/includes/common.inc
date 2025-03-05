@@ -360,7 +360,7 @@ function drupal_attach_tabledrag(&$element, array $options) {
  * @param $element
  *   The element to be hidden.
  *
- * @return
+ * @return array
  *   The element.
  *
  * @see \Drupal\Core\Render\RendererInterface
@@ -390,7 +390,7 @@ function hide(&$element) {
  * @param $element
  *   The element to be shown.
  *
- * @return
+ * @return array
  *   The element.
  *
  * @see \Drupal\Core\Render\RendererInterface
@@ -489,7 +489,9 @@ function drupal_flush_all_caches($kernel = NULL) {
   // Wipe the Twig PHP Storage cache.
   \Drupal::service('twig')->invalidate();
 
-  // Rebuild theme data that is stored in state.
+  // Rebuild profile, profile, theme_engine and theme data.
+  \Drupal::service('extension.list.profile')->reset();
+  \Drupal::service('extension.list.theme_engine')->reset();
   \Drupal::service('theme_handler')->refreshInfo();
   // In case the active theme gets requested later in the same request we need
   // to reset the theme manager.
@@ -562,7 +564,7 @@ function drupal_get_updaters() {
 /**
  * Assembles the Drupal FileTransfer registry.
  *
- * @return
+ * @return array
  *   The Drupal FileTransfer class registry.
  *
  * @see \Drupal\Core\FileTransfer\FileTransfer

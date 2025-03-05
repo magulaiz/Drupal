@@ -221,6 +221,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     $this->serializer = $this->container->get('jsonapi.serializer');
 
+    $this->config('system.logging')->set('error_level', ERROR_REPORTING_HIDE)->save();
+
     // Ensure the anonymous user role has no permissions at all.
     $user_role = Role::load(RoleInterface::ANONYMOUS_ID);
     foreach ($user_role->getPermissions() as $permission) {
@@ -607,21 +609,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Sets up the necessary authorization.
    *
-   * In case of a test verifying publicly accessible REST resources: grant
-   * permissions to the anonymous user role.
-   *
-   * In case of a test verifying behavior when using a particular authentication
-   * provider: create a user with a particular set of permissions.
-   *
    * Because of the $method parameter, it's possible to first set up
-   * authentication for only GET, then add POST, et cetera. This then also
+   * authorization for only GET, then add POST, et cetera. This then also
    * allows for verifying a 403 in case of missing authorization.
    *
    * @param string $method
-   *   The HTTP method for which to set up authentication.
+   *   The HTTP method for which to set up authorization.
    *
-   * @see ::grantPermissionsToAnonymousRole()
-   * @see ::grantPermissionsToAuthenticatedRole()
+   * @see ::grantPermissionsToTestedRole()
    */
   abstract protected function setUpAuthorization($method);
 
@@ -732,7 +727,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // Expected cache tags: X-Drupal-Cache-Tags header.
     $this->assertSame($expected_cache_tags !== FALSE, $response->hasHeader('X-Drupal-Cache-Tags'));
     if (is_array($expected_cache_tags)) {
-      $this->assertEqualsCanonicalizing($expected_cache_tags, explode(' ', $response->getHeader('X-Drupal-Cache-Tags')[0]));
+      $actual_cache_tags = explode(' ', $response->getHeader('X-Drupal-Cache-Tags')[0]);
+
+      $tag = 'config:system.logging';
+      if (!in_array($tag, $expected_cache_tags) && in_array($tag, $actual_cache_tags)) {
+        $expected_cache_tags[] = $tag;
+      }
+
+      $this->assertEqualsCanonicalizing($expected_cache_tags, $actual_cache_tags);
     }
 
     // Expected cache contexts: X-Drupal-Cache-Contexts header.
@@ -2377,7 +2379,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $doc_multi_value_tests['data']['attributes']['field_rest_test_multivalue'] = $this->entity->get('field_rest_test_multivalue')->getValue();
     $doc_remove_item = $doc_multi_value_tests;
     unset($doc_remove_item['data']['attributes']['field_rest_test_multivalue'][0]);
-    $request_options[RequestOptions::BODY] = Json::encode($doc_remove_item, 'api_json');
+    $request_options[RequestOptions::BODY] = Json::encode($doc_remove_item);
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
     $updated_entity = $this->entityLoadUnchanged($this->entity->id());

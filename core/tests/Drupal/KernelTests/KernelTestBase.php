@@ -12,6 +12,7 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
@@ -26,6 +27,7 @@ use Drupal\TestTools\Extension\SchemaInspector;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,6 +91,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use TestRequirementsTrait;
   use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
+  use ProphecyTrait;
   use ExpectDeprecationTrait;
 
   /**
@@ -192,6 +195,13 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @var \Drupal\Core\Config\ConfigImporter
    */
   protected $configImporter;
+
+  /**
+   * The key_value service that must persist between container rebuilds.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory
+   */
+  protected KeyValueMemoryFactory $keyValue;
 
   /**
    * The app root.
@@ -453,7 +463,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       throw new \Exception('There is no database connection so no tests can be run. You must provide a SIMPLETEST_DB environment variable to run PHPUnit based functional tests outside of run-tests.sh. See https://www.drupal.org/node/2116263#skipped-tests for more information.');
     }
     else {
-      $database = Database::convertDbUrlToConnectionInfo($db_url, $this->root);
+      $database = Database::convertDbUrlToConnectionInfo($db_url, $this->root, TRUE);
       Database::addConnectionInfo('default', 'default', $database);
     }
 
@@ -542,12 +552,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       ->register('lock', 'Drupal\Core\Lock\NullLockBackend');
     $container
       ->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
-    $container
-      ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory')
-      // Must persist container rebuilds, or all data would vanish otherwise.
-      ->addTag('persist');
-    $container
-      ->setAlias('keyvalue', 'keyvalue.memory');
+
+    // Use memory for key value storages to avoid database queries. Store the
+    // key value factory on the test object so that key value storages persist
+    // container rebuilds, otherwise all state data would vanish.
+    if (!isset($this->keyValue)) {
+      $this->keyValue = new KeyValueMemoryFactory();
+    }
+    $container->set('keyvalue', $this->keyValue);
 
     // Set the default language on the minimal container.
     $container->setParameter('language.default_values', Language::$defaultValues);
@@ -585,7 +597,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     }
     $definition = $container->getDefinition($id);
     $definition->clearTag('needs_destruction');
-    $container->setDefinition("simpletest.$route_provider_service_name", $definition);
+    $container->setDefinition("test.$route_provider_service_name", $definition);
 
     $route_provider_definition = new Definition(RouteProvider::class);
     $route_provider_definition->setPublic(TRUE);
@@ -700,7 +712,12 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       if (!$this->container->get('module_handler')->moduleExists($module)) {
         throw new \LogicException("$module module is not enabled.");
       }
-      $this->container->get('config.installer')->installDefaultConfig('module', $module);
+      try {
+        $this->container->get('config.installer')->installDefaultConfig('module', $module);
+      }
+      catch (\Exception $e) {
+        throw new \Exception(sprintf('Exception when installing config for module %s, message was: %s', $module, $e->getMessage()), 0, $e);
+      }
     }
   }
 
@@ -973,27 +990,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // together.
     $modules = array_values(array_reverse($modules));
     return call_user_func_array('array_merge_recursive', $modules);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function prepareTemplate(\Text_Template $template) {
-    $bootstrap_globals = '';
-
-    // Fix missing bootstrap.php when $preserveGlobalState is FALSE.
-    // @see https://github.com/sebastianbergmann/phpunit/pull/797
-    $bootstrap_globals .= '$__PHPUNIT_BOOTSTRAP = ' . var_export($GLOBALS['__PHPUNIT_BOOTSTRAP'], TRUE) . ";\n";
-
-    // Avoid repetitive test namespace discoveries to improve performance.
-    // @see /core/tests/bootstrap.php
-    $bootstrap_globals .= '$namespaces = ' . var_export($GLOBALS['namespaces'], TRUE) . ";\n";
-
-    $template->setVar([
-      'constants' => '',
-      'included_files' => '',
-      'globals' => $bootstrap_globals,
-    ]);
   }
 
   /**
