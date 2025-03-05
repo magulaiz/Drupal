@@ -140,11 +140,24 @@ class HookCollectorPass implements CompilerPassInterface {
     // discovered.
     foreach ($processAfter[RemoveHook::class] as $removeHook) {
       if ($module = ($moduleFinder[$removeHook->class][$removeHook->method][$removeHook->hook] ?? '')) {
+        // Remove the hook implementation for the defined class, method, and
+        // hook.
         unset($implementations[$removeHook->hook][$module][$removeHook->class][$removeHook->method]);
-        // A module can implement a hook  more than one time so confirm no
-        // more implementations before removing from the
+        // Check if the given module has implemented the hook on more than one
+        // method for the class.
+        // Hook removal is very rare so it is more efficient to do the check
+        // here.
+        if ($implementations[$removeHook->hook][$module][$removeHook->class]) {
+          // Remove the class from the implementation map if the hook has no
+          // more implementations.
+          unset($implementations[$removeHook->hook][$module][$removeHook->class]);
+        }
+        // A module can implement a hook on more than one class so we confirm
+        // there are no more implementations before removing from the
         // $legacyImplementationMap.
-        if (!isset($implementations[$removeHook->hook][$module])) {
+        // We do not need to clear further empty arrays since we handle this
+        // state before registering the hooks.
+        if (empty($implementations[$removeHook->hook][$module])) {
           unset($legacyImplementationMap[$removeHook->hook][$module]);
         }
       }
