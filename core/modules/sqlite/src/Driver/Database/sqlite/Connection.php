@@ -6,6 +6,8 @@ use Drupal\Component\Utility\FilterArray;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\ExceptionHandler;
+use Drupal\Core\Database\Identifier\IdentifierHandler;
+use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
@@ -68,11 +70,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   protected $transactionalDDLSupport = TRUE;
 
   /**
-   * {@inheritdoc}
-   */
-  protected $identifierQuotes = ['"', '"'];
-
-  /**
    * Constructs a \Drupal\sqlite\Driver\Database\sqlite\Connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
@@ -87,8 +84,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       $prefix .= '.';
     }
 
-    // Regenerate the prefix.
-    $this->setPrefix($prefix);
+    // Initialize the identifier handler.
+    $this->identifierHandler = new IdentifierHandler($prefix);
   }
 
   /**
@@ -432,10 +429,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * {@inheritdoc}
    */
   public function getFullQualifiedTableName($table) {
-    $prefix = $this->getPrefix();
-
     // Don't include the SQLite database file name as part of the table name.
-    return $prefix . $table;
+    return $this->identifierHandler->getPlatformTableName($table, TRUE, TRUE);
   }
 
   /**

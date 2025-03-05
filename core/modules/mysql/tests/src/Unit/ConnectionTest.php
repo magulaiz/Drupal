@@ -69,7 +69,6 @@ class ConnectionTest extends UnitTestCase {
 
       public function __construct(\PDO $connection) {
         $this->connection = $connection;
-        $this->setPrefix('');
       }
 
     };

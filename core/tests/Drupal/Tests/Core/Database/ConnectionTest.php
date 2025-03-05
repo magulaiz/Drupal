@@ -23,53 +23,6 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 class ConnectionTest extends UnitTestCase {
 
   /**
-   * Data provider for testPrefixRoundTrip().
-   *
-   * @return array
-   *   Array of arrays with the following elements:
-   *   - Arguments to pass to Connection::setPrefix().
-   *   - Expected result from Connection::getPrefix().
-   */
-  public static function providerPrefixRoundTrip() {
-    return [
-      [
-        [
-          '' => 'test_',
-        ],
-        'test_',
-      ],
-      [
-        [
-          'fooTable' => 'foo_',
-          'barTable' => 'foo_',
-        ],
-        'foo_',
-      ],
-    ];
-  }
-
-  /**
-   * Exercise setPrefix() and getPrefix().
-   *
-   * @dataProvider providerPrefixRoundTrip
-   */
-  public function testPrefixRoundTrip($expected, $prefix_info): void {
-    $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, []);
-
-    // setPrefix() is protected, so we make it accessible with reflection.
-    $reflection = new \ReflectionClass('Drupal\Tests\Core\Database\Stub\StubConnection');
-    $set_prefix = $reflection->getMethod('setPrefix');
-
-    // Set the prefix data.
-    $set_prefix->invokeArgs($connection, [$prefix_info]);
-    // Check the round-trip.
-    foreach ($expected as $prefix) {
-      $this->assertEquals($prefix, $connection->getPrefix());
-    }
-  }
-
-  /**
    * Data provider for testPrefixTables().
    *
    * @return array
@@ -577,26 +530,6 @@ class ConnectionTest extends UnitTestCase {
     $connection = new StubConnection($mock_pdo, [], $identifier_quote);
 
     $this->assertEquals($expected, $connection->escapeDatabase($name));
-  }
-
-  /**
-   * @covers ::__construct
-   */
-  public function testIdentifierQuotesAssertCount(): void {
-    $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
-    $mock_pdo = $this->createMock(StubPDO::class);
-    new StubConnection($mock_pdo, [], ['"']);
-  }
-
-  /**
-   * @covers ::__construct
-   */
-  public function testIdentifierQuotesAssertString(): void {
-    $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
-    $mock_pdo = $this->createMock(StubPDO::class);
-    new StubConnection($mock_pdo, [], [0, '1']);
   }
 
   /**

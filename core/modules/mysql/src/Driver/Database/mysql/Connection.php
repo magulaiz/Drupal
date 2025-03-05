@@ -7,6 +7,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseConnectionRefusedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
+use Drupal\Core\Database\Identifier\IdentifierHandler;
+use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
@@ -63,11 +65,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
-  protected $identifierQuotes = ['"', '"'];
-
-  /**
-   * {@inheritdoc}
-   */
   public function __construct(\PDO $connection, array $connection_options) {
     // If the SQL mode doesn't include 'ANSI_QUOTES' (explicitly or via a
     // combination mode), then MySQL doesn't interpret a double quote as an
@@ -88,10 +85,10 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       }
     }
 
-    if ($this->identifierQuotes === ['"', '"'] && !$is_ansi_quotes_mode) {
-      $this->identifierQuotes = ['`', '`'];
-    }
     parent::__construct($connection, $connection_options);
+
+    // Initialize the identifier handler.
+    $this->identifierHandler = new IdentifierHandler($this->connectionOptions['prefix'], $is_ansi_quotes_mode ? ['"', '"'] : ['`', '`']);
   }
 
   /**
