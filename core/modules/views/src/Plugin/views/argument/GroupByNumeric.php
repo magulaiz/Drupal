@@ -4,6 +4,8 @@ namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\views\Attribute\ViewsArgument;
 
+// cspell:ignore groupby
+
 /**
  * Simple handler for arguments using group by.
  *
@@ -14,6 +16,9 @@ use Drupal\views\Attribute\ViewsArgument;
 )]
 class GroupByNumeric extends ArgumentPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
     $field = $this->getField();
@@ -22,6 +27,9 @@ class GroupByNumeric extends ArgumentPluginBase {
     $this->query->addHavingExpression(0, "$field = $placeholder", [$placeholder => $this->argument]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function adminLabel($short = FALSE) {
     return $this->getField(parent::adminLabel($short));
   }

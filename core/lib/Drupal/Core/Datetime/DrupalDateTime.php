@@ -12,10 +12,12 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * This class extends the basic component and adds in Drupal-specific
  * handling, like translation of the format() method.
  *
- * Static methods in base class can also be used to create DrupalDateTime objects.
- * For example:
+ * Static methods in base class can also be used to create DrupalDateTime
+ * objects. For example:
  *
- * DrupalDateTime::createFromArray( array('year' => 2010, 'month' => 9, 'day' => 28) )
+ * @code
+ * DrupalDateTime::createFromArray(['year' => 2010, 'month' => 9, 'day' => 28])
+ * @endcode
  *
  * @see \Drupal\Component\Datetime\DateTimePlus
  */
@@ -29,6 +31,7 @@ class DrupalDateTime extends DateTimePlus {
   /**
    * Formatted strings translation cache.
    *
+   * @var array
    * Translation cache represents an instance storage for formatted date
    * strings. It contains a multidimensional array where:
    * - first level keys - are drupal language codes;
@@ -53,8 +56,6 @@ class DrupalDateTime extends DateTimePlus {
    *     ],
    *   ]
    * @endcode
-   *
-   * @var array
    */
   protected $formatTranslationCache = [];
 
@@ -69,6 +70,7 @@ class DrupalDateTime extends DateTimePlus {
    *   timezone are ignored when the $time parameter either is a UNIX timestamp
    *   (e.g. @946684800) or specifies a timezone
    *   (e.g. 2010-01-28T15:00:00+02:00).
+   *   phpcs:ignore Drupal.Commenting.FunctionComment.ParamCommentFullStop
    *   @see http://php.net/manual/datetime.construct.php
    * @param array $settings
    *   - validate_format: (optional) Boolean choice to validate the
@@ -154,6 +156,7 @@ class DrupalDateTime extends DateTimePlus {
               $this->formatTranslationCache[$langcode][$code][$string] = $string;
             }
             else {
+              // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
               $this->formatTranslationCache[$langcode][$code][$string] = $this->t($string, [], $options);
             }
           }

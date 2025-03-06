@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\session_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -70,7 +72,10 @@ class SessionTestController extends ControllerBase {
    *   A notification message with session ID.
    */
   public function getIdFromCookie(Request $request) {
-    return ['#markup' => 'session_id:' . $request->cookies->get(session_name()) . "\n", '#cache' => ['contexts' => ['cookies:' . session_name()]]];
+    return [
+      '#markup' => 'session_id:' . $request->cookies->get(session_name()) . "\n",
+      '#cache' => ['contexts' => ['cookies:' . session_name()]],
+    ];
   }
 
   /**
@@ -111,10 +116,10 @@ class SessionTestController extends ControllerBase {
    */
   public function setMessage() {
     $this->messenger()->addStatus($this->t('This is a dummy message.'));
-    return new Response($this->t('A message was set.'));
-    // Do not return anything, so the current request does not result in a themed
-    // page with messages. The message will be displayed in the following request
-    // instead.
+    return new Response((string) $this->t('A message was set.'));
+    // Do not return anything, so the current request does not result in a
+    // themed page with messages. The message will be displayed in the following
+    // request instead.
   }
 
   /**
@@ -240,8 +245,8 @@ class SessionTestController extends ControllerBase {
     /** @var \Drupal\session_test\Session\TestSessionBag */
     $bag = $request->getSession()->getBag(TestSessionBag::BAG_NAME);
     return new Response(empty($bag->hasFlag())
-      ? $this->t('Flag is absent from session bag')
-      : $this->t('Flag is present in session bag')
+      ? (string) $this->t('Flag is absent from session bag')
+      : (string) $this->t('Flag is present in session bag')
     );
   }
 

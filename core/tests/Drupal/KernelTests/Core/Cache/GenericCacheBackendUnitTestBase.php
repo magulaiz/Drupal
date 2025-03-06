@@ -42,6 +42,16 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   protected $defaultValue;
 
   /**
+   * Most cache backends ensure changes to objects do not affect the cache.
+   *
+   * Some caches explicitly allow this, for example,
+   * \Drupal\Core\Cache\MemoryCache\MemoryCache.
+   *
+   * @var bool
+   */
+  protected bool $testObjectProperties = TRUE;
+
+  /**
    * Gets the testing bin.
    *
    * Override this method if you want to work on a different bin than the
@@ -208,13 +218,19 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $data->this_should_not_be_in_the_cache = TRUE;
     $cached = $backend->get('test7');
     $this->assertIsObject($cached);
-    $this->assertEquals($expected_data, $cached->data);
-    $this->assertFalse(isset($cached->data->this_should_not_be_in_the_cache));
-    // Add a property to the cache data. It should not appear when we fetch
-    // the data from cache again.
-    $cached->data->this_should_not_be_in_the_cache = TRUE;
-    $fresh_cached = $backend->get('test7');
-    $this->assertFalse(isset($fresh_cached->data->this_should_not_be_in_the_cache));
+    if ($this->testObjectProperties) {
+      $this->assertEquals($expected_data, $cached->data);
+      $this->assertFalse(isset($cached->data->this_should_not_be_in_the_cache));
+
+      // Add a property to the cache data. It should not appear when we fetch
+      // the data from cache again.
+      $cached->data->this_should_not_be_in_the_cache = TRUE;
+      $fresh_cached = $backend->get('test7');
+      $this->assertFalse(isset($fresh_cached->data->this_should_not_be_in_the_cache));
+    }
+    else {
+      $this->assertSame($data, $cached->data);
+    }
 
     // Check with a long key.
     $cid = str_repeat('a', 300);
@@ -226,12 +242,19 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertEquals('value', $backend->get('TEST8')->data);
     $this->assertFalse($backend->get('test8'));
 
+    // Test a cid with and without a trailing space is treated as two different
+    // IDs.
+    $cid_nospace = 'trailing-space-test';
+    $backend->set($cid_nospace, $cid_nospace);
+    $this->assertSame($cid_nospace, $backend->get($cid_nospace)->data);
+    $this->assertFalse($backend->get($cid_nospace . ' '));
+
     // Calling ::set() with invalid cache tags. This should fail an assertion.
     try {
       $backend->set('assertion_test', 'value', Cache::PERMANENT, ['node' => [3, 5, 7]]);
       $this->fail('::set() was called with invalid cache tags, but runtime assertion did not fail.');
     }
-    catch (\AssertionError $e) {
+    catch (\AssertionError) {
       // Do nothing; continue testing in extending classes.
     }
   }
@@ -435,7 +458,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
       $backend->setMultiple($items);
       $this->fail('::setMultiple() was called with invalid cache tags, but runtime assertion did not fail.');
     }
-    catch (\AssertionError $e) {
+    catch (\AssertionError) {
       // Do nothing; continue testing in extending classes.
     }
   }
@@ -629,6 +652,8 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
   /**
    * Tests Drupal\Core\Cache\CacheBackendInterface::invalidateAll().
+   *
+   * @group legacy
    */
   public function testInvalidateAll(): void {
     $backend_a = $this->getCacheBackend();
@@ -639,6 +664,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $backend_a->set('test2', 3, time() + 1000);
     $backend_b->set('test3', 4, Cache::PERMANENT);
 
+    $this->expectDeprecation('CacheBackendInterface::invalidateAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use CacheBackendInterface::deleteAll() or cache tag invalidation instead. See https://www.drupal.org/node/3500622');
     $backend_a->invalidateAll();
 
     $this->assertFalse($backend_a->get('test1'), 'First key has been invalidated.');

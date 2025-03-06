@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\editor\Unit\EditorXssFilter;
 
 use Drupal\editor\EditorXssFilter\Standard;
-use Drupal\Tests\UnitTestCase;
 use Drupal\filter\Plugin\FilterInterface;
+use Drupal\Tests\UnitTestCase;
 
 // cspell:ignore ascript attributename bgsound bscript ckers cript datafld
 // cspell:ignore dataformatas datasrc dynsrc ession livescript msgbox nmouseover
@@ -65,7 +65,8 @@ class StandardTest extends UnitTestCase {
     $data[] = ['<p>Hello, world!</p><unknown>Pink Fairy Armadillo</unknown><script>alert("evil");</script>', '<p>Hello, world!</p><unknown>Pink Fairy Armadillo</unknown>alert("evil");'];
     $data[] = ['<p>Hello, world!</p><unknown>Pink Fairy Armadillo</unknown><a href="javascript:alert(1)">test</a>', '<p>Hello, world!</p><unknown>Pink Fairy Armadillo</unknown><a href="alert(1)">test</a>'];
 
-    // All cases listed on https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+    // All cases listed on
+    // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
 
     // No Filter Evasion.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#No_Filter_Evasion
@@ -473,7 +474,8 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#XML_data_island_with_CDATA_obfuscation
     $data[] = ['<XML ID="xss"><I><B><IMG SRC="javas<!-- -->cript:alert(\'XSS\')"></B></I></XML><SPAN DATASRC="#xss" DATAFLD="B" DATAFORMATAS="HTML"></SPAN>', '<XML id="xss"><I><B><IMG>cript:alert(\'XSS\')"&gt;</B></I></XML><SPAN datasrc="#xss" datafld="B" dataformatas="HTML"></SPAN>'];
 
-    // Locally hosted XML with embedded JavaScript that is generated using an XML data island.
+    // Locally hosted XML with embedded JavaScript that is generated using an
+    // XML data island.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Locally_hosted_XML_with_embedded_JavaScript_that_is_generated_using_an_XML_data_island
     // This one is irrelevant for Drupal; Drupal disallows XML uploads by
     // default.
@@ -482,7 +484,8 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#HTML.2BTIME_in_XML
     $data[] = ['<?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"><?import namespace="t" implementation="#default#time2"><t:set attributeName="innerHTML" to="XSS<SCRIPT DEFER>alert("XSS")</SCRIPT>">', '&lt;?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"&gt;&lt;?import namespace="t" implementation="#default#time2"&gt;<t set attributename="innerHTML">alert("XSS")"&gt;'];
 
-    // Assuming you can only fit in a few characters and it filters against ".js".
+    // Assuming you can only fit in a few characters and it filters against
+    // ".js".
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Assuming_you_can_only_fit_in_a_few_characters_and_it_filters_against_.22.js.22
     $data[] = ['<SCRIPT SRC="http://ha.ckers.org/xss.jpg"></SCRIPT>', ''];
 
@@ -513,7 +516,7 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#URL_string_evasion
     // This one is irrelevant for Drupal; Drupal doesn't forbid linking to some
     // sites, it only forbids linking to any protocols other than those that are
-    // whitelisted.
+    // allowed.
 
     // Test XSS filtering on data-attributes.
     // @see \Drupal\editor\EditorXssFilter::filterXssDataAttributes()
@@ -547,7 +550,7 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
   /**
    * Tests removing disallowed tags and XSS prevention.
    *
-   * \Drupal\Component\Utility\Xss::filter() has the ability to run in blacklist
+   * \Drupal\Component\Utility\Xss::filter() has the ability to run in remove
    * mode, in which it still applies the exact same filtering, with one
    * exception: it no longer works with a list of allowed tags, but with a list
    * of disallowed tags.
@@ -559,28 +562,30 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
    * @param string $message
    *   The assertion message to display upon failure.
    * @param array $disallowed_tags
-   *   (optional) The disallowed HTML tags to be passed to \Drupal\Component\Utility\Xss::filter().
+   *   (optional) The disallowed HTML tags to be passed to
+   *   \Drupal\Component\Utility\Xss::filter().
    *
-   * @dataProvider providerTestBlackListMode
+   * @dataProvider providerTestDisallowMode
    */
-  public function testBlacklistMode($value, $expected, $message, array $disallowed_tags): void {
+  public function testDisallowMode($value, $expected, $message, array $disallowed_tags): void {
     $value = Standard::filter($value, $disallowed_tags);
     $this->assertSame($expected, $value, $message);
   }
 
   /**
-   * Data provider for testBlacklistMode().
+   * Data provider for testDisallowMode().
    *
-   * @see testBlacklistMode()
+   * @see testDisallowMode()
    *
    * @return array
    *   An array of arrays containing the following elements:
    *     - The value to filter.
    *     - The value to expect after filtering.
    *     - The assertion message.
-   *     - (optional) The disallowed HTML tags to be passed to \Drupal\Component\Utility\Xss::filter().
+   *     - (optional) The disallowed HTML tags to be passed to
+   *       \Drupal\Component\Utility\Xss::filter().
    */
-  public static function providerTestBlackListMode() {
+  public static function providerTestDisallowMode() {
     return [
       [
         '<unknown style="visibility:hidden">Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',
