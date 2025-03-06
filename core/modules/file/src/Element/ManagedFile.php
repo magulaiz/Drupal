@@ -28,17 +28,16 @@ class ManagedFile extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#process' => [
-        [$class, 'processManagedFile'],
+        [static::class, 'processManagedFile'],
       ],
       '#element_validate' => [
-        [$class, 'validateManagedFile'],
+        [static::class, 'validateManagedFile'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderManagedFile'],
+        [static::class, 'preRenderManagedFile'],
       ],
       '#theme' => 'file_managed_file',
       '#theme_wrappers' => ['form_element'],
@@ -466,6 +465,7 @@ class ManagedFile extends FormElementBase {
    * Wraps the file usage service.
    *
    * @return \Drupal\file\FileUsage\FileUsageInterface
+   *   The file usage service.
    */
   protected static function fileUsage() {
     return \Drupal::service('file.usage');
