@@ -10,7 +10,7 @@ namespace Drupal\Tests\node\Functional;
  * @group node
  * @group Cache
  */
-class NodeAccessCacheRedirectWarning extends NodeTestBase {
+class NodeAccessCacheRedirectWarningTest extends NodeTestBase {
 
   /**
    * {@inheritdoc}
