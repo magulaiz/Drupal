@@ -1072,7 +1072,7 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function label(): string {
+  public function label(): ?string {
     return $this->storage->label();
   }
 
