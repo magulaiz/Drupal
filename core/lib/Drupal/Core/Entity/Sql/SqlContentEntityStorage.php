@@ -25,6 +25,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Utility\Error;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -143,6 +144,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   protected $temporary = FALSE;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
@@ -154,7 +162,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $container->get('language_manager'),
       $container->get('entity.memory_cache'),
       $container->get('entity_type.bundle.info'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('logger.factory')->get('entity')
     );
   }
 
@@ -185,7 +194,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $this->entityTypeManager = $entity_type_manager;
     $this->entityType = $this->entityTypeManager->getActiveDefinition($entity_type->id());
     $this->fieldStorageDefinitions = $this->entityFieldManager->getActiveFieldStorageDefinitions($entity_type->id());
-
+    $this->logger = $logger;
     $this->initTableLayout();
   }
 
@@ -1642,6 +1651,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $storage_definition->isDeleted());
 
     if (!$this->database->schema()->tableExists($table_name)) {
+      $this->logger->warning('Entity module tried to delete a non-existent %field_name field table.', ['%field_name' => $field_definition->getName()]);
       return [];
     }
 
