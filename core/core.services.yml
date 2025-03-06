@@ -9,14 +9,15 @@ parameters:
   cache_default_bin_backends: []
   memory_cache_default_bin_backends: []
   security.enable_super_user: true
+  core.moved_classes:
+    'Drupal\Core\StringTranslation\TranslationWrapper':
+      class: 'Drupal\Core\StringTranslation\TranslatableMarkup'
   session.storage.options:
     gc_probability: 1
     gc_divisor: 100
     gc_maxlifetime: 200000
     cookie_lifetime: 2000000
     cookie_samesite: Lax
-    sid_length: 48
-    sid_bits_per_character: 6
     name_suffix: ''
   twig.config:
     debug: false
@@ -234,6 +235,9 @@ services:
       - { name: cache_tags_invalidator}
       - { name: backend_overridable }
   Drupal\Core\Cache\CacheTagsChecksumInterface: '@cache_tags.invalidator.checksum'
+  cache_tags.preloader:
+    class: Drupal\Core\Cache\EventSubscriber\CacheTagPreloadSubscriber
+    autowire: true
   cache.backend.chainedfast:
     class: Drupal\Core\Cache\ChainedFastBackendFactory
     arguments: ['@settings']
@@ -642,9 +646,7 @@ services:
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
   module_handler:
     class: Drupal\Core\Extension\ModuleHandler
-    arguments: ['%app.root%', '%container.modules%', '@cache.bootstrap']
-    tags:
-      - { name: needs_destruction }
+    arguments: ['%app.root%', '%container.modules%', '@event_dispatcher', '%hook_implementations_map%']
   Drupal\Core\Extension\ModuleHandlerInterface: '@module_handler'
   module_installer:
     class: Drupal\Core\Extension\ModuleInstaller
@@ -665,7 +667,7 @@ services:
   Drupal\Core\Extension\ProfileExtensionList: '@extension.list.profile'
   extension.list.theme:
     class: Drupal\Core\Extension\ThemeExtensionList
-    arguments: ['%app.root%', 'theme', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.theme_engine', '%install_profile%']
+    arguments: ['%app.root%', 'theme', '@cache.bootstrap', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.theme_engine', '%install_profile%']
   Drupal\Core\Extension\ThemeExtensionList: '@extension.list.theme'
   extension.list.theme_engine:
     class: Drupal\Core\Extension\ThemeEngineExtensionList
@@ -1461,7 +1463,7 @@ services:
     class: Drupal\Core\Access\RouteProcessorCsrf
     tags:
       - { name: route_processor_outbound }
-    arguments: ['@csrf_token']
+    arguments: ['@csrf_token', '@request_stack']
   transliteration:
     class: Drupal\Core\Transliteration\PhpTransliteration
     arguments: [null, '@module_handler']
@@ -1680,14 +1682,15 @@ services:
     class: Drupal\Core\Asset\AssetDumper
     arguments: ['@file_system']
   library.discovery:
-    class: Drupal\Core\Asset\LibraryDiscovery
-    arguments: ['@library.discovery.collector']
-  Drupal\Core\Asset\LibraryDiscoveryInterface: '@library.discovery'
-  library.discovery.collector:
     class: Drupal\Core\Asset\LibraryDiscoveryCollector
     arguments: ['@cache.discovery', '@lock', '@library.discovery.parser', '@theme.manager']
     tags:
       - { name: needs_destruction }
+  Drupal\Core\Asset\LibraryDiscoveryInterface: '@library.discovery'
+  library.discovery.collector:
+    arguments: ['@cache.discovery', '@lock', '@library.discovery.parser', '@theme.manager']
+    class: Drupal\Core\Asset\LibraryDiscoveryCollector
+    deprecated: The "%service_id%" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use LibraryDiscovery instead. See https://www.drupal.org/node/3462970
   library.discovery.parser:
     class: Drupal\Core\Asset\LibraryDiscoveryParser
     arguments: ['%app.root%', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder', '@extension.path.resolver', '@plugin.manager.sdc']
@@ -1702,7 +1705,7 @@ services:
   Drupal\Core\Asset\LibraryDependencyResolverInterface: '@library.dependency_resolver'
   asset.resolver:
     class: Drupal\Core\Asset\AssetResolver
-    arguments: ['@library.discovery', '@library.dependency_resolver', '@module_handler', '@theme.manager', '@language_manager', '@cache.data']
+    arguments: ['@library.discovery', '@library.dependency_resolver', '@module_handler', '@theme.manager', '@language_manager', '@cache.data', '@theme_handler']
   Drupal\Core\Asset\AssetResolverInterface: '@asset.resolver'
   info_parser:
     class: Drupal\Core\Extension\InfoParser
@@ -1721,6 +1724,10 @@ services:
       - { name: twig.extension, priority: 100 }
   Drupal\Core\Template\ComponentsTwigExtension:
     arguments: ['@plugin.manager.sdc', '@Drupal\Core\Theme\Component\ComponentValidator']
+    tags:
+      - { name: twig.extension, priority: 101 }
+  Drupal\Core\Template\IconsTwigExtension:
+    arguments: ['@plugin.manager.icon_pack']
     tags:
       - { name: twig.extension, priority: 101 }
   twig.extension.debug:
@@ -1804,6 +1811,11 @@ services:
     tags:
       - { name: service_collector, tag: placeholder_strategy, call: addPlaceholderStrategy }
   Drupal\Core\Render\Placeholder\PlaceholderStrategyInterface: '@placeholder_strategy'
+  placeholder_strategy.cached:
+    class: Drupal\Core\Render\Placeholder\CachedStrategy
+    arguments: ['@placeholder_strategy', '@render_cache']
+    tags:
+      - { name: placeholder_strategy, priority: 100 }
   placeholder_strategy.single_flush:
     class: Drupal\Core\Render\Placeholder\SingleFlushStrategy
     tags:
@@ -1862,7 +1874,6 @@ services:
   Drupal\Core\Theme\ComponentNegotiator:
     arguments:
       - '@theme.manager'
-      - '@extension.list.module'
   plugin.manager.sdc:
     public: true
     class: Drupal\Core\Theme\ComponentPluginManager
@@ -1885,3 +1896,39 @@ services:
     tags:
       - { name: twig.loader, priority: 5 }
   Drupal\Core\EventSubscriber\CsrfExceptionSubscriber: ~
+  plugin.manager.icon_pack:
+    class: Drupal\Core\Theme\Icon\Plugin\IconPackManager
+    calls:
+      - [setValidator, []]
+    arguments:
+      [
+        '@module_handler',
+        '@theme_handler',
+        '@cache.discovery',
+        '@plugin.manager.icon_extractor',
+        '@Drupal\Core\Theme\Icon\IconCollector',
+        '%app.root%',
+      ]
+  Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface: '@plugin.manager.icon_pack'
+  plugin.manager.icon_extractor:
+    class: Drupal\Core\Theme\Icon\IconExtractorPluginManager
+    parent: default_plugin_manager
+    arguments: ['@plugin_form.factory']
+  Drupal\Core\Theme\Icon\IconExtractorInterface: '@plugin.manager.icon_extractor'
+  Drupal\Core\Theme\Icon\IconFinder:
+    autowire: true
+    arguments:
+      [
+        '@file_url_generator',
+        '@logger.channel.default',
+        '%app.root%',
+      ]
+  Drupal\Core\Theme\Icon\IconCollector:
+    arguments:
+      [
+        '@plugin.manager.icon_extractor',
+        '@cache.default',
+        '@lock',
+      ]
+    tags:
+      - { name: needs_destruction }
