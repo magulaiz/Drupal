@@ -141,7 +141,7 @@ default:
   - cd core
   - corepack enable
   - yarn install
-  - yarn run spellcheck:core --no-must-find-files --cache --cache-strategy content
+  - yarn run spellcheck:core --no-progress --no-must-find-files --cache --cache-strategy content
 ################
 # Stages
 #
@@ -183,7 +183,6 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-8"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
-    OTEL_COLLECTOR: $OTEL_COLLECTOR
   # Run on MR, schedule, push, parent pipeline and performance test.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
@@ -240,10 +239,10 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-8.4"
 
-'PHP 8.3 MySQL 9.0':
+'PHP 8.4 MySQL 9.2':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_PHP: "8.4-ubuntu"
     _TARGET_DB: "mysql-9"
 
 'PHP 8.3 PostgreSQL 16':
@@ -252,11 +251,23 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "pgsql-16"
 
+'PHP 8.4 PostgreSQL 17':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.4-ubuntu"
+    _TARGET_DB: "pgsql-17"
+
 'PHP 8.3 SQLite 3.45':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "sqlite-3"
+
+'PHP 8.4 MySQL 8.4':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.4-ubuntu"
+    _TARGET_DB: "mysql-8.4"
 
 # Jobs running on commits.
 # The value set in the "needs" property will determine the order in the sequence.
@@ -287,9 +298,14 @@ default:
   needs: [ '[Daily] PHP 8.3 SQLite 3.45' ]
   <<: [ *run-daily ]
 
-'[Daily] PHP 8.3 MySQL 8.4':
-  extends: 'PHP 8.3 MySQL 8.4'
+'[Daily] PHP 8.4 MySQL 8.4':
+  extends: 'PHP 8.4 MySQL 8.4'
   needs: [ '[Daily] PHP 8.3 MariaDB 10.6' ]
+  <<: [ *run-daily ]
+
+'[Daily] PHP 8.4 PostgreSQL 17':
+  extends: 'PHP 8.4 PostgreSQL 17'
+  needs: [ '[Daily] PHP 8.4 MySQL 8.4' ]
   <<: [ *run-daily ]
 
 ################
@@ -330,6 +346,31 @@ default:
       - core/.cspellcache
       - core/.eslintcache
       - core/.stylelintcache
+
+'📔 Spell-checking':
+  <<: [ *default-job-settings-lint ]
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  script:
+    - *prepare-lint-directory
+    - *cspell-cache
+    - *core-spellcheck
+    - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
+    - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
+    - mv /build/core/node_modules $CI_PROJECT_DIR/core
+  cache:
+    key:
+      files:
+        - ./core/package.json
+        - ./core/yarn.lock
+    paths:
+      - ./core/node_modules
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor'
+    paths:
+      - core/node_modules/
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
@@ -443,35 +484,10 @@ default:
     - cd core
     - yarn install
     - yarn run build:css --check
-    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color  --custom-formatter=@gitlab-formatters/stylelint-formatter-gitlab --output-file=$CI_PROJECT_DIR/gl-codequality.json
   artifacts:
     reports:
-      codequality: stylelint-quality-report.json
-
-'📔 Spell-checking':
-  <<: [ *default-job-settings-lint ]
-  stage: 🪄 Lint
-  variables:
-    KUBERNETES_CPU_REQUEST: "2"
-  script:
-    - *prepare-lint-directory
-    - *cspell-cache
-    - *core-spellcheck
-    - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
-    - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
-    - mv /build/core/node_modules $CI_PROJECT_DIR/core
-  cache:
-    key:
-      files:
-        - ./core/package.json
-        - ./core/yarn.lock
-    paths:
-      - ./core/node_modules
-  artifacts:
-    expire_in: 1 week
-    expose_as: 'yarn-vendor'
-    paths:
-      - core/node_modules/
+      codequality: gl-codequality.json
 
 '📔 Validatable config':
   <<: [ *default-job-settings-lint ]
@@ -517,7 +533,7 @@ default:
     - vendor/bin/drush config:inspect --statistics > HEAD.json
     # Return to the MR commit being tested, conditionally install updates, always rebuild the container.
     - git checkout -f $CI_COMMIT_SHA
-    - git diff $CI_MERGE_REQUEST_DIFF_BASE_SHA $CI_COMMIT_SHA --name-only | grep -q '.install$\|.post_update\.php$' && echo '🤖 Installing DB updates…' && vendor/bin/drush updatedb --yes --quiet
+    - git diff $CI_MERGE_REQUEST_DIFF_BASE_SHA $CI_COMMIT_SHA --name-only | grep -q '.install$\|.post_update\.php$' && echo '🤖 Installing DB updates…' && vendor/bin/drush updatedb --yes
     - vendor/bin/drush cr --quiet
     # Compute statistics for coverage of validatable config for MR.
     - vendor/bin/drush config:inspect --statistics > MR.json
