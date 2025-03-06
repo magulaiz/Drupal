@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests\Core;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -44,7 +46,7 @@ class MachineNameTest extends WebDriverTestBase {
    * Makes sure that the machine name field automatically provides a valid
    * machine name and that the manual editing mode functions.
    */
-  public function testMachineName() {
+  public function testMachineName(): void {
     // Visit the machine name test page which contains two machine name fields.
     $this->drupalGet('form-test/machine-name');
 
@@ -103,11 +105,6 @@ class MachineNameTest extends WebDriverTestBase {
 
     // Assert that a machine name based on a default value is initialized.
     $this->assertJsCondition('jQuery("#edit-machine-name-3-label-machine-name-suffix .machine-name-value").html() == "yet_another_machine_name"');
-
-    // Field must be present for the rest of the test to work.
-    if (empty($machine_name_1_value)) {
-      $this->fail('Cannot finish test, missing machine name field');
-    }
 
     // Test each value for conversion to a machine name.
     foreach ($test_values as $test_info) {

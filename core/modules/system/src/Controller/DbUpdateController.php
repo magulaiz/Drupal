@@ -101,7 +101,17 @@ class DbUpdateController extends ControllerBase {
    * @param \Drupal\Core\Asset\AssetQueryStringInterface $assetQueryString
    *   The asset query string.
    */
-  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry, protected AssetQueryStringInterface $assetQueryString) {
+  public function __construct(
+    $root,
+    KeyValueExpirableFactoryInterface $key_value_expirable_factory,
+    CacheBackendInterface $cache,
+    StateInterface $state,
+    ModuleHandlerInterface $module_handler,
+    AccountInterface $account,
+    BareHtmlPageRendererInterface $bare_html_page_renderer,
+    UpdateRegistry $post_update_registry,
+    protected AssetQueryStringInterface $assetQueryString,
+  ) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
@@ -134,10 +144,10 @@ class DbUpdateController extends ControllerBase {
    *
    * @param string $op
    *   The update operation to perform. Can be any of the below:
-   *    - info
-   *    - selection
-   *    - run
-   *    - results
+   *    - "info".
+   *    - "selection".
+   *    - "run".
+   *    - "results".
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request object.
    *
@@ -522,7 +532,7 @@ class DbUpdateController extends ControllerBase {
   /**
    * Renders a list of requirement errors or warnings.
    *
-   * @param $severity
+   * @param int $severity
    *   The severity of the message, as per RFC 3164.
    * @param array $requirements
    *   The array of requirement values.
@@ -654,12 +664,13 @@ class DbUpdateController extends ControllerBase {
    * page in update.php). Additionally, if the site was off-line, now that the
    * update process is completed, the site is set back online.
    *
-   * @param $success
+   * @param bool $success
    *   Indicate that the batch API tasks were all completed successfully.
    * @param array $results
    *   An array of all the results that were updated in update_do_one().
    * @param array $operations
-   *   A list of all the operations that had not been completed by the batch API.
+   *   A list of all the operations that had not been completed by the batch
+   *   API.
    */
   public static function batchFinished($success, $results, $operations) {
     // No updates to run, so caches won't get flushed later.  Clear them now.

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field_ui\Traits;
 
 /**
@@ -43,12 +45,13 @@ trait FieldUiJSTestTrait {
 
     if ($assert_session->waitForElementVisible('css', "[name='new_storage_type'][value='$field_type']")) {
       $page = $this->getSession()->getPage();
-      $field_card = $page->find('css', "[name='new_storage_type'][value='$field_type']");
+      $field_card = $page->find('css', "[name='new_storage_type'][value='$field_type']")->getParent();
     }
     else {
       $field_card = $this->getFieldFromGroupJS($field_type);
     }
     $field_card?->click();
+    $page->findButton('Continue')->click();
     $field_label = $page->findField('edit-label');
     $this->assertTrue($field_label->isVisible());
     $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
@@ -61,19 +64,10 @@ trait FieldUiJSTestTrait {
     $this->assertTrue($field_field_name->isVisible());
     $field_field_name->setValue($field_name);
 
-    $page->findButton('Save and continue')->click();
+    $page->findButton('Continue')->click();
     $assert_session->waitForText("These settings apply to the $label field everywhere it is used.");
     if ($save_settings) {
-      $breadcrumb_link = $page->findLink($label);
-
-      // Test breadcrumb.
-      $this->assertTrue($breadcrumb_link->isVisible());
-
-      // Second step: 'Storage settings' form.
-      $page->findButton('Save field settings')->click();
-      $assert_session->pageTextContains("Updated field $label field settings.");
-
-      // Third step: 'Field settings' form.
+      // Second step: Save field settings.
       $page->findButton('Save settings')->click();
       $assert_session->pageTextContains("Saved $label configuration.");
 
@@ -145,15 +139,16 @@ trait FieldUiJSTestTrait {
     }
     $field_card = NULL;
     foreach ($groups as $group) {
-      $group_field_card = $this->getSession()->getPage()->find('css', "[name='new_storage_type'][value='$group']");
+      $group_field_card = $this->getSession()->getPage()->find('css', "[name='new_storage_type'][value='$group']")->getParent();
       $group_field_card->click();
-      $this->assertSession()->assertWaitOnAjaxRequest();
+      $this->getSession()->getPage()->pressButton('Continue');
       $field_card = $this->getSession()->getPage()->find('css', "[name='group_field_options_wrapper'][value='$field_type']");
       if ($field_card) {
         break;
       }
+      $this->getSession()->getPage()->pressButton('Back');
     }
-    return $field_card;
+    return $field_card->getParent();
   }
 
 }

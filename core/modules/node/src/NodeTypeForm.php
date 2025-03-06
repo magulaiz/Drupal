@@ -69,7 +69,7 @@ class NodeTypeForm extends BundleEntityFormBase {
       '#title' => $this->t('Name'),
       '#type' => 'textfield',
       '#default_value' => $type->label(),
-      '#description' => $this->t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>Add content</em> page. This name must be unique.'),
+      '#description' => $this->t('The human-readable name for this content type, displayed on the <em>Content types</em> page.'),
       '#required' => TRUE,
       '#size' => 30,
     ];
@@ -83,7 +83,7 @@ class NodeTypeForm extends BundleEntityFormBase {
         'exists' => ['Drupal\node\Entity\NodeType', 'load'],
         'source' => ['name'],
       ],
-      '#description' => $this->t('A unique machine-readable name for this content type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %node-add page.', [
+      '#description' => $this->t('Unique machine-readable name: lowercase letters, numbers, and underscores only.', [
         '%node-add' => $this->t('Add content'),
       ]),
     ];
@@ -92,7 +92,7 @@ class NodeTypeForm extends BundleEntityFormBase {
       '#title' => $this->t('Description'),
       '#type' => 'textarea',
       '#default_value' => $type->getDescription(),
-      '#description' => $this->t('This text will be displayed on the <em>Add new content</em> page.'),
+      '#description' => $this->t('Displays on the <em>Content types</em> page.'),
     ];
 
     $form['additional_settings'] = [
@@ -204,6 +204,23 @@ class NodeTypeForm extends BundleEntityFormBase {
   /**
    * {@inheritdoc}
    */
+  public function buildEntity(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\node\NodeTypeInterface $entity */
+    $entity = parent::buildEntity($form, $form_state);
+
+    // The description and help text cannot be empty strings.
+    if (trim($form_state->getValue('description')) === '') {
+      $entity->set('description', NULL);
+    }
+    if (trim($form_state->getValue('help')) === '') {
+      $entity->set('help', NULL);
+    }
+    return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function save(array $form, FormStateInterface $form_state) {
     $type = $this->entity;
     $type->setNewRevision($form_state->getValue(['options', 'revision']));
@@ -218,7 +235,9 @@ class NodeTypeForm extends BundleEntityFormBase {
       $this->messenger()->addStatus($this->t('The content type %name has been updated.', $t_args));
     }
     elseif ($status == SAVED_NEW) {
-      node_add_body_field($type);
+      if (\Drupal::installProfile() === 'testing') {
+        node_add_body_field($type);
+      }
       $this->messenger()->addStatus($this->t('The content type %name has been added.', $t_args));
       $context = array_merge($t_args, ['link' => $type->toLink($this->t('View'), 'collection')->toString()]);
       $this->logger('node')->notice('Added content type %name.', $context);
