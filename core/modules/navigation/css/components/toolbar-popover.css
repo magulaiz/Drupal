@@ -15,11 +15,10 @@
 }
 [data-toolbar-popover-wrapper] {
   position: fixed;
-  z-index: var(--admin-toolbar-z-index-popover);
+  z-index: var(--admin-toolbar-z-index-popover-wrapper);
   display: grid;
   overflow: auto;
   grid-auto-rows: max-content;
-  margin-top: var(--admin-toolbar-space-12);
   padding: var(--admin-toolbar-space-12) var(--admin-toolbar-space-16) var(--admin-toolbar-space-16);
   transition:
     transform var(--admin-toolbar-transition),
