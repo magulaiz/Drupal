@@ -26,13 +26,6 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   protected static $modules = ['datetime', 'system'];
 
   /**
-   * Sets up the test.
-   */
-  protected function setUp(): void {
-    parent::setUp();
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getFormId() {
@@ -108,7 +101,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => 'Submit',
     ];
 
     return $form;

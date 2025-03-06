@@ -27,7 +27,8 @@ function _drupal_maintenance_theme() {
   require_once __DIR__ . '/common.inc';
   require_once __DIR__ . '/module.inc';
 
-  // Install and update pages are treated differently to prevent theming overrides.
+  // Install and update pages are treated differently to prevent theming
+  // overrides.
   if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
     if (InstallerKernel::installationAttempted()) {
       $custom_theme = $GLOBALS['install_state']['theme'];
@@ -108,7 +109,7 @@ function _drupal_maintenance_theme() {
  *   An associative array containing:
  *   - messages: An array of result messages.
  */
-function template_preprocess_authorize_report(&$variables) {
+function template_preprocess_authorize_report(&$variables): void {
   $messages = [];
   if (!empty($variables['messages'])) {
     foreach ($variables['messages'] as $heading => $logs) {
