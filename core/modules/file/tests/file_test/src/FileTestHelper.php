@@ -43,7 +43,8 @@ class FileTestHelper {
   /**
    * Gets the arguments passed to a given hook invocation.
    *
-   * Arguments are gathered since Drupal\file_test\FileTestHelper::reset() was last called.
+   * Arguments are gathered since Drupal\file_test\FileTestHelper::reset() was
+   * last called.
    *
    * @param string $op
    *   One of the hook_file_* operations: 'load', 'validate', 'download',
@@ -65,8 +66,8 @@ class FileTestHelper {
    *
    * @return array
    *   An array keyed by hook name ('load', 'validate', 'download', 'insert',
-   *   'update', 'copy', 'move', 'delete') with values being arrays of parameters
-   *   passed to each call.
+   *   'update', 'copy', 'move', 'delete') with values being arrays of
+   *   parameters passed to each call.
    */
   public static function getAllCalls(): array {
     return \Drupal::state()->get('file_test.results', []);
@@ -97,7 +98,7 @@ class FileTestHelper {
    *
    * @param string $op
    *   One of the hook_file_[validate,download] operations.
-   * @param mixed $value
+   * @param array|int $value
    *   Value for the hook to return.
    *
    * @see Drupal\file_test\FileTestHelper::getReturn()
@@ -117,7 +118,7 @@ class FileTestHelper {
    * returned.
    *
    * @param string|null $filepath
-   *   File path
+   *   File path.
    * @param bool $reset
    *   (optional) If to reset the internal memory cache. If TRUE is passed, the
    *   first parameter has no effect. Defaults to FALSE.

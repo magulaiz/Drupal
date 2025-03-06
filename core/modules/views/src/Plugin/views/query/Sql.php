@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin\views\query;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -18,6 +19,8 @@ use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
+// cspell: ignore groupby
 
 /**
  * Views query plugin for an SQL query.
@@ -536,8 +539,8 @@ class Sql extends QueryPluginBase {
       }
     }
 
-    // Check this again to make sure we don't blow up existing aliases for already
-    // adjusted joins.
+    // Check this again to make sure we don't blow up existing aliases for
+    // already adjusted joins.
     if (isset($this->tableQueue[$alias])) {
       return $alias;
     }
@@ -630,9 +633,9 @@ class Sql extends QueryPluginBase {
     }
 
     // If the relationship is the primary table, this actually be a relationship
-    // link back from an alias. We store all aliases along with the primary table
-    // to detect this state, because eventually it'll hit a table we already
-    // have and that's when we want to stop.
+    // link back from an alias. We store all aliases along with the primary
+    // table to detect this state, because eventually it'll hit a table we
+    // already have and that's when we want to stop.
     if ($relationship == $this->view->storage->get('base_table') && !empty($this->tables[$relationship][$table])) {
       return $this->tables[$relationship][$table]['alias'];
     }
@@ -780,7 +783,8 @@ class Sql extends QueryPluginBase {
         $this->ensureTable($join->leftTable, $relationship);
       }
 
-      // First, if this is our link point/anchor table, just use the relationship
+      // First, if this is our link point/anchor table, just use the
+      // relationship
       if ($join->leftTable == $this->relationships[$relationship]['table']) {
         $join->leftTable = $relationship;
       }
@@ -863,7 +867,8 @@ class Sql extends QueryPluginBase {
    *     aggregated in a GROUP BY.
    *
    * @return string
-   *   The name that this field can be referred to as. Usually this is the alias.
+   *   The name that this field can be referred to as. Usually this is the
+   *   alias.
    */
   public function addField($table, $field, $alias = '', $params = []) {
     // We check for this specifically because it gets a special alias.
@@ -880,7 +885,7 @@ class Sql extends QueryPluginBase {
     }
 
     // Make sure an alias is assigned
-    $alias = $alias ? $alias : $field;
+    $alias = $alias ?: $field;
 
     // PostgreSQL truncates aliases to 63 characters:
     // https://www.drupal.org/node/571548.
@@ -949,9 +954,9 @@ class Sql extends QueryPluginBase {
    * @param string $field
    *   The name of the field to check.
    * @param string|array|null $value
-   *   The value to test the field against. In most cases, this is a scalar. For more
-   *   complex options, it is an array. The meaning of each element in the array is
-   *   dependent on the $operator.
+   *   The value to test the field against. In most cases, this is a scalar. For
+   *   more complex options, it is an array. The meaning of each element in the
+   *   array is dependent on the $operator.
    * @param string|null $operator
    *   The comparison operator, such as =, <, or >=. It also accepts more
    *   complex options such as IN, LIKE, LIKE BINARY, or BETWEEN. Defaults to =.
@@ -992,7 +997,7 @@ class Sql extends QueryPluginBase {
    *   If the group does not yet exist it will be created as an AND group.
    * @param string $snippet
    *   The snippet to check. This can be either a column or
-   *   a complex expression like "UPPER(table.field) = 'value'"
+   *   a complex expression like "UPPER(table.field) = 'value'".
    * @param array $args
    *   An associative array of arguments.
    *
@@ -1021,8 +1026,8 @@ class Sql extends QueryPluginBase {
    * Add a complex HAVING clause to the query.
    *
    * The caller is responsible for ensuring that all fields are fully qualified
-   * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist in the query.
-   * Internally the dbtng method "having" is used.
+   * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist
+   * in the query. Internally the dbtng method "having" is used.
    *
    * @param string $group
    *   The HAVING group to add these to; groups are used to create AND/OR
@@ -1030,7 +1035,7 @@ class Sql extends QueryPluginBase {
    *   If the group does not yet exist it will be created as an AND group.
    * @param string $snippet
    *   The snippet to check. This can be either a column or
-   *   a complex expression like "COUNT(table.field) > 3"
+   *   a complex expression like "COUNT(table.field) > 3".
    * @param array $args
    *   An associative array of arguments.
    *
@@ -1336,10 +1341,9 @@ class Sql extends QueryPluginBase {
       $distinct = TRUE;
     }
 
-    /**
-     * An optimized count query includes just the base field instead of all the fields.
-     * Determine of this query qualifies by checking for a groupby or distinct.
-     */
+    // An optimized count query includes just the base field instead of all the
+    // fields. Determine of this query qualifies by checking for a groupby or
+    // distinct.
     if ($get_count && !$this->groupby) {
       foreach ($this->fields as $field) {
         if (!empty($field['distinct']) || !empty($field['function'])) {
@@ -1562,14 +1566,15 @@ class Sql extends QueryPluginBase {
         $view->pager->preExecute($query);
 
         if (!empty($this->limit) || !empty($this->offset)) {
-          // We can't have an offset without a limit, so provide a very large limit instead.
+          // We can't have an offset without a limit, so provide a very large
+          // limit instead.
           $limit = intval(!empty($this->limit) ? $this->limit : 999999);
           $offset = intval(!empty($this->offset) ? $this->offset : 0);
           $query->range($offset, $limit);
         }
 
         $result = $query->execute();
-        $result->setFetchMode(\PDO::FETCH_CLASS, 'Drupal\views\ResultRow');
+        $result->setFetchMode(FetchAs::ClassObject, 'Drupal\views\ResultRow');
 
         // Setup the result row objects.
         $view->result = iterator_to_array($result);
@@ -1748,6 +1753,7 @@ class Sql extends QueryPluginBase {
    * Gets all the involved entities of the view.
    *
    * @return \Drupal\Core\Entity\EntityInterface[]
+   *   The involved entities.
    */
   protected function getAllEntities() {
     $entities = [];

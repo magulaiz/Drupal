@@ -47,16 +47,23 @@ class PerComponentEntityFormDisplayTest extends MigrateTestCase {
 
 }
 
+/**
+ * Test class for testing per component entity form display.
+ */
 class TestPerComponentEntityFormDisplay extends PerComponentEntityFormDisplay {
   const MODE_NAME = 'form_mode';
 
   /**
    * The test values.
+   *
+   * @var string[]
    */
   protected $testValues;
 
   /**
    * The test entity.
+   *
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $entity;
 
