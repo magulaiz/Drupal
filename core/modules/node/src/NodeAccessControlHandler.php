@@ -207,22 +207,22 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     // we need to add the node as a cacheable dependency.
     $cacheability->addCacheableDependency($node);
 
+    if ($node->isPublished()) {
+      return NULL;
+    }
+    $cacheability->addCacheContexts(['user.permissions']);
+
+    if (!$account->hasPermission('view own unpublished content')) {
+      return NULL;
+    }
+
     // Due to the check below, it is not possible to rely only on account
     // permissions to determine whether the 'view own unpublished content'
     // permission can be checked, instead we also need to check if the user has
     // the authenticated role. Just in case anonymous and authenticated users
     // are both granted the 'view own unpublished content' permission and also
     // have otherwise identical permissions.
-
-    if ($node->isPublished()) {
-      return NULL;
-    }
-    $cacheability->addCacheContexts(['user.permissions']);
     $cacheability->addCacheContexts(['user.roles:authenticated']);
-
-    if (!$account->hasPermission('view own unpublished content')) {
-      return NULL;
-    }
 
     // The "view own unpublished content" permission must not be granted
     // to anonymous users for security reasons.
