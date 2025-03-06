@@ -337,7 +337,11 @@ class HookCollectorPass implements CompilerPassInterface {
                 throw new \LogicException('Complex ordering can only work when all implementations on a single method are for the same module.');
               }
               $map1[$combinedHook][$class1][$method1] = reset($moduleFinder[$class1][$method1]);
-              $priority1 = self::addTagToDefinition($container->findDefinition($class1), $combinedHook, $method1, $priority1);
+              $container->findDefinition($class1)->addTag('kernel.event_listener', [
+                'event' => "drupal_hook.$combinedHook",
+                'method' => $method1,
+                'priority' => $priority1--,
+              ]);
             }
           }
           $container->setParameter('hook_implementations_map', $map1);
@@ -653,30 +657,6 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
     return $attributes;
-  }
-
-  /**
-   * Adds an event listener tag to a service definition.
-   *
-   * @param \Symfony\Component\DependencyInjection\Definition $definition
-   *   The service definition.
-   * @param string|int $hook
-   *   The name of the hook.
-   * @param string $method
-   *   The method.
-   * @param int $priority
-   *   The priority.
-   *
-   * @return int
-   *   A new priority, guaranteed to be lower than $priority.
-   */
-  protected static function addTagToDefinition(Definition $definition, string|int $hook, string $method, int $priority): int {
-    $definition->addTag('kernel.event_listener', [
-      'event' => "drupal_hook.$hook",
-      'method' => $method,
-      'priority' => $priority--,
-    ]);
-    return $priority;
   }
 
 }
