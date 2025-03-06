@@ -236,7 +236,7 @@ class MigrateMessageController extends ControllerBase {
   }
 
   /**
-   * Builds a query for migrate message administration.
+   * Adds a filter to the query for migrate message administration.
    *
    * This method retrieves the session-based filters from the request and
    * applies them to the provided query object. If no filters are present, the
@@ -254,47 +254,35 @@ class MigrateMessageController extends ControllerBase {
     }
 
     // Build the condition.
-    $condition_and = $query->getConnection()->condition('AND');
-    $condition_and_used = FALSE;
+    $condition_and = $query->andConditionGroup();
     foreach ($session_filters as $filter) {
-      $condition_or = $query->getConnection()->condition('OR');
-      $condition_or_used = FALSE;
+      if (!empty($filter['value'])) {
+        continue;
+      }
+      $condition_or = $query->orConditionGroup();
       switch ($filter['type']) {
         case 'array':
-          $values = [];
-          foreach ($filter['value'] as $value) {
-            if ($filter['field'] == 'msg.level') {
-              $values[] = (int) $value;
-            }
-            else {
-              $values[] = $value;
-            }
+          if ($filter['field'] == 'msg.level') {
+            $values = array_map(fn($x) => (int) $x, array_values($filter['value']));
           }
-          if (!empty($values)) {
-            $condition_or->condition($filter['field'], $values, 'IN');
-            $condition_or_used = TRUE;
+          else {
+            $values = array_values($filter['value']);
           }
+          $condition_or->condition($filter['field'], $values, 'IN');
           break;
 
         case 'string':
-          if (!empty($filter['value'])) {
-            $condition_or->condition($filter['field'], '%' . $filter['value'] . '%');
-            $condition_or_used = TRUE;
-          }
+          $condition_or->condition($filter['field'], '%' . $filter['value'] . '%', 'LIKE');
           break;
 
         default:
-          if (!empty($filter['value'])) {
-            $condition_or->condition($filter['field'], $filter['value']);
-            $condition_or_used = TRUE;
-          }
+          $condition_or->condition($filter['field'], $filter['value']);
       }
-      if ($condition_or_used) {
+      if ($condition_or->count() > 0) {
         $condition_and->condition($condition_or);
-        $condition_and_used = TRUE;
       }
     }
-    if ($condition_and_used) {
+    if ($condition_and->count() > 0) {
       $query->condition($condition_and);
     }
   }
