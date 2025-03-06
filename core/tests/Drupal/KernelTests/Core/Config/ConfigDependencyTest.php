@@ -645,8 +645,6 @@ class ConfigDependencyTest extends EntityKernelTestBase {
    * Tests that config dependency ordering.
    */
   public function testDependencyOrder(): void {
-    /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
-    $config_manager = \Drupal::service('config.manager');
     $storage = $this->container->get('entity_type.manager')->getStorage('config_test');
     // Test dependencies between modules.
     $entity1 = $storage->create(['id' => 'entity1']);
