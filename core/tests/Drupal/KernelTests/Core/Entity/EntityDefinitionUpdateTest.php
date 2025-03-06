@@ -1092,7 +1092,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Tests purging a field with a broken state.
    */
-  public function testBundleFieldPurgeWithBrokenState() {
+  public function testBundleFieldPurgeWithBrokenState(): void {
     /** @var \Drupal\Core\Entity\Sql\SqlEntityStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage('entity_test_update');
     $schema_handler = $this->database->schema();
@@ -1106,7 +1106,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $storage_definition = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions('entity_test_update')['new_bundle_field'];
 
     // Save an entity with the bundle field populated.
-    entity_test_create_bundle('custom');
+    EntityTestHelper::createBundle('custom');
     $entity = $storage->create(['type' => 'test_bundle', 'new_bundle_field' => 'foo']);
     $entity->save();
 
