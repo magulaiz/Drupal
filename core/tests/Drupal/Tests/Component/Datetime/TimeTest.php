@@ -126,6 +126,16 @@ class TimeTest extends TestCase {
     $this->assertEquals($expected, $this->time->getCurrentMicroTime());
   }
 
+  /**
+   * Tests the now method.
+   *
+   * @covers ::now
+   */
+  public function testNow(): void {
+    $expected = 12345678;
+    $this->assertEquals($expected, $this->time->now()->getTimestamp());
+  }
+
 }
 
 namespace Drupal\Component\Datetime;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Config\Checkpoint;
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
 use Drupal\Core\Config\Checkpoint\CheckpointExistsException;
@@ -13,6 +12,7 @@ use Drupal\Core\Config\Checkpoint\LinearHistory;
 use Drupal\Core\State\StateInterface;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
+use Psr\Clock\ClockInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\Checkpoint\LinearHistory
@@ -37,8 +37,11 @@ class LinearHistoryTest extends UnitTestCase {
     $state = $this->prophesize(StateInterface::class);
     $state->get(self::CHECKPOINT_KEY, [])->willReturn([]);
     $state->set(self::CHECKPOINT_KEY, Argument::any())->willReturn(NULL);
-    $time = $this->prophesize(TimeInterface::class);
-    $time->getCurrentTime()->willReturn(1701539520, 1701539994);
+    $time = $this->prophesize(ClockInterface::class);
+    $time->now()->willReturn(
+      \DateTimeImmutable::createFromFormat('U', '1701539520'),
+      \DateTimeImmutable::createFromFormat('U', '1701539994')
+    );
     $checkpoints = new LinearHistory($state->reveal(), $time->reveal());
 
     $this->assertCount(0, $checkpoints);
@@ -80,8 +83,11 @@ class LinearHistoryTest extends UnitTestCase {
     $state = $this->prophesize(StateInterface::class);
     $state->get(self::CHECKPOINT_KEY, [])->willReturn([]);
     $state->set(self::CHECKPOINT_KEY, Argument::any())->willReturn(NULL);
-    $time = $this->prophesize(TimeInterface::class);
-    $time->getCurrentTime()->willReturn(1701539520, 1701539994);
+    $time = $this->prophesize(ClockInterface::class);
+    $time->now()->willReturn(
+      \DateTimeImmutable::createFromFormat('U', '1701539520'),
+      \DateTimeImmutable::createFromFormat('U', '1701539994')
+    );
     $checkpoints = new LinearHistory($state->reveal(), $time->reveal());
     $checkpoints->add('hash1', 'Label');
     // Add another checkpoint with the same ID and an exception should be
@@ -102,7 +108,7 @@ class LinearHistoryTest extends UnitTestCase {
       'hash3' => new Checkpoint('hash3', 'Three', 1701539530, 'hash2'),
     ]);
     $state->delete(self::CHECKPOINT_KEY)->willReturn();
-    $time = $this->prophesize(TimeInterface::class);
+    $time = $this->prophesize(ClockInterface::class);
     $checkpoints = new LinearHistory($state->reveal(), $time->reveal());
 
     $this->assertCount(3, $checkpoints);
@@ -125,7 +131,7 @@ class LinearHistoryTest extends UnitTestCase {
     $state->get(self::CHECKPOINT_KEY, [])->willReturn($test_data);
     unset($test_data['hash1'], $test_data['hash2']);
     $state->set(self::CHECKPOINT_KEY, $test_data)->willReturn();
-    $time = $this->prophesize(TimeInterface::class);
+    $time = $this->prophesize(ClockInterface::class);
     $checkpoints = new LinearHistory($state->reveal(), $time->reveal());
 
     $this->assertCount(3, $checkpoints);
@@ -141,7 +147,7 @@ class LinearHistoryTest extends UnitTestCase {
   public function testDeleteException(): void {
     $state = $this->prophesize(StateInterface::class);
     $state->get(self::CHECKPOINT_KEY, [])->willReturn([]);
-    $time = $this->prophesize(TimeInterface::class);
+    $time = $this->prophesize(ClockInterface::class);
     $checkpoints = new LinearHistory($state->reveal(), $time->reveal());
 
     $this->expectException(UnknownCheckpointException::class);
@@ -161,7 +167,7 @@ class LinearHistoryTest extends UnitTestCase {
       'hash3' => new Checkpoint('hash3', 'Three', 1701539530, 'hash2'),
     ];
     $state->get(self::CHECKPOINT_KEY, [])->willReturn($test_data);
-    $time = $this->prophesize(TimeInterface::class);
+    $time = $this->prophesize(ClockInterface::class);
     $checkpoints = new LinearHistory($state->reveal(), $time->reveal());
 
     $this->assertSame(['hash2' => $test_data['hash2'], 'hash1' => $test_data['hash1']], iterator_to_array($checkpoints->getParents('hash3')));
@@ -179,7 +185,7 @@ class LinearHistoryTest extends UnitTestCase {
       'hash2' => new Checkpoint('hash2', 'Two', 1701539520, 'hash1'),
     ];
     $state->get(self::CHECKPOINT_KEY, [])->willReturn($test_data);
-    $time = $this->prophesize(TimeInterface::class);
+    $time = $this->prophesize(ClockInterface::class);
     $checkpoints = new LinearHistory($state->reveal(), $time->reveal());
 
     $this->expectException(UnknownCheckpointException::class);

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Config\Checkpoint;
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\State\StateInterface;
+use Psr\Clock\ClockInterface;
 
 /**
  * A chronological list of Checkpoint objects.
@@ -41,12 +41,12 @@ final class LinearHistory implements CheckpointListInterface {
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
+   * @param \Psr\Clock\ClockInterface $time
    *   The time service.
    */
   public function __construct(
     private readonly StateInterface $state,
-    private readonly TimeInterface $time,
+    private readonly ClockInterface $time,
   ) {
     $this->checkpoints = $this->state->get(self::CHECKPOINT_KEY, []);
     $this->activeCheckpoint = end($this->checkpoints) ?: NULL;
@@ -104,7 +104,7 @@ final class LinearHistory implements CheckpointListInterface {
     if (isset($this->checkpoints[$id])) {
       throw new CheckpointExistsException(sprintf('Cannot create a checkpoint with the ID "%s" as it already exists', $id));
     }
-    $checkpoint = new Checkpoint($id, $label, $this->time->getCurrentTime(), $this->activeCheckpoint?->id);
+    $checkpoint = new Checkpoint($id, $label, $this->time->now()->getTimestamp(), $this->activeCheckpoint?->id);
     $this->checkpoints[$checkpoint->id] = $checkpoint;
     $this->activeCheckpoint = $checkpoint;
     $this->state->set(self::CHECKPOINT_KEY, $this->checkpoints);
