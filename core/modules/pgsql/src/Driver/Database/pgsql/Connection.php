@@ -333,7 +333,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     $sequence_name = $this->prefixTables('{' . $table . '}_' . $field . '_seq');
     // Remove identifier quotes as we are constructing a new name from a
     // prefixed and quoted table name.
-    return str_replace($this->getIdentifierHandler()->identifierQuotes, '', $sequence_name);
+    return str_replace($this->identifiers()->identifierQuotes, '', $sequence_name);
   }
 
   /**
@@ -345,7 +345,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
 
     // The fully qualified table name in PostgreSQL is in the form of
     // <database>.<schema>.<table>.
-    return $options['database'] . '.' . $schema . '.' . $this->identifierHandler->getPlatformTableName($table, TRUE, FALSE);
+    return $options['database'] . '.' . $schema . '.' . $this->identifiers()->table($table)->machineName(quoted: FALSE);
   }
 
   /**

@@ -39,6 +39,31 @@ class IdentifierHandler {
   /**
    * @todo fill in.
    */
+  public function table(string|Table $name): Table {
+    if (is_string($name)) {
+      $table = new Table($this, $name);
+      return $table;
+    }
+    return $name;
+  }
+
+  /**
+   * @todo fill in.
+   */
+  public function tableEscapeName(Table $table): string {
+    return preg_replace('/[^A-Za-z0-9_.]+/', '', $table->name);
+  }
+
+  /**
+   * @todo fill in.
+   */
+  public function tableMachineName(Table $table): string {
+    return $table->escapedName();
+  }
+
+  /**
+   * @todo fill in.
+   */
   protected function setIdentifier(string $identifier, string $platform_identifier, IdentifierType $type, bool $isAlias): void {
     if (!$isAlias) {
       $this->identifiers['identifier'][$identifier][$type->value] = $platform_identifier;
@@ -81,21 +106,6 @@ class IdentifierHandler {
     return $quoted ?
       $start_quote . $this->identifiers['identifier'][$original_name][IdentifierType::Database->value] . $end_quote :
       $this->identifiers['identifier'][$original_name][IdentifierType::Database->value];
-  }
-
-  /**
-   * @todo fill in.
-   */
-  public function getPlatformTableName(string $original_name, bool $prefixed = FALSE, bool $quoted = FALSE): string {
-    $original_name = (string) preg_replace('/[^A-Za-z0-9_.]+/', '', $original_name);
-    if (!$this->hasIdentifier($original_name, IdentifierType::Table)) {
-      $table_name = $this->resolvePlatformTableIdentifier($original_name);
-      $this->setIdentifier($original_name, $table_name, IdentifierType::Table, FALSE);
-      $this->setIdentifier($original_name, $this->tablePrefix . $table_name, IdentifierType::PrefixedTable, FALSE);
-    }
-    [$start_quote, $end_quote] = $this->identifierQuotes;
-    $table = $prefixed ? $this->identifiers['identifier'][$original_name][IdentifierType::PrefixedTable->value] : $this->identifiers['identifier'][$original_name][IdentifierType::Table->value];
-    return $quoted ? $start_quote . str_replace(".", "$end_quote.$start_quote", $table) . $end_quote : $table;
   }
 
   /**

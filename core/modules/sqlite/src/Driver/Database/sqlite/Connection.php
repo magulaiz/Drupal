@@ -429,7 +429,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    */
   public function getFullQualifiedTableName($table) {
     // Don't include the SQLite database file name as part of the table name.
-    return $this->identifierHandler->getPlatformTableName($table, TRUE, TRUE);
+    return $this->identifiers()->table($table)->machineName();
   }
 
   /**

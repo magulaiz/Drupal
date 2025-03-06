@@ -310,7 +310,7 @@ abstract class Connection {
    */
   public function getPrefix(): string {
     // @trigger_error(__METHOD__ . '() is deprecated in drupal:9.x.0 and is removed from drupal:10.0.0. @todo. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
-    return $this->identifierHandler->tablePrefix;
+    return $this->identifiers()->tablePrefix;
   }
 
   /**
@@ -341,7 +341,7 @@ abstract class Connection {
     $replacements = $tables = [];
     preg_match_all('/(\{(\S*)\})/', $sql, $tables, PREG_SET_ORDER, 0);
     foreach ($tables as $table) {
-      $replacements[$table[1]] = $this->identifierHandler->getPlatformTableName($table[2], TRUE, TRUE);
+      $replacements[$table[1]] = $this->identifiers()->table($table[2])->machineName();
     }
     return str_replace(array_keys($replacements), array_values($replacements), $sql);
   }
@@ -371,7 +371,7 @@ abstract class Connection {
     $identifiers = [];
     $i = 0;
     foreach ($matches[1] as $match) {
-      $identifiers[$match] = $this->identifierHandler->getPlatformIdentifierName($matches[2][$i]);
+      $identifiers[$match] = $this->identifiers()->getPlatformIdentifierName($matches[2][$i]);
       $i++;
     }
     return strtr($sql, $identifiers);
@@ -387,7 +387,7 @@ abstract class Connection {
    *   The fully qualified table name.
    */
   public function getFullQualifiedTableName($table) {
-    return $this->identifierHandler->getPlatformDatabaseName($this->getConnectionOptions()['database']) . '.' . $this->identifierHandler->getPlatformTableName($table, TRUE, TRUE);
+    return $this->identifiers()->getPlatformDatabaseName($this->getConnectionOptions()['database']) . '.' . $this->identifiers()->table($table)->machineName();
   }
 
   /**
@@ -547,30 +547,6 @@ abstract class Connection {
    */
   public function getLogger() {
     return $this->logger;
-  }
-
-  /**
-   * Creates the appropriate sequence name for a given table and serial field.
-   *
-   * This information is exposed to all database drivers, although it is only
-   * useful on some of them. This method is table prefix-aware.
-   *
-   * Note that if a sequence was generated automatically by the database, its
-   * name might not match the one returned by this function. Therefore, in those
-   * cases, it is generally advised to use a database-specific way of retrieving
-   * the name of an auto-created sequence. For example, PostgreSQL provides a
-   * dedicated function for this purpose: pg_get_serial_sequence().
-   *
-   * @param string $table
-   *   The table name to use for the sequence.
-   * @param string $field
-   *   The field name to use for the sequence.
-   *
-   * @return string
-   *   A table prefix-parsed string for the sequence name.
-   */
-  public function makeSequenceName($table, $field) {
-    return $this->identifierHandler->getPlatformTableName($table, TRUE, FALSE) . "_{$field}_seq";
   }
 
   /**
@@ -793,7 +769,7 @@ abstract class Connection {
   /**
    * @todo fill in.
    */
-  public function getIdentifierHandler(): IdentifierHandler {
+  public function identifiers(): IdentifierHandler {
     return $this->identifierHandler;
   }
 
@@ -1002,7 +978,7 @@ abstract class Connection {
    *   The sanitized database name.
    */
   public function escapeDatabase($database) {
-    return $this->identifierHandler->getPlatformDatabaseName($database);
+    return $this->identifiers()->getPlatformDatabaseName($database);
   }
 
   /**
@@ -1023,7 +999,8 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Connection::setPrefix()
    */
   public function escapeTable($table) {
-    return $this->identifierHandler->getPlatformTableName($table);
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312", E_USER_DEPRECATED);
+    return $this->identifiers()->table($table)->escapedName();
   }
 
   /**
@@ -1040,7 +1017,7 @@ abstract class Connection {
    *   The sanitized field name.
    */
   public function escapeField($field) {
-    return $this->identifierHandler->getPlatformColumnName($field);
+    return $this->identifiers()->getPlatformColumnName($field);
   }
 
   /**
@@ -1058,7 +1035,7 @@ abstract class Connection {
    *   The sanitized alias name.
    */
   public function escapeAlias($field) {
-    return $this->identifierHandler->getPlatformAliasName($field);
+    return $this->identifiers()->getPlatformAliasName($field);
   }
 
   /**

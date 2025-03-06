@@ -91,7 +91,7 @@ abstract class Schema implements PlaceholderInterface {
       $table = ($add_prefix ? $prefix : '') . $table;
     }
     else {
-      $table = $this->connection->getIdentifierHandler()->getPlatformTableName($table, $add_prefix);
+      $table = $this->connection->identifiers()->table($table)->machineName(quoted: FALSE, prefixed: $add_prefix);
     }
     // If the prefix contains a period in it, then that means the prefix also
     // contains a schema reference in which case we will change the schema key
