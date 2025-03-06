@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional;
 
-use Drupal\Core\Cache\CacheableMetadata;
-
 /**
  * Tests the node access grants cache context service.
  *
@@ -46,25 +44,29 @@ class NodeAccessCacheRedirectWarning extends NodeTestBase {
 
     $author = $this->drupalCreateUser([
       'create page content',
-      'edit own page content',
+      'edit any page content',
       'view own unpublished content',
     ]);
     $this->drupalLogin($author);
 
     $node = $this->drupalCreateNode(['uid' => $author->id(), 'status' => 0]);
 
-    $access = $node->access('view', $author, TRUE);
-    $unpublished_metadata = CacheableMetadata::createFromObject($access);
-
-    // Reset the node access cache to check the published node.
-    \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
+    $this->drupalGet($node->toUrl());
 
     $node->setPublished();
     $node->save();
-    $access = $node->access('view', $author, TRUE);
-    $published_metadata = CacheableMetadata::createFromObject($access);
 
-    $this->assertSame($unpublished_metadata->getCacheContexts(), $published_metadata->getCacheContexts());
+    $this->drupalGet($node->toUrl());
+
+    $node->setUnpublished();
+    $node->save();
+
+    $this->drupalGet($node->toUrl());
+
+    $node->setPublished();
+    $node->save();
+
+    $this->drupalGet($node->toUrl());
   }
 
 }
