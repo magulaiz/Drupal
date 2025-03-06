@@ -121,7 +121,6 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     // know it for a fact.
     $set_cacheability = function (AccessResult $access_result) use ($operation) {
       $access_result->addCacheContexts(['user.node_grants:' . $operation]);
-      $access_result->addCacheContexts(['user.roles.authenticated']);
       if ($operation !== 'view') {
         $access_result->setCacheMaxAge(0);
       }
