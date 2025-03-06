@@ -35,6 +35,7 @@ class RenderPlaceholderMessageTestController implements TrustedCallbackInterface
 
   /**
    * @return array
+   *   A renderable array with the messages placeholder rendered first.
    */
   public function messagesPlaceholderFirst() {
     return $this->build([
@@ -48,6 +49,7 @@ class RenderPlaceholderMessageTestController implements TrustedCallbackInterface
 
   /**
    * @return array
+   *   A renderable array with the messages placeholder rendered in the middle.
    */
   public function messagesPlaceholderMiddle() {
     return $this->build([
@@ -61,6 +63,7 @@ class RenderPlaceholderMessageTestController implements TrustedCallbackInterface
 
   /**
    * @return array
+   *   A renderable array with the messages placeholder rendered last.
    */
   public function messagesPlaceholderLast() {
     return $this->build([
@@ -74,6 +77,7 @@ class RenderPlaceholderMessageTestController implements TrustedCallbackInterface
 
   /**
    * @return array
+   *   A renderable array containing only messages.
    */
   public function queuedMessages() {
     return ['#type' => 'status_messages'];
@@ -81,16 +85,23 @@ class RenderPlaceholderMessageTestController implements TrustedCallbackInterface
 
   /**
    * @return array
+   *   A renderable array containing only placeholders.
    */
   protected function build(array $placeholder_order) {
     $build = [];
     $build['messages'] = ['#type' => 'status_messages'];
     $build['p1'] = [
-      '#lazy_builder' => ['\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage', ['P1']],
+      '#lazy_builder' => [
+        '\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage',
+        ['P1'],
+      ],
       '#create_placeholder' => TRUE,
     ];
     $build['p2'] = [
-      '#lazy_builder' => ['\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage', ['P2']],
+      '#lazy_builder' => [
+        '\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage',
+        ['P2'],
+      ],
       '#create_placeholder' => TRUE,
     ];
 
