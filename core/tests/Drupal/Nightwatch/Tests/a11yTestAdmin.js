@@ -43,7 +43,7 @@ const testCases = [
           'wcag22a',
           'wcag22aa',
         ],
-      }
+      },
     },
   },
   // @todo remove the skipped rules below in https://drupal.org/i/3318394.
