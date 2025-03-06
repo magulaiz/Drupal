@@ -1052,7 +1052,7 @@ class ViewUI implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function save(): int {
-    $this->storage->save();
+    return $this->storage->save();
   }
 
   /**
@@ -1466,7 +1466,7 @@ class ViewUI implements ViewEntityInterface {
       $path = \Drupal::service('renderer')->renderInIsolation($path);
     }
     else {
-      $path = Link::fromTextAndUrl($preview_path->toString(), $preview_path)->toString();
+      $path = Link::fromTextAndUrl($updated_path, $preview_path)->toString();
     }
     return $path;
   }
