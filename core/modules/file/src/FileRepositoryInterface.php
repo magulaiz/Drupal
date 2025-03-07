@@ -11,7 +11,7 @@ interface FileRepositoryInterface {
 
   /**
    * Writes a file to the specified destination.
-   * 
+   *
    * If a file entity already exists for the URI, it is updated; otherwise,
    * a new file entity is created.
    *
