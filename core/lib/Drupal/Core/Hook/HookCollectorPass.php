@@ -87,9 +87,6 @@ class HookCollectorPass implements CompilerPassInterface {
     // List of modules implementing hooks with the implementation details.
     $implementations = [];
 
-    // Hooks that should be ordered together when extra types are involved.
-    $orderExtraTypes = [];
-
     $modules = array_keys($container->getParameter('container.modules'));
     foreach ($collector->implementations as $hook => $hookImplementations) {
       foreach ($modules as $module) {
@@ -132,6 +129,34 @@ class HookCollectorPass implements CompilerPassInterface {
     // precedence.
     /** @var list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations */
     $hookOrderOperations = array_merge(...$collector->orderAttributesByPhase);
+    $orderExtraTypes = $collector->getOrderExtraTypes($hookOrderOperations);
+
+    // @todo investigate whether this if() is needed after ModuleHandler::add()
+    // is removed.
+    // @see https://www.drupal.org/project/drupal/issues/3481778
+    if (count($container->getDefinitions()) > 1) {
+      static::registerImplementations($container, $collector, $implementations, $orderExtraTypes, $hookOrderOperations);
+    }
+    return $implementations;
+  }
+
+  /**
+   * Gets groups of extra hooks from collected data.
+   *
+   * @param list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations
+   *   All attributes that contain ordering information.
+   *
+   * @return array<string, list<string>>
+   *   Lists of extra hooks keyed by main hook.
+   */
+  protected function getOrderExtraTypes(array $hookOrderOperations): array {
+    // Loop over all ReOrderHook attributes and gather order information
+    // before registering the hooks. This must happen after all collection,
+    // but before registration to ensure this ordering directive takes
+    // precedence.
+    /** @var list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations */
+    $hookOrderOperations = array_merge(...$this->orderAttributesByPhase);
+    $orderExtraTypes = [];
     foreach ($hookOrderOperations as $hookWithOrder) {
       if ($hookWithOrder->order instanceof ComplexOrder && $hookWithOrder->order->extraTypes) {
         $extraTypes = [... $hookWithOrder->order->extraTypes, $hookWithOrder->hook];
@@ -141,14 +166,7 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
     $orderExtraTypes = array_map('array_unique', $orderExtraTypes);
-
-    // @todo investigate whether this if() is needed after ModuleHandler::add()
-    // is removed.
-    // @see https://www.drupal.org/project/drupal/issues/3481778
-    if (count($container->getDefinitions()) > 1) {
-      static::registerImplementations($container, $collector, $implementations, $orderExtraTypes, $hookOrderOperations);
-    }
-    return $implementations;
+    return array_map('array_values', $orderExtraTypes);
   }
 
   /**
