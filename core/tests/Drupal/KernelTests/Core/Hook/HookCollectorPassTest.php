@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Hook;
 
-use Drupal\Core\Hook\HookCollectorPass;
+use Drupal\Core\Hook\HookCollectorPassTmpRename;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
- * @coversDefaultClass \Drupal\Core\Hook\HookCollectorPass
+ * @coversDefaultClass \Drupal\Core\Hook\HookCollectorPassTmpRename
  * @group Hook
  */
 class HookCollectorPassTest extends KernelTestBase {
@@ -38,7 +38,7 @@ class HookCollectorPassTest extends KernelTestBase {
     ];
     $container->setParameter('container.modules', $module_filenames);
     $container->setDefinition('module_handler', new Definition());
-    (new HookCollectorPass())->process($container);
+    (new HookCollectorPassTmpRename())->process($container);
     $implementations = [
       'user_format_name_alter' => [
         'Drupal\user_hooks_test\Hook\UserHooksTest' => [
@@ -64,7 +64,7 @@ class HookCollectorPassTest extends KernelTestBase {
     include_once 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all1/src/Hook/ModuleHandlerTestAll1Hooks.php';
     $container->setParameter('container.modules', $module_filenames);
     $container->setDefinition('module_handler', new Definition());
-    (new HookCollectorPass())->process($container);
+    (new HookCollectorPassTmpRename())->process($container);
     $priorities = [];
     foreach ($container->findTaggedServiceIds('kernel.event_listener') as $tags) {
       foreach ($tags as $attributes) {
@@ -95,7 +95,7 @@ class HookCollectorPassTest extends KernelTestBase {
     include_once 'core/tests/Drupal/Tests/Core/Extension/modules/module_implements_alter_test_legacy/module_implements_alter_test_legacy.module';
     $container->setParameter('container.modules', $module_filenames);
     $container->setDefinition('module_handler', new Definition());
-    (new HookCollectorPass())->process($container);
+    (new HookCollectorPassTmpRename())->process($container);
 
     // This test will also fail if the deprecation notice shows up.
     $this->assertFalse(isset($GLOBALS['ShouldNotRunLegacyModuleImplementsAlter']));

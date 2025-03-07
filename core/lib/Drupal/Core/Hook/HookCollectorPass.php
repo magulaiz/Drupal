@@ -11,10 +11,9 @@ use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter;
-use Drupal\Core\Hook\Attribute\ReOrderHook;
 use Drupal\Core\Hook\Attribute\RemoveHook;
+use Drupal\Core\Hook\Attribute\ReOrderHook;
 use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -30,7 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * Finally, a hook_implementations_map container parameter is added. This
  * contains a mapping from [hook,class,method] to the module name.
  */
-class HookCollectorPass implements CompilerPassInterface {
+class HookCollectorPass {
 
   /**
    * A map of include files by function name.
@@ -84,27 +83,12 @@ class HookCollectorPass implements CompilerPassInterface {
   protected array $removeHookAttributes = [];
 
   /**
-   * {@inheritdoc}
-   */
-  public function process(ContainerBuilder $container): void {
-    $module_list = $container->getParameter('container.modules');
-    $parameters = $container->getParameterBag()->all();
-    $skip_procedural_modules = array_filter(
-      array_keys($module_list),
-      fn (string $module) => !empty($parameters["$module.hooks_converted"]),
-    );
-    $collector = static::collectAllHookImplementations($module_list, $skip_procedural_modules);
-
-    $collector->writeToContainer($container);
-  }
-
-  /**
    * Writes collected definitions to the container builder.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
    *   Container builder.
    */
-  protected function writeToContainer(ContainerBuilder $container): void {
+  public function writeToContainer(ContainerBuilder $container): void {
     $orderExtraTypes = $this->getOrderExtraTypes();
 
     $container->register(ProceduralCall::class, ProceduralCall::class)
