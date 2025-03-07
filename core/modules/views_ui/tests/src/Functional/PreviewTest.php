@@ -126,7 +126,7 @@ class PreviewTest extends UITestBase {
     $query_string = <<<SQL
 SELECT "views_test_data"."name" AS "views_test_data_name"
 FROM
-{views_test_data} "views_test_data"
+"views_test_data" "views_test_data"
 WHERE (views_test_data.id = '100')
 SQL;
     $this->assertSession()->assertEscaped($query_string);
