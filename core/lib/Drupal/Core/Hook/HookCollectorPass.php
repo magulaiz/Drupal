@@ -79,39 +79,42 @@ class HookCollectorPass implements CompilerPassInterface {
    * {@inheritdoc}
    */
   public function process(ContainerBuilder $container): void {
-    $collector = static::collectAllHookImplementations($container->getParameter('container.modules'), $container);
+    $module_list = $container->getParameter('container.modules');
+    $parameters = $container->getParameterBag()->all();
+    $skip_procedural_modules = array_filter(
+      array_keys($module_list),
+      fn (string $module) => !empty($parameters["$module.hooks_converted"]),
+    );
+    $collector = static::collectAllHookImplementations($module_list, $skip_procedural_modules);
 
-    $implementationsByHook = $collector->getFilteredImplementations();
+    $collector->writeToContainer($container);
+  }
 
-    // Loop over all ReOrderHook attributes and gather order information
-    // before registering the hooks. This must happen after all collection,
-    // but before registration to ensure this ordering directive takes
-    // precedence.
-    /** @var list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations */
-    $hookOrderOperations = array_merge(...$collector->orderAttributesByPhase);
-    $orderExtraTypes = $collector->getOrderExtraTypes($hookOrderOperations);
+  /**
+   * Writes collected definitions to the container builder.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+   *   Container builder.
+   */
+  protected function writeToContainer(ContainerBuilder $container): void {
+    $orderExtraTypes = $this->getOrderExtraTypes();
 
     $container->register(ProceduralCall::class, ProceduralCall::class)
-      ->addArgument($collector->includes);
+      ->addArgument($this->includes);
 
     // Gather includes for each hook_hook_info group.
     // We store this in $groupIncludes so moduleHandler can ensure the files
     // are included runtime when the hooks are invoked.
     $groupIncludes = [];
-    foreach ($collector->hookInfo as $function) {
+    foreach ($this->hookInfo as $function) {
       foreach ($function() as $hook => $info) {
-        if (isset($collector->groupIncludes[$info['group']])) {
-          $groupIncludes[$hook] = $collector->groupIncludes[$info['group']];
+        if (isset($this->groupIncludes[$info['group']])) {
+          $groupIncludes[$hook] = $this->groupIncludes[$info['group']];
         }
       }
     }
 
-    $implementationsByHook = static::calculateImplementations(
-      $implementationsByHook,
-      $collector,
-      $orderExtraTypes,
-      $hookOrderOperations,
-    );
+    $implementationsByHook = $this->calculateImplementations($orderExtraTypes);
 
     static::writeImplementationsToContainer($container, $implementationsByHook);
 
@@ -139,13 +142,10 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Gets groups of extra hooks from collected data.
    *
-   * @param list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations
-   *   All attributes that contain ordering information.
-   *
    * @return array<string, list<string>>
    *   Lists of extra hooks keyed by main hook.
    */
-  protected function getOrderExtraTypes(array $hookOrderOperations): array {
+  protected function getOrderExtraTypes(): array {
     // Loop over all ReOrderHook attributes and gather order information
     // before registering the hooks. This must happen after all collection,
     // but before registration to ensure this ordering directive takes
@@ -168,27 +168,16 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Calculates the ordered implementations.
    *
-   * @param array<string, array<string, string>> $implementationsByHookOrig
-   *   Implementations before ordering, as module names keyed by hook name and
-   *   "$class::$method" identifier.
-   *   All implementations, as method names keyed by hook, module and class.
-   * @param \Drupal\Core\Hook\HookCollectorPass $collector
-   *   The collector.
    * @param array<string, list<string>> $orderExtraTypes
    *   Extra types to order a hook with.
-   * @param list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations
-   *   All attributes that contain ordering information.
    *
    * @return array<string, array<string, string>>
    *   Implementations, as module names keyed by hook name and "$class::$method"
    *   identifier.
    */
-  protected static function calculateImplementations(
-    array $implementationsByHookOrig,
-    self $collector,
-    array $orderExtraTypes,
-    array $hookOrderOperations,
-  ): array {
+  protected function calculateImplementations(array $orderExtraTypes): array {
+    $implementationsByHookOrig = $this->getFilteredImplementations();
+
     // List of hooks and modules formatted for hook_module_implements_alter().
     $moduleImplementsMap = [];
     foreach ($implementationsByHookOrig as $hook => $hookImplementations) {
@@ -206,7 +195,7 @@ class HookCollectorPass implements CompilerPassInterface {
         $moduleImplements += $moduleImplementsMap[$extraHook] ?? [];
       }
       // Process all hook_module_implements_alter() for build time ordering.
-      foreach ($collector->moduleImplementsAlters as $alter) {
+      foreach ($this->moduleImplementsAlters as $alter) {
         $alter($moduleImplements, $hook);
       }
       foreach ($moduleImplements as $module => $v) {
@@ -224,6 +213,8 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
+    /** @var list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations */
+    $hookOrderOperations = array_merge(...$this->orderAttributesByPhase);
     foreach ($hookOrderOperations as $hookOrderOperation) {
       static::applyOrderAttributeOperation(
         $implementationsByHook,
@@ -351,8 +342,8 @@ class HookCollectorPass implements CompilerPassInterface {
    * @param array $module_filenames
    *   An associative array. Keys are the module names, values are relevant
    *   info yml file path.
-   * @param \Symfony\Component\DependencyInjection\ContainerBuilder|null $container
-   *   The container.
+   * @param list<string> $skipProceduralModules
+   *   Module names that are known to not have procedural hook implementations.
    *
    * @return static
    *   A HookCollectorPass instance holding all hook implementations and
@@ -362,19 +353,16 @@ class HookCollectorPass implements CompilerPassInterface {
    *   This method is only used by ModuleHandler.
    *
    * @todo Pass only $container when ModuleHandler::add() is removed
-   *   @see https://www.drupal.org/project/drupal/issues/3481778
+   * @see https://www.drupal.org/project/drupal/issues/3481778
    */
-  public static function collectAllHookImplementations(array $module_filenames, ?ContainerBuilder $container = NULL): static {
+  public static function collectAllHookImplementations(array $module_filenames, array $skipProceduralModules = []): static {
     $modules = array_map(static fn ($x) => preg_quote($x, '/'), array_keys($module_filenames));
     // Longer modules first.
     usort($modules, fn($a, $b) => strlen($b) - strlen($a));
     $module_preg = '/^(?<function>(?<module>' . implode('|', $modules) . ')_(?!preprocess_)(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
     $collector = new static();
     foreach ($module_filenames as $module => $info) {
-      $skip_procedural = FALSE;
-      if ($container?->hasParameter("$module.hooks_converted")) {
-        $skip_procedural = $container->getParameter("$module.hooks_converted");
-      }
+      $skip_procedural = in_array($module, $skipProceduralModules);
       $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, $skip_procedural);
     }
     return $collector;
