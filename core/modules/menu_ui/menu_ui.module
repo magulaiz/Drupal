@@ -65,8 +65,8 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
     $entity->set('parent', $values['parent']);
     $needs_save = TRUE;
   }
-  if ($entity->get('weight')->value != $values['weight']) {
-    $entity->set('weight', $values['weight']);
+  if ($entity->get('weight')->value != ($values['weight'] ?? 0)) {
+    $entity->set('weight', $values['weight'] ?? 0);
     $needs_save = TRUE;
   }
 
