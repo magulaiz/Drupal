@@ -10,7 +10,8 @@ use Drupal\Core\File\FileExists;
 interface FileRepositoryInterface {
 
   /**
-   * Writes a file to the specified destination and creates a file entity.
+   * Writes a file to the specified destination and either updates an existing
+   * file entity or creates a new one.
    *
    * @param string $data
    *   A string containing the contents of the file.
