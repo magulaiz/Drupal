@@ -547,11 +547,7 @@ class HookCollectorPass implements CompilerPassInterface {
    * @internal
    */
   public function getImplementations(array $paths): array {
-    $container = new ContainerBuilder();
-
-    $collector = static::collectAllHookImplementations($paths, $container);
-
-    $implementationsByHook = $collector->getFilteredImplementations();
+    $implementationsByHook = $this->getFilteredImplementations();
 
     // List of modules implementing hooks with the implementation details.
     $implementations = [];
