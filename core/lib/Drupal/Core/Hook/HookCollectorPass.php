@@ -59,13 +59,21 @@ class HookCollectorPass implements CompilerPassInterface {
   private array $groupIncludes = [];
 
   /**
-   * A list of attributes for hook implementations.
+   * Implementations, as module names keyed by hook name and "$class::$method".
    *
-   * Keys are module, class and method. Values are Hook attributes.
-   *
-   * @var array<string, array<class-string, array<string, list<\Drupal\Core\Hook\HookOperation>>>>
+   * @var array<string, array<string, string>>
    */
-  protected array $moduleHooks = [];
+  protected array $implementations = [];
+
+  /**
+   * @var array<int, list<\Drupal\Core\Hook\HookOperation>>
+   */
+  protected array $orderAttributesByPhase = [0 => [], 1 => []];
+
+  /**
+   * @var list<\Drupal\Core\Hook\Attribute\RemoveHook>
+   */
+  protected array $removeHookAttributes = [];
 
   /**
    * {@inheritdoc}
@@ -82,46 +90,12 @@ class HookCollectorPass implements CompilerPassInterface {
     // Hooks that should be ordered together when extra types are involved.
     $orderExtraTypes = [];
 
-    // Hook attributes that contain ordering information.
-    $hookOrderOperations = [];
-
-    // List of modules that the hooks are defined for, keyed by class and
-    // method.
-    $moduleFinder = [];
-
-    // These attributes need to be processed after all hooks have been
-    // processed.
-    $processAfter = [
-      RemoveHook::class => [],
-      ReOrderHook::class => [],
-    ];
-    foreach (array_keys($container->getParameter('container.modules')) as $module) {
-      foreach ($collector->moduleHooks[$module] ?? [] as $class => $attributesByMethod) {
-        foreach ($attributesByMethod as $method => $attributes) {
-          foreach ($attributes as $hookAttribute) {
-            assert($hookAttribute instanceof HookOperation);
-            if (isset($processAfter[get_class($hookAttribute)])) {
-              $processAfter[get_class($hookAttribute)][] = $hookAttribute;
-              continue;
-            }
-            if (!$hookAttribute instanceof Hook) {
-              // This is an unsupported attribute class, the code below would
-              // not work.
-              continue;
-            }
-            if ($class !== ProceduralCall::class) {
-              self::checkForProceduralOnlyHooks($hookAttribute, $class);
-            }
-            // Set properties on hook class that are needed for registration.
-            $hookAttribute->set($class, $module, $method);
-            // Store the implementation details for registering the hook.
-            $implementations[$hookAttribute->hook][$hookAttribute->module][$class][$hookAttribute->method] = $hookAttribute->method;
-            // Reverse lookup for modules implementing hooks.
-            $moduleFinder[$class][$hookAttribute->method][$hookAttribute->hook] = $hookAttribute->module;
-            if ($hookAttribute->order) {
-              $hookOrderOperations[] = $hookAttribute;
-            }
-          }
+    $modules = array_keys($container->getParameter('container.modules'));
+    foreach ($collector->implementations as $hook => $hookImplementations) {
+      foreach ($modules as $module) {
+        foreach (array_keys($hookImplementations, $module, TRUE) as $identifier) {
+          [$class, $method] = explode('::', $identifier);
+          $implementations[$hook][$module][$class][$method] = $method;
         }
       }
     }
@@ -130,8 +104,9 @@ class HookCollectorPass implements CompilerPassInterface {
     // registering the hooks. This must happen after all collection, but before
     // registration to ensure the hook it is removing has already been
     // discovered.
-    foreach ($processAfter[RemoveHook::class] as $removeHook) {
-      if ($module = ($moduleFinder[$removeHook->class][$removeHook->method][$removeHook->hook] ?? '')) {
+    foreach ($collector->removeHookAttributes as $removeHook) {
+      $module = $collector->implementations[$removeHook->hook][$removeHook->class . '::' . $removeHook->method] ?? NULL;
+      if ($module !== NULL) {
         // Remove the hook implementation for the defined class, method, and
         // hook.
         unset($implementations[$removeHook->hook][$module][$removeHook->class][$removeHook->method]);
@@ -155,10 +130,8 @@ class HookCollectorPass implements CompilerPassInterface {
     // before registering the hooks. This must happen after all collection,
     // but before registration to ensure this ordering directive takes
     // precedence.
-    foreach ($processAfter[ReOrderHook::class] as $reOrderHook) {
-      $hookOrderOperations[] = $reOrderHook;
-    }
-
+    /** @var list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations */
+    $hookOrderOperations = array_merge(...$collector->orderAttributesByPhase);
     foreach ($hookOrderOperations as $hookWithOrder) {
       if ($hookWithOrder->order instanceof ComplexOrder && $hookWithOrder->order->extraTypes) {
         $extraTypes = [... $hookWithOrder->order->extraTypes, $hookWithOrder->hook];
@@ -173,7 +146,7 @@ class HookCollectorPass implements CompilerPassInterface {
     // is removed.
     // @see https://www.drupal.org/project/drupal/issues/3481778
     if (count($container->getDefinitions()) > 1) {
-      static::registerImplementations($container, $collector, $implementations, $orderExtraTypes, $hookOrderOperations, $moduleFinder);
+      static::registerImplementations($container, $collector, $implementations, $orderExtraTypes, $hookOrderOperations);
     }
     return $implementations;
   }
@@ -193,12 +166,6 @@ class HookCollectorPass implements CompilerPassInterface {
    *   Extra types to order a hook with.
    * @param list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations
    *   All attributes that contain ordering information.
-   * @param array<class-string, array<string, array<string, string>>> $moduleFinder
-   *   Lookup map to find the module for each hook implementation.
-   *   Array keys are the class, method, and hook, array values are module
-   *   names.
-   *   The module name can be different from the module the class is in,
-   *   because an implementation can be on behalf of another module.
    */
   protected static function registerImplementations(
     ContainerBuilder $container,
@@ -206,7 +173,6 @@ class HookCollectorPass implements CompilerPassInterface {
     array $implementations,
     array $orderExtraTypes,
     array $hookOrderOperations,
-    array $moduleFinder,
   ): void {
     $container->register(ProceduralCall::class, ProceduralCall::class)
       ->addArgument($collector->includes);
@@ -506,7 +472,24 @@ class HookCollectorPass implements CompilerPassInterface {
             $hook_file_cache->set($filename, ['class' => $class, 'attributes' => $attributes]);
           }
         }
-        $this->moduleHooks[$module][$class] = $attributes;
+        foreach ($attributes as $method => $methodAttributes) {
+          foreach ($methodAttributes as $attribute) {
+            if ($attribute instanceof Hook) {
+              self::checkForProceduralOnlyHooks($attribute, $class);
+              $this->implementations[$attribute->hook][$class . '::' . ($attribute->method ?: $method)] = $attribute->module ?? $module;
+              if ($attribute->order !== NULL) {
+                $attribute->set($class, $attribute->module ?? $module, $method);
+                $this->orderAttributesByPhase[0][] = $attribute;
+              }
+            }
+            elseif ($attribute instanceof ReOrderHook) {
+              $this->orderAttributesByPhase[1][] = $attribute;
+            }
+            elseif ($attribute instanceof RemoveHook) {
+              $this->removeHookAttributes[] = $attribute;
+            }
+          }
+        }
       }
       elseif (!$skip_procedural) {
         $implementations = $procedural_hook_file_cache->get($filename);
@@ -570,15 +553,15 @@ class HookCollectorPass implements CompilerPassInterface {
    *   The name of function implementing the hook.
    */
   protected function addProceduralImplementation(\SplFileInfo $fileinfo, string $hook, string $module, string $function): void {
-    $this->moduleHooks[$module][ProceduralCall::class][$function] = [new Hook($hook, method: $module . '_' . $hook)];
     if ($hook === 'hook_info') {
       $this->hookInfo[] = $function;
     }
-    if ($hook === 'module_implements_alter') {
+    elseif ($hook === 'module_implements_alter') {
       $message = "$function without a #[LegacyModuleImplementsAlter] attribute is deprecated in drupal:11.2.0 and removed in drupal:12.0.0. See https://www.drupal.org/node/3496788";
       @trigger_error($message, E_USER_DEPRECATED);
       $this->moduleImplementsAlters[] = $function;
     }
+    $this->implementations[$hook][ProceduralCall::class . '::' . $module . '_' . $hook] = $module;
     if ($fileinfo->getExtension() !== 'module') {
       $this->includes[$function] = $fileinfo->getPathname();
     }
