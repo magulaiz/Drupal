@@ -116,7 +116,7 @@ class Insert extends Query implements \Countable {
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
 
     if (!empty($this->fromQuery)) {
-      return $comments . 'INSERT INTO ' . $this->connection->identifiers()->table($this->table)->machineName() . ' (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
+      return $comments . 'INSERT INTO ' . $this->connection->identifiers->table($this->table)->machineName() . ' (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
     }
 
     // For simplicity, we will use the $placeholders array to inject

@@ -69,6 +69,11 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   protected $transactionalDDLSupport = TRUE;
 
   /**
+   * @todo fill in.
+   */
+  public readonly IdentifierHandler $identifiers;
+
+  /**
    * Constructs a \Drupal\sqlite\Driver\Database\sqlite\Connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
@@ -84,7 +89,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     }
 
     // Initialize the identifier handler.
-    $this->identifierHandler = new IdentifierHandler($prefix);
+    $this->identifiers = new IdentifierHandler($prefix);
   }
 
   /**
@@ -429,7 +434,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    */
   public function getFullQualifiedTableName($table) {
     // Don't include the SQLite database file name as part of the table name.
-    return $this->identifiers()->table($table)->machineName();
+    return $this->identifiers->table($table)->machineName();
   }
 
   /**

@@ -29,6 +29,14 @@ class Table extends IdentifierBase {
    * @todo fill in.
    */
   public function escapedName(): string {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312", E_USER_DEPRECATED);
+    return $this->escape();
+  }
+
+  /**
+   * @todo fill in.
+   */
+  public function escape(): string {
     if (!isset($this->escapedName)) {
       $this->escapedName = $this->identifierHandler->tableEscapeName($this);
     }

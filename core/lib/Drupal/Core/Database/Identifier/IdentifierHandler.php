@@ -58,7 +58,7 @@ class IdentifierHandler {
    * @todo fill in.
    */
   public function tableMachineName(Table $table): string {
-    return $table->escapedName();
+    return $table->escape();
   }
 
   /**

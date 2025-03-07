@@ -114,7 +114,7 @@ abstract class Connection {
   /**
    * @todo fill in.
    */
-  protected IdentifierHandler $identifierHandler;
+  public readonly IdentifierHandler $identifiers;
 
   /**
    * Tracks the database API events to be dispatched.
@@ -302,8 +302,8 @@ abstract class Connection {
    *   The table prefix.
    */
   public function getPrefix(): string {
-    // @trigger_error(__METHOD__ . '() is deprecated in drupal:9.x.0 and is removed from drupal:10.0.0. @todo. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
-    return $this->identifiers()->tablePrefix;
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312", E_USER_DEPRECATED);
+    return $this->identifiers->tablePrefix;
   }
 
   /**
@@ -313,7 +313,7 @@ abstract class Connection {
    *   A single prefix.
    */
   protected function setPrefix($prefix) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. @todo. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312", E_USER_DEPRECATED);
   }
 
   /**
@@ -334,7 +334,7 @@ abstract class Connection {
     $replacements = $tables = [];
     preg_match_all('/(\{(\S*)\})/', $sql, $tables, PREG_SET_ORDER, 0);
     foreach ($tables as $table) {
-      $replacements[$table[1]] = $this->identifiers()->table($table[2])->machineName();
+      $replacements[$table[1]] = $this->identifiers->table($table[2])->machineName();
     }
     return str_replace(array_keys($replacements), array_values($replacements), $sql);
   }
@@ -364,7 +364,7 @@ abstract class Connection {
     $identifiers = [];
     $i = 0;
     foreach ($matches[1] as $match) {
-      $identifiers[$match] = $this->identifiers()->getPlatformIdentifierName($matches[2][$i]);
+      $identifiers[$match] = $this->identifiers->getPlatformIdentifierName($matches[2][$i]);
       $i++;
     }
     return strtr($sql, $identifiers);
@@ -380,7 +380,7 @@ abstract class Connection {
    *   The fully qualified table name.
    */
   public function getFullQualifiedTableName($table) {
-    return $this->identifiers()->getPlatformDatabaseName($this->getConnectionOptions()['database']) . '.' . $this->identifiers()->table($table)->machineName();
+    return $this->identifiers->getPlatformDatabaseName($this->getConnectionOptions()['database']) . '.' . $this->identifiers->table($table)->machineName();
   }
 
   /**
@@ -760,13 +760,6 @@ abstract class Connection {
   }
 
   /**
-   * @todo fill in.
-   */
-  public function identifiers(): IdentifierHandler {
-    return $this->identifierHandler;
-  }
-
-  /**
    * Prepares and returns a SELECT query object.
    *
    * @param string|\Drupal\Core\Database\Query\SelectInterface $table
@@ -971,7 +964,7 @@ abstract class Connection {
    *   The sanitized database name.
    */
   public function escapeDatabase($database) {
-    return $this->identifiers()->getPlatformDatabaseName($database);
+    return $this->identifiers->getPlatformDatabaseName($database);
   }
 
   /**
@@ -993,7 +986,7 @@ abstract class Connection {
    */
   public function escapeTable($table) {
     @trigger_error(__METHOD__ . "() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312", E_USER_DEPRECATED);
-    return $this->identifiers()->table($table)->escapedName();
+    return $this->identifiers->table($table)->escapedName();
   }
 
   /**
@@ -1010,7 +1003,7 @@ abstract class Connection {
    *   The sanitized field name.
    */
   public function escapeField($field) {
-    return $this->identifiers()->getPlatformColumnName($field);
+    return $this->identifiers->getPlatformColumnName($field);
   }
 
   /**
@@ -1028,7 +1021,7 @@ abstract class Connection {
    *   The sanitized alias name.
    */
   public function escapeAlias($field) {
-    return $this->identifiers()->getPlatformAliasName($field);
+    return $this->identifiers->getPlatformAliasName($field);
   }
 
   /**

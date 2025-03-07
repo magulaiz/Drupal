@@ -85,6 +85,11 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   protected array $savepoints = [];
 
   /**
+   * @todo fill in.
+   */
+  public readonly IdentifierHandler $identifiers;
+
+  /**
    * Constructs a connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
@@ -109,7 +114,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     }
 
     // Initialize the identifier handler.
-    $this->identifierHandler = new IdentifierHandler($connection_options['prefix']);
+    $this->identifiers = new IdentifierHandler($connection_options['prefix']);
   }
 
   /**
@@ -333,7 +338,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     $sequence_name = $this->prefixTables('{' . $table . '}_' . $field . '_seq');
     // Remove identifier quotes as we are constructing a new name from a
     // prefixed and quoted table name.
-    return str_replace($this->identifiers()->identifierQuotes, '', $sequence_name);
+    return str_replace($this->identifiers->identifierQuotes, '', $sequence_name);
   }
 
   /**
@@ -345,7 +350,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
 
     // The fully qualified table name in PostgreSQL is in the form of
     // <database>.<schema>.<table>.
-    return $options['database'] . '.' . $schema . '.' . $this->identifiers()->table($table)->machineName(quoted: FALSE);
+    return $options['database'] . '.' . $schema . '.' . $this->identifiers->table($table)->machineName(quoted: FALSE);
   }
 
   /**

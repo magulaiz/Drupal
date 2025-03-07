@@ -62,6 +62,11 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   const MIN_MAX_ALLOWED_PACKET = 1024;
 
   /**
+   * @todo fill in.
+   */
+  public readonly IdentifierHandler $identifiers;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(\PDO $connection, array $connection_options) {
@@ -87,7 +92,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     parent::__construct($connection, $connection_options);
 
     // Initialize the identifier handler.
-    $this->identifierHandler = new IdentifierHandler($this->connectionOptions['prefix'], $is_ansi_quotes_mode ? ['"', '"'] : ['`', '`']);
+    $this->identifiers = new IdentifierHandler($this->connectionOptions['prefix'], $is_ansi_quotes_mode ? ['"', '"'] : ['`', '`']);
   }
 
   /**

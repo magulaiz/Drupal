@@ -32,6 +32,11 @@ class StubConnection extends Connection {
   public $driver = 'stub';
 
   /**
+   * @todo fill in.
+   */
+  public readonly IdentifierHandler $identifiers;
+
+  /**
    * Constructs a Connection object.
    *
    * @param \PDO $connection
@@ -44,7 +49,7 @@ class StubConnection extends Connection {
   public function __construct(\PDO $connection, array $connection_options, $identifier_quotes = ['', '']) {
     parent::__construct($connection, $connection_options);
     // Initialize the identifier handler.
-    $this->identifierHandler = new IdentifierHandler($connection_options['prefix'] ?? '', $identifier_quotes);
+    $this->identifiers = new IdentifierHandler($connection_options['prefix'] ?? '', $identifier_quotes);
   }
 
   /**
