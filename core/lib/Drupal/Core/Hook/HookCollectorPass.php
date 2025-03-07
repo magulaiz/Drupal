@@ -84,11 +84,21 @@ class HookCollectorPass implements CompilerPassInterface {
   public function process(ContainerBuilder $container): array {
     $collector = static::collectAllHookImplementations($container->getParameter('container.modules'), $container);
 
+    $implementationsByHook = $collector->implementations;
+
+    // Loop over all RemoveHook attributes and remove them from the maps before
+    // registering the hooks. This must happen after all collection, but before
+    // registration to ensure the hook it is removing has already been
+    // discovered.
+    foreach ($collector->removeHookAttributes as $removeHook) {
+      unset($implementationsByHook[$removeHook->hook][$removeHook->class . '::' . $removeHook->method]);
+    }
+
     // List of modules implementing hooks with the implementation details.
     $implementations = [];
 
     $modules = array_keys($container->getParameter('container.modules'));
-    foreach ($collector->implementations as $hook => $hookImplementations) {
+    foreach ($implementationsByHook as $hook => $hookImplementations) {
       foreach ($modules as $module) {
         foreach (array_keys($hookImplementations, $module, TRUE) as $identifier) {
           [$class, $method] = explode('::', $identifier);
@@ -97,30 +107,11 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
-    // Loop over all RemoveHook attributes and remove them from the maps before
-    // registering the hooks. This must happen after all collection, but before
-    // registration to ensure the hook it is removing has already been
-    // discovered.
-    foreach ($collector->removeHookAttributes as $removeHook) {
-      $module = $collector->implementations[$removeHook->hook][$removeHook->class . '::' . $removeHook->method] ?? NULL;
-      if ($module !== NULL) {
-        // Remove the hook implementation for the defined class, method, and
-        // hook.
-        unset($implementations[$removeHook->hook][$module][$removeHook->class][$removeHook->method]);
-        // Remove empty arrays, after the entry was removed.
-        // Hook implementation removal is expected to be rare, therefore it will
-        // be faster to do it like this than cleaning the entire tree
-        // afterwards.
-        if (empty($implementations[$removeHook->hook][$module][$removeHook->class])) {
-          unset($implementations[$removeHook->hook][$module][$removeHook->class]);
-          if (empty($implementations[$removeHook->hook][$module])) {
-            unset($implementations[$removeHook->hook][$module]);
-            if (empty($implementations[$removeHook->hook])) {
-              unset($implementations[$removeHook->hook]);
-            }
-          }
-        }
-      }
+    // @todo investigate whether this if() is needed after ModuleHandler::add()
+    // is removed.
+    // @see https://www.drupal.org/project/drupal/issues/3481778
+    if (count($container->getDefinitions()) <= 1) {
+      return $implementations;
     }
 
     // Loop over all ReOrderHook attributes and gather order information
@@ -130,13 +121,6 @@ class HookCollectorPass implements CompilerPassInterface {
     /** @var list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations */
     $hookOrderOperations = array_merge(...$collector->orderAttributesByPhase);
     $orderExtraTypes = $collector->getOrderExtraTypes($hookOrderOperations);
-
-    // @todo investigate whether this if() is needed after ModuleHandler::add()
-    // is removed.
-    // @see https://www.drupal.org/project/drupal/issues/3481778
-    if (count($container->getDefinitions()) <= 1) {
-      return $implementations;
-    }
 
     $container->register(ProceduralCall::class, ProceduralCall::class)
       ->addArgument($collector->includes);
@@ -154,7 +138,7 @@ class HookCollectorPass implements CompilerPassInterface {
     }
 
     $implementationsByHook = static::calculateImplementations(
-      $implementations,
+      $implementationsByHook,
       $collector,
       $orderExtraTypes,
       $hookOrderOperations,
@@ -202,7 +186,9 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Calculates the ordered implementations.
    *
-   * @param array<string, array<string, array<class-string, list<string>>>> $implementations
+   * @param array<string, array<string, string>> $implementationsByHookOrig
+   *   Implementations before ordering, as module names keyed by hook name and
+   *   "$class::$method" identifier.
    *   All implementations, as method names keyed by hook, module and class.
    * @param \Drupal\Core\Hook\HookCollectorPass $collector
    *   The collector.
@@ -216,15 +202,15 @@ class HookCollectorPass implements CompilerPassInterface {
    *   identifier.
    */
   protected static function calculateImplementations(
-    array $implementations,
+    array $implementationsByHookOrig,
     self $collector,
     array $orderExtraTypes,
     array $hookOrderOperations,
   ): array {
     // List of hooks and modules formatted for hook_module_implements_alter().
     $moduleImplementsMap = [];
-    foreach ($implementations as $hook => $implementationsByModule) {
-      foreach ($implementationsByModule as $module => $implementationsByClass) {
+    foreach ($implementationsByHookOrig as $hook => $hookImplementations) {
+      foreach ($hookImplementations as $module) {
         $moduleImplementsMap[$hook][$module] = '';
       }
     }
@@ -242,18 +228,14 @@ class HookCollectorPass implements CompilerPassInterface {
         $alter($moduleImplements, $hook);
       }
       foreach ($moduleImplements as $module => $v) {
-        foreach ($implementations[$hook][$module] ?? [] as $class => $methods) {
-          foreach ($methods as $method) {
-            $implementationsByHook[$hook]["$class::$method"] = $module;
-          }
+        foreach (array_keys($implementationsByHookOrig[$hook], $module, TRUE) as $identifier) {
+          $implementationsByHook[$hook][$identifier] = $module;
         }
         if (count($extraHooks) > 1) {
           $combinedHook = implode(':', $extraHooks);
           foreach ($extraHooks as $extraHook) {
-            foreach ($implementations[$extraHook][$module] ?? [] as $class => $methods) {
-              foreach ($methods as $method) {
-                $implementationsByHook[$combinedHook]["$class::$method"] = $module;
-              }
+            foreach (array_keys($implementationsByHookOrig[$extraHook] ?? [], $module, TRUE) as $identifier) {
+              $implementationsByHook[$combinedHook][$identifier] = $module;
             }
           }
         }
