@@ -83,7 +83,10 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
     }
   }
   else {
-    $entity->isDefaultRevision($node->isDefaultRevision());
+    if ($entity->isDefaultRevision() != $node->isDefaultRevision()) {
+      $entity->isDefaultRevision($node->isDefaultRevision());
+      $needs_save = TRUE;
+    }
     if (!$entity->isDefaultRevision()) {
       $entity->setNewRevision(TRUE);
       $needs_save = TRUE;
