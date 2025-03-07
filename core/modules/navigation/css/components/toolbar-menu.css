@@ -145,3 +145,6 @@
 .toolbar-menu__link--3:hover::after {
   background-color: currentColor;
 }
+#drupal-off-canvas-wrapper .button--primary {
+  margin-right: 0.3125rem;
+}

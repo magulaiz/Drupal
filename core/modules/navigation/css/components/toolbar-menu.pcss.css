@@ -167,3 +167,9 @@
     }
   }
 }
+
+#drupal-off-canvas-wrapper {
+  .button--primary {
+    margin-right: 5px;
+  }
+}
