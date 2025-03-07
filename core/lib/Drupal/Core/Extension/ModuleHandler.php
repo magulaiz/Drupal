@@ -78,8 +78,9 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   The event dispatcher.
    * @param array $hookImplementationsMap
    *   An array keyed by hook, classname, method and the value is the module.
-   * @param array $groupIncludes
-   *   An array of .inc files to get helpers from.
+   * @param array<string, list<string>> $groupIncludes
+   *   Lists of *.inc file paths that contain procedural implementations, keyed
+   *   by hook name.
    * @param array<string, list<string>> $orderedExtraTypes
    *   A multidimensional array of hooks that have been ordered and the
    *   extra_types they have been ordered against. This is stored separately
