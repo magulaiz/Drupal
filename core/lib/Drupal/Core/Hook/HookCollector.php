@@ -83,6 +83,16 @@ class HookCollector {
   protected array $removeHookAttributes = [];
 
   /**
+   * Constructor. Should not be called directly.
+   *
+   * @param list<string> $modules
+   *   Names of installed modules.
+   */
+  protected function __construct(
+    protected readonly array $modules,
+  ) {}
+
+  /**
    * Writes collected definitions to the container builder.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
@@ -356,7 +366,7 @@ class HookCollector {
       $modules,
     ));
     $module_preg = '/^(?<function>(?<module>' . $known_modules_pattern . ')_(?!preprocess_)(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
-    $collector = new static();
+    $collector = new static($modules);
     foreach ($module_list as $module => $info) {
       $skip_procedural = in_array($module, $skipProceduralModules);
       $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, $skip_procedural);
@@ -525,9 +535,6 @@ class HookCollector {
   /**
    * This method is only to be used by ModuleHandler.
    *
-   * @param array<string, array{pathname: string}> $paths
-   *   Reduced module info arrays by module name.
-   *
    * @return array<string, array<string, array<class-string, array<string, string>>>>
    *   Hook implementation method names keyed by hook, module, class and method.
    *
@@ -536,15 +543,14 @@ class HookCollector {
    *
    * @internal
    */
-  public function getImplementations(array $paths): array {
+  public function getImplementations(): array {
     $implementationsByHook = $this->getFilteredImplementations();
 
     // List of modules implementing hooks with the implementation details.
     $implementations = [];
 
-    $modules = array_keys($paths);
     foreach ($implementationsByHook as $hook => $hookImplementations) {
-      foreach ($modules as $module) {
+      foreach ($this->modules as $module) {
         foreach (array_keys($hookImplementations, $module, TRUE) as $identifier) {
           [$class, $method] = explode('::', $identifier);
           $implementations[$hook][$module][$class][$method] = $method;
