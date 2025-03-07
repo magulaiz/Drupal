@@ -339,7 +339,7 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Collects all hook implementations.
    *
-   * @param array $module_filenames
+   * @param array $module_list
    *   An associative array. Keys are the module names, values are relevant
    *   info yml file path.
    * @param list<string> $skipProceduralModules
@@ -355,13 +355,17 @@ class HookCollectorPass implements CompilerPassInterface {
    * @todo Pass only $container when ModuleHandler::add() is removed
    * @see https://www.drupal.org/project/drupal/issues/3481778
    */
-  public static function collectAllHookImplementations(array $module_filenames, array $skipProceduralModules = []): static {
-    $modules = array_map(static fn ($x) => preg_quote($x, '/'), array_keys($module_filenames));
+  public static function collectAllHookImplementations(array $module_list, array $skipProceduralModules = []): static {
+    $modules = array_keys($module_list);
     // Longer modules first.
-    usort($modules, fn($a, $b) => strlen($b) - strlen($a));
-    $module_preg = '/^(?<function>(?<module>' . implode('|', $modules) . ')_(?!preprocess_)(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
+    usort($modules, fn ($a, $b) => strlen($b) - strlen($a));
+    $known_modules_pattern = implode('|', array_map(
+      static fn ($x) => preg_quote($x, '/'),
+      $modules,
+    ));
+    $module_preg = '/^(?<function>(?<module>' . $known_modules_pattern . ')_(?!preprocess_)(?!update_\d)(?<hook>[a-zA-Z0-9_\x80-\xff]+$))/';
     $collector = new static();
-    foreach ($module_filenames as $module => $info) {
+    foreach ($module_list as $module => $info) {
       $skip_procedural = in_array($module, $skipProceduralModules);
       $collector->collectModuleHookImplementations(dirname($info['pathname']), $module, $module_preg, $skip_procedural);
     }
