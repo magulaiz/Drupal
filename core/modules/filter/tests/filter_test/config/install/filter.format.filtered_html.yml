@@ -7,9 +7,15 @@ filters:
     provider: filter
     status: true
     settings:
-      allowed_html: '<p> <br> <strong> <a href hreflang>'
+      allowed_html: '<p> <br> <strong> <a href hreflang> <blockquote> <q>'
   filter_url:
     id: filter_url
     provider: filter
     status: true
     weight: -1
+  filter_quote:
+    id: filter_quote
+    provider: filter
+    status: true
+    weight: 0
+    settings: {  }
