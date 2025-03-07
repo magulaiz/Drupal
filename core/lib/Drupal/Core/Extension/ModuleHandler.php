@@ -6,7 +6,7 @@ use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Hook\Attribute\LegacyHook;
-use Drupal\Core\Hook\HookCollectorPass;
+use Drupal\Core\Hook\HookCollector;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -212,7 +212,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     $this->moduleList[$name] = new Extension($this->root, $type, $pathname, $filename);
     $this->resetImplementations();
     $paths = [$name => ['pathname' => $pathname]];
-    $hook_collector = HookCollectorPass::collectAllHookImplementations($paths);
+    $hook_collector = HookCollector::collectAllHookImplementations($paths);
     // A module freshly added will not be registered on the container yet.
     // ProceduralCall service does not yet know about it.
     // Note in HookCollectorPass:

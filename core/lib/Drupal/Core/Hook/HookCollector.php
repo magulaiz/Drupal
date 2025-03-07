@@ -29,7 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * Finally, a hook_implementations_map container parameter is added. This
  * contains a mapping from [hook,class,method] to the module name.
  */
-class HookCollectorPass {
+class HookCollector {
 
   /**
    * A map of include files by function name.

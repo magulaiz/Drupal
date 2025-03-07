@@ -32,7 +32,7 @@ class HookCollectorPassTmpRename implements CompilerPassInterface {
       array_keys($module_list),
       fn (string $module) => !empty($parameters["$module.hooks_converted"]),
     );
-    $collector = HookCollectorPass::collectAllHookImplementations($module_list, $skip_procedural_modules);
+    $collector = HookCollector::collectAllHookImplementations($module_list, $skip_procedural_modules);
 
     $collector->writeToContainer($container);
   }
