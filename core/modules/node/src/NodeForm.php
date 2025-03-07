@@ -141,7 +141,7 @@ class NodeForm extends ContentEntityForm {
 
     // Set default author.
     $meta_author = \Drupal::currentUser()->getAccountName();
-    if (!$node->isNew() && $node->getOwner() != null) {
+    if (!$node->isNew() && $node->getOwner() != NULL) {
       $meta_author = $node->getOwner()->getAccountName();
     }
     $form['meta'] = [
