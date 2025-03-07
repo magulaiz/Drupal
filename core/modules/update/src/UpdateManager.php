@@ -89,7 +89,7 @@ class UpdateManager implements UpdateManagerInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The Module Handler service
+   *   The Module Handler service.
    * @param \Drupal\update\UpdateProcessorInterface $update_processor
    *   The Update Processor service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
@@ -182,10 +182,8 @@ class UpdateManager implements UpdateManagerInterface {
       'system.modules_list',
       'system.theme_install',
       'update.module_update',
-      'update.module_install',
       'update.status',
       'update.report_update',
-      'update.report_install',
       'update.settings',
       'system.status',
       'update.manual_status',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
@@ -15,6 +16,9 @@ use Drupal\views\Views;
  */
 class FilterStringTest extends ViewsKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['system'];
 
   /**
@@ -75,6 +79,7 @@ class FilterStringTest extends ViewsKernelTestBase {
    * Build and return a Page view of the views_test_data table.
    *
    * @return \Drupal\views\ViewExecutable
+   *   The page view object.
    */
   protected function getBasicPageView() {
     $view = Views::getView('test_view');
@@ -87,7 +92,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     return $view;
   }
 
-  public function testFilterStringEqual() {
+  public function testFilterStringEqual(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -110,9 +115,48 @@ class FilterStringTest extends ViewsKernelTestBase {
       ],
     ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
+    $view->destroy();
+
+    // Get the original dataset
+    $data_set = $this->dataSet();
+    // Adds a new data point in the views_test_data table.
+    $query = Database::getConnection()->insert('views_test_data')
+      ->fields(array_keys($data_set[0]));
+    $query->values([
+      'name' => 'Ringo%',
+      'age' => 31,
+      'job' => 'Drummer',
+      'created' => gmmktime(6, 30, 10, 1, 1, 2000),
+      'status' => 1,
+      'description' => NULL,
+    ]);
+    $query->execute();
+
+    $view = Views::getView('test_view');
+    $view->setDisplay();
+
+    // Change the filtering
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'name' => [
+        'id' => 'name',
+        'table' => 'views_test_data',
+        'field' => 'name',
+        'relationship' => 'none',
+        'operator' => '=',
+        'value' => 'Ringo%',
+      ],
+    ]);
+
+    $this->executeView($view);
+    $resultset = [
+      [
+        'name' => 'Ringo%',
+      ],
+    ];
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringGroupedExposedEqual() {
+  public function testFilterStringGroupedExposedEqual(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -133,7 +177,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringNotEqual() {
+  public function testFilterStringNotEqual(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -167,7 +211,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringGroupedExposedNotEqual() {
+  public function testFilterStringGroupedExposedNotEqual(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -198,7 +242,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringContains() {
+  public function testFilterStringContains(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -223,7 +267,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringGroupedExposedContains() {
+  public function testFilterStringGroupedExposedContains(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -244,7 +288,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringWord() {
+  public function testFilterStringWord(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -332,7 +376,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset);
   }
 
-  public function testFilterStringGroupedExposedWord() {
+  public function testFilterStringGroupedExposedWord(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -373,7 +417,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringStarts() {
+  public function testFilterStringStarts(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -398,7 +442,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringGroupedExposedStarts() {
+  public function testFilterStringGroupedExposedStarts(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -421,7 +465,7 @@ class FilterStringTest extends ViewsKernelTestBase {
   /**
    * Tests the string filter with negated 'regular_expression' operator.
    */
-  public function testFilterStringGroupedNotRegularExpression() {
+  public function testFilterStringGroupedNotRegularExpression(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -451,7 +495,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringNotStarts() {
+  public function testFilterStringNotStarts(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -483,7 +527,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringGroupedExposedNotStarts() {
+  public function testFilterStringGroupedExposedNotStarts(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -510,7 +554,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringEnds() {
+  public function testFilterStringEnds(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -538,7 +582,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringGroupedExposedEnds() {
+  public function testFilterStringGroupedExposedEnds(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -561,7 +605,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringNotEnds() {
+  public function testFilterStringNotEnds(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -590,7 +634,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringGroupedExposedNotEnds() {
+  public function testFilterStringGroupedExposedNotEnds(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -614,7 +658,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringNot() {
+  public function testFilterStringNot(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -643,7 +687,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringGroupedExposedNot() {
+  public function testFilterStringGroupedExposedNot(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -668,7 +712,7 @@ class FilterStringTest extends ViewsKernelTestBase {
 
   }
 
-  public function testFilterStringShorter() {
+  public function testFilterStringShorter(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -696,7 +740,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringGroupedExposedShorter() {
+  public function testFilterStringGroupedExposedShorter(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -718,7 +762,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringLonger() {
+  public function testFilterStringLonger(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -743,7 +787,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringGroupedExposedLonger() {
+  public function testFilterStringGroupedExposedLonger(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -762,7 +806,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringEmpty() {
+  public function testFilterStringEmpty(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -786,7 +830,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  public function testFilterStringGroupedExposedEmpty() {
+  public function testFilterStringGroupedExposedEmpty(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = $this->getBasicPageView();
 
@@ -808,7 +852,7 @@ class FilterStringTest extends ViewsKernelTestBase {
   /**
    * Tests the string filter handler with the negated 'regular_expression' operator.
    */
-  public function testFilterStringNotRegularExpression() {
+  public function testFilterStringNotRegularExpression(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -848,7 +892,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  protected function getGroupedExposedFilters() {
+  protected function getGroupedExposedFilters(): array {
     $filters = [
       'name' => [
         'id' => 'name',

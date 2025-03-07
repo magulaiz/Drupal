@@ -8,11 +8,12 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
+use Drupal\update\Hook\UpdateHooks;
 
 /**
  * Tests text of update email.
  *
- * @covers \update_mail
+ * @covers \Drupal\update\Hook\UpdateHooks::mail
  *
  * @group update
  */
@@ -77,9 +78,7 @@ class UpdateMailTest extends UnitTestCase {
    *
    * @dataProvider providerTestUpdateEmail
    */
-  public function testUpdateEmail(string $notification_threshold, array $params, bool $authorized, string $expected_subject, array $expected_body): void {
-    $site_name = 'Test site';
-    $expected_subject .= $site_name;
+  public function testUpdateEmail($notification_threshold, $params, $authorized, array $expected_body): void {
     $langcode = 'en';
     $available_updates_url = 'https://example.com/admin/reports/updates';
     $update_settings_url = 'https://example.com/admin/reports/updates/settings';
@@ -148,7 +147,8 @@ class UpdateMailTest extends UnitTestCase {
     \Drupal::setContainer($this->container);
 
     // Generate the email message.
-    update_mail($key, $message, $params);
+    $updateMail = new UpdateHooks();
+    $updateMail->mail($key, $message, $params);
 
     // Confirm the subject.
     is_string($message['subject']) ? $this->assertSame($expected_subject, $message['subject']) : $this->assertSame($expected_subject, $message['subject']->render());
