@@ -136,7 +136,7 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
       foreach ($links as $link) {
         if ($link->isEnabled()) {
           $found = $link;
-          break; // Stop once we find the first enabled link.
+          break;
         }
       }
       // Select the first matching link.
