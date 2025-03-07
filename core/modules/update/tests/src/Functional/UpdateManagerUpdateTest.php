@@ -163,8 +163,6 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
   /**
    * Tests the Update form for a single test scenario of incompatible updates.
    *
-   * @dataProvider incompatibleUpdatesTableProvider
-   *
    * @param string $core_fixture
    *   The fixture file to use for Drupal core.
    * @param string $a_fixture
@@ -179,6 +177,8 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
    *   ('AAA' or 'BBB') and values are subarrays with the following keys:
    *   - 'recommended': The recommended version.
    *   - 'range': The versions of Drupal core required for that version.
+   *
+   * @dataProvider incompatibleUpdatesTableProvider
    */
   public function testIncompatibleUpdatesTable($core_fixture, $a_fixture, $b_fixture, array $compatible, array $incompatible): void {
 
@@ -306,7 +306,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
    *   Array of expected header texts, keyed by CSS selectors relative to the
    *   thead tr (for example, "th:nth-of-type(3)").
    */
-  private function checkTableHeaders($table_locator, array $expected_headers) {
+  private function checkTableHeaders($table_locator, array $expected_headers): void {
     $assert_session = $this->assertSession();
     $assert_session->elementExists('css', $table_locator);
     foreach ($expected_headers as $locator => $header) {

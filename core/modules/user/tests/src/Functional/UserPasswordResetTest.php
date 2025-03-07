@@ -122,11 +122,11 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Ensure that the current URL does not contain the hash and timestamp.
     $this->assertSession()->addressEquals(Url::fromRoute('user.reset.form', ['uid' => $this->account->id()]));
 
-    $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'UNCACHEABLE (request policy)');
 
     // Ensure the password reset URL is not cached.
     $this->drupalGet($resetURL);
-    $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'UNCACHEABLE (request policy)');
 
     // Check the one-time login page.
     $this->assertSession()->pageTextContains($this->account->getAccountName());
@@ -137,6 +137,10 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->submitForm([], 'Log in');
     $this->assertSession()->linkExists('Log out');
     $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
+
+    // Try to save without entering password.
+    $this->submitForm([], 'Save');
+    $this->assertSession()->pageTextContains('Password field is required.');
 
     // Change the forgotten password.
     $password = \Drupal::service('password_generator')->generate();
@@ -173,7 +177,8 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Expected user_string to be a string, NULL given');
     $this->drupalLogout();
 
-    // Create a password reset link as if the request time was 60 seconds older than the allowed limit.
+    // Create a password reset link as if the request time was 60 seconds older
+    // than the allowed limit.
     $timeout = $this->config('user.settings')->get('password_reset_timeout');
     $bogus_timestamp = \Drupal::time()->getRequestTime() - $timeout - 60;
     $_uid = $this->account->id();
@@ -199,7 +204,8 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     $this->assertCount($before, $this->drupalGetMails(['id' => 'user_password_reset']), 'No email was sent when requesting password reset for a blocked account');
 
-    // Verify a password reset link is invalidated when the user's email address changes.
+    // Verify a password reset link is invalidated when the user's email address
+    // changes.
     $this->drupalGet('user/password');
     $edit = ['name' => $this->account->getAccountName()];
     $this->submitForm($edit, 'Submit');
@@ -256,7 +262,8 @@ class UserPasswordResetTest extends BrowserTestBase {
       $this->account->save();
       $this->assertSame($setPreferredLangcode, $this->account->getPreferredLangcode(FALSE));
 
-      // Test Default langcode is different from active langcode when visiting different.
+      // Test Default langcode is different from active langcode when visiting
+      // different.
       if ($setPreferredLangcode !== 'en') {
         $this->drupalGet($prefix . '/user/password');
         $this->assertSame($activeLangcode, $this->getSession()->getResponseHeader('Content-language'));
@@ -279,6 +286,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    * Provides scenarios for testUserPasswordResetPreferredLanguage().
    *
    * @return array
+   *   An array of scenarios.
    */
   protected function languagePrefixTestProvider() {
     return [
@@ -450,7 +458,8 @@ class UserPasswordResetTest extends BrowserTestBase {
       $random_name = $this->randomMachineName();
       $edit = ['name' => $random_name];
       $this->submitForm($edit, 'Submit');
-      // Because we're testing with a random name, the password reset will not be valid.
+      // Because we're testing with a random name, the password reset will not
+      // be valid.
       $this->assertNoValidPasswordReset($random_name);
       $this->assertNoPasswordIpFlood();
     }
