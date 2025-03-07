@@ -254,15 +254,14 @@ class MigrateMessageController extends ControllerBase {
     }
 
     // Build the condition.
-    $condition_and = $query->andConditionGroup();
+    $condition_or = $query->orConditionGroup();
     foreach ($session_filters as $filter) {
-      if (!empty($filter['value'])) {
+      if (empty($filter['value'])) {
         continue;
       }
-      $condition_or = $query->orConditionGroup();
       switch ($filter['type']) {
         case 'array':
-          if ($filter['field'] == 'msg.level') {
+          if ($filter['field'] === 'msg.level') {
             $values = array_map(fn($x) => (int) $x, array_values($filter['value']));
           }
           else {
@@ -278,12 +277,9 @@ class MigrateMessageController extends ControllerBase {
         default:
           $condition_or->condition($filter['field'], $filter['value']);
       }
-      if ($condition_or->count() > 0) {
-        $condition_and->condition($condition_or);
-      }
     }
-    if ($condition_and->count() > 0) {
-      $query->condition($condition_and);
+    if ($condition_or->count() > 0) {
+      $query->condition($condition_or);
     }
   }
 
