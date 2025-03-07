@@ -7,7 +7,7 @@ namespace Drupal\Tests\Core;
 use org\bovigo\vfs\vfsStream;
 
 /**
- * @coversDefaultClass \Drupal\Core\Hook\HookCollectorPassTmpRename
+ * @coversDefaultClass \Drupal\Core\Hook\HookCollectorPass
  * @group Hook
  */
 trait GroupIncludesTestTrait {

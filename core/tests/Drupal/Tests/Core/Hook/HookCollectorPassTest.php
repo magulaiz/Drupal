@@ -6,7 +6,7 @@ namespace Drupal\Tests\Core\Hook;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ProceduralCall;
-use Drupal\Core\Hook\HookCollectorPassTmpRename;
+use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\Core\GroupIncludesTestTrait;
 use org\bovigo\vfs\vfsStream;
@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
- * @coversDefaultClass \Drupal\Core\Hook\HookCollectorPassTmpRename
+ * @coversDefaultClass \Drupal\Core\Hook\HookCollectorPass
  * @group Hook
  */
 class HookCollectorPassTest extends UnitTestCase {
@@ -65,7 +65,7 @@ __EOF__
     $container = new ContainerBuilder();
     $container->setParameter('container.modules', $module_filenames);
     $container->setDefinition('module_handler', new Definition());
-    (new HookCollectorPassTmpRename())->process($container);
+    (new HookCollectorPass())->process($container);
     $this->assertSame($implementations, $container->getParameter('hook_implementations_map'));
     $this->assertSame($includes, $container->getDefinition(ProceduralCall::class)->getArguments()[0]);
   }
@@ -79,7 +79,7 @@ __EOF__
     $container = new ContainerBuilder();
     $container->setParameter('container.modules', $module_filenames);
     $container->setDefinition('module_handler', new Definition());
-    (new HookCollectorPassTmpRename())->process($container);
+    (new HookCollectorPass())->process($container);
     $argument = $container->getDefinition('module_handler')->getArgument('$groupIncludes');
     $this->assertSame(self::GROUP_INCLUDES, $argument);
   }
