@@ -854,11 +854,7 @@ class Select extends Query implements SelectInterface {
         $table_string = '(' . (string) $subquery . ')';
       }
       else {
-        $table_string = $this->connection->identifiers()->table($table['table'])->escapedName();
-        // Do not attempt prefixing cross database / schema queries.
-        if (!str_contains($table_string, '.')) {
-          $table_string = '{' . $table_string . '}';
-        }
+        $table_string = $this->connection->identifiers()->table($table['table'])->machineName();
       }
 
       // Don't use the AS keyword for table aliases, as some

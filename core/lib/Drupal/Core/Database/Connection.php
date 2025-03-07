@@ -117,13 +117,6 @@ abstract class Connection {
   protected IdentifierHandler $identifierHandler;
 
   /**
-   * Post-root (non-nested) transaction commit callbacks.
-   *
-   * @var callable[]
-   */
-  protected $rootTransactionEndCallbacks = [];
-
-  /**
    * Tracks the database API events to be dispatched.
    *
    * For performance reasons, database API events are not yielded by default.
