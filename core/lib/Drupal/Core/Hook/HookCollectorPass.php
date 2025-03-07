@@ -16,7 +16,6 @@ use Drupal\Core\Hook\Attribute\RemoveHook;
 use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Collects and registers hook implementations.
@@ -224,6 +223,43 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
+    $implementationsByHook = static::calculateImplementations(
+      $implementations,
+      $collector,
+      $orderExtraTypes,
+      $hookOrderOperations,
+    );
+
+    static::writeImplementationsToContainer($container, $implementationsByHook);
+
+    // Update the module handler definition.
+    $definition = $container->getDefinition('module_handler');
+    $definition->setArgument('$groupIncludes', $groupIncludes);
+    $definition->setArgument('$orderedExtraTypes', $orderExtraTypes);
+  }
+
+  /**
+   * Calculates the ordered implementations.
+   *
+   * @param array<string, array<string, array<class-string, list<string>>>> $implementations
+   *   All implementations, as method names keyed by hook, module and class.
+   * @param \Drupal\Core\Hook\HookCollectorPass $collector
+   *   The collector.
+   * @param array<string, list<string>> $orderExtraTypes
+   *   Extra types to order a hook with.
+   * @param list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations
+   *   All attributes that contain ordering information.
+   *
+   * @return array<string, array<string, string>>
+   *   Implementations, as module names keyed by hook name and "$class::$method"
+   *   identifier.
+   */
+  protected static function calculateImplementations(
+    array $implementations,
+    self $collector,
+    array $orderExtraTypes,
+    array $hookOrderOperations,
+  ): array {
     // List of hooks and modules formatted for hook_module_implements_alter().
     $moduleImplementsMap = [];
     foreach ($implementations as $hook => $implementationsByModule) {
@@ -232,7 +268,7 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
-    $alteredImplementations = [];
+    $implementationsByHook = [];
     foreach ($moduleImplementsMap as $hook => $moduleImplements) {
       $extraHooks = $orderExtraTypes[$hook] ?? [];
       // Add implementations to the array we pass to legacy ordering
@@ -247,15 +283,113 @@ class HookCollectorPass implements CompilerPassInterface {
       foreach ($moduleImplements as $module => $v) {
         foreach ($implementations[$hook][$module] ?? [] as $class => $methods) {
           foreach ($methods as $method) {
-            $alteredImplementations[$hook]["$class::$method"] = $module;
+            $implementationsByHook[$hook]["$class::$method"] = $module;
+          }
+        }
+        if (count($extraHooks) > 1) {
+          $combinedHook = implode(':', $extraHooks);
+          foreach ($extraHooks as $extraHook) {
+            foreach ($implementations[$extraHook][$module] ?? [] as $class => $methods) {
+              foreach ($methods as $method) {
+                $implementationsByHook[$combinedHook]["$class::$method"] = $module;
+              }
+            }
           }
         }
       }
     }
 
+    foreach ($hookOrderOperations as $hookOrderOperation) {
+      static::applyOrderAttributeOperation(
+        $implementationsByHook,
+        $orderExtraTypes,
+        $hookOrderOperation,
+      );
+    }
+
+    return $implementationsByHook;
+  }
+
+  /**
+   * Applies hook order changes from a single attribute with order information.
+   *
+   * @param array<string, array<string, string>> $implementationsByHook
+   *   Implementations, as module names keyed by hook name and "$class::$method"
+   *   identifier.
+   * @param array<string, list<string>> $orderExtraTypes
+   *   Extra types to order a hook with.
+   * @param \Drupal\Core\Hook\HookOperation $hookOrderOperation
+   *   Hook attribute with order information.
+   */
+  protected static function applyOrderAttributeOperation(
+    array &$implementationsByHook,
+    array $orderExtraTypes,
+    HookOperation $hookOrderOperation,
+  ): void {
+    // ::process() adds the hook serving as key to the order extraTypes so it
+    // does not need to be added if there's a extraTypes for the hook.
+    $hooks = $orderExtraTypes[$hookOrderOperation->hook] ?? [$hookOrderOperation->hook];
+    $combinedHook = implode(':', $hooks);
+    $identifier = $hookOrderOperation->class . '::' . $hookOrderOperation->method;
+    $module = $implementationsByHook[$combinedHook][$identifier] ?? NULL;
+    if ($module === NULL) {
+      // Implementation is not in the list. Nothing to reorder.
+      return;
+    }
+    $list = $implementationsByHook[$combinedHook];
+    $order = $hookOrderOperation->order;
+    if ($order === NULL) {
+      throw new \InvalidArgumentException('This method must only be called with attributes that have order information.');
+    }
+    if ($order === Order::First) {
+      unset($list[$identifier]);
+      $list = [$identifier => $module] + $list;
+    }
+    elseif ($order === Order::Last) {
+      unset($list[$identifier]);
+      $list[$identifier] = $module;
+    }
+    elseif ($order instanceof ComplexOrder) {
+      $shouldBeAfter = !$order->value;
+      unset($list[$identifier]);
+      $identifiers = array_keys($list);
+      $modules = array_values($list);
+      $compareIndices = [];
+      if (isset($hookOrderOperation->order->modules)) {
+        $compareIndices = array_keys(array_intersect($modules, $hookOrderOperation->order->modules));
+      }
+      foreach ($hookOrderOperation->order->classesAndMethods as [$otherClass, $otherMethod]) {
+        $compareIndices[] = array_search("$otherClass::$otherMethod", $identifiers, TRUE);
+      }
+      if (!$compareIndices) {
+        return;
+      }
+      $splice_index = $shouldBeAfter
+        ? max($compareIndices) + 1
+        : min($compareIndices);
+      array_splice($identifiers, $splice_index, 0, [$identifier]);
+      array_splice($modules, $splice_index, 0, [$module]);
+      $list = array_combine($identifiers, $modules);
+    }
+    $implementationsByHook[$combinedHook] = $list;
+  }
+
+  /**
+   * Writes all implementations to the container.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+   *   The container builder.
+   * @param array<string, array<string, string>> $implementationsByHook
+   *   Implementations, as module names keyed by hook name and "$class::$method"
+   *   identifier.
+   */
+  protected static function writeImplementationsToContainer(
+    ContainerBuilder $container,
+    array $implementationsByHook,
+  ): void {
     $map = [];
     $tagsInfoByClass = [];
-    foreach ($alteredImplementations as $hook => $hookImplementations) {
+    foreach ($implementationsByHook as $hook => $hookImplementations) {
       $priority = 0;
       foreach ($hookImplementations as $class_and_method => $module) {
         [$class, $method] = explode('::', $class_and_method);
@@ -283,140 +417,7 @@ class HookCollectorPass implements CompilerPassInterface {
       }
     }
 
-    // Pass necessary parameters to moduleHandler.
-    $definition = $container->getDefinition('module_handler');
-    $definition->setArgument('$groupIncludes', $groupIncludes);
-    $definition->setArgument('$orderedExtraTypes', $orderExtraTypes);
     $container->setParameter('hook_implementations_map', $map);
-
-    foreach ($hookOrderOperations as $hookOrderOperation) {
-      assert($hookOrderOperation instanceof HookOperation);
-      // ::process() adds the hook serving as key to the order extraTypes so it
-      // does not need to be added if there's a extraTypes for the hook.
-      $hooks = $orderExtraTypes[$hookOrderOperation->hook] ?? [$hookOrderOperation->hook];
-      $combinedHook = implode(':', $hooks);
-      if ($hookOrderOperation->order instanceof ComplexOrder) {
-        // Collect classes and methods for
-        // self::registerComplexHookImplementations().
-        $classesAndMethods = $hookOrderOperation->order->classesAndMethods;
-        foreach ($hookOrderOperation->order->modules as $module) {
-          foreach ($hooks as $hook) {
-            foreach ($implementations[$hook][$module] ?? [] as $class => $methods) {
-              foreach ($methods as $method) {
-                $classesAndMethods[] = [$class, $method];
-              }
-            }
-          }
-        }
-        // Verify the correct structure of
-        // $hookOrderOperation->order->classesAndMethods and create specifiers
-        // for HookPriority::change() while at it.
-        $otherSpecifiers = array_map(
-          static function ($pair) {
-            if (!is_array($pair)) {
-              return throw new \LogicException('classesAndMethods needs to be an array of arrays');
-            }
-            return $pair[0] . '::' . $pair[1];
-          },
-          $classesAndMethods,
-        );
-        if (count($hooks) > 1) {
-          // The hook implementation in $hookOrderOperation and everything in
-          // $classesAndMethods will be ordered relative to each other as if
-          // they were implementing a single hook. This needs to be marked on
-          // their service definition and added to the
-          // hook_implementations_map container parameter.
-          $classesAndMethods[] = [$hookOrderOperation->class, $hookOrderOperation->method];
-
-          $map1 = $container->getParameter('hook_implementations_map');
-          $priority1 = 0;
-          foreach ($classesAndMethods as [$class1, $method1]) {
-            // Ordering against not installed modules is possible.
-            if (isset($moduleFinder[$class1][$method1])) {
-              if (count(array_unique($moduleFinder[$class1][$method1])) > 1) {
-                throw new \LogicException('Complex ordering can only work when all implementations on a single method are for the same module.');
-              }
-              $map1[$combinedHook][$class1][$method1] = reset($moduleFinder[$class1][$method1]);
-              $container->findDefinition($class1)->addTag('kernel.event_listener', [
-                'event' => "drupal_hook.$combinedHook",
-                'method' => $method1,
-                'priority' => $priority1--,
-              ]);
-            }
-          }
-          $container->setParameter('hook_implementations_map', $map1);
-        }
-      }
-      else {
-        $otherSpecifiers = NULL;
-      }
-
-      foreach ($container->findTaggedServiceIds('kernel.event_listener') as $id => $tags) {
-        foreach ($tags as $key => $tag) {
-          if ($tag['event'] === "drupal_hook.$combinedHook") {
-            $index = "$id.$key";
-            $priority = $tag['priority'];
-            // Symfony documents event listener priorities to be integers,
-            // HookCollectorPass sets them to be integers, ::set() only
-            // accepts integers.
-            assert(is_int($priority));
-            $priorities[$index] = $priority;
-            $specifier = "$id::" . $tag['method'];
-            if ($specifier === "$hookOrderOperation->class::$hookOrderOperation->method") {
-              $index_this = $index;
-            }
-            // $other_specifiers is defined for before and after, for these
-            // compare only the priority of those. For first and last the
-            // priority of every other hook matters.
-            elseif (!isset($otherSpecifiers) || in_array($specifier, $otherSpecifiers)) {
-              $priorities_other[$specifier] = $priority;
-            }
-          }
-        }
-      }
-      if (!isset($index_this) || !isset($priorities) || !isset($priorities_other)) {
-        return;
-      }
-
-      $shouldBeLarger = (bool) $hookOrderOperation->order->value;
-      // The priority of the hook being changed.
-      $priority_this = $priorities[$index_this];
-      // The priority of the hook being compared to.
-      $priority_other = $shouldBeLarger ? max($priorities_other) : min($priorities_other);
-      // If the order is correct there is nothing to do. If the two priorities
-      // are the same then the order is undefined and so it can't be correct.
-      // If they are not the same and $priority_this is already larger exactly
-      // when $shouldBeLarger says then it's the correct order.
-      if ($priority_this !== $priority_other && ($shouldBeLarger === ($priority_this > $priority_other))) {
-        return;
-      }
-      $priority_new = $priority_other + ($shouldBeLarger ? 1 : -1);
-      // For first and last this new priority is already larger/smaller
-      // than all existing priorities but for before / after it might belong to
-      // an already existing hook. In this case set the new priority temporarily
-      // to be halfway between $priority_other and $priority_new then give all
-      // hook implementations new, integer priorities keeping this new order.
-      // This ensures the hook implementation being changed is in the right order
-      // relative to both $priority_other and the hook whose priority was
-      // $priority_new.
-      if (in_array($priority_new, $priorities)) {
-        $priorities[$index_this] = $priority_other + ($shouldBeLarger ? 0.5 : -0.5);
-        asort($priorities);
-        $changed_indexes = array_keys($priorities);
-        $priorities = array_combine($changed_indexes, range(1, count($changed_indexes)));
-      }
-      else {
-        $priorities[$index_this] = $priority_new;
-        $changed_indexes = [$index_this];
-      }
-      foreach ($changed_indexes as $index) {
-        [$id1, $key1] = explode('.', $index);
-        $definition = $container->findDefinition($id1);
-        $tags = $definition->getTags();
-        $tags['kernel.event_listener'][$key1]['priority'] = $priorities[$index];
-        $definition->setTags($tags);
-      }
-    }
   }
 
   /**
