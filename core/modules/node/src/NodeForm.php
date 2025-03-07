@@ -139,6 +139,11 @@ class NodeForm extends ContentEntityForm {
 
     $form['advanced']['#attributes']['class'][] = 'entity-meta';
 
+    // Set default author.
+    $meta_author = \Drupal::currentUser()->getAccountName();
+    if (!$node->isNew() && $node->getOwner() != null) {
+      $meta_author = $node->getOwner()->getAccountName();
+    }
     $form['meta'] = [
       '#type' => 'details',
       '#group' => 'advanced',
@@ -163,7 +168,7 @@ class NodeForm extends ContentEntityForm {
     $form['meta']['author'] = [
       '#type' => 'item',
       '#title' => $this->t('Author'),
-      '#markup' => $node->getOwner()->getAccountName(),
+      '#markup' => $meta_author,
       '#wrapper_attributes' => ['class' => ['entity-meta__author']],
     ];
 
