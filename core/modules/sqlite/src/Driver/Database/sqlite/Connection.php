@@ -69,16 +69,9 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   protected $transactionalDDLSupport = TRUE;
 
   /**
-   * @todo fill in.
-   */
-  public readonly IdentifierHandler $identifiers;
-
-  /**
    * Constructs a \Drupal\sqlite\Driver\Database\sqlite\Connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
-    parent::__construct($connection, $connection_options);
-
     // Empty prefix means query the main database -- no need to attach anything.
     $prefix = $this->connectionOptions['prefix'] ?? '';
     if ($prefix !== '') {
@@ -87,9 +80,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       // querying an attached database.
       $prefix .= '.';
     }
-
-    // Initialize the identifier handler.
-    $this->identifiers = new IdentifierHandler($prefix);
+    parent::__construct($connection, $connection_options, new IdentifierHandler($prefix));
   }
 
   /**

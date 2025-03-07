@@ -85,11 +85,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   protected array $savepoints = [];
 
   /**
-   * @todo fill in.
-   */
-  public readonly IdentifierHandler $identifiers;
-
-  /**
    * Constructs a connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
@@ -103,7 +98,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     // needs this.
     $this->connectionOptions = $connection_options;
 
-    parent::__construct($connection, $connection_options);
+    parent::__construct($connection, $connection_options, new IdentifierHandler($connection_options['prefix']));
 
     // Force PostgreSQL to use the UTF-8 character set by default.
     $this->connection->exec("SET NAMES 'UTF8'");
@@ -112,9 +107,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     if (isset($connection_options['init_commands'])) {
       $this->connection->exec(implode('; ', $connection_options['init_commands']));
     }
-
-    // Initialize the identifier handler.
-    $this->identifiers = new IdentifierHandler($connection_options['prefix']);
   }
 
   /**

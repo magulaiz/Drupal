@@ -82,16 +82,12 @@ abstract class Schema implements PlaceholderInterface {
    *   A keyed array with information about the schema, table name and prefix.
    */
   protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
-    $prefix = $this->connection->getPrefix();
     $info = [
       'schema' => $this->defaultSchema,
-      'prefix' => $prefix,
+      'prefix' => $this->connection->identifiers->tablePrefix,
     ];
-    if (strpos($table, '%') !== FALSE) {
-      $table = ($add_prefix ? $prefix : '') . $table;
-    }
-    else {
-      $table = $this->connection->identifiers->table($table)->machineName(quoted: FALSE, prefixed: $add_prefix);
+    if ($add_prefix) {
+      $table = $info['prefix'] . $table;
     }
     // If the prefix contains a period in it, then that means the prefix also
     // contains a schema reference in which case we will change the schema key
@@ -227,7 +223,7 @@ abstract class Schema implements PlaceholderInterface {
     $condition = $this->buildTableNameCondition('%', 'LIKE');
     $condition->compile($this->connection, $this);
 
-    $prefix = $this->connection->getPrefix();
+    $prefix = $this->connection->identifiers->tablePrefix;
     $prefix_length = strlen($prefix);
     $tables = [];
     // Normally, we would heartily discourage the use of string

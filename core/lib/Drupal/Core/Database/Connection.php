@@ -112,11 +112,6 @@ abstract class Connection {
   protected array $tablePlaceholderReplacements;
 
   /**
-   * @todo fill in.
-   */
-  public readonly IdentifierHandler $identifiers;
-
-  /**
    * Tracks the database API events to be dispatched.
    *
    * For performance reasons, database API events are not yielded by default.
@@ -139,8 +134,14 @@ abstract class Connection {
    *   - prefix
    *   - namespace
    *   - Other driver-specific options.
+   * @param \Drupal\Core\Database\Identifier\IdentifierHandler|null $identifiers
+   *   The identifiers handler.
    */
-  public function __construct(object $connection, array $connection_options) {
+  public function __construct(
+    object $connection,
+    array $connection_options,
+    public readonly ?IdentifierHandler $identifiers,
+  ) {
     // Manage the table prefix.
     $connection_options['prefix'] = $connection_options['prefix'] ?? '';
 
