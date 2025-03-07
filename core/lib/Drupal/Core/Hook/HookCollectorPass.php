@@ -134,9 +134,39 @@ class HookCollectorPass implements CompilerPassInterface {
     // @todo investigate whether this if() is needed after ModuleHandler::add()
     // is removed.
     // @see https://www.drupal.org/project/drupal/issues/3481778
-    if (count($container->getDefinitions()) > 1) {
-      static::registerImplementations($container, $collector, $implementations, $orderExtraTypes, $hookOrderOperations);
+    if (count($container->getDefinitions()) <= 1) {
+      return $implementations;
     }
+
+    $container->register(ProceduralCall::class, ProceduralCall::class)
+      ->addArgument($collector->includes);
+
+    // Gather includes for each hook_hook_info group.
+    // We store this in $groupIncludes so moduleHandler can ensure the files
+    // are included runtime when the hooks are invoked.
+    $groupIncludes = [];
+    foreach ($collector->hookInfo as $function) {
+      foreach ($function() as $hook => $info) {
+        if (isset($collector->groupIncludes[$info['group']])) {
+          $groupIncludes[$hook] = $collector->groupIncludes[$info['group']];
+        }
+      }
+    }
+
+    $implementationsByHook = static::calculateImplementations(
+      $implementations,
+      $collector,
+      $orderExtraTypes,
+      $hookOrderOperations,
+    );
+
+    static::writeImplementationsToContainer($container, $implementationsByHook);
+
+    // Update the module handler definition.
+    $definition = $container->getDefinition('module_handler');
+    $definition->setArgument('$groupIncludes', $groupIncludes);
+    $definition->setArgument('$orderedExtraTypes', $orderExtraTypes);
+
     return $implementations;
   }
 
@@ -167,59 +197,6 @@ class HookCollectorPass implements CompilerPassInterface {
     }
     $orderExtraTypes = array_map('array_unique', $orderExtraTypes);
     return array_map('array_values', $orderExtraTypes);
-  }
-
-  /**
-   * Register hook implementations as event listeners.
-   *
-   * Passes required include and ordering information to module_handler.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-   *   The container.
-   * @param \Drupal\Core\Hook\HookCollectorPass $collector
-   *   The collector.
-   * @param array<string, array<string, array<class-string, list<string>>>> $implementations
-   *   All implementations, as method names keyed by hook, module and class.
-   * @param array<string, list<string>> $orderExtraTypes
-   *   Extra types to order a hook with.
-   * @param list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations
-   *   All attributes that contain ordering information.
-   */
-  protected static function registerImplementations(
-    ContainerBuilder $container,
-    HookCollectorPass $collector,
-    array $implementations,
-    array $orderExtraTypes,
-    array $hookOrderOperations,
-  ): void {
-    $container->register(ProceduralCall::class, ProceduralCall::class)
-      ->addArgument($collector->includes);
-
-    // Gather includes for each hook_hook_info group.
-    // We store this in $groupIncludes so moduleHandler can ensure the files
-    // are included runtime when the hooks are invoked.
-    $groupIncludes = [];
-    foreach ($collector->hookInfo as $function) {
-      foreach ($function() as $hook => $info) {
-        if (isset($collector->groupIncludes[$info['group']])) {
-          $groupIncludes[$hook] = $collector->groupIncludes[$info['group']];
-        }
-      }
-    }
-
-    $implementationsByHook = static::calculateImplementations(
-      $implementations,
-      $collector,
-      $orderExtraTypes,
-      $hookOrderOperations,
-    );
-
-    static::writeImplementationsToContainer($container, $implementationsByHook);
-
-    // Update the module handler definition.
-    $definition = $container->getDefinition('module_handler');
-    $definition->setArgument('$groupIncludes', $groupIncludes);
-    $definition->setArgument('$orderedExtraTypes', $orderExtraTypes);
   }
 
   /**
