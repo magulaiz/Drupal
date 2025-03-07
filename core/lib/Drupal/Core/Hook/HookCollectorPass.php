@@ -541,6 +541,12 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * This method is only to be used by ModuleHandler.
    *
+   * @param array<string, array{pathname: string}> $paths
+   *   Reduced module info arrays by module name.
+   *
+   * @return array<string, array<string, array<class-string, array<string, string>>>>
+   *   Hook implementation method names keyed by hook, module, class and method.
+   *
    * @todo remove when ModuleHandler::add() is removed.
    *   See https://www.drupal.org/project/drupal/issues/3481778
    *
