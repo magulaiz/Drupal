@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Placeholder\CachedStrategy;
 use Drupal\Core\Render\Placeholder\SingleFlushStrategy;
 
 /**
@@ -57,7 +58,10 @@ class StatusMessages extends RenderElementBase {
       // SingleFLushStrategy so that it is not handled by big pipe. Messages
       // are very quick to render and this allows pages without other
       // placeholders to avoid  loading big pipe's JavaScript altogether.
-      '#placeholder_strategy' => [SingleFlushStrategy::class => TRUE],
+      '#placeholder_strategy' => [
+        SingleFlushStrategy::class => TRUE,
+        CachedStrategy::class => TRUE,
+      ],
     ];
 
     // Directly create a placeholder as we need this to be placeholdered
