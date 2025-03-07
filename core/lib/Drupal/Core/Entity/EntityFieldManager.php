@@ -195,7 +195,10 @@ class EntityFieldManager implements EntityFieldManagerInterface, PreWarmableInte
       else {
         // Rebuild the definitions and put it into the cache.
         $this->baseFieldDefinitions[$entity_type_id] = $this->buildBaseFieldDefinitions($entity_type_id);
-        $this->cacheSet($cid, $this->baseFieldDefinitions[$entity_type_id], Cache::PERMANENT, ['entity_types', 'entity_field_info']);
+        $this->cacheSet($cid, $this->baseFieldDefinitions[$entity_type_id], Cache::PERMANENT, [
+          'entity_types',
+          'entity_field_info',
+        ]);
       }
     }
     return $this->baseFieldDefinitions[$entity_type_id];
@@ -578,7 +581,7 @@ class EntityFieldManager implements EntityFieldManagerInterface, PreWarmableInte
    *
    * @param string $entity_type_id
    *   The entity type ID. Only entity types that implement
-   *   \Drupal\Core\Entity\FieldableEntityInterface are supported
+   *   \Drupal\Core\Entity\FieldableEntityInterface are supported.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
    *   An array of field storage definitions, keyed by field name.
