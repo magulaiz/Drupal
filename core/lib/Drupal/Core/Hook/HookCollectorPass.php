@@ -77,42 +77,11 @@ class HookCollectorPass implements CompilerPassInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * @return array<string, array<string, array<class-string, array<string, string>>>>
-   *   Hook implementation method names keyed by hook, module, class and method.
    */
-  public function process(ContainerBuilder $container): array {
+  public function process(ContainerBuilder $container): void {
     $collector = static::collectAllHookImplementations($container->getParameter('container.modules'), $container);
 
-    $implementationsByHook = $collector->implementations;
-
-    // Loop over all RemoveHook attributes and remove them from the maps before
-    // registering the hooks. This must happen after all collection, but before
-    // registration to ensure the hook it is removing has already been
-    // discovered.
-    foreach ($collector->removeHookAttributes as $removeHook) {
-      unset($implementationsByHook[$removeHook->hook][$removeHook->class . '::' . $removeHook->method]);
-    }
-
-    // List of modules implementing hooks with the implementation details.
-    $implementations = [];
-
-    $modules = array_keys($container->getParameter('container.modules'));
-    foreach ($implementationsByHook as $hook => $hookImplementations) {
-      foreach ($modules as $module) {
-        foreach (array_keys($hookImplementations, $module, TRUE) as $identifier) {
-          [$class, $method] = explode('::', $identifier);
-          $implementations[$hook][$module][$class][$method] = $method;
-        }
-      }
-    }
-
-    // @todo investigate whether this if() is needed after ModuleHandler::add()
-    // is removed.
-    // @see https://www.drupal.org/project/drupal/issues/3481778
-    if (count($container->getDefinitions()) <= 1) {
-      return $implementations;
-    }
+    $implementationsByHook = $collector->getFilteredImplementations();
 
     // Loop over all ReOrderHook attributes and gather order information
     // before registering the hooks. This must happen after all collection,
@@ -150,8 +119,21 @@ class HookCollectorPass implements CompilerPassInterface {
     $definition = $container->getDefinition('module_handler');
     $definition->setArgument('$groupIncludes', $groupIncludes);
     $definition->setArgument('$orderedExtraTypes', $orderExtraTypes);
+  }
 
-    return $implementations;
+  /**
+   * Gets implementation lists with removals already applied.
+   *
+   * @return array<string, list<string>>
+   *   Implementations, as module names keyed by hook name and
+   *   "$class::$method".
+   */
+  protected function getFilteredImplementations(): array {
+    $implementationsByHook = $this->implementations;
+    foreach ($this->removeHookAttributes as $removeHook) {
+      unset($implementationsByHook[$removeHook->hook][$removeHook->class . '::' . $removeHook->method]);
+    }
+    return $implementationsByHook;
   }
 
   /**
@@ -569,7 +551,25 @@ class HookCollectorPass implements CompilerPassInterface {
   public function getImplementations(array $paths): array {
     $container = new ContainerBuilder();
     $container->setParameter('container.modules', $paths);
-    return $this->process($container);
+
+    $collector = static::collectAllHookImplementations($container->getParameter('container.modules'), $container);
+
+    $implementationsByHook = $collector->getFilteredImplementations();
+
+    // List of modules implementing hooks with the implementation details.
+    $implementations = [];
+
+    $modules = array_keys($container->getParameter('container.modules'));
+    foreach ($implementationsByHook as $hook => $hookImplementations) {
+      foreach ($modules as $module) {
+        foreach (array_keys($hookImplementations, $module, TRUE) as $identifier) {
+          [$class, $method] = explode('::', $identifier);
+          $implementations[$hook][$module][$class][$method] = $method;
+        }
+      }
+    }
+
+    return $implementations;
   }
 
   /**
