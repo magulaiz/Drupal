@@ -416,6 +416,25 @@
   };
 
   /**
+   * Scroll file input into view when added.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches behavior to ensure the file input scrolls into view 
+   *   when the media library modal is opened.
+   */
+  Drupal.behaviors.mediaLibraryScrollFix = {
+    attach: function (context, settings) {
+      once('mediaLibraryScrollFix', 'input[type="file"]', context).forEach((input) => {
+        setTimeout(() => {
+          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      });
+    }
+  };
+
+  /**
    * Theme function for the selection count.
    *
    * @return {string}
