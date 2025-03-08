@@ -160,7 +160,8 @@ trait ImageTestProviderTrait {
     $this->assertEquals('center', $drupal_media_element->getAttribute('data-align'));
 
     $page->pressButton('Save');
-    // Check that the 'content has been updated' message status appears to confirm we left the editor.
+    // Check that the 'content has been updated' message status appears to
+    // confirm we left the editor.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '[data-drupal-messages]'));
     // Check that the class is correct in the front end.
     $assert_session->elementExists('css', 'img.align-center');
@@ -242,6 +243,7 @@ trait ImageTestProviderTrait {
    * Data provider for ::testWidth().
    *
    * @return string[][]
+   *   An array of test cases, each with a width value.
    */
   public static function providerWidth(): array {
     return [

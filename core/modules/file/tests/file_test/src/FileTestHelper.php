@@ -98,7 +98,7 @@ class FileTestHelper {
    *
    * @param string $op
    *   One of the hook_file_[validate,download] operations.
-   * @param mixed $value
+   * @param array|int $value
    *   Value for the hook to return.
    *
    * @see Drupal\file_test\FileTestHelper::getReturn()
@@ -118,7 +118,7 @@ class FileTestHelper {
    * returned.
    *
    * @param string|null $filepath
-   *   File path
+   *   File path.
    * @param bool $reset
    *   (optional) If to reset the internal memory cache. If TRUE is passed, the
    *   first parameter has no effect. Defaults to FALSE.
