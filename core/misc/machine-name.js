@@ -229,7 +229,7 @@
         // Preview the machine name in realtime when the human-readable name
         // changes, but only if there is no machine name yet; i.e., only upon
         // initial creation, not when editing.
-        if ($target[0].value === '') {
+        if (machine === '') {
           // Listen to the 'change' and 'input' events that are fired
           // immediately as the user is typing for faster response time. This is
           // safe because the event handler doesn't include any slow
