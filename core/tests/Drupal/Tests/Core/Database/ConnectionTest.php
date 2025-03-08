@@ -535,6 +535,26 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
+   * Tests identifier quotes.
+   */
+  public function testIdentifierQuotesAssertCount(): void {
+    $this->expectException(\AssertionError::class);
+    $this->expectExceptionMessage('Drupal\\Core\\Database\\Identifier\\IdentifierHandler::$identifierQuotes must contain 2 string values');
+    $mock_pdo = $this->createMock(StubPDO::class);
+    new StubConnection($mock_pdo, [], ['"']);
+  }
+
+  /**
+   * Tests identifier quotes.
+   */
+  public function testIdentifierQuotesAssertString(): void {
+    $this->expectException(\AssertionError::class);
+    $this->expectExceptionMessage('Drupal\\Core\\Database\\Identifier\\IdentifierHandler::$identifierQuotes must contain 2 string values');
+    $mock_pdo = $this->createMock(StubPDO::class);
+    new StubConnection($mock_pdo, [], [0, '1']);
+  }
+
+  /**
    * @covers ::__construct
    */
   public function testNamespaceDefault(): void {

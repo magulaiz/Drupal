@@ -134,7 +134,7 @@ class ErrorHandlerTest extends BrowserTestBase {
       '%type' => 'DatabaseExceptionWrapper',
       '@message' => PHP_VERSION_ID >= 80400 ?
       $message :
-      'SELECT "b".* FROM {bananas_are_awesome} "b"',
+      'SELECT "b"\.\* FROM .*bananas_are_awesome. "b"',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerPDOException()',
       '%line' => 64,
       '%file' => $this->getModulePath('error_test') . '/error_test.module',
@@ -160,7 +160,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($error_pdo_exception['%type']);
     // Assert statement improved since static queries adds table alias in the
     // error message.
-    $this->assertSession()->pageTextContains($error_pdo_exception['@message']);
+    $this->assertSession()->pageTextMatches($error_pdo_exception['@message']);
     $error_details = new FormattableMarkup('in %function (line ', $error_pdo_exception);
     $this->assertSession()->responseContains($error_details);
     $this->drupalGet('error-test/trigger-renderer-exception');

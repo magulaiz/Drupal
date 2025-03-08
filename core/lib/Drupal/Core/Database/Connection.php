@@ -102,16 +102,6 @@ abstract class Connection {
   protected $schema = NULL;
 
   /**
-   * Replacements to fully qualify {table} placeholders in SQL strings.
-   *
-   * An array of two strings, the first being the replacement for opening curly
-   * brace '{', the second for closing curly brace '}'.
-   *
-   * @var string[]
-   */
-  protected array $tablePlaceholderReplacements;
-
-  /**
    * List of escaped field names, keyed by unescaped names.
    *
    * There are cases in which escapeField() is called on an empty string. In
@@ -161,6 +151,10 @@ abstract class Connection {
   ) {
     // Manage the table prefix.
     $connection_options['prefix'] = $connection_options['prefix'] ?? '';
+    assert(is_string($connection_options['prefix']), 'The \'prefix\' connection option to ' . __METHOD__ . '() must be a string.');
+    if (is_array($connection_options['prefix'])) {
+      $connection_options['prefix'] = $connection_options['prefix'][0] ?? '';
+    }
 
     // Work out the database driver namespace if none is provided. This normally
     // written to setting.php by installer or set by
@@ -179,7 +173,7 @@ abstract class Connection {
    * @todo Remove the method in Drupal 1x.
    */
   public function __get($name): mixed {
-    if (in_array($name, ['prefix', 'escapedTables', 'identifierQuotes'])) {
+    if (in_array($name, ['prefix', 'escapedTables', 'identifierQuotes', 'tablePlaceholderReplacements'])) {
       @trigger_error("Accessing Connection::\${$name} is deprecated in drupal:11.9.0 and the property is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/1234567", E_USER_DEPRECATED);
       return [];
     }
@@ -391,8 +385,7 @@ abstract class Connection {
    *   The fully qualified table name.
    */
   public function getFullQualifiedTableName($table) {
-    $options = $this->getConnectionOptions();
-    return $options['database'] . '.' . $this->identifiers->table($table)->machineName();
+    return $this->identifiers->table($this->getConnectionOptions()['database'] . '.' . $table)->machineName();
   }
 
   /**
@@ -1000,7 +993,7 @@ abstract class Connection {
    */
   public function escapeTable($table) {
     @trigger_error(__METHOD__ . "() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312", E_USER_DEPRECATED);
-    return $this->identifiers->table($table)->table;
+    return $this->identifiers->table($table)->machineName(quoted: FALSE);
   }
 
   /**
