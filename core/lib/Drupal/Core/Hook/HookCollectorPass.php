@@ -72,8 +72,7 @@ class HookCollectorPass implements CompilerPassInterface {
    * {@inheritdoc}
    *
    * @return array<string, array<string, array<class-string, array<string, string>>>>
-   *   Hook implementation method names
-   *   keyed by hook, module, class and method.
+   *   Hook implementation method names keyed by hook, module, class and method.
    */
   public function process(ContainerBuilder $container): array {
     $collector = static::collectAllHookImplementations($container->getParameter('container.modules'), $container);
@@ -109,7 +108,7 @@ class HookCollectorPass implements CompilerPassInterface {
               $processAfter[get_class($hookAttribute)][] = $hookAttribute;
               continue;
             }
-            if (!($hookAttribute instanceof Hook)) {
+            if (!$hookAttribute instanceof Hook) {
               // This is an unsupported attribute class, the code below would
               // not work.
               continue;
@@ -515,11 +514,11 @@ class HookCollectorPass implements CompilerPassInterface {
    * This method is only to be used by ModuleHandler.
    *
    * @todo remove when ModuleHandler::add() is removed.
-   * @see https://www.drupal.org/project/drupal/issues/3481778
+   *   See https://www.drupal.org/project/drupal/issues/3481778
    *
    * @internal
    */
-  public function getImplementations($paths): array {
+  public function getImplementations(array $paths): array {
     $container = new ContainerBuilder();
     $container->setParameter('container.modules', $paths);
     return $this->process($container);
