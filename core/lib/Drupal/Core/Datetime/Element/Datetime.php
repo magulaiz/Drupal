@@ -365,7 +365,7 @@ class Datetime extends DateElementBase {
         if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
           $range = static::datetimeRangeYears($element['#date_year_range']);
           $min = clone($date);
-          $min->setDate($range[0], 1, 1)->setTime(0, 0, 0);
+          $min->setDate($range[0], 1, 1)->setTime(0, 0);
           $max = clone($date);
           $max->setDate($range[1], 12, 31)->setTime(23, 59, 59);
 
