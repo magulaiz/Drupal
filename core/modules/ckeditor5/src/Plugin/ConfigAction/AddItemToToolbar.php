@@ -46,18 +46,40 @@ final class AddItemToToolbar implements ConfigActionPluginInterface, ContainerFa
    * {@inheritdoc}
    */
   public function apply(string $configName, mixed $value): void {
+    // Normalize $value, which could be one of three things:
+    // - A string (add one item to the toolbar, no additional options)
+    // - An associative array (add one item to the toolbar, with options)
+    // - An indexed array (add multiple items to the toolbar, each of which
+    //   could be one of the previous two forms)
+    if (is_string($value) || (is_array($value) && !array_is_list($value))) {
+      $value = [$value];
+    }
+    assert(is_array($value) && array_is_list($value));
+
     $editor = $this->configManager->loadConfigEntityByName($configName);
     assert($editor instanceof EditorInterface);
 
     if ($editor->getEditor() !== 'ckeditor5') {
       throw new ConfigActionException(sprintf('The %s config action only works with editors that use CKEditor 5.', $this->pluginId));
     }
-
-    if (is_string($value)) {
-      $value = ['item_name' => $value];
+    foreach ($value as $item) {
+      if (is_string($item)) {
+        $item = ['item_name' => $item];
+      }
+      $this->applySingle($editor, $item);
     }
-    assert(is_array($value));
+    $editor->save();
+  }
 
+  /**
+   * Adds an item to the toolbar.
+   *
+   * @param \Drupal\editor\EditorInterface $editor
+   *   The editor to which the item should be added.
+   * @param array $value
+   *   An array of options for the item.
+   */
+  private function applySingle(EditorInterface $editor, array $value): void {
     $item_name = $value['item_name'];
     assert(is_string($item_name));
 
@@ -112,7 +134,7 @@ final class AddItemToToolbar implements ConfigActionPluginInterface, ContainerFa
       }
     }
 
-    $editor->setSettings($editor_settings)->save();
+    $editor->setSettings($editor_settings);
   }
 
 }
