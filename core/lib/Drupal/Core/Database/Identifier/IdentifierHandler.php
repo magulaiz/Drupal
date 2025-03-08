@@ -63,11 +63,11 @@ class IdentifierHandler {
    */
   public function tableMachineName(Table $table): string {
     $tableName = $table->needsPrefix ? $this->tablePrefix . $table->table : $table->table;
-    if ($table->schema) {
-      return implode('.', [$table->schema, $table->database, $tableName]);
+    if ($table->database) {
+      return implode('.', [$table->database, $table->schema, $tableName]);
     }
-    elseif ($table->database) {
-      return implode('.', [$table->database, $tableName]);
+    elseif ($table->schema) {
+      return implode('.', [$table->schema, $tableName]);
     }
     return $tableName;
   }

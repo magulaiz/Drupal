@@ -84,7 +84,7 @@ abstract class Schema implements PlaceholderInterface {
   protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
     $info = [
       'schema' => $this->defaultSchema,
-      'prefix' => $this->connection->identifiers->tablePrefix,
+      'prefix' => isset($this->connection->identifiers) ? $this->connection->identifiers->tablePrefix : '',
     ];
     if ($add_prefix) {
       $table = $info['prefix'] . $table;

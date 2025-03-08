@@ -68,7 +68,7 @@ class ConnectionTest extends UnitTestCase {
     return new class($pdo_connection) extends Connection {
 
       public function __construct(\PDO $connection) {
-        $this->connection = $connection;
+        parent::__construct($connection, ['prefix' => '']);
       }
 
     };

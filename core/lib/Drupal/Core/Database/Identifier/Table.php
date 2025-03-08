@@ -12,12 +12,12 @@ class Table extends IdentifierBase {
   /**
    * @todo fill in.
    */
-  public readonly ?string $schema;
+  public readonly ?string $database;
 
   /**
    * @todo fill in.
    */
-  public readonly ?string $database;
+  public readonly ?string $schema;
 
   /**
    * @todo fill in.
@@ -40,7 +40,7 @@ class Table extends IdentifierBase {
   ) {
     parent::__construct($identifierHandler, $identifier);
     $parts = explode(".", $identifier);
-    [$this->schema, $this->database, $this->table] = match (count($parts)) {
+    [$this->database, $this->schema, $this->table] = match (count($parts)) {
       1 => [
         NULL,
         NULL,
