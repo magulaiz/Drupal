@@ -10,12 +10,12 @@ namespace Drupal\Core\Database\Identifier;
 class IdentifierHandler {
 
   /**
-   * @var array{'identifier':array<string,array<int,string>>,'platform':array<string,array<int,string>>}
+   * @var array{'identifier':array<string,array<string,string>>,'platform':array<string,array<string,string>>}
    */
   protected array $identifiers;
 
   /**
-   * @var array{'identifier':array<string,array<int,string>>,'platform':array<string,array<int,string>>}
+   * @var array{'identifier':array<string,array<string,string>>,'platform':array<string,array<string,string>>}
    */
   protected array $aliases;
 
@@ -39,12 +39,18 @@ class IdentifierHandler {
   /**
    * @todo fill in.
    */
-  public function table(string|Table $name): Table {
-    if (is_string($name)) {
-      $table = new Table($this, $name);
-      return $table;
+  public function table(string|Table $tableIdentifier): Table {
+    if ($tableIdentifier instanceof Table) {
+      $tableIdentifier = $tableIdentifier->identifier;
     }
-    return $name;
+    if ($this->hasIdentifier($tableIdentifier, IdentifierType::Table)) {
+      $table = $this->getIdentifier($tableIdentifier, IdentifierType::Table);
+    }
+    else {
+      $table = new Table($this, $tableIdentifier);
+      $this->setIdentifier1($tableIdentifier, IdentifierType::Table, $table);
+    }
+    return $table;
   }
 
   /**
@@ -85,8 +91,22 @@ class IdentifierHandler {
   /**
    * @todo fill in.
    */
-  protected function hasIdentifier(string $identifier, IdentifierType $type): bool {
-    return isset($this->identifiers['identifier'][$identifier][$type->value]);
+  protected function setIdentifier1(string $id, IdentifierType $type, IdentifierBase $identifier): void {
+    $this->identifiers['identifier'][$id][$type->value] = $identifier;
+  }
+
+  /**
+   * @todo fill in.
+   */
+  protected function hasIdentifier(string $id, IdentifierType $type): bool {
+    return isset($this->identifiers['identifier'][$id][$type->value]);
+  }
+
+  /**
+   * @todo fill in.
+   */
+  protected function getIdentifier(string $id, IdentifierType $type): IdentifierBase {
+    return $this->identifiers['identifier'][$id][$type->value];
   }
 
   /**

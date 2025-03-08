@@ -7,14 +7,14 @@ namespace Drupal\Core\Database\Identifier;
 /**
  * Enum for database identifier types.
  */
-enum IdentifierType: int {
-  case Generic = 0x0;
-  case Database = 0x4;
-  case Sequence = 0x5;
-  case Table = 0x7;
-  case PrefixedTable = 0x8;
-  case Column = 0xC;
-  case Index = 0xD;
+enum IdentifierType: string {
+  case Generic = 'unknown';
+  case Database = 'database';
+  case Schema = 'schema';
+  case Sequence = 'sequence';
+  case Table = 'table';
+  case Column = 'column';
+  case Index = 'index';
 
-  case Alias = 0x100;
+  case Alias = 'alias';
 }
