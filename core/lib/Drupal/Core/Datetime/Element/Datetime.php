@@ -373,7 +373,7 @@ class Datetime extends DateElementBase {
           if ($date < $min || $date > $max) {
             $form_state->setError(
               $element,
-              t('The %field date is invalid. Please enter a date in the %min-%max year range.',
+              t('The %field date is invalid. Date should be in the %min-%max year range.',
                 ['%field' => $title, '%min' => $range[0], '%max' => $range[1]])
             );
           }
