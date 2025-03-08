@@ -33,7 +33,8 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
         ],
         'name' => [
           'type' => 'varchar',
-          'length' => 10, // Should enforce a max length of 10 characters.
+          // Should enforce a max length of 10 characters.
+          'length' => 10,
           'not null' => TRUE,
         ],
       ],
