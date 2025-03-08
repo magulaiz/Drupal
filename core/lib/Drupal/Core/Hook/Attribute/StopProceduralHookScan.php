@@ -9,6 +9,8 @@ namespace Drupal\Core\Hook\Attribute;
  *
  * This allows contrib and core to mark when a file has no more
  * procedural hooks.
+ *
+ * @internal
  */
 #[\Attribute(\Attribute::TARGET_FUNCTION)]
 class StopProceduralHookScan {
