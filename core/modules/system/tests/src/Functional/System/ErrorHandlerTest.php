@@ -134,7 +134,7 @@ class ErrorHandlerTest extends BrowserTestBase {
       '%type' => 'DatabaseExceptionWrapper',
       '@message' => PHP_VERSION_ID >= 80400 ?
       $message :
-      'SELECT "b".* FROM "bananas_are_awesome" "b"',
+      'SELECT "b".* FROM {bananas_are_awesome} "b"',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerPDOException()',
       '%line' => 64,
       '%file' => $this->getModulePath('error_test') . '/error_test.module',
