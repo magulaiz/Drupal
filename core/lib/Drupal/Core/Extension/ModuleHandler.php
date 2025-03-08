@@ -452,7 +452,7 @@ class ModuleHandler implements ModuleHandlerInterface {
         // for ordering because the set might contain hooks not included in
         // this alter() call. \Drupal\Core\Hook\HookPriority::change()
         // registers the implementations of combined hooks.
-        foreach (array_merge($extra_hooks, [$type . '_alter']) as $extra_hook) {
+        foreach ([...$extra_hooks, $hook] as $extra_hook) {
           if (isset($this->orderedExtraTypes[$extra_hook])) {
             $orderedHooks = $this->orderedExtraTypes[$extra_hook];
             $extra_listeners = $this->findListenersForAlter(implode(':', $orderedHooks));
