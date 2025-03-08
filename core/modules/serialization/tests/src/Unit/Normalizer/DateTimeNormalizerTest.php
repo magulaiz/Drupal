@@ -220,6 +220,7 @@ class DateTimeNormalizerTest extends UnitTestCase {
  */
 class DateTimeNormalizerTestDrupalDateTime extends DrupalDateTime {
 
+  // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod
   public function setTimezone(\DateTimeZone $timezone) {
     parent::setTimezone($timezone);
   }

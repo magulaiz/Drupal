@@ -1665,6 +1665,8 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
  */
 class TestSqlContentDefaultTableMapping extends DefaultTableMapping {
 
+  // phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod
+
   /**
    * {@inheritdoc}
    */

@@ -34,6 +34,7 @@ class AccessRoleUITest extends UITestBase {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.Missing, Generic.CodeAnalysis.UselessOverridingMethod
   protected function setUp($import_test_views = TRUE, $modules = ['user_test_views']): void {
     parent::setUp($import_test_views, $modules);
   }
