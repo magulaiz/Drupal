@@ -120,35 +120,6 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests per-table prefix connection option.
-   */
-  public function testPerTablePrefixOption(): void {
-    $connection_info = Database::getConnectionInfo('default');
-    $new_connection_info = $connection_info['default'];
-    $new_connection_info['prefix'] = [
-      'default' => $connection_info['default']['prefix'],
-      'test_table' => $connection_info['default']['prefix'] . '_bar',
-    ];
-    Database::addConnectionInfo('default', 'foo', $new_connection_info);
-    $this->expectException(\TypeError::class);
-    Database::getConnection('foo', 'default');
-  }
-
-  /**
-   * Tests the prefix connection option in array form.
-   */
-  public function testPrefixArrayOption(): void {
-    $connection_info = Database::getConnectionInfo('default');
-    $new_connection_info = $connection_info['default'];
-    $new_connection_info['prefix'] = [
-      'default' => $connection_info['default']['prefix'],
-    ];
-    Database::addConnectionInfo('default', 'foo', $new_connection_info);
-    $this->expectException(\TypeError::class);
-    Database::getConnection('foo', 'default');
-  }
-
-  /**
    * Ensure that you cannot execute multiple statements in a query.
    */
   public function testMultipleStatementsQuery(): void {

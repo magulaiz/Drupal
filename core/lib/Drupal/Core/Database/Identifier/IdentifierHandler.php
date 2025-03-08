@@ -50,15 +50,22 @@ class IdentifierHandler {
   /**
    * @todo fill in.
    */
-  public function tableEscapeName(Table $table): string {
-    return preg_replace('/[^A-Za-z0-9_.]+/', '', $table->name);
+  public function tableEscapeName(string $table): string {
+    return preg_replace('/[^A-Za-z0-9_.]+/', '', $table);
   }
 
   /**
    * @todo fill in.
    */
   public function tableMachineName(Table $table): string {
-    return $table->escape();
+    $tableName = $table->needsPrefix ? $this->tablePrefix . $table->table : $table->table;
+    if ($table->schema) {
+      return implode('.', [$table->schema, $table->database, $tableName]);
+    }
+    elseif ($table->database) {
+      return implode('.', [$table->database, $tableName]);
+    }
+    return $tableName;
   }
 
   /**

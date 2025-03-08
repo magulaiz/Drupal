@@ -987,7 +987,7 @@ abstract class Connection {
    */
   public function escapeTable($table) {
     @trigger_error(__METHOD__ . "() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312", E_USER_DEPRECATED);
-    return $this->identifiers->table($table)->escapedName();
+    return $this->identifiers->table($table)->table;
   }
 
   /**
