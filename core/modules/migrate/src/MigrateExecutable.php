@@ -438,7 +438,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
           }
           catch (MigrateException $e) {
             // Prepend the process plugin id and index to the message.
-            $message = sprintf("%s($index): %s", $plugin->getPluginId(), $e->getMessage());
+            $message = sprintf("%s(%d): %s", $plugin->getPluginId(), $index, $e->getMessage());
             throw new MigrateException($message);
           }
           if ($plugin->isPipelineStopped()) {
