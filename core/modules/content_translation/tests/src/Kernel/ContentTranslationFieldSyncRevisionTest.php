@@ -480,6 +480,7 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
 
   /**
    * @return \Drupal\Core\Entity\ContentEntityInterface
+   *   The saved entity.
    */
   protected function saveNewEntity() {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
@@ -551,7 +552,7 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
   /**
    * Asserts that the latest revision has the expected field values.
    *
-   * @param $entity_id
+   * @param string $entity_id
    *   The entity ID.
    * @param array $expected_values
    *   An array of expected values in the following order:

@@ -6,6 +6,7 @@ use Drupal\Core\Cache\Context\CacheContextsPass;
 use Drupal\Core\Cache\ListCacheBinsPass;
 use Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass;
 use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
+use Drupal\Core\DependencyInjection\Compiler\BackwardsCompatibilityClassLoaderPass;
 use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\DeprecatedServicePass;
 use Drupal\Core\DependencyInjection\Compiler\DevelopmentSettingsPass;
@@ -56,7 +57,8 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
   public function register(ContainerBuilder $container) {
     $this->registerTest($container);
 
-    // Only register the private file stream wrapper if a file path has been set.
+    // Only register the private file stream wrapper if a file path has been
+    // set.
     if (Settings::get('file_private_path')) {
       $container->register('stream_wrapper.private', 'Drupal\Core\StreamWrapper\PrivateStream')
         ->addTag('stream_wrapper', ['scheme' => 'private']);
@@ -109,6 +111,9 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->addCompilerPass(new DeprecatedServicePass());
 
+    // Collect moved classes for the backwards compatibility class loader.
+    $container->addCompilerPass(new BackwardsCompatibilityClassLoaderPass());
+
     $container->registerForAutoconfiguration(EventSubscriberInterface::class)
       ->addTag('event_subscriber');
 
@@ -120,6 +125,17 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->registerForAutoconfiguration(ModuleUninstallValidatorInterface::class)
       ->addTag('module_install.uninstall_validator');
+
+    // Deprecated parameters.
+    if ($container->hasParameter('session.storage.options')) {
+      $session_storage_options = $container->getParameter('session.storage.options');
+      if (array_key_exists('sid_length', $session_storage_options)) {
+        @trigger_error('The "sid_length" parameter is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. This setting should be removed from the settings file, since its usage has been removed. See https://www.drupal.org/node/3469305', E_USER_DEPRECATED);
+      }
+      if (array_key_exists('sid_bits_per_character', $session_storage_options)) {
+        @trigger_error('The "sid_bits_per_character" parameter is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. This setting should be removed from the settings file, since its usage has been removed. See https://www.drupal.org/node/3469305', E_USER_DEPRECATED);
+      }
+    }
   }
 
   /**

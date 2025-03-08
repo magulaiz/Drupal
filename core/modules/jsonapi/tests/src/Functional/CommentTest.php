@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
+use Drupal\entity_test\EntityTestHelper;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -107,7 +109,7 @@ class CommentTest extends ResourceTestBase {
   protected function createEntity() {
     // Create a "bar" bundle for the "entity_test" entity type and create.
     $bundle = 'bar';
-    entity_test_create_bundle($bundle, NULL, 'entity_test');
+    EntityTestHelper::createBundle($bundle, NULL, 'entity_test');
 
     // Create a comment field on this bundle.
     $this->addDefaultCommentField('entity_test', 'bar', 'comment');
@@ -150,10 +152,10 @@ class CommentTest extends ResourceTestBase {
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
+            'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
           ],
         ],
-        'version' => '1.0',
+        'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
       ],
       'links' => [
         'self' => ['href' => $self_url],
@@ -293,10 +295,10 @@ class CommentTest extends ResourceTestBase {
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
     switch ($method) {
-      case 'GET';
+      case 'GET':
         return "The 'access comments' permission is required and the comment must be published.";
 
-      case 'POST';
+      case 'POST':
         return "The 'post comments' permission is required.";
 
       case 'PATCH':
