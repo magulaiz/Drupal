@@ -363,7 +363,7 @@ class Datetime extends DateElementBase {
         // If the date is valid, set it.
         $date = $input['object'];
         if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
-          $range = static::datetimeRangeYears($element['#date_year_range']);
+          $range = self::datetimeRangeYears($element['#date_year_range']);
           $min = DrupalDateTime::createFromArray(['year' => $range[0]], $date->getTimezone());
           $max = DrupalDateTime::createFromArray(['year' => $range[1] + 1], $date->getTimezone());
 
