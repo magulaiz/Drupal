@@ -45,7 +45,9 @@ function options_allowed_values(FieldStorageDefinitionInterface $definition, ?Fi
     // generating dynamic and uncached values.
     $cacheable = TRUE;
     if (!empty($function)) {
-      $values = $function($definition, $entity, $cacheable);
+      $values = is_array($function)
+        ? call_user_func($function)
+        : $function($definition, $entity, $cacheable);
     }
     else {
       $values = $definition->getSetting('allowed_values');
