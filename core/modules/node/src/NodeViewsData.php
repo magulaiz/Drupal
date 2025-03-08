@@ -4,6 +4,8 @@ namespace Drupal\node;
 
 use Drupal\views\EntityViewsData;
 
+// cspell:ignore fulldate
+
 /**
  * Provides the views data for the node entity type.
  */
@@ -250,8 +252,8 @@ class NodeViewsData extends EntityViewsData {
       ],
     ];
 
-    // Define the base group of this table. Fields that don't have a group defined
-    // will go into this field by default.
+    // Define the base group of this table. Fields that don't have a group
+    // defined will go into this field by default.
     $data['node_access']['table']['group'] = $this->t('Content access');
 
     // For other base tables, explain how we join.
