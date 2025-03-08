@@ -89,6 +89,7 @@ class MachineNameTest extends WebDriverTestBase {
 
     // Get elements from the page.
     $title_1 = $page->findField('machine_name_1_label');
+    $title_3 = $page->findField('machine_name_3_label');
     $machine_name_1_field = $page->findField('machine_name_1');
     $machine_name_2_field = $page->findField('machine_name_2');
     $machine_name_1_wrapper = $machine_name_1_field->getParent();
@@ -137,6 +138,14 @@ class MachineNameTest extends WebDriverTestBase {
     // Validate if the element contains the correct value.
     $this->assertEquals(end($test_values)['expected'], $machine_name_1_field->getValue(), 'The ID field value must be equal to the php generated machine name');
 
+    // Assert that a machine name based on a default value is initialized.
+    $this->assertJsCondition('jQuery("#edit-machine-name-3-label-machine-name-suffix .machine-name-value").html() == "yet_another_machine_name"');
+
+    // Assert that a machine name based on a default value is updated when the
+    // value is updated.
+    $title_3->setValue('A new machine name');
+    $this->assertJsCondition('jQuery("#edit-machine-name-3-label-machine-name-suffix .machine-name-value").html() == "a_new_machine_name"');
+
     // Test that machine name generation still occurs after an HTML 5
     // validation failure.
     $this->drupalGet('form-test/machine-name');
@@ -146,9 +155,6 @@ class MachineNameTest extends WebDriverTestBase {
     $this->assertNotEmpty($machine_name_1_value, 'Machine name field 1 must be initialized');
     $this->assertNotEmpty($machine_name_2_value, 'Machine name field 2 must be initialized');
     $this->assertNotEmpty($machine_name_3_value, 'Machine name field 3 must be initialized');
-
-    // Assert that a machine name based on a default value is initialized.
-    $this->assertJsCondition('jQuery("#edit-machine-name-3-label-machine-name-suffix .machine-name-value").html() == "yet_another_machine_name"');
 
     // Test each value for conversion to a machine name.
     foreach ($test_values as $test_info) {
