@@ -35,9 +35,10 @@ class Table extends IdentifierBase {
   protected string $machineName;
 
   public function __construct(
-    protected readonly IdentifierHandler $identifierHandler,
-    public readonly string $identifier,
+    IdentifierHandler $identifierHandler,
+    string $identifier,
   ) {
+    parent::__construct($identifierHandler, $identifier);
     $parts = explode(".", $identifier);
     [$this->schema, $this->database, $this->table] = match (count($parts)) {
       1 => [

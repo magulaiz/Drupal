@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database\Identifier;
 
+use Drupal\Component\Assertion\Inspector;
+
 /**
  * @todo fill in.
  */
 class IdentifierHandler {
 
   /**
-   * @var array{'identifier':array<string,array<string,string>>,'platform':array<string,array<string,string>>}
+   * @var array{'identifier':array<string,array<string,string>>,'machine':array<string,array<string,string>>}
    */
   protected array $identifiers;
-
-  /**
-   * @var array{'identifier':array<string,array<string,string>>,'platform':array<string,array<string,string>>}
-   */
-  protected array $aliases;
 
   /**
    * Constructs an IdentifierHandler object.
@@ -34,6 +31,7 @@ class IdentifierHandler {
     public readonly string $tablePrefix,
     public readonly array $identifierQuotes = ['"', '"'],
   ) {
+    assert(count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), __CLASS__ . '::$identifierQuotes must contain 2 string values');
   }
 
   /**
@@ -48,7 +46,7 @@ class IdentifierHandler {
     }
     else {
       $table = new Table($this, $tableIdentifier);
-      $this->setIdentifier1($tableIdentifier, IdentifierType::Table, $table);
+      $this->setIdentifier($tableIdentifier, IdentifierType::Table, $table);
     }
     return $table;
   }
@@ -77,21 +75,7 @@ class IdentifierHandler {
   /**
    * @todo fill in.
    */
-  protected function setIdentifier(string $identifier, string $platform_identifier, IdentifierType $type, bool $isAlias): void {
-    if (!$isAlias) {
-      $this->identifiers['identifier'][$identifier][$type->value] = $platform_identifier;
-      $this->identifiers['platform'][$platform_identifier][$type->value] = $identifier;
-    }
-    else {
-      $this->aliases['identifier'][$identifier][$type->value] = $platform_identifier;
-      $this->aliases['platform'][$platform_identifier][$type->value] = $identifier;
-    }
-  }
-
-  /**
-   * @todo fill in.
-   */
-  protected function setIdentifier1(string $id, IdentifierType $type, IdentifierBase $identifier): void {
+  protected function setIdentifier(string $id, IdentifierType $type, IdentifierBase $identifier): void {
     $this->identifiers['identifier'][$id][$type->value] = $identifier;
   }
 
@@ -107,102 +91,6 @@ class IdentifierHandler {
    */
   protected function getIdentifier(string $id, IdentifierType $type): IdentifierBase {
     return $this->identifiers['identifier'][$id][$type->value];
-  }
-
-  /**
-   * @todo fill in.
-   */
-  public function getPlatformIdentifierName(string $original_name, bool $quoted = TRUE): string {
-    if (!$this->hasIdentifier($original_name, IdentifierType::Generic)) {
-      $this->setIdentifier($original_name, $this->resolvePlatformGenericIdentifier($original_name), IdentifierType::Generic, FALSE);
-    }
-    [$start_quote, $end_quote] = $this->identifierQuotes;
-    $identifier = $this->identifiers['identifier'][$original_name][IdentifierType::Generic->value];
-    return $quoted ? $start_quote . $identifier . $end_quote : $identifier;
-  }
-
-  /**
-   * @todo fill in.
-   */
-  public function getPlatformDatabaseName(string $original_name, bool $quoted = TRUE): string {
-    $original_name = (string) preg_replace('/[^A-Za-z0-9_]+/', '', $original_name);
-    if (!$this->hasIdentifier($original_name, IdentifierType::Database)) {
-      $this->setIdentifier($original_name, $this->resolvePlatformDatabaseIdentifier($original_name), IdentifierType::Database, FALSE);
-    }
-    [$start_quote, $end_quote] = $this->identifierQuotes;
-    return $quoted ?
-      $start_quote . $this->identifiers['identifier'][$original_name][IdentifierType::Database->value] . $end_quote :
-      $this->identifiers['identifier'][$original_name][IdentifierType::Database->value];
-  }
-
-  /**
-   * @todo fill in.
-   */
-  public function getPlatformColumnName(string $original_name, bool $quoted = TRUE): string {
-    if ($original_name === '') {
-      return '';
-    }
-    $original_name = (string) preg_replace('/[^A-Za-z0-9_.]+/', '', $original_name);
-    if (!$this->hasIdentifier($original_name, IdentifierType::Column)) {
-      $this->setIdentifier($original_name, $this->resolvePlatformColumnIdentifier($original_name), IdentifierType::Column, FALSE);
-    }
-    // Sometimes fields have the format table_alias.field. In such cases
-    // both identifiers should be quoted, for example, "table_alias"."field".
-    [$start_quote, $end_quote] = $this->identifierQuotes;
-    return $quoted ?
-      $start_quote . str_replace(".", "$end_quote.$start_quote", $this->identifiers['identifier'][$original_name][IdentifierType::Column->value]) . $end_quote :
-      $this->identifiers['identifier'][$original_name][IdentifierType::Column->value];
-  }
-
-  /**
-   * @todo fill in.
-   */
-  public function getPlatformAliasName(string $original_name, IdentifierType $type = IdentifierType::Generic, bool $quoted = TRUE): string {
-    $original_name = (string) preg_replace('/[^A-Za-z0-9_]+/', '', $original_name);
-    if ($original_name[0] === $this->identifierQuotes[0]) {
-      $original_name = substr($original_name, 1, -1);
-    }
-    if (!$this->hasIdentifier($original_name, IdentifierType::Alias)) {
-      $this->setIdentifier($original_name, $this->resolvePlatformGenericIdentifier($original_name), $type, TRUE);
-    }
-    [$start_quote, $end_quote] = $this->identifierQuotes;
-    $alias = $this->aliases['identifier'][$original_name][$type->value] ?? $this->identifiers['identifier'][$original_name][0];
-    return $quoted ? $start_quote . $alias . $end_quote : $alias;
-  }
-
-  /**
-   * @todo fill in.
-   */
-  protected function resolvePlatformGenericIdentifier(string $identifier): string {
-    return $identifier;
-  }
-
-  /**
-   * @todo fill in.
-   */
-  protected function resolvePlatformDatabaseIdentifier(string $identifier): string {
-    return $identifier;
-  }
-
-  /**
-   * @todo fill in.
-   */
-  protected function resolvePlatformTableIdentifier(string $identifier): string {
-    return $identifier;
-  }
-
-  /**
-   * @todo fill in.
-   */
-  protected function resolvePlatformColumnIdentifier(string $identifier): string {
-    return $identifier;
-  }
-
-  /**
-   * @todo fill in.
-   */
-  protected function resolvePlatformAliasIdentifier(string $identifier, int $type = 0): string {
-    return $identifier;
   }
 
 }

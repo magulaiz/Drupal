@@ -112,6 +112,23 @@ abstract class Connection {
   protected array $tablePlaceholderReplacements;
 
   /**
+   * List of escaped field names, keyed by unescaped names.
+   *
+   * There are cases in which escapeField() is called on an empty string. In
+   * this case it should always return an empty string.
+   *
+   * @var array
+   */
+  protected $escapedFields = ["" => ""];
+
+  /**
+   * List of escaped aliases names, keyed by unescaped aliases.
+   *
+   * @var array
+   */
+  protected $escapedAliases = [];
+
+  /**
    * Tracks the database API events to be dispatched.
    *
    * For performance reasons, database API events are not yielded by default.
@@ -162,7 +179,7 @@ abstract class Connection {
    * @todo Remove the method in Drupal 1x.
    */
   public function __get($name): mixed {
-    if (in_array($name, ['prefix', 'escapedTables', 'escapedFields', 'escapedAliases', 'identifierQuotes'])) {
+    if (in_array($name, ['prefix', 'escapedTables', 'identifierQuotes'])) {
       @trigger_error("Accessing Connection::\${$name} is deprecated in drupal:11.9.0 and the property is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/1234567", E_USER_DEPRECATED);
       return [];
     }
@@ -361,14 +378,7 @@ abstract class Connection {
    *   This method should only be called by database API code.
    */
   public function quoteIdentifiers($sql) {
-    preg_match_all('/(\[(.+?)\])/', $sql, $matches);
-    $identifiers = [];
-    $i = 0;
-    foreach ($matches[1] as $match) {
-      $identifiers[$match] = $this->identifiers->getPlatformIdentifierName($matches[2][$i]);
-      $i++;
-    }
-    return strtr($sql, $identifiers);
+    return str_replace(['[', ']'], $this->identifiers->identifierQuotes, $sql);
   }
 
   /**
@@ -381,7 +391,8 @@ abstract class Connection {
    *   The fully qualified table name.
    */
   public function getFullQualifiedTableName($table) {
-    return $this->identifiers->getPlatformDatabaseName($this->getConnectionOptions()['database']) . '.' . $this->identifiers->table($table)->machineName();
+    $options = $this->getConnectionOptions();
+    return $options['database'] . '.' . $this->identifiers->table($table)->machineName();
   }
 
   /**
@@ -965,7 +976,9 @@ abstract class Connection {
    *   The sanitized database name.
    */
   public function escapeDatabase($database) {
-    return $this->identifiers->getPlatformDatabaseName($database);
+    $database = preg_replace('/[^A-Za-z0-9_]+/', '', $database);
+    [$start_quote, $end_quote] = $this->identifiers->identifierQuotes;
+    return $start_quote . $database . $end_quote;
   }
 
   /**
@@ -1004,7 +1017,14 @@ abstract class Connection {
    *   The sanitized field name.
    */
   public function escapeField($field) {
-    return $this->identifiers->getPlatformColumnName($field);
+    if (!isset($this->escapedFields[$field])) {
+      $escaped = preg_replace('/[^A-Za-z0-9_.]+/', '', $field);
+      [$start_quote, $end_quote] = $this->identifiers->identifierQuotes;
+      // Sometimes fields have the format table_alias.field. In such cases
+      // both identifiers should be quoted, for example, "table_alias"."field".
+      $this->escapedFields[$field] = $start_quote . str_replace('.', $end_quote . '.' . $start_quote, $escaped) . $end_quote;
+    }
+    return $this->escapedFields[$field];
   }
 
   /**
@@ -1022,7 +1042,11 @@ abstract class Connection {
    *   The sanitized alias name.
    */
   public function escapeAlias($field) {
-    return $this->identifiers->getPlatformAliasName($field);
+    if (!isset($this->escapedAliases[$field])) {
+      [$start_quote, $end_quote] = $this->identifiers->identifierQuotes;
+      $this->escapedAliases[$field] = $start_quote . preg_replace('/[^A-Za-z0-9_]+/', '', $field) . $end_quote;
+    }
+    return $this->escapedAliases[$field];
   }
 
   /**
