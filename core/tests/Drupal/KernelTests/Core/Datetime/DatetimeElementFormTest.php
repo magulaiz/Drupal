@@ -226,6 +226,17 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
       $formState->getError($form['range_datetime_element'])
     );
 
+    // Tests with a date barely outside range.
+    $formState = new FormState();
+    $formState->setValue(['range_datetime_element', 'date'], '3001-01-01');
+    $formState->setValue(['range_datetime_element', 'time'], '00:00');
+    $form = \Drupal::formBuilder()->getForm($this);
+    \Drupal::formBuilder()->submitForm($this, $formState);
+    $this->assertEquals(
+      'The range_datetime_element date is invalid. Date should be in the 1850-3000 year range.',
+      $formState->getError($form['range_datetime_element'])
+    );
+
     // Tests with a date inside range.
     $formState = new FormState();
     $formState->setValue(['range_datetime_element', 'date'], '2000-01-01');

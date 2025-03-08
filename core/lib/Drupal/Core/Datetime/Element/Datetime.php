@@ -364,13 +364,11 @@ class Datetime extends DateElementBase {
         $date = $input['object'];
         if ($date instanceof DrupalDateTime && !$date->hasErrors()) {
           $range = static::datetimeRangeYears($element['#date_year_range']);
-          $min = clone($date);
-          $min->setDate($range[0], 1, 1)->setTime(0, 0);
-          $max = clone($date);
-          $max->setDate($range[1], 12, 31)->setTime(23, 59, 59);
+          $min = DrupalDateTime::createFromArray(['year' => $range[0]], $date->getTimezone());
+          $max = DrupalDateTime::createFromArray(['year' => $range[1] + 1], $date->getTimezone());
 
           // Check if the date is in the allowed year range.
-          if ($date < $min || $date > $max) {
+          if ($date < $min || $date >= $max) {
             $form_state->setError(
               $element,
               t('The %field date is invalid. Date should be in the %min-%max year range.',
