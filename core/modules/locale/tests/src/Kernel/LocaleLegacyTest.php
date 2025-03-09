@@ -18,12 +18,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class LocaleLegacyTest extends KernelTestBase {
 
   /**
-   * The modules to enable for this test.
-   *
-   * @var string[]
-   */
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = ['language', 'locale', 'locale_test'];

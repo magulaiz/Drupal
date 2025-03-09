@@ -126,6 +126,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
 
     // Install configs.
     $this->installConfig(['language', 'locale', 'user']);
+
     \Drupal::service('locale.config_manager')->updateDefaultConfigLangcodes();
     $langcodes = array_keys(\Drupal::languageManager()->getLanguages());
     $locale_config_manager = \Drupal::service('locale.config_manager');
