@@ -505,7 +505,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertNotFalse($backend->get('test11'), "Cache id test11 exists.");
     $this->assertNotFalse($backend->get('test13'), "Cache id test13 exists.");
     $this->assertNotFalse($backend->get('test17'), "Cache id test17 exists.");
-    
+
     // Calling deleteMultiple() with an empty array should not cause an error.
     $this->assertNull($backend->deleteMultiple([]));
   }
