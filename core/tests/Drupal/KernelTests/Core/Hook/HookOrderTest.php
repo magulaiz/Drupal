@@ -226,19 +226,7 @@ class HookOrderTest extends KernelTestBase {
       BAlterHooks::class . '::testAlterAfterCExtra',
       CAlterHooks::class . '::testAlter',
       DAlterHooks::class . '::testAlter',
-    ], 'test', [
-      ['test', 'test_unknown'],
-      ['test_unknown', 'test', 'test_unknown'],
-      ['test_unknown_1', 'test_unknown_2', 'test'],
-    ]);
-
-    // Prepending a type changes the order and loses the implementation for 'D'.
-    // @todo This is probably bad.
-    $this->assertAlterCallOrder([
-      CAlterHooks::class . '::testAlter',
-      AAlterHooks::class . '::testAlterAfterC',
-      BAlterHooks::class . '::testAlterAfterCExtra',
-    ], ['test_other_unknown', 'test'], []);
+    ], 'test');
 
     $this->assertAlterCallOrder([
       AAlterHooks::class . '::testSubtypeAlter',
@@ -249,15 +237,6 @@ class HookOrderTest extends KernelTestBase {
 
     $this->assertAlterCallOrder([
       // The implementation from 'D' is gone.
-      CAlterHooks::class . '::testAlter',
-      CAlterHooks::class . '::testSubtypeAlter',
-      AAlterHooks::class . '::testAlterAfterC',
-      AAlterHooks::class . '::testSubtypeAlter',
-      BAlterHooks::class . '::testAlterAfterCExtra',
-      BAlterHooks::class . '::testSubtypeAlter',
-    ], ['test', 'test_subtype'], []);
-
-    $this->assertAlterCallOrder([
       AAlterHooks::class . '::testAlterAfterC',
       AAlterHooks::class . '::testSubtypeAlter',
       BAlterHooks::class . '::testAlterAfterCExtra',
@@ -266,7 +245,7 @@ class HookOrderTest extends KernelTestBase {
       CAlterHooks::class . '::testSubtypeAlter',
       DAlterHooks::class . '::testAlter',
       DAlterHooks::class . '::testSubtypeAlter',
-    ], ['test', 'test_subtype', 'test_other'], []);
+    ], ['test', 'test_subtype']);
 
     $this->disableModules(['hk_b_test']);
 
@@ -302,14 +281,16 @@ class HookOrderTest extends KernelTestBase {
     ], $this->alter('form')['#calls'] ?? NULL);
 
     $this->assertSameCallList([
-      BFormAlterHooks::class . '::formAlter',
-      BFormAlterHooks::class . '::myFormAlter',
       AFormAlterHooks::class . '::formAlter',
       AFormAlterHooks::class . '::formAlterAfterB',
       AFormAlterHooks::class . '::formAlterAfterBExtra',
       AFormAlterHooks::class . '::myFormAlter',
       AFormAlterHooks::class . '::myFormAlterAfterB',
       AFormAlterHooks::class . '::myFormAlterAfterBExtra',
+      BFormAlterHooks::class . '::formAlter',
+      BFormAlterHooks::class . '::myFormAlter',
+      CFormAlterHooks::class . '::formAlter',
+      CFormAlterHooks::class . '::myFormAlter',
     ], $this->alter(['form', 'form_myform'])['#calls'] ?? NULL);
   }
 
