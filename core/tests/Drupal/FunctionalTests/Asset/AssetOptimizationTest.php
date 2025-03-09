@@ -164,7 +164,7 @@ class AssetOptimizationTest extends BrowserTestBase {
   }
 
   /**
-   * Tests gzip compresion.
+   * Tests gzip compression.
    *
    * @param string $url
    *   The source URL.
