@@ -9,15 +9,18 @@ namespace Drupal\Core\Database\Identifier;
  */
 abstract class IdentifierBase implements \Stringable {
 
-  /**
-   * @todo fill in.
-   */
-  public readonly string $canonicalName;
-
   public function __construct(
     protected readonly IdentifierProcessorBase $identifierProcessor,
     public readonly string $identifier,
+    public readonly string $canonicalName,
   ) {
+  }
+
+  /**
+   * @todo fill in.
+   */
+  public function canonical(): string {
+    return $this->canonicalName;
   }
 
   /**

@@ -14,22 +14,17 @@ class Table extends IdentifierBase {
   /**
    * @todo fill in.
    */
-  public readonly ?string $database;
+  public readonly ?Database $database;
 
   /**
    * @todo fill in.
    */
-  public readonly ?string $schema;
+  public readonly ?Schema $schema;
 
   /**
    * @todo fill in.
    */
   public readonly bool $needsPrefix;
-
-  /**
-   * @todo fill in.
-   */
-  public readonly string $canonicalName;
 
   /**
    * @todo fill in.
@@ -40,8 +35,10 @@ class Table extends IdentifierBase {
     IdentifierProcessorBase $identifierProcessor,
     string $identifier,
   ) {
-    parent::__construct($identifierProcessor, $identifier);
-    [$this->database, $this->schema, $this->canonicalName, $this->needsPrefix] = $this->identifierProcessor->parseTableIdentifier($identifier);
+    $parts = $identifierProcessor->parseTableIdentifier($identifier);
+    parent::__construct($identifierProcessor, $identifier, $parts[2]);
+
+    [$this->database, $this->schema, $tmp, $this->needsPrefix] = $parts;
     if (strlen($this->needsPrefix ? $this->identifierProcessor->tablePrefix : '' . $this->canonicalName) > $this->identifierProcessor->getMaxLength(IdentifierType::Table)) {
       throw new IdentifierException(sprintf(
         'The machine length of the %s identifier \'%s\' exceeds the maximum allowed (%d)',
@@ -53,7 +50,17 @@ class Table extends IdentifierBase {
   }
 
   /**
-   * @todo fill in.
+   * {@inheritdoc}
+   */
+  public function canonical(): string {
+    $ret = isset($this->database) ? $this->database->canonical() . '.' : '';
+    $ret .= isset($this->schema) ? $this->schema->canonical() . '.' : '';
+    $ret .= $this->canonicalName;
+    return $ret;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function machineName(bool $quoted = TRUE): string {
     if (!isset($this->machineName)) {

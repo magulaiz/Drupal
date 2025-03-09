@@ -37,23 +37,37 @@ abstract class IdentifierProcessorBase {
   /**
    * @todo fill in.
    */
+  public function quote(string $value): string {
+    return $this->identifierQuotes[0] . $value . $this->identifierQuotes[1];
+  }
+
+  /**
+   * @todo fill in.
+   */
+  public function canonicalizeIdentifier(string $identifier, IdentifierType $type): string {
+    return preg_replace('/[^A-Za-z0-9_]+/', '', $identifier);
+  }
+
+  /**
+   * @todo fill in.
+   */
   public function parseTableIdentifier(string $identifier): array {
     $parts = explode(".", $identifier);
     [$database, $schema, $table] = match (count($parts)) {
       1 => [
         NULL,
         NULL,
-        $this->tableEscapeName($parts[0]),
+        $this->canonicalizeIdentifier($parts[0], IdentifierType::Table),
       ],
       2 => [
         NULL,
-        $this->tableEscapeName($parts[0]),
-        $this->tableEscapeName($parts[1]),
+        new Schema($this, $parts[0]),
+        $this->canonicalizeIdentifier($parts[1], IdentifierType::Table),
       ],
       3 => [
-        $this->tableEscapeName($parts[0]),
-        $this->tableEscapeName($parts[1]),
-        $this->tableEscapeName($parts[2]),
+        new Database($this, $parts[0]),
+        new Schema($this, $parts[1]),
+        $this->canonicalizeIdentifier($parts[2], IdentifierType::Table),
       ],
     };
     $needsPrefix = match (count($parts)) {
@@ -61,13 +75,6 @@ abstract class IdentifierProcessorBase {
       default => FALSE,
     };
     return [$database, $schema, $table, $needsPrefix];
-  }
-
-  /**
-   * @todo fill in.
-   */
-  public function tableEscapeName(string $table): string {
-    return preg_replace('/[^A-Za-z0-9_.]+/', '', $table);
   }
 
   /**
