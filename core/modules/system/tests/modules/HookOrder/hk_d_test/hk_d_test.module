@@ -1,0 +1,10 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_testhook().
+ */
+function hk_d_test_testhook(): string {
+  return __FUNCTION__;
+}

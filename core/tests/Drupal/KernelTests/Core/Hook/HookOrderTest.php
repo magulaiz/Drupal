@@ -4,7 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Hook;
 
+use Drupal\hk_a_test\Hook\AAlterHooks;
+use Drupal\hk_a_test\Hook\AFormAlterHooks;
+use Drupal\hk_a_test\Hook\AHooks;
 use Drupal\hk_a_test\Hook\ModuleImplementsAlter;
+use Drupal\hk_b_test\Hook\BAlterHooks;
+use Drupal\hk_b_test\Hook\BFormAlterHooks;
+use Drupal\hk_b_test\Hook\BHooks;
+use Drupal\hk_c_test\Hook\CAlterHooks;
+use Drupal\hk_c_test\Hook\CFormAlterHooks;
+use Drupal\hk_d_test\Hook\DAlterHooks;
+use Drupal\hk_d_test\Hook\DHooks;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -19,6 +29,7 @@ class HookOrderTest extends KernelTestBase {
     'hk_a_test',
     'hk_b_test',
     'hk_c_test',
+    'hk_d_test',
   ];
 
   public function testProceduralAlterOrder(): void {
@@ -207,6 +218,119 @@ class HookOrderTest extends KernelTestBase {
       'hk_c_test_procedural_alter',
       'hk_c_test_procedural_subtype_alter',
     ], ['procedural', 'procedural_subtype']);
+  }
+
+  public function testAlterOrder(): void {
+    $this->assertAlterCallOrder([
+      AAlterHooks::class . '::testAlterAfterC',
+      BAlterHooks::class . '::testAlterAfterCExtra',
+      CAlterHooks::class . '::testAlter',
+      DAlterHooks::class . '::testAlter',
+    ], 'test', [
+      ['test', 'test_unknown'],
+      ['test_unknown', 'test', 'test_unknown'],
+      ['test_unknown_1', 'test_unknown_2', 'test'],
+    ]);
+
+    // Prepending a type changes the order and loses the implementation for 'D'.
+    // @todo This is probably bad.
+    $this->assertAlterCallOrder([
+      CAlterHooks::class . '::testAlter',
+      AAlterHooks::class . '::testAlterAfterC',
+      BAlterHooks::class . '::testAlterAfterCExtra',
+    ], ['test_other_unknown', 'test'], []);
+
+    $this->assertAlterCallOrder([
+      AAlterHooks::class . '::testSubtypeAlter',
+      BAlterHooks::class . '::testSubtypeAlter',
+      CAlterHooks::class . '::testSubtypeAlter',
+      DAlterHooks::class . '::testSubtypeAlter',
+    ], 'test_subtype', prepend_unknown_type: FALSE);
+
+    $this->assertAlterCallOrder([
+      // The implementation from 'D' is gone.
+      CAlterHooks::class . '::testAlter',
+      CAlterHooks::class . '::testSubtypeAlter',
+      AAlterHooks::class . '::testAlterAfterC',
+      AAlterHooks::class . '::testSubtypeAlter',
+      BAlterHooks::class . '::testAlterAfterCExtra',
+      BAlterHooks::class . '::testSubtypeAlter',
+    ], ['test', 'test_subtype'], []);
+
+    $this->assertAlterCallOrder([
+      AAlterHooks::class . '::testAlterAfterC',
+      AAlterHooks::class . '::testSubtypeAlter',
+      BAlterHooks::class . '::testAlterAfterCExtra',
+      BAlterHooks::class . '::testSubtypeAlter',
+      CAlterHooks::class . '::testAlter',
+      CAlterHooks::class . '::testSubtypeAlter',
+      DAlterHooks::class . '::testAlter',
+      DAlterHooks::class . '::testSubtypeAlter',
+    ], ['test', 'test_subtype', 'test_other'], []);
+
+    $this->disableModules(['hk_b_test']);
+
+    $this->assertAlterCallOrder([
+      CAlterHooks::class . '::testAlter',
+      AAlterHooks::class . '::testAlterAfterC',
+      DAlterHooks::class . '::testAlter',
+    ], 'test', prepend_unknown_type: FALSE);
+
+    $this->assertAlterCallOrder([
+      AAlterHooks::class . '::testSubtypeAlter',
+      CAlterHooks::class . '::testSubtypeAlter',
+      DAlterHooks::class . '::testSubtypeAlter',
+    ], 'test_subtype', prepend_unknown_type: FALSE);
+
+    $this->assertAlterCallOrder([
+      CAlterHooks::class . '::testAlter',
+      CAlterHooks::class . '::testSubtypeAlter',
+      AAlterHooks::class . '::testAlterAfterC',
+      AAlterHooks::class . '::testSubtypeAlter',
+      DAlterHooks::class . '::testAlter',
+      DAlterHooks::class . '::testSubtypeAlter',
+    ], ['test', 'test_subtype'], prepend_unknown_type: FALSE);
+  }
+
+  public function testFormAlterOrder(): void {
+    $this->assertSameCallList([
+      AFormAlterHooks::class . '::formAlter',
+      AFormAlterHooks::class . '::formAlterAfterB',
+      AFormAlterHooks::class . '::formAlterAfterBExtra',
+      BFormAlterHooks::class . '::formAlter',
+      CFormAlterHooks::class . '::formAlter',
+    ], $this->alter('form')['#calls'] ?? NULL);
+
+    $this->assertSameCallList([
+      BFormAlterHooks::class . '::formAlter',
+      BFormAlterHooks::class . '::myFormAlter',
+      AFormAlterHooks::class . '::formAlter',
+      AFormAlterHooks::class . '::formAlterAfterB',
+      AFormAlterHooks::class . '::formAlterAfterBExtra',
+      AFormAlterHooks::class . '::myFormAlter',
+      AFormAlterHooks::class . '::myFormAlterAfterB',
+      AFormAlterHooks::class . '::myFormAlterAfterBExtra',
+    ], $this->alter(['form', 'form_myform'])['#calls'] ?? NULL);
+  }
+
+  public function testHookOrder(): void {
+    $this->assertSameCallList(
+      [
+        // All the implementations from CHooks are gone.
+        // @todo This is probably bad.
+        AHooks::class . '::testHookFirst',
+        'hk_a_test_testhook',
+        AHooks::class . '::testHook',
+        AHooks::class . '::testHookAfterB',
+        AHooks::class . '::testHookLast',
+        'hk_b_test_testhook',
+        BHooks::class . '::testHook',
+        'hk_c_test_testhook',
+        'hk_d_test_testhook',
+        DHooks::class . '::testHook',
+      ],
+      \Drupal::moduleHandler()->invokeAll('testhook'),
+    );
   }
 
   /**
