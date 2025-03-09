@@ -25,12 +25,12 @@ use Drupal\Core\Database\TransactionOutOfOrderException;
  *
  * Call structure:
  *   transactionOuterLayer()
- *     Start transaction
+ *     Start transaction "A"
  *     transactionInnerLayer()
- *       Start transaction (does nothing in database)
- *       [Maybe decide to roll back]
+ *       Start transaction "B" (does nothing in database)
+ *       [Maybe decide to roll back "B"]
  *     Do more stuff
- *     Should still be in transaction A
+ *     Should still be in transaction "A"
  *
  * These method can be overridden by non-core database driver if their
  * transaction behavior is different from core. For example, both oci8 (Oracle)
@@ -176,7 +176,7 @@ class TransactionYieldTest extends DatabaseTestBase {
     $txn = $this->connection->startTransaction();
 
     $depth2 = $this->connection->transactionManager()->stackDepth();
-    $this->assertGreaterThan($depth, $depth2, 'Transaction depth has increased with new transaction.');
+    $this->assertSame($depth + 1, $depth2, 'Transaction depth has increased with new transaction.');
 
     // Insert a single row into the testing table.
     $this->connection->insert('test')
@@ -441,6 +441,9 @@ class TransactionYieldTest extends DatabaseTestBase {
 
   /**
    * Tests commit does not fail when committing after DDL.
+   *
+   * In core, SQLite and PostgreSql databases support transactional DDL, MySql
+   * does not.
    */
   public function testCommitAfterDdl(): void {
     $transaction = $this->createRootTransaction();
@@ -676,6 +679,7 @@ class TransactionYieldTest extends DatabaseTestBase {
       $transaction3 = $this->connection->startTransaction();
       $this->insertRow('row');
       $transaction3->yield();
+      $this->assertRowPresent('row');
       $transaction->rollBack();
       $this->assertRowAbsent('row');
     }
@@ -698,6 +702,8 @@ class TransactionYieldTest extends DatabaseTestBase {
     $this->assertEquals(ClientConnectionTransactionState::Active, $reflectionMethod->invoke($this->connection->transactionManager()));
     $this->insertRow('row');
     $this->executeDDLStatement();
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+    $this->assertEquals(ClientConnectionTransactionState::Voided, $reflectionMethod->invoke($this->connection->transactionManager()));
 
     // Try to rollback the root transaction. Since the DDL already committed
     // it, it should fail.
@@ -766,6 +772,7 @@ class TransactionYieldTest extends DatabaseTestBase {
     $this->connection->truncate('test')
       ->execute();
     $this->postTransactionCallbackAction = NULL;
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
   }
 
   /**
@@ -1052,6 +1059,23 @@ class TransactionYieldTest extends DatabaseTestBase {
     $this->expectException(TransactionNameNonUniqueException::class);
     $this->expectExceptionMessage("savepoint_1 is already in use.");
     $this->connection->startTransaction('savepoint_1');
+  }
+
+  /**
+   * Tests for arbitrary transaction names.
+   */
+  public function testArbitraryTransactionNames(): void {
+    $transaction = $this->createRootTransaction('TinkyWinky', FALSE);
+    // Despite setting a name, the root transaction is always named
+    // 'drupal_transaction'.
+    $this->assertSame('drupal_transaction', $transaction->name());
+
+    $savepoint1 = $this->createFirstSavepointTransaction('Dipsy', FALSE);
+    $this->assertSame('Dipsy', $savepoint1->name());
+
+    $this->expectException(TransactionNameNonUniqueException::class);
+    $this->expectExceptionMessage("Dipsy is already in use.");
+    $this->connection->startTransaction('Dipsy');
   }
 
   /**
