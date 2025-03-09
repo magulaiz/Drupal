@@ -122,6 +122,12 @@ class AccessManager implements AccessManagerInterface {
     }
     $route = $route_match->getRouteObject();
     $checks = $route->getOption('_access_checks') ?: [];
+    if (!$route->hasDefault('_form') && !in_array('access_check.csrf', $checks)) {
+      @trigger_error(
+        'Having a non-form route without the _csrf_token requirement explicitly set to TRUE or FALSE is deprecated in drupal:11.2.0 and will trigger an exception in drupal:13.0.0. The ' . $route_match->getRouteName() . ' route does not have this requirement. See https://www.drupal.org/project/drupal/issues/3508087',
+        E_USER_DEPRECATED
+      );
+    }
 
     // Filter out checks which require the incoming request.
     if (!isset($request)) {
