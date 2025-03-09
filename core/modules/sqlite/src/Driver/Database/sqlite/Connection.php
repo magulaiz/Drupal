@@ -84,7 +84,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       // querying an attached database.
       $prefix .= '.';
     }
-    parent::__construct($connection, $connection_options, new IdentifierHandler($prefix));
+    parent::__construct($connection, $connection_options, new IdentifierHandler(new IdentifierProcessor($prefix)));
     if (isset($attachedDatabaseName)) {
       $this->attachDatabase($attachedDatabaseName);
     }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database\Identifier;
 
+use Drupal\Core\Database\Exception\IdentifierException;
+
 /**
  * @todo fill in.
  */
@@ -44,23 +46,31 @@ class Table extends IdentifierBase {
       1 => [
         NULL,
         NULL,
-        $this->identifierHandler->tableEscapeName($parts[0]),
+        $this->identifierHandler->identifierProcessor->tableEscapeName($parts[0]),
       ],
       2 => [
         NULL,
-        $this->identifierHandler->tableEscapeName($parts[0]),
-        $this->identifierHandler->tableEscapeName($parts[1]),
+        $this->identifierHandler->identifierProcessor->tableEscapeName($parts[0]),
+        $this->identifierHandler->identifierProcessor->tableEscapeName($parts[1]),
       ],
       3 => [
-        $this->identifierHandler->tableEscapeName($parts[0]),
-        $this->identifierHandler->tableEscapeName($parts[1]),
-        $this->identifierHandler->tableEscapeName($parts[2]),
+        $this->identifierHandler->identifierProcessor->tableEscapeName($parts[0]),
+        $this->identifierHandler->identifierProcessor->tableEscapeName($parts[1]),
+        $this->identifierHandler->identifierProcessor->tableEscapeName($parts[2]),
       ],
     };
     $this->needsPrefix = match (count($parts)) {
       1 => TRUE,
       default => FALSE,
     };
+    if (strlen($this->needsPrefix ? $this->identifierHandler->identifierProcessor->tablePrefix : '' . $this->table) > $this->identifierHandler->identifierProcessor->getMaxLength(IdentifierType::Table)) {
+      throw new IdentifierException(sprintf(
+        'The machine length of the %s identifier \'%s\' exceeds the maximum allowed (%d)',
+        IdentifierType::Table->value,
+        $this->table,
+        $this->identifierHandler->identifierProcessor->getMaxLength(IdentifierType::Table),
+      ));
+    }
   }
 
   /**
@@ -68,9 +78,9 @@ class Table extends IdentifierBase {
    */
   public function machineName(bool $quoted = TRUE): string {
     if (!isset($this->machineName)) {
-      $this->machineName = $this->identifierHandler->tableMachineName($this);
+      $this->machineName = $this->identifierHandler->identifierProcessor->tableMachineName($this);
     }
-    [$start_quote, $end_quote] = $this->identifierHandler->identifierQuotes;
+    [$start_quote, $end_quote] = $this->identifierHandler->identifierProcessor->identifierQuotes;
     return $quoted ? $start_quote . str_replace(".", "$end_quote.$start_quote", $this->machineName) . $end_quote : $this->machineName;
   }
 

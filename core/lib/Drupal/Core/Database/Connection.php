@@ -315,7 +315,7 @@ abstract class Connection {
    */
   public function getPrefix(): string {
     @trigger_error(__METHOD__ . "() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312", E_USER_DEPRECATED);
-    return $this->identifiers->tablePrefix;
+    return $this->identifiers->identifierProcessor->tablePrefix;
   }
 
   /**
@@ -372,7 +372,7 @@ abstract class Connection {
    *   This method should only be called by database API code.
    */
   public function quoteIdentifiers($sql) {
-    return str_replace(['[', ']'], $this->identifiers->identifierQuotes, $sql);
+    return str_replace(['[', ']'], $this->identifiers->identifierProcessor->identifierQuotes, $sql);
   }
 
   /**
@@ -970,7 +970,7 @@ abstract class Connection {
    */
   public function escapeDatabase($database) {
     $database = preg_replace('/[^A-Za-z0-9_]+/', '', $database);
-    [$start_quote, $end_quote] = $this->identifiers->identifierQuotes;
+    [$start_quote, $end_quote] = $this->identifiers->identifierProcessor->identifierQuotes;
     return $start_quote . $database . $end_quote;
   }
 
@@ -1012,7 +1012,7 @@ abstract class Connection {
   public function escapeField($field) {
     if (!isset($this->escapedFields[$field])) {
       $escaped = preg_replace('/[^A-Za-z0-9_.]+/', '', $field);
-      [$start_quote, $end_quote] = $this->identifiers->identifierQuotes;
+      [$start_quote, $end_quote] = $this->identifiers->identifierProcessor->identifierQuotes;
       // Sometimes fields have the format table_alias.field. In such cases
       // both identifiers should be quoted, for example, "table_alias"."field".
       $this->escapedFields[$field] = $start_quote . str_replace('.', $end_quote . '.' . $start_quote, $escaped) . $end_quote;
@@ -1036,7 +1036,7 @@ abstract class Connection {
    */
   public function escapeAlias($field) {
     if (!isset($this->escapedAliases[$field])) {
-      [$start_quote, $end_quote] = $this->identifiers->identifierQuotes;
+      [$start_quote, $end_quote] = $this->identifiers->identifierProcessor->identifierQuotes;
       $this->escapedAliases[$field] = $start_quote . preg_replace('/[^A-Za-z0-9_]+/', '', $field) . $end_quote;
     }
     return $this->escapedAliases[$field];

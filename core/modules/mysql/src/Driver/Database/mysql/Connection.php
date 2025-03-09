@@ -87,7 +87,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     parent::__construct(
       $connection,
       $connection_options,
-      new IdentifierHandler($connection_options['prefix'], $is_ansi_quotes_mode ? ['"', '"'] : ['`', '`']),
+      new IdentifierHandler(new IdentifierProcessor($connection_options['prefix'], $is_ansi_quotes_mode ? ['"', '"'] : ['`', '`'])),
     );
   }
 

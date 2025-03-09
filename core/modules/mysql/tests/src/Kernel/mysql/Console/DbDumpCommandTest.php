@@ -35,7 +35,7 @@ class DbDumpCommandTest extends DriverSpecificKernelTestBase {
 
     // Create a table with a field type not defined in
     // \Drupal\Core\Database\Schema::getFieldTypeMap.
-    $table_name = $connection->identifiers->tablePrefix . 'foo';
+    $table_name = $connection->identifiers->identifierProcessor->tablePrefix . 'foo';
     $sql = "create table if not exists `$table_name` (`test` datetime NOT NULL);";
     $connection->query($sql)->execute();
   }
