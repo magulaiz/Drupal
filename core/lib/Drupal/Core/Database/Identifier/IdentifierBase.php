@@ -9,8 +9,13 @@ namespace Drupal\Core\Database\Identifier;
  */
 abstract class IdentifierBase implements \Stringable {
 
+  /**
+   * @todo fill in.
+   */
+  public readonly string $canonicalName;
+
   public function __construct(
-    protected readonly IdentifierHandler $identifierHandler,
+    protected readonly IdentifierProcessorBase $identifierProcessor,
     public readonly string $identifier,
   ) {
   }

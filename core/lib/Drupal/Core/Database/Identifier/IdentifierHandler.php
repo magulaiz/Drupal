@@ -30,7 +30,7 @@ class IdentifierHandler {
       $table = $this->getIdentifier($tableIdentifier, IdentifierType::Table);
     }
     else {
-      $table = new Table($this, $tableIdentifier);
+      $table = new Table($this->identifierProcessor, $tableIdentifier);
       $this->setIdentifier($tableIdentifier, IdentifierType::Table, $table);
     }
     return $table;

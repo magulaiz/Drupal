@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\pgsql\Driver\Database\pgsql;
 
 use Drupal\Core\Database\Identifier\IdentifierProcessorBase;

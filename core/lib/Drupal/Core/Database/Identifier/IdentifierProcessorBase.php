@@ -37,6 +37,35 @@ abstract class IdentifierProcessorBase {
   /**
    * @todo fill in.
    */
+  public function parseTableIdentifier(string $identifier): array {
+    $parts = explode(".", $identifier);
+    [$database, $schema, $table] = match (count($parts)) {
+      1 => [
+        NULL,
+        NULL,
+        $this->tableEscapeName($parts[0]),
+      ],
+      2 => [
+        NULL,
+        $this->tableEscapeName($parts[0]),
+        $this->tableEscapeName($parts[1]),
+      ],
+      3 => [
+        $this->tableEscapeName($parts[0]),
+        $this->tableEscapeName($parts[1]),
+        $this->tableEscapeName($parts[2]),
+      ],
+    };
+    $needsPrefix = match (count($parts)) {
+      1 => TRUE,
+      default => FALSE,
+    };
+    return [$database, $schema, $table, $needsPrefix];
+  }
+
+  /**
+   * @todo fill in.
+   */
   public function tableEscapeName(string $table): string {
     return preg_replace('/[^A-Za-z0-9_.]+/', '', $table);
   }
@@ -45,7 +74,7 @@ abstract class IdentifierProcessorBase {
    * @todo fill in.
    */
   public function tableMachineName(Table $table): string {
-    $tableName = $table->needsPrefix ? $this->tablePrefix . $table->table : $table->table;
+    $tableName = $table->needsPrefix ? $this->tablePrefix . $table->canonicalName : $table->canonicalName;
     if ($table->database) {
       return implode('.', [$table->database, $table->schema, $tableName]);
     }

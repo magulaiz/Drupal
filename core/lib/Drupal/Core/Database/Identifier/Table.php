@@ -24,12 +24,12 @@ class Table extends IdentifierBase {
   /**
    * @todo fill in.
    */
-  public readonly string $table;
+  public readonly bool $needsPrefix;
 
   /**
    * @todo fill in.
    */
-  public readonly bool $needsPrefix;
+  public readonly string $canonicalName;
 
   /**
    * @todo fill in.
@@ -37,38 +37,17 @@ class Table extends IdentifierBase {
   protected string $machineName;
 
   public function __construct(
-    IdentifierHandler $identifierHandler,
+    IdentifierProcessorBase $identifierProcessor,
     string $identifier,
   ) {
-    parent::__construct($identifierHandler, $identifier);
-    $parts = explode(".", $identifier);
-    [$this->database, $this->schema, $this->table] = match (count($parts)) {
-      1 => [
-        NULL,
-        NULL,
-        $this->identifierHandler->identifierProcessor->tableEscapeName($parts[0]),
-      ],
-      2 => [
-        NULL,
-        $this->identifierHandler->identifierProcessor->tableEscapeName($parts[0]),
-        $this->identifierHandler->identifierProcessor->tableEscapeName($parts[1]),
-      ],
-      3 => [
-        $this->identifierHandler->identifierProcessor->tableEscapeName($parts[0]),
-        $this->identifierHandler->identifierProcessor->tableEscapeName($parts[1]),
-        $this->identifierHandler->identifierProcessor->tableEscapeName($parts[2]),
-      ],
-    };
-    $this->needsPrefix = match (count($parts)) {
-      1 => TRUE,
-      default => FALSE,
-    };
-    if (strlen($this->needsPrefix ? $this->identifierHandler->identifierProcessor->tablePrefix : '' . $this->table) > $this->identifierHandler->identifierProcessor->getMaxLength(IdentifierType::Table)) {
+    parent::__construct($identifierProcessor, $identifier);
+    [$this->database, $this->schema, $this->canonicalName, $this->needsPrefix] = $this->identifierProcessor->parseTableIdentifier($identifier);
+    if (strlen($this->needsPrefix ? $this->identifierProcessor->tablePrefix : '' . $this->canonicalName) > $this->identifierProcessor->getMaxLength(IdentifierType::Table)) {
       throw new IdentifierException(sprintf(
         'The machine length of the %s identifier \'%s\' exceeds the maximum allowed (%d)',
         IdentifierType::Table->value,
-        $this->table,
-        $this->identifierHandler->identifierProcessor->getMaxLength(IdentifierType::Table),
+        $this->canonicalName,
+        $this->identifierProcessor->getMaxLength(IdentifierType::Table),
       ));
     }
   }
@@ -78,9 +57,9 @@ class Table extends IdentifierBase {
    */
   public function machineName(bool $quoted = TRUE): string {
     if (!isset($this->machineName)) {
-      $this->machineName = $this->identifierHandler->identifierProcessor->tableMachineName($this);
+      $this->machineName = $this->identifierProcessor->tableMachineName($this);
     }
-    [$start_quote, $end_quote] = $this->identifierHandler->identifierProcessor->identifierQuotes;
+    [$start_quote, $end_quote] = $this->identifierProcessor->identifierQuotes;
     return $quoted ? $start_quote . str_replace(".", "$end_quote.$start_quote", $this->machineName) . $end_quote : $this->machineName;
   }
 

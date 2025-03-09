@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\mysql\Driver\Database\mysql;
 
 use Drupal\Core\Database\Identifier\IdentifierProcessorBase;
