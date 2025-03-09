@@ -31,7 +31,9 @@ class IdentifierProcessor extends IdentifierProcessorBase {
     if (!isset($table->database) && !isset($table->schema) && $table->needsPrefix) {
       return $this->quote(rtrim($this->tablePrefix, '.')) . '.' . $this->quote($table->canonicalName);
     }
-    return parent::getTableMachineName($table);
+    $ret = isset($table->schema) ? $this->quote($table->schema->canonical()) . '.' : '';
+    $ret .= $this->quote($table->canonicalName);
+    return $ret;
   }
 
 }
