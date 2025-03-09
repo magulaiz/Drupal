@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database\Identifier;
 
-use Drupal\Core\Database\Exception\IdentifierException;
-
 /**
  * Handles a schema identifier.
  *

@@ -38,7 +38,10 @@ class Table extends IdentifierBase {
     $parts = $identifierProcessor->parseTableIdentifier($identifier);
     parent::__construct($identifierProcessor, $identifier, $parts[2]);
 
-    [$this->database, $this->schema, $tmp, $this->needsPrefix] = $parts;
+    $this->database = $parts[0];
+    $this->schema = $parts[1];
+    $this->needsPrefix = $parts[3];
+
     if (strlen($this->needsPrefix ? $this->identifierProcessor->tablePrefix : '' . $this->canonicalName) > $this->identifierProcessor->getMaxLength(IdentifierType::Table)) {
       throw new IdentifierException(sprintf(
         'The machine length of the %s identifier \'%s\' exceeds the maximum allowed (%d)',
