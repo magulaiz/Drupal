@@ -45,7 +45,7 @@ class StubConnection extends Connection {
     parent::__construct(
       $connection,
       $connection_options,
-      new IdentifierHandler($connection_options['prefix'] ?? '', $identifier_quotes),
+      new IdentifierHandler(new StubIdentifierProcessor($connection_options['prefix'] ?? '', $identifier_quotes)),
     );
   }
 
