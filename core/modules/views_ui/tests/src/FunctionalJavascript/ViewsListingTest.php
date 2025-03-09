@@ -176,7 +176,7 @@ class ViewsListingTest extends WebDriverTestBase {
    * @return array
    *   Not visible elements.
    */
-  protected function filterNotVisibleElements($elements) {
+  protected function filterNotVisibleElements(array $elements): array {
     $elements = array_filter($elements, function ($element) {
       return !$element->isVisible();
     });
