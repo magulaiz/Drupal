@@ -193,7 +193,7 @@ class AssetOptimizationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     /*
-     * Guzzle decodes the gzip response automatically
+     * Guzzle decodes the brotli response automatically
      * but adds the original Content-Encoding value in this header.
      */
     $this->assertSession()->responseHeaderEquals('x-encoded-content-encoding', 'br');
