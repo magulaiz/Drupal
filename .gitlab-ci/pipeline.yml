@@ -167,7 +167,10 @@ variables:
     TESTSUITE: PHPUnit-Functional
     CONCURRENCY: "5"
     KUBERNETES_CPU_REQUEST: "16"
-  before_script: pecl install brotli && docker-php-ext-enable brotli
+  before_script:
+    - apt install phpize
+    - pecl install brotli
+    - docker-php-ext-enable brotli
   services:
     - <<: *with-database
 
