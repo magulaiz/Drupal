@@ -88,7 +88,7 @@ abstract class IdentifierProcessorBase {
   public function getTableMachineName(Table $table): string {
     $ret = isset($table->database) ? $this->quote($table->database->canonical()) . '.' : '';
     $ret .= isset($table->schema) ? $this->quote($table->schema->canonical()) . '.' : '';
-    $ret .= $this->quote($table->canonicalName);
+    $ret .= $this->quote($this->tablePrefix . $table->canonicalName);
     return $ret;
   }
 
