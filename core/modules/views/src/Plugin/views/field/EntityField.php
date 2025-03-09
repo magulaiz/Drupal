@@ -674,6 +674,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
         ],
       ],
       '#description' => $this->t('Start from last values.'),
+      '#parents' => ['options', 'delta_reversed'],
     ];
     $form['multiple_field_settings_order']['delta_first_last'] = [
       '#title' => $this->t('First and last only'),
@@ -684,6 +685,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
           ':input[name="options[group_rows]"]' => ['checked' => TRUE],
         ],
       ],
+      '#parents' => ['options', 'delta_first_last'],
     ];
   }
 
