@@ -102,6 +102,9 @@ class AccessManagerTest extends UnitTestCase {
     $this->routeCollection->add('test_route_2', new Route('/test-route-2', [], ['_access' => 'TRUE']));
     $this->routeCollection->add('test_route_3', new Route('/test-route-3', [], ['_access' => 'FALSE']));
     $this->routeCollection->add('test_route_4', new Route('/test-route-4/{value}', [], ['_access' => 'TRUE']));
+    $this->routeCollection->add('test_route_5', new Route('/test-route-5/', [], ['_access' => 'TRUE', '_csrf_token' => 'TRUE']));
+    $this->routeCollection->add('test_route_6', new Route('/test-route-6/', [], ['_access' => 'TRUE', '_csrf_token' => 'FALSE']));
+    $this->routeCollection->add('test_route_7', new Route('/test-route-7/', [], ['_access' => 'TRUE']));
 
     $this->routeProvider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
     $map = [];
@@ -544,6 +547,51 @@ class AccessManagerTest extends UnitTestCase {
 
         return $resolver;
       });
+  }
+
+  /**
+   * Tests that routes without _csrf_token trigger a deprecation.
+   *
+   * @group legacy
+   */
+  public function testRequiredCsrf(): void {
+    $this->setupAccessChecker();
+    $this->checkProvider->setChecks($this->routeCollection);
+    $this->setupAccessArgumentsResolverFactory();
+
+    $this->paramConverter->expects($this->exactly(3))
+      ->method('convert')
+      ->willReturnMap([
+        [
+          [
+            RouteObjectInterface::ROUTE_NAME => 'test_route_5',
+            RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_5'),
+          ],
+          [],
+        ],
+        [
+          [
+            RouteObjectInterface::ROUTE_NAME => 'test_route_6',
+            RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_6'),
+          ],
+          [],
+        ],
+        [
+          [
+            RouteObjectInterface::ROUTE_NAME => 'test_route_7',
+            RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_7'),
+          ],
+          [],
+        ],
+      ]);
+
+    // Routes that should not trigger a deprecation.
+    $this->accessManager->checkNamedRoute('test_route_5', [], $this->account);
+    $this->accessManager->checkNamedRoute('test_route_6', [], $this->account);
+
+    // Tests that a route without _csrf_token triggers a deprecation.
+    $this->expectDeprecation('Having a non-form route without the _csrf_token requirement explicitly set to TRUE or FALSE is deprecated in drupal:11.2.0 and will trigger an exception in drupal:13.0.0. The test_route_7 route does not have this requirement. See https://www.drupal.org/project/drupal/issues/3508087');
+    $this->accessManager->checkNamedRoute('test_route_7', [], $this->account);
   }
 
 }
