@@ -168,7 +168,7 @@ variables:
     CONCURRENCY: "5"
     KUBERNETES_CPU_REQUEST: "16"
   before_script:
-    - apt install phpize
+    - apt-get install php-dev
     - pecl install brotli
     - docker-php-ext-enable brotli
   services:
