@@ -8,7 +8,6 @@ use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\Core\Access\AccessException;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\CheckProvider;
-use Drupal\Core\Access\CsrfAccessCheck;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Access\AccessManager;
@@ -550,8 +549,9 @@ class AccessManagerTest extends UnitTestCase {
       });
   }
 
-
   /**
+   * Tests that routes without _csrf_token trigger a deprecation.
+   *
    * @group legacy
    */
   public function testRequiredCsrf(): void {
@@ -565,23 +565,23 @@ class AccessManagerTest extends UnitTestCase {
         [
           [
             RouteObjectInterface::ROUTE_NAME => 'test_route_5',
-            RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_5')
+            RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_5'),
           ],
-          []
+          [],
         ],
         [
           [
             RouteObjectInterface::ROUTE_NAME => 'test_route_6',
-            RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_6')
+            RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_6'),
           ],
-          []
+          [],
         ],
         [
           [
             RouteObjectInterface::ROUTE_NAME => 'test_route_7',
-            RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_7')
+            RouteObjectInterface::ROUTE_OBJECT => $this->routeCollection->get('test_route_7'),
           ],
-          []
+          [],
         ],
       ]);
 
