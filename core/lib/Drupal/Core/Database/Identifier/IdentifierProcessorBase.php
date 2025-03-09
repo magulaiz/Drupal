@@ -80,15 +80,11 @@ abstract class IdentifierProcessorBase {
   /**
    * @todo fill in.
    */
-  public function tableMachineName(Table $table): string {
-    $tableName = $table->needsPrefix ? $this->tablePrefix . $table->canonicalName : $table->canonicalName;
-    if ($table->database) {
-      return implode('.', [$table->database, $table->schema, $tableName]);
-    }
-    elseif ($table->schema) {
-      return implode('.', [$table->schema, $tableName]);
-    }
-    return $tableName;
+  public function getTableMachineName(Table $table): string {
+    $ret = isset($table->database) ? $this->quote($table->database->canonical()) . '.' : '';
+    $ret .= isset($table->schema) ? $this->quote($table->schema->canonical()) . '.' : '';
+    $ret .= $this->quote($table->canonicalName);
+    return $ret;
   }
 
 }

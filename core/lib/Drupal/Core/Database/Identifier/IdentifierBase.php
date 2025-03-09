@@ -26,7 +26,9 @@ abstract class IdentifierBase implements \Stringable {
   /**
    * @todo fill in.
    */
-  abstract public function machineName(bool $quoted = TRUE): string;
+  public function machineName(bool $quoted = TRUE): string {
+    return $quoted ? $this->identifierProcessor->quote($this->canonicalName) : $this->canonicalName;
+  }
 
   /**
    * @todo fill in.

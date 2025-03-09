@@ -23,11 +23,4 @@ class Schema extends IdentifierBase {
     );
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function machineName(bool $quoted = TRUE): string {
-    return $quoted ? $this->identifierProcessor->quote($this->canonicalName) : $this->canonicalName;
-  }
-
 }

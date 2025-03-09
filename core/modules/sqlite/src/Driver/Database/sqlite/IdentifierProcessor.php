@@ -6,6 +6,7 @@ namespace Drupal\sqlite\Driver\Database\sqlite;
 
 use Drupal\Core\Database\Identifier\IdentifierProcessorBase;
 use Drupal\Core\Database\Identifier\IdentifierType;
+use Drupal\Core\Database\Identifier\Table;
 
 /**
  * SQLite implementation of the identifier processor.
@@ -21,6 +22,16 @@ class IdentifierProcessor extends IdentifierProcessorBase {
     // @see https://www.sqlite.org/limits.html
     // @see https://stackoverflow.com/questions/8135013/table-name-limit-in-sqlite-android
     return 128;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTableMachineName(Table $table): string {
+    if (!isset($table->database) && !isset($table->schema) && $table->needsPrefix) {
+      return $this->quote(rtrim($this->tablePrefix, '.')) . '.' . $this->quote($table->canonicalName);
+    }
+    return parent::getTableMachineName($table);
   }
 
 }

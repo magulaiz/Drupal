@@ -26,11 +26,6 @@ class Table extends IdentifierBase {
    */
   public readonly bool $needsPrefix;
 
-  /**
-   * @todo fill in.
-   */
-  protected string $machineName;
-
   public function __construct(
     IdentifierProcessorBase $identifierProcessor,
     string $identifier,
@@ -66,11 +61,10 @@ class Table extends IdentifierBase {
    * {@inheritdoc}
    */
   public function machineName(bool $quoted = TRUE): string {
-    if (!isset($this->machineName)) {
-      $this->machineName = $this->identifierProcessor->tableMachineName($this);
+    if (!$quoted) {
+      return $this->canonical();
     }
-    [$start_quote, $end_quote] = $this->identifierProcessor->identifierQuotes;
-    return $quoted ? $start_quote . str_replace(".", "$end_quote.$start_quote", $this->machineName) . $end_quote : $this->machineName;
+    return $this->identifierProcessor->getTableMachineName($this);
   }
 
 }
