@@ -70,10 +70,15 @@ abstract class IdentifierProcessorBase {
         $this->canonicalizeIdentifier($parts[2], IdentifierType::Table),
       ],
     };
-    $needsPrefix = match (count($parts)) {
-      1 => TRUE,
-      default => FALSE,
-    };
+    if ($this->tablePrefix !== '') {
+      $needsPrefix = match (count($parts)) {
+        1 => TRUE,
+        default => FALSE,
+      };
+    }
+    else {
+      $needsPrefix = FALSE;
+    }
     return [$database, $schema, $table, $needsPrefix];
   }
 
