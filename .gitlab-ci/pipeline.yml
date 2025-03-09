@@ -169,7 +169,7 @@ variables:
     KUBERNETES_CPU_REQUEST: "16"
   before_script:
     - apt-get update
-    - apt-get install -y php-dev
+    - apt-get install -y php-dev make
     - pecl install brotli
     - docker-php-ext-enable brotli
   services:
