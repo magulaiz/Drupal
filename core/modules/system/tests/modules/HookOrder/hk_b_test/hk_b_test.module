@@ -1,6 +1,13 @@
 <?php
 
 /**
+ * Implements hook_testhook()
+ */
+function hk_b_test_testhook(): string {
+  return __FUNCTION__;
+}
+
+/**
  * Implements hook_procedural_alter().
  *
  * @param list<string> $calls

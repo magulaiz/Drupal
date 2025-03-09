@@ -3,6 +3,13 @@
 use Drupal\hk_a_test\Hook\ModuleImplementsAlter;
 
 /**
+ * Implements hook_testhook()
+ */
+function hk_a_test_testhook(): string {
+  return __FUNCTION__;
+}
+
+/**
  * Implements hook_procedural_alter().
  *
  * @param list<string> $calls
