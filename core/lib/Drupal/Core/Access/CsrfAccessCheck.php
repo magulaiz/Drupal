@@ -55,6 +55,10 @@ class CsrfAccessCheck implements RoutingAccessInterface {
    *   The access result.
    */
   public function access(Route $route, Request $request, RouteMatchInterface $route_match) {
+    if ($route->getRequirement('_csrf_token') === 'FALSE') {
+      return AccessResult::allowed();
+    }
+
     $parameters = $route_match->getRawParameters();
     $path = ltrim($route->getPath(), '/');
     // Replace the path parameters with values from the parameters array.
