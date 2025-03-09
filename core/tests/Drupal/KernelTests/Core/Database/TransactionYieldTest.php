@@ -13,6 +13,8 @@ use Drupal\Core\Database\Transaction\TransactionManagerBase;
 use Drupal\Core\Database\TransactionNameNonUniqueException;
 use Drupal\Core\Database\TransactionOutOfOrderException;
 
+// cspell:ignore Tinky Winky Dipsy
+
 /**
  * Tests the transactions, using the explicit Transaction::yield() method.
  *
