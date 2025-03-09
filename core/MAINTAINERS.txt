@@ -48,9 +48,14 @@ Core JavaScript packages
 
 Committer team facilitators
 - Pamela Barone 'pameeela' https://www.drupal.org/u/pameeela
+- Griffyn Heels 'griffynh' https://www.drupal.org/u/griffynh (provisional)
 
 Core initiative facilitators
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
+
+General core committers
+- Drew Webber 'mcdruid' https://www.drupal.org/u/mcdruid
+- Juraj Nemec 'poker10' https://www.drupal.org/u/poker10
 
 Subsystem maintainers
 ---------------------
