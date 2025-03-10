@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\language_switcher_test\Hook;
 
+use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Url;
+
 /**
  * Hook implementations for language_switcher_test.
  */
