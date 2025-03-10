@@ -110,8 +110,8 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $values, $entity_type_id = 'responsive_image_style') {
-    parent::__construct($values, $entity_type_id);
+  public function __construct(array $values, $entity_type = 'responsive_image_style') {
+    parent::__construct($values, $entity_type);
   }
 
   /**

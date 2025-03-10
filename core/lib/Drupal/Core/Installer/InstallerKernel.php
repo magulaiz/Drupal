@@ -13,7 +13,7 @@ class InstallerKernel extends DrupalKernel {
   /**
    * {@inheritdoc}
    */
-  protected function initializeContainer() {
+  protected function initializeContainer(?array $container_definition = NULL) {
     // Always force a container rebuild.
     $this->containerNeedsRebuild = TRUE;
     // Ensure the InstallerKernel's container is not dumped.
@@ -95,6 +95,7 @@ class InstallerKernel extends DrupalKernel {
     // when multiple modules are being installed.
     // @todo Move this to the parent class after https://www.drupal.org/i/2066993
     $this->container?->reset();
+    $this->container?->set('kernel', $this);
   }
 
 }

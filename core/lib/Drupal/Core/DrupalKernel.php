@@ -12,6 +12,7 @@ use Drupal\Core\ClassLoader\BackwardsCompatibilityClassLoader;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
@@ -26,7 +27,6 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -263,6 +263,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @var string
    */
   protected $root;
+
+  /**
+   * The cached container builder.
+   *
+   * @var \Drupal\Core\DependencyInjection\ContainerBuilder
+   */
+  protected ContainerBuilder $containerBuilder;
 
   /**
    * Create a DrupalKernel object from a request.
@@ -553,10 +560,24 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $cache = $this->bootstrapContainer->get('cache.container')->get($this->getContainerCacheKey());
 
     if ($cache) {
-      return $cache->data;
+      $this->containerBuilder = $cache->data['builder'];
+      return $cache->data['definition'];
     }
 
     return NULL;
+  }
+
+  /**
+   * Get the cached container builder.
+   *
+   * @return \Drupal\Core\DependencyInjection\ContainerBuilder
+   *   The cached container builder.
+   */
+  public function getCachedContainerBuilder(): ContainerBuilder {
+    if (!isset($this->containerBuilder)) {
+      throw new \LogicException('DrupalContainer::getCachedContainerBuilder() is not supposed to be called when there is no container yet.');
+    }
+    return $this->containerBuilder;
   }
 
   /**
@@ -874,7 +895,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @return \Symfony\Component\DependencyInjection\ContainerInterface
    *   An initialized container object.
    */
-  protected function initializeContainer() {
+  protected function initializeContainer(?array $container_definition = NULL) {
     $this->containerNeedsDumping = FALSE;
     $session_started = FALSE;
     $all_messages = [];
@@ -905,7 +926,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // If the module list hasn't already been set in updateModules and we are
     // not forcing a rebuild, then try and load the container from the cache.
-    if (empty($this->moduleList) && !$this->containerNeedsRebuild) {
+    if (!isset($container_definition) && empty($this->moduleList) && !$this->containerNeedsRebuild) {
       $container_definition = $this->getCachedContainerDefinition();
     }
 
@@ -918,8 +939,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // KernelTestBase, which never wants to use the real container, but always
       // the container builder.
       if ($this->allowDumping) {
-        $dumper = new $this->phpArrayDumperClass($container);
-        $container_definition = $dumper->getArray();
+        $container_definition = $this->getDumpedContainerDefinition($container);
       }
     }
 
@@ -939,6 +959,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->attachSynthetic($container);
 
     $this->container = $container;
+
     if ($session_started) {
       $this->container->get('session')->start();
     }
@@ -1395,7 +1416,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $container->setParameter('app.root', $this->getAppRoot());
     $container->setParameter('site.path', $this->getSitePath());
 
+    $serialized = serialize($container);
     $container->compile();
+    $this->containerBuilder = unserialize($serialized)->prepareNewBuilder($container);
+
     return $container;
   }
 
@@ -1444,7 +1468,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function cacheDrupalContainer(array $container_definition) {
     $saved = TRUE;
     try {
-      $this->bootstrapContainer->get('cache.container')->set($this->getContainerCacheKey(), $container_definition);
+      $this->bootstrapContainer->get('cache.container')->set($this->getContainerCacheKey(), [
+        'definition' => $container_definition,
+        'builder' => $this->containerBuilder,
+      ]);
     }
     catch (\Exception) {
       // There is no way to get from the Cache API if the cache set was
@@ -1454,6 +1481,25 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     return $saved;
+  }
+
+  /**
+   * Add the definitions from the current container builder to the container.
+   */
+  public function mergeContainers(): ContainerInterface {
+    if ($this->container instanceof ContainerBuilder) {
+      $this->containerBuilder->prepareNewBuilder($this->container);
+    }
+    $serialized = serialize($this->containerBuilder);
+    $this->containerBuilder->compile();
+    if ($this->container instanceof ContainerBuilder) {
+      $this->container = $this->containerBuilder;
+    }
+    else {
+      $this->container = $this->initializeContainer($this->getDumpedContainerDefinition($this->containerBuilder));
+    }
+    $this->containerBuilder = unserialize($serialized);
+    return $this->container;
   }
 
   /**
@@ -1712,6 +1758,19 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $session = new Session(new MockArraySessionStorage());
     $session->start();
     $request->setSession($session);
+  }
+
+  /**
+   * Gets the service container definition as a PHP array.
+   *
+   * @param \Drupal\Core\DependencyInjection\ContainerBuilder $container
+   *   The container.
+   *
+   * @return array
+   *   A PHP array representation of the service container.
+   */
+  protected function getDumpedContainerDefinition(ContainerBuilder $container): array {
+    return (new $this->phpArrayDumperClass($container))->getArray();
   }
 
 }

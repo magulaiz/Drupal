@@ -17,4 +17,29 @@ interface ContainerInterface extends BaseContainerInterface {
    */
   public function getServiceIds();
 
+  /**
+   * Set a plugin parameter (even on frozen parameter bags).
+   *
+   * @param string $plugin_type
+   *   The plugin type.
+   * @param string $name
+   *   The name.
+   * @param mixed $value
+   *   The value.
+   */
+  public function setPluginParameter(string $plugin_type, string $name, mixed $value): void;
+
+  /**
+   * Get a plugin parameter (without throwing an exception).
+   *
+   * @param string $plugin_type
+   *   The plugin type.
+   * @param string $name
+   *   The name.
+   *
+   * @return mixed
+   *   The value of the parameter or NULL if it doesn't exist.
+   */
+  public function getPluginParameter(string $plugin_type, string $name): mixed;
+
 }

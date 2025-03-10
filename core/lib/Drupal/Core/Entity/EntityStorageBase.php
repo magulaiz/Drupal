@@ -251,8 +251,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    *   The created entity.
    */
   protected function doCreate(array $values) {
-    $entity_class = $this->getEntityClass();
-    return new $entity_class($values, $this->entityTypeId);
+    return ($this->entityFactory)($values);
   }
 
   /**
@@ -414,9 +413,8 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected function mapFromStorageRecords(array $records) {
     $entities = [];
     foreach ($records as $record) {
-      $entity_class = $this->getEntityClass();
       /** @var \Drupal\Core\Entity\EntityInterface $entity */
-      $entity = new $entity_class($record, $this->entityTypeId);
+      $entity = ($this->entityFactory)($record);
       $entities[$entity->id()] = $entity;
     }
     return $entities;
