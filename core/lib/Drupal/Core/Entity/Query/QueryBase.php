@@ -262,6 +262,13 @@ abstract class QueryBase implements QueryInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasAccessCheck() : ?bool {
+    return $this->accessCheck;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function currentRevision() {
     $this->allRevisions = FALSE;
     $this->latestRevision = FALSE;

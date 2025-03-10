@@ -223,6 +223,11 @@ interface QueryInterface extends AlterableInterface {
   public function accessCheck($access_check = TRUE);
 
   /**
+   * Determines if an access check has been requested.
+   */
+  public function hasAccessCheck() : ?bool;
+
+  /**
    * Execute the query.
    *
    * @return int|array
