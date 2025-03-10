@@ -31,6 +31,7 @@
   <!-- Drupal sniffs -->
   <rule ref="Drupal.Arrays.Array"/>
   <rule ref="Drupal.Arrays.Array.LongLineDeclaration">
+    <include-pattern>core/lib/*</include-pattern>
     <include-pattern>core/modules/*/tests/modules/*</include-pattern>
   </rule>
   <rule ref="Drupal.CSS.ClassDefinitionNameSpacing"/>
@@ -60,7 +61,9 @@
       TagsNotGrouped, ParamGroup -->
     <exclude name="Drupal.Commenting.DocComment.LongFullStop"/>
     <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
-    <exclude name="Drupal.Commenting.DocComment.ShortNotCapital"/>
+  </rule>
+  <rule ref="Drupal.Commenting.DocComment">
+    <exclude-pattern>core/tests/*</exclude-pattern>
   </rule>
   <rule ref="Drupal.Commenting.DocCommentAlignment"/>
   <rule ref="Drupal.Commenting.DocCommentLongArraySyntax"/>
