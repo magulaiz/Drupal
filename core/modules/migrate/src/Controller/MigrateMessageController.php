@@ -247,7 +247,7 @@ class MigrateMessageController extends ControllerBase {
    * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   The database query.
    */
-  protected function addFilterToQuery(Request $request, SelectInterface &$query): void {
+  protected function addFilterToQuery(Request $request, SelectInterface $query): void {
     $session_filters = $request->getSession()->get('migration_messages_overview_filter', []);
     if (empty($session_filters)) {
       return;
