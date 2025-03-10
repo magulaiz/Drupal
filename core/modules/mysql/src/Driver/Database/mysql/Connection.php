@@ -7,7 +7,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseConnectionRefusedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
-use Drupal\Core\Database\Identifier\IdentifierHandler;
 use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
@@ -87,7 +86,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     parent::__construct(
       $connection,
       $connection_options,
-      new IdentifierHandler(new IdentifierProcessor($connection_options['prefix'], $is_ansi_quotes_mode ? ['"', '"'] : ['`', '`'])),
+      new IdentifierHandler($connection_options['prefix'], $is_ansi_quotes_mode ? ['"', '"'] : ['`', '`']),
     );
   }
 

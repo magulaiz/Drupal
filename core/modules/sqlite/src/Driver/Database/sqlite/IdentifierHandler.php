@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
-use Drupal\Core\Database\Identifier\IdentifierProcessorBase;
+use Drupal\Core\Database\Identifier\IdentifierHandlerBase;
 use Drupal\Core\Database\Identifier\IdentifierType;
 use Drupal\Core\Database\Identifier\Table;
 
 /**
- * SQLite implementation of the identifier processor.
+ * SQLite implementation of the identifier handler.
  */
-class IdentifierProcessor extends IdentifierProcessorBase {
+class IdentifierHandler extends IdentifierHandlerBase {
 
   /**
    * {@inheritdoc}

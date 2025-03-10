@@ -539,7 +539,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testIdentifierQuotesAssertCount(): void {
     $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('Drupal\\Core\\Database\\Identifier\\IdentifierProcessorBase::$identifierQuotes must contain 2 string values');
+    $this->expectExceptionMessage('Drupal\\Core\\Database\\Identifier\\IdentifierHandlerBase::$identifierQuotes must contain 2 string values');
     $mock_pdo = $this->createMock(StubPDO::class);
     new StubConnection($mock_pdo, [], ['"']);
   }
@@ -549,7 +549,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testIdentifierQuotesAssertString(): void {
     $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('Drupal\\Core\\Database\\Identifier\\IdentifierProcessorBase::$identifierQuotes must contain 2 string values');
+    $this->expectExceptionMessage('Drupal\\Core\\Database\\Identifier\\IdentifierHandlerBase::$identifierQuotes must contain 2 string values');
     $mock_pdo = $this->createMock(StubPDO::class);
     new StubConnection($mock_pdo, [], [0, '1']);
   }

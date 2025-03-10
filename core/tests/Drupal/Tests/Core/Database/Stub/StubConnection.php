@@ -6,7 +6,6 @@ namespace Drupal\Tests\Core\Database\Stub;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\ExceptionHandler;
-use Drupal\Core\Database\Identifier\IdentifierHandler;
 use Drupal\Core\Database\Log;
 use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Tests\Core\Database\Stub\Driver\Schema;
@@ -45,7 +44,7 @@ class StubConnection extends Connection {
     parent::__construct(
       $connection,
       $connection_options,
-      new IdentifierHandler(new StubIdentifierProcessor($connection_options['prefix'] ?? '', $identifier_quotes)),
+      new StubIdentifierHandler($connection_options['prefix'] ?? '', $identifier_quotes),
     );
   }
 

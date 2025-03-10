@@ -10,7 +10,7 @@ namespace Drupal\Core\Database\Identifier;
 abstract class IdentifierBase implements \Stringable {
 
   public function __construct(
-    protected readonly IdentifierProcessorBase $identifierProcessor,
+    protected readonly IdentifierHandlerBase $identifierHandler,
     public readonly string $identifier,
     public readonly string $canonicalName,
   ) {
@@ -27,7 +27,7 @@ abstract class IdentifierBase implements \Stringable {
    * @todo fill in.
    */
   public function machineName(bool $quoted = TRUE): string {
-    return $quoted ? $this->identifierProcessor->quote($this->canonicalName) : $this->canonicalName;
+    return $quoted ? $this->identifierHandler->quote($this->canonicalName) : $this->canonicalName;
   }
 
   /**

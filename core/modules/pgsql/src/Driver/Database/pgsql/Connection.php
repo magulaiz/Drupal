@@ -7,7 +7,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\ExceptionHandler;
-use Drupal\Core\Database\Identifier\IdentifierHandler;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
@@ -330,7 +329,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     $sequence_name = $this->prefixTables('{' . $table . '}_' . $field . '_seq');
     // Remove identifier quotes as we are constructing a new name from a
     // prefixed and quoted table name.
-    return str_replace($this->identifiers->identifierProcessor->identifierQuotes, '', $sequence_name);
+    return str_replace($this->identifiers->identifierQuotes, '', $sequence_name);
   }
 
   /**

@@ -6,7 +6,6 @@ use Drupal\Component\Utility\FilterArray;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\ExceptionHandler;
-use Drupal\Core\Database\Identifier\IdentifierHandler;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
@@ -84,7 +83,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       // querying an attached database.
       $prefix .= '.';
     }
-    parent::__construct($connection, $connection_options, new IdentifierHandler(new IdentifierProcessor($prefix)));
+    parent::__construct($connection, $connection_options, new IdentifierHandler($prefix));
     if (isset($attachedDatabaseName)) {
       $this->attachDatabase($attachedDatabaseName);
     }

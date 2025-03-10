@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\pgsql\Driver\Database\pgsql;
 
-use Drupal\Core\Database\Identifier\IdentifierProcessorBase;
+use Drupal\Core\Database\Identifier\IdentifierHandlerBase;
 use Drupal\Core\Database\Identifier\IdentifierType;
 
 /**
- * MySQL implementation of the identifier processor.
+ * MySQL implementation of the identifier handler.
  */
-class IdentifierProcessor extends IdentifierProcessorBase {
+class IdentifierHandler extends IdentifierHandlerBase {
 
   /**
    * {@inheritdoc}

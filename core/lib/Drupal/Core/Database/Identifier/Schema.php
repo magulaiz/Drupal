@@ -13,13 +13,13 @@ namespace Drupal\Core\Database\Identifier;
 class Schema extends IdentifierBase {
 
   public function __construct(
-    IdentifierProcessorBase $identifierProcessor,
+    IdentifierHandlerBase $identifierHandler,
     string $identifier,
   ) {
     parent::__construct(
-      $identifierProcessor,
+      $identifierHandler,
       $identifier,
-      $identifierProcessor->canonicalizeIdentifier($identifier, IdentifierType::Schema),
+      $identifierHandler->canonicalizeIdentifier($identifier, IdentifierType::Schema),
     );
   }
 

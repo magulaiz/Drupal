@@ -9,7 +9,12 @@ use Drupal\Component\Assertion\Inspector;
 /**
  * @todo fill in.
  */
-abstract class IdentifierProcessorBase {
+abstract class IdentifierHandlerBase {
+
+  /**
+   * @var array{'identifier':array<string,array<string,string>>,'machine':array<string,array<string,string>>}
+   */
+  protected array $identifiers;
 
   /**
    * Constructor.
@@ -27,6 +32,44 @@ abstract class IdentifierProcessorBase {
     public readonly array $identifierQuotes = ['"', '"'],
   ) {
     assert(count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), __CLASS__ . '::$identifierQuotes must contain 2 string values');
+  }
+
+  /**
+   * @todo fill in.
+   */
+  public function table(string|Table $tableIdentifier): Table {
+    if ($tableIdentifier instanceof Table) {
+      $tableIdentifier = $tableIdentifier->identifier;
+    }
+    if ($this->hasIdentifier($tableIdentifier, IdentifierType::Table)) {
+      $table = $this->getIdentifier($tableIdentifier, IdentifierType::Table);
+    }
+    else {
+      $table = new Table($this, $tableIdentifier);
+      $this->setIdentifier($tableIdentifier, IdentifierType::Table, $table);
+    }
+    return $table;
+  }
+
+  /**
+   * @todo fill in.
+   */
+  protected function setIdentifier(string $id, IdentifierType $type, IdentifierBase $identifier): void {
+    $this->identifiers['identifier'][$id][$type->value] = $identifier;
+  }
+
+  /**
+   * @todo fill in.
+   */
+  protected function hasIdentifier(string $id, IdentifierType $type): bool {
+    return isset($this->identifiers['identifier'][$id][$type->value]);
+  }
+
+  /**
+   * @todo fill in.
+   */
+  protected function getIdentifier(string $id, IdentifierType $type): IdentifierBase {
+    return $this->identifiers['identifier'][$id][$type->value];
   }
 
   /**

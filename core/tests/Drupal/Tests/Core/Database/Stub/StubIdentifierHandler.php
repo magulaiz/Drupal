@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Database\Stub;
 
-use Drupal\Core\Database\Identifier\IdentifierProcessorBase;
+use Drupal\Core\Database\Identifier\IdentifierHandlerBase;
 use Drupal\Core\Database\Identifier\IdentifierType;
 
 /**
- * A stub of the abstract IdentifierProcessorBase class for testing purposes.
+ * A stub of the abstract IdentifierHandlerBase class for testing purposes.
  */
-class StubIdentifierProcessor extends IdentifierProcessorBase {
+class StubIdentifierHandler extends IdentifierHandlerBase {
 
   /**
    * {@inheritdoc}
