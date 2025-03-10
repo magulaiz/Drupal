@@ -122,6 +122,27 @@ default:
     paths:
       - ./sites/default/files/simpletest/phpunit-*.xml
 
+.default-component-unit-test-job-settings: &default-component-unit-test-job-settings
+  stage: 🪄 Lint
+  before_script:
+    - composer validate
+    - composer install --optimize-autoloader
+    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
+    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+    - docker-php-ext-enable pcov
+  script:
+    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --testdox --coverage-text --colors=always --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.cobertura.xml
+    paths:
+      - junit.xml
+
 .prepare-lint-directory: &prepare-lint-directory
   # PHPStan and yarn linting use absolute paths to determine cache validity. Because GitLab CI
   # working directories are not consistent, work around this by running linting in a separate,
@@ -528,6 +549,20 @@ default:
     TESTSUITE: PHPUnit-Unit
     KUBERNETES_CPU_REQUEST: "8"
     CONCURRENCY: 24
+    _TARGET_PHP: "8.4-ubuntu"
+
+'⚡️ Component unit tests on PHP 8.3':
+  <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
+  variables:
+    KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: 1
+    _TARGET_PHP: "8.3-ubuntu"
+
+'⚡️ Component unit tests on PHP 8.4':
+  <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
+  variables:
+    KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: 1
     _TARGET_PHP: "8.4-ubuntu"
 
 '✅️ PHPStan rules tests':
