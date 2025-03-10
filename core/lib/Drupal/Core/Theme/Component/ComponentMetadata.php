@@ -155,9 +155,8 @@ class ComponentMetadata {
       $schema['additionalProperties'] = FALSE;
       // All props should also support "object" this allows deferring rendering
       // in Twig to the render pipeline.
-      $schema = $this->addObjectToSchemaRecursive($schema);
+      $this->addObjectToSchemaRecursive($schema);
     }
-    $this->schema = $schema;
   }
 
   /**
