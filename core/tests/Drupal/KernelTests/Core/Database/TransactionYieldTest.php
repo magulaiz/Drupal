@@ -120,13 +120,8 @@ class TransactionYieldTest extends DatabaseTestBase {
    *
    * @param string $suffix
    *   Suffix to add to field values to differentiate tests.
-   * @param bool $rollback
-   *   Whether or not to try rolling back the transaction when we're done.
-   * @param bool $ddl_statement
-   *   Whether to execute a DDL statement during the inner transaction.
    */
-  protected function transactionOuterLayer(string $suffix, bool $rollback = FALSE, bool $ddl_statement = FALSE): void {
-    $depth = $this->connection->transactionManager()->stackDepth();
+  protected function transactionOuterLayer(string $suffix): void {
     $txn = $this->connection->startTransaction();
 
     // Insert a single row into the testing table.
@@ -141,17 +136,9 @@ class TransactionYieldTest extends DatabaseTestBase {
 
     // We're already in a transaction, but we call ->transactionInnerLayer
     // to nest another transaction inside the current one.
-    $this->transactionInnerLayer($suffix, $rollback, $ddl_statement);
+    $this->transactionInnerLayer($suffix);
 
     $this->assertTrue($this->connection->inTransaction(), 'In transaction after calling nested transaction.');
-
-    if ($rollback) {
-      // Roll back the transaction, if requested.
-      // This rollback should propagate to the last savepoint.
-      $txn->rollBack();
-      $this->assertSame($depth, $this->connection->transactionManager()->stackDepth(), 'Transaction has rolled back to the last savepoint after calling rollBack().');
-      return;
-    }
 
     $txn->yield();
   }
@@ -164,12 +151,8 @@ class TransactionYieldTest extends DatabaseTestBase {
    *
    * @param string $suffix
    *   Suffix to add to field values to differentiate tests.
-   * @param bool $rollback
-   *   Whether or not to try rolling back the transaction when we're done.
-   * @param bool $ddl_statement
-   *   Whether to execute a DDL statement during the transaction.
    */
-  protected function transactionInnerLayer(string $suffix, bool $rollback = FALSE, bool $ddl_statement = FALSE): void {
+  protected function transactionInnerLayer(string $suffix): void {
     $depth = $this->connection->transactionManager()->stackDepth();
     // Start a transaction. If we're being called from ->transactionOuterLayer,
     // then we're already in a transaction. Normally, that would make starting
@@ -189,30 +172,6 @@ class TransactionYieldTest extends DatabaseTestBase {
       ->execute();
 
     $this->assertTrue($this->connection->inTransaction(), 'In transaction inside nested transaction.');
-
-    if ($ddl_statement) {
-      $table = [
-        'fields' => [
-          'id' => [
-            'type' => 'serial',
-            'unsigned' => TRUE,
-            'not null' => TRUE,
-          ],
-        ],
-        'primary key' => ['id'],
-      ];
-      $this->connection->schema()->createTable('database_test_1', $table);
-
-      $this->assertTrue($this->connection->inTransaction(), 'In transaction inside nested transaction.');
-    }
-
-    if ($rollback) {
-      // Roll back the transaction, if requested.
-      // This rollback should propagate to the last savepoint.
-      $txn->rollBack();
-      $this->assertSame($depth, $this->connection->transactionManager()->stackDepth(), 'Transaction has rolled back to the last savepoint after calling rollBack().');
-      return;
-    }
 
     $txn->yield();
   }
