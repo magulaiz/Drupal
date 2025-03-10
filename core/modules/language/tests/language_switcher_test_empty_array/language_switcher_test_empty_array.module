@@ -12,6 +12,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_language_switch_links_alter().
  */
+#[LegacyHook]
 function language_switcher_test_empty_array_language_switch_links_alter(array &$links, string $type, Url $url): void {
   // Return an empty array which will hide the language switcher block.
   $links = [];
