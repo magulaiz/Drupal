@@ -37,6 +37,40 @@ abstract class IdentifierHandlerBase {
   /**
    * @todo fill in.
    */
+  public function database(string|Database $identifier): Database {
+    if ($identifier instanceof Database) {
+      $identifier = $identifier->identifier;
+    }
+    if ($this->hasIdentifier($identifier, IdentifierType::Database)) {
+      $database = $this->getIdentifier($identifier, IdentifierType::Database);
+    }
+    else {
+      $database = new Database($this, $identifier);
+      $this->setIdentifier($identifier, IdentifierType::Database, $database);
+    }
+    return $database;
+  }
+
+  /**
+   * @todo fill in.
+   */
+  public function schema(string|Schema $identifier): Schema {
+    if ($identifier instanceof Schema) {
+      $identifier = $identifier->identifier;
+    }
+    if ($this->hasIdentifier($identifier, IdentifierType::Schema)) {
+      $schema = $this->getIdentifier($identifier, IdentifierType::Schema);
+    }
+    else {
+      $schema = new Schema($this, $identifier);
+      $this->setIdentifier($identifier, IdentifierType::Schema, $schema);
+    }
+    return $schema;
+  }
+
+  /**
+   * @todo fill in.
+   */
   public function table(string|Table $tableIdentifier): Table {
     if ($tableIdentifier instanceof Table) {
       $tableIdentifier = $tableIdentifier->identifier;
@@ -104,12 +138,12 @@ abstract class IdentifierHandlerBase {
       ],
       2 => [
         NULL,
-        new Schema($this, $parts[0]),
+        $this->schema($parts[0]),
         $this->canonicalizeIdentifier($parts[1], IdentifierType::Table),
       ],
       3 => [
-        new Database($this, $parts[0]),
-        new Schema($this, $parts[1]),
+        $this->database($parts[0]),
+        $this->schema($parts[1]),
         $this->canonicalizeIdentifier($parts[2], IdentifierType::Table),
       ],
     };
