@@ -166,9 +166,13 @@ class HookCollectorPass implements CompilerPassInterface {
     // Loop over all ReOrderHook attributes and gather order information
     // before registering the hooks. This must happen after all collection,
     // but before registration to ensure this ordering directive takes
-    // precedence.
+    // precedence. We only add this directive if the implementation exists.
     foreach ($processAfter[ReOrderHook::class] as $reOrderHook) {
-      $hookOrderOperations[] = $reOrderHook;
+      if ($module = ($moduleFinder[$reOrderHook->class][$reOrderHook->method][$reOrderHook->hook] ?? '')) {
+        if (isset($implementations[$reOrderHook->hook][$module][$reOrderHook->class][$reOrderHook->method])) {
+          $hookOrderOperations[] = $reOrderHook;
+        }
+      }
     }
 
     foreach ($hookOrderOperations as $hookWithOrder) {
