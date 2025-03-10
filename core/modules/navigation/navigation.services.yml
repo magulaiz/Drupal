@@ -15,7 +15,6 @@ services:
         '@request_stack',
         '@extension.list.module',
         '@current_user',
-        '%renderer.config%',
         '@navigation.entity_route_helper',
       ]
   Drupal\navigation\NavigationRenderer: '@navigation.renderer'
@@ -29,6 +28,7 @@ services:
         '@router.route_provider',
         '@menu.active_trail',
         '@callable_resolver',
+        '@module_handler',
       ]
 
   navigation.entity_route_helper:
