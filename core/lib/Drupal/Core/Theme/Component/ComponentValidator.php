@@ -36,6 +36,39 @@ class ComponentValidator {
   }
 
   /**
+   * Utility method to call nullifyClassPropsSchema() on every sub-property.
+   *
+   * @param array $schema_props
+   *   The schema for all the props.
+   * @param array $classes_per_prop
+   *   Associative array that associates prop names with their prop classes.
+   *
+   * @return array
+   *   The new schema.
+   */
+  protected function nullifyClassPropsRecursive(array $schema_props, array $classes_per_prop): array {
+    if (isset($schema_props['properties'])) {
+      // If the schema is on object, we nullify its class properties.
+      $schema_props = $this->nullifyClassPropsSchema(
+        $schema_props,
+        $classes_per_prop
+      );
+
+      // And also look for sub-properties.
+      foreach ($schema_props['properties'] ?? [] as $key => $property) {
+        $schema_props['properties'][$key] = $this->nullifyClassPropsRecursive($property, $classes_per_prop);
+      }
+    }
+
+    if (isset($schema_props['items'])) {
+      // If schema is an array, we look for properties on array items.
+      $schema_props['items'] = $this->nullifyClassPropsRecursive($schema_props['items'], $classes_per_prop);
+    }
+
+    return $schema_props;
+  }
+
+  /**
    * Validates the component metadata file.
    *
    * A valid component metadata file can be validated against the
@@ -116,20 +149,9 @@ class ComponentValidator {
         ),
       ];
     }
-    // Remove the non JSON Schema types for validation down below.
-    $definition['props'] = $this->nullifyClassPropsSchema(
-      $schema,
-      $classes_per_prop
-    );
 
-    foreach ($definition['props']['properties'] as &$prop) {
-      if (isset($prop['items'])) {
-        $prop['items'] = $this->nullifyClassPropsSchema(
-          $prop['items'],
-          $classes_per_prop
-        );
-      }
-    }
+    // Remove the non JSON Schema types for validation down below.
+    $definition['props'] = $this->nullifyClassPropsRecursive($definition['props'], $classes_per_prop);
 
     $definition_object = Validator::arrayToObjectRecursive($definition);
     $this->validator->validate(
@@ -290,16 +312,7 @@ class ComponentValidator {
       $props_raw[$prop_name] = NULL;
     }
 
-    foreach ($props_schema['properties'] as &$prop) {
-      if (isset($prop['items'])) {
-        $prop['items'] = $this->nullifyClassPropsSchema(
-          $prop['items'],
-          $classes_per_prop
-        );
-      }
-    }
-
-    $props_schema = $this->nullifyClassPropsSchema($props_schema, $classes_per_prop);
+    $props_schema = $this->nullifyClassPropsRecursive($props_schema, $classes_per_prop);
     if (!empty($error_messages)) {
       $message = implode("\n", $error_messages);
       throw new InvalidComponentException($message);

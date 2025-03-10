@@ -155,26 +155,40 @@ class ComponentMetadata {
       $schema['additionalProperties'] = FALSE;
       // All props should also support "object" this allows deferring rendering
       // in Twig to the render pipeline.
-      $schema_props = $metadata_info['props'];
-      foreach ($schema_props['properties'] ?? [] as $name => $prop_schema) {
-        $type = $prop_schema['type'] ?? '';
-        $schema['properties'][$name]['type'] = array_unique([
-          ...(array) $type,
-          'object',
-        ]);
-
-        if (isset($prop_schema['items'])) {
-          foreach ($prop_schema['items']['properties'] as $subpropName => &$subprop) {
-            $type = $subprop['type'] ?? '';
-            $schema['properties'][$name]['items']['properties'][$subpropName]['type'] = array_unique([
-              ...(array) $type,
-              'object',
-            ]);
-          }
-        }
-      }
+      $schema = $this->addObjectToSchemaRecursive($schema);
     }
     $this->schema = $schema;
+  }
+
+  /**
+   * Add object type to every property in the schema.
+   *
+   * @param array $schema
+   *   The schema for all the props.
+   *
+   * @return array
+   *   The new schema.
+   */
+  protected function addObjectToSchemaRecursive(array $schema): array {
+    foreach ($schema['properties'] ?? [] as $name => $prop_schema) {
+      $type = $prop_schema['type'] ?? '';
+      $schema['properties'][$name]['type'] = array_unique([
+        ...(array) $type,
+        'object',
+      ]);
+    }
+
+    // And also look for sub-properties.
+    foreach ($schema['properties'] ?? [] as $key => $property) {
+      $schema['properties'][$key] = $this->addObjectToSchemaRecursive($property);
+    }
+
+    if (isset($schema['items'])) {
+      // If schema is an array, we look for properties on array items.
+      $schema['items'] = $this->addObjectToSchemaRecursive($schema['items']);
+    }
+
+    return $schema;
   }
 
   /**
