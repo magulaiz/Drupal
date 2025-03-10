@@ -1,0 +1,24 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Props in props
+description: Component with properties inside arrays and objects
+props:
+  type: object
+  properties:
+    single_level_array:
+      type: array
+      items:
+        type: object
+        properties:
+          attributes:
+            title: "Attributes"
+            type: Drupal\Core\Template\Attribute
+    two_levels_array:
+      type: array
+      items:
+        type: array
+        items:
+          type: object
+          properties:
+            attributes:
+              title: "Attributes"
+              type: Drupal\Core\Template\Attribute
