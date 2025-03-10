@@ -478,7 +478,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // and the node type, body field and entity displays are still scheduled for
     // removal.
     $this->submitForm([], 'Import all');
-    $validation_message = "Entities exist of type {$node->getEntityType()->getLabel()} and {$node->getEntityType()->getBundleLabel()} {$node_type->label()}. These entities need to be deleted before importing.";
+    $validation_message = "Entities exist of type {$node->getEntityType()->getLabel()} and {$node->getEntityType()->getBundleLabel()} {$node_type->label()} ({$node_type->id()}). These entities need to be deleted before importing.";
     $this->assertSession()->pageTextContains($validation_message);
     $this->assertSession()->pageTextContains('node.type.' . $node_type->id());
     $this->assertSession()->pageTextContains('field.field.node.' . $node_type->id() . '.body');
