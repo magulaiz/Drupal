@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Hook\Attribute;
 
-use Drupal\Core\Hook\HookOperation;
+use Drupal\Core\Hook\HookAttributeInterface;
 
 /**
  * Attribute for removing an implementation.
@@ -12,7 +12,7 @@ use Drupal\Core\Hook\HookOperation;
  * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class RemoveHook extends HookOperation {
+class RemoveHook implements HookAttributeInterface {
 
   /**
    * Constructs a RemoveHook object.
@@ -26,11 +26,9 @@ class RemoveHook extends HookOperation {
    *   on a class and does not have method set, then use __invoke.
    */
   public function __construct(
-    string $hook,
-    string $class,
-    string $method,
-  ) {
-    parent::__construct($hook, $method, $class);
-  }
+    public readonly string $hook,
+    public readonly string $class,
+    public readonly string $method,
+  ) {}
 
 }

@@ -10,11 +10,14 @@ use Drupal\Core\Hook\Attribute\ReOrderHook;
 use Drupal\Core\Hook\Order;
 use Drupal\hk_c_test\Hook\CHooks;
 
-#[ReOrderHook('testhook', CHooks::class, 'testHookReOrderFirst', Order::First)]
-#[RemoveHook('testhook', CHooks::class, 'testHookRemoved')]
+/**
+ * Hooks for testing ordering.
+ */
+#[ReOrderHook('test_hook', CHooks::class, 'testHookReOrderFirst', Order::First)]
+#[RemoveHook('test_hook', CHooks::class, 'testHookRemoved')]
 class DHooks {
 
-  #[Hook('testhook')]
+  #[Hook('test_hook')]
   public function testHook(): string {
     return __METHOD__;
   }

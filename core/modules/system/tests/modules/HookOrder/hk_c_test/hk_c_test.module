@@ -1,11 +1,16 @@
 <?php
 
+/**
+ * @file
+ * Contains procedural hook implementations.
+ */
+
 declare(strict_types=1);
 
 /**
- * Implements hook_testhook().
+ * Implements hook_test_hook().
  */
-function hk_c_test_testhook(): string {
+function hk_c_test_test_hook(): string {
   return __FUNCTION__;
 }
 

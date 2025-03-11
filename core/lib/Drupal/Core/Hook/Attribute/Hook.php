@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Hook\Attribute;
 
-use Drupal\Core\Hook\ComplexOrder;
-use Drupal\Core\Hook\HookOperation;
-use Drupal\Core\Hook\Order;
+use Drupal\Core\Hook\HookAttributeInterface;
+use Drupal\Core\Hook\OrderInterface;
 
 /**
  * Attribute for defining a class method as a hook implementation.
@@ -101,7 +100,7 @@ use Drupal\Core\Hook\Order;
  * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class Hook extends HookOperation {
+class Hook implements HookAttributeInterface {
 
   /**
    * Constructs a Hook attribute object.
@@ -117,38 +116,14 @@ class Hook extends HookOperation {
    *   (optional) The module this implementation is for. This allows one module
    *   to implement a hook on behalf of another module. Defaults to the module
    *   the implementation is in.
-   * @param \Drupal\Core\Hook\Order|\Drupal\Core\Hook\ComplexOrder|null $order
+   * @param \Drupal\Core\Hook\OrderInterface|null $order
    *   (optional) Set the order of the implementation.
    */
   public function __construct(
-    string $hook,
-    string $method = '',
+    public string $hook,
+    public string $method = '',
     public ?string $module = NULL,
-    Order|ComplexOrder|null $order = NULL,
-  ) {
-    parent::__construct($hook, $method, order: $order);
-  }
-
-  /**
-   * Set necessary parameters for the hook attribute.
-   *
-   * @param class-string $class
-   *   The class for the hook.
-   * @param string $module
-   *   The module for the hook.
-   * @param string $method
-   *   The method for the hook.
-   */
-  public function set(string $class, string $module, string $method): void {
-    if (!$this->class) {
-      $this->class = $class;
-    }
-    if (!$this->module) {
-      $this->module = $module;
-    }
-    if (!$this->method) {
-      $this->method = $method;
-    }
-  }
+    public OrderInterface|null $order = NULL,
+  ) {}
 
 }

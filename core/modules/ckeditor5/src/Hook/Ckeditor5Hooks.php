@@ -112,7 +112,6 @@ class Ckeditor5Hooks {
   #[Hook('form_filter_format_form_alter',
     order: new OrderAfter(
       modules: ['editor', 'media'],
-      extraTypes: ['form_filter_format_add_form_alter', 'form_filter_format_edit_form_alter'],
     )
   )]
   public function formFilterFormatFormAlter(array &$form, FormStateInterface $form_state, $form_id) : void {
