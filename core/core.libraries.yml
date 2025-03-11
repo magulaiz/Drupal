@@ -614,6 +614,13 @@ drupal.form:
     - core/drupal.debounce
     - core/once
 
+
+drupal.item-list:
+  version: VERSION
+  css:
+    component:
+      misc/components/item-list.module.css: { weight: -10 }
+
 drupal.machine-name:
   version: VERSION
   js:

@@ -22,8 +22,6 @@ base:
         weight: -10
       css/components/inline-form.css:
         weight: -10
-      css/components/item-list.css:
-        weight: -10
       css/components/link.css:
         weight: -10
       css/components/links.css:
@@ -91,6 +89,12 @@ progress:
   css:
     component:
       css/components/progress.css:
+        weight: -10
+item-list:
+  version: VERSION
+  css:
+    component:
+      css/components/item-list.css:
         weight: -10
 search-results:
   version: VERSION
