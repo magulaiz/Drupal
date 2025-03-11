@@ -121,6 +121,10 @@ abstract class IdentifierHandlerBase {
 
   /**
    * @todo fill in.
+   *
+   * Standard SQL identifiers designate basic Latin letters, digits 0-9,
+   * dollar and underscore as valid characters. Drupal is stricter in the
+   * sense that the dollar character is not allowed.
    */
   public function canonicalize(string $identifier, IdentifierType $type): string {
     $canonicalName = preg_replace('/[^A-Za-z0-9_]+/', '', $identifier);

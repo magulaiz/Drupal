@@ -526,8 +526,10 @@ class ConnectionTest extends UnitTestCase {
   /**
    * @covers ::escapeDatabase
    * @dataProvider providerEscapeDatabase
+   * @group legacy
    */
   public function testEscapeDatabase($expected, $name, array $identifier_quote = ['"', '"']): void {
+    $this->expectDeprecation('Drupal\Core\Database\Connection::escapeDatabase() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312');
     $mock_pdo = $this->createMock(StubPDO::class);
     $connection = new StubConnection($mock_pdo, [], $identifier_quote);
 

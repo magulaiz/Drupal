@@ -969,9 +969,8 @@ abstract class Connection {
    *   The sanitized database name.
    */
   public function escapeDatabase($database) {
-    $database = preg_replace('/[^A-Za-z0-9_]+/', '', $database);
-    [$start_quote, $end_quote] = $this->identifiers->identifierQuotes;
-    return $start_quote . $database . $end_quote;
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312", E_USER_DEPRECATED);
+    return $this->identifiers->database($database)->forMachine();
   }
 
   /**
