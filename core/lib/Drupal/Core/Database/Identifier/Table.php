@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database\Identifier;
 
-use Drupal\Core\Database\Exception\IdentifierException;
-
 /**
  * @todo fill in.
  */
@@ -31,20 +29,14 @@ class Table extends IdentifierBase {
     string $identifier,
   ) {
     $parts = $identifierHandler->parseTableIdentifier($identifier);
-    parent::__construct($identifierHandler, $identifier, $parts[2]);
 
-    $this->database = $parts[0];
-    $this->schema = $parts[1];
-    $this->needsPrefix = $parts[3];
+    $canonicalName = $identifierHandler->canonicalize($parts['table'], IdentifierType::Table);
+    $machineName = $identifierHandler->resolveForMachine($canonicalName, IdentifierType::Table);
+    parent::__construct($identifier, $canonicalName, $machineName);
 
-    if (strlen($this->needsPrefix ? $this->identifierHandler->tablePrefix : '' . $this->canonicalName) > $this->identifierHandler->getMaxLength(IdentifierType::Table)) {
-      throw new IdentifierException(sprintf(
-        'The machine length of the %s identifier \'%s\' exceeds the maximum allowed (%d)',
-        IdentifierType::Table->value,
-        $this->canonicalName,
-        $this->identifierHandler->getMaxLength(IdentifierType::Table),
-      ));
-    }
+    $this->database = $parts['database'];
+    $this->schema = $parts['schema'];
+    $this->needsPrefix = $parts['needs_prefix'];
   }
 
   /**
@@ -60,11 +52,11 @@ class Table extends IdentifierBase {
   /**
    * {@inheritdoc}
    */
-  public function machineName(bool $quoted = TRUE): string {
-    if (!$quoted) {
-      return $this->canonical();
-    }
-    return $this->identifierHandler->getTableMachineName($this);
+  public function forMachine(): string {
+    $ret = isset($this->database) ? $this->database->forMachine() . '.' : '';
+    $ret .= isset($this->schema) ? $this->schema->forMachine() . '.' : '';
+    $ret .= $this->machineName;
+    return $ret;
   }
 
 }

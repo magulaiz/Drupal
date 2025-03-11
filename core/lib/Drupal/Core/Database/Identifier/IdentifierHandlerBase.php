@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Database\Identifier;
 
 use Drupal\Component\Assertion\Inspector;
+use Drupal\Core\Database\Exception\IdentifierException;
 
 /**
  * @todo fill in.
@@ -121,8 +122,45 @@ abstract class IdentifierHandlerBase {
   /**
    * @todo fill in.
    */
-  public function canonicalizeIdentifier(string $identifier, IdentifierType $type): string {
-    return preg_replace('/[^A-Za-z0-9_]+/', '', $identifier);
+  public function canonicalize(string $identifier, IdentifierType $type): string {
+    $canonicalName = preg_replace('/[^A-Za-z0-9_]+/', '', $identifier);
+    $canonicalNameLength = strlen($canonicalName);
+    if ($canonicalNameLength > $this->getMaxLength($type) || $canonicalNameLength === 0) {
+      throw new IdentifierException(sprintf(
+        'The length of the %s identifier \'%s\' once canonicalized to \'%s\' is invalid (maximum allowed: %d)',
+        $type->value,
+        $identifier,
+        $canonicalName,
+        $this->getMaxLength($type),
+      ));
+    }
+    return $canonicalName;
+  }
+
+  /**
+   * @todo fill in.
+   */
+  public function resolveForMachine(string $canonicalName, IdentifierType $type): string {
+    return match ($type) {
+      IdentifierType::Table => $this->resolveTableForMachine($canonicalName),
+      default => $this->quote($canonicalName),
+    };
+  }
+
+  /**
+   * @todo fill in.
+   */
+  protected function resolveTableForMachine(string $canonicalName): string {
+    if (strlen($this->tablePrefix . $canonicalName) > $this->getMaxLength(IdentifierType::Table)) {
+      throw new IdentifierException(sprintf(
+        'The machine length of the %s canonicalized identifier \'%s\' once table prefix \'%s\' is added is invalid (maximum allowed: %d)',
+        IdentifierType::Table->value,
+        $canonicalName,
+        $this->tablePrefix,
+        $this->getMaxLength($type),
+      ));
+    }
+    return $this->quote($this->tablePrefix ? $this->tablePrefix . $canonicalName : $canonicalName);
   }
 
   /**
@@ -131,21 +169,9 @@ abstract class IdentifierHandlerBase {
   public function parseTableIdentifier(string $identifier): array {
     $parts = explode(".", $identifier);
     [$database, $schema, $table] = match (count($parts)) {
-      1 => [
-        NULL,
-        NULL,
-        $this->canonicalizeIdentifier($parts[0], IdentifierType::Table),
-      ],
-      2 => [
-        NULL,
-        $this->schema($parts[0]),
-        $this->canonicalizeIdentifier($parts[1], IdentifierType::Table),
-      ],
-      3 => [
-        $this->database($parts[0]),
-        $this->schema($parts[1]),
-        $this->canonicalizeIdentifier($parts[2], IdentifierType::Table),
-      ],
+      1 => [NULL, NULL, $parts[0]],
+      2 => [NULL, $this->schema($parts[0]), $parts[1]],
+      3 => [$this->database($parts[0]), $this->schema($parts[1]), $parts[2]],
     };
     if ($this->tablePrefix !== '') {
       $needsPrefix = match (count($parts)) {
@@ -156,17 +182,12 @@ abstract class IdentifierHandlerBase {
     else {
       $needsPrefix = FALSE;
     }
-    return [$database, $schema, $table, $needsPrefix];
-  }
-
-  /**
-   * @todo fill in.
-   */
-  public function getTableMachineName(Table $table): string {
-    $ret = isset($table->database) ? $this->quote($table->database->canonical()) . '.' : '';
-    $ret .= isset($table->schema) ? $this->quote($table->schema->canonical()) . '.' : '';
-    $ret .= $this->quote($this->tablePrefix . $table->canonicalName);
-    return $ret;
+    return [
+      'database' => $database,
+      'schema' => $schema,
+      'table' => $table,
+      'needs_prefix' => $needsPrefix,
+    ];
   }
 
 }

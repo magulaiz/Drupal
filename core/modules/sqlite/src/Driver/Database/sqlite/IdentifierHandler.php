@@ -21,45 +21,19 @@ class IdentifierHandler extends IdentifierHandlerBase {
     // common sense.
     // @see https://www.sqlite.org/limits.html
     // @see https://stackoverflow.com/questions/8135013/table-name-limit-in-sqlite-android
-    return 128;
+    return 256;
   }
 
   /**
    * {@inheritdoc}
    */
   public function parseTableIdentifier(string $identifier): array {
-    $parts = explode(".", $identifier);
-    [$database, $schema, $table] = match (count($parts)) {
-      1 => [
-        NULL,
-        NULL,
-        $this->canonicalizeIdentifier($parts[0], IdentifierType::Table),
-      ],
-      2 => [
-        NULL,
-        $this->schema($parts[0]),
-        $this->canonicalizeIdentifier($parts[1], IdentifierType::Table),
-      ],
-      3 => [
-        $this->database($parts[0]),
-        $this->schema($parts[1]),
-        $this->canonicalizeIdentifier($parts[2], IdentifierType::Table),
-      ],
-    };
-    if ($this->tablePrefix !== '' && count($parts) === 1) {
-      $database = $this->database(rtrim($this->tablePrefix, '.'));
+    $parts = parent::parseTableIdentifier($identifier);
+    if ($this->tablePrefix !== '' && $parts['database'] === NULL && $parts['schema'] === NULL) {
+      $parts['schema'] = $this->schema(rtrim($this->tablePrefix, '.'));
+      $parts['needs_prefix'] = FALSE;
     }
-    $needsPrefix = FALSE;
-    return [$database, $schema, $table, $needsPrefix];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getTableMachineName(Table $table): string {
-    $ret = isset($table->database) ? $this->quote($table->database->canonical()) . '.' : '';
-    $ret .= $this->quote($table->canonicalName);
-    return $ret;
+    return $parts;
   }
 
 }

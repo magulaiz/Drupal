@@ -854,7 +854,7 @@ class Select extends Query implements SelectInterface {
         $table_string = '(' . (string) $subquery . ')';
       }
       else {
-        $table_string = $this->connection->identifiers->table($table['table'])->machineName();
+        $table_string = $this->connection->identifiers->table($table['table'])->forMachine();
       }
 
       // Don't use the AS keyword for table aliases, as some

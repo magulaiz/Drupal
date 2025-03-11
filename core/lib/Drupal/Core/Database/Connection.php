@@ -346,7 +346,7 @@ abstract class Connection {
     $replacements = $tables = [];
     preg_match_all('/(\{(\S*)\})/', $sql, $tables, PREG_SET_ORDER, 0);
     foreach ($tables as $table) {
-      $replacements[$table[1]] = $this->identifiers->table($table[2])->machineName();
+      $replacements[$table[1]] = $this->identifiers->table($table[2])->forMachine();
     }
     return str_replace(array_keys($replacements), array_values($replacements), $sql);
   }
@@ -385,7 +385,7 @@ abstract class Connection {
    *   The fully qualified table name.
    */
   public function getFullQualifiedTableName($table) {
-    return $this->identifiers->table($this->getConnectionOptions()['database'] . '.' . $table)->machineName();
+    return $this->identifiers->table($this->getConnectionOptions()['database'] . '.' . $table)->forMachine();
   }
 
   /**
