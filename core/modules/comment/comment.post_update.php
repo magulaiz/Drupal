@@ -5,6 +5,7 @@
  * Post update functions for the comment module.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -19,9 +20,19 @@ function comment_removed_post_updates(): array {
 }
 
 /**
+ * Re-save comment type configurations with new_revision config.
+ */
+function comment_post_update_set_new_revision(&$sandbox = NULL): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)
+    ->update($sandbox, 'comment_type', function ($comment_type) {
+      return TRUE;
+    });
+}
+
+/**
  * Update comments to be revisionable.
  */
-function comment_post_update_make_comment_revisionable(&$sandbox): void {
+function comment_post_update_make_comment_revisionable(&$sandbox): TranslatableMarkup {
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
   $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
@@ -46,6 +57,7 @@ function comment_post_update_make_comment_revisionable(&$sandbox): void {
 
   // Update the field storage definitions and add the new ones required by a
   // revisionable entity type.
+  $field_storage_definitions['langcode']->setRevisionable(TRUE);
   $field_storage_definitions['subject']->setRevisionable(TRUE);
   $field_storage_definitions['name']->setRevisionable(TRUE);
   $field_storage_definitions['mail']->setRevisionable(TRUE);
@@ -110,6 +122,8 @@ function comment_post_update_make_comment_revisionable(&$sandbox): void {
     ->setDefaultValue('');
 
   $definition_update_manager->updateFieldableEntityType($entity_type, $field_storage_definitions, $sandbox);
+
+  return t('Comments have been converted to be revisionable.');
 }
 
 /**
@@ -122,18 +136,16 @@ function comment_post_update_set_initial_revision_field_values(&$sandbox): void 
     'revision_user' => 'uid',
   ];
 
-  $definition = \Drupal::entityTypeManager()->getDefinition('comment');
-  $dataTable = $definition->getDataTable();
-  $revisionTable = $definition->getRevisionTable();
+  foreach ($fields as $fieldName => $mappedFieldName) {
+    $subQuery = $connection->select('comment_field_data', 'cfd')
+      ->fields('cfd', [$mappedFieldName])
+      ->where($connection->prefixTables("{comment_revision}.cid = cfd.cid"))
+      ->where($connection->prefixTables("{comment_revision}.revision_id = cfd.revision_id"))
+      ->where($connection->prefixTables("{comment_revision}.langcode = cfd.langcode"));
 
-  foreach ($fields as $newFieldName => $existingFieldName) {
-    $subQuery = $connection->select($dataTable, 'cfd')
-      ->fields('cfd', [$existingFieldName])
-      ->where("$revisionTable.cid = cfd.cid AND $revisionTable.revision_id = cfd.revision_id AND $revisionTable.langcode = cfd.langcode");
-
-    $connection->update($revisionTable)
-      ->expression($newFieldName, $subQuery)
-      ->isNull($newFieldName)
+    $connection->update('comment_revision')
+      ->expression($fieldName, $subQuery)
+      ->isNull($fieldName)
       ->execute();
   }
 }

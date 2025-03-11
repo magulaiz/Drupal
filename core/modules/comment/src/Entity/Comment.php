@@ -307,7 +307,8 @@ class Comment extends EditorialContentEntityBase implements CommentInterface {
     $fields['mail'] = BaseFieldDefinition::create('email')
       ->setLabel(t('Email'))
       ->setDescription(t("The comment author's email address."))
-      ->setTranslatable(TRUE);
+      ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE);
 
     $fields['homepage'] = BaseFieldDefinition::create('uri')
       ->setLabel(t('Homepage'))

@@ -5,7 +5,6 @@ namespace Drupal\comment\Entity;
 use Drupal\comment\CommentTypeForm;
 use Drupal\comment\CommentTypeListBuilder;
 use Drupal\comment\Form\CommentTypeDeleteForm;
-use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
@@ -89,11 +88,11 @@ class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface
   protected $target_entity_type_id;
 
   /**
-   * Default value of the 'Create new revision' checkbox of this comment type.
+   * The default revision setting for a comment type.
    *
    * @var bool
    */
-  protected $new_revision = TRUE;
+  protected $new_revision = FALSE;
 
   /**
    * {@inheritdoc}
@@ -120,16 +119,15 @@ class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface
   /**
    * {@inheritdoc}
    */
-  public function shouldCreateNewRevision() {
-    return $this->new_revision;
+  public function setNewRevision($new_revision): void {
+    $this->new_revision = $new_revision;
   }
 
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Automatically create new revisions'), pluralize: FALSE)]
-  public function setNewRevision($new_revision): void {
-    $this->new_revision = $new_revision;
+  public function shouldCreateNewRevision() {
+    return $this->new_revision;
   }
 
 }
