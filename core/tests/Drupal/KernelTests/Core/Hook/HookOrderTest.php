@@ -298,7 +298,7 @@ class HookOrderTest extends KernelTestBase {
       AFormAlterHooks::class . '::formAlterAfterB',
       CFormAlterHooks::class . '::formAlter',
       CFormAlterHooks::class . '::myFormAlter',
-    ], $this->alter(['form', 'form_myform'])['#calls'] ?? NULL);
+    ], $this->alter(['form', 'form_my_form'])['#calls'] ?? NULL);
   }
 
   public function testHookOrder(): void {
@@ -307,18 +307,18 @@ class HookOrderTest extends KernelTestBase {
         CHooks::class . '::testHookReOrderFirst',
         CHooks::class . '::testHookFirst',
         CHooks::class . '::testHook',
-        'hk_c_test_testhook',
+        'hk_c_test_test_hook',
         AHooks::class . '::testHookFirst',
-        'hk_a_test_testhook',
+        'hk_a_test_test_hook',
         AHooks::class . '::testHook',
         AHooks::class . '::testHookAfterB',
         AHooks::class . '::testHookLast',
-        'hk_b_test_testhook',
+        'hk_b_test_test_hook',
         BHooks::class . '::testHook',
-        'hk_d_test_testhook',
+        'hk_d_test_test_hook',
         DHooks::class . '::testHook',
       ],
-      \Drupal::moduleHandler()->invokeAll('testhook'),
+      \Drupal::moduleHandler()->invokeAll('test_hook'),
     );
   }
 
@@ -394,7 +394,7 @@ class HookOrderTest extends KernelTestBase {
    * @param string $message
    *   Message to pass to ->assertSame().
    */
-  protected function assertSameCallList(array $expected, array $actual, string $message = '') {
+  protected function assertSameCallList(array $expected, array $actual, string $message = ''): void {
     // Format without the numeric array keys, but in a way that can be easily
     // copied into the test.
     $format = function (array $strings): string {

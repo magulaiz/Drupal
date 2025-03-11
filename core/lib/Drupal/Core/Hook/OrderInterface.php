@@ -10,8 +10,10 @@ interface OrderInterface {
 
   /**
    * @param string $identifier
+   *   Identifier.
    *
    * @return \Drupal\Core\Hook\OrderOperation\OrderOperationInterface
+   *   Order operation.
    */
   public function getOperation(string $identifier): OrderOperationInterface;
 

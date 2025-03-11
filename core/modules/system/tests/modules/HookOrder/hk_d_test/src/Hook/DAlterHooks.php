@@ -1,11 +1,14 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\hk_d_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 
+/**
+ * Hooks for testing ordering.
+ */
 class DAlterHooks {
 
   #[Hook('test_alter')]

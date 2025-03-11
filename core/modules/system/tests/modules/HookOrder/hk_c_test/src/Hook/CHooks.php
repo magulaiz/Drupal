@@ -1,21 +1,23 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\hk_c_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Order;
-use Drupal\Core\Hook\OrderAfter;
 
+/**
+ * Hooks for testing ordering.
+ */
 class CHooks {
 
-  #[Hook('testhook')]
+  #[Hook('test_hook')]
   public function testHook(): string {
     return __METHOD__;
   }
 
-  #[Hook('testhook', order: Order::First)]
+  #[Hook('test_hook', order: Order::First)]
   public function testHookFirst(): string {
     return __METHOD__;
   }
@@ -25,7 +27,7 @@ class CHooks {
    *
    * @see \Drupal\hk_d_test\Hook\DHooks
    */
-  #[Hook('testhook')]
+  #[Hook('test_hook')]
   public function testHookReOrderFirst(): string {
     return __METHOD__;
   }
@@ -35,11 +37,9 @@ class CHooks {
    *
    * @see \Drupal\hk_d_test\Hook\DHooks
    */
-  #[Hook('testhook')]
+  #[Hook('test_hook')]
   public function testHookRemoved(): string {
     return __METHOD__;
   }
-
-
 
 }

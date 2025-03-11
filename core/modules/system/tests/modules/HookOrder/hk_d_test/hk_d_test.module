@@ -1,8 +1,14 @@
 <?php
 
 /**
- * Implements hook_testhook()
+ * @file
  */
-function hk_d_test_testhook(): string {
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_test_hook().
+ */
+function hk_d_test_test_hook(): string {
   return __FUNCTION__;
 }

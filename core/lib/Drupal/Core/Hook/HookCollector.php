@@ -78,9 +78,10 @@ class HookCollector {
    * Operations with higher weight are applied last, which means they can
    * override the changes from previous operations.
    *
-   * @todo Review how to combine operations from different hooks.
+   * Review how to combine operations from different hooks.
    *
    * @var array<string, array<int, list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface>>>
+   *   Order operations.
    */
   protected array $orderOperations = [];
 
@@ -112,7 +113,7 @@ class HookCollector {
       ->addArgument($this->includes);
 
     $container->setParameter('hook.implementations', $this->implementations);
-    #$container->setParameter();
+    // $container->setParameter();
 
     // Gather includes for each hook_hook_info group.
     // We store this in $groupIncludes so moduleHandler can ensure the files
@@ -196,6 +197,7 @@ class HookCollector {
 
   /**
    * @return array<string, list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface>>
+   *   Order operation list.
    */
   protected function getOrderOperations(): array {
     $operations_by_hook = [];
@@ -208,7 +210,9 @@ class HookCollector {
 
   /**
    * @param array<string, string> $implementation_list
+   *   Implementation list.
    * @param list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface> $order_operations
+   *   Order operations.
    */
   public static function applyOrderOperations(array &$implementation_list, array $order_operations): void {
     $module_finder = $implementation_list;

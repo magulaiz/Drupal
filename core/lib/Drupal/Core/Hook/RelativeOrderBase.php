@@ -19,6 +19,8 @@ abstract readonly class RelativeOrderBase implements OrderInterface {
    *   A list of modules the implementations of which to order against.
    * @param list<array{class-string, string}> $classesAndMethods
    *   A list of implementations to order against, as [$class, $method].
+   * @param array $extraTypes
+   *   Extra types.
    */
   public function __construct(
     public array $modules = [],

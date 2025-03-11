@@ -19,7 +19,9 @@ class RelativeOrderOperation implements OrderOperationInterface {
 
   /**
    * @param string $identifier
+   *   Identifier.
    * @param list<string> $modules_to_order_against
+   *   Modules.
    * @param list<string> $identifiers_to_order_against
    *   List of implementation identifiers, as "$class::$method".
    *
@@ -35,7 +37,7 @@ class RelativeOrderOperation implements OrderOperationInterface {
    */
   public function apply(array &$identifiers, array $module_finder): void {
     assert(array_is_list($identifiers));
-    $orig = $identifiers;
+    // $orig = $identifiers;
     $index = array_search($this->identifier, $identifiers);
     if ($index === FALSE) {
       // Nothing to reorder.
