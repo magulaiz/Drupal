@@ -11,7 +11,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Installer\InstallerKernel;
-use Drupal\Core\Site\SettingsEditor;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -141,210 +140,22 @@ function drupal_install_profile_distribution_version() {
 }
 
 /**
- * Replaces values in settings.php with values in the submitted array.
- *
- * This function replaces values in place if possible, even for
- * multidimensional arrays. This way the old settings do not linger,
- * overridden and also the doxygen on a value remains where it should be.
- *
- * @param $settings
- *   An array of settings that need to be updated. Multidimensional arrays
- *   are dumped up to a stdClass object. The object can have value, required
- *   and comment properties.
- *   @code
- *   $settings['settings']['config_sync_directory'] = (object) array(
- *     'value' => 'config_hash/sync',
- *     'required' => TRUE,
- *   );
- *   @endcode
- *   gets dumped as:
- *   @code
- *   $settings['config_sync_directory'] = 'config_hash/sync'
- *   @endcode
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   SettingsEditor::rewrite() instead. Note $settings_file argument becomes
- *   required and the first argument of the method.
- *
- * @see https://www.drupal.org/node/3244583
- * @see \Drupal\Core\Site\SettingsEditor::rewrite()
- */
-function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. The order of the arguments has also changed: $settings_file is now required and is the first argument of the method. See https://www.drupal.org/node/3244583', E_USER_DEPRECATED);
-  SettingsEditor::rewrite(
-    $settings_file ?? \Drupal::getContainer()->getParameter('site.path') . '/settings.php',
-    $settings
-  );
-}
-
-/**
- * Helper for drupal_rewrite_settings().
- *
- * Checks whether this token represents a scalar or NULL.
- *
- * @param int $type
- *   The token type.
- * @param string $value
- *   The value of the token.
- *
- * @return bool
- *   TRUE if this token represents a scalar or NULL.
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   SettingsEditor::rewrite() instead. As internal API,
- *   _drupal_rewrite_settings_is_simple() may also be removed in a minor
- *   release.
- *
- * @see https://www.drupal.org/node/3244583
- * @see token_name()
- */
-function _drupal_rewrite_settings_is_simple($type, $value) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. As internal API, ' . __FUNCTION__ . '() may also be removed in a minor release. See https://www.drupal.org/node/3244583', E_USER_DEPRECATED);
-  $is_integer = $type == T_LNUMBER;
-  $is_float = $type == T_DNUMBER;
-  $is_string = $type == T_CONSTANT_ENCAPSED_STRING;
-  $is_boolean_or_null = $type == T_STRING && in_array(strtoupper($value), ['TRUE', 'FALSE', 'NULL']);
-  return $is_integer || $is_float || $is_string || $is_boolean_or_null;
-}
-
-/**
- * Helper for drupal_rewrite_settings().
- *
- * Checks whether this token represents a valid array index: a number or a
- * string.
- *
- * @param int $type
- *   The token type.
- *
- * @return bool
- *   TRUE if this token represents a number or a string.
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   SettingsEditor::rewrite() instead. As internal API,
- *   _drupal_rewrite_settings_is_array_index() may also be removed in a minor
- *   release.
- *
- * @see https://www.drupal.org/node/3244583
- * @see token_name()
- */
-function _drupal_rewrite_settings_is_array_index($type) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. As internal API, ' . __FUNCTION__ . '() may also be removed in a minor release. See https://www.drupal.org/node/3244583', E_USER_DEPRECATED);
-  $is_integer = $type == T_LNUMBER;
-  $is_float = $type == T_DNUMBER;
-  $is_string = $type == T_CONSTANT_ENCAPSED_STRING;
-  return $is_integer || $is_float || $is_string;
-}
-
-/**
- * Helper for drupal_rewrite_settings().
- *
- * Makes the new settings global.
- *
- * @param array|null $ref
- *   A reference to a nested index in $GLOBALS.
- * @param array|object $variable
- *   The nested value of the setting being copied.
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   SettingsEditor::rewrite() instead. As internal API,
- *   _drupal_rewrite_settings_global() may also be removed in a minor
- *   release.
- *
- * @see https://www.drupal.org/node/3244583
- */
-function _drupal_rewrite_settings_global(&$ref, $variable) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. As internal API, ' . __FUNCTION__ . '() may also be removed in a minor release. See https://www.drupal.org/node/3244583', E_USER_DEPRECATED);
-  if (is_object($variable)) {
-    $ref = $variable->value;
-  }
-  else {
-    foreach ($variable as $k => $v) {
-      _drupal_rewrite_settings_global($ref[$k], $v);
-    }
-  }
-}
-
-/**
- * Helper for drupal_rewrite_settings().
- *
- * Dump the relevant value properties.
- *
- * @param array|object $variable
- *   The container for variable values.
- * @param string $variable_name
- *   Name of variable.
- *
- * @return string
- *   A string containing valid PHP code of the variable suitable for placing
- *   into settings.php.
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   SettingsEditor::rewrite() instead. As internal API,
- *   _drupal_rewrite_settings_dump() may also be removed in a minor
- *   release.
- *
- * @see https://www.drupal.org/node/3244583
- */
-function _drupal_rewrite_settings_dump($variable, $variable_name) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. As internal API, ' . __FUNCTION__ . '() may also be removed in a minor release. See https://www.drupal.org/node/3244583', E_USER_DEPRECATED);
-  $return = '';
-  if (is_object($variable)) {
-    if (!empty($variable->required)) {
-      $return .= _drupal_rewrite_settings_dump_one($variable, "$variable_name = ", "\n");
-    }
-  }
-  else {
-    foreach ($variable as $k => $v) {
-      $return .= _drupal_rewrite_settings_dump($v, $variable_name . "['" . $k . "']");
-    }
-  }
-  return $return;
-}
-
-/**
- * Helper for drupal_rewrite_settings().
- *
- * Dump the value of a value property and adds the comment if it exists.
- *
- * @param object $variable
- *   A stdClass object with at least a value property.
- * @param string $prefix
- *   A string to prepend to the variable's value.
- * @param string $suffix
- *   A string to append to the variable's value.
- *
- * @return string
- *   A string containing valid PHP code of the variable suitable for placing
- *   into settings.php.
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   SettingsEditor::rewrite() instead. As internal API,
- *   _drupal_rewrite_settings_dump_one() may also be removed in a minor
- *   release.
- *
- * @see https://www.drupal.org/node/3244583
- */
-function _drupal_rewrite_settings_dump_one(\stdClass $variable, $prefix = '', $suffix = '') {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. As internal API, ' . __FUNCTION__ . '() may also be removed in a minor release. See https://www.drupal.org/node/3244583', E_USER_DEPRECATED);
-  $return = $prefix . var_export($variable->value, TRUE) . ';';
-  if (!empty($variable->comment)) {
-    $return .= ' // ' . $variable->comment;
-  }
-  $return .= $suffix;
-  return $return;
-}
-
-/**
  * Verifies that all dependencies are met for a given installation profile.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  *
  * @return array
  *   The list of modules to install.
+ *
+ * @todo https://www.drupal.org/i/3005959 Rework this method as it is not only
+ *   about profiles.
  */
 function drupal_verify_profile($install_state) {
   $profile = $install_state['parameters']['profile'];
+  if ($profile === FALSE) {
+    return [];
+  }
   $info = $install_state['profile_info'];
 
   // Get the list of available modules for the selected installation profile.
@@ -428,9 +239,14 @@ function drupal_install_system($install_state) {
 
   // Store the installation profile in configuration to populate the
   // 'install_profile' container parameter.
-  \Drupal::configFactory()->getEditable('core.extension')
-    ->set('profile', $install_state['parameters']['profile'])
-    ->save();
+  $config = \Drupal::configFactory()->getEditable('core.extension');
+  if ($install_state['parameters']['profile'] === FALSE) {
+    $config->clear('profile');
+  }
+  else {
+    $config->set('profile', $install_state['parameters']['profile']);
+  }
+  $config->save();
 
   $connection = Database::getConnection();
   $provider = $connection->getProvider();
@@ -464,11 +280,11 @@ function drupal_install_system($install_state) {
 /**
  * Verifies the state of the specified file.
  *
- * @param $file
+ * @param string $file
  *   The file to check for.
- * @param $mask
+ * @param int $mask
  *   An optional bitmask created from various FILE_* constants.
- * @param $type
+ * @param string|null $type
  *   The type of file. Can be file (default), dir, or link.
  * @param bool $auto_fix
  *   (optional) Determines whether to attempt fixing the permissions according
@@ -556,11 +372,11 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file', $auto_f
 /**
  * Creates a directory with the specified permissions.
  *
- * @param $file
- *   The name of the directory to create;
- * @param $mask
+ * @param string $file
+ *   The name of the directory to create.
+ * @param int $mask
  *   The permissions of the directory to create.
- * @param $message
+ * @param bool $message
  *   (optional) Whether to output messages. Defaults to TRUE.
  *
  * @return bool
@@ -607,11 +423,11 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
  * using bitwise operations. This lets us remove, for example, 0222 from
  * 0700 and get the correct value of 0500.
  *
- * @param $file
+ * @param string $file
  *   The name of the file with permissions to fix.
- * @param $mask
+ * @param int $mask
  *   The desired permissions for the file.
- * @param $message
+ * @param bool $message
  *   (optional) Whether to output messages. Defaults to TRUE.
  *
  * @return bool
@@ -686,7 +502,7 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
  *
  * This issues an on-site HTTP redirect. Messages (and errors) are erased.
  *
- * @param $path
+ * @param string $path
  *   An installer path.
  */
 function install_goto($path) {
@@ -714,14 +530,14 @@ function install_goto($path) {
  * that need to be bypassed), using this function to generate the URL for links
  * to the next steps of the script ensures that the links will work correctly.
  *
- * @param $query
+ * @param array $query
  *   (optional) An array of query parameters to merge in to the existing ones.
  *
  * @return string
  *   The URL of the current script, with query parameters modified by the
  *   passed-in $query. The URL is not sanitized, so it still needs to be run
- *   through \Drupal\Component\Utility\UrlHelper::filterBadProtocol() if it will be
- *   used as an HTML attribute value.
+ *   through \Drupal\Component\Utility\UrlHelper::filterBadProtocol() if it will
+ *   be used as an HTML attribute value.
  *
  * @see drupal_requirements_url()
  * @see Drupal\Component\Utility\UrlHelper::filterBadProtocol()
@@ -742,7 +558,7 @@ function drupal_current_script_url($query = []) {
  * update.php) and returns a URL that can be used to attempt to proceed to the
  * next step of the script.
  *
- * @param $severity
+ * @param int $severity
  *   The severity of the requirements problem, as returned by
  *   drupal_requirements_severity().
  *
@@ -797,8 +613,6 @@ function drupal_check_profile($profile) {
         require_once $install_file;
       }
 
-      \Drupal::service('class_loader')->addPsr4('Drupal\\' . $module . '\\', \Drupal::root() . "/$module_path/src");
-
       if (function_exists($function)) {
         $requirements = array_merge($requirements, $function('install'));
       }
@@ -817,7 +631,7 @@ function drupal_check_profile($profile) {
 /**
  * Extracts the highest severity from the requirements array.
  *
- * @param $requirements
+ * @param array $requirements
  *   An array of requirements, in the same format as is returned by
  *   hook_requirements().
  *
@@ -837,7 +651,7 @@ function drupal_requirements_severity(&$requirements) {
 /**
  * Checks a module's requirements.
  *
- * @param $module
+ * @param string $module
  *   Machine name of module to check.
  *
  * @return bool
@@ -913,9 +727,9 @@ function drupal_check_module($module) {
  *      - dblog
  * @endcode
  *
- * @param $profile
+ * @param string $profile
  *   Name of profile.
- * @param $langcode
+ * @param string $langcode
  *   Language code (if any).
  *
  * @return array

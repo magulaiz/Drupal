@@ -64,7 +64,10 @@ class MailFormatHelper {
       $text = preg_replace('/(?(?<!^--) +\n|  +\n)/m', "\n", $text);
       // Wrap each line at the needed width.
       $lines = explode("\n", $text);
-      array_walk($lines, '\Drupal\Core\Mail\MailFormatHelper::wrapMailLine', ['soft' => $soft, 'length' => strlen($indent)]);
+      array_walk($lines, '\Drupal\Core\Mail\MailFormatHelper::wrapMailLine', [
+        'soft' => $soft,
+        'length' => strlen($indent),
+      ]);
       $text = implode("\n", $lines);
     }
     else {
@@ -84,8 +87,9 @@ class MailFormatHelper {
   /**
    * Transforms an HTML string into plain text, preserving its structure.
    *
-   * The output will be suitable for use as 'format=flowed; delsp=yes' text
-   * (RFC 3676) and can be passed directly to MailManagerInterface::mail() for sending.
+   * The output will be suitable for use as 'format=flowed; delsp=yes' text (RFC
+   * 3676) and can be passed directly to MailManagerInterface::mail() for
+   * sending.
    *
    * We deliberately use LF rather than CRLF, see MailManagerInterface::mail().
    *
@@ -311,7 +315,7 @@ class MailFormatHelper {
     }
     if (!$line_is_mime_header) {
       // Use soft-breaks only for purely quoted or un-indented text.
-      $line = wordwrap($line, 77 - $values['length'], $values['soft'] ? " \n" : "\n");
+      $line = wordwrap($line, 77 - $values['length'], $values['soft'] ? "  \n" : "\n");
     }
     // Break really long words at the maximum width allowed.
     $line = wordwrap($line, 996 - $values['length'], $values['soft'] ? " \n" : "\n", TRUE);
