@@ -5,9 +5,7 @@
  */
 
 use Drupal\comment\CommentInterface;
-use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
