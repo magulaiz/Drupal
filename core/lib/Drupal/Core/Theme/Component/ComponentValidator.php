@@ -152,6 +152,10 @@ class ComponentValidator {
     $definition['props'] = $this->nullifyClassPropsRecursive($definition['props']);
 
     $definition_object = Validator::arrayToObjectRecursive($definition);
+    // If there are no props, force casting to object instead of array.
+    if (($definition_object->props->properties ?? NULL) === []) {
+      $definition_object->props->properties = new \stdClass();
+    }
     $this->validator->validate(
       $definition_object,
       (object) ['$ref' => 'file://' . dirname(__DIR__, 5) . '/assets/schemas/v1/metadata-full.schema.json']
