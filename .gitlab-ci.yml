@@ -127,11 +127,9 @@ default:
   before_script:
     - composer validate
     - composer install --optimize-autoloader
-    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
-    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - docker-php-ext-enable pcov
   script:
-    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --testdox --coverage-text --colors=always --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
+    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --coverage-text --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
   artifacts:
     when: always
     expire_in: 6 mos
@@ -539,14 +537,12 @@ default:
   <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "8"
-    CONCURRENCY: 1
     _TARGET_PHP: "8.3-ubuntu"
 
 '⚡️ Component unit tests on PHP 8.4':
   <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "8"
-    CONCURRENCY: 1
     _TARGET_PHP: "8.4-ubuntu"
 
 '✅️ PHPStan rules tests':
