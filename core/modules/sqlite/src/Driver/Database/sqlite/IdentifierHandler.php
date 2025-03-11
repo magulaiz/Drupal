@@ -6,7 +6,6 @@ namespace Drupal\sqlite\Driver\Database\sqlite;
 
 use Drupal\Core\Database\Identifier\IdentifierHandlerBase;
 use Drupal\Core\Database\Identifier\IdentifierType;
-use Drupal\Core\Database\Identifier\Table;
 
 /**
  * SQLite implementation of the identifier handler.
