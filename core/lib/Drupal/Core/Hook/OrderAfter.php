@@ -7,11 +7,13 @@ namespace Drupal\Core\Hook;
 /**
  * Set this implementation to be after others.
  */
-readonly class OrderAfter extends ComplexOrder {
+readonly class OrderAfter extends RelativeOrderBase {
 
   /**
-   * After means the priority should not be larger than others.
+   * {@inheritdoc}
    */
-  const bool VALUE = FALSE;
+  protected function isAfter(): bool {
+    return TRUE;
+  }
 
 }

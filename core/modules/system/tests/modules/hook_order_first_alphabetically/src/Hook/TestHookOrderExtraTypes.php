@@ -27,7 +27,6 @@ class TestHookOrderExtraTypes {
   #[Hook('custom_hook_extra_types1_alter',
     order: new OrderAfter(
       modules: ['hook_order_last_alphabetically'],
-      extraTypes: ['custom_hook_extra_types2_alter'],
     )
   )]
   public static function customHookExtraTypes(): void {

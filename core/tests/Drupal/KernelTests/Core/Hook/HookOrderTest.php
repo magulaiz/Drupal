@@ -13,6 +13,7 @@ use Drupal\hk_b_test\Hook\BFormAlterHooks;
 use Drupal\hk_b_test\Hook\BHooks;
 use Drupal\hk_c_test\Hook\CAlterHooks;
 use Drupal\hk_c_test\Hook\CFormAlterHooks;
+use Drupal\hk_c_test\Hook\CHooks;
 use Drupal\hk_d_test\Hook\DAlterHooks;
 use Drupal\hk_d_test\Hook\DHooks;
 use Drupal\KernelTests\KernelTestBase;
@@ -222,9 +223,8 @@ class HookOrderTest extends KernelTestBase {
 
   public function testAlterOrder(): void {
     $this->assertAlterCallOrder([
-      AAlterHooks::class . '::testAlterAfterC',
-      BAlterHooks::class . '::testAlterAfterCExtra',
       CAlterHooks::class . '::testAlter',
+      AAlterHooks::class . '::testAlterAfterC',
       DAlterHooks::class . '::testAlter',
     ], 'test');
 
@@ -237,12 +237,11 @@ class HookOrderTest extends KernelTestBase {
 
     $this->assertAlterCallOrder([
       // The implementation from 'D' is gone.
-      AAlterHooks::class . '::testAlterAfterC',
       AAlterHooks::class . '::testSubtypeAlter',
-      BAlterHooks::class . '::testAlterAfterCExtra',
       BAlterHooks::class . '::testSubtypeAlter',
       CAlterHooks::class . '::testAlter',
       CAlterHooks::class . '::testSubtypeAlter',
+      AAlterHooks::class . '::testAlterAfterC',
       DAlterHooks::class . '::testAlter',
       DAlterHooks::class . '::testSubtypeAlter',
     ], ['test', 'test_subtype']);
@@ -262,10 +261,10 @@ class HookOrderTest extends KernelTestBase {
     ], 'test_subtype', prepend_unknown_type: FALSE);
 
     $this->assertAlterCallOrder([
+      AAlterHooks::class . '::testSubtypeAlter',
       CAlterHooks::class . '::testAlter',
       CAlterHooks::class . '::testSubtypeAlter',
       AAlterHooks::class . '::testAlterAfterC',
-      AAlterHooks::class . '::testSubtypeAlter',
       DAlterHooks::class . '::testAlter',
       DAlterHooks::class . '::testSubtypeAlter',
     ], ['test', 'test_subtype'], prepend_unknown_type: FALSE);
@@ -274,43 +273,41 @@ class HookOrderTest extends KernelTestBase {
   public function testFormAlterOrder(): void {
     $this->assertSameCallList([
       AFormAlterHooks::class . '::formAlter',
-      AFormAlterHooks::class . '::formAlterAfterB',
-      AFormAlterHooks::class . '::formAlterAfterBExtra',
       BFormAlterHooks::class . '::formAlter',
+      AFormAlterHooks::class . '::formAlterAfterB',
       CFormAlterHooks::class . '::formAlter',
     ], $this->alter('form')['#calls'] ?? NULL);
 
     $this->assertSameCallList([
       AFormAlterHooks::class . '::formAlter',
-      AFormAlterHooks::class . '::formAlterAfterB',
-      AFormAlterHooks::class . '::formAlterAfterBExtra',
       AFormAlterHooks::class . '::myFormAlter',
-      AFormAlterHooks::class . '::myFormAlterAfterB',
-      AFormAlterHooks::class . '::myFormAlterAfterBExtra',
       BFormAlterHooks::class . '::formAlter',
       BFormAlterHooks::class . '::myFormAlter',
+      AFormAlterHooks::class . '::myFormAlterAfterB',
+      AFormAlterHooks::class . '::formAlterAfterB',
       CFormAlterHooks::class . '::formAlter',
       CFormAlterHooks::class . '::myFormAlter',
-    ], $this->alter(['form', 'form_myform'])['#calls'] ?? NULL);
+    ], $this->alter(['form', 'form_my_form'])['#calls'] ?? NULL);
   }
 
   public function testHookOrder(): void {
     $this->assertSameCallList(
       [
-        // All the implementations from CHooks are gone.
-        // @todo This is probably bad.
+        CHooks::class . '::testHookReOrderFirst',
+        CHooks::class . '::testHookFirst',
         AHooks::class . '::testHookFirst',
-        'hk_a_test_testhook',
+        'hk_a_test_test_hook',
         AHooks::class . '::testHook',
-        AHooks::class . '::testHookAfterB',
-        AHooks::class . '::testHookLast',
-        'hk_b_test_testhook',
+        'hk_b_test_test_hook',
         BHooks::class . '::testHook',
-        'hk_c_test_testhook',
-        'hk_d_test_testhook',
+        AHooks::class . '::testHookAfterB',
+        'hk_c_test_test_hook',
+        CHooks::class . '::testHook',
+        'hk_d_test_test_hook',
         DHooks::class . '::testHook',
+        AHooks::class . '::testHookLast',
       ],
-      \Drupal::moduleHandler()->invokeAll('testhook'),
+      \Drupal::moduleHandler()->invokeAll('test_hook'),
     );
   }
 

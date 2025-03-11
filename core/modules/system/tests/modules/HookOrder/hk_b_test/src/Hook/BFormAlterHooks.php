@@ -6,6 +6,9 @@ namespace Drupal\hk_b_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 
+/**
+ * Hooks for testing ordering.
+ */
 class BFormAlterHooks {
 
   #[Hook('form_alter')]
@@ -13,7 +16,7 @@ class BFormAlterHooks {
     $form['#calls'][] = __METHOD__;
   }
 
-  #[Hook('form_myform_alter')]
+  #[Hook('form_my_form_alter')]
   public function myFormAlter(array &$form): void {
     $form['#calls'][] = __METHOD__;
   }
