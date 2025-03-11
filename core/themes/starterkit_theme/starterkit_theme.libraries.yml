@@ -48,7 +48,7 @@ base:
 details:
   version: VERSION
   css:
-    theme:
+    component:
       css/components/details.css:
         weight: -10
 

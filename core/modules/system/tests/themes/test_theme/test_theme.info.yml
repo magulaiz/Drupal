@@ -27,6 +27,9 @@ libraries-override:
       component:
         css/components/button.css: css/my-button.css
         css/components/container-inline.css: /themes/my_theme/css/my-container-inline.css
+  starterkit_theme/details:
+    css:
+      component:
         css/components/details.css: /themes/my_theme/css/my-details.css
   # Remove particular library assets.
   starterkit_theme/dialog:
