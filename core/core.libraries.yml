@@ -510,7 +510,7 @@ drupal.collapse:
       css:
         component:
           css/components/details.module.css:
-            base: core/misc/components/details.module.css
+            base: misc/components/details.module.css
 
 drupal.debounce:
   version: VERSION
