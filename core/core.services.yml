@@ -528,6 +528,7 @@ services:
     abstract: true
     class: Drupal\Core\Logger\LoggerChannel
     factory: ['@logger.factory', 'get']
+  Drupal\Core\Logger\LoggerChannelInterface: '@logger.channel_base'
   logger.channel.default:
     parent: logger.channel_base
     arguments: ['system']
@@ -541,8 +542,7 @@ services:
     parent: logger.channel_base
     arguments: ['cron']
   logger.channel.file:
-    class: Drupal\Core\Logger\LoggerChannel
-    factory: ['@logger.factory', 'get']
+    parent: logger.channel_base
     arguments: ['file']
   logger.channel.form:
     parent: logger.channel_base
