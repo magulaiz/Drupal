@@ -175,6 +175,9 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
 
     $this->container->get('account_switcher')->switchTo($user_with_access);
 
+    // We check if the referencing entity was loaded by checking
+    // if it was added to the memory cache.
+    // This requires an empty memory cache for the test to be reliable.
     $this->container->get('entity.memory_cache')->reset();
     $violations = $referencing_entity->field_test->validate();
     $this->assertCount(0, $violations);
