@@ -144,8 +144,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
       ],
       'CacheSetCount' => 45,
       'CacheDeleteCount' => 0,
-      'CacheTagChecksumCount' => 38,
-      'CacheTagIsValidCount' => 43,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 21,
       'CacheTagGroupedLookups' => [
@@ -204,8 +202,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertCountBetween(24, 25, $performance_data->getCacheTagChecksumCount());
-    $this->assertCountBetween(38, 39, $performance_data->getCacheTagIsValidCount());
     $expected = [
       'QueryCount' => 10,
       'CacheGetCount' => 92,
@@ -268,8 +264,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheGetCount' => 81,
       'CacheSetCount' => 17,
       'CacheDeleteCount' => 0,
-      'CacheTagChecksumCount' => 23,
-      'CacheTagIsValidCount' => 33,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 16,
       'StylesheetCount' => 1,
@@ -325,8 +319,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheGetCount' => 84,
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
-      'CacheTagChecksumCount' => 1,
-      'CacheTagIsValidCount' => 37,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 17,
       'CacheTagGroupedLookups' => [
@@ -404,8 +396,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheGetCount' => 103,
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
-      'CacheTagChecksumCount' => 1,
-      'CacheTagIsValidCount' => 41,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 19,
     ];
