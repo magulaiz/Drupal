@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Kernel;
 
+use Drupal\block\BlockConfigUpdater;
 use Drupal\block\Entity\Block;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\KernelTestBase;
@@ -49,7 +50,7 @@ class BlockRebuildTest extends KernelTestBase {
    * @covers \Drupal\block\Hook\BlockHooks::rebuild
    */
   public function testRebuildNoBlocks(): void {
-    $blockRebuild = new BlockHooks($this->container->get(BlockHooks::class));
+    $blockRebuild = new BlockHooks($this->container->get(BlockConfigUpdater::class));
     $blockRebuild->rebuild();
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
@@ -62,7 +63,7 @@ class BlockRebuildTest extends KernelTestBase {
   public function testRebuildNoInvalidBlocks(): void {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);
 
-    $blockRebuild = new BlockHooks($this->container->get(BlockHooks::class));
+    $blockRebuild = new BlockHooks($this->container->get(BlockConfigUpdater::class));
     $blockRebuild->rebuild();
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
@@ -94,7 +95,7 @@ class BlockRebuildTest extends KernelTestBase {
     $this->assertSame('INVALID', $block2->getRegion());
     $this->assertFalse($block2->status());
 
-    $blockRebuild = new BlockHooks($this->container->get(BlockHooks::class));
+    $blockRebuild = new BlockHooks($this->container->get(BlockConfigUpdater::class));
     $blockRebuild->rebuild();
 
     // Reload block entities.

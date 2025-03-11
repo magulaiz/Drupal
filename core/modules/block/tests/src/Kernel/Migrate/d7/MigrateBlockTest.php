@@ -6,6 +6,7 @@ namespace Drupal\Tests\block\Kernel\Migrate\d7;
 
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
+use Drupal\Tests\block\Kernel\BlockRebuildTest;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\block\Hook\BlockHooks;
 
@@ -59,7 +60,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
       'd7_custom_block',
       'd7_block',
     ]);
-    $blockRebuild = new BlockHooks($this->container->get(BlockHooks::class));
+    $blockRebuild = new BlockHooks($this->container->get(BlockRebuildTest::class));
     $blockRebuild->rebuild();
   }
 
