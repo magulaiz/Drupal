@@ -216,9 +216,10 @@
             'data-autocomplete-first-character-blacklist',
           );
           Drupal.deprecatedProperty({
-            deprecatedProperty: 'blacklist',
+            target: autocomplete.options,
+            deprecatedProperty: 'firstCharacterBlacklist',
             message:
-              'The blacklist constant is been deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use denyList instead. See https://www.drupal.org/node/3472016.',
+              'The firstCharacterBlacklist property has been deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use firstCharacterDenyList instead. See https://www.drupal.org/node/3472016.',
           });
           const denyList = $autocomplete.attr(
             'data-autocomplete-first-character-denylist',
