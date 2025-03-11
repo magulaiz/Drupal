@@ -11,7 +11,7 @@ use Drupal\user\RoleInterface;
 /**
  * Grants navigation specific permission to roles with access to any layout.
  */
-function navigation_post_update_update_permissions(array &$sandbox) {
+function navigation_post_update_update_permissions(array &$sandbox): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'user_role', function (RoleInterface $role) {
     $needs_save = FALSE;
     if ($role->hasPermission('configure any layout')) {
@@ -30,12 +30,33 @@ function navigation_post_update_update_permissions(array &$sandbox) {
 /**
  * Defines the values for the default logo dimensions.
  */
-function navigation_post_update_set_logo_dimensions_default(array &$sandbox) {
-  $settings = \Drupal::configFactory()->getEditable('navigation.settings');
-  $settings->set('logo_height', 40)
-    ->set('logo_width', 40);
-  if (is_array($settings->get('logo_managed'))) {
-    $settings->set('logo_managed', current($settings->get('logo_managed')));
+function navigation_post_update_set_logo_dimensions_default(array &$sandbox): void {
+  // Empty post_update hook.
+}
+
+/**
+ * Creates the Navigation user links menu.
+ */
+function navigation_post_update_navigation_user_links_menu(array &$sandbox): void {
+  $menu_storage = \Drupal::entityTypeManager()->getStorage('menu');
+
+  // Do not create the new menu if already exists.
+  if ($menu_storage->load('navigation-user-links')) {
+    return;
   }
-  $settings->save();
+
+  $menu_storage
+    ->create([
+      'id' => 'navigation-user-links',
+      'label' => 'Navigation user links',
+      'description' => 'User links to be used in Navigation',
+      'dependencies' => [
+        'enforced' => [
+          'module' => [
+            'navigation',
+          ],
+        ],
+      ],
+      'locked' => TRUE,
+    ])->save();
 }

@@ -428,7 +428,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   /**
    * Tests the 'access shortcuts' permission for shortcut set administration.
    */
-  private function verifyAccessShortcutsPermissionForEditPages() {
+  private function verifyAccessShortcutsPermissionForEditPages(): void {
     // Create a user with customize links and switch sets permissions  but
     // without the 'access shortcuts' permission.
     $test_permissions = [
@@ -481,14 +481,14 @@ class ShortcutLinksTest extends ShortcutTestBase {
    *   Link position counting from zero.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use new FormattableMarkup() to embed variables in the message text, not
-   *   t(). If left blank, a default message will be displayed.
+   *   messages: use new FormattableMarkup() to embed variables in the message
+   *   text, not t(). If left blank, a default message will be displayed.
    *
    * @internal
    */
   protected function assertShortcutQuickLink(string $label, int $index = 0, string $message = ''): void {
     $links = $this->xpath('//a[normalize-space()=:label]', [':label' => $label]);
-    $message = ($message ? $message : (string) new FormattableMarkup('Shortcut quick link with label %label found.', ['%label' => $label]));
+    $message = ($message ?: (string) new FormattableMarkup('Shortcut quick link with label %label found.', ['%label' => $label]));
     $this->assertArrayHasKey($index, $links, $message);
   }
 
