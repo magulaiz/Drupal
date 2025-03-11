@@ -114,6 +114,7 @@ final class ImportStorageTransformer {
     }
 
     // Copy the sync configuration to the created mutable storage.
+    // Wrapping the queries in a transaction for performance gain.
     $transaction = $this->connection->startTransaction();
     self::replaceStorageContents($storage, $mutable);
     unset($transaction);
