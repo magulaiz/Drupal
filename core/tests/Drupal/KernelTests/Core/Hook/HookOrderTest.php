@@ -223,6 +223,12 @@ class HookOrderTest extends KernelTestBase {
     ], ['procedural', 'procedural_subtype']);
   }
 
+  public function testProceduralOrderSideEffect(): void {
+    $this->enableModules(['hk_extra_test']);
+    // The previous test should behave exactly the same.
+    $this->testProceduralAlterOrder();
+  }
+
   public function testAlterOrder(): void {
     $this->assertAlterCallOrder([
       CAlterHooks::class . '::testAlter',
