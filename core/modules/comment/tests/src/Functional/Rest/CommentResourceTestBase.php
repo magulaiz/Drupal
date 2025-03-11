@@ -145,6 +145,9 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
       'cid' => [
         ['value' => 1],
       ],
+      'revision_id' => [
+        ['value' => 1],
+      ],
       'uuid' => [
         ['value' => $this->entity->uuid()],
       ],
@@ -219,6 +222,16 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
       'thread' => [
         [
           'value' => '01/',
+        ],
+      ],
+      'revision_created' => [
+        (new \DateTime())->setTimestamp((int) $this->entity->getRevisionCreationTime())->setTimezone(new \DateTimeZone("UTC"))->format(\DateTime::RFC3339),
+      ],
+      'revision_user' => [],
+      'revision_log_message' => [],
+      'revision_translation_affected' => [
+        [
+          'value' => TRUE,
         ],
       ],
       'comment_body' => [
