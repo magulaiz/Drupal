@@ -461,6 +461,7 @@ class BigPipeTest extends BrowserTestBase {
 
   /**
    * @return \Drupal\big_pipe_test\BigPipePlaceholderTestCase[]
+   *   An array of test cases.
    */
   protected function getTestCases($has_session = TRUE) {
     return BigPipePlaceholderTestCases::cases($this->container, $this->rootUser);
@@ -475,7 +476,7 @@ class BigPipeTest extends BrowserTestBase {
    * @internal
    */
   protected function assertSetsEqual(array $a, array $b): void {
-    $result = count($a) == count($b) && !array_diff_assoc($a, $b);
+    count($a) == count($b) && !array_diff_assoc($a, $b);
   }
 
   /**

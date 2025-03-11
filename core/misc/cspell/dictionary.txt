@@ -34,6 +34,7 @@ autoplace
 autoplay
 autoreply
 autosubmit
+avif
 backlink
 bakeware
 barchart
@@ -125,7 +126,6 @@ datelist
 daterange
 datestamp
 datetimeiso
-datetimeplus
 dburl
 dealerdirect
 defaultable
@@ -147,7 +147,6 @@ deviantart
 dflt
 dialogsave
 diffchange
-differring
 dnumber
 dockerhub
 docroot
@@ -158,17 +157,9 @@ dragtable
 drillable
 dropbutton
 dropbuttons
-drupalelementstyle
-drupalelementstylecommand
-drupalelementstyleediting
-drupalelementstyleui
-drupalhtmlbuilder
-drupalmediaediting
-drupalmediatoolbar
 editables
 egulias
 elbonia
-elems
 encapsed
 endautoescape
 endcode
@@ -192,7 +183,6 @@ extraspace
 fakepath
 falsey
 fastcgi
-favourite
 favstar
 fcgi
 fdiv
@@ -219,7 +209,6 @@ français
 fraîche
 frontpage
 fudgy
-fulldata
 fulldate
 fulltext
 gabilondo
@@ -246,15 +235,14 @@ icann
 iconwrap
 idekey
 iframeupload
+imageavif
 imagecache
-imagetextalternative
 indexname
 inglés
 inited
 inlines
 inno
 instantiator
-interactable
 interruptible
 introspectable
 invalidators
@@ -271,9 +259,7 @@ keypresses
 kinberg
 kolkata
 lamoids
-languageswitcher
 libc
-licious
 lified
 lightninggreen
 linkability
@@ -303,9 +289,6 @@ maximumred
 maxlifetime
 maynot
 mbytes
-mediaimagetextalternative
-mediaimagetextalternativeediting
-mediaimagetextalternativeui
 mediumint
 mediumtext
 messagekey
@@ -317,12 +300,10 @@ mglaman
 micheh
 mikey
 mimetypes
-minifyzombies
 minusthick
 mlfr
 mocktail
 mocktails
-mocky
 moderatable
 modernizr
 mojito
@@ -343,7 +324,6 @@ navs
 ndocs
 necolas
 newcol
-newfieldinitial
 newwin
 nids
 nightwatch
@@ -365,7 +345,6 @@ nplurals
 ntfs
 nyholm
 oembed
-omittable
 onecol
 oneplusfourgrid
 optgroups
@@ -393,7 +372,6 @@ phpserialize
 phpspec
 pickable
 pingback
-pjpeg
 placeholdered
 placeholdering
 plusthick
@@ -415,10 +393,7 @@ prerendered
 presave
 pretransaction
 preuninstall
-proname
 prophesize
-prophesized
-prophesizing
 protossl
 pseudotag
 puzzlepiece
@@ -431,7 +406,6 @@ qvalues
 ralouphie
 rasterizable
 rasterizes
-readmore
 realpaths
 realword
 rebuilder
@@ -442,7 +416,6 @@ referer
 refinable
 reindexing
 renderables
-reparenting
 replyto
 resave
 resaved
@@ -455,7 +428,6 @@ revisionable
 revisioned
 revisionid
 revisioning
-ribisi
 rowspans
 rtsp
 ruleset
@@ -481,7 +453,6 @@ slatkin
 smacss
 smalldatetime
 smtps
-somecompany
 splitbutton
 splitbuttons
 squaresmall
@@ -545,17 +516,13 @@ tableinfo
 tableresponsive
 tableselect
 tablesort
-tablesort's
 tablesorts
 tabset
 tabwidth
-taskless
 tbachert
 testbot
-testbots
 testlogger
 textareas
-textboxes
 textfields
 themename
 themer
@@ -569,7 +536,6 @@ timemap
 timespan
 tinyint
 tinytext
-titlealert
 titlebar
 tlds
 tmpfs
@@ -577,7 +543,6 @@ toggleable
 tongatapu
 toolkits
 toplevel
-torder
 touchevents
 trackback
 transferthick
@@ -601,7 +566,6 @@ unminified
 unmoderated
 unpromote
 unpublishing
-unrevisionable
 unrouted
 unsanitized
 unserialization
@@ -618,9 +582,7 @@ uploadprogress
 upscaling
 urandom
 userinfo
-vampirize
 versionable
-versionless
 vfsstream
 viewports
 wcag
@@ -634,7 +596,6 @@ webservers
 widthx
 wordsafe
 writeln
-xbap
 xbitmap
 xmlhttp
 xpsdocument

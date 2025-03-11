@@ -94,14 +94,14 @@ variables:
     SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
     SE_NODE_MAX_SESSIONS: "16"
     SE_SESSION_RETRY_INTERVAL: "1"
-    SE_SESSION_REQUEST_TIMEOUT: "10"
-    SE_START_XVFB: "false"
+    SE_SESSION_REQUEST_TIMEOUT: "60"
+    SE_START_XVFB: "true"
     SE_START_VNC: "false"
 
 .run-tests: &run-tests
   script:
     # Need to pass this along directly.
-    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
+    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
 
 .run-repeat-class-test: &run-repeat-class-test
   script:
@@ -113,7 +113,7 @@ variables:
         echo '   "Key" to "REPEAT_TEST_CLASS" and "Value" to "Drupal\Tests\ckeditor5\FunctionalJavascript\MediaLinkabilityTest"';
         exit 1;
       else
-        sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $REPEAT_TEST_CLASS
+        sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $REPEAT_TEST_CLASS
       fi
 
 ################
@@ -132,7 +132,7 @@ variables:
   allow_failure: true
   services:
     - <<: *with-database
-    - <<: *with-chrome
+    - <<: *with-selenium-chrome
   script:
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
 
@@ -151,24 +151,14 @@ variables:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
     - cp /builds/chromedriver.log ./
 
-'🖱️️️ PHPUnit Functional Javascript (non W3C legacy)':
-  <<: [ *with-composer, *default-job-settings ]
-  parallel: 1
+'👷️️️ PHPUnit Build':
+  <<: [ *with-composer, *run-tests, *default-job-settings ]
   variables:
-    TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 6
-    KUBERNETES_CPU_REQUEST: "16"
-    MINK_DRIVER_ARGS_WEBDRIVER: $MINK_DRIVER_ARGS_WEBDRIVER_CHROMEDRIVER_NON_W3C
+    TESTSUITE: PHPUnit-Build
+    KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: "5"
   services:
     - <<: *with-database
-    - <<: *with-chrome
-  script:
-    # Run a small subset of tests to prove non W3C testing still works.
-    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html javascript
-
-  after_script:
-    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
-    - cp /builds/chromedriver.log ./
 
 '🌐️️ PHPUnit Functional':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
@@ -187,15 +177,6 @@ variables:
     TESTSUITE: PHPUnit-Kernel
     KUBERNETES_CPU_REQUEST: "8"
     CONCURRENCY: 12
-  services:
-    - <<: *with-database
-
-'👷️️️ PHPUnit Build':
-  <<: [ *with-composer, *run-tests, *default-job-settings ]
-  variables:
-    TESTSUITE: PHPUnit-Build
-    KUBERNETES_CPU_REQUEST: "8"
-    CONCURRENCY: "5"
   services:
     - <<: *with-database
 
@@ -261,7 +242,7 @@ variables:
     - chown -R www-data:www-data ./sites /var/www
     - cd core
     - corepack enable
-    - sudo -u www-data yarn run test:nightwatch --workers=3
+    - sudo -u www-data -E -H yarn run test:nightwatch --workers=3
   after_script:
     - cp /builds/chromedriver.log ./
   artifacts:
@@ -272,6 +253,25 @@ variables:
     paths:
       - ./nightwatch_output
       - '*.log'
+
+'🖱️️️ PHPUnit Functional Javascript (non W3C legacy)':
+  <<: [ *with-composer, *default-job-settings ]
+  parallel: 1
+  variables:
+    TESTSUITE: PHPUnit-FunctionalJavascript
+    CONCURRENCY: 6
+    KUBERNETES_CPU_REQUEST: "16"
+    MINK_DRIVER_ARGS_WEBDRIVER: $MINK_DRIVER_ARGS_WEBDRIVER_CHROMEDRIVER_NON_W3C
+  services:
+    - <<: *with-database
+    - <<: *with-chrome
+  script:
+    # Run a small subset of tests to prove non W3C testing still works.
+    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html javascript
+
+  after_script:
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+    - cp /builds/chromedriver.log ./
 
 '🔁 Repeat Class Test':
   <<: [ *with-composer, *run-repeat-class-test, *default-job-settings ]
@@ -308,4 +308,4 @@ variables:
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" OTEL_COLLECTOR="$OTEL_COLLECTOR" -u www-data ./vendor/bin/phpunit -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
+    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" -u www-data -E -H ./vendor/bin/phpunit -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
