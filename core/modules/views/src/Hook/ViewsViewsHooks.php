@@ -255,6 +255,13 @@ class ViewsViewsHooks {
           'base field' => $target_entity_type->getKey('id'),
           'relationship field' => $field_name . '_target_id',
         ];
+        if ($target_base_table && $field_storage->isTranslatable()) {
+          $data[$table_name][$field_name]['relationship']['extra'][] = [
+            'field' => 'langcode',
+            'left_field' => 'langcode',
+          ];
+        }
+
         // Provide a reverse relationship for the entity type that is referenced
         // by the field.
         $args['@entity'] = $entity_type->getLabel();
