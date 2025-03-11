@@ -8,9 +8,10 @@ use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
 /**
  * Creates status report page element.
+ *
+ * @RenderElement("status_report_page")
  */
-#[RenderElement('status_report_page')]
-class StatusReportPage extends RenderElementBase {
+class StatusReportPage extends RenderElement {
 
   /**
    * {@inheritdoc}
