@@ -89,6 +89,8 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
         'changed',
         'cid',
         'thread',
+        'revision_user',
+        'revision_created',
       ];
       // These fields can be edited during comment creation.
       $create_only_fields = [
@@ -143,6 +145,12 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
           ->addCacheableDependency($field_definition->getConfig($commented_entity->bundle()))
           ->addCacheableDependency($commented_entity);
         return $admin_access->orIf($anonymous_access);
+      }
+
+      // Users have access to the revision log message if they have
+      // the administer comments permission.
+      if ($field_definition->getName() === 'revision_log_message') {
+        return AccessResult::allowedIfHasPermission($account, 'administer comments');
       }
     }
 

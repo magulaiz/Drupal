@@ -12,6 +12,9 @@ use Drupal\comment\CommentViewsData;
 use Drupal\comment\Form\DeleteForm;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\EntityListBuilder;
+use Drupal\Core\Entity\Form\RevisionDeleteForm;
+use Drupal\Core\Entity\Form\RevisionRevertForm;
+use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Component\Utility\Number;
 use Drupal\Core\Cache\Cache;
@@ -54,6 +57,11 @@ use Drupal\user\EntityOwnerTrait;
     'form' => [
       'default' => CommentForm::class,
       'delete' => DeleteForm::class,
+      'revision-delete' => RevisionDeleteForm::class,
+      'revision-revert' => RevisionRevertForm::class,
+    ],
+    'route_provider' => [
+      'revision' => RevisionHtmlRouteProvider::class,
     ],
     'translation' => CommentTranslationHandler::class,
   ],
@@ -63,6 +71,10 @@ use Drupal\user\EntityOwnerTrait;
     'delete-multiple-form' => '/admin/content/comment/delete',
     'edit-form' => '/comment/{comment}/edit',
     'create' => '/comment',
+    'revision' => '/comment/{comment}/revision/{comment_revision}/view',
+    'revision-delete-form' => '/comment/{comment}/revision/{comment_revision}/delete',
+    'revision-revert-form' => '/comment/{comment}/revision/{comment_revision}/revert',
+    'version-history' => '/comment/{comment}/revisions',
   ],
   bundle_entity_type: 'comment_type',
   bundle_label: new TranslatableMarkup('Comment type'),
@@ -71,6 +83,7 @@ use Drupal\user\EntityOwnerTrait;
   revision_table: 'comment_revision',
   revision_data_table: 'comment_field_revision',
   translatable: TRUE,
+  show_revision_ui: TRUE,
   label_count: [
     'singular' => '@count comment',
     'plural' => '@count comments',

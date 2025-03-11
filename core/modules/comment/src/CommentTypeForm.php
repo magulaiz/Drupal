@@ -144,14 +144,19 @@ class CommentTypeForm extends EntityForm {
       '#group' => 'additional_settings',
     ];
 
+    $workflow_options = [
+      'revision' => $comment_type->shouldCreateNewRevision(),
+    ];
+    $keys = array_keys(array_filter($workflow_options));
+    $workflow_options = array_combine($keys, $keys);
     $form['workflow']['options'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Default options'),
-      '#description' => $this->t('Automatically create new revisions.'),
-      '#default_value' => $this->getWorkflowOptions(),
+      '#default_value' => $workflow_options,
       '#options' => [
-        'new_revision' => $this->t('Create new revision'),
+        'revision' => $this->t('Create new revision'),
       ],
+      '#description' => $this->t('Users with sufficient access rights will be able to override these options.'),
     ];
 
     if ($this->moduleHandler->moduleExists('content_translation')) {
@@ -184,21 +189,6 @@ class CommentTypeForm extends EntityForm {
   }
 
   /**
-   * Prepares workflow options to be used in the 'checkboxes' form element.
-   *
-   * @return array
-   *   Array of options ready to be used in #options.
-   */
-  protected function getWorkflowOptions() {
-    $workflow_options = [
-      'new_revision' => $this->entity->shouldCreateNewRevision(),
-    ];
-    // Prepare workflow options to be used for 'checkboxes' form element.
-    $keys = array_keys(array_filter($workflow_options));
-    return array_combine($keys, $keys);
-  }
-
-  /**
    * Wraps _comment_entity_uses_integer_id().
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -214,17 +204,9 @@ class CommentTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
-
-    $this->entity->setNewRevision((bool) $form_state->getValue(['options', 'new_revision']));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function save(array $form, FormStateInterface $form_state) {
     $comment_type = $this->entity;
+    $comment_type->setNewRevision($form_state->getValue(['options', 'revision']));
     $status = $comment_type->save();
 
     $edit_link = $this->entity->toLink($this->t('Edit'), 'edit-form')->toString();

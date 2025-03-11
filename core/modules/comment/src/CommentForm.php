@@ -439,4 +439,11 @@ class CommentForm extends ContentEntityForm {
     return $this->t('Your comment has been updated.');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function showRevisionUi() {
+    return $this->currentUser->hasPermission('administer comments') && parent::showRevisionUi();
+  }
+
 }
