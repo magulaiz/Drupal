@@ -215,17 +215,23 @@
           const blacklist = $autocomplete.attr(
             'data-autocomplete-first-character-blacklist',
           );
+          if (blacklist !== undefined) {
+            Drupal.deprecationError({
+              message:
+                'The data-autocomplete-first-character-blocklist attribute is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use firstCharacterDenyList instead. See https://www.drupal.org/node/3472016.',
+            });
+          }
+          const denyList = $autocomplete.attr(
+            'data-autocomplete-first-character-denylist',
+          );
           Drupal.deprecatedProperty({
             target: autocomplete.options,
             deprecatedProperty: 'firstCharacterBlacklist',
             message:
-              'The firstCharacterBlacklist property has been deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use firstCharacterDenyList instead. See https://www.drupal.org/node/3472016.',
+              'The firstCharacterBlacklist property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use firstCharacterDenyList instead. See https://www.drupal.org/node/3472016.',
           });
-          const denyList = $autocomplete.attr(
-            'data-autocomplete-first-character-denylist',
-          );
           $.extend(autocomplete.options, {
-            firstCharacterDenyList: denyList || '',
+            firstCharacterDenyList: denyList || blacklist,
           });
           // Use jQuery UI Autocomplete on the textfield.
           $autocomplete.autocomplete(autocomplete.options).each(function () {
