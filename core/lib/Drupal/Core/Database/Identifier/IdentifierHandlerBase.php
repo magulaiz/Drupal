@@ -157,7 +157,7 @@ abstract class IdentifierHandlerBase {
         IdentifierType::Table->value,
         $canonicalName,
         $this->tablePrefix,
-        $this->getMaxLength($IdentifierType::Table),
+        $this->getMaxLength(IdentifierType::Table),
       ));
     }
     return $this->quote($this->tablePrefix ? $this->tablePrefix . $canonicalName : $canonicalName);
