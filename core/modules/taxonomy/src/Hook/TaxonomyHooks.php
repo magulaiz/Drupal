@@ -176,4 +176,8 @@ class TaxonomyHooks {
     }
   }
 
+  /**
+   * @} End of "defgroup taxonomy_index".
+   */
+
 }
