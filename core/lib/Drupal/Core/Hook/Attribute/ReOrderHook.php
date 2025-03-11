@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Hook\Attribute;
 
-use Drupal\Core\Hook\ComplexOrder;
-use Drupal\Core\Hook\HookOperation;
-use Drupal\Core\Hook\Order;
+use Drupal\Core\Hook\HookAttributeInterface;
+use Drupal\Core\Hook\OrderInterface;
 
 /**
  * Set the order of an already existing implementation.
@@ -14,7 +13,7 @@ use Drupal\Core\Hook\Order;
  * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class ReOrderHook extends HookOperation {
+class ReOrderHook implements HookAttributeInterface {
 
   /**
    * Constructs a ReOrderHook object.
@@ -26,16 +25,14 @@ class ReOrderHook extends HookOperation {
    * @param string $method
    *   The method name of the #Hook being modified. If the hook attribute is
    *   on a class and does not have method set, then use __invoke.
-   * @param \Drupal\Core\Hook\Order|\Drupal\Core\Hook\ComplexOrder $order
+   * @param \Drupal\Core\Hook\OrderInterface $order
    *   Set the order of the implementation.
    */
   public function __construct(
-    string $hook,
-    string $class,
-    string $method,
-    Order|ComplexOrder $order,
-  ) {
-    parent::__construct($hook, $method, $class, $order);
-  }
+    public string $hook,
+    public string $class,
+    public string $method,
+    public OrderInterface $order,
+  ) {}
 
 }

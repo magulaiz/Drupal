@@ -10,7 +10,7 @@ use Drupal\Core\Hook\OrderAfter;
 
 class BAlterHooks {
 
-  #[Hook('test_alter', order: new OrderAfter(modules: ['hk_c_test'], extraTypes: ['test_subtype_alter']))]
+  #[Hook('test_alter', order: new OrderAfter(modules: ['hk_c_test']))]
   public function testAlterAfterCExtra(array &$calls): void {
     $calls[] = __METHOD__;
   }

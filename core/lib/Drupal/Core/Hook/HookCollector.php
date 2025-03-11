@@ -73,14 +73,23 @@ class HookCollector {
   protected array $implementations = [];
 
   /**
-   * @var array<int, list<\Drupal\Core\Hook\HookOperation>>
+   * Order operations grouped by hook name and weight.
+   *
+   * Operations with higher weight are applied last, which means they can
+   * override the changes from previous operations.
+   *
+   * @todo Review how to combine operations from different hooks.
+   *
+   * @var array<string, array<int, list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface>>>
    */
-  protected array $orderAttributesByPhase = [0 => [], 1 => []];
+  protected array $orderOperations = [];
 
   /**
-   * @var list<\Drupal\Core\Hook\Attribute\RemoveHook>
+   * Identifiers to remove, as "$class::$method, keyed by hook name.
+   *
+   * @var array<string, list<string>>
    */
-  protected array $removeHookAttributes = [];
+  protected array $removeHookIdentifiers = [];
 
   /**
    * Constructor. Should not be called directly.
@@ -99,10 +108,11 @@ class HookCollector {
    *   Container builder.
    */
   public function writeToContainer(ContainerBuilder $container): void {
-    $orderExtraTypes = $this->getOrderExtraTypes();
-
     $container->register(ProceduralCall::class, ProceduralCall::class)
       ->addArgument($this->includes);
+
+    $container->setParameter('hook.implementations', $this->implementations);
+    #$container->setParameter();
 
     // Gather includes for each hook_hook_info group.
     // We store this in $groupIncludes so moduleHandler can ensure the files
@@ -116,14 +126,14 @@ class HookCollector {
       }
     }
 
-    $implementationsByHook = $this->calculateImplementations($orderExtraTypes);
+    $implementationsByHook = $this->calculateImplementations();
 
     static::writeImplementationsToContainer($container, $implementationsByHook);
 
     // Update the module handler definition.
     $definition = $container->getDefinition('module_handler');
     $definition->setArgument('$groupIncludes', $groupIncludes);
-    $definition->setArgument('$orderedExtraTypes', $orderExtraTypes);
+    $definition->setArgument('$orderingRules', $this->getOrderOperations());
   }
 
   /**
@@ -135,49 +145,25 @@ class HookCollector {
    */
   protected function getFilteredImplementations(): array {
     $implementationsByHook = $this->implementations;
-    foreach ($this->removeHookAttributes as $removeHook) {
-      unset($implementationsByHook[$removeHook->hook][$removeHook->class . '::' . $removeHook->method]);
+    foreach ($this->removeHookIdentifiers as $hook => $identifiers_to_remove) {
+      foreach ($identifiers_to_remove as $identifier_to_remove) {
+        unset($implementationsByHook[$hook][$identifier_to_remove]);
+      }
+      if (empty($implementationsByHook[$hook])) {
+        unset($implementationsByHook[$hook]);
+      }
     }
     return $implementationsByHook;
   }
 
   /**
-   * Gets groups of extra hooks from collected data.
-   *
-   * @return array<string, list<string>>
-   *   Lists of extra hooks keyed by main hook.
-   */
-  protected function getOrderExtraTypes(): array {
-    // Loop over all ReOrderHook attributes and gather order information
-    // before registering the hooks. This must happen after all collection,
-    // but before registration to ensure this ordering directive takes
-    // precedence.
-    /** @var list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations */
-    $hookOrderOperations = array_merge(...$this->orderAttributesByPhase);
-    $orderExtraTypes = [];
-    foreach ($hookOrderOperations as $hookWithOrder) {
-      if ($hookWithOrder->order instanceof ComplexOrder && $hookWithOrder->order->extraTypes) {
-        $extraTypes = [... $hookWithOrder->order->extraTypes, $hookWithOrder->hook];
-        foreach ($extraTypes as $extraHook) {
-          $orderExtraTypes[$extraHook] = array_merge($orderExtraTypes[$extraHook] ?? [], $extraTypes);
-        }
-      }
-    }
-    $orderExtraTypes = array_map('array_unique', $orderExtraTypes);
-    return array_map('array_values', $orderExtraTypes);
-  }
-
-  /**
    * Calculates the ordered implementations.
-   *
-   * @param array<string, list<string>> $orderExtraTypes
-   *   Extra types to order a hook with.
    *
    * @return array<string, array<string, string>>
    *   Implementations, as module names keyed by hook name and "$class::$method"
    *   identifier.
    */
-  protected function calculateImplementations(array $orderExtraTypes): array {
+  protected function calculateImplementations(): array {
     $implementationsByHookOrig = $this->getFilteredImplementations();
 
     // List of hooks and modules formatted for hook_module_implements_alter().
@@ -190,12 +176,6 @@ class HookCollector {
 
     $implementationsByHook = [];
     foreach ($moduleImplementsMap as $hook => $moduleImplements) {
-      $extraHooks = $orderExtraTypes[$hook] ?? [];
-      // Add implementations to the array we pass to legacy ordering
-      // when the definition specifies that they should be ordered together.
-      foreach ($extraHooks as $extraHook) {
-        $moduleImplements += $moduleImplementsMap[$extraHook] ?? [];
-      }
       // Process all hook_module_implements_alter() for build time ordering.
       foreach ($this->moduleImplementsAlters as $alter) {
         $alter($moduleImplements, $hook);
@@ -204,92 +184,44 @@ class HookCollector {
         foreach (array_keys($implementationsByHookOrig[$hook], $module, TRUE) as $identifier) {
           $implementationsByHook[$hook][$identifier] = $module;
         }
-        if (count($extraHooks) > 1) {
-          $combinedHook = implode(':', $extraHooks);
-          foreach ($extraHooks as $extraHook) {
-            foreach (array_keys($implementationsByHookOrig[$extraHook] ?? [], $module, TRUE) as $identifier) {
-              $implementationsByHook[$combinedHook][$identifier] = $module;
-            }
-          }
-        }
       }
     }
 
-    /** @var list<\Drupal\Core\Hook\HookOperation> $hookOrderOperations */
-    $hookOrderOperations = array_merge(...$this->orderAttributesByPhase);
-    foreach ($hookOrderOperations as $hookOrderOperation) {
-      static::applyOrderAttributeOperation(
-        $implementationsByHook,
-        $orderExtraTypes,
-        $hookOrderOperation,
-      );
+    foreach ($this->getOrderOperations() as $hook => $order_operations) {
+      self::applyOrderOperations($implementationsByHook[$hook], $order_operations);
     }
 
     return $implementationsByHook;
   }
 
   /**
-   * Applies hook order changes from a single attribute with order information.
-   *
-   * @param array<string, array<string, string>> $implementationsByHook
-   *   Implementations, as module names keyed by hook name and "$class::$method"
-   *   identifier.
-   * @param array<string, list<string>> $orderExtraTypes
-   *   Extra types to order a hook with.
-   * @param \Drupal\Core\Hook\HookOperation $hookOrderOperation
-   *   Hook attribute with order information.
+   * @return array<string, list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface>>
    */
-  protected static function applyOrderAttributeOperation(
-    array &$implementationsByHook,
-    array $orderExtraTypes,
-    HookOperation $hookOrderOperation,
-  ): void {
-    // ::process() adds the hook serving as key to the order extraTypes so it
-    // does not need to be added if there's a extraTypes for the hook.
-    $hooks = $orderExtraTypes[$hookOrderOperation->hook] ?? [$hookOrderOperation->hook];
-    $combinedHook = implode(':', $hooks);
-    $identifier = $hookOrderOperation->class . '::' . $hookOrderOperation->method;
-    $module = $implementationsByHook[$combinedHook][$identifier] ?? NULL;
-    if ($module === NULL) {
-      // Implementation is not in the list. Nothing to reorder.
-      return;
+  protected function getOrderOperations(): array {
+    $operations_by_hook = [];
+    foreach ($this->orderOperations as $hook => $order_operations_by_weight) {
+      ksort($order_operations_by_weight);
+      $operations_by_hook[$hook] = array_merge(...$order_operations_by_weight);
     }
-    $list = $implementationsByHook[$combinedHook];
-    $order = $hookOrderOperation->order;
-    if ($order === NULL) {
-      throw new \InvalidArgumentException('This method must only be called with attributes that have order information.');
+    return $operations_by_hook;
+  }
+
+  /**
+   * @param array<string, string> $implementation_list
+   * @param list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface> $order_operations
+   */
+  public static function applyOrderOperations(array &$implementation_list, array $order_operations): void {
+    $module_finder = $implementation_list;
+    $identifiers = array_keys($module_finder);
+    foreach ($order_operations as $order_operation) {
+      $order_operation->apply($identifiers, $module_finder);
+      assert($identifiers === array_unique($identifiers));
+      $identifiers = array_values($identifiers);
     }
-    if ($order === Order::First) {
-      unset($list[$identifier]);
-      $list = [$identifier => $module] + $list;
-    }
-    elseif ($order === Order::Last) {
-      unset($list[$identifier]);
-      $list[$identifier] = $module;
-    }
-    elseif ($order instanceof ComplexOrder) {
-      $shouldBeAfter = !$order->value;
-      unset($list[$identifier]);
-      $identifiers = array_keys($list);
-      $modules = array_values($list);
-      $compareIndices = [];
-      if (isset($hookOrderOperation->order->modules)) {
-        $compareIndices = array_keys(array_intersect($modules, $hookOrderOperation->order->modules));
-      }
-      foreach ($hookOrderOperation->order->classesAndMethods as [$otherClass, $otherMethod]) {
-        $compareIndices[] = array_search("$otherClass::$otherMethod", $identifiers, TRUE);
-      }
-      if (!$compareIndices) {
-        return;
-      }
-      $splice_index = $shouldBeAfter
-        ? max($compareIndices) + 1
-        : min($compareIndices);
-      array_splice($identifiers, $splice_index, 0, [$identifier]);
-      array_splice($modules, $splice_index, 0, [$module]);
-      $list = array_combine($identifiers, $modules);
-    }
-    $implementationsByHook[$combinedHook] = $list;
+    // Clean up after bad order operations.
+    $identifiers = array_combine($identifiers, $identifiers);
+    $identifiers = array_intersect_key($identifiers, $module_finder);
+    $implementation_list = array_replace($identifiers, $module_finder);
   }
 
   /**
@@ -429,15 +361,14 @@ class HookCollector {
               self::checkForProceduralOnlyHooks($attribute, $class);
               $this->implementations[$attribute->hook][$class . '::' . ($attribute->method ?: $method)] = $attribute->module ?? $module;
               if ($attribute->order !== NULL) {
-                $attribute->set($class, $attribute->module ?? $module, $method);
-                $this->orderAttributesByPhase[0][] = $attribute;
+                $this->orderOperations[$attribute->hook][0][] = $attribute->order->getOperation("$class::$method");
               }
             }
             elseif ($attribute instanceof ReOrderHook) {
-              $this->orderAttributesByPhase[1][] = $attribute;
+              $this->orderOperations[$attribute->hook][1][] = $attribute->order->getOperation($attribute->class . '::' . $attribute->method);
             }
             elseif ($attribute instanceof RemoveHook) {
-              $this->removeHookAttributes[] = $attribute;
+              $this->removeHookIdentifiers[$attribute->hook][] = $attribute->class . '::' . $attribute->method;
             }
           }
         }
@@ -593,7 +524,7 @@ class HookCollector {
    * @param \ReflectionClass $reflectionClass
    *   A reflected class.
    *
-   * @return array<string, list<\Drupal\Core\Hook\HookOperation>>
+   * @return array<string, list<\Drupal\Core\Hook\HookAttributeInterface>>
    *   Lists of Hook attribute instances by method name.
    */
   protected static function getAttributeInstances(\ReflectionClass $reflectionClass): array {
@@ -601,7 +532,7 @@ class HookCollector {
     $reflections = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
     $reflections[] = $reflectionClass;
     foreach ($reflections as $reflection) {
-      if ($reflectionAttributes = $reflection->getAttributes(HookOperation::class, \ReflectionAttribute::IS_INSTANCEOF)) {
+      if ($reflectionAttributes = $reflection->getAttributes(HookAttributeInterface::class, \ReflectionAttribute::IS_INSTANCEOF)) {
         $method = $reflection instanceof \ReflectionMethod ? $reflection->getName() : '__invoke';
         $attributes[$method] = array_map(static fn (\ReflectionAttribute $ra) => $ra->newInstance(), $reflectionAttributes);
       }
