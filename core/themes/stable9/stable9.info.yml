@@ -63,7 +63,7 @@ libraries-override:
       component:
         misc/components/autocomplete-loading.module.css: css/core/components/autocomplete-loading.module.css
 
-  core/drupal.details:
+  core/drupal.collapse:
     css:
       component:
         misc/components/details.module.css: css/core/components/details.module.css
