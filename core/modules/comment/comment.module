@@ -5,6 +5,8 @@
  */
 
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -299,14 +301,14 @@ function comment_preprocess_field(&$variables): void {
 /**
  * Implements hook_ranking().
  */
-function comment_ranking() {
+function comment_ranking(): array {
   return \Drupal::service('comment.statistics')->getRankingInfo();
 }
 
 /**
  * Implements hook_ENTITY_TYPE_presave() for entity_view_display entities.
  */
-function comment_entity_view_display_presave(EntityViewDisplayInterface $display) {
+function comment_entity_view_display_presave(EntityViewDisplayInterface $display): void {
   // Act only on comment view displays being disabled.
   if ($display->isNew() || $display->getTargetEntityTypeId() !== 'comment' || $display->status()) {
     return;
@@ -346,7 +348,7 @@ function comment_entity_view_display_presave(EntityViewDisplayInterface $display
 /**
  * Implements hook_entity_base_field_info_alter().
  */
-function comment_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
+function comment_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type): void {
   // Provide a better default value for the moderation state field if the
   // content moderation is enabled for comments.
   if (\Drupal::moduleHandler()->moduleExists('content_moderation') && \Drupal::service('content_moderation.moderation_information')->canModerateEntitiesOfEntityType($entity_type) && isset($fields['moderation_state'])) {

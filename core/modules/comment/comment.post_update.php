@@ -21,7 +21,7 @@ function comment_removed_post_updates(): array {
 /**
  * Update comments to be revisionable.
  */
-function comment_post_update_make_comment_revisionable(&$sandbox) {
+function comment_post_update_make_comment_revisionable(&$sandbox): void {
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
   $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
@@ -110,14 +110,12 @@ function comment_post_update_make_comment_revisionable(&$sandbox) {
     ->setDefaultValue('');
 
   $definition_update_manager->updateFieldableEntityType($entity_type, $field_storage_definitions, $sandbox);
-
-  return t('Comments have been converted to be revisionable.');
 }
 
 /**
  * Set initial values for new revision fields.
  */
-function comment_post_update_set_initial_revision_field_values(&$sandbox) {
+function comment_post_update_set_initial_revision_field_values(&$sandbox): void {
   $connection = \Drupal::database();
   $fields = [
     'revision_created' => 'created',

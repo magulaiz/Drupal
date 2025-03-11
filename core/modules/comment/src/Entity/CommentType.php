@@ -128,7 +128,7 @@ class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface
    * {@inheritdoc}
    */
   #[ActionMethod(adminLabel: new TranslatableMarkup('Automatically create new revisions'), pluralize: FALSE)]
-  public function setNewRevision($new_revision) {
+  public function setNewRevision($new_revision): void {
     $this->new_revision = $new_revision;
   }
 
