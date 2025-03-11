@@ -111,8 +111,12 @@
     if ($regionHeading.length) {
       title = $regionHeading[0].textContent.trim();
     }
-    options.title = $region.find('h2').eq(0).text().trim();
-    const contextualModelView = new Drupal.contextual.ContextualModelView($contextual, $region, options);
+    options.title = title;
+    const contextualModelView = new Drupal.contextual.ContextualModelView(
+      $contextual,
+      $region,
+      options,
+    );
     contextual.instances.push(contextualModelView);
     // Create a model and the appropriate views.
     const model = new contextual.StateModel({
@@ -280,9 +284,9 @@
         obj[prop] = value;
         window.dispatchEvent(new Event('contextual-instances-added'));
         return true;
-      }
+      },
     }),
-    ContextualModelView: {}
+    ContextualModelView: {},
   };
 
   /**

@@ -29,9 +29,11 @@
 
     const viewOptions = {
       el: $('.toolbar .toolbar-bar .contextual-toolbar-tab'),
-      strings: strings
+      strings,
     };
-    contextualToolbar.model = new Drupal.contextual.ContextualToolbarModelView(viewOptions);
+    contextualToolbar.model = new Drupal.contextual.ContextualToolbarModelView(
+      viewOptions,
+    );
   }
 
   /**

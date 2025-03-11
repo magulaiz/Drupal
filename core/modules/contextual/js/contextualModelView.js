@@ -33,7 +33,7 @@
           this.toggleOpen();
         },
         touchend: () => {
-          this.touchEndToClick();
+          Drupal.contextual.ContextualModelView.touchEndToClick();
         },
         focus: () => {
           this.focus();
@@ -50,7 +50,7 @@
           this.blur();
         },
         touchend: () => {
-          this.touchEndToClick();
+          Drupal.contextual.ContextualModelView.touchEndToClick();
         },
         focus: () => {
           this.focus();
@@ -82,20 +82,15 @@
         .toggleClass('visually-hidden', !isVisible);
 
       this.$contextual.find('.contextual-links').prop('hidden', !isOpen);
-      this.$contextual
-        .find('.trigger')
-        .text(
-          Drupal.t('@action @title configuration options', {
-            '@action': !isOpen
-              ? this.strings.open
-              : this.strings.close,
-            '@title': this.title,
-          }),
-        )
-        .attr('aria-pressed', isOpen);
+      const trigger = this.$contextual.find('.trigger').eq(0);
+      trigger.textContent = Drupal.t('@action @title configuration options', {
+        '@action': !isOpen ? this.strings.open : this.strings.close,
+        '@title': this.title,
+      });
+      trigger.setAttribute('aria-pressed', isOpen);
     }
 
-    touchEndToClick(event) {
+    static touchEndToClick(event) {
       event.preventDefault();
       event.target.click();
     }
@@ -173,4 +168,4 @@
       }
     }
   };
-})(jQuery, Drupal, Modernizr);
+})(jQuery, Drupal);
