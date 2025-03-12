@@ -155,7 +155,7 @@ abstract class IdentifierHandlerBase {
    * @todo fill in.
    */
   protected function resolveTableForMachine(string $canonicalName, array $info): string {
-    if (strlen($this->tablePrefix . $canonicalName) > $this->getMaxLength(IdentifierType::Table)) {
+    if (strlen($info['needs_prefix'] ? $this->tablePrefix : '' . $canonicalName) > $this->getMaxLength(IdentifierType::Table)) {
       throw new IdentifierException(sprintf(
         'The machine length of the %s canonicalized identifier \'%s\' once table prefix \'%s\' is added is invalid (maximum allowed: %d)',
         IdentifierType::Table->value,
