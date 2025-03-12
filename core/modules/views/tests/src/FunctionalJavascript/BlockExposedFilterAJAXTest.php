@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\FunctionalJavascript;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -18,6 +19,7 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
 
   use ContentTypeCreationTrait;
   use NodeCreationTrait;
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -119,7 +121,7 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     $form1 = $page->find('css', '#block-' . $block1->id() . ' form');
     $form1_id = $form1->getAttribute('id');
     // Filter by page type in the first form.
-    $this->submitForm(['type' => 'page'], t('Apply'), $form1_id);
+    $this->submitForm(['type' => 'page'], $this->t('Apply'), $form1_id);
     $this->waitForCount(1, 'xpath', '//*[text()="Article A"]');
     $this->assertCount(2, $page->findAll('xpath', '//*[text()="Page A"]'));
     $this->assertCount(2, $page->findAll('xpath', '//*[text()="Page B"]'));
@@ -128,7 +130,7 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     $form2 = $page->find('css', '#block-' . $block2->id() . ' form');
     $form2_id = $form2->getAttribute('id');
     // Filter by page type in the second form.
-    $this->submitForm(['type' => 'page'], t('Apply'), $form2_id);
+    $this->submitForm(['type' => 'page'], $this->t('Apply'), $form2_id);
     $this->waitForCount(1, 'xpath', '//*[text()="Article A"]');
     $this->assertCount(2, $page->findAll('xpath', '//*[text()="Page A"]'));
     $this->assertCount(2, $page->findAll('xpath', '//*[text()="Page B"]'));
