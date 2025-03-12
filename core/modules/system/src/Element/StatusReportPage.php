@@ -65,6 +65,12 @@ class StatusReportPage extends RenderElementBase {
           }
           break;
       }
+      
+      // Allow modules to add their information to the General Info section.
+      if (isset($requirement['add_to_general_info']) &&
+        $requirement['add_to_general_info'] === TRUE) {
+        $element['#general_info']['#other_modules'][$key] = $requirement;
+      }
     }
 
     return $element;
