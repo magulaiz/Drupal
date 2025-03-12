@@ -9,7 +9,7 @@ namespace Drupal\Component\Discovery;
  *
  * This does not really load classes, but allows calling code to explicitly
  * check whether a class that was requested failed to discovered by other
- * classloaders.
+ * class loaders.
  *
  * It also works around a PHP limitation when it attempts to load a class that
  * relies on a trait that does not exist. This is a common situation with Drupal
@@ -31,14 +31,14 @@ final class MissingClassDetectionClassLoader {
    *
    * This method is registered as a class loader during attribute discovery and
    * runs last. Any call to this method means that $class is missing, and if
-   * $class is a trait, it is aliased to a stub trait to avoid an uncatchable
+   * $class is a trait, it is aliased to a stub trait to avoid an uncaught
    * PHP fatal error.
    *
    * @param string $class
    *   The classname to load.
    */
   public function loadClass(string $class): void {
-      $this->missingClasses[] = $class;
+    $this->missingClasses[] = $class;
     if (str_ends_with($class, 'Trait')) {
       class_alias(StubTrait::class, $class, TRUE);
     }
