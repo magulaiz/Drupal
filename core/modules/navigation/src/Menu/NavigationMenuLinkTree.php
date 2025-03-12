@@ -49,20 +49,21 @@ final class NavigationMenuLinkTree extends MenuLinkTree {
         // Add an overview menu link to all pages that are not known as simply
         // listing their children.
         foreach ($item->subtree as $sub_item) {
+          $sub_item_id = $sub_item->link->getPluginId();
           $route_name = $sub_item->link->getRouteName();
           if (
-            !empty($build['#items'][$plugin_id]['below'][$route_name]['below'])
+            !empty($build['#items'][$plugin_id]['below'][$sub_item_id]['below'])
             && $this->routeProvider->getRouteByName($route_name)->getDefault('_controller') !== '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
           ) {
 
             // Clone the parent link, changing the title to 'Overview' and
             // add it to the top of the menu children.
-            $overview = $build['#items'][$plugin_id]['below'][$route_name];
+            $overview = $build['#items'][$plugin_id]['below'][$sub_item_id];
             $overview['title'] = $this->t('Overview');
             $overview['below'] = [];
-            $build['#items'][$plugin_id]['below'][$route_name]['below'] = [
-              $route_name => $overview,
-            ] + $build['#items'][$plugin_id]['below'][$route_name]['below'];
+            $build['#items'][$plugin_id]['below'][$sub_item_id]['below'] = [
+              $sub_item_id => $overview,
+            ] + $build['#items'][$plugin_id]['below'][$sub_item_id]['below'];
           }
         }
       }
