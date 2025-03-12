@@ -301,7 +301,7 @@ class ExposedFormTest extends ViewTestBase {
   /**
    * Test placing the same form twice on the same page.
    */
-  public function testNoDoubleIdsForSameExposedForm() {
+  public function testNoDoubleIdsForSameExposedForm(): void {
     $view = Views::getView('test_exposed_block');
     $view->setDisplay('page_1');
     $this->drupalPlaceBlock('views_exposed_filter_block:test_exposed_block-page_1');
@@ -529,7 +529,7 @@ class ExposedFormTest extends ViewTestBase {
   /**
    * Asserts that each HTML ID is used for just a single element on the page.
    */
-  protected function assertNoDuplicateIds() {
+  protected function assertNoDuplicateIds(): void {
     $args = ['@url' => $this->getUrl()];
 
     if (!$elements = $this->xpath('//*[@id]')) {
