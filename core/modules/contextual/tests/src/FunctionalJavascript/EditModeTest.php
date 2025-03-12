@@ -83,8 +83,8 @@ class EditModeTest extends WebDriverTestBase {
         $web_assert->assertWaitOnAjaxRequest();
       }
 
+      $unrestricted_tab_count = $this->getTabbableElementsCount();
       if ($page_get_count == 0) {
-        $unrestricted_tab_count = $this->getTabbableElementsCount();
         $this->assertGreaterThan($expected_restricted_tab_count, $unrestricted_tab_count);
 
         // Enable edit mode.
