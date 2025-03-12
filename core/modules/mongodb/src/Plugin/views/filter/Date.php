@@ -21,8 +21,8 @@ class Date extends CoreDate {
 
     if (!empty($this->value['type']) && $this->value['type'] == 'offset') {
       $time = \Drupal::time()->getRequestMicroTime();
-      $a = new UTCDateTime(($time - $a) * 1000);
-      $b = new UTCDateTime(($time + $b) * 1000);
+      $a = new UTCDateTime(intval(($time - $a) * 1000));
+      $b = new UTCDateTime(intval(($time + $b) * 1000));
     }
     else {
       $a = new UTCDateTime($a * 1000);
@@ -48,7 +48,7 @@ class Date extends CoreDate {
 
     if (!empty($this->value['type']) && $this->value['type'] == 'offset') {
       $time = \Drupal::time()->getRequestMicroTime();
-      $value = new UTCDateTime(($time + $value) * 1000);
+      $value = new UTCDateTime(intval(($time + $value) * 1000));
     }
     else {
       $value = new UTCDateTime($value * 1000);

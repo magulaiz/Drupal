@@ -35,7 +35,7 @@ class Date extends CoreDate {
       $timezone = !empty($this->options['timezone']) ? $this->options['timezone'] : NULL;
       // Will be positive for a datetime in the past (ago), and negative for a
       // datetime in the future (hence).
-      $time_diff = \Drupal::time()->getRequestMicroTime() - $value;
+      $time_diff = intval(\Drupal::time()->getRequestMicroTime() - $value);
       switch ($format) {
         case 'raw time ago':
           return $this->dateFormatter->formatTimeDiffSince($value, ['granularity' => is_numeric($custom_format) ? $custom_format : 2]);
