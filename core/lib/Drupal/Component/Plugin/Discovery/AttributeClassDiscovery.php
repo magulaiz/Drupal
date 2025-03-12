@@ -135,8 +135,8 @@ class AttributeClassDiscovery implements DiscoveryInterface {
                 }
               }
               catch (\Error $e) {
-                self::$skipClasses[$class] = $autoloader->getMissingClasses();
                 if (!$autoloader->hasMissingClass()) {
+                  self::$skipClasses[$class] = $autoloader->getMissingClasses();
                   $autoloader->reset();
                   spl_autoload_unregister([$autoloader, 'loadClass']);
                   throw $e;
