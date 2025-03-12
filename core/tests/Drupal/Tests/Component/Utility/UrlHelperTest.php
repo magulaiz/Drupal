@@ -398,7 +398,7 @@ class UrlHelperTest extends TestCase {
         '/my/path#http://example.com',
         [
           'fragment' => 'http://example.com',
-          'path' => 'http://example.com/my/path',
+          'path' => '/my/path',
           'query' => [],
         ],
       ],
@@ -406,7 +406,7 @@ class UrlHelperTest extends TestCase {
         '#http://example.com',
         [
           'fragment' => 'http://example.com',
-          'path' => 'http://example.com/my/path',
+          'path' => '',
           'query' => [],
         ],
       ],
