@@ -31,7 +31,7 @@ class Table extends IdentifierBase {
     $parts = $identifierHandler->parseTableIdentifier($identifier);
 
     $canonicalName = $identifierHandler->canonicalize($parts['table'], IdentifierType::Table);
-    $machineName = $identifierHandler->resolveForMachine($canonicalName, IdentifierType::Table);
+    $machineName = $identifierHandler->resolveForMachine($canonicalName, $parts, IdentifierType::Table);
     parent::__construct($identifier, $canonicalName, $machineName);
 
     $this->database = $parts['database'];

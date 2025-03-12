@@ -17,7 +17,7 @@ class Schema extends IdentifierBase {
     string $identifier,
   ) {
     $canonicalName = $identifierHandler->canonicalize($identifier, IdentifierType::Schema);
-    $machineName = $identifierHandler->resolveForMachine($canonicalName, IdentifierType::Schema);
+    $machineName = $identifierHandler->resolveForMachine($canonicalName, [], IdentifierType::Schema);
     parent::__construct($identifier, $canonicalName, $machineName);
   }
 

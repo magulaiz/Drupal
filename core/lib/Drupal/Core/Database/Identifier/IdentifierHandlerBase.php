@@ -144,9 +144,9 @@ abstract class IdentifierHandlerBase {
   /**
    * @todo fill in.
    */
-  public function resolveForMachine(string $canonicalName, IdentifierType $type): string {
+  public function resolveForMachine(string $canonicalName, array $info, IdentifierType $type): string {
     return match ($type) {
-      IdentifierType::Table => $this->resolveTableForMachine($canonicalName),
+      IdentifierType::Table => $this->resolveTableForMachine($canonicalName, $info),
       default => $this->quote($canonicalName),
     };
   }
@@ -154,7 +154,7 @@ abstract class IdentifierHandlerBase {
   /**
    * @todo fill in.
    */
-  protected function resolveTableForMachine(string $canonicalName): string {
+  protected function resolveTableForMachine(string $canonicalName, array $info): string {
     if (strlen($this->tablePrefix . $canonicalName) > $this->getMaxLength(IdentifierType::Table)) {
       throw new IdentifierException(sprintf(
         'The machine length of the %s canonicalized identifier \'%s\' once table prefix \'%s\' is added is invalid (maximum allowed: %d)',
@@ -164,7 +164,7 @@ abstract class IdentifierHandlerBase {
         $this->getMaxLength(IdentifierType::Table),
       ));
     }
-    return $this->quote($this->tablePrefix ? $this->tablePrefix . $canonicalName : $canonicalName);
+    return $this->quote($info['needs_prefix'] ? $this->tablePrefix . $canonicalName : $canonicalName);
   }
 
   /**

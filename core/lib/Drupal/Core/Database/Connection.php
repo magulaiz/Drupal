@@ -385,7 +385,11 @@ abstract class Connection {
    *   The fully qualified table name.
    */
   public function getFullQualifiedTableName($table) {
-    return $this->identifiers->table($this->getConnectionOptions()['database'] . '.' . $table)->forMachine();
+    $tableIdentifier = $this->identifiers->table($table);
+    if ($tableIdentifier->database || $tableIdentifier->schema) {
+      return $tableIdentifier->forMachine();
+    }
+    return  $this->identifiers->schema($this->getConnectionOptions()['database'])->forMachine() . '.' . $tableIdentifier->machineName;
   }
 
   /**
