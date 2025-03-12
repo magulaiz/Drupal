@@ -22,9 +22,14 @@ namespace Drupal\Component\Discovery;
 final class MissingClassDetectionClassLoader {
 
   /**
+   * An array of detected missing traits.
+   */
+  protected array $missingTraits = [];
+
+  /**
    * Flag indicating whether there was an attempt to load a missing class.
    */
-  protected array $missingClasses = [];
+  protected bool $missingClass = FALSE;
 
   /**
    * Records missing classes and aliases missing traits.
@@ -38,8 +43,9 @@ final class MissingClassDetectionClassLoader {
    *   The classname to load.
    */
   public function loadClass(string $class): void {
-    $this->missingClasses[] = $class;
+    $this->missingClass = TRUE;
     if (str_ends_with($class, 'Trait')) {
+      $this->missingTraits[] = $class;
       class_alias(StubTrait::class, $class, TRUE);
     }
   }
@@ -51,24 +57,25 @@ final class MissingClassDetectionClassLoader {
    *   TRUE if there was an attempt to load a missing trait, otherwise FALSE.
    */
   public function hasMissingClass(): bool {
-    return \count($this->missingClasses) > 0;
+    return $this->missingClass;
   }
 
   /**
-   * Returns all recorded missing classes since the last reset.
+   * Returns all recorded missing traits since the last reset.
    *
    * @return string[]
    *   An array of traits recorded as missing.
    */
-  public function getMissingClasses(): array {
-    return $this->missingClasses;
+  public function getMissingTraits(): array {
+    return $this->missingTraits;
   }
 
   /**
-   * Resets the missing classes flag to FALSE.
+   * Resets class variables.
    */
   public function reset(): void {
-    $this->missingClasses = [];
+    $this->missingClass = FALSE;
+    $this->missingTraits = [];
   }
 
 }
