@@ -105,7 +105,7 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
   /**
    * Test that AJAX works with two exposed blocks on the same page.
    */
-  public function testExposedFilterWithDoubleExposedBlock() {
+  public function testExposedFilterWithDoubleExposedBlock(): void {
     $node = $this->createNode();
     $block1 = $this->drupalPlaceBlock('views_block:test_block_exposed_ajax-block_1');
     $block2 = $this->drupalPlaceBlock('views_block:test_block_exposed_ajax-block_1');
