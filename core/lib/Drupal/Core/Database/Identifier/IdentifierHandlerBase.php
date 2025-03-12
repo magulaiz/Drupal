@@ -8,11 +8,16 @@ use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Database\Exception\IdentifierException;
 
 /**
- * @todo fill in.
+ * Base class to handle identifier value objects.
+ *
+ * Database drivers should extend this class to implement db-specific
+ * limitations and behaviors.
  */
 abstract class IdentifierHandlerBase {
 
   /**
+   * A cache of all identifiers handled.
+   *
    * @var array{'identifier':array<string,array<string,string>>,'machine':array<string,array<string,string>>}
    */
   protected array $identifiers;
@@ -108,7 +113,10 @@ abstract class IdentifierHandlerBase {
   }
 
   /**
-   * @todo fill in.
+   * Returns the maximum length, in bytes, of an identifier type.
+   *
+   * @return positive-int
+   *   The maximum length, in bytes, of an identifier type.
    */
   abstract public function getMaxLength(IdentifierType $type): int;
 
@@ -120,14 +128,48 @@ abstract class IdentifierHandlerBase {
   }
 
   /**
-   * @todo fill in.
+   * Returns a canonicalized and validated identifier string.
    *
    * Standard SQL identifiers designate basic Latin letters, digits 0-9,
    * dollar and underscore as valid characters. Drupal is stricter in the
    * sense that the dollar character is not allowed.
+   *
+   * @param string $identifier
+   *   A raw identifier string. Can include quote characters and any character
+   *   in general.
+   * @param \Drupal\Core\Database\Identifier\IdentifierType $type
+   *   The type of identifier.
+   *
+   * @return string
+   *   A canonicalized and validated identifier string.
+   *
+   * @throws \Drupal\Core\Database\Exception\IdentifierException
+   *   If the identifier is invalid.
    */
   public function canonicalize(string $identifier, IdentifierType $type): string {
     $canonicalName = preg_replace('/[^A-Za-z0-9_]+/', '', $identifier);
+    $this->validateCanonicalName($identifier, $canonicalName, $type);
+    return $canonicalName;
+  }
+
+  /**
+   * Validates a canonicalized identifier string.
+   *
+   * @param string $identifier
+   *   A raw identifier string. Can include quote characters and any character
+   *   in general.
+   * @param string $canonicalName
+   *   A canonical identifier string.
+   * @param \Drupal\Core\Database\Identifier\IdentifierType $type
+   *   The type of identifier.
+   *
+   * @return true
+   *   Upon successful validation.
+   *
+   * @throws \Drupal\Core\Database\Exception\IdentifierException
+   *   If the identifier is invalid.
+   */
+  protected function validateCanonicalName(string $identifier, string $canonicalName, IdentifierType $type): TRUE {
     $canonicalNameLength = strlen($canonicalName);
     if ($canonicalNameLength > $this->getMaxLength($type) || $canonicalNameLength === 0) {
       throw new IdentifierException(sprintf(
@@ -138,7 +180,7 @@ abstract class IdentifierHandlerBase {
         $this->getMaxLength($type),
       ));
     }
-    return $canonicalName;
+    return TRUE;
   }
 
   /**
@@ -176,6 +218,10 @@ abstract class IdentifierHandlerBase {
       1 => [NULL, NULL, $parts[0]],
       2 => [NULL, $this->schema($parts[0]), $parts[1]],
       3 => [$this->database($parts[0]), $this->schema($parts[1]), $parts[2]],
+      default => throw new IdentifierException(sprintf(
+        'The table identifier \'%s\' does not comply with the syntax [database.][schema.]table',
+        $identifier,
+      )),
     };
     if ($this->tablePrefix !== '') {
       $needsPrefix = match (count($parts)) {

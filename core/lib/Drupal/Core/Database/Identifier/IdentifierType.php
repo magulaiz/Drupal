@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Core\Database\Identifier;
 
 /**
- * Enum for database identifier types.
+ * Enumeration of database identifier types.
  */
 enum IdentifierType: string {
-  case Generic = 'unknown';
   case Database = 'database';
   case Schema = 'schema';
   case Sequence = 'sequence';
@@ -17,4 +16,6 @@ enum IdentifierType: string {
   case Index = 'index';
 
   case Alias = 'alias';
+
+  case Unknown = 'unknown';
 }

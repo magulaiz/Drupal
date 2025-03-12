@@ -17,10 +17,11 @@ class IdentifierHandler extends IdentifierHandlerBase {
    */
   public function getMaxLength(IdentifierType $type): int {
     // There is no hard limit on identifier length in SQLite, so we just use
-    // common sense.
+    // common sense: identifiers longer than 128 characters are hardly
+    // readable.
     // @see https://www.sqlite.org/limits.html
     // @see https://stackoverflow.com/questions/8135013/table-name-limit-in-sqlite-android
-    return 256;
+    return 128;
   }
 
   /**

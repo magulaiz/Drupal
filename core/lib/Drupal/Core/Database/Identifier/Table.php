@@ -5,22 +5,25 @@ declare(strict_types=1);
 namespace Drupal\Core\Database\Identifier;
 
 /**
- * @todo fill in.
+ * Handles a table identifier.
+ *
+ * When using full notation, a table can be identified as
+ * [database.][schema.]table.
  */
 class Table extends IdentifierBase {
 
   /**
-   * @todo fill in.
+   * The database identifier, if specified.
    */
   public readonly ?Database $database;
 
   /**
-   * @todo fill in.
+   * The schema identifier, if specified.
    */
   public readonly ?Schema $schema;
 
   /**
-   * @todo fill in.
+   * Whether the table requires to be prefixed.
    */
   public readonly bool $needsPrefix;
 

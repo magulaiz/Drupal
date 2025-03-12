@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Database\Identifier;
 
 /**
- * @todo fill in.
+ * The base class for database identifier value objects.
  */
 abstract class IdentifierBase implements \Stringable {
 
@@ -17,21 +17,30 @@ abstract class IdentifierBase implements \Stringable {
   }
 
   /**
-   * @todo fill in.
+   * Returns the canonical name of the identifier.
+   *
+   * @return string
+   *   The canonical name of the identifier.
    */
   public function canonical(): string {
     return $this->canonicalName;
   }
 
   /**
-   * @todo fill in.
+   * Returns the identifier in a format suitable for including in SQL queries.
+   *
+   * @return string
+   *   The identifier in a format suitable for including in SQL queries.
    */
   public function forMachine(): string {
     return $this->machineName;
   }
 
   /**
-   * @todo fill in.
+   * Returns the identifier in a format suitable for including in SQL queries.
+   *
+   * @return string
+   *   The identifier in a format suitable for including in SQL queries.
    */
   public function __toString(): string {
     return $this->forMachine();

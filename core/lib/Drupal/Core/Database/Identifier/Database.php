@@ -7,8 +7,8 @@ namespace Drupal\Core\Database\Identifier;
 /**
  * Handles a database identifier.
  *
- * In full namespaced tables, the identifier is defined as
- * <database>.<schema>.<table>.
+ * When using full notation, a table can be identified as
+ * [database.][schema.]table.
  */
 class Database extends IdentifierBase {
 
