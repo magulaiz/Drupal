@@ -128,10 +128,10 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               }
               try {
                 $class_exists = \class_exists($class, TRUE);
-                if (!$class_exists || $autoloader->hasMissingClass()) {
-                  if (\count($autoloader->getMissingTraits()) > 0) {
-                    self::$skipClasses[$class] = $autoloader->getMissingTraits();
-                  }
+                // @todo remove this workaround once PHP treats missing traits
+                // as catchable fatal errors.
+                if (\count($autoloader->getMissingTraits())) {
+                  self::$skipClasses[$class] = $autoloader->getMissingTraits();
                   $autoloader->reset();
                   continue;
                 }

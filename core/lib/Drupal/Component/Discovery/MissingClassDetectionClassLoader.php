@@ -51,10 +51,10 @@ final class MissingClassDetectionClassLoader {
   }
 
   /**
-   * Returns whether there was an attempt to load a missing trait.
+   * Returns whether there was an attempt to load a missing class.
    *
    * @return bool
-   *   TRUE if there was an attempt to load a missing trait, otherwise FALSE.
+   *   TRUE if there was an attempt to load a missing class, otherwise FALSE.
    */
   public function hasMissingClass(): bool {
     return $this->missingClass;
