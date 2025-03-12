@@ -117,7 +117,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               // catchable fatal errors.
               // @see https://github.com/php/php-src/issues/17959
               if (array_key_exists($class, self::$skipClasses)) {
-                $missing_classes= self::$skipClasses[$class];
+                $missing_classes = self::$skipClasses[$class];
                 foreach ($missing_classes as $missing_class) {
                   $missing_class_namespace = implode('\\', array_slice(explode('\\', $missing_class), 0, 2));
                   if (!isset($this->getPluginNamespaces()[$missing_class_namespace])) {
