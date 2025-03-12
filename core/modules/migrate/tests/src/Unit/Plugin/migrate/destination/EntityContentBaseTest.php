@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\migrate\MigrateException;
@@ -24,7 +27,7 @@ class EntityContentBaseTest extends EntityTestBase {
    *
    * @covers ::import
    */
-  public function testImport() {
+  public function testImport(): void {
     $bundles = [];
     $destination = new EntityTestDestination([], '', [],
       $this->migration->reveal(),
@@ -32,7 +35,8 @@ class EntityContentBaseTest extends EntityTestBase {
       $bundles,
       $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal(),
-      $this->prophesize(AccountSwitcherInterface::class)->reveal()
+      $this->prophesize(AccountSwitcherInterface::class)->reveal(),
+      $this->prophesize(EntityTypeBundleInfoInterface::class)->reveal(),
     );
     $entity = $this->prophesize(ContentEntityInterface::class);
     $entity->isValidationRequired()
@@ -58,7 +62,7 @@ class EntityContentBaseTest extends EntityTestBase {
    *
    * @covers ::import
    */
-  public function testImportEntityLoadFailure() {
+  public function testImportEntityLoadFailure(): void {
     $bundles = [];
     $destination = new EntityTestDestination([], '', [],
       $this->migration->reveal(),
@@ -66,7 +70,8 @@ class EntityContentBaseTest extends EntityTestBase {
       $bundles,
       $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal(),
-      $this->prophesize(AccountSwitcherInterface::class)->reveal()
+      $this->prophesize(AccountSwitcherInterface::class)->reveal(),
+      $this->prophesize(EntityTypeBundleInfoInterface::class)->reveal(),
     );
     $destination->setEntity(FALSE);
     $this->expectException(MigrateException::class);
@@ -77,7 +82,7 @@ class EntityContentBaseTest extends EntityTestBase {
   /**
    * Tests that translation destination fails for untranslatable entities.
    */
-  public function testUntranslatable() {
+  public function testUntranslatable(): void {
     // An entity type without a language.
     $this->entityType->getKey('langcode')->willReturn('');
     $this->entityType->getKey('id')->willReturn('id');
@@ -93,7 +98,8 @@ class EntityContentBaseTest extends EntityTestBase {
       [],
       $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal(),
-      $this->prophesize(AccountSwitcherInterface::class)->reveal()
+      $this->prophesize(AccountSwitcherInterface::class)->reveal(),
+      $this->prophesize(EntityTypeBundleInfoInterface::class)->reveal(),
     );
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The "foo" entity type does not support translations.');
@@ -109,9 +115,14 @@ class EntityContentBaseTest extends EntityTestBase {
  */
 class EntityTestDestination extends EntityContentBase {
 
+  /**
+   * The test entity.
+   *
+   * @var \Drupal\migrate\Plugin\migrate\destination\EntityContentBase|null
+   */
   private $entity = NULL;
 
-  public function setEntity($entity) {
+  public function setEntity($entity): void {
     $this->entity = $entity;
   }
 
