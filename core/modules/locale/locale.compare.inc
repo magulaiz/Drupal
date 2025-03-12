@@ -2,10 +2,10 @@
 
 /**
  * @file
- * The API for comparing project translation status with available translation.
  */
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Utility\ProjectInfo;
 
 /**
@@ -18,6 +18,7 @@ require_once __DIR__ . '/locale.translation.inc';
 /**
  * Clear the project data table.
  */
+#[StopProceduralHookScan]
 function locale_translation_flush_projects() {
   \Drupal::service('locale.project')->deleteAll();
 }
@@ -160,10 +161,8 @@ function locale_translation_default_translation_server() {
   // An additional check is required here. During the upgrade process
   // \Drupal::config()->get() returns NULL. We use the defined value as
   // fallback.
-  $pattern = $pattern ? $pattern : LOCALE_TRANSLATION_DEFAULT_SERVER_PATTERN;
-
   return [
-    'pattern' => $pattern,
+    'pattern' => $pattern ?: \Drupal::TRANSLATION_DEFAULT_SERVER_PATTERN,
   ];
 }
 
@@ -228,8 +227,8 @@ function locale_translation_check_projects_batch($projects = [], $langcodes = []
  *   Batch definition array.
  */
 function locale_translation_batch_status_build($projects = [], $langcodes = []) {
-  $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
-  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
+  $projects = $projects ?: array_keys(locale_translation_get_projects());
+  $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
   $options = _locale_translation_default_update_options();
 
   $operations = _locale_translation_batch_status_operations($projects, $langcodes, $options);
@@ -295,7 +294,7 @@ function _locale_translation_batch_status_operations($projects, $langcodes, $opt
  */
 function locale_translation_check_projects_local($projects = [], $langcodes = []) {
   $projects = locale_translation_get_projects($projects);
-  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
+  $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
   // For each project and each language we check if a local po file is
   // available. When found the source object is updated with the appropriate
