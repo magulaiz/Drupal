@@ -307,7 +307,7 @@ class FormTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Submit');
     // Verify that the error message is displayed with invalid token even when
-    // required fields are filled.'.
+    // required fields are filled.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
     $this->assertSession()->pageTextContains('The form has become outdated.');
     $this->assertSession()->fieldValueEquals('integer_step', 5);

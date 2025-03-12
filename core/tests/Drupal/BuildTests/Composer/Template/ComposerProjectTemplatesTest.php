@@ -430,7 +430,7 @@ JSON;
     }
     $stability = VersionParser::parseStability($version);
     if ($stability === 'dev') {
-      // Strip off "-dev";.
+      // Strip off "-dev".
       $version_towards = substr($version, 0, -4);
 
       if (!str_ends_with($version_towards, '.0')) {

@@ -100,7 +100,6 @@ class MappingTest extends KernelTestBase {
           // Avoid showing "Powered by Drupal" on 404 responses.
           'visibility' => [
             'I_CAN_CHOOSE_THIS' => [
-              // This is what determines the.
               'id' => 'response_status',
               'negate' => FALSE,
               'status_codes' => [

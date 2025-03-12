@@ -332,7 +332,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
           '#return_value' => $field,
           '#parents' => ['style_options', 'default'],
           '#id' => $radio_id,
-          // Because 'radio' doesn't fully support '#id' =(.
+          // Because 'radio' doesn't fully support "'#id' =(".
           '#attributes' => ['id' => $radio_id],
           '#default_value' => $default,
           '#states' => [

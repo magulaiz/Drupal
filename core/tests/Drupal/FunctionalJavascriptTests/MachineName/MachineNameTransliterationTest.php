@@ -80,7 +80,8 @@ class MachineNameTransliterationTest extends WebDriverTestBase {
       ['fr', 'ᐑ', 'wii'],
       // This test is not working with chromedriver as '𐌰𐌸' chars are not
       // accepted.
-      // ['en', '𐌰𐌸', '__'],.
+      // phpcs:ignore
+      // ['en', '𐌰𐌸', '__']
       ['en', 'Ä Ö Ü Å Ø äöüåøhello', 'a_o_u_a_o_aouaohello'],
       ['de', 'Ä Ö Ü Å Ø äöüåøhello', 'ae_oe_ue_a_o_aeoeueaohello'],
       ['de', ']URY&m_G^;', 'ury_m_g'],

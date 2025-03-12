@@ -23,7 +23,7 @@ class Requirements1TestHooks {
     $requirements['requirements1_test_alterable']['title'] = $this->t('Requirements 1 Test - Changed');
     // Decrease the severity.
     $requirements['requirements1_test_alterable']['severity'] = REQUIREMENT_WARNING;
-    // Delete 'requirements1_test_deletable',.
+    // Delete 'requirements1_test_deletable'.
     unset($requirements['requirements1_test_deletable']);
   }
 
