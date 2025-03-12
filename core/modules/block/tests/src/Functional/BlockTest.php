@@ -80,6 +80,12 @@ class BlockTest extends BlockTestBase {
     // Confirm that an empty block is not displayed.
     $this->assertSession()->pageTextNotContains('Powered by Drupal');
     $this->assertSession()->responseNotContains('sidebar-first');
+
+    // Confirm that index.php followed by anything else does not cause an
+    // exception.
+    $this->drupalGet('/index.php' . $this->randomMachineName());
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains($title);
   }
 
   /**
