@@ -585,12 +585,12 @@ class ExposedFormTest extends ViewTestBase {
     foreach ($elements as $element) {
       $id = $element->getAttribute('id');
       if (isset($seen_ids[$id])) {
-        $this->fail($message);
+        $this->fail((string) $message);
         return;
       }
       $seen_ids[$id] = TRUE;
     }
-    $this->assertTrue(TRUE, $message);
+    $this->assertTrue(TRUE, (string) $message);
   }
 
   /**
