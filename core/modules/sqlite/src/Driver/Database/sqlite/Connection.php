@@ -74,9 +74,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     // Empty prefix means query the main database -- no need to attach anything.
     $prefix = $connection_options['prefix'] ?? '';
     assert(is_string($prefix), 'The \'prefix\' connection option to ' . __METHOD__ . '() must be a string.');
-    if (is_array($prefix)) {
-      $prefix = $prefix[0] ?? '';
-    }
     if ($prefix !== '') {
       $attachedDatabaseName = $prefix;
       // Add a ., so queries become prefix.table, which is proper syntax for

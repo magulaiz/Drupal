@@ -194,9 +194,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'SELECT "menu_tree"."menu_name" AS "menu_name", "menu_tree"."route_name" AS "route_name", "menu_tree"."route_parameters" AS "route_parameters", "menu_tree"."url" AS "url", "menu_tree"."title" AS "title", "menu_tree"."description" AS "description", "menu_tree"."parent" AS "parent", "menu_tree"."weight" AS "weight", "menu_tree"."options" AS "options", "menu_tree"."expanded" AS "expanded", "menu_tree"."enabled" AS "enabled", "menu_tree"."provider" AS "provider", "menu_tree"."metadata" AS "metadata", "menu_tree"."class" AS "class", "menu_tree"."form_class" AS "form_class", "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE ("route_name" = "entity.node.canonical") AND ("route_param_key" = "node=1") AND ("menu_name" = "main") ORDER BY "depth" ASC, "weight" ASC, "id" ASC',
       'SELECT "menu_tree"."menu_name" AS "menu_name", "menu_tree"."route_name" AS "route_name", "menu_tree"."route_parameters" AS "route_parameters", "menu_tree"."url" AS "url", "menu_tree"."title" AS "title", "menu_tree"."description" AS "description", "menu_tree"."parent" AS "parent", "menu_tree"."weight" AS "weight", "menu_tree"."options" AS "options", "menu_tree"."expanded" AS "expanded", "menu_tree"."enabled" AS "enabled", "menu_tree"."provider" AS "provider", "menu_tree"."metadata" AS "metadata", "menu_tree"."class" AS "class", "menu_tree"."form_class" AS "form_class", "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE ("route_name" = "entity.node.canonical") AND ("route_param_key" = "node=1") AND ("menu_name" = "account") ORDER BY "depth" ASC, "weight" ASC, "id" ASC',
       'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("theme_registry:runtime:stark:Drupal\Core\Utility\ThemeRegistry", "LOCK_ID", "EXPIRE")',
-      'DELETE FROM "semaphore"  WHERE ("name" = "theme_registry:runtime:stark:Drupal\Core\Utility\ThemeRegistry") AND ("value" = "LOCK_ID")',
+      'DELETE FROM "semaphore" WHERE ("name" = "theme_registry:runtime:stark:Drupal\Core\Utility\ThemeRegistry") AND ("value" = "LOCK_ID")',
       'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("active-trail:route:entity.node.canonical:route_parameters:a:1:{s:4:"node";s:1:"1";}:Drupal\Core\Cache\CacheCollector", "LOCK_ID", "EXPIRE")',
-      'DELETE FROM "semaphore"  WHERE ("name" = "active-trail:route:entity.node.canonical:route_parameters:a:1:{s:4:"node";s:1:"1";}:Drupal\Core\Cache\CacheCollector") AND ("value" = "LOCK_ID")',
+      'DELETE FROM "semaphore" WHERE ("name" = "active-trail:route:entity.node.canonical:route_parameters:a:1:{s:4:"node";s:1:"1";}:Drupal\Core\Cache\CacheCollector") AND ("value" = "LOCK_ID")',
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
@@ -253,7 +253,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'SELECT "ud".* FROM "users_data" "ud" WHERE ("module" = "contact") AND ("uid" = "2") AND ("name" = "enabled")',
       'SELECT "name", "data" FROM "config" WHERE "collection" = "" AND "name" IN ( "contact.settings" )',
       'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("active-trail:route:entity.user.canonical:route_parameters:a:1:{s:4:"user";s:1:"2";}:Drupal\Core\Cache\CacheCollector", "LOCK_ID", "EXPIRE")',
-      'DELETE FROM "semaphore"  WHERE ("name" = "active-trail:route:entity.user.canonical:route_parameters:a:1:{s:4:"user";s:1:"2";}:Drupal\Core\Cache\CacheCollector") AND ("value" = "LOCK_ID")',
+      'DELETE FROM "semaphore" WHERE ("name" = "active-trail:route:entity.user.canonical:route_parameters:a:1:{s:4:"user";s:1:"2";}:Drupal\Core\Cache\CacheCollector") AND ("value" = "LOCK_ID")',
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
