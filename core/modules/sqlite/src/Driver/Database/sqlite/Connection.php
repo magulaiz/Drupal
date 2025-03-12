@@ -441,7 +441,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
-  public static function createConnectionOptionsFromUrl($url, $root) {
+  public static function createConnectionOptionsFromUrl($url, $root = NULL) {
     $database = parent::createConnectionOptionsFromUrl($url, $root);
 
     // A SQLite database path with two leading slashes indicates a system path.
