@@ -2,7 +2,7 @@
 
 namespace Drupal\Component\Plugin\Discovery;
 
-use Drupal\Component\Discovery\TraitSafeClassLoader;
+use Drupal\Component\Discovery\MissingClassDetectionClassLoader;
 use Drupal\Component\Plugin\Attribute\AttributeInterface;
 use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Component\FileCache\FileCacheFactory;
@@ -68,7 +68,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
   public function getDefinitions() {
     $definitions = [];
 
-    $autoloader = new TraitSafeClassLoader();
+    $autoloader = new MissingClassDetectionClassLoader();
     spl_autoload_register([$autoloader, 'loadClass']);
 
     // Search for classes within all PSR-4 namespace locations.
@@ -117,10 +117,10 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               // catchable fatal errors.
               // @see https://github.com/php/php-src/issues/17959
               if (array_key_exists($class, self::$skipClasses)) {
-                $missing_traits = self::$skipClasses[$class];
-                foreach ($missing_traits as $missing_trait) {
-                  $missing_trait_namespace = implode('\\', array_slice(explode('\\', $missing_trait), 0, 2));
-                  if (!isset($this->getPluginNamespaces()[$missing_trait_namespace])) {
+                $missing_classes= self::$skipClasses[$class];
+                foreach ($missing_classes as $missing_class) {
+                  $missing_class_namespace = implode('\\', array_slice(explode('\\', $missing_class), 0, 2));
+                  if (!isset($this->getPluginNamespaces()[$missing_class_namespace])) {
                     $autoloader->reset();
                     continue 2;
                   }
@@ -128,19 +128,20 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               }
               try {
                 $class_exists = \class_exists($class, TRUE);
-                if (!$class_exists || $autoloader->hasMissingTrait()) {
-                  self::$skipClasses[$class] = $autoloader->getMissingTraits();
+                if (!$class_exists || $autoloader->hasMissingClass()) {
+                  self::$skipClasses[$class] = $autoloader->getMissingClasses();
                   $autoloader->reset();
                   continue;
                 }
               }
               catch (\Error $e) {
-                self::$skipClasses[$class] = $autoloader->getMissingTraits();
-                $autoloader->reset();
-                if (!preg_match('/(Class|Interface) .* not found$/', $e->getMessage())) {
+                self::$skipClasses[$class] = $autoloader->getMissingClasses();
+                if (!$autoloader->hasMissingClass()) {
+                  $autoloader->reset();
                   spl_autoload_unregister([$autoloader, 'loadClass']);
                   throw $e;
                 }
+                $autoloader->reset();
                 continue;
               }
               ['id' => $id, 'content' => $content] = $this->parseClass($class, $fileinfo);
