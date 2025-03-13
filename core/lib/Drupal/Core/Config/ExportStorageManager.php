@@ -23,39 +23,11 @@ final class ExportStorageManager implements StorageManagerInterface {
   const LOCK_NAME = 'config_storage_export_manager';
 
   /**
-   * The active configuration storage.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $active;
-
-  /**
    * The database storage.
    *
    * @var \Drupal\Core\Config\DatabaseStorage
    */
   protected $storage;
-
-  /**
-   * The drupal database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The used lock backend instance.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
 
   /**
    * ExportStorageManager constructor.
@@ -64,16 +36,17 @@ final class ExportStorageManager implements StorageManagerInterface {
    *   The active config storage to prime the export storage.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The used lock backend instance.
    */
-  public function __construct(StorageInterface $active, Connection $connection, EventDispatcherInterface $event_dispatcher, LockBackendInterface $lock) {
-    $this->active = $active;
-    $this->connection = $connection;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->lock = $lock;
+  public function __construct(
+    protected StorageInterface $active,
+    protected Connection $connection,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected LockBackendInterface $lock,
+  ) {
     // The point of this service is to provide the storage and dispatch the
     // event when needed, so the storage itself can not be a service.
     $this->storage = new DatabaseStorage($connection, 'config_export');
