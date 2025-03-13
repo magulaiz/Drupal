@@ -318,7 +318,7 @@ class VariationCache implements VariationCacheInterface {
    */
   protected function redirectChainIsValid(array $keys, array $chain): bool {
     foreach ($chain as $result) {
-      if ($result->data instanceof CacheRedirect) {
+      if ($result && $result->data instanceof CacheRedirect) {
         $cid = $this->createCacheIdFast($keys, $result->data);
         if (!isset($chain[$cid])) {
           return FALSE;
