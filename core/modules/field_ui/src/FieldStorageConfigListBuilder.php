@@ -64,14 +64,14 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder implements F
    *
    * @var string
    */
-  protected $fieldTypeFilter;
+  protected string $fieldTypeFilter;
 
   /**
    * The name of entity type.
    *
    * @var string
    */
-  protected $entityTypeFilter;
+  protected string $entityTypeFilter;
 
   /**
    * Constructs a new FieldStorageConfigListBuilder object.
