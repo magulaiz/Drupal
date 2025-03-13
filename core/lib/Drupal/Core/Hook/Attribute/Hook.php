@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Hook\Attribute;
 
+use Drupal\Core\Hook\HookAttributeInterface;
+use Drupal\Core\Hook\OrderInterface;
+
 /**
  * Attribute for defining a class method as a hook implementation.
  *
  * Hook implementations in classes need to be marked with this attribute,
  * using one of the following techniques:
  * - On a method, use this attribute with the hook name:
+ *
  *   @code
  *   #[Hook('user_cancel')]
  *   public function userCancel(...) {}
@@ -30,8 +34,14 @@ namespace Drupal\Core\Hook\Attribute;
  *   }
  *   @endcode
  *
- * Ordering hook implementations can be done by implementing
- * hook_module_implements_alter.
+ * Ordering hook implementations can be done by using the order parameter.
+ *
+ * @see https://www.drupal.org/node/3493962
+ *
+ * Removing hook implementations can be done by using the attribute
+ * \Drupal\Core\Hook\Attribute/RemoveHook.
+ *
+ * @see https://www.drupal.org/node/3496786
  *
  * Classes that use this annotation on the class or on their methods are
  * automatically registered as autowired services with the class name as the
@@ -86,9 +96,11 @@ namespace Drupal\Core\Hook\Attribute;
  * the procedural hook implementations.
  *
  * See \Drupal\Core\Hook\Attribute\LegacyHook for additional information.
+ *
+ * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class Hook {
+class Hook implements HookAttributeInterface {
 
   /**
    * Constructs a Hook attribute object.
@@ -104,23 +116,14 @@ class Hook {
    *   (optional) The module this implementation is for. This allows one module
    *   to implement a hook on behalf of another module. Defaults to the module
    *   the implementation is in.
+   * @param \Drupal\Core\Hook\OrderInterface|null $order
+   *   (optional) Set the order of the implementation.
    */
   public function __construct(
     public string $hook,
     public string $method = '',
     public ?string $module = NULL,
+    public OrderInterface|null $order = NULL,
   ) {}
-
-  /**
-   * Set the method the hook should apply to.
-   *
-   * @param string $method
-   *   The method that the hook attribute applies to.
-   *   This only needs to be set when the attribute is on the class.
-   */
-  public function setMethod(string $method): static {
-    $this->method = $method;
-    return $this;
-  }
 
 }
