@@ -8,7 +8,7 @@ use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
- * Tests pager functionality.
+ * Tests pager functionality in a modal.
  *
  * @group Pager
  */
@@ -22,14 +22,7 @@ class PagerModalTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'olivero';
-
-  /**
-   * A user with permission to access site reports.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  protected $adminUser;
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -57,7 +50,7 @@ class PagerModalTest extends WebDriverTestBase {
     $this->assertSession()->elementExists('css', '.test-pager-0')->clickLink('Go to page 2');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
-    $this->assertEquals('Page 2', $this->assertSession()->elementExists('css', '.pager__item--active')->getText());
+    $this->assertEquals('Page 2', $this->assertSession()->elementExists('css', '.pager__item.is-active')->getText());
     // Ensure we're still in the modal.
     $this->assertTrue($this->assertSession()->elementExists('css', '#drupal-modal')->isVisible());
   }
