@@ -545,6 +545,13 @@ default:
     KUBERNETES_CPU_REQUEST: "8"
     _TARGET_PHP: "8.4-ubuntu"
 
+'⚡️ Component unit tests on PHP 8.5':
+  <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
+  allow_failure: true
+  variables:
+    KUBERNETES_CPU_REQUEST: "8"
+    _TARGET_PHP: "8.5-ubuntu"
+
 '✅️ PHPStan rules tests':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
