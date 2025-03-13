@@ -26,9 +26,10 @@ use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\TestRequirementsTrait;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
+use Drupal\TestTools\Extension\Dump\DebugDump;
 use Drupal\TestTools\Extension\SchemaInspector;
-use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -209,11 +210,13 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected bool $usesSuperUserAccessPolicy;
 
   /**
-   * {@inheritdoc}
+   * Registers the dumper CLI handler when the DebugDump extension is enabled.
    */
-  public static function setUpBeforeClass(): void {
-    parent::setUpBeforeClass();
-    VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
+  #[BeforeClass]
+  public static function setDebugDumpHandler(): void {
+    if (DebugDump::isEnabled()) {
+      VarDumper::setHandler(DebugDump::class . '::cliHandler');
+    }
   }
 
   /**
@@ -669,6 +672,15 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
           unset($tables[$table]);
         }
       }
+    }
+
+    // If the test used the regular file system, remove any files created.
+    if (!str_starts_with($this->siteDirectory, 'vfs://')) {
+      // Delete test site directory.
+      $callback = function (string $path) {
+        @chmod($path, 0700);
+      };
+      \Drupal::service('file_system')->deleteRecursive($this->siteDirectory, $callback);
     }
 
     // Free up memory: Own properties.
