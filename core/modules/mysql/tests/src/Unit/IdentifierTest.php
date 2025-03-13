@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\mysql\Unit;
 
+use Drupal\Core\Database\Exception\IdentifierException;
 use Drupal\mysql\Driver\Database\mysql\Connection;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
@@ -32,9 +33,27 @@ class IdentifierTest extends UnitTestCase {
         'expectedMachine' => '"nocase"',
       ],
       [
+        'prefix' => 'foobar', 
+        'identifier' => 'nocase', 
+        'expectedCanonical' => 'nocase',
+        'expectedMachine' => '"foobarnocase"',
+      ],
+      [
+        'prefix' => 'VeryVeryVeryVeryVeryVeryVeryVeryLongLongLongLongLongLongLongPrefix', 
+        'identifier' => 'nocase', 
+        'expectedCanonical' => 'nocase',
+        'expectedMachine' => '"foobarnocase"',
+      ],
+      [
         'identifier' => 'camelCase', 
         'expectedCanonical' => 'camelCase',
         'expectedMachine' => '"camelCase"',
+      ],
+      [
+        'prefix' => 'foobar', 
+        'identifier' => 'camelCase', 
+        'expectedCanonical' => 'camelCase',
+        'expectedMachine' => '"foobarcamelCase"',
       ],
       [
         'identifier' => '`backtick`', 
@@ -61,17 +80,43 @@ class IdentifierTest extends UnitTestCase {
         'expectedCanonical' => 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar',
         'expectedMachine' => '"VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar"',
       ],
+      [
+        'prefix' => 'foobar', 
+        'identifier' => 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar', 
+        'expectedCanonical' => 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar',
+        'expectedMachine' => '"VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar"',
+      ],
+      [
+        'prefix' => 'VeryVeryVeryVeryVeryVeryVeryVeryLongLongLongLongLongLongLongPrefix', 
+        'identifier' => 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar', 
+        'expectedCanonical' => 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar',
+        'expectedMachine' => '"VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar"',
+      ],
       // Sometimes, table names are following the pattern database.schema.table.
       [
         'identifier' => 'Chowra.Teressa.Bompuka.Katchal', 
+        'expectedException' => 'The table identifier \'Chowra.Teressa.Bompuka.Katchal\' does not comply with the syntax [database.][schema.]table',
       ],
       [
         'identifier' => 'Chowra.Teressa.Bompuka', 
+        'expectedException' => 'MySql does not support the syntax [database.][schema.]table for the table identifier \'Chowra.Teressa.Bompuka\'. Avoid specifying the \'database\' part',
       ],
       [
         'identifier' => '"Nancowry"."Tillangchong"', 
         'expectedCanonical' => 'Nancowry.Tillangchong',
         'expectedMachine' => '"Nancowry"."Tillangchong"',
+      ],
+      [
+        'prefix' => 'foobar', 
+        'identifier' => '"Nancowry"."Tillangchong"', 
+        'expectedCanonical' => 'Nancowry.Tillangchong',
+        'expectedMachine' => '"Nancowry"."Tillangchong"',
+      ],
+      [
+        'prefix' => 'foobar', 
+        'identifier' => '"Nancowry"."foobarTillangchong"', 
+        'expectedCanonical' => 'Nancowry.Tillangchong',
+        'expectedMachine' => '"Nancowry"."foobarTillangchong"',
       ],
       [
         'identifier' => '!Nancowry?.$Tillangchong%%%', 
@@ -80,9 +125,11 @@ class IdentifierTest extends UnitTestCase {
       ],
       [
         'identifier' => 'Camorta.VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar', 
+        'expectedException' => '....',
       ],
       [
         'identifier' => 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar.Trinket', 
+        'expectedException' => 'The length of the schema identifier \'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar\' once canonicalized to \'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar\' is invalid (maximum allowed: 64)',
       ],
     ];
   }
@@ -90,13 +137,17 @@ class IdentifierTest extends UnitTestCase {
   /**
    * @dataProvider providerTable
    */
-  public function testTable(string $identifier, ?string $expectedCanonical = '', ?string $expectedMachine = '', ?string $expectedException = NULL): void {
+  public function testTable(string $identifier, string $prefix = '', ?string $expectedCanonical = '', ?string $expectedMachine = '', ?string $expectedException = NULL): void {
     $connection = new Connection($this->createMock(\PDO::class), [
-      'prefix' => 'blahblah',
+      'prefix' => $prefix,
       'init_commands' => [
         'sql_mode' => 'ANSI',
       ],
     ]);
+    if ($expectedException) {
+      $this->expectException(IdentifierException::class);
+      $this->expectExceptionMessage($expectedException);
+    }
     $this->assertSame($expectedCanonical, $connection->identifiers->table($identifier)->canonical());
     $this->assertSame($expectedMachine, $connection->identifiers->table($identifier)->forMachine());
   }

@@ -35,7 +35,7 @@ class IdentifierHandler extends IdentifierHandlerBase {
   }
 
   /**
-   * @todo fill in.
+   * {@inheritdoc}
    */
   public function parseTableIdentifier(string $identifier): array {
     $parts = parent::parseTableIdentifier($identifier);
@@ -46,6 +46,18 @@ class IdentifierHandler extends IdentifierHandlerBase {
       ));
     }
     return $parts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function resolveTableForMachine(string $canonicalName, array $info): string {
+    if (strlen($info['needs_prefix'] ? $this->tablePrefix : '' . $canonicalName) > $this->getMaxLength(IdentifierType::Table)) {
+      $hash = substr(hash('sha256', $canonicalName), 0, 10);
+      $shortened = substr($canonicalName, 0, $this->getMaxLength(IdentifierType::Table) - strlen($this->tablePrefix) - 10);
+      return $this->quote($info['needs_prefix'] ? $this->tablePrefix . $shortened . $hash : $shortened . $hash);
+    }
+    return $this->quote($info['needs_prefix'] ? $this->tablePrefix . $canonicalName : $canonicalName);
   }
 
 }
