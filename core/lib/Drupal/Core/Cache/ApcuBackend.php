@@ -105,7 +105,7 @@ class ApcuBackend implements CacheBackendInterface {
         $tags_for_preload = [];
         foreach ($result as $item) {
           if ($item->tags) {
-            tags_for_preload[] = explode(' ', $item->tags);
+            $tags_for_preload[] = explode(' ', $item->tags);
           }
         }
         $this->checksumProvider->registerCacheTagsForPreload(array_merge(...$tags_for_preload));
