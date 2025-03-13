@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class VariationCache implements VariationCacheInterface {
 
   /**
-   * Stores redirect chain lookups until the next SET.
+   * Stores redirect chain lookups until the next set, invalidate or delete.
    *
    * @var array
    */
@@ -40,7 +40,7 @@ class VariationCache implements VariationCacheInterface {
    */
   public function get(array $keys, CacheableDependencyInterface $initial_cacheability) {
     $chain = $this->getRedirectChain($keys, $initial_cacheability);
-    return array_pop($chain);
+    return end($chain);
   }
 
   /**
@@ -284,8 +284,15 @@ class VariationCache implements VariationCacheInterface {
    */
   protected function getRedirectChain(array $keys, CacheableDependencyInterface $initial_cacheability): array {
     $cid = $initial_cid = $this->createCacheIdFast($keys, $initial_cacheability);
+
+    // See if we previously stored the redirect chain in memory. We do need to
+    // run a validity check because cache context values might have changed
+    // since the last time we got the chain. In theory that should never happen
+    // during a single request, but better safe than sorry.
     if (isset($this->redirectChainCache[$cid])) {
-      return $this->redirectChainCache[$cid];
+      if ($this->redirectChainIsValid($keys, $this->redirectChainCache[$cid])) {
+        return $this->redirectChainCache[$cid];
+      }
     }
 
     $chain[$cid] = $result = $this->cacheBackend->get($cid);
@@ -296,6 +303,29 @@ class VariationCache implements VariationCacheInterface {
     }
 
     return $this->redirectChainCache[$initial_cid] = $chain;
+  }
+
+  /**
+   * Validates a redirect chain for the current cache context values.
+   *
+   * @param string[] $keys
+   *   The cache keys used to build the chain.
+   * @param array $chain
+   *   The redirect chain to validate.
+   *
+   * @return bool
+   *   Whether the redirect chain is valid.
+   */
+  protected function redirectChainIsValid(array $keys, array $chain): bool {
+    foreach ($chain as $result) {
+      if ($result->data instanceof CacheRedirect) {
+        $cid = $this->createCacheIdFast($keys, $result->data);
+        if (!isset($chain[$cid])) {
+          return FALSE;
+        }
+      }
+    }
+    return TRUE;
   }
 
   /**
