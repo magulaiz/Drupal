@@ -347,22 +347,28 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * @see \Drupal\Core\Render\Element\FormElementBase::processPattern()
    */
   public static function validateAllowedValues($element, FormStateInterface $form_state) {
+    $children = !empty($element['table']) && is_array($element['table']) ? Element::children($element['table']) : [];
     $items = array_filter(array_map(function ($item) use ($element) {
-      $current_element = $element['table'][$item];
-      if ($current_element['item']['key']['#value'] !== NULL && $current_element['item']['label']['#value']) {
-        return $current_element['item']['key']['#value'] . '|' . $current_element['item']['label']['#value'];
+      if (!isset($element['table'][$item]['item'])) {
+        return NULL;
       }
-      elseif ($current_element['item']['key']['#value']) {
-        return $current_element['item']['key']['#value'];
+      $current_element = $element['table'][$item]['item'];
+      $key = $current_element['key']['#value'] ?? NULL;
+      $label = $current_element['label']['#value'] ?? NULL;
+      if ($key !== NULL && $label) {
+        return $key . '|' . $label;
       }
-      elseif ($current_element['item']['label']['#value']) {
-        return $current_element['item']['label']['#value'];
+      elseif ($key) {
+        return $key;
       }
-
+      elseif ($label) {
+        return $label;
+      }
       return NULL;
-    }, Element::children($element['table'])), function ($item) {
-      return $item;
+    }, $children), function ($item) {
+      return $item !== NULL;
     });
+    // Sort items based on the reordered weights from form state.
     if ($reordered_items = $form_state->getValue([...$element['#parents'], 'table'])) {
       uksort($items, function ($a, $b) use ($reordered_items) {
         $a_weight = $reordered_items[$a]['weight'] ?? 0;
