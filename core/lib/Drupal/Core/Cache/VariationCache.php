@@ -13,6 +13,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class VariationCache implements VariationCacheInterface {
 
   /**
+   * Stores redirect chain lookups until the next SET.
+   *
+   * @var array
+   */
+  protected array $redirectChainCache = [];
+
+  /**
    * Constructs a new VariationCache object.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
@@ -224,6 +231,7 @@ class VariationCache implements VariationCacheInterface {
       $this->cacheBackend->set($chain_cid, new CacheRedirect($cacheability));
     }
 
+    unset($this->redirectChainCache[$this->createCacheIdFast($keys, $initial_cacheability)]);
     $this->cacheBackend->set($cid, $data, $this->maxAgeToExpire($cacheability->getCacheMaxAge()), $optimized_cacheability->getCacheTags());
   }
 
@@ -232,6 +240,13 @@ class VariationCache implements VariationCacheInterface {
    */
   public function delete(array $keys, CacheableDependencyInterface $initial_cacheability): void {
     $chain = $this->getRedirectChain($keys, $initial_cacheability);
+
+    // Don't need to delete what could not be found.
+    if (end($chain) === FALSE) {
+      return;
+    }
+
+    unset($this->redirectChainCache[$this->createCacheIdFast($keys, $initial_cacheability)]);
     $this->cacheBackend->delete(array_key_last($chain));
   }
 
@@ -240,6 +255,13 @@ class VariationCache implements VariationCacheInterface {
    */
   public function invalidate(array $keys, CacheableDependencyInterface $initial_cacheability): void {
     $chain = $this->getRedirectChain($keys, $initial_cacheability);
+
+    // Don't need to invalidate what could not be found.
+    if (end($chain) === FALSE) {
+      return;
+    }
+
+    unset($this->redirectChainCache[$this->createCacheIdFast($keys, $initial_cacheability)]);
     $this->cacheBackend->invalidate(array_key_last($chain));
   }
 
@@ -261,7 +283,11 @@ class VariationCache implements VariationCacheInterface {
    *   to query the cache for that result.
    */
   protected function getRedirectChain(array $keys, CacheableDependencyInterface $initial_cacheability): array {
-    $cid = $this->createCacheIdFast($keys, $initial_cacheability);
+    $cid = $initial_cid = $this->createCacheIdFast($keys, $initial_cacheability);
+    if (isset($this->redirectChainCache[$cid])) {
+      return $this->redirectChainCache[$cid];
+    }
+
     $chain[$cid] = $result = $this->cacheBackend->get($cid);
 
     while ($result && $result->data instanceof CacheRedirect) {
@@ -269,7 +295,7 @@ class VariationCache implements VariationCacheInterface {
       $chain[$cid] = $result = $this->cacheBackend->get($cid);
     }
 
-    return $chain;
+    return $this->redirectChainCache[$initial_cid] = $chain;
   }
 
   /**
