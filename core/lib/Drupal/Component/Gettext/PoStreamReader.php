@@ -155,7 +155,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
     }
     $this->fd = @fopen($this->uri, 'rb');
     if (!$this->fd) {
-      throw new \Exception('Cannot open stream');
+      throw new \Exception('Cannot open stream for uri ' . $this->uri);
     }
     $this->readHeader();
   }
