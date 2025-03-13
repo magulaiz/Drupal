@@ -17,10 +17,12 @@ use Drupal\hk_c_test\Hook\CHooks;
 use Drupal\hk_d_test\Hook\DAlterHooks;
 use Drupal\hk_d_test\Hook\DHooks;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * @group Hook
  */
+#[IgnoreDeprecations]
 class HookOrderTest extends KernelTestBase {
 
   /**
