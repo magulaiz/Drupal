@@ -17,25 +17,6 @@ use Prophecy\Argument;
 class IdentifierTest extends UnitTestCase {
 
   /**
-   * A MySql connection.
-   */
-  private Connection $connection;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    $this->connection = new Connection($this->createMock(\PDO::class), [
-      'prefix' => 'blahblah',
-      'init_commands' => [
-        'sql_mode' => 'ANSI',
-      ],
-    ]);
-  }
-
-  /**
    * Data provider for testTable.
    *
    * @return array
@@ -45,28 +26,79 @@ class IdentifierTest extends UnitTestCase {
    */
   public static function providerTable(): array {
     return [
-      ['nocase', 'nocase'],
-      ['camelCase', 'camelCase'],
-      ['backtick', '`backtick`', ['`', '`']],
-      ['brackets', '[brackets]', ['[', ']']],
-      ['camelCase', '"camelCase"'],
-      ['camelCase', 'camel/Case'],
-      ['camelCase', 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar'],
+      [
+        'identifier' => 'nocase', 
+        'expectedCanonical' => 'nocase',
+        'expectedMachine' => '"nocase"',
+      ],
+      [
+        'identifier' => 'camelCase', 
+        'expectedCanonical' => 'camelCase',
+        'expectedMachine' => '"camelCase"',
+      ],
+      [
+        'identifier' => '`backtick`', 
+        'expectedCanonical' => 'backtick',
+        'expectedMachine' => '"backtick"',
+      ],
+      [
+        'identifier' => '[brackets]', 
+        'expectedCanonical' => 'brackets',
+        'expectedMachine' => '"brackets"',
+      ],
+      [
+        'identifier' => 'no/case', 
+        'expectedCanonical' => 'nocase',
+        'expectedMachine' => '"nocase"',
+      ],
+      [
+        'identifier' => 'no"case', 
+        'expectedCanonical' => 'nocase',
+        'expectedMachine' => '"nocase"',
+      ],
+      [
+        'identifier' => 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar', 
+        'expectedCanonical' => 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar',
+        'expectedMachine' => '"VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar"',
+      ],
       // Sometimes, table names are following the pattern database.schema.table.
-      ['', 'Chowra.Teressa.Bompuka.Katchal'],
-      ['', 'Chowra.Teressa.Bompuka'],
-      ['"Nancowry"."Tillangchong"', '"Nancowry"."Tillangchong"'],
-      ['"Nancowry"."Tillangchong"', '!Nancowry?.$Tillangchong%%%'],
-      ['', 'Camorta.VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar'],
-      ['', 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar.Trinket'],
+      [
+        'identifier' => 'Chowra.Teressa.Bompuka.Katchal', 
+      ],
+      [
+        'identifier' => 'Chowra.Teressa.Bompuka', 
+      ],
+      [
+        'identifier' => '"Nancowry"."Tillangchong"', 
+        'expectedCanonical' => 'Nancowry.Tillangchong',
+        'expectedMachine' => '"Nancowry"."Tillangchong"',
+      ],
+      [
+        'identifier' => '!Nancowry?.$Tillangchong%%%', 
+        'expectedCanonical' => 'Nancowry.Tillangchong',
+        'expectedMachine' => '"Nancowry"."Tillangchong"',
+      ],
+      [
+        'identifier' => 'Camorta.VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar', 
+      ],
+      [
+        'identifier' => 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar.Trinket', 
+      ],
     ];
   }
 
   /**
    * @dataProvider providerTable
    */
-  public function testTable($expected, $name, array $identifier_quote = ['"', '"']): void {
-    $this->assertEquals($expected, $this->connection->identifiers->table($name)->forMachine());
+  public function testTable(string $identifier, ?string $expectedCanonical = '', ?string $expectedMachine = '', ?string $expectedException = NULL): void {
+    $connection = new Connection($this->createMock(\PDO::class), [
+      'prefix' => 'blahblah',
+      'init_commands' => [
+        'sql_mode' => 'ANSI',
+      ],
+    ]);
+    $this->assertSame($expectedCanonical, $connection->identifiers->table($identifier)->canonical());
+    $this->assertSame($expectedMachine, $connection->identifiers->table($identifier)->forMachine());
   }
 
 }
