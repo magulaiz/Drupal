@@ -216,7 +216,7 @@ class SessionTest extends BrowserTestBase {
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(FALSE);
     // Verify that caching was bypassed.
-    $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'UNCACHEABLE (request policy)');
     $this->assertSession()->pageTextContains('This is a dummy message.');
     // Verify that session cookie was deleted.
     $this->assertSession()->responseHeaderMatches('Set-Cookie', '/SESS\w+=deleted/');
@@ -230,7 +230,8 @@ class SessionTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderDoesNotExist('Set-Cookie');
 
-    // Verify that no session is created if drupal_save_session(FALSE) is called.
+    // Verify that no session is created if drupal_save_session(FALSE) is
+    // called.
     $this->drupalGet('session-test/set-message-but-do-not-save');
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(TRUE);
@@ -375,7 +376,7 @@ class SessionTest extends BrowserTestBase {
   /**
    * Reset the cookie file so that it refers to the specified user.
    */
-  public function sessionReset() {
+  public function sessionReset(): void {
     // Close the internal browser.
     $this->mink->resetSessions();
     $this->loggedInUser = FALSE;

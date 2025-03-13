@@ -78,7 +78,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of elements triggered by a checkbox element.
    */
-  protected function doCheckboxTriggerTests() {
+  protected function doCheckboxTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
@@ -138,7 +138,8 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $radios_checked_element = $page->findField('radios_checked_when_checkbox_trigger_checked');
     $this->assertNotEmpty($radios_checked_element);
 
-    // We want to select the specific radio buttons, not the whole radios field itself.
+    // We want to select the specific radio buttons, not the whole radios field
+    // itself.
     $radios_all_disabled_value1 = $this->xpath('//input[@name=:name][@value=:value]', [':name' => 'radios_all_disabled_when_checkbox_trigger_checked', ':value' => 'value1']);
     $this->assertCount(1, $radios_all_disabled_value1);
     // We want to access the radio button directly for the rest of the test, so
@@ -187,6 +188,8 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($radios_some_disabled_value2->hasAttribute('disabled'));
     // Check if the link is visible.
     $this->assertTrue($link->isVisible());
+    // Check enter password is visible.
+    $this->assertSession()->pageTextContains('Enter password');
 
     // Change state: check the checkbox.
     $trigger->check();
@@ -228,6 +231,8 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($radios_some_disabled_value2->hasAttribute('disabled'));
     // The link shouldn't be visible.
     $this->assertFalse($link->isVisible());
+    // Check enter password is not visible.
+    $this->assertSession()->pageTextNotContains('Enter password');
 
     // Change state: uncheck the checkbox.
     $trigger->uncheck();
@@ -263,12 +268,14 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($radios_some_disabled_value2->hasAttribute('disabled'));
     // Check if the link is turned back to visible state.
     $this->assertTrue($link->isVisible());
+    // Check enter password is visible.
+    $this->assertSession()->pageTextContains('Enter password');
   }
 
   /**
    * Tests states of elements triggered by a checkboxes element.
    */
-  protected function doCheckboxesTriggerTests() {
+  protected function doCheckboxesTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
@@ -308,7 +315,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of elements triggered by a textfield element.
    */
-  protected function doTextfieldTriggerTests() {
+  protected function doTextfieldTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
@@ -353,7 +360,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of elements triggered by a radios element.
    */
-  protected function doRadiosTriggerTests() {
+  protected function doRadiosTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
@@ -416,7 +423,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of elements triggered by a select element.
    */
-  protected function doSelectTriggerTests() {
+  protected function doSelectTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
@@ -457,7 +464,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of elements triggered by a multiple select element.
    */
-  protected function doMultipleSelectTriggerTests() {
+  protected function doMultipleSelectTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
     // Find trigger and target elements.
@@ -514,7 +521,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of elements triggered by multiple elements.
    */
-  protected function doMultipleTriggerTests() {
+  protected function doMultipleTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
@@ -538,7 +545,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of radios element triggered by other radios element.
    */
-  protected function doNestedTriggerTests() {
+  protected function doNestedTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 

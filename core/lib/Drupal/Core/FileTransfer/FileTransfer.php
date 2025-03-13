@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\FileTransfer;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Defines the base FileTransfer class.
  *
@@ -20,6 +22,8 @@ namespace Drupal\Core\FileTransfer;
  */
 #[\AllowDynamicProperties]
 abstract class FileTransfer {
+
+  use StringTranslationTrait;
 
   /**
    * The username for this file transfer.
@@ -59,7 +63,7 @@ abstract class FileTransfer {
   /**
    * Constructs a Drupal\Core\FileTransfer\FileTransfer object.
    *
-   * @param $jail
+   * @param string $jail
    *   The full path where all file operations performed by this object will
    *   be restricted to. This prevents the FileTransfer classes from being
    *   able to touch other parts of the filesystem.
@@ -88,6 +92,7 @@ abstract class FileTransfer {
    *
    * @throws \Drupal\Core\FileTransfer\FileTransferException
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn
   public static function factory($jail, $settings) {
     throw new FileTransferException('FileTransfer::factory() static method not overridden by FileTransfer subclass.');
   }
@@ -263,7 +268,10 @@ abstract class FileTransfer {
       ->realpath(substr($this->chroot . $path, 0, strlen($full_jail)));
     $full_path = $this->fixRemotePath($full_path, FALSE);
     if ($full_jail !== $full_path) {
-      throw new FileTransferException('@directory is outside of the @jail', 0, ['@directory' => $path, '@jail' => $this->jail]);
+      throw new FileTransferException('@directory is outside of the @jail', 0, [
+        '@directory' => $path,
+        '@jail' => $this->jail,
+      ]);
     }
   }
 
@@ -376,7 +384,7 @@ abstract class FileTransfer {
    * Checks if a particular path is a directory.
    *
    * @param string $path
-   *   The path to check
+   *   The path to check.
    *
    * @return bool
    *   TRUE if the specified path is a directory, FALSE otherwise.
@@ -445,26 +453,26 @@ abstract class FileTransfer {
   public function getSettingsForm() {
     $form['username'] = [
       '#type' => 'textfield',
-      '#title' => t('Username'),
+      '#title' => $this->t('Username'),
     ];
     $form['password'] = [
       '#type' => 'password',
-      '#title' => t('Password'),
-      '#description' => t('Your password is not saved in the database and is only used to establish a connection.'),
+      '#title' => $this->t('Password'),
+      '#description' => $this->t('Your password is not saved in the database and is only used to establish a connection.'),
     ];
     $form['advanced'] = [
       '#type' => 'details',
-      '#title' => t('Advanced settings'),
+      '#title' => $this->t('Advanced settings'),
     ];
     $form['advanced']['hostname'] = [
       '#type' => 'textfield',
-      '#title' => t('Host'),
+      '#title' => $this->t('Host'),
       '#default_value' => 'localhost',
-      '#description' => t('The connection will be created between your web server and the machine hosting the web server files. In the vast majority of cases, this will be the same machine, and "localhost" is correct.'),
+      '#description' => $this->t('The connection will be created between your web server and the machine hosting the web server files. In the vast majority of cases, this will be the same machine, and "localhost" is correct.'),
     ];
     $form['advanced']['port'] = [
       '#type' => 'textfield',
-      '#title' => t('Port'),
+      '#title' => $this->t('Port'),
       '#default_value' => NULL,
     ];
     return $form;

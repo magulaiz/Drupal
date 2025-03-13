@@ -15,6 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
  * applied.
  *
  * @group Asset
+ * @group #slow
  */
 class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
 
@@ -176,7 +177,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
    *   An array of library definitions, keyed by extension, then by library, and
    *   so on.
    */
-  protected function verifyLibraryFilesExist($library_definitions) {
+  protected function verifyLibraryFilesExist($library_definitions): void {
     foreach ($library_definitions as $extension => $libraries) {
       foreach ($libraries as $library_name => $library) {
         if (in_array("$extension/$library_name", $this->librariesToSkip)) {
@@ -203,6 +204,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
    * Gets all libraries for core and all installed modules.
    *
    * @return \Drupal\Core\Extension\Extension[]
+   *   An array of discovered libraries keyed by extension name.
    */
   protected function getAllLibraries() {
     $modules = \Drupal::moduleHandler()->getModuleList();

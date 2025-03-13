@@ -506,6 +506,7 @@ class AccessManagerTest extends UnitTestCase {
    * Data provider for testCheckException.
    *
    * @return array
+   *   An array of data for check exceptions.
    */
   public static function providerCheckException() {
     return [
@@ -519,7 +520,7 @@ class AccessManagerTest extends UnitTestCase {
   /**
    * Adds a default access check service to the container and the access manager.
    */
-  protected function setupAccessChecker() {
+  protected function setupAccessChecker(): void {
     $this->container->register('test_access_default', DefaultAccessCheck::class);
     $this->checkProvider->addCheckService('test_access_default', 'access', ['_access']);
   }

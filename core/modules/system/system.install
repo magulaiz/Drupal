@@ -14,9 +14,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionLifecycle;
-use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
-use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
-use Drupal\Core\Field\Plugin\Field\FieldType\TimestampItem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Utility\PhpRequirements;
@@ -27,9 +24,9 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Update\EquivalentUpdate;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
-use Drupal\Core\Utility\UpdateException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -66,7 +63,7 @@ const DRUPAL_CORE_REMOVED_THEME_LIST = [
 /**
  * Implements hook_requirements().
  */
-function system_requirements($phase) {
+function system_requirements($phase): array {
   global $install_state;
 
   // Get the current default PHP requirements for this version of Drupal.
@@ -577,7 +574,7 @@ function system_requirements($phase) {
       'title' => t('Database support for JSON'),
       'severity' => REQUIREMENT_OK,
       'value' => t('Available'),
-      'description' => t('Is required in Drupal 10.0.'),
+      'description' => t('Drupal requires databases that support JSON storage.'),
     ];
 
     if (!Database::getConnection()->hasJson()) {
@@ -709,6 +706,7 @@ function system_requirements($phase) {
       if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || !str_contains($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003')) {
         $url = 'https://www.drupal.org/SA-CORE-2013-003';
         $requirements[$htaccess_file] = [
+          // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
           'title' => new TranslatableMarkup($protected_dir->getTitle()),
           'value' => t('Not fully protected'),
           'severity' => REQUIREMENT_ERROR,
@@ -872,7 +870,8 @@ function system_requirements($phase) {
       else {
         $error = t('The directory %directory is not writable.', ['%directory' => $directory]);
       }
-      // The files directory requirement check is done only during install and runtime.
+      // The files directory requirement check is done only during install and
+      // runtime.
       if ($phase == 'runtime') {
         $description = t('You may need to set the correct directory at the <a href=":admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', [':admin-file-system' => Url::fromRoute('system.file_system_settings')->toString()]);
       }
@@ -994,7 +993,8 @@ function system_requirements($phase) {
     $requirements['update access']['title'] = t('Access to update.php');
   }
 
-  // Display an error if a newly introduced dependency in a module is not resolved.
+  // Display an error if a newly introduced dependency in a module is not
+  // resolved.
   if ($phase === 'update' || $phase === 'runtime') {
     $create_extension_incompatibility_list = function (array $extension_names, PluralTranslatableMarkup $description, PluralTranslatableMarkup $title, TranslatableMarkup|string $message = '', TranslatableMarkup|string $additional_description = '') {
       if ($message === '') {
@@ -1469,10 +1469,14 @@ function system_requirements($phase) {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
     $module_list = [];
-    $module_handler->invokeAllWith(
-      'update_last_removed',
-      function (callable $hook, string $module) use (&$module_list, $update_registry, $module_extension_list) {
-        $last_removed = $hook();
+    // hook_update_last_removed() is a procedural hook hook because we
+    // do not have classes loaded that would be needed.
+    // Simply inlining the old hook mechanism is better than making
+    // ModuleInstaller::invoke() public.
+    foreach ($module_handler->getModuleList() as $module => $extension) {
+      $function = $module . '_update_last_removed';
+      if (function_exists($function)) {
+        $last_removed = $function();
         if ($last_removed && $last_removed > $update_registry->getInstalledVersion($module)) {
 
           /** @var \Drupal\Core\Extension\Extension $module_info */
@@ -1484,7 +1488,7 @@ function system_requirements($phase) {
           ];
         }
       }
-    );
+    }
 
     // If user module is in the list then only show a specific message for
     // Drupal core.
@@ -1618,7 +1622,7 @@ function system_requirements($phase) {
 /**
  * Implements hook_install().
  */
-function system_install() {
+function system_install(): void {
   // Populate the cron key state variable.
   $cron_key = Crypt::randomBytesBase64(55);
   \Drupal::state()->set('system.cron_key', $cron_key);
@@ -1638,7 +1642,7 @@ function system_install() {
 /**
  * Implements hook_schema().
  */
-function system_schema() {
+function system_schema(): array {
   // @deprecated The sequences table has been deprecated in drupal:10.2.0 and is
   // removed from drupal:12.0.0. See https://www.drupal.org/node/3220378.
   // @todo Remove sequences table in Drupal 12. See https://www.drupal.org/i/3335756
@@ -1661,7 +1665,7 @@ function system_schema() {
 /**
  * Implements hook_update_last_removed().
  */
-function system_update_last_removed() {
+function system_update_last_removed(): int {
   return 10201;
 }
 
@@ -1717,140 +1721,65 @@ function _system_advisories_requirements(array &$requirements): void {
 }
 
 /**
- * Update TimestampItem field schema size to support dates greater than 2038.
+ * Invalidate container because the module handler has changed.
  */
-function system_update_11001(&$sandbox) {
-  // Execute only if allowed setting, 'timestamp_field_update_y2038', is true.
-  if (!Settings::get('timestamp_field_update_y2038', FALSE)) {
-    return t("Update '11001 - Update TimestampItem field schema size to support dates greater than 2038' skipped due to setting of 'timestamp_field_update_y2038' in settings.php");
-  }
-  $timeout = Settings::get('timestamp_field_update_y2038_timeout', 0);
-  if (!isset($sandbox['items'])) {
-    $items = _system_update_get_timestamp_fields();
-    $sandbox['items'] = $items;
-    $sandbox['current'] = 0;
-    $sandbox['num_processed'] = 0;
-    $sandbox['max'] = count($items);
-    $sandbox['start_time'] = \Drupal::time()->getCurrentTime();
-  }
-  elseif ($timeout > 0 && \Drupal::time()->getCurrentTime() > ($sandbox['start_time'] + $timeout)) {
-    // On subsequent runs check if the timeout is exceeded. If it is exceeded
-    // then throw an UpdateException with a helpful message. The exception is
-    // used to ensure that the update is not marked complete.
-    throw new UpdateException(sprintf("Update 10202 failed to complete, stopped after %d seconds", Settings::get('timestamp_field_update_y2038_timeout')));
-  }
-
-  [$entity_type_id, $field_name] = $sandbox['items'][$sandbox['current']] ?? [NULL, NULL];
-  if ($entity_type_id && $field_name) {
-    _system_update_process_timestamp_field($entity_type_id, $field_name);
-  }
-  $sandbox['current']++;
-
-  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['current'] / $sandbox['max']);
+function system_update_11100(): void {
+  \Drupal::service('kernel')->invalidateContainer();
 }
 
 /**
- * Gets a list fields that use the TimeStampItem class.
- *
- * @return string[]
- *   An array with two elements, an entity type ID and a field name.
+ * Update length of menu_tree fields url and route_param_key from 255 to 2048.
  */
-function _system_update_get_timestamp_fields(): array {
-  $items = [];
-
-  // Get all the field definitions.
-  $field_definitions = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
-
-  // Get all the field types that use the TimestampItem class.
-  $field_types = array_keys(array_filter($field_definitions, function ($definition) {
-    return is_a($definition['class'], TimestampItem::class, TRUE);
-  }));
-
-  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
-  $entity_field_manager = \Drupal::service('entity_field.manager');
-
-  // Build a list of all the timestamp fields.
-  foreach ($field_types as $field_type) {
-    $entity_field_map = $entity_field_manager->getFieldMapByFieldType($field_type);
-    foreach ($entity_field_map as $entity_type_id => $fields) {
-      $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
-      if ($storage instanceof SqlContentEntityStorage) {
-        foreach (array_keys($fields) as $field_name) {
-          $items[] = [$entity_type_id, $field_name];
-        }
-      }
-    }
-  }
-
-  return $items;
-}
-
-/**
- * Update a timestamp field to remove Y2038 limitation.
- *
- * @param string $entity_type_id
- *   The entity type ID.
- * @param string $field_name
- *   The name of the field that needs to be updated.
- *
- * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
- * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
- * @throws \Drupal\Core\Entity\Sql\SqlContentEntityStorageException
- */
-function _system_update_process_timestamp_field(string $entity_type_id, string $field_name): void {
-  /** @var \Drupal\Core\Logger\LoggerChannel $logger */
-  $logger = \Drupal::logger('update');
-
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $entity_storage = $entity_type_manager->getStorage($entity_type_id);
-
-  // Get the table mappings for this field.
-  /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-  $storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
-  $table_mapping = $entity_storage->getTableMapping($storage_definitions);
-
-  // Field type column names map to real table column names.
-  $columns = $table_mapping->getColumnNames($field_name);
-  $column_name = $columns['value'] ?? NULL;
-
-  // We are only allowed to change the 'value' column. If that does not exist
-  // due contrib or custom code leave everything unchanged.
-  if (!$column_name) {
-    $logger->notice("Timestamp for entity '$entity_type_id' field '$field_name' not updated because database column was not found.");
-    return;
-  }
-
-  // Get the original storage definition for this field.
-  $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
-  $original_storage_definitions = $last_installed_schema_repository->getLastInstalledFieldStorageDefinitions($entity_type_id);
-  $original_storage_definition = $original_storage_definitions[$field_name];
-
-  // Get the current storage definition for this field.
-  $storage_definition = $storage_definitions[$field_name];
-  $storage = $entity_type_manager->getStorage($storage_definition->getTargetEntityTypeId());
-
-  if (!($storage instanceof DynamicallyFieldableEntityStorageSchemaInterface
-    && $storage->requiresFieldStorageSchemaChanges($storage_definition, $original_storage_definition))) {
-    $logger->notice("Timestamp for entity '$entity_type_id' field '$field_name' not updated because field size is already 'big'.");
-    return;
-  }
-
-  // Update the table specification for the timestamp field, setting the size to
-  // 'big'.
+function system_update_11001(): void {
   $schema = \Drupal::database()->schema();
-  $field_schema = $original_storage_definitions[$field_name]->getSchema() ?? $storage_definition->getSchema();
-  $specification = $field_schema['columns']['value'];
-  $specification['size'] = 'big';
-  foreach ($table_mapping->getAllFieldTableNames($field_name) as $table) {
-    $schema->changeField($table, $column_name, $column_name, $specification);
+  $spec = [
+    'description' => 'The external path this link points to (when not using a route).',
+    'type' => 'varchar',
+    'length' => 2048,
+    'not null' => TRUE,
+    'default' => '',
+  ];
+  $schema->changeField('menu_tree', 'url', 'url', $spec);
+
+  $spec = [
+    'description' => 'An encoded string of route parameters for loading by route.',
+    'type' => 'varchar',
+    'length' => 2048,
+  ];
+  $schema->changeField('menu_tree', 'route_param_key', 'route_param_key', $spec);
+}
+
+/**
+ * Equivalent update to 10400.
+ */
+function system_update_11102(): TranslatableMarkup|null {
+  // This is a no-op that exists to prevent an upgrade from 10.4+ to 11.0. That
+  // path is actually a downgrade.
+  $equivalent_update = \Drupal::service('update.update_hook_registry')
+    ->getEquivalentUpdate();
+  if ($equivalent_update instanceof EquivalentUpdate) {
+    return $equivalent_update->toSkipMessage();
   }
+  return NULL;
+}
 
-  // Set flag to let EntityDefinitionUpdateManager know the column changes
-  // have been handled.
-  $storage_definition->setSetting('column_changes_handled', TRUE);
+/**
+ * Add the [alias] field to the {router} table.
+ */
+function system_update_11201(): void {
+  $schema = \Drupal::database()->schema();
 
-  // Update the tracked entity table schema, setting the size to 'big'.
-  \Drupal::service('entity.definition_update_manager')->updateFieldStorageDefinition($storage_definition);
-
-  $logger->notice("Successfully updated entity '$entity_type_id' field '$field_name' to remove year 2038 limitation.");
+  if ($schema->tableExists('router') && !$schema->fieldExists('router', 'alias')) {
+    $spec = [
+      'fields' => [
+        'alias' => [
+          'description' => 'The alias of the route, if applicable.',
+          'type' => 'varchar_ascii',
+          'length' => 255,
+        ],
+      ],
+    ];
+    $schema->addField('router', 'alias', $spec['fields']['alias']);
+    $schema->addIndex('router', 'alias', ['alias'], $spec);
+  }
 }
