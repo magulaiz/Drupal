@@ -130,7 +130,9 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
       ->setOwnerId(static::$auth ? $this->account->id() : 0)
       ->setPublished()
       ->setCreatedTime(123456789)
-      ->setChangedTime(123456789);
+      ->setChangedTime(123456789)
+      ->setRevisionUserId(static::$auth ? $this->account->id() : 0)
+      ->setRevisionCreationTime(123456789);
     $comment->save();
 
     return $comment;
@@ -198,6 +200,14 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
           'url' => base_path() . 'user/' . $author->id(),
         ],
       ],
+      'revision_user' => [
+        [
+          'target_id' => (int) $author->id(),
+          'target_type' => 'user',
+          'target_uuid' => $author->uuid(),
+          'url' => base_path() . 'user/' . $author->id(),
+        ],
+      ],
       'pid' => [],
       'entity_type' => [
         [
@@ -232,7 +242,6 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
           'format' => \DateTime::RFC3339,
         ],
       ],
-      'revision_user' => [],
       'revision_translation_affected' => [
         [
           'value' => TRUE,
@@ -305,7 +314,12 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedCacheContexts() {
-    return Cache::mergeContexts(['languages:language_interface', 'theme'], parent::getExpectedCacheContexts());
+    return [
+      'languages:language_interface',
+      'theme',
+      'url.site',
+      'user',
+    ];
   }
 
   /**

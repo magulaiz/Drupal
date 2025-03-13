@@ -59,6 +59,7 @@ function comment_post_update_make_comment_revisionable(&$sandbox): TranslatableM
   // revisionable entity type.
   $field_storage_definitions['langcode']->setRevisionable(TRUE);
   $field_storage_definitions['subject']->setRevisionable(TRUE);
+  $field_storage_definitions['uid']->setRevisionable(TRUE);
   $field_storage_definitions['name']->setRevisionable(TRUE);
   $field_storage_definitions['mail']->setRevisionable(TRUE);
   $field_storage_definitions['homepage']->setRevisionable(TRUE);

@@ -20,8 +20,6 @@ use Drupal\Component\Utility\Number;
 use Drupal\Core\Cache\Cache;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Entity\EditorialContentEntityBase;
-use Drupal\Core\Entity\EntityChangedTrait;
-use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -101,9 +99,7 @@ use Drupal\user\EntityOwnerTrait;
 )]
 class Comment extends EditorialContentEntityBase implements CommentInterface {
 
-  use EntityChangedTrait;
   use EntityOwnerTrait;
-  use EntityPublishedTrait;
 
   /**
    * The thread for which a lock was acquired.
@@ -294,7 +290,8 @@ class Comment extends EditorialContentEntityBase implements CommentInterface {
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['uid']
-      ->setDescription(t('The user ID of the comment author.'));
+      ->setDescription(t('The user ID of the comment author.'))
+      ->setRevisionable(TRUE);
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
