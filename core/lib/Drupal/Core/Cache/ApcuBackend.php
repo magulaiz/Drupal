@@ -102,11 +102,13 @@ class ApcuBackend implements CacheBackendInterface {
       // cache tags for all returned cache items for preloading, this allows the
       // cache tag service to optimize cache tag lookups.
       if ($this->checksumProvider instanceof CacheTagsChecksumPreloadInterface) {
+        $tags_for_preload = [];
         foreach ($result as $item) {
           if ($item->tags) {
-            $this->checksumProvider->registerCacheTagsForPreload(explode(' ', $item->tags));
+            tags_for_preload[] = explode(' ', $item->tags);
           }
         }
+        $this->checksumProvider->registerCacheTagsForPreload(array_merge(...$tags_for_preload));
       }
       foreach ($result as $key => $item) {
         $item = $this->prepareItem($item, $allow_invalid);
