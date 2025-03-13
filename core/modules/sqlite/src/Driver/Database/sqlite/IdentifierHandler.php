@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
+use Drupal\Core\Database\Exception\IdentifierException;
 use Drupal\Core\Database\Identifier\IdentifierHandlerBase;
 use Drupal\Core\Database\Identifier\IdentifierType;
 
@@ -29,7 +30,13 @@ class IdentifierHandler extends IdentifierHandlerBase {
    */
   public function parseTableIdentifier(string $identifier): array {
     $parts = parent::parseTableIdentifier($identifier);
-    if ($this->tablePrefix !== '' && $parts['database'] === NULL && $parts['schema'] === NULL) {
+    if ($parts['database']) {
+      throw new IdentifierException(sprintf(
+        'SQLite does not support the syntax [database.][schema.]table for the table identifier \'%s\'. Avoid specifying the \'database\' part',
+        $identifier,
+      ));
+    }
+    if ($this->tablePrefix !== '' && $parts['schema'] === NULL) {
       $parts['schema'] = $this->schema(rtrim($this->tablePrefix, '.'));
       $parts['needs_prefix'] = FALSE;
     }
