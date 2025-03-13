@@ -43,6 +43,8 @@ namespace Drupal\Core\PreWarm;
  * try to prewarm different things. If we always chose the service to prewarm
  * sequentially, we could end up reproducing the cache stampede situation.
  *
+ * @internal
+ *
  * @see Drupal\Core\PreWarm\PreWarmableInterface
  * @see Drupal\Core\DrupalKernel::handle()
  * @see Drupal\Core\LockBackendAbstract::wait()

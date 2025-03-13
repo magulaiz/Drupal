@@ -31,6 +31,8 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
  * FCDABE
  * BEDAFC
  *
+ * @internal
+ *
  * @see Drupal\Core\PreWarm\PreWarmableInterface
  * @see Drupal\Core\DrupalKernel::handle()
  * @see Drupal\Core\LockBackendAbstract::wait()
