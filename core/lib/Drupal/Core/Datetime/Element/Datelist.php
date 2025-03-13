@@ -265,7 +265,7 @@ class Datelist extends DateElementBase {
 
       // Allow `#title_display` override for parts.
       if (!empty($element["#date_{$part}_part_title_display"])) {
-        $element[$part]['#title_display'] = 'invisible';
+        $element[$part]['#title_display'] = $element["#date_{$part}_part_title_display"];
       }
     }
 
