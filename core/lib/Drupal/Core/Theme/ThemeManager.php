@@ -7,6 +7,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Template\AttributeHelper;
 
 /**
  * Provides the default implementation of a theme manager.
@@ -56,6 +57,13 @@ class ThemeManager implements ThemeManagerInterface {
   protected $root;
 
   /**
+   * Default variables.
+   *
+   * @var array|null
+   */
+  protected ?array $defaultVariables = NULL;
+
+  /**
    * Constructs a new ThemeManager object.
    *
    * @param string $root
@@ -90,7 +98,7 @@ class ThemeManager implements ThemeManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getActiveTheme(RouteMatchInterface $route_match = NULL) {
+  public function getActiveTheme(?RouteMatchInterface $route_match = NULL) {
     if (!isset($this->activeTheme)) {
       $this->initTheme($route_match);
     }
@@ -109,6 +117,7 @@ class ThemeManager implements ThemeManagerInterface {
    */
   public function resetActiveTheme() {
     $this->activeTheme = NULL;
+    $this->defaultVariables = NULL;
     return $this;
   }
 
@@ -130,13 +139,6 @@ class ThemeManager implements ThemeManagerInterface {
     static $default_attributes;
 
     $active_theme = $this->getActiveTheme();
-
-    // If called before all modules are loaded, we do not necessarily have a
-    // full theme registry to work with, and therefore cannot process the theme
-    // request properly. See also \Drupal\Core\Theme\Registry::get().
-    if (!$this->moduleHandler->isLoaded() && !defined('MAINTENANCE_MODE')) {
-      throw new \Exception('The theme implementations may not be rendered until all modules are loaded.');
-    }
 
     $theme_registry = $this->themeRegistry->getRuntime();
 
@@ -182,6 +184,9 @@ class ThemeManager implements ThemeManagerInterface {
     }
 
     $info = $theme_registry->get($hook);
+    if (isset($info['deprecated'])) {
+      @trigger_error($info['deprecated'], E_USER_DEPRECATED);
+    }
 
     // If a renderable array is passed as $variables, then set $variables to
     // the arguments expected by the theme function.
@@ -214,34 +219,7 @@ class ThemeManager implements ThemeManagerInterface {
       'theme_hook_original' => $original_hook,
     ];
 
-    // Set base hook for later use. For example if '#theme' => 'node__article'
-    // is called, we run hook_theme_suggestions_node_alter() rather than
-    // hook_theme_suggestions_node__article_alter(), and also pass in the base
-    // hook as the last parameter to the suggestions alter hooks.
-    if (isset($info['base hook'])) {
-      $base_theme_hook = $info['base hook'];
-    }
-    else {
-      $base_theme_hook = $hook;
-    }
-
-    // Invoke hook_theme_suggestions_HOOK().
-    $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, [$variables]);
-    // If the theme implementation was invoked with a direct theme suggestion
-    // like '#theme' => 'node__article', add it to the suggestions array before
-    // invoking suggestion alter hooks.
-    if (isset($info['base hook'])) {
-      $suggestions[] = $hook;
-    }
-
-    // Invoke hook_theme_suggestions_alter() and
-    // hook_theme_suggestions_HOOK_alter().
-    $hooks = [
-      'theme_suggestions',
-      'theme_suggestions_' . $base_theme_hook,
-    ];
-    $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
-    $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
+    $suggestions = $this->buildThemeHookSuggestions($hook, $info['base hook'] ?? '', $variables);
 
     // Check if each suggestion exists in the theme registry, and if so,
     // use it instead of the base hook. For example, a function may use
@@ -279,6 +257,23 @@ class ThemeManager implements ThemeManagerInterface {
         $theme_hook_suggestion = $hook;
       }
     }
+
+    // Set default variables before preprocess hooks.
+    $variables += $this->getDefaultTemplateVariables();
+
+    // When theming a render element, merge its #attributes into
+    // $variables['attributes'].
+    if (isset($info['render element'])) {
+      $key = $info['render element'];
+      if (isset($variables[$key]['#attributes'])) {
+        $variables['attributes'] = AttributeHelper::mergeCollections($variables['attributes'], $variables[$key]['#attributes']);
+      }
+    }
+
+    // Invoke preprocess hooks.
+    // By default $info['preprocess functions'] should always be set, but it's
+    // good to check it if default Registry service implementation is
+    // overridden. See \Drupal\Core\Theme\Registry.
     if (isset($info['preprocess functions'])) {
       foreach ($info['preprocess functions'] as $preprocessor_function) {
         if (is_callable($preprocessor_function)) {
@@ -324,21 +319,6 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
-    // In some cases, a template implementation may not have had
-    // template_preprocess() run (for example, if the default implementation
-    // is a function, but a template overrides that default implementation).
-    // In these cases, a template should still be able to expect to have
-    // access to the variables provided by template_preprocess(), so we add
-    // them here if they don't already exist. We don't want the overhead of
-    // running template_preprocess() twice, so we use the 'directory' variable
-    // to determine if it has already run, which while not completely
-    // intuitive, is reasonably safe, and allows us to save on the overhead of
-    // adding some new variable to track that.
-    if (!isset($variables['directory'])) {
-      $default_template_variables = [];
-      template_preprocess($default_template_variables, $hook, $info);
-      $variables += $default_template_variables;
-    }
     if (!isset($default_attributes)) {
       $default_attributes = new Attribute();
     }
@@ -374,14 +354,62 @@ class ThemeManager implements ThemeManagerInterface {
   }
 
   /**
+   * Builds theme hook suggestions for a theme hook with variables.
+   *
+   * @param string $hook
+   *   Theme hook that was called.
+   * @param string $info_base_hook
+   *   Theme registry info for $hook['base hook'] key or empty string.
+   * @param array $variables
+   *   Theme variables that were passed along with the call.
+   *
+   * @return string[]
+   *   Suggested theme hook names to use instead of $hook, in the order of
+   *   ascending specificity.
+   *   The caller will pick the last of those suggestions that has a known theme
+   *   registry entry.
+   *
+   * @internal
+   *   This method may change at any time. It is not for use outside this class.
+   */
+  protected function buildThemeHookSuggestions(string $hook, string $info_base_hook, array &$variables): array {
+    // Set base hook for later use. For example if '#theme' => 'node__article'
+    // is called, we run hook_theme_suggestions_node_alter() rather than
+    // hook_theme_suggestions_node__article_alter(), and also pass in the base
+    // hook as the last parameter to the suggestions alter hooks.
+    $base_theme_hook = $info_base_hook ?: $hook;
+
+    // Invoke hook_theme_suggestions_HOOK().
+    $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, [$variables]);
+    // If the theme implementation was invoked with a direct theme suggestion
+    // like '#theme' => 'node__article', add it to the suggestions array before
+    // invoking suggestion alter hooks.
+    if ($info_base_hook) {
+      $suggestions[] = $hook;
+    }
+
+    // Invoke hook_theme_suggestions_alter() and
+    // hook_theme_suggestions_HOOK_alter().
+    $hooks = [
+      'theme_suggestions',
+      'theme_suggestions_' . $base_theme_hook,
+    ];
+    $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
+    $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
+
+    return $suggestions;
+  }
+
+  /**
    * Initializes the active theme for a given route match.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
    */
-  protected function initTheme(RouteMatchInterface $route_match = NULL) {
-    // Determine the active theme for the theme negotiator service. This includes
-    // the default theme as well as really specific ones like the ajax base theme.
+  protected function initTheme(?RouteMatchInterface $route_match = NULL) {
+    // Determine the active theme for the theme negotiator service. This
+    // includes the default theme as well as really specific ones like the ajax
+    // base theme.
     if (!$route_match) {
       $route_match = \Drupal::routeMatch();
     }
@@ -401,19 +429,19 @@ class ThemeManager implements ThemeManagerInterface {
     // Most of the time, $type is passed as a string, so for performance,
     // normalize it to that. When passed as an array, usually the first item in
     // the array is a generic type, and additional items in the array are more
-    // specific variants of it, as in the case of array('form', 'form_FORM_ID').
+    // specific variants of it, as in the case of ['form', 'form_FORM_ID'].
     if (is_array($type)) {
       $extra_types = $type;
       $type = array_shift($extra_types);
       // Allow if statements in this function to use the faster isset() rather
-      // than !empty() both when $type is passed as a string, or as an array with
-      // one item.
+      // than !empty() both when $type is passed as a string, or as an array
+      // with one item.
       if (empty($extra_types)) {
         unset($extra_types);
       }
     }
 
-    $theme_keys = array_keys($theme->getBaseThemeExtensions());
+    $theme_keys = array_reverse(array_keys($theme->getBaseThemeExtensions()));
     $theme_keys[] = $theme->getName();
     $functions = [];
     foreach ($theme_keys as $theme_key) {
@@ -442,6 +470,41 @@ class ThemeManager implements ThemeManagerInterface {
   public function alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
     $theme = $this->getActiveTheme();
     $this->alterForTheme($theme, $type, $data, $context1, $context2);
+  }
+
+  /**
+   * Returns default template variables.
+   *
+   * These are set for every template before template preprocessing hooks.
+   *
+   * See the @link themeable Default theme implementations topic @endlink for
+   * details.
+   *
+   * @return array
+   *   An array of default template variables.
+   *
+   * @internal
+   */
+  public function getDefaultTemplateVariables(): array {
+    if (!isset($this->defaultVariables)) {
+      // Variables that don't depend on a database connection.
+      $this->defaultVariables = [
+        'attributes' => [],
+        'title_attributes' => [],
+        'content_attributes' => [],
+        'title_prefix' => [],
+        'title_suffix' => [],
+        'db_is_active' => !defined('MAINTENANCE_MODE'),
+        'is_admin' => FALSE,
+        'logged_in' => FALSE,
+      ];
+
+      // Give modules a chance to alter default template variables.
+      $this->moduleHandler->alter('template_preprocess_default_variables', $this->defaultVariables);
+      // Tell all templates where they are located.
+      $this->defaultVariables['directory'] = $this->getActiveTheme()->getPath();
+    }
+    return $this->defaultVariables;
   }
 
 }
