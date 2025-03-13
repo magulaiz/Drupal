@@ -86,13 +86,13 @@ class VariationCache implements VariationCacheInterface {
       foreach ($this->cacheBackend->getMultiple($fetch_cids) as $cid => $result) {
         $info = $cid_map[$cid];
 
-        $this->redirectChainCache[$info['initial']][$cid] = $result;
 
         // Add redirects to the next CID map, so the next iteration can look
         // them all up in one ::getMultiple() call to the cache backend.
         if ($result->data instanceof CacheRedirect) {
           $redirect_cid = $this->createCacheIdFast($info['keys'], $result->data);
           $new_cid_map[$redirect_cid] = $info;
+          $this->redirectChainCache[$info['initial']][$cid] = $result;
           continue;
         }
 
@@ -323,7 +323,13 @@ class VariationCache implements VariationCacheInterface {
       $chain[$cid] = $result = $this->cacheBackend->get($cid);
     }
 
-    return $this->redirectChainCache[$initial_cid] = $chain;
+    $chain[$cid] = $result;
+    if ($result === FALSE) {
+      $this->redirectChainCache[$initial_cid] = $chain;
+    }
+
+    return $chain;
+
   }
 
   /**
