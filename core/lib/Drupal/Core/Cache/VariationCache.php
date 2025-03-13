@@ -101,7 +101,7 @@ class VariationCache implements VariationCacheInterface {
 
       // Any cache misses are still in $fetch_cids, ensure they are set.
       foreach ($fetch_cids as $fetch_cid) {
-        $info = $cid_map[$cid];
+        $info = $cid_map[$fetch_cid];
         $this->redirectChainCache[$info['initial']][$fetch_cid] = FALSE;
       }
 
