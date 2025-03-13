@@ -861,8 +861,10 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - url
         - url.query_args
+        - 'url.query_args:author_name'
+        - 'url.query_args:langcode'
+        - 'url.query_args:subject'
         - user.permissions
       tags: {  }
       cacheable: false
@@ -890,8 +892,10 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - url
         - url.query_args
+        - 'url.query_args:author_name'
+        - 'url.query_args:langcode'
+        - 'url.query_args:subject'
         - user.permissions
       tags: {  }
       cacheable: false
@@ -1595,8 +1599,10 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - url
         - url.query_args
+        - 'url.query_args:author_name'
+        - 'url.query_args:langcode'
+        - 'url.query_args:subject'
         - user.permissions
       tags: {  }
       cacheable: false
