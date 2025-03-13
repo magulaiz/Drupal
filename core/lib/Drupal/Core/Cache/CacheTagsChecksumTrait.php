@@ -182,6 +182,9 @@ trait CacheTagsChecksumTrait {
    * Implements \Drupal\Core\Cache\CacheTagsChecksumPreloadInterface::registerCacheTagsForPreload()
    */
   public function registerCacheTagsForPreload(array $cache_tags): void {
+    if (empty($cache_tags)) {
+      return;
+    }
     // Don't preload delayed tags that are awaiting invalidation.
     $preloadable_tags = array_diff($cache_tags, $this->delayedTags);
     if ($preloadable_tags) {
