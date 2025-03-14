@@ -128,9 +128,15 @@ function system_theme_suggestions_field(array $variables): array {
 
   $suggestions[] = 'field__' . $element['#field_type'];
   $suggestions[] = 'field__' . $element['#field_name'];
+  $suggestions[] = 'field__' . $element['#view_mode'];
+  $suggestions[] = 'field__' . $element['#view_mode'] . '__' . $element['#bundle'];
+  $suggestions[] = 'field__' . $element['#view_mode'] . '__' . $element['#field_name'];
   $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#bundle'];
   $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'];
   $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'];
+  $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#view_mode'] . '__' . $element['#bundle'];
+  $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#view_mode'] . '__' . $element['#field_name'];
+  $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#view_mode'] . '__' . $element['#field_name'] . '__' . $element['#bundle'];
 
   return $suggestions;
 }
