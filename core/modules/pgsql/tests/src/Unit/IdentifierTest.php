@@ -17,6 +17,8 @@ use Drupal\Tests\UnitTestCase;
  */
 class IdentifierTest extends UnitTestCase {
 
+  // cSpell:disable
+
   /**
    * Data provider for testTable.
    *
@@ -173,6 +175,8 @@ class IdentifierTest extends UnitTestCase {
       ],
     ];
   }
+
+  // cSpell:enable
 
   /**
    * @dataProvider providerTable
