@@ -2,6 +2,7 @@
 
 namespace Drupal\comment\Hook;
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
