@@ -50,7 +50,8 @@ field.storage.*.*:
       type: string
       label: 'Type'
       constraints:
-        # @todo In principle, we should validate that this plugin was indeed provided by `module`.
+        # @todo In principle, we should validate that this plugin was indeed
+        # provided by `module`. Fix in https://www.drupal.org/i/3512956.
         PluginExists:
           manager: plugin.manager.field.field_type
           interface: '\Drupal\Core\Field\FieldItemInterface'
