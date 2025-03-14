@@ -290,10 +290,8 @@ class VariationCache implements VariationCacheInterface {
     // run a validity check because cache context values might have changed
     // since the last time we got the chain. In theory that should never happen
     // during a single request, but better safe than sorry.
-    if (isset($this->redirectChainCache[$cid])) {
-      if ($this->redirectChainIsValid($keys, $this->redirectChainCache[$cid])) {
-        $chain = $this->redirectChainCache[$cid];
-      }
+    if (isset($this->redirectChainCache[$cid]) && $this->redirectChainIsValid($keys, $this->redirectChainCache[$cid])) {
+      $chain = $this->redirectChainCache[$cid];
     }
 
     // Initiate the chain if we couldn't retrieve (a partial) one from memory.
@@ -409,6 +407,15 @@ class VariationCache implements VariationCacheInterface {
       $keys = array_merge($keys, $context_cache_keys->getKeys());
     }
     return implode(':', $keys);
+  }
+
+  /**
+   * Reset statically cached variables.
+   *
+   * This is only used by tests.
+   */
+  public function reset() {
+    $this->redirectChainCache = [];
   }
 
 }
