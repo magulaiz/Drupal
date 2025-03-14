@@ -198,6 +198,7 @@ class CommentTest extends ResourceTestBase {
           'homepage' => NULL,
           'langcode' => 'en',
           'name' => NULL,
+          'mail' => NULL,
           'status' => TRUE,
           'subject' => 'Llama',
           'thread' => '01/',
