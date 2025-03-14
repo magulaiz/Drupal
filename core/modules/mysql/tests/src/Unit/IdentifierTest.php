@@ -23,6 +23,7 @@ class IdentifierTest extends UnitTestCase {
    * @return array
    *   An associative array of test case data.
    */
+  // cSpell:disable
   public static function providerTable(): array {
     return [
       'No prefix' => [
@@ -173,8 +174,11 @@ class IdentifierTest extends UnitTestCase {
       ],
     ];
   }
+  // cSpell:enable
 
   /**
+   * Tests table identifiers.
+   *
    * @dataProvider providerTable
    */
   public function testTable(string $identifier, string $prefix = '', ?string $expectedCanonical = '', ?string $expectedMachine = '', ?string $expectedException = NULL): void {
