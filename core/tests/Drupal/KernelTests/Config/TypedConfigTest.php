@@ -46,7 +46,7 @@ class TypedConfigTest extends KernelTestBase {
   /**
    * Test cases for ::testGetCanonicalRepresentation().
    */
-  public function providerGetCanonicalRepresentation(): array {
+  public static function providerGetCanonicalRepresentation(): array {
     $config = Yaml::parseFile('core/modules/config/tests/config_test/config/install/config_test.validation.yml');
 
     $cases = [];

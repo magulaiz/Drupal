@@ -112,7 +112,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
   /**
    * {@inheritdoc}
    */
-  public function setValue($value, $notify = TRUE) {
+  public function setValue($value, $notify = TRUE): void {
     parent::setValue($value, $notify);
     // Changing the value requires re-parsing.
     unset($this->elements);
