@@ -597,7 +597,10 @@ field_config_base:
             - 'string'
     settings:
       type: field.field_settings.[%parent.field_type]
-      # @todo Constraints on each of the field type-specific settings config schemas BUT extra special challenge: until Drupal 11, at best only core field types will have validation constraints set!
+      # @todo Constraints on each of the field type-specific settings config
+      # schemas BUT extra special challenge: until Drupal 11, at best only
+      # core field types will have validation constraints set! Remove this
+      # todo in https://drupal.org/i/3512957
     field_type:
       type: string
       label: 'Field type'
