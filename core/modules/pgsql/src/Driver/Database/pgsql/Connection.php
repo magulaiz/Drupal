@@ -262,16 +262,11 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   }
 
   /**
-   * Overrides \Drupal\Core\Database\Connection::createDatabase().
-   *
-   * @param string $database
-   *   The name of the database to create.
-   *
-   * @throws \Drupal\Core\Database\DatabaseNotFoundException
+   * {@inheritdoc}
    */
   public function createDatabase($database) {
     // Escape the database name.
-    $database = Database::getConnection()->escapeDatabase($database);
+    $database = Database::getConnection()->identifiers->database($database)->forMachine();
     $db_created = FALSE;
 
     // Try to determine the proper locales for character classification and
@@ -336,12 +331,18 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * {@inheritdoc}
    */
   public function getFullQualifiedTableName($table) {
-    $options = $this->getConnectionOptions();
-    $schema = $options['schema'] ?? 'public';
-
+    $tableIdentifier = $this->identifiers->table($table);
+    // If already fully qualified, just pass it on.
+    if ($tableIdentifier->database || $tableIdentifier->schema) {
+      return $tableIdentifier->forMachine();
+    }
     // The fully qualified table name in PostgreSQL is in the form of
     // <database>.<schema>.<table>.
-    return $options['database'] . '.' . $schema . '.' . $this->identifiers->table($table)->forMachine();
+    $options = $this->getConnectionOptions();
+    $schema = $options['schema'] ?? 'public';
+    return $this->identifiers->database($options['database'])->forMachine() . '.' .
+      $this->identifiers->schema($schema)->forMachine() . '.' .
+      $tableIdentifier->machineName;
   }
 
   /**

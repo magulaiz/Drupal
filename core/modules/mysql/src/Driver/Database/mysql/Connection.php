@@ -295,16 +295,11 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   }
 
   /**
-   * Overrides \Drupal\Core\Database\Connection::createDatabase().
-   *
-   * @param string $database
-   *   The name of the database to create.
-   *
-   * @throws \Drupal\Core\Database\DatabaseNotFoundException
+   * {@inheritdoc}
    */
   public function createDatabase($database) {
     // Escape the database name.
-    $database = Database::getConnection()->escapeDatabase($database);
+    $database = Database::getConnection()->identifiers->schema($database)->forMachine();
 
     try {
       // Create the database and set it as active.

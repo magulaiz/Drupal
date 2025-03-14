@@ -383,9 +383,11 @@ abstract class Connection {
    */
   public function getFullQualifiedTableName($table) {
     $tableIdentifier = $this->identifiers->table($table);
+    // If already fully qualified, just pass it on.
     if ($tableIdentifier->database || $tableIdentifier->schema) {
       return $tableIdentifier->forMachine();
     }
+    // Return as <schema>.<table>.
     return $this->identifiers->schema($this->getConnectionOptions()['database'])->forMachine() . '.' . $tableIdentifier->machineName;
   }
 
@@ -971,7 +973,7 @@ abstract class Connection {
    */
   public function escapeDatabase($database) {
     @trigger_error(__METHOD__ . "() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312", E_USER_DEPRECATED);
-    return $this->identifiers->database($database)->forMachine();
+    return $this->identifiers->schema($database)->forMachine();
   }
 
   /**
@@ -1224,6 +1226,8 @@ abstract class Connection {
    *
    * @param string $database
    *   The name of the database to create.
+   *
+   * @throws \Drupal\Core\Database\DatabaseNotFoundException
    */
   abstract public function createDatabase($database);
 
