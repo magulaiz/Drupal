@@ -9,8 +9,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidator
-{
+class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidator {
 
   /**
    * {@inheritdoc}
@@ -27,7 +26,7 @@ class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidat
     $max_delta_alias = 'max_delta';
     $result = \Drupal::entityQueryAggregate($entity_type)
       ->accessCheck(FALSE)
-      ->aggregate($field_name . '.%delta', 'MAX', null, $max_delta_alias)
+      ->aggregate($field_name . '.%delta', 'MAX', NULL, $max_delta_alias)
       ->execute();
 
     $max_delta = 0;

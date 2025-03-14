@@ -15,8 +15,7 @@ use Drupal\Core\Validation\Attribute\Constraint;
   id: 'NoEntitiesExistYetWithHigherCardinality',
   label: new TranslatableMarkup('No entities exist with higher cardinality', [], ['context' => 'Validation'])
 )]
-class NoEntitiesExistYetWithHigherCardinality extends SymfonyConstraint
-{
+class NoEntitiesExistYetWithHigherCardinality extends SymfonyConstraint {
 
   /**
    * The error message if a plugin does not implement the expected interface.
