@@ -1447,4 +1447,33 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->storage->getQuery()->execute();
   }
 
+  /**
+   * @covers \Drupal\Core\Entity\Query\QueryBase::key
+   */
+  public function testKeyMethod(): void {
+    EntityTestHelper::createBundle('test_key', entity_type: 'entity_test_mulrev');
+    EntityTestMulRev::create([
+      'type' => 'test_key',
+      'name' => 'Test 1',
+    ])->save();
+    EntityTestMulRev::create([
+      'type' => 'test_key',
+      'name' => 'Test 2',
+    ])->save();
+    EntityTestMulRev::create([
+      'type' => 'test_key',
+      'name' => 'Test 3',
+    ])->save();
+    EntityTestMulRev::create([
+      'type' => 'test_key',
+      'name' => 'Test 4',
+    ])->save();
+    $results = $this->storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('type', 'test_key')
+      ->key('label')
+      ->execute();
+    $this->assertSame(['Test 1', 'Test 2', 'Test 3', 'Test 4'], array_values($results));
+  }
+
 }

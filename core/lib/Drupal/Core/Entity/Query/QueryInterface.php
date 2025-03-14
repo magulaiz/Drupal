@@ -313,4 +313,11 @@ interface QueryInterface extends AlterableInterface {
    */
   public function allRevisions();
 
+  /**
+   * @param string $key
+   *
+   * @return $this
+   */
+  public function key(string $key);
+
 }
