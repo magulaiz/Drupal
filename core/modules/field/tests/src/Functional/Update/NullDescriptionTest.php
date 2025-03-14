@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Functional\Update;
 
 use Drupal\field\Entity\FieldConfig;
@@ -15,7 +17,7 @@ class NullDescriptionTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-10.3.0.filled.standard.php.gz',
     ];
@@ -24,7 +26,7 @@ class NullDescriptionTest extends UpdatePathTestBase {
   /**
    * Tests the upgrade path for updating empty help and description to NULL.
    */
-  public function testRunUpdates() {
+  public function testRunUpdates(): void {
     $field_config = FieldConfig::load('node.article.body');
     $this->assertInstanceOf(FieldConfig::class, $field_config);
 
