@@ -29,7 +29,7 @@ class IdentifierHandler extends IdentifierHandlerBase {
    */
   protected function validateCanonicalName(string $identifier, string $canonicalName, IdentifierType $type): true {
     return match ($type) {
-      IdentifierType::Table => true,
+      IdentifierType::Table => TRUE,
       default => parent::validateCanonicalName($identifier, $canonicalName, $type),
     };
   }
