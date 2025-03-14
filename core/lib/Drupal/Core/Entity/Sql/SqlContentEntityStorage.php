@@ -1586,6 +1586,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // Get the current revision ID, so that it can be set correctly in the base
       // table.
+      $current_revision_id = NULL;
       if ($this->entityType->isRevisionable() && !$entity->isDefaultRevision()) {
         $entity_id = $entity->id();
         if (is_int($entity_id) || ctype_digit($entity_id)) {
@@ -1620,15 +1621,15 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       }
 
       $embedded_tables = [];
-      if ($this->jsonStorageAllRevisionsTable) {
-        $embedded_tables[] = ['table' => $this->jsonStorageAllRevisionsTable, 'update action' => 'append'];
-      }
       // Not sure about the change on the next line. It fixes the EntityDuplicateTest.
       if ($this->jsonStorageCurrentRevisionTable && ($entity->isDefaultRevision() || ($entity->getRevisionId() == $entity->getLoadedRevisionId()))) {
         $embedded_tables[] = ['table' => $this->jsonStorageCurrentRevisionTable, 'update action' => 'replace'];
       }
       if ($this->jsonStorageLatestRevisionTable && ($entity->isNewRevision() || ($entity->getRevisionId() >= $this->getLatestRevisionId($entity->id())))) {
         $embedded_tables[] = ['table' => $this->jsonStorageLatestRevisionTable, 'update action' => 'replace'];
+      }
+      if ($this->jsonStorageAllRevisionsTable) {
+        $embedded_tables[] = ['table' => $this->jsonStorageAllRevisionsTable, 'update action' => 'append'];
       }
       if ($this->jsonStorageTranslationsTable) {
         $embedded_tables[] = ['table' => $this->jsonStorageTranslationsTable, 'update action' => 'replace'];
@@ -1933,7 +1934,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $entity_data = $this->database->getConnection()->selectCollection($prefixed_table)->findOne(
           [$this->idKey => ['$eq' => $entity_id]],
           [
-            'projection' => [$this->jsonStorageAllRevisionsTable => 1, $this->jsonStorageCurrentRevisionTable => 1],
+            'projection' => [$this->jsonStorageAllRevisionsTable => 1, $this->jsonStorageLatestRevisionTable => 1, $this->jsonStorageCurrentRevisionTable => 1],
             'session' => $this->database->getMongodbSession(),
           ],
         );
@@ -1969,6 +1970,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
         }
 
+        // The all revisions can have a double version of the current revision.
+        // We are going to remove the oldest version of the current revision
+        // from the all revisions embedded table.
         $revisions_langcodes = [];
         $new_all_revisions_data = [];
         if (isset($entity_data->{$this->jsonStorageAllRevisionsTable})) {
@@ -2002,6 +2006,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
                   $exists = TRUE;
                 }
               }
+
               if ($current_revision_id && isset($revision->{$this->revisionKey}) && isset($revision->{$revision_default_field})) {
                 if ($revision->{$this->revisionKey} == $current_revision_id) {
                   $revision->{$revision_default_field} = TRUE;
@@ -2025,11 +2030,50 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
         $new_all_revisions_data = array_reverse($new_all_revisions_data);
 
+        // The latest revision does not need to be the same as the current
+        // revision. Therefore update the
+        $new_latest_revision_data = [];
+        if (isset($entity_data->{$this->jsonStorageLatestRevisionTable})) {
+          $latest_revision_data = (array)$entity_data->{$this->jsonStorageLatestRevisionTable};
+          $latest_revision_data = array_reverse($latest_revision_data);
+          foreach ($latest_revision_data as $revision) {
+            // Update the values of non-revisionable non-translatable fields
+            // for all existing revisions.
+            foreach ($non_revisionable_non_translatable_field_data as $non_revisionable_non_translatable_field_name => $non_revisionable_non_translatable_field_value) {
+              $revision->{$non_revisionable_non_translatable_field_name} = $non_revisionable_non_translatable_field_value;
+            }
+
+            // @todo We got no testing for this.
+            // Update the values of non-revisionable translatable fields for
+            // all existing revisions.
+            foreach ($non_revisionable_translatable_field_data as $non_revisionable_translatable_field_name => $non_revisionable_translatable_field_values) {
+              if (isset($non_revisionable_translatable_field_values[$revision->{$this->langcodeKey}])) {
+                $revision->{$non_revisionable_translatable_field_name} = $non_revisionable_translatable_field_values[$revision->{$this->langcodeKey}];
+              }
+            }
+
+            if ($current_revision_id && isset($revision->{$this->revisionKey}) && isset($revision->{$revision_default_field})) {
+              if ($revision->{$this->revisionKey} == $current_revision_id) {
+                $revision->{$revision_default_field} = TRUE;
+              }
+              else {
+                // All revisions that are not the current revision should have
+                // set the value of "revision_default" to FALSE.
+                $revision->{$revision_default_field} = FALSE;
+              }
+            }
+
+            $new_latest_revision_data[] = clone $revision;
+          }
+        }
+
+        $new_latest_revision_data = array_reverse($new_latest_revision_data);
+
         $set = [];
         $set[$this->jsonStorageAllRevisionsTable] = $new_all_revisions_data;
+        $set[$this->jsonStorageLatestRevisionTable] = $new_latest_revision_data;
         if (isset($current_revision_id)) {
           $set[$this->revisionKey] = $current_revision_id;
-          // $this->entityKeys[$this->revisionKey] = $current_revision_id;
         }
 
         $this->database->getConnection()->selectCollection($prefixed_table)->updateOne(
@@ -2056,10 +2100,31 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The records to store for the shared table
    */
   protected function getEmbeddedTableRecords(ContentEntityInterface $entity, $table_name) {
+    $current_revision_id = NULL;
+    if ($this->entityType->isRevisionable()) {
+      $revision_default_field = $this->entityType->getRevisionMetadataKey('revision_default');
+      $current_revision_id = $entity->{$this->revisionKey}->value;
+    }
+
     $records = [];
     foreach ($entity->getTranslationLanguages() as $langcode => $language) {
       $translation = $entity->getTranslation($langcode);
-      $records[] = (array) $this->mapToStorageRecord($translation, $table_name);
+      $record = (array) $this->mapToStorageRecord($translation, $table_name);
+
+      if ($current_revision_id && isset($record[$this->revisionKey])) {
+        if ($record[$this->revisionKey] == $current_revision_id) {
+          // The value for the default revision field is always TRUE when the
+          // current revision id is equal to the record revision id
+          $record[$revision_default_field] = '1';
+        }
+        else {
+          // The value for the default revision field is always FALSE when the
+          // current revision id is not equal to the record revision id
+          $record[$revision_default_field] = '0';
+        }
+      }
+
+      $records[] = $record;
     }
 
     return $records;
