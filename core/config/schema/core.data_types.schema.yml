@@ -591,7 +591,10 @@ field_config_base:
       label: 'Default value callback'
       nullable: true
       constraints:
-        Callback: []
+        Type:
+          type:
+            - 'callable'
+            - 'string'
     settings:
       type: field.field_settings.[%parent.field_type]
       # @todo Constraints on each of the field type-specific settings config schemas BUT extra special challenge: until Drupal 11, at best only core field types will have validation constraints set!
