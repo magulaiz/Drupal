@@ -76,7 +76,8 @@ field.storage.*.*:
     indexes:
       type: sequence
       label: 'Indexes'
-      # @todo Constraints — but shockingly this A) uses `type: ignore`, B) has zero validation logic in core?!
+      # @todo Constraints — but shockingly this A) uses `type: ignore`, B) has
+      # no validation logic in core? Fix in https://www.drupal.org/i/3512962.
       sequence:
         type: sequence
         label: 'Indexes'
