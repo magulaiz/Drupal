@@ -30,6 +30,7 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
    */
   protected static array $propertiesWithOptionalValues = [
     'default_value',
+    'default_value_callback',
     'description',
   ];
 
