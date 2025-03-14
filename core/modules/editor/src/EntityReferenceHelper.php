@@ -4,6 +4,9 @@ namespace Drupal\editor;
 
 use Drupal\Core\Entity\FieldableEntityInterface;
 
+/**
+ * Helper for entity references.
+ */
 class EntityReferenceHelper {
 
   /**

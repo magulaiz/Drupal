@@ -148,6 +148,7 @@ namespace Drupal\Tests\editor\Kernel {
      * Creates and returns a singleton instance of a test node.
      *
      * @return \Drupal\node\NodeInterface
+     *   The test node entity.
      */
     public static function getTestNodeEntity(): NodeInterface {
       static $node_entity = NULL;
@@ -169,6 +170,7 @@ namespace Drupal\Tests\editor\Kernel {
      * Creates and returns a singleton instance of a referenced node.
      *
      * @return \Drupal\node\NodeInterface
+     *   The referenced test node entity.
      */
     public static function getTestReferencedNodeEntity(): NodeInterface {
       static $referenced_node_entity = NULL;
@@ -200,6 +202,7 @@ namespace Drupal\Tests\editor\Kernel {
      * Creates and returns a singleton instance of a test image entity.
      *
      * @return \Drupal\file\FileInterface
+     *   The test image entity.
      */
     public static function getTestImageEntity(): FileInterface {
       static $image_entity = NULL;
