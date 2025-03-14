@@ -433,5 +433,5 @@ class CommentTest extends ResourceTestBase {
 
     parent::doTestPatchIndividual();
   }
-  
+
 }
