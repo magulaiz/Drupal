@@ -17,4 +17,13 @@ interface OrderOperationInterface {
    */
   public function apply(array &$identifiers, array $module_finder): void;
 
+  /**
+   * Packs the object properties.
+   *
+   * @return array
+   *   An array to pass as arguments to the constructor.
+   *   Keys can be parameter names or indices.
+   */
+  public function pack(): array;
+
 }
