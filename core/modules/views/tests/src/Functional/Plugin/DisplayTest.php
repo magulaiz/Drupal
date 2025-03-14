@@ -22,7 +22,16 @@ class DisplayTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_filter_groups', 'test_get_attach_displays', 'test_view', 'test_display_more', 'test_display_invalid', 'test_display_empty', 'test_exposed_relationship_admin_ui', 'test_simple_argument'];
+  public static $testViews = [
+    'test_filter_groups',
+    'test_get_attach_displays',
+    'test_view',
+    'test_display_more',
+    'test_display_invalid',
+    'test_display_empty',
+    'test_exposed_relationship_admin_ui',
+    'test_simple_argument',
+  ];
 
   /**
    * {@inheritdoc}
@@ -389,8 +398,22 @@ class DisplayTest extends ViewTestBase {
     $errors = $view->validate();
     // Check that the error messages are shown.
     $this->assertCount(2, $errors['default'], 'Error messages found for required relationship');
-    $this->assertEquals(new FormattableMarkup('The %relationship_name relationship used in %handler_type %handler is not present in the %display_name display.', ['%relationship_name' => 'uid', '%handler_type' => 'field', '%handler' => 'User: Last login', '%display_name' => 'Default']), $errors['default'][0]);
-    $this->assertEquals(new FormattableMarkup('The %relationship_name relationship used in %handler_type %handler is not present in the %display_name display.', ['%relationship_name' => 'uid', '%handler_type' => 'field', '%handler' => 'User: Created', '%display_name' => 'Default']), $errors['default'][1]);
+    $this->assertEquals(new FormattableMarkup(
+      'The %relationship_name relationship used in %handler_type %handler is not present in the %display_name display.',
+      [
+        '%relationship_name' => 'uid',
+        '%handler_type' => 'field',
+        '%handler' => 'User: Last login',
+        '%display_name' => 'Default',
+      ]), $errors['default'][0]);
+    $this->assertEquals(
+      new FormattableMarkup('The %relationship_name relationship used in %handler_type %handler is not present in the %display_name display.',
+        [
+          '%relationship_name' => 'uid',
+          '%handler_type' => 'field',
+          '%handler' => 'User: Created',
+          '%display_name' => 'Default',
+        ]), $errors['default'][1]);
   }
 
   /**

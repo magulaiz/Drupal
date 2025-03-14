@@ -64,7 +64,9 @@ class LanguageSelectElementTest extends BrowserTestBase {
 
     // Test that the #options were not altered by #languages.
     $this->assertSession()->fieldExists('edit-language-custom-options');
-    $this->_testLanguageSelectElementOptions('edit-language-custom-options', ['opt1' => 'First option', 'opt2' => 'Second option', 'opt3' => 'Third option']);
+    $this->_testLanguageSelectElementOptions(
+      'edit-language-custom-options',
+      ['opt1' => 'First option', 'opt2' => 'Second option', 'opt3' => 'Third option']);
   }
 
   /**
@@ -78,7 +80,12 @@ class LanguageSelectElementTest extends BrowserTestBase {
     $this->container->get('module_installer')->uninstall(['language']);
     $this->drupalGet('form-test/language_select');
     // Check that the language fields were rendered on the page.
-    $ids = ['edit-languages-all', 'edit-languages-configurable', 'edit-languages-locked', 'edit-languages-config-and-locked'];
+    $ids = [
+      'edit-languages-all',
+      'edit-languages-configurable',
+      'edit-languages-locked',
+      'edit-languages-config-and-locked',
+    ];
     foreach ($ids as $id) {
       $this->assertSession()->fieldNotExists($id);
     }

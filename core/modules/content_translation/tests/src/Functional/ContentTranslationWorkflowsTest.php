@@ -127,7 +127,13 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    * Returns an array of permissions needed for the entity owner.
    */
   protected function getEntityOwnerPermissions(): array {
-    return ['edit own entity_test content', 'translate editable entities', 'view test entity', 'view test entity translations', 'view unpublished test entity translations'];
+    return [
+      'edit own entity_test content',
+      'translate editable entities',
+      'view test entity',
+      'view test entity translations',
+      'view unpublished test entity translations',
+    ];
   }
 
   /**
@@ -171,7 +177,13 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
 
     // Create a translation that is not published to test view access.
     $this->drupalLogin($this->translator);
-    $add_translation_url = Url::fromRoute("entity.$this->entityTypeId.content_translation_add", [$this->entityTypeId => $id, 'source' => $default_langcode, 'target' => $this->langcodes[2]]);
+    $add_translation_url = Url::fromRoute(
+      "entity.$this->entityTypeId.content_translation_add",
+      [
+        $this->entityTypeId => $id,
+        'source' => $default_langcode,
+        'target' => $this->langcodes[2],
+      ]);
     $edit = [
       'name[0][value]' => 'translation name',
       'content_translation[status]' => FALSE,
@@ -331,7 +343,10 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     $this->assertSession()->statusCodeEquals($expected_status['overview']);
 
     // Check whether the user is allowed to create a translation.
-    $add_translation_url = Url::fromRoute("entity.$this->entityTypeId.content_translation_add", [$this->entityTypeId => $this->entity->id(), 'source' => $default_langcode, 'target' => $langcode], $options);
+    $add_translation_url = Url::fromRoute(
+      "entity.$this->entityTypeId.content_translation_add",
+      [$this->entityTypeId => $this->entity->id(), 'source' => $default_langcode, 'target' => $langcode],
+      $options);
     if ($expected_status['add_translation'] == 200) {
       $this->clickLink('Add');
       $this->assertSession()->addressEquals($add_translation_url);
@@ -349,7 +364,10 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     // Check whether the user is allowed to edit a translation.
     $langcode = $this->langcodes[2];
     $options['language'] = $languages[$langcode];
-    $edit_translation_url = Url::fromRoute("entity.$this->entityTypeId.content_translation_edit", [$this->entityTypeId => $this->entity->id(), 'language' => $langcode], $options);
+    $edit_translation_url = Url::fromRoute(
+      "entity.$this->entityTypeId.content_translation_edit",
+      [$this->entityTypeId => $this->entity->id(), 'language' => $langcode],
+      $options);
     if ($expected_status['edit_translation'] == 200) {
       $this->drupalGet($translations_url);
       $editor = $expected_status['edit'] == 200;
@@ -390,7 +408,10 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     }
 
     // Check whether the user is allowed to delete a translation.
-    $delete_translation_url = Url::fromRoute("entity.$this->entityTypeId.content_translation_delete", [$this->entityTypeId => $this->entity->id(), 'language' => $langcode], $options);
+    $delete_translation_url = Url::fromRoute(
+      "entity.$this->entityTypeId.content_translation_delete",
+      [$this->entityTypeId => $this->entity->id(), 'language' => $langcode],
+      $options);
     if ($expected_status['delete_translation'] == 200) {
       $this->drupalGet($translations_url);
       $editor = $expected_status['delete'] == 200;

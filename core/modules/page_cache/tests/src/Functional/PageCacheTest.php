@@ -270,7 +270,8 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('Foo', 'bar');
 
     // Check replacing default headers.
-    $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Expires', 'value' => 'Fri, 19 Nov 2008 05:00:00 GMT']]);
+    $this->drupalGet('system-test/set-header',
+      ['query' => ['name' => 'Expires', 'value' => 'Fri, 19 Nov 2008 05:00:00 GMT']]);
     $this->assertSession()->responseHeaderEquals('Expires', 'Fri, 19 Nov 2008 05:00:00 GMT');
     $this->drupalGet('system-test/set-header', ['query' => ['name' => 'Vary', 'value' => 'User-Agent']]);
     $this->assertSession()->responseHeaderContains('Vary', 'user-agent');

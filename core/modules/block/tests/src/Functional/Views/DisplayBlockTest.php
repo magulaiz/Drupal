@@ -290,7 +290,17 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('');
     $this->assertSession()->elementNotExists('xpath', "{$block_xpath}/h2");
 
-    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:system.site', 'config:views.view.test_view_block', 'http_response', 'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form', 'rendered']));
+    $this->assertCacheTags(array_merge(
+      $block->getCacheTags(),
+      [
+        'block_view',
+        'config:block_list',
+        'config:system.site',
+        'config:views.view.test_view_block',
+        'http_response',
+        'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
+        'rendered',
+      ]));
   }
 
   /**
@@ -304,7 +314,12 @@ class DisplayBlockTest extends ViewTestBase {
     $view = View::load('test_view_block');
     $view->invalidateCaches();
 
-    $block = $this->drupalPlaceBlock('views_block:test_view_block-block_1', ['label' => 'test_view_block-block_1:1', 'views_label' => 'Custom title']);
+    $block = $this->drupalPlaceBlock(
+      'views_block:test_view_block-block_1',
+      [
+        'label' => 'test_view_block-block_1:1',
+        'views_label' => 'Custom title',
+      ]);
     $block_xpath = $this->assertSession()->buildXPathQuery('//div[@id = :id]', [
       ':id' => 'block-' . $block->id(),
     ]);
@@ -319,7 +334,15 @@ class DisplayBlockTest extends ViewTestBase {
     $this->assertSession()->elementNotExists('xpath', $block_xpath);
     // Ensure that the view cacheability metadata is propagated even, for an
     // empty block.
-    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:views.view.test_view_block', 'http_response', 'rendered']));
+    $this->assertCacheTags(array_merge(
+      $block->getCacheTags(),
+      [
+        'block_view',
+        'config:block_list',
+        'config:views.view.test_view_block',
+        'http_response',
+        'rendered',
+      ]));
     $this->assertCacheContexts(['url.query_args:_wrapper_format']);
 
     // Add a header displayed on empty result.
@@ -337,7 +360,15 @@ class DisplayBlockTest extends ViewTestBase {
 
     $this->drupalGet($url);
     $this->assertSession()->elementsCount('xpath', $block_xpath, 1);
-    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:views.view.test_view_block', 'http_response', 'rendered']));
+    $this->assertCacheTags(array_merge(
+      $block->getCacheTags(),
+      [
+        'block_view',
+        'config:block_list',
+        'config:views.view.test_view_block',
+        'http_response',
+        'rendered',
+      ]));
     $this->assertCacheContexts(['url.query_args:_wrapper_format']);
 
     // Hide the header on empty results.
@@ -355,7 +386,9 @@ class DisplayBlockTest extends ViewTestBase {
 
     $this->drupalGet($url);
     $this->assertSession()->elementNotExists('xpath', $block_xpath);
-    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:views.view.test_view_block', 'http_response', 'rendered']));
+    $this->assertCacheTags(array_merge(
+      $block->getCacheTags(),
+      ['block_view', 'config:block_list', 'config:views.view.test_view_block', 'http_response', 'rendered']));
     $this->assertCacheContexts(['url.query_args:_wrapper_format']);
 
     // Add an empty text.
@@ -372,7 +405,9 @@ class DisplayBlockTest extends ViewTestBase {
 
     $this->drupalGet($url);
     $this->assertSession()->elementsCount('xpath', $block_xpath, 1);
-    $this->assertCacheTags(array_merge($block->getCacheTags(), ['block_view', 'config:block_list', 'config:views.view.test_view_block', 'http_response', 'rendered']));
+    $this->assertCacheTags(array_merge(
+      $block->getCacheTags(),
+      ['block_view', 'config:block_list', 'config:views.view.test_view_block', 'http_response', 'rendered']));
     $this->assertCacheContexts(['url.query_args:_wrapper_format']);
   }
 
@@ -395,8 +430,10 @@ class DisplayBlockTest extends ViewTestBase {
     $cached_id_token = Crypt::hmacBase64($cached_id, Settings::getHashSalt() . $this->container->get('private_key')->get());
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
     // Check existence of the contextual link placeholders.
+    // phpcs:disable Drupal.Arrays.Array.LongLineDeclaration
     $this->assertSession()->responseContains('<div' . new Attribute(['data-contextual-id' => $id, 'data-contextual-token' => $id_token, 'data-drupal-ajax-container' => '']) . '></div>');
     $this->assertSession()->responseContains('<div' . new Attribute(['data-contextual-id' => $cached_id, 'data-contextual-token' => $cached_id_token, 'data-drupal-ajax-container' => '']) . '></div>');
+    // phpcs:enable
 
     // Get server-rendered contextual links.
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:renderContextualLinks()

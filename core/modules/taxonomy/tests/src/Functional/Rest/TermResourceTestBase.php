@@ -329,7 +329,8 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedCacheTags() {
-    return Cache::mergeTags(parent::getExpectedCacheTags(), ['config:filter.format.plain_text', 'config:filter.settings']);
+    return Cache::mergeTags(
+      parent::getExpectedCacheTags(), ['config:filter.format.plain_text', 'config:filter.settings']);
   }
 
   /**

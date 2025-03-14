@@ -101,7 +101,8 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:size]'] = ByteSizeMarkup::create($file->getSize());
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, ['file' => $file], ['langcode' => $language_interface->getId(), 'sanitize' => FALSE]);
+      $output = $token_service->replace(
+        $input, ['file' => $file], ['langcode' => $language_interface->getId(), 'sanitize' => FALSE]);
       $this->assertEquals($expected, $output, "Unsanitized file token $input replaced.");
     }
   }

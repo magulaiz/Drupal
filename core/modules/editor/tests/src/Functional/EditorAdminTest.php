@@ -142,7 +142,9 @@ class EditorAdminTest extends BrowserTestBase {
     $this->drupalLogin($account);
 
     // The node edit page header.
-    $text = (string) new FormattableMarkup('<em>Edit @type</em> @title', ['@type' => $node_type->label(), '@title' => $node->label()]);
+    $text = (string) new FormattableMarkup(
+      '<em>Edit @type</em> @title',
+      ['@type' => $node_type->label(), '@title' => $node->label()]);
 
     // Go to node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
