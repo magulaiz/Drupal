@@ -53,32 +53,20 @@ class VariationCache implements VariationCacheInterface {
     // cache backend.
     //
     // Create a map of CIDs with their associated $items index and cache keys.
-    $results = [];
     $cid_map = [];
     foreach ($items as $index => [$keys, $cacheability]) {
       $cid = $this->createCacheIdFast($keys, $cacheability);
 
-      // See if we previously stored the redirect chain in memory. We do need to
-      // run a validity check because cache context values might have changed
-      // since the last time we got the chain. In theory that should never happen
-      // during a single request, but better safe than sorry.
-      if (isset($this->redirectChainCache[$cid])) {
-        if ($this->redirectChainIsValid($keys, $this->redirectChainCache[$cid])) {
-          $results[$index] = end($this->redirectChainCache[$cid]);
-          continue;
-        }
-      }
-
       $cid_map[$cid] = [
         'index' => $index,
         'keys' => $keys,
-        'initial' => $cid,
       ];
     }
 
     // Go over all CIDs and update the map according to found redirects. If the
     // map is empty, it means we've followed all CIDs to their final result or
     // lack thereof.
+    $results = [];
     while (!empty($cid_map)) {
       $new_cid_map = [];
 
@@ -91,17 +79,10 @@ class VariationCache implements VariationCacheInterface {
         if ($result->data instanceof CacheRedirect) {
           $redirect_cid = $this->createCacheIdFast($info['keys'], $result->data);
           $new_cid_map[$redirect_cid] = $info;
-          $this->redirectChainCache[$info['initial']][$cid] = $result;
           continue;
         }
 
         $results[$info['index']] = $result;
-      }
-
-      // Any cache misses are still in $fetch_cids, ensure they are set.
-      foreach ($fetch_cids as $fetch_cid) {
-        $info = $cid_map[$fetch_cid];
-        $this->redirectChainCache[$info['initial']][$fetch_cid] = FALSE;
       }
 
       $cid_map = $new_cid_map;
