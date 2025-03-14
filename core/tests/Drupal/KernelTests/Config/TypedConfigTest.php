@@ -162,9 +162,8 @@ class TypedConfigTest extends KernelTestBase {
     $this->assertSame([
       '_core' => [
         // cspell:disable-next-line
-        'default_config_hash' => 'HmEHH4uiJOf69mOC9CGwagBAGyvdXFtvMUDd4aiQSp8',
+        'default_config_hash' => 'M0uZVp4ihphuViwEVk_ceksfS6aTacmoRUZ60m8nVMU',
       ],
-      'langcode' => 'en',
       'zoo' => TRUE,
       'llama' => 'llama',
       'cat' => [
@@ -190,6 +189,7 @@ class TypedConfigTest extends KernelTestBase {
       ],
       'uuid' => '7C30C50E-641A-4E34-A7F1-46BCFB9BE5A3',
       'string__not_blank' => 'this is a label',
+      'host' => 'localhost',
     ], $typed_config_manager->getCanonicalRepresentation($typed_config));
 
     // Test a primitive.
