@@ -22,6 +22,9 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class UrlTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['common_test', 'url_alter_test'];
 
   /**
@@ -165,11 +168,11 @@ class UrlTest extends KernelTestBase {
   /**
    * Checks for class existence in link.
    *
-   * @param $attribute
+   * @param string $attribute
    *   Attribute to be checked.
-   * @param $link
+   * @param string $link
    *   URL to search.
-   * @param $class
+   * @param string $class
    *   Element class to search for.
    *
    * @return bool
@@ -244,11 +247,13 @@ class UrlTest extends KernelTestBase {
     ];
     $this->assertEquals($result, UrlHelper::parse($url), 'Relative URL parsed correctly.');
 
-    // Test that drupal can recognize an absolute URL. Used to prevent attack vectors.
+    // Test that drupal can recognize an absolute URL. Used to prevent attack
+    // vectors.
     $url = 'https://www.example.org/foo/bar?foo=bar&bar=baz&baz#foo';
     $this->assertTrue(UrlHelper::isExternal($url), 'Correctly identified an external URL.');
 
-    // Test that UrlHelper::parse() does not allow spoofing a URL to force a malicious redirect.
+    // Test that UrlHelper::parse() does not allow spoofing a URL to force a
+    // malicious redirect.
     $parts = UrlHelper::parse('forged:http://cwe.mitre.org/data/definitions/601.html');
     $this->assertFalse(UrlHelper::isValid($parts['path'], TRUE), '\Drupal\Component\Utility\UrlHelper::isValid() correctly parsed a forged URL.');
   }

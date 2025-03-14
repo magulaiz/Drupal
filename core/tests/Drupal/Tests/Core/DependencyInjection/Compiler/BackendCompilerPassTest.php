@@ -100,10 +100,11 @@ class BackendCompilerPassTest extends UnitTestCase {
    * This is necessary because the container clone does not clone the parameter
    * bag so the setParameter() call effects the parent container as well.
    *
-   * @param $service
+   * @param \Symfony\Component\DependencyInjection\Definition $service
    *   The service definition.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+   *   The container with a sqlite database service in it.
    */
   protected function getSqliteContainer($service) {
     $container = new ContainerBuilder();
@@ -120,10 +121,11 @@ class BackendCompilerPassTest extends UnitTestCase {
    * This is necessary because the container clone does not clone the parameter
    * bag so the setParameter() call effects the parent container as well.
    *
-   * @param $service
+   * @param \Symfony\Component\DependencyInjection\Definition $service
    *   The service definition.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+   *   The container with a mysql database service in it.
    */
   protected function getMysqlContainer($service) {
     $container = new ContainerBuilder();
@@ -138,10 +140,11 @@ class BackendCompilerPassTest extends UnitTestCase {
    * This is necessary because the container clone does not clone the parameter
    * bag so the setParameter() call effects the parent container as well.
    *
-   * @param $service
+   * @param \Symfony\Component\DependencyInjection\Definition $service
    *   The service definition.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+   *   The container with a DriverTestMysql database service in it.
    */
   protected function getDriverTestMysqlContainer($service) {
     $container = new ContainerBuilder();
@@ -153,17 +156,32 @@ class BackendCompilerPassTest extends UnitTestCase {
 
 }
 
+/**
+ * A class used for testing the backend compiler passes.
+ */
 class ServiceClassDefault {
 }
 
+/**
+ * A class used for testing the backend compiler passes.
+ */
 class ServiceClassMysql extends ServiceClassDefault {
 }
 
+/**
+ * A class used for testing the backend compiler passes.
+ */
 class ServiceClassMariaDb extends ServiceClassMysql {
 }
 
+/**
+ * A class used for testing the backend compiler passes.
+ */
 class ServiceClassSqlite extends ServiceClassDefault {
 }
 
+/**
+ * A class used for testing the backend compiler passes.
+ */
 class ServiceClassDriverTestMysql extends ServiceClassDefault {
 }

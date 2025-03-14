@@ -18,6 +18,7 @@ use Drupal\link\Plugin\Field\FieldType\LinkItem;
 use Drupal\user\EntityOwnerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * A service for handling import of content.
@@ -45,6 +46,7 @@ final class Importer implements LoggerAwareInterface {
     private readonly FileSystemInterface $fileSystem,
     private readonly LanguageManagerInterface $languageManager,
     private readonly EntityRepositoryInterface $entityRepository,
+    private readonly EventDispatcherInterface $eventDispatcher,
   ) {}
 
   /**
@@ -70,6 +72,9 @@ final class Importer implements LoggerAwareInterface {
       return;
     }
 
+    $event = new PreImportEvent($content, $existing);
+    $skip = $this->eventDispatcher->dispatch($event)->getSkipList();
+
     $account = $this->accountSwitcher->switchToAdministrator();
 
     try {
@@ -79,6 +84,19 @@ final class Importer implements LoggerAwareInterface {
         assert(is_string($uuid));
         assert(is_string($entity_type_id));
         assert(is_string($path));
+
+        // The event subscribers asked to skip importing this entity. If they
+        // explained why, log that.
+        if (array_key_exists($uuid, $skip)) {
+          if ($skip[$uuid]) {
+            $this->logger?->info('Skipped importing @entity_type @uuid because: %reason', [
+              '@entity_type' => $entity_type_id,
+              '@uuid' => $uuid,
+              '%reason' => $skip[$uuid],
+            ]);
+          }
+          continue;
+        }
 
         $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
         /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type */
@@ -350,12 +368,11 @@ final class Importer implements LoggerAwareInterface {
   private function verifyNormalizedLanguage(array $data): array {
     $default_langcode = $data['_meta']['default_langcode'];
     $default_language = $this->languageManager->getDefaultLanguage();
-    // Check the language. If the default language isn't known, import as one
-    // of the available translations if one exists with those values. If none
-    // exists, create the entity in the default language.
-    // During the installer, when installing with an alternative language,
-    // `en` is still the default when modules are installed so check the default language
-    // instead.
+    // Check the language. If the default language isn't known, import as one of
+    // the available translations if one exists with those values. If none
+    // exists, create the entity in the default language. During the installer,
+    // when installing with an alternative language, `en` is still the default
+    // when modules are installed so check the default language instead.
     if (!$this->languageManager->getLanguage($default_langcode) || (InstallerKernel::installationAttempted() && $default_language->getId() !== $default_langcode)) {
       $use_default = TRUE;
       foreach ($data['translations'] ?? [] as $langcode => $translation_data) {
