@@ -118,12 +118,7 @@ class UpdateRequirements {
       // strings together in a single paragraph.
       $requirement['description'][] = ['#markup' => _update_message_text($type, $status)];
       if (!in_array($status, [UpdateFetcherInterface::UNKNOWN, UpdateFetcherInterface::NOT_CHECKED, UpdateFetcherInterface::NOT_FETCHED, UpdateFetcherInterface::FETCH_PENDING])) {
-        if (_update_manager_access()) {
-          $requirement['description'][] = ['#prefix' => ' ', '#markup' => $this->t('See the <a href=":available_updates">available updates</a> page for more information and to update your software.', [':available_updates' => Url::fromRoute('update.report_update')->toString()])];
-        }
-        else {
-          $requirement['description'][] = ['#prefix' => ' ', '#markup' => $this->t('See the <a href=":available_updates">available updates</a> page for more information.', [':available_updates' => Url::fromRoute('update.status')->toString()])];
-        }
+        $requirement['description'][] = ['#prefix' => ' ', '#markup' => $this->t('See the <a href=":available_updates">available updates</a> page for more information.', [':available_updates' => Url::fromRoute('update.status')->toString()])];
       }
     }
     switch ($status) {
@@ -158,7 +153,7 @@ class UpdateRequirements {
     if ($status != UpdateManagerInterface::CURRENT && $type == 'core' && isset($project['recommended'])) {
       $requirement_label .= ' ' . $this->t('(version @version available)', ['@version' => $project['recommended']]);
     }
-    $requirement['value'] = Link::fromTextAndUrl($requirement_label, Url::fromRoute(_update_manager_access() ? 'update.report_update' : 'update.status'))->toString();
+    $requirement['value'] = Link::fromTextAndUrl($requirement_label, Url::fromRoute('update.status'))->toString();
     return $requirement;
   }
 
