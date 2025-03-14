@@ -7,7 +7,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\HookCollector;
-use Drupal\Core\Hook\OrderOperation\OrderOperationInterface;
+use Drupal\Core\Hook\OrderOperation\OrderOperation;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -105,7 +105,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @param array<string, list<string>> $groupIncludes
    *   Lists of *.inc file paths that contain procedural implementations, keyed
    *   by hook name.
-   * @param ?string $serialized_ordering_rules
+   * @param array<string, list<string>> $packedOrderOperations
    *   Ordering rules by hook name, serialized.
    *
    * @see \Drupal\Core\DrupalKernel
@@ -117,16 +117,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     protected EventDispatcherInterface $eventDispatcher,
     protected array $hookImplementationsMap,
     protected array $groupIncludes = [],
-    ?string $serialized_ordering_rules = NULL,
+    protected array $packedOrderOperations = [],
   ) {
-    if ($serialized_ordering_rules !== NULL) {
-      $this->orderingRules = unserialize($serialized_ordering_rules);
-      foreach ($this->orderingRules as $rules) {
-        foreach ($rules as $rule) {
-          assert($rule instanceof OrderOperationInterface);
-        }
-      }
-    }
     $this->root = $root;
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
@@ -525,7 +517,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     }
     $identifiers = array_keys($listeners_by_identifier);
     foreach ([$main_hook, ...$extra_hooks] as $hook) {
-      foreach ($this->orderingRules[$hook] ?? [] as $rule) {
+      foreach ($this->getHookOrderingRules($hook) as $rule) {
         $rule->apply($identifiers, $modules_by_identifier);
         assert($identifiers === array_unique($identifiers));
         $identifiers = array_values($identifiers);
@@ -549,6 +541,22 @@ class ModuleHandler implements ModuleHandlerInterface {
     return array_map(
       fn (string $identifier) => $listeners_by_identifier[$identifier],
       $identifiers,
+    );
+  }
+
+  /**
+   * Gets ordering rules for a hook.
+   *
+   * @param string $hook
+   *   Hook name.
+   *
+   * @return list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface>
+   *   List of order operations for the hook.
+   */
+  protected function getHookOrderingRules(string $hook): array {
+    return $this->orderingRules[$hook] ??= array_map(
+      OrderOperation::unpack(...),
+      $this->packedOrderOperations[$hook] ?? [],
     );
   }
 

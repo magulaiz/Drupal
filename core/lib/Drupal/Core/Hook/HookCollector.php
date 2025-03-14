@@ -14,6 +14,7 @@ use Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter;
 use Drupal\Core\Hook\Attribute\RemoveHook;
 use Drupal\Core\Hook\Attribute\ReOrderHook;
 use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+use Drupal\Core\Hook\OrderOperation\OrderOperation;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -137,7 +138,16 @@ class HookCollector {
     // Update the module handler definition.
     $definition = $container->getDefinition('module_handler');
     $definition->setArgument('$groupIncludes', $groupIncludes);
-    $definition->setArgument('$serialized_ordering_rules', serialize($this->getOrderOperations()));
+
+    $packed_order_operations = [];
+    $order_operations = $this->getOrderOperations();
+    foreach (preg_grep('@_alter$@', array_keys($order_operations)) as $alter_hook) {
+      $packed_order_operations[$alter_hook] = array_map(
+        OrderOperation::pack(...),
+        $order_operations[$alter_hook],
+      );
+    }
+    $definition->setArgument('$packedOrderOperations', $packed_order_operations);
   }
 
   /**
