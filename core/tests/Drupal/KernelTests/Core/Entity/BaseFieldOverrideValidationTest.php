@@ -26,6 +26,7 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
    */
   protected static array $propertiesWithOptionalValues = [
     'default_value',
+    'default_value_callback',
     'description',
   ];
 
