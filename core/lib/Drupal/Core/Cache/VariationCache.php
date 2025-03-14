@@ -311,24 +311,36 @@ class VariationCache implements VariationCacheInterface {
     // during a single request, but better safe than sorry.
     if (isset($this->redirectChainCache[$cid])) {
       if ($this->redirectChainIsValid($keys, $this->redirectChainCache[$cid])) {
-        return $this->redirectChainCache[$cid];
+        $chain = $this->redirectChainCache[$cid];
       }
     }
 
-    $chain[$cid] = $result = $this->cacheBackend->get($cid);
+    // Initiate the chain if we couldn't retrieve (a partial) one from memory.
+    // If we did find one, we continue our search from the last redirect in the
+    // chain in case we had a cache hit before, or we take the FALSE at the end
+    // of the chain from a previous cache miss, bypassing the while loop below.
+    if (empty($chain)) {
+      $chain[$cid] = $result = $this->cacheBackend->get($cid);
+    }
+    else {
+      $result = end($chain);
+    }
 
     while ($result && $result->data instanceof CacheRedirect) {
       $cid = $this->createCacheIdFast($keys, $result->data);
       $chain[$cid] = $result = $this->cacheBackend->get($cid);
     }
 
-    $chain[$cid] = $result;
-    if ($result === FALSE) {
-      $this->redirectChainCache[$initial_cid] = $chain;
+    // When storing the redirect chain in memory we must take care to not store
+    // a cache hit as they can be invalidated, unlike CacheRedirect objects. We
+    // do store the rest of the chain because redirects can be reused safely.
+    $chain_to_cache = $chain;
+    if ($result !== FALSE) {
+      array_pop($chain_to_cache);
     }
+    $this->redirectChainCache[$initial_cid] = $chain_to_cache;
 
     return $chain;
-
   }
 
   /**
