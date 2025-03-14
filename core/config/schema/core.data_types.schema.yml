@@ -593,6 +593,7 @@ field_config_base:
           type:
             - 'callable'
             - 'string'
+            - 'null'
     settings:
       type: field.field_settings.[%parent.field_type]
       # @todo Constraints on each of the field type-specific settings config
