@@ -5,9 +5,10 @@ namespace Drupal\path\Plugin\Field\FieldType;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -65,12 +66,20 @@ class PathItem extends FieldItemBase {
    */
   public function postSave($update) {
     $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
-    $entity = $this->getEntity();
 
     // If specified, rely on the langcode property for the language, so that the
     // existing language of an alias can be kept. That could for example be
     // unspecified even if the field/entity has a specific langcode.
     $alias_langcode = ($this->langcode && $this->pid) ? $this->langcode : $this->getLangcode();
+
+    $entity = $this->getEntity();
+    $moduleHandler = \Drupal::service('module_handler');
+    if ($moduleHandler->moduleExists('content_translation') && !$moduleHandler->moduleExists('workspaces')) {
+      // If either entity or the path field is non-translatable, use 'und'.
+      if (!$entity->isTranslatable() || !$this->getFieldDefinition()->isTranslatable()) {
+        $alias_langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+      }
+    }
 
     // If we have an alias, we need to create or update a path alias entity.
     if ($this->alias) {
@@ -107,7 +116,7 @@ class PathItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition): array {
     $random = new Random();
     $values['alias'] = '/' . str_replace(' ', '-', strtolower($random->sentences(3)));
     return $values;
@@ -116,7 +125,7 @@ class PathItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function mainPropertyName() {
+  public static function mainPropertyName(): string {
     return 'alias';
   }
 
