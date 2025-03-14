@@ -39,8 +39,8 @@ class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidat
     /**
      * We cannot check this constraint if the field storage does not exist.
      */
-    $fieldStorageConfig  = $this->entityTypeManager->getStorage('field_storage_config')
-      ->load('' . $constraint->entityType . '.' . $constraint->fieldName);
+    $fieldStorageConfig = $this->entityTypeManager->getStorage('field_storage_config')
+      ->load($constraint->entityType . '.' . $constraint->fieldName);
     if ($fieldStorageConfig === NULL) {
       return;
     }
