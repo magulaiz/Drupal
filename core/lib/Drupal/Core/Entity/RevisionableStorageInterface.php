@@ -85,7 +85,7 @@ interface RevisionableStorageInterface extends EntityStorageInterface {
    * If a revision ID denotes a default revision then the corresponding entity
    * will be invalidated in the entity static and persistent caches, as well.
    *
-   * @param $revision_ids
+   * @param int[]|string[] $revision_ids
    *   The entity revision IDs to reset the static and persistent revision
    *   caches for.
    */

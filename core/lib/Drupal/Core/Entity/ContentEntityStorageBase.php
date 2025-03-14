@@ -1438,7 +1438,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * Additionally the revisions of the entities will be invalidated in the
    * static and persistent revision caches.
    *
-   * @param $id
+   * @param string|int $id
    *   (optional) If specified, the cache is reset for the entities with the
    *   given id only.
    */

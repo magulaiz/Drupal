@@ -8,9 +8,7 @@ use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFieldManager;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
@@ -19,6 +17,7 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\Core\Entity\ContentEntityBaseMockableClass;
 use Drupal\Tests\Core\Entity\StubEntityBase;
+use Drupal\Tests\Core\Entity\StubRevisionableEntity;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
@@ -1283,9 +1282,9 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->setUpModuleHandlerNoImplementations();
 
     $id = 1;
-    $entity = $this->getMockBuilder(StubEntityBase::class)
+    $entity = $this->getMockBuilder(StubRevisionableEntity::class)
       ->disableOriginalConstructor()
-      ->onlyMethods(['id'])
+      ->onlyMethods(['id', 'isDefaultRevision'])
       ->getMock();
     $entity->expects($this->any())
       ->method('id')
@@ -1472,19 +1471,3 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   }
 
 }
-<<<<<<< HEAD
-=======
-
-/**
- * Provides an entity with dummy implementations of static methods.
- */
-abstract class SqlContentEntityStorageTestEntityInterface implements \IteratorAggregate, ContentEntityInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function postLoad(EntityStorageInterface $storage, array &$entities) {
-  }
-
-}
->>>>>>> fd1c0e66bb2 (Use static and persistent entity cache for ContentEntityStorageBase::loadRevision.)
