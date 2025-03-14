@@ -56,7 +56,7 @@ class ComponentNodeVisitor implements NodeVisitorInterface {
     $emoji = static::emojiForString($component_id);
     if ($env->isDebug()) {
       $print_nodes[] = new PrintNode(new ConstantExpression(sprintf('<!-- %s Component start: %s -->', $emoji, $component_id), $line), $line);
-      if (!empty($component->metadata->variants)) {
+      if (!empty($component->metadata->variantDefinitions)) {
         $print_nodes[] = new PrintNode(new ConstantExpression(sprintf('<!--     with variant: "'), $line), $line);
         $print_nodes[] = new PrintNode(new ContextVariable('variant', $line), $line);
         $print_nodes[] = new PrintNode(new ConstantExpression('" -->', $line), $line);

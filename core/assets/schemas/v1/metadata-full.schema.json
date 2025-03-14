@@ -32,7 +32,7 @@
         "^[a-zA-Z0-9_-]$": {
           "type": "object",
           "properties": {
-            "title": {
+            "label": {
               "type": "string",
               "title": "Title"
             },
@@ -162,7 +162,7 @@
     "slots": {
       "$ref": "metadata.schema.json#/$defs/slotDefinition"
     },
-    "variants": {
+    "variantDefinitions": {
       "$ref": "metadata.schema.json#/$defs/variantDefinition"
     },
     "template": {
