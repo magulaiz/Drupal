@@ -13,6 +13,7 @@ use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\Tests\comment\Traits\CommentCreationTrait;
 use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -25,6 +26,7 @@ use Drupal\user\RoleInterface;
  */
 class CommentFieldAccessTest extends EntityKernelTestBase {
 
+  use CommentCreationTrait;
   use CommentTestTrait;
   use GeneratePermutationsTrait;
 
@@ -350,6 +352,58 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       $may_view = $set['comment']->mail->access('view', $set['user']);
       $this->assertEquals($may_view, $set['user']->hasPermission('administer comments'));
     }
+  }
+
+  /**
+   * Tests the comment field item list 'view comment list' access.
+   */
+  public function testFieldViewOnlyOperationAccess(): void {
+    // Create a comment type and attach a comment field to entity_test.
+    $this->createCommentType('entity_test');
+    $this->addDefaultCommentField('entity_test', 'entity_test', 'comment');
+
+    // Create a testing host entity.
+    $host = EntityTest::create();
+    $host->save();
+
+    // Enable comment statistics creation.
+    $this->container->get('state')->set('comment.maintain_entity_statistics', TRUE);
+
+    // An initial published comment.
+    $enabled = $this->createComment([
+      'entity_type' => 'entity_test',
+      'entity_id' => $host->id(),
+    ]);
+
+    // The last comment is disabled.
+    $this->createComment([
+      'entity_type' => 'entity_test',
+      'entity_id' => $host->id(),
+      'status' => FALSE,
+    ]);
+
+    $account = $this->createUser(['access comments', 'view test entity']);
+
+    // Reload the entity.
+    $host = EntityTest::load($host->id());
+    /** @var \Drupal\comment\CommentFieldItemList $comment_field */
+    $comment_field = $host->get('comment');
+
+    // Check that the 'view comment list' access to the field is permitted.
+    $this->assertTrue($comment_field->access('view comment list', $account));
+    // And the last comment is comment statistic is the enabled comment.
+    $this->assertSame($enabled->id(), $comment_field->cid);
+
+    // Delete the published comment. From now on the field contains only
+    // unpublished comments.
+    $enabled->delete();
+
+    // Reload the entity.
+    $host = EntityTest::load($host->id());
+    /** @var \Drupal\comment\CommentFieldItemList $comment_field */
+    $comment_field = $host->get('comment');
+    // Check that the 'view comment list' access to the field is not permitted.
+    $this->assertFalse($comment_field->access('view comment list', $account));
   }
 
 }
