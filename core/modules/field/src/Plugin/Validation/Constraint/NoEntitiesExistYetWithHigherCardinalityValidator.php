@@ -5,12 +5,26 @@ declare(strict_types=1);
 namespace Drupal\field\Plugin\Validation\Constraint;
 
 use Drupal\Core\Config\Schema\TypeResolver;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidator {
+class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidator implements ContainerInjectionInterface {
+
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
+  }
+
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -22,6 +36,15 @@ class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidat
       return;
     }
 
+    /**
+     * We cannot check this constraint if the field storage does not exist.
+     */
+    $fieldStorageConfig  = $this->entityTypeManager->getStorage('field_storage_config')
+      ->load('' . $constraint->entityType . '.' . $constraint->fieldName);
+    if ($fieldStorageConfig === NULL) {
+      return;
+    }
+
     $object = $this->context->getObject();
     assert($object instanceof TypedDataInterface);
 
@@ -29,7 +52,8 @@ class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidat
     $field_name = TypeResolver::resolveExpression($constraint->fieldName, $object);
 
     $max_delta_alias = 'max_delta';
-    $result = \Drupal::entityQueryAggregate($entity_type)
+    $result = $this->entityTypeManager->getStorage($entity_type)
+      ->getAggregateQuery()
       ->accessCheck(FALSE)
       ->aggregate($field_name . '.%delta', 'MAX', NULL, $max_delta_alias)
       ->execute();
