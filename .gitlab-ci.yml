@@ -129,7 +129,7 @@ default:
     - composer install --optimize-autoloader
     - docker-php-ext-enable pcov
   script:
-    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --coverage-text --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml --fail-on-deprecation --fail-on-phpunit-deprecation
+    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=never --testdox --coverage-text --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml --fail-on-deprecation --fail-on-phpunit-deprecation
   coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   artifacts:
     when: always
