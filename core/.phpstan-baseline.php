@@ -6296,9 +6296,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$current_revision_id might not be defined\\.$#',
+	'message' => '#^Variable \\$revision_default_field might not be defined\\.$#',
 	'identifier' => 'variable.undefined',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
 ];
 $ignoreErrors[] = [
