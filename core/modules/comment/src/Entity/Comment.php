@@ -181,6 +181,12 @@ class Comment extends EditorialContentEntityBase implements CommentInterface {
       $this->set('name', NULL);
       $this->set('mail', NULL);
     }
+
+    // If no revision author has been set explicitly, make the comment owner the
+    // revision author.
+    if (!$this->getRevisionUser()) {
+      $this->setRevisionUserId($this->getOwnerId());
+    }
   }
 
   /**

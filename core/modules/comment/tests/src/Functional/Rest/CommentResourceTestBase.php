@@ -314,12 +314,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedCacheContexts() {
-    return [
-      'languages:language_interface',
-      'theme',
-      'url.site',
-      'user',
-    ];
+    return Cache::mergeContexts(['languages:language_interface', 'theme'], parent::getExpectedCacheContexts());
   }
 
   /**

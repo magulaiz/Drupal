@@ -47,7 +47,7 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
 
       case 'update':
         $access_result = AccessResult::allowedIf($account->id() && $account->id() == $entity->getOwnerId() && $entity->isPublished() && $account->hasPermission('edit own comments'))
-          ->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
+          ->cachePerPermissions()->addCacheableDependency($entity);
         if (!$access_result->isAllowed()) {
           $access_result->setReason("The 'edit own comments' permission is required, the user must be the comment author, and the comment must be published.");
         }
