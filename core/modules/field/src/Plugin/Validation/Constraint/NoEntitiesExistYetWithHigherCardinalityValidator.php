@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\field\Plugin\Validation\Constraint;
 
 use Drupal\Core\Config\Schema\TypeResolver;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -16,6 +17,10 @@ class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidat
    */
   public function validate(mixed $cardinality, SymfonyConstraint $constraint): void {
     assert($constraint instanceof NoEntitiesExistYetWithHigherCardinality);
+
+    if ($cardinality === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
+      return;
+    }
 
     $object = $this->context->getObject();
     assert($object instanceof TypedDataInterface);

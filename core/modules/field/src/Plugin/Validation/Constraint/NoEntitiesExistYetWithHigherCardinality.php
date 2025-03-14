@@ -22,7 +22,7 @@ class NoEntitiesExistYetWithHigherCardinality extends SymfonyConstraint {
    *
    * @var string
    */
-  public string $message = "The field '@field_name' of entity type '@entity_type' has more entries (@max_delta) than the new cardinality (@cardinality) allows.";
+  public string $message = "The field '@field_name' of entity type '@entity_type' has more entries (@max_delta) than the cardinality (@cardinality) allows.";
   /**
    * The entity type to check.
    *
