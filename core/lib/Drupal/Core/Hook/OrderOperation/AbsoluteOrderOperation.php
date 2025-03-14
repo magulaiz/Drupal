@@ -23,6 +23,13 @@ class AbsoluteOrderOperation implements OrderOperationInterface {
   /**
    * {@inheritdoc}
    */
+  public function pack(): array {
+    return get_object_vars($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function apply(array &$identifiers, array $module_finder): void {
     $index = array_search($this->identifier, $identifiers);
     if ($index === FALSE) {

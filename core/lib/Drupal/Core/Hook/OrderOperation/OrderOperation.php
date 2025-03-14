@@ -13,8 +13,8 @@ namespace Drupal\Core\Hook\OrderOperation;
 class OrderOperation {
 
   const array KNOWN_CLASSES = [
-    AbsoluteOrderOperation::class,
-    RelativeOrderOperation::class,
+    'absolute' => AbsoluteOrderOperation::class,
+    'relative' => RelativeOrderOperation::class,
   ];
 
   /**
@@ -23,27 +23,29 @@ class OrderOperation {
    * @param \Drupal\Core\Hook\OrderOperation\OrderOperationInterface $operation
    *   Order operation object.
    *
-   * @return string
-   *   Serialized object.
+   * @return array
+   *   Packed operation.
    */
-  public static function pack(OrderOperationInterface $operation): string {
-    if (!in_array(get_class($operation), static::KNOWN_CLASSES)) {
-      throw new \InvalidArgumentException('Unsupported order operation class ' . get_class($operation));
-    }
-    return serialize($operation);
+  public static function pack(OrderOperationInterface $operation): array {
+    $type = array_search(get_class($operation), static::KNOWN_CLASSES)
+      ?: throw new \InvalidArgumentException('Unsupported order operation class ' . get_class($operation));
+    return [$type, $operation->pack()];
   }
 
   /**
    * Unserializes an order operation object.
    *
-   * @param string $serialized_operation
-   *   Serialized operation.
+   * @param array $packed_operation
+   *   Packed operation.
    *
    * @return \Drupal\Core\Hook\OrderOperation\OrderOperationInterface
-   *   Unserialized operation.
+   *   Unpacked operation.
    */
-  public static function unpack(string $serialized_operation): OrderOperationInterface {
-    return unserialize($serialized_operation, ['allowed_classes' => static::KNOWN_CLASSES]);
+  public static function unpack(array $packed_operation): OrderOperationInterface {
+    [$type, $args] = $packed_operation;
+    $class = static::KNOWN_CLASSES[$type]
+      ?? throw new \InvalidArgumentException('Unsupported order operation type ' . $type);
+    return new $class(...$args);
   }
 
 }
