@@ -68,8 +68,8 @@ class FormTestClickedButtonForm extends FormBase {
         else {
           $form[$name]['#value'] = $name;
         }
-
-        // Check if the argument contains "r" to restrict access.
+        // 'r' for restricted, so we can test that button click detection code
+        // correctly takes #access security into account.
         if (str_contains($arg, 'r')) {
           $form[$name]['#access'] = FALSE;
         }
