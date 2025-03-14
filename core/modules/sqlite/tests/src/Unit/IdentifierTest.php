@@ -17,13 +17,14 @@ use Drupal\Tests\UnitTestCase;
  */
 class IdentifierTest extends UnitTestCase {
 
+  // cSpell:disable
+
   /**
    * Data provider for testTable.
    *
    * @return array
    *   An associative array of test case data.
    */
-  // cSpell:disable
   public static function providerTable(): array {
     return [
       'No prefix' => [
@@ -143,6 +144,7 @@ class IdentifierTest extends UnitTestCase {
       ],
     ];
   }
+
   // cSpell:enable
 
   /**
