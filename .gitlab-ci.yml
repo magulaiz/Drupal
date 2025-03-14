@@ -534,8 +534,18 @@ default:
     CONCURRENCY: 24
     _TARGET_PHP: "8.4-ubuntu"
 
+'⚡️ PHPUnit Unit tests on PHP 8.5':
+  <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
+  allow_failure: true
+  variables:
+    TESTSUITE: PHPUnit-Unit
+    KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: 24
+    _TARGET_PHP: "8.5-ubuntu"
+
 '⚡️ Component unit tests on PHP 8.3':
   <<: [ *default-job-settings-lint, *default-component-unit-test-job-settings ]
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
   variables:
     KUBERNETES_CPU_REQUEST: "8"
     _TARGET_PHP: "8.3-ubuntu"
