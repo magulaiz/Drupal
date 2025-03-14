@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\Theme;
 
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Component\Render\MarkupInterface;
 
@@ -17,7 +18,7 @@ class ThemeTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['theme_test', 'node', 'system'];
+  protected static $modules = ['theme_test', 'node', 'system', 'entity_test', 'user'];
 
   /**
    * {@inheritdoc}
@@ -206,6 +207,74 @@ class ThemeTest extends KernelTestBase {
     // Ensure the removed post update function has been removed from the list of
     // existing updates.
     $this->assertNotContains('test_theme_depending_on_modules_post_update_foo', \Drupal::service('keyvalue')->get('post_update')->get('existing_updates'));
+  }
+
+  /**
+   * Tests theme suggestions for a field element.
+   *
+   * @dataProvider providerThemeSuggestionsField
+   */
+  public function testThemeSuggestionsField(string|array $display_options, array $expected_suggestions): void {
+    $entity = EntityTest::create(['name' => 'Test entity']);
+    $variables['element'] = $entity->get('name')->view($display_options);
+    $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_field', [$variables]);
+    $this->assertSame($expected_suggestions, $suggestions);
+  }
+
+  /**
+   * Provider for testThemeSuggestionsField()
+   */
+  public static function providerThemeSuggestionsField(): array {
+    return [
+      [
+        'default',
+        [
+          'field__string',
+          'field__name',
+          'field__default',
+          'field__default__entity_test',
+          'field__default__name',
+          'field__entity_test__entity_test',
+          'field__entity_test__name',
+          'field__entity_test__name__entity_test',
+          'field__entity_test__default__entity_test',
+          'field__entity_test__default__name',
+          'field__entity_test__default__name__entity_test',
+        ],
+      ],
+      [
+        'other_view_mode',
+        [
+          'field__string',
+          'field__name',
+          'field__other_view_mode',
+          'field__other_view_mode__entity_test',
+          'field__other_view_mode__name',
+          'field__entity_test__entity_test',
+          'field__entity_test__name',
+          'field__entity_test__name__entity_test',
+          'field__entity_test__other_view_mode__entity_test',
+          'field__entity_test__other_view_mode__name',
+          'field__entity_test__other_view_mode__name__entity_test',
+        ],
+      ],
+      [
+        [],
+        [
+          'field__string',
+          'field__name',
+          'field___custom',
+          'field___custom__entity_test',
+          'field___custom__name',
+          'field__entity_test__entity_test',
+          'field__entity_test__name',
+          'field__entity_test__name__entity_test',
+          'field__entity_test___custom__entity_test',
+          'field__entity_test___custom__name',
+          'field__entity_test___custom__name__entity_test',
+        ],
+      ],
+    ];
   }
 
 }
