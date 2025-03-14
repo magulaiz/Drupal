@@ -1939,6 +1939,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           ],
         );
 
+        $current_revision_id = NULL;
         $non_revisionable_non_translatable_field_data = [];
         $non_revisionable_translatable_field_data = [];
         if (isset($entity_data->{$this->jsonStorageCurrentRevisionTable})) {
@@ -2031,10 +2032,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $new_all_revisions_data = array_reverse($new_all_revisions_data);
 
         // The latest revision does not need to be the same as the current
-        // revision. Therefore update the
+        // revision.
         $new_latest_revision_data = [];
         if (isset($entity_data->{$this->jsonStorageLatestRevisionTable})) {
-          $latest_revision_data = (array)$entity_data->{$this->jsonStorageLatestRevisionTable};
+          $latest_revision_data = (array) $entity_data->{$this->jsonStorageLatestRevisionTable};
           $latest_revision_data = array_reverse($latest_revision_data);
           foreach ($latest_revision_data as $revision) {
             // Update the values of non-revisionable non-translatable fields
