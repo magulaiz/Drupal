@@ -86,7 +86,6 @@ class VariationCache implements VariationCacheInterface {
       foreach ($this->cacheBackend->getMultiple($fetch_cids) as $cid => $result) {
         $info = $cid_map[$cid];
 
-
         // Add redirects to the next CID map, so the next iteration can look
         // them all up in one ::getMultiple() call to the cache backend.
         if ($result->data instanceof CacheRedirect) {
