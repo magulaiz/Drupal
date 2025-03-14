@@ -1243,7 +1243,15 @@ class EntityResource {
    */
   protected function entityExists(EntityInterface $entity) {
     $entity_storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
-    return !empty($entity_storage->loadByProperties([
+
+    $return = FALSE;
+    if ($entity instanceof ConfigEntityInterface) {
+      $return = !empty($entity_storage->loadByProperties([
+        'id' => $entity->id(),
+      ]));
+    }
+
+    return $return || !empty($entity_storage->loadByProperties([
       'uuid' => $entity->uuid(),
     ]));
   }
