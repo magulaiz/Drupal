@@ -414,7 +414,7 @@ class VariationCache implements VariationCacheInterface {
    *
    * This is only used by tests.
    */
-  public function reset() {
+  public function reset(): void {
     $this->redirectChainCache = [];
   }
 
