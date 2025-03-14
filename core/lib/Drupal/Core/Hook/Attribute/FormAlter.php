@@ -25,7 +25,8 @@ class FormAlter extends Hook {
    * Constructs a FormAlter attribute object.
    *
    * @param string $form_id
-   *   The ID of the form that this implementation alters.
+   *   (optional) The ID of the form that this implementation alters.
+   *   If this is left blank then `form_alter` is the hook that is registered.
    * @param string $method
    *   (optional) The method name. If this attribute is on a method, this
    *   parameter is not required. If this attribute is on a class and this

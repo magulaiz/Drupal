@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\comment\Hook;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\FormAlter;
 
 /**
- * Hook implementations for comment.
+ * Form hook implementations for Comment.
  */
 class CommentFormAlterHooks {
 
