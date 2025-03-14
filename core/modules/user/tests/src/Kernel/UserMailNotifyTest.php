@@ -194,6 +194,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     $config = $this->config('system.site');
     $config->set('langcode', 'en');
     // Use a name that could trigger HTML entity replacements.
+    // cspell:ignore L'Equipe de l'Agriculture
     $config->set('name', "L'Equipe de l'Agriculture")->save();
 
     $hooks = new UserHooks();
