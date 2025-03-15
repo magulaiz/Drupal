@@ -20,21 +20,19 @@ module.exports = {
             requestParams.request.headers['X-Requested-With'] ===
             'XMLHttpRequest'
           ) {
-            const searchParams = URL.parse(
-              requestParams.request.url,
-            ).searchParams;
+            const url = new URL(requestParams.request.url);
             browser.assert.strictEqual(
-              searchParams.getAll('title').length,
+              url.searchParams.getAll('title').length,
               1,
               'Duplicate title parameter',
             );
             browser.assert.strictEqual(
-              searchParams.getAll('type').length,
+              url.searchParams.getAll('type').length,
               1,
               'Duplicate type parameter',
             );
             browser.assert.strictEqual(
-              searchParams.getAll('status').length,
+              url.searchParams.getAll('status').length,
               1,
               'Duplicate status parameter',
             );
