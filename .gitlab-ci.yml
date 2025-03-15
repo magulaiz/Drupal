@@ -135,10 +135,10 @@ default:
     expire_in: 6 mos
     reports:
       junit: junit.xml
+      metrics: component-coverage-metrics.txt
       coverage_report:
         coverage_format: cobertura
         path: component-coverage-cobertura.xml
-        metrics: component-coverage-metrics.txt
     paths:
       - junit.xml
       - component-coverage*
