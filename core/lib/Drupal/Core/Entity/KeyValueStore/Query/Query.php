@@ -65,9 +65,12 @@ class Query extends QueryBase {
       return count($result);
     }
 
-    // Create the expected structure of entity_id => entity_id.
-    $entity_ids = array_keys($result);
-    return array_combine($entity_ids, $entity_ids);
+    // Create the expected structure of entity_id => value.
+    $value_field = $this->entityType->getKey($this->key);
+    return array_map(
+      fn(array $row): string => (string) $row[$value_field][0]['value'],
+      $result,
+    );
   }
 
 }
