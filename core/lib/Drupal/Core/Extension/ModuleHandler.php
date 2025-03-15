@@ -525,18 +525,6 @@ class ModuleHandler implements ModuleHandlerInterface {
         $identifiers = array_values($identifiers);
         assert(!array_diff($identifiers, array_keys($modules_by_identifier)));
         assert(!array_diff(array_keys($modules_by_identifier), $identifiers));
-        $lost_identifiers = array_diff(array_keys($modules_by_identifier), $identifiers);
-        assert(!$lost_identifiers, sprintf(
-          "Lost identifiers for\n%s:\n%s",
-          var_export($rule, TRUE),
-          json_encode($lost_identifiers),
-        ));
-        $added_identifiers = array_diff($identifiers, array_keys($modules_by_identifier));
-        assert(!$added_identifiers, sprintf(
-          'Added identifiers for\n%s:\n%s',
-          var_export($rule, TRUE),
-          json_encode($added_identifiers),
-        ));
       }
     }
     $identifiers = array_values(array_unique($identifiers));
