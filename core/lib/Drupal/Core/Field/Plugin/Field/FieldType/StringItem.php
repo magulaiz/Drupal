@@ -66,6 +66,9 @@ class StringItem extends StringItemBase {
           '%name' => $label,
           '@max' => $max_length,
         ]);
+        if ($this->getFieldDefinition()->getSetting('is_ascii') === TRUE) {
+          $length_constraint_config['charset'] = 'ASCII';
+        }
       }
       $constraints[] = $constraint_manager->create('ComplexData', [
         'value' => [
