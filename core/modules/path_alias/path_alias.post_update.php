@@ -5,9 +5,9 @@
  * Post update functions for Path Alias.
  */
 
-use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Implements hook_removed_post_updates().
  */
@@ -28,7 +28,7 @@ function path_alias_post_update_update_path_alias_revision_indexes(): void {
 }
 
 /**
- * Update entity definitions, necessary if notices appear on site status page.
+ * Update entity definitions for Path Alias to make it revisionable.
  */
 function path_alias_post_update_entity_updates(&$sandbox = []): void {
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
