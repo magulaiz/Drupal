@@ -21,16 +21,16 @@ if (empty($report)) {
 // Dump the report to STDOUT, with colors, for humans.
 echo $report;
 
-// Remove ANSI color codes.
+// Remove ANSI color codes and replace the file.
 $output = preg_replace('/\x1b\[\d+(?:;\d+)*m/', '', $report);
 file_put_contents($reportFilePath, $output);
 
 // Find and report the metrics.
 foreach (explode("\n", $output) as $line) {
-  preg_match('/^\s*(Classes|Methods|Lines):\s+(\d+\.\d+%\s*\([\d\/]*\))\s*$/', $line, $m);
+  preg_match('/^\s*(Classes|Methods|Lines):\s+(\d+\.\d+%\s*\([\d\/\s]*\))\s*$/', $line, $m);
   if (!empty($m)) {
     $metric = strtolower($m[1]);
-    $metricValue = $m[2];
+    $metricValue = str_replace(' ', '·', $m[2]);
     file_put_contents($metricsFilePath, "component.coverage.{$metric} {$metricValue}\n", \FILE_APPEND);
   }
 }
