@@ -508,13 +508,11 @@ class ModuleHandler implements ModuleHandlerInterface {
         $identifier = is_array($listener)
           ? get_class($listener[0]) . '::' . $listener[1]
           : ProceduralCall::class . '::' . $listener;
-        if (isset($listeners_by_identifier[$identifier])) {
-          throw new \LogicException(sprintf(
-            'The hook implementation %s is registered for more than one hook. This is not allowed for hooks that are called together, in this case %s.',
-            $identifier,
-            json_encode([$main_hook, ...$extra_hooks])));
-        }
         $listeners_by_identifier[$identifier] = $listener;
+        if (isset($modules_by_identifier[$identifier]) && $modules_by_identifier[$identifier] !== $module) {
+          $other_module = $modules_by_identifier[$identifier];
+          throw new \LogicException("$identifier defines two hooks which belongs to two different modules: $module and $other_module, this is not supported for ModuleHandler::alter() called with these two hooks.");
+        }
         $modules_by_identifier[$identifier] = $module;
         $identifiers[] = $identifier;
       }
