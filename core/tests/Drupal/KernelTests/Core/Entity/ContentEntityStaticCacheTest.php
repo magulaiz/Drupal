@@ -50,7 +50,7 @@ class ContentEntityStaticCacheTest extends KernelTestBase {
   /**
    * Tests the static cache when loading content entities.
    */
-  public function testEntityLoad() {
+  public function testEntityLoad(): void {
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
     $entity_type_manager = $this->container->get('entity_type.manager');
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
@@ -105,7 +105,7 @@ class ContentEntityStaticCacheTest extends KernelTestBase {
   /**
    * Tests that on loading unchanged entity a new object reference is returned.
    */
-  public function testLoadUnchanged() {
+  public function testLoadUnchanged(): void {
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
     $entity_type_manager = $this->container->get('entity_type.manager');
 
@@ -131,7 +131,7 @@ class ContentEntityStaticCacheTest extends KernelTestBase {
    * @param string $entity_type_id
    *   The entity type ID to test Storage::loadUnchanged() with.
    */
-  protected function doTestLoadUnchanged($entity_type_id) {
+  protected function doTestLoadUnchanged($entity_type_id): void {
     foreach ([FALSE, TRUE] as $invalidate_entity_cache) {
       /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
       $entity_type_manager = $this->container->get('entity_type.manager');
@@ -182,7 +182,7 @@ class ContentEntityStaticCacheTest extends KernelTestBase {
   /**
    * Tests loading a cached revision after a non-rev field has been changed.
    */
-  public function testCacheNonRevField() {
+  public function testCacheNonRevField(): void {
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
     $entity_type_manager = $this->container->get('entity_type.manager');
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
@@ -241,7 +241,7 @@ class ContentEntityStaticCacheTest extends KernelTestBase {
   /**
    * Tests deleting an entity or an entity revision.
    */
-  public function testDelete() {
+  public function testDelete(): void {
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
     $entity_type_manager = $this->container->get('entity_type.manager');
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
@@ -283,7 +283,7 @@ class ContentEntityStaticCacheTest extends KernelTestBase {
   /**
    * Test swapping revisions in hook_entity_preload().
    */
-  public function testNonDefaultRevision() {
+  public function testNonDefaultRevision(): void {
     \Drupal::state()->set('enable_hook', TRUE);
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage($this->revEntityTypeId);

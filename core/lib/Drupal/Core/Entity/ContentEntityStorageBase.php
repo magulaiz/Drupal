@@ -917,7 +917,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   /**
    * {@inheritdoc}
    */
-  protected function doResetCacheOnSave(EntityInterface $entity) {
+  protected function doResetCacheOnSave(EntityInterface $entity): void {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
 
     // Tentatively set the flag for ::resetCache() to skip invalidating all
@@ -1546,7 +1546,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   /**
    * {@inheritdoc}
    */
-  public function resetRevisionCache(array $revision_ids) {
+  public function resetRevisionCache(array $revision_ids): void {
     $cache_ids = array_map(function ($revision_id) {
       return $this->buildCacheId($revision_id, TRUE);
     }, $revision_ids);

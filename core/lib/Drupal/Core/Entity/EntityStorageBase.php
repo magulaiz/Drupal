@@ -564,7 +564,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The saved entity.
    */
-  protected function doResetCacheOnSave(EntityInterface $entity) {
+  protected function doResetCacheOnSave(EntityInterface $entity): void {
     $this->resetCache([$entity->id()]);
   }
 

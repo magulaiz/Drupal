@@ -89,6 +89,6 @@ interface RevisionableStorageInterface extends EntityStorageInterface {
    *   The entity revision IDs to reset the static and persistent revision
    *   caches for.
    */
-  public function resetRevisionCache(array $revision_ids);
+  public function resetRevisionCache(array $revision_ids): void;
 
 }
