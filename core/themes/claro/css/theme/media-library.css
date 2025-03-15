@@ -683,9 +683,8 @@
   bottom: 0;
   display: block;
   overflow: hidden;
-  max-width: calc(100% - 0.625rem);
+  max-width: 100%;
   max-height: calc(100% - 3.125rem);
-  padding: 0.3125rem;
   background: white;
 }
 
