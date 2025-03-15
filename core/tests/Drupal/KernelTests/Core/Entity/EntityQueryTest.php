@@ -205,7 +205,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Test querying for field with a key different from 'id'.
     $query->key('label');
-    $this->queryResults = (clone $query)->execute();
+    $this->queryResults = (clone $query)->condition('langcode', 'tr')->execute();
     $this->assertRevisionResult([5, 7, 13, 15], ['Entity 5 tr', 'Entity 7 tr', 'Entity 13 tr', 'Entity 15 tr']);
     $query->key('uuid');
     $this->queryResults = (clone $query)->execute();
