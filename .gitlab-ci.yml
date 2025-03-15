@@ -130,6 +130,8 @@ default:
     - docker-php-ext-enable pcov
   script:
     - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --coverage-text=component-coverage-report.txt --coverage-cobertura=component-coverage-cobertura.xml --log-junit junit.xml --fail-on-deprecation --fail-on-phpunit-deprecation
+    # Process the coverage text report to produce an OpenMetrics report.
+    - php .gitlab-ci/scripts/component-coverage-metrics.php
   artifacts:
     when: always
     expire_in: 6 mos
