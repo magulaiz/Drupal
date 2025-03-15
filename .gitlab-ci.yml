@@ -129,8 +129,7 @@ default:
     - composer install --optimize-autoloader
     - docker-php-ext-enable pcov
   script:
-    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --coverage-text=coverage.report.txt --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml --fail-on-deprecation --fail-on-phpunit-deprecation
-  coverage: '/Lines:\s*\d+.\d+\%/'
+    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --coverage-text=component-coverage-report.txt --coverage-cobertura=component-coverage-cobertura.xml --log-junit junit.xml --fail-on-deprecation --fail-on-phpunit-deprecation
   artifacts:
     when: always
     expire_in: 6 mos
@@ -138,10 +137,11 @@ default:
       junit: junit.xml
       coverage_report:
         coverage_format: cobertura
-        path: coverage.cobertura.xml
+        path: component-coverage-cobertura.xml
+        metrics: component-coverage-metrics.txt
     paths:
       - junit.xml
-      - coverage.*
+      - component-coverage*
 
 .prepare-lint-directory: &prepare-lint-directory
   # PHPStan and yarn linting use absolute paths to determine cache validity. Because GitLab CI
