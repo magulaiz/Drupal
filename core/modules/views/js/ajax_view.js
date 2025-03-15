@@ -94,7 +94,13 @@
           const [name, value] = param.split('=');
           return (
             this.$exposed_form.find(`input[name="${name}"]`).length === 0 &&
-            name !== 'page'
+            /*
+            Submitting filters should reset paging and sorting
+            because that is what happens without AJAX.
+             */
+            name !== 'page' &&
+            name !== 'sort' &&
+            name !== 'order'
           );
         });
       queryString = encodeURI(params.join('&'));
