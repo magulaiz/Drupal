@@ -46,7 +46,7 @@ abstract readonly class RelativeOrderBase implements OrderInterface {
       $identifier,
       $this->modules,
       array_map(
-        fn(array $class_and_method) => implode('::', $class_and_method),
+        static fn(array $class_and_method) => implode('::', $class_and_method),
         $this->classesAndMethods,
       ),
       $this->isAfter(),

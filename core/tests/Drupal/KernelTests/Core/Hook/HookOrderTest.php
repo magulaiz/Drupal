@@ -399,7 +399,7 @@ class HookOrderTest extends KernelTestBase {
         return '[]';
       }
       $parts = array_map(
-        function (string $call_string) {
+        static function (string $call_string) {
           if (preg_match('@^(\w+\\\\)*(\w+)::(\w+)@', $call_string, $matches)) {
             [,, $class_shortname, $method] = $matches;
             return $class_shortname . '::class . ' . var_export('::' . $method, TRUE);

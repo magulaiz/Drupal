@@ -460,7 +460,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     // quickly.
     if (!isset($this->alterEventListeners[$cid])) {
       $hooks = is_array($type)
-        ? array_map(fn (string $type) => $type . '_alter', $type)
+        ? array_map(static fn (string $type) => $type . '_alter', $type)
         : [$type . '_alter'];
       $this->alterEventListeners[$cid] = $this->getCombinedListeners(...$hooks);
     }
@@ -539,7 +539,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     }
     $identifiers = array_values(array_unique($identifiers));
     return array_map(
-      fn (string $identifier) => $listeners_by_identifier[$identifier],
+      static fn (string $identifier) => $listeners_by_identifier[$identifier],
       $identifiers,
     );
   }

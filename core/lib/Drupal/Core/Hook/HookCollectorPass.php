@@ -30,7 +30,7 @@ class HookCollectorPass implements CompilerPassInterface {
     $parameters = $container->getParameterBag()->all();
     $skip_procedural_modules = array_filter(
       array_keys($module_list),
-      fn (string $module) => !empty($parameters["$module.hooks_converted"]),
+      static fn (string $module) => !empty($parameters["$module.hooks_converted"]),
     );
     $collector = HookCollector::collectAllHookImplementations($module_list, $skip_procedural_modules);
 
