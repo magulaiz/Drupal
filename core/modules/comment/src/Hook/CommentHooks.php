@@ -2,7 +2,9 @@
 
 namespace Drupal\comment\Hook;
 
-use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\comment\CommentStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -27,6 +29,28 @@ use Drupal\Core\Hook\Attribute\Hook;
 class CommentHooks {
 
   use StringTranslationTrait;
+
+  /**
+   * The Comment Storage.
+   *
+   * @var \Drupal\comment\CommentStorageInterface
+   */
+  protected CommentStorageInterface $commentStorage;
+
+  /**
+   * CommentHooks constructor.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
+   */
+  public function __construct(
+    EntityTypeManagerInterface $entityTypeManager,
+    protected ModuleHandlerInterface $moduleHandler,
+  ) {
+    $this->commentStorage = $entityTypeManager->getStorage('comment');
+  }
 
   /**
    * Implements hook_help().
@@ -432,48 +456,33 @@ class CommentHooks {
 
   /**
    * Implements hook_user_cancel().
+   *
+   * Unpublish comments (current revisions).
    */
   #[Hook('user_cancel')]
-  public function userCancel($edit, UserInterface $account, $method): void {
-    switch ($method) {
-      case 'user_cancel_block_unpublish':
-        $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);
-        foreach ($comments as $comment) {
-          $comment->setUnpublished();
-          $comment->save();
-        }
-        break;
-
-      case 'user_cancel_reassign':
-        /** @var \Drupal\comment\CommentInterface[] $comments */
-        $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);
-        foreach ($comments as $comment) {
-          $langcodes = array_keys($comment->getTranslationLanguages());
-          // For efficiency manually set the original comment before applying
-          // any changes.
-          $comment->setOriginal(clone $comment);
-          foreach ($langcodes as $langcode) {
-            $comment_translated = $comment->getTranslation($langcode);
-            $comment_translated->setOwnerId(0);
-            $comment_translated->setAuthorName(\Drupal::config('user.settings')->get('anonymous'));
-          }
-          $comment->save();
-        }
-        break;
+  public function userCancelBlockUnpublish($edit, UserInterface $account, $method): void {
+    if ($method === 'user_cancel_block_unpublish') {
+      $this->moduleHandler->loadInclude('comment', 'inc', 'comment.admin');
+      $cids = $this->commentStorage->getQuery()
+        ->accessCheck(FALSE)
+        ->condition('uid', $account->id())
+        ->execute();
+      comment_mass_update($cids, ['status' => 0], NULL, TRUE);
     }
   }
 
   /**
-   * Implements hook_ENTITY_TYPE_predelete() for user entities.
+   * Implements hook_user_cancel().
+   *
+   * Anonymize all of the comments for this old account.
    */
-  #[Hook('user_predelete')]
-  public function userPredelete($account): void {
-    $entity_query = \Drupal::entityQuery('comment')->accessCheck(FALSE);
-    $entity_query->condition('uid', $account->id());
-    $cids = $entity_query->execute();
-    $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
-    $comments = $comment_storage->loadMultiple($cids);
-    $comment_storage->delete($comments);
+  #[Hook('user_cancel')]
+  public function userCancelReassign($edit, UserInterface $account, $method): void {
+    if ($method === 'user_cancel_reassign') {
+      $this->moduleHandler->loadInclude('comment', 'inc', 'comment.admin');
+      $revision_ids = $this->commentStorage->userRevisionIds($account);
+      comment_mass_update($revision_ids, ['uid' => 0, 'revision_user' => 0], NULL, TRUE, TRUE);
+    }
   }
 
   /**

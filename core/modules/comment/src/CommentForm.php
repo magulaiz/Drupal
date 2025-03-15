@@ -250,7 +250,17 @@ class CommentForm extends ContentEntityForm {
       '#access' => $is_admin,
     ];
 
-    return parent::form($form, $form_state);
+    $form = parent::form($form, $form_state);
+
+    // Use a simplified revision UI for comments.
+    if (isset($form['revision_information'])) {
+      $form['revision_information'] = [
+        '#type' => 'container',
+        '#weight' => $form['revision_information']['#weight'],
+      ];
+    }
+
+    return $form;
   }
 
   /**
@@ -335,6 +345,13 @@ class CommentForm extends ContentEntityForm {
         $comment->setSubject($this->t('(No subject)'));
       }
     }
+
+    // Make sure that new revisions are enforced according to the comment type
+    // configuration for users who do not have access to the revision UI.
+    if (!$this->showRevisionUi()) {
+      $comment->setNewRevision($this->getNewRevisionDefault());
+    }
+
     return $comment;
   }
 
