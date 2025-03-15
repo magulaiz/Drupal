@@ -327,7 +327,7 @@ class HookCollector {
   public static function collectAllHookImplementations(array $module_list, array $skipProceduralModules = []): static {
     $modules = array_keys($module_list);
     $modules_by_length = $modules;
-    usort($modules_by_length, fn ($a, $b) => strlen($b) - strlen($a));
+    usort($modules_by_length, static fn ($a, $b) => strlen($b) - strlen($a));
     $known_modules_pattern = implode('|', array_map(
       static fn ($x) => preg_quote($x, '/'),
       $modules_by_length,
@@ -452,7 +452,7 @@ class HookCollector {
         return TRUE;
       }
       // glob() doesn't support streams but scandir() does.
-      return !in_array($fileInfo->getFilename(), ['tests', 'js', 'css']) && !array_filter(scandir($key), fn ($filename) => str_ends_with($filename, '.info.yml'));
+      return !in_array($fileInfo->getFilename(), ['tests', 'js', 'css']) && !array_filter(scandir($key), static fn ($filename) => str_ends_with($filename, '.info.yml'));
     }
     return in_array($extension, ['inc', 'module', 'profile', 'install']);
   }
