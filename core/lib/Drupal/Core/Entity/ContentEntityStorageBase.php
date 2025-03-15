@@ -1402,9 +1402,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
         if ($revisionable) {
           // @see \Drupal\Core\Entity\ContentEntityStorageBase::setPersistentCache()
           $cache_tags_revision = [$this->memoryCacheTag, "revision_of:{$this->entityTypeId}:{$id}"];
-          if ($entity->isDefaultRevision()) {
-            $cache_tags_revision[] = "default_revision_of:{$this->entityTypeId}:{$id}";
-          }
           $this->memoryCache->set($this->buildCacheId($entity->getRevisionId(), TRUE), $entity, MemoryCacheInterface::CACHE_PERMANENT, $cache_tags_revision);
         }
       }
@@ -1495,9 +1492,9 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
           // Checking this, however, would require additional complexity in
           // ::doPostSave() so we always invalidate the default revision here in
           // this case.
-          $revision_cache_tags[] = $this->invalidateAllRevisions ?
-            "revision_of:{$this->entityTypeId}:{$id}" :
-            "default_revision_of:{$this->entityTypeId}:{$id}";
+          if ($this->invalidateAllRevisions) {
+            $revision_cache_tags[] = "revision_of:{$this->entityTypeId}:{$id}";
+          }
         }
       }
 
@@ -1523,9 +1520,13 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   }
 
   /**
-   * {@inheritdoc}
+   * Resets the static and persistent revision caches.
+   *
+   * @param int[]|string[] $revision_ids
+   *   The entity revision IDs to reset the static and persistent revision
+   *   caches for.
    */
-  public function resetRevisionCache(array $revision_ids): void {
+  protected function resetRevisionCache(array $revision_ids): void {
     $cache_ids = array_map(function ($revision_id) {
       return $this->buildCacheId($revision_id, TRUE);
     }, $revision_ids);
