@@ -50,6 +50,7 @@ use Drupal\path_alias\PathAliasStorageSchema;
     'UniquePathAlias' => [],
   ],
   revision_metadata_keys: [
+    'revision_default' => 'revision_default',
     'revision_user' => 'revision_uid',
     'revision_created' => 'revision_timestamp',
     'revision_log_message' => 'revision_log',

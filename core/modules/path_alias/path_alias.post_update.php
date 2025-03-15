@@ -6,7 +6,8 @@
  */
 
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
-
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Implements hook_removed_post_updates().
  */
@@ -29,62 +30,77 @@ function path_alias_post_update_update_path_alias_revision_indexes(): void {
 /**
  * Update entity definitions, necessary if notices appear on site status page.
  */
-function path_alias_post_update_entity_updates(): void {
-  $entityDefinitionUpdateManager = \Drupal::service('entity.definition_update_manager');
-  $entityTypeManager = \Drupal::service('entity_type.manager');
-  $entityFieldManager = \Drupal::service('entity_field.manager');
-  $entityLastInstalledSchemaRepository = \Drupal::service('entity.last_installed_schema.repository');
-  $fieldStorageDefinitionListener = \Drupal::service('field_storage_definition.listener');
-  $entityTypeListener = \Drupal::service('entity_type.listener');
-  $reflector = new \ReflectionMethod($entityDefinitionUpdateManager, 'getChangeList');
-  $reflector->setAccessible(TRUE);
-  $complete_change_list = $reflector->invoke($entityDefinitionUpdateManager);
-  if ($complete_change_list) {
-    // EntityDefinitionUpdateManagerInterface::getChangeList() only disables
-    // the cache and does not invalidate. In case there are changes,
-    // explicitly invalidate caches.
-    $entityTypeManager->clearCachedDefinitions();
-    $entityFieldManager->clearCachedFieldDefinitions();
-  }
-  $entity_type_id = 'path_alias';
-  $change_list = $complete_change_list[$entity_type_id];
-  $entity_type = $entityTypeManager->getDefinition($entity_type_id);
-  switch ($change_list['entity_type']) {
-    case EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED:
-      $entityTypeListener->onEntityTypeCreate($entity_type);
-      break;
+function path_alias_post_update_entity_updates(&$sandbox = []): void {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
 
-    case EntityDefinitionUpdateManagerInterface::DEFINITION_UPDATED:
-      $original = $entityLastInstalledSchemaRepository->getLastInstalledDefinition($entity_type_id);
-      $field_storage_definitions = $entityFieldManager->getFieldStorageDefinitions($entity_type_id);
-      $original_field_Storage_definitions = $entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entity_type_id);
-      $entityTypeListener->onFieldableEntityTypeUpdate($entity_type, $original, $field_storage_definitions, $original_field_Storage_definitions);
-      break;
-  }
-  // Process field storage definition changes.
-  if (!empty($change_list['field_storage_definitions'])) {
-    $storage_definitions = $entityFieldManager->getFieldStorageDefinitions('path_alias');
-    $original_storage_definitions = $entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions('path_alias');
-    foreach ($change_list['field_storage_definitions'] as $field_name => $op) {
-      $storage_definition = $storage_definitions[$field_name] ?? NULL;
-      $original_storage_definition = $original_storage_definitions[$field_name] ?? NULL;
-      switch ($op) {
-        case EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED:
-          $fieldStorageDefinitionListener->onFieldStorageDefinitionCreate($storage_definition);
-          break;
+  $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+  $field_storage_definitions = $last_installed_schema_repository->getLastInstalledFieldStorageDefinitions('path_alias');
+  $entity_type = $definition_update_manager->getEntityType('path_alias');
+  // Update the entity type definition.
+  $entity_keys = $entity_type->getKeys();
+  $entity_keys['revision'] = 'revision_id';
+  $entity_keys['revision_translation_affected'] = 'revision_translation_affected';
+  $entity_type->set('entity_keys', $entity_keys);
+  $entity_type->set('revision_table', 'path_alias_revision');
+  $entity_type->set('revision_data_table', 'path_alias_field_revision');
+  $revision_metadata_keys = [
+    'revision_default' => 'revision_default',
+    'revision_user' => 'revision_uid',
+    'revision_created' => 'revision_timestamp',
+    'revision_log_message' => 'revision_log',
+  ];
+  $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
 
-        case EntityDefinitionUpdateManagerInterface::DEFINITION_UPDATED:
-          if ($storage_definition && $original_storage_definition) {
-            $fieldStorageDefinitionListener->onFieldStorageDefinitionUpdate($storage_definition, $original_storage_definition);
-          }
-          break;
+  // Update the field storage definitions and add the new ones required by a
+  // revisionable entity type.
+  $field_storage_definitions['langcode']->setRevisionable(TRUE);
+  $field_storage_definitions['path']->setRevisionable(TRUE);
+  $field_storage_definitions['alias']->setRevisionable(TRUE);
 
-        case EntityDefinitionUpdateManagerInterface::DEFINITION_DELETED:
-          if ($original_storage_definition) {
-            $fieldStorageDefinitionListener->onFieldStorageDefinitionDelete($original_storage_definition);
-          }
-          break;
-      }
-    }
-  }
+  $field_storage_definitions['revision_id'] = BaseFieldDefinition::create('integer')
+    ->setName('revision_id')
+    ->setTargetEntityTypeId('path_alias')
+    ->setTargetBundle(NULL)
+    ->setLabel(new TranslatableMarkup('Revision ID'))
+    ->setReadOnly(TRUE)
+    ->setSetting('unsigned', TRUE);
+
+  $field_storage_definitions['revision_default'] = BaseFieldDefinition::create('boolean')
+    ->setName('revision_default')
+    ->setTargetEntityTypeId('path_alias')
+    ->setTargetBundle(NULL)
+    ->setLabel(new TranslatableMarkup('Default revision'))
+    ->setDescription(new TranslatableMarkup('A flag indicating whether this was a default revision when it was saved.'))
+    ->setStorageRequired(TRUE)
+    ->setInternal(TRUE)
+    ->setTranslatable(FALSE)
+    ->setRevisionable(TRUE);
+
+  $field_storage_definitions['revision_timestamp'] = BaseFieldDefinition::create('created')
+    ->setName('revision_timestamp')
+    ->setTargetEntityTypeId('path_alias')
+    ->setTargetBundle(NULL)
+    ->setLabel(new TranslatableMarkup('Revision create time'))
+    ->setDescription(new TranslatableMarkup('The time that the current revision was created.'))
+    ->setRevisionable(TRUE);
+
+  $field_storage_definitions['revision_uid'] = BaseFieldDefinition::create('entity_reference')
+    ->setName('revision_uid')
+    ->setTargetEntityTypeId('path_alias')
+    ->setTargetBundle(NULL)
+    ->setLabel(new TranslatableMarkup('Revision user'))
+    ->setDescription(new TranslatableMarkup('The user ID of the author of the current revision.'))
+    ->setSetting('target_type', 'user')
+    ->setRevisionable(TRUE);
+
+  $field_storage_definitions['revision_log'] = BaseFieldDefinition::create('string_long')
+    ->setName('revision_log')
+    ->setTargetEntityTypeId('path_alias')
+    ->setTargetBundle(NULL)
+    ->setLabel(new TranslatableMarkup('Revision log message'))
+    ->setDescription(new TranslatableMarkup('Briefly describe the changes you have made.'))
+    ->setRevisionable(TRUE)
+    ->setDefaultValue('');
+  $definition_update_manager->updateFieldableEntityType($entity_type, $field_storage_definitions, $sandbox);
+
 }
