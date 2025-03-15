@@ -22,7 +22,7 @@ class SetBrowserUrl implements CommandInterface {
    * Constructs a new command instance.
    *
    * @param string $url
-   *   The URL to be set in the browser
+   *   The URL to be set in the browser.
    */
   public function __construct(string $url) {
     $this->url = $url;
