@@ -1293,42 +1293,28 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     $revisionable = $this->entityType->isRevisionable();
 
     $items = [];
+    $cache_tags = ['entity_field_info'];
     foreach ($entities as $entity) {
       $id = $entity->id();
       if ($entity->isDefaultRevision()) {
-        $entity_cache_tags = ['entity_field_info'];
-        if ($revisionable) {
-          // When the default revision is cleared from the revision cache via
-          // ::resetRevisionCache() we must clear the respective entity from
-          // the entity cache, as well. To do this, we add a tag with the
-          // revision ID of the default revision to the entity's cache entry.
-          // This tag will be invalidated by ::resetRevisionCache().
-          // @see \Drupal\Core\Entity\ContentEntityStorageBase::resetRevisionCache()
-          $entity_cache_tags[] = "default_revision:{$this->entityTypeId}:{$entity->getRevisionId()}";
-        }
         $items[$this->buildCacheId($id)] = [
           'data' => $entity,
-          'tags' => $entity_cache_tags,
+          'tags' => $cache_tags,
         ];
       }
       if ($revisionable) {
-        $revision_cache_tags = ['entity_field_info'];
         // When an entity is cleared from the entity cache via ::resetCache()
         // we must clear the related revisions from the revision cache, as well.
         // In ::doResetCacheOnSave() is decided whether ::resetCache() should
         // clear the caches for all revisions or just for the default revision.
         // To make this possible, we add a tag with the entity's ID to the
-        // revision's cache entry. Either of these tags will then be invalidated
-        // by ::resetCache().
+        // revision's cache entry.
         // @see \Drupal\Core\Entity\ContentEntityStorageBase::doResetCacheOnSave()
         // @see \Drupal\Core\Entity\ContentEntityStorageBase::resetCache()
-        $revision_cache_tags[] = "revision_of:{$this->entityTypeId}:{$id}";
-        if ($entity->isDefaultRevision()) {
-          $revision_cache_tags[] = "default_revision_of:{$this->entityTypeId}:{$id}";
-        }
+        $cache_tags[] = "revision_of:{$this->entityTypeId}:{$id}";
         $items[$this->buildCacheId($entity->getRevisionId(), TRUE)] = [
           'data' => $entity,
-          'tags' => $revision_cache_tags,
+          'tags' => $cache_tags,
         ];
       }
     }
@@ -1543,19 +1529,12 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     $cache_ids = array_map(function ($revision_id) {
       return $this->buildCacheId($revision_id, TRUE);
     }, $revision_ids);
-    // Make sure that the default revision will always be removed from
-    // entity cache as well.
-    $cache_tags = array_map(function ($revision_id) {
-      return "default_revision:{$this->entityTypeId}:{$revision_id}";
-    }, $revision_ids);
 
     if ($this->entityType->isStaticallyCacheable()) {
       $this->memoryCache->deleteMultiple($cache_ids);
-      $this->memoryCache->invalidateTags($cache_tags);
     }
     if ($this->entityType->isPersistentlyCacheable()) {
       $this->cacheBackend->deleteMultiple($cache_ids);
-      Cache::invalidateTags($cache_tags);
     }
   }
 
