@@ -927,10 +927,14 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
         }
       }
 
-      // Always invalidate the loaded revision except when we'll invalidate all
-      // revisions later.
+      // Always invalidate the loaded and original revision except
+      // when we'll invalidate all revisions later.
       if (!$this->invalidateAllRevisions) {
-        $this->resetRevisionCache([$entity->getLoadedRevisionId()]);
+        $revision_ids = [$entity->getLoadedRevisionId()];
+        if ($entity->getOriginal() && $entity->getOriginal()->getRevisionId() != $entity->getLoadedRevisionId()) {
+          $revision_ids[] = $entity->getOriginal()->getRevisionId();
+        }
+        $this->resetRevisionCache($revision_ids);
       }
     }
     $this->resetCache([$entity->id()]);
