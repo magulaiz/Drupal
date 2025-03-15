@@ -31,7 +31,7 @@ class SetBrowserUrl implements CommandInterface {
   /**
    * {@inheritdoc}
    */
-  public function render() {
+  public function render(): array {
     return [
       'command' => 'setBrowserUrl',
       'url' => $this->url,
