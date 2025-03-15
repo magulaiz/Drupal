@@ -927,9 +927,9 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
         }
       }
 
-      // If saving in the current revision we always have to invalidate the
-      // revision cache for the loaded revision.
-      if (!$this->invalidateAllRevisions && !$entity->isNewRevision()) {
+      // Always invalidate the loaded revision except when we'll invalidate all
+      // revisions later.
+      if (!$this->invalidateAllRevisions) {
         $this->resetRevisionCache([$entity->getLoadedRevisionId()]);
       }
     }
@@ -1500,14 +1500,17 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
 
       if ($this->entityType->isPersistentlyCacheable()) {
         $this->cacheBackend->deleteMultiple($cids);
-        if ($revisionable) {
+        if ($revision_cache_tags) {
           // Invalidate related entity revisions in the persistent entity cache.
           Cache::invalidateTags($revision_cache_tags);
         }
       }
       if ($this->entityType->isStaticallyCacheable() && $revisionable) {
         // Invalidate related entity revisions in the static entity cache.
-        $this->memoryCache->invalidateTags($revision_cache_tags);
+        $this->memoryCache->deleteMultiple($cids);
+        if ($revision_cache_tags) {
+          $this->memoryCache->invalidateTags($revision_cache_tags);
+        }
       }
     }
     else {
