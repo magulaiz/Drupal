@@ -52,6 +52,8 @@ class HookCollectorPassTest extends KernelTestBase {
 
   /**
    * Test that ordering works.
+   *
+   * @group legacy
    */
   public function testOrdering(): void {
     $container = new ContainerBuilder();
@@ -80,6 +82,23 @@ class HookCollectorPassTest extends KernelTestBase {
     // For the hook order2 or any hook but order1, however, all1 fires first
     // and all2 second.
     $this->assertLessThan($priorities['drupal_hook.order2']['order'], $priorities['drupal_hook.order2']['module_handler_test_all2_order2']);
+  }
+
+  /**
+   * Test LegacyModuleImplementsAlter.
+   */
+  public function testLegacyModuleImplementsAlter(): void {
+    $container = new ContainerBuilder();
+    $module_filenames = [
+      'module_implements_alter_test_legacy' => ['pathname' => "core/tests/Drupal/Tests/Core/Extension/modules/module_implements_alter_test_legacy/module_implements_alter_test_legacy.info.yml"],
+    ];
+    include_once 'core/tests/Drupal/Tests/Core/Extension/modules/module_implements_alter_test_legacy/module_implements_alter_test_legacy.module';
+    $container->setParameter('container.modules', $module_filenames);
+    $container->setDefinition('module_handler', new Definition());
+    (new HookCollectorPass())->process($container);
+
+    // This test will also fail if the deprecation notice shows up.
+    $this->assertFalse(isset($GLOBALS['ShouldNotRunLegacyModuleImplementsAlter']));
   }
 
   /**
@@ -121,7 +140,6 @@ class HookCollectorPassTest extends KernelTestBase {
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_after_attribute']));
     $this->assertTrue(isset($GLOBALS['procedural_attribute_skip_find']));
     $this->assertTrue(isset($GLOBALS['skipped_procedural_oop_cache_flush']));
-
   }
 
   /**
@@ -135,6 +153,153 @@ class HookCollectorPassTest extends KernelTestBase {
     drupal_flush_all_caches();
     $this->assertTrue(isset($GLOBALS['hook_named_arguments']));
     $this->assertTrue(isset($GLOBALS['hook_invoke_method']));
+  }
+
+  /**
+   * Tests hook ordering with attributes.
+   */
+  public function testHookFirst(): void {
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['hook_order_first_alphabetically']));
+    $this->assertTrue($module_installer->install(['hook_order_last_alphabetically']));
+    $this->assertFalse(isset($GLOBALS['HookFirst']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingHookFirst']));
+    $this->assertFalse(isset($GLOBALS['HookRanTestingHookFirst']));
+    $module_handler = $this->container->get('module_handler');
+    $data = ['hi'];
+    $module_handler->invokeAll('custom_hook_test_hook_first', $data);
+    $this->assertTrue(isset($GLOBALS['HookFirst']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingHookFirst']));
+    $this->assertTrue(isset($GLOBALS['HookRanTestingHookFirst']));
+  }
+
+  /**
+   * Tests hook ordering with attributes.
+   */
+  public function testHookAfter(): void {
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['hook_order_first_alphabetically']));
+    $this->assertTrue($module_installer->install(['hook_order_last_alphabetically']));
+    $this->assertFalse(isset($GLOBALS['HookAfter']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingHookAfter']));
+    $this->assertFalse(isset($GLOBALS['HookRanTestingHookAfter']));
+    $module_handler = $this->container->get('module_handler');
+    $data = ['hi'];
+    $module_handler->invokeAll('custom_hook_test_hook_after', $data);
+    $this->assertTrue(isset($GLOBALS['HookAfter']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingHookAfter']));
+    $this->assertTrue(isset($GLOBALS['HookRanTestingHookAfter']));
+  }
+
+  /**
+   * Tests hook ordering with attributes.
+   */
+  public function testHookAfterClassMethod(): void {
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['hook_second_order_first_alphabetically']));
+    $this->assertTrue($module_installer->install(['hook_second_order_last_alphabetically']));
+    $this->assertFalse(isset($GLOBALS['HookAfterClassMethod']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingHookAfterClassMethod']));
+    $this->assertFalse(isset($GLOBALS['HookRanTestingHookAfterClassMethod']));
+    $module_handler = $this->container->get('module_handler');
+    $data = ['hi'];
+    $module_handler->invokeAll('custom_hook_test_hook_after_class_method', $data);
+    $this->assertTrue(isset($GLOBALS['HookAfterClassMethod']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingHookAfterClassMethod']));
+    $this->assertTrue(isset($GLOBALS['HookRanTestingHookAfterClassMethod']));
+  }
+
+  /**
+   * Tests hook ordering with attributes.
+   */
+  public function testHookBefore(): void {
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['hook_order_first_alphabetically']));
+    $this->assertTrue($module_installer->install(['hook_order_last_alphabetically']));
+    $this->assertFalse(isset($GLOBALS['HookBefore']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingHookBefore']));
+    $this->assertFalse(isset($GLOBALS['HookRanTestingHookBefore']));
+    $module_handler = $this->container->get('module_handler');
+    $data = ['hi'];
+    $module_handler->invokeAll('custom_hook_test_hook_before', $data);
+    $this->assertTrue(isset($GLOBALS['HookBefore']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingHookBefore']));
+    $this->assertTrue(isset($GLOBALS['HookRanTestingHookBefore']));
+  }
+
+  /**
+   * Tests hook ordering with attributes.
+   */
+  public function testHookOrderExtraTypes(): void {
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['hook_order_first_alphabetically']));
+    $this->assertTrue($module_installer->install(['hook_order_last_alphabetically']));
+    $this->assertFalse(isset($GLOBALS['HookOrderExtraTypes']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingOrderExtraTypes']));
+    $this->assertFalse(isset($GLOBALS['HookRanTestingOrderExtraTypes']));
+    $module_handler = $this->container->get('module_handler');
+    $hooks = [
+      'custom_hook',
+      'custom_hook_extra_types1',
+      'custom_hook_extra_types2',
+    ];
+    $data = ['hi'];
+    $module_handler->alter($hooks, $data);
+    $this->assertTrue(isset($GLOBALS['HookOrderExtraTypes']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingOrderExtraTypes']));
+    $this->assertTrue(isset($GLOBALS['HookRanTestingOrderExtraTypes']));
+  }
+
+  /**
+   * Tests hook ordering with attributes.
+   */
+  public function testHookLast(): void {
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['hook_order_first_alphabetically']));
+    $this->assertTrue($module_installer->install(['hook_order_last_alphabetically']));
+    $this->assertFalse(isset($GLOBALS['HookLast']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingHookLast']));
+    $this->assertFalse(isset($GLOBALS['HookRanTestingHookLast']));
+    $module_handler = $this->container->get('module_handler');
+    $data = ['hi'];
+    $module_handler->invokeAll('custom_hook_test_hook_last', $data);
+    $this->assertTrue(isset($GLOBALS['HookLast']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingHookLast']));
+    $this->assertTrue(isset($GLOBALS['HookRanTestingHookLast']));
+  }
+
+  /**
+   * Tests hook remove.
+   */
+  public function testHookRemove(): void {
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['hook_test_remove']));
+    $this->assertFalse(isset($GLOBALS['HookShouldRunTestRemove']));
+    $this->assertFalse(isset($GLOBALS['HookShouldNotRunTestRemove']));
+    $module_handler = $this->container->get('module_handler');
+    $data = ['hi'];
+    $module_handler->invokeAll('custom_hook1', $data);
+    $module_handler->invokeAll('custom_hook2', $data);
+    $this->assertTrue(isset($GLOBALS['HookShouldRunTestRemove']));
+    $this->assertFalse(isset($GLOBALS['HookShouldNotRunTestRemove']));
+  }
+
+  /**
+   * Tests hook override.
+   */
+  public function testHookOverride(): void {
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['hook_order_first_alphabetically']));
+    $this->assertTrue($module_installer->install(['hook_order_last_alphabetically']));
+    $this->assertFalse(isset($GLOBALS['HookRanTestingReOrderHookFirstAlpha']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingReOrderHook']));
+    $this->assertFalse(isset($GLOBALS['HookRanTestingReOrderHookLastAlpha']));
+    $module_handler = $this->container->get('module_handler');
+    $data = ['hi'];
+    $module_handler->invokeAll('custom_hook_override', $data);
+    $this->assertTrue(isset($GLOBALS['HookRanTestingReOrderHookFirstAlpha']));
+    $this->assertFalse(isset($GLOBALS['HookOutOfOrderTestingReOrderHook']));
+    $this->assertTrue(isset($GLOBALS['HookRanTestingReOrderHookLastAlpha']));
   }
 
 }
