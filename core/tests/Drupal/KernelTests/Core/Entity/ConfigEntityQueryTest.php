@@ -18,6 +18,19 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfigEntityQueryTest extends KernelTestBase {
 
   /**
+   * Test entities UUIDs. Keys are entity IDs.
+   */
+  protected const UUID = [
+    1 => '550e8400-e29b-41d4-a716-446655440000',
+    2 => '6f1a7b8e-47d3-4c9d-931c-2b5b72461e32',
+    3 => 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+    4 => '9b5c928f-3c62-4ad5-9b6d-1a2b3c4d5e6f',
+    5 => 'c71d9e2a-3b08-44b7-9e3f-78aa56e2c1d0',
+    6 => '2d8f313e-23c7-4aa9-8b9a-fab13a799512',
+    7 => 'e2b9c5f1-426a-4f23-8df9-ff8e2b1946d3',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = ['config_test'];
@@ -68,6 +81,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
       'id' => '1',
       'number' => 31,
       'array' => $array,
+      'uuid' => self::UUID[1],
     ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
@@ -79,6 +93,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
       'id' => '2',
       'number' => 41,
       'array' => $array,
+      'uuid' => self::UUID[2],
     ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
@@ -90,6 +105,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
       'id' => '3',
       'number' => 59,
       'array' => $array,
+      'uuid' => self::UUID[3],
     ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
@@ -101,6 +117,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
       'id' => '4',
       'number' => 26,
       'array' => $array,
+      'uuid' => self::UUID[4],
     ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
@@ -112,6 +129,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
       'id' => '5',
       'number' => 53,
       'array' => $array,
+      'uuid' => self::UUID[5],
     ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
@@ -119,9 +137,10 @@ class ConfigEntityQueryTest extends KernelTestBase {
 
     $array['level1'] = [];
     $entity = ConfigQueryTest::create([
-      'label' => $this->randomMachineName(),
+      'label' => 'Entity 6',
       'id' => '6',
       'array' => $array,
+      'uuid' => self::UUID[6],
     ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
@@ -129,10 +148,11 @@ class ConfigEntityQueryTest extends KernelTestBase {
 
     $array['level1']['level2'] = 4;
     $entity = ConfigQueryTest::create([
-      'label' => $this->randomMachineName(),
+      'label' => 'Entity 7',
       'id' => '7',
       'number' => 70,
       'array' => $array,
+      'uuid' => self::UUID[7],
     ]);
     $this->entities[] = $entity;
     $entity->enforceIsNew();
@@ -147,6 +167,31 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $this->queryResults = $this->entityStorage->getQuery()
       ->execute();
     $this->assertResults(['1', '2', '3', '4', '5', '6', '7']);
+
+    // Results using a different key than 'id'.
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->key('uuid')
+      ->execute();
+    $this->assertSame(self::UUID, $this->queryResults);
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->key('label')
+      ->execute();
+    $this->assertSame([
+      1 => 'entity_1',
+      2 => 'entity_2',
+      3 => 'test_prefix_entity_3',
+      4 => 'entity_4_test_suffix',
+      5 => 'entity_5_TEST_contains_entity_5',
+      6 => 'Entity 6',
+      7 => 'Entity 7',
+    ], $this->queryResults);
+
+    // Using an invalid key.
+    $this->expectExceptionObject(new \InvalidArgumentException("The 'config_query_test' entity type doesn't have a 'invalid' key."));
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->key('invalid')
+      ->execute();
+
     // No conditions, OR.
     $this->queryResults = $this->entityStorage->getQuery('OR')
       ->execute();

@@ -113,10 +113,12 @@ class Query extends QueryBase implements QueryInterface {
       return count($result);
     }
 
+    $value_property = $this->entityType->getKey($this->key);
+
     // Create the expected structure of entity_id => entity_id. Config
     // entities have string entity IDs.
     foreach ($result as $key => &$value) {
-      $value = (string) $key;
+      $value = (string) $result[$key][$value_property];
     }
     return $result;
   }
