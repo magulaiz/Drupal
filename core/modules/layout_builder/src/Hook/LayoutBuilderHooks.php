@@ -2,7 +2,6 @@
 
 namespace Drupal\layout_builder\Hook;
 
-
 use Drupal\block_content\BlockContentPermissions;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\CacheableMetadata;
