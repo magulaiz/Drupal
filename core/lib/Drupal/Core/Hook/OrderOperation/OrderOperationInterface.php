@@ -7,7 +7,7 @@ namespace Drupal\Core\Hook\OrderOperation;
 interface OrderOperationInterface {
 
   /**
-   * Alters a list of hook implementations.
+   * Changes the order of a list of hook implementations.
    *
    * @param list<string> $identifiers
    *   Implementation identifiers, as "$class::$method".
