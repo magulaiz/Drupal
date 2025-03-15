@@ -118,7 +118,7 @@
 
     this.settings = settings;
 
-    // Add the ajax to exposed forms.;
+    // Add the ajax to exposed forms.
     once('exposed-form', this.$exposed_form).forEach(
       this.attachExposedFormAjax.bind(this),
     );
