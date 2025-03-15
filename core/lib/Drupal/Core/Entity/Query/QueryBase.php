@@ -136,6 +136,9 @@ abstract class QueryBase implements QueryInterface {
    */
   protected string $conjunction;
 
+  /**
+   * The entity key corresponding to the field of query results values.
+   */
   protected string $key = 'id';
 
   /**
@@ -538,6 +541,9 @@ abstract class QueryBase implements QueryInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function key(string $key): QueryInterface {
     if ($this->entityType->hasKey($key)) {
       $this->key = $key;
