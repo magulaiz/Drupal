@@ -481,7 +481,7 @@ class CommentHooks {
     if ($method === 'user_cancel_reassign') {
       $this->moduleHandler->loadInclude('comment', 'inc', 'comment.admin');
       $revision_ids = $this->commentStorage->userRevisionIds($account);
-      comment_mass_update($revision_ids, ['uid' => 0, 'revision_user' => 0], NULL, TRUE, TRUE);
+      comment_mass_update($revision_ids, ['uid' => 0, 'revision_user' => 0], NULL, TRUE, TRUE, TRUE);
     }
   }
 

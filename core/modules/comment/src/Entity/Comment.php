@@ -187,6 +187,10 @@ class Comment extends EditorialContentEntityBase implements CommentInterface {
     if (!$this->getRevisionUser()) {
       $this->setRevisionUserId($this->getOwnerId());
     }
+    // Preserve the default revision value during synchronization.
+    if ($this->isSyncing()) {
+      $this->isDefaultRevision($this->wasDefaultRevision());
+    }
   }
 
   /**

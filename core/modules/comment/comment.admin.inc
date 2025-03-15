@@ -29,8 +29,10 @@ use Drupal\Core\Link;
  * @param bool $revisions
  *   (optional) TRUE if $comments contains an array of revision IDs instead of
  *   comment IDs. Defaults to FALSE; will be ignored if $load is FALSE.
+ * @param bool $syncing
+ *   (optional) TRUE if comments should be saved in synchronization mode.
  */
-function comment_mass_update(array $comments, array $updates, $langcode = NULL, $load = FALSE, $revisions = FALSE): void {
+function comment_mass_update(array $comments, array $updates, $langcode = NULL, $load = FALSE, $revisions = FALSE, $syncing = FALSE): void {
   // We use batch processing to prevent timeout when updating a large number
   // of comments.
   if (count($comments) > 10) {
@@ -38,7 +40,7 @@ function comment_mass_update(array $comments, array $updates, $langcode = NULL, 
       // The operations do not live in the .module file, so we need to
       // tell the batch engine which file to load before calling them.
       ->setFile(\Drupal::service('extension.list.module')->getPath('comment') . '/comment.admin.inc')
-      ->addOperation('_comment_mass_update_batch_process', [$comments, $updates, $langcode, $load, $revisions])
+      ->addOperation('_comment_mass_update_batch_process', [$comments, $updates, $langcode, $load, $revisions, $syncing])
       ->setFinishCallback('_comment_mass_update_batch_finished')
       ->setTitle(t('Processing'))
       ->setErrorMessage(t('The update has encountered an error.'))
@@ -56,7 +58,7 @@ function comment_mass_update(array $comments, array $updates, $langcode = NULL, 
       if ($load && $revisions) {
         $comment = $storage->loadRevision($comment);
       }
-      _comment_mass_update_helper($comment, $updates, $langcode);
+      _comment_mass_update_helper($comment, $updates, $langcode, $syncing);
     }
     \Drupal::messenger()->addStatus(t('The update has been performed.'));
   }
@@ -72,13 +74,15 @@ function comment_mass_update(array $comments, array $updates, $langcode = NULL, 
  * @param string $langcode
  *   (optional) The language updates should be applied to. If none is specified
  *   all available languages are processed.
+ * @param bool $syncing
+ *   (optional) TRUE if comments should be saved in synchronization mode.
  *
  * @return \Drupal\comment\CommentInterface
  *   An updated comment object.
  *
  * @see comment_mass_update()
  */
-function _comment_mass_update_helper(CommentInterface $comment, array $updates, $langcode = NULL): CommentInterface {
+function _comment_mass_update_helper(CommentInterface $comment, array $updates, $langcode = NULL, $syncing = FALSE): CommentInterface {
   $langcodes = isset($langcode) ? [$langcode] : array_keys($comment->getTranslationLanguages());
   // For efficiency manually save the original comment before applying
   // any changes.
@@ -88,6 +92,7 @@ function _comment_mass_update_helper(CommentInterface $comment, array $updates, 
       $comment->getTranslation($langcode)->$name = $value;
     }
   }
+  $comment->setSyncing($syncing);
   $comment->save();
   return $comment;
 }
@@ -110,10 +115,12 @@ function _comment_mass_update_helper(CommentInterface $comment, array $updates, 
  * @param bool $revisions
  *   (optional) TRUE if $comments contains an array of revision IDs instead of
  *   comment IDs. Defaults to FALSE; will be ignored if $load is FALSE.
+ * @param bool $syncing
+ *   (optional) TRUE if comments should be saved in synchronization mode.
  * @param array|\ArrayAccess $context
  *   An array of contextual key/values.
  */
-function _comment_mass_update_batch_process(array $comments, array $updates, $langcode, $load, $revisions, &$context): void {
+function _comment_mass_update_batch_process(array $comments, array $updates, $langcode, $load, $revisions, $syncing, &$context): void {
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] = count($comments);
@@ -130,7 +137,7 @@ function _comment_mass_update_batch_process(array $comments, array $updates, $la
       $comment = $revisions ?
         $storage->loadRevision($comment) : $storage->load($comment);
     }
-    $comment = _comment_mass_update_helper($comment, $updates, $langcode);
+    $comment = _comment_mass_update_helper($comment, $updates, $langcode, $syncing);
 
     // Store result for post-processing in the finished callback.
     $context['results'][] = Link::fromTextAndUrl($comment->label(), $comment->toUrl())->toString();
