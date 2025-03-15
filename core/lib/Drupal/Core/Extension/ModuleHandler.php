@@ -500,6 +500,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     $this->alter('module_implements', $module_implements, $main_hook);
     $listeners_by_identifier = [];
     $modules_by_identifier = [];
+    $identifiers = [];
     foreach (array_keys($module_implements) as $module) {
       foreach ($listeners_by_module[$module] ?? [] as $listener) {
         $identifier = is_array($listener)
@@ -513,9 +514,9 @@ class ModuleHandler implements ModuleHandlerInterface {
         }
         $listeners_by_identifier[$identifier] = $listener;
         $modules_by_identifier[$identifier] = $module;
+        $identifiers[] = $identifier;
       }
     }
-    $identifiers = array_keys($listeners_by_identifier);
     foreach ([$main_hook, ...$extra_hooks] as $hook) {
       foreach ($this->getHookOrderingRules($hook) as $rule) {
         $rule->apply($identifiers, $modules_by_identifier);
