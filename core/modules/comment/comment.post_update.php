@@ -22,7 +22,7 @@ function comment_removed_post_updates(): array {
 /**
  * Re-save comment type configurations with new_revision config.
  */
-function comment_post_update_set_new_revision(&$sandbox = NULL): void {
+function comment_post_update_11x_set_new_revision(&$sandbox = NULL): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)
     ->update($sandbox, 'comment_type', function ($comment_type) {
       return TRUE;
@@ -32,7 +32,7 @@ function comment_post_update_set_new_revision(&$sandbox = NULL): void {
 /**
  * Update comments to be revisionable.
  */
-function comment_post_update_make_comment_revisionable(&$sandbox): TranslatableMarkup {
+function comment_post_update_11x_make_comment_revisionable(&$sandbox): TranslatableMarkup {
   $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $last_installed_schema_repository */
   $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
@@ -130,7 +130,7 @@ function comment_post_update_make_comment_revisionable(&$sandbox): TranslatableM
 /**
  * Set initial values for new revision fields.
  */
-function comment_post_update_set_initial_revision_field_values(&$sandbox): void {
+function comment_post_update_11x_set_initial_revision_field_values(&$sandbox): void {
   $connection = \Drupal::database();
   $fields = [
     'revision_created' => 'created',
