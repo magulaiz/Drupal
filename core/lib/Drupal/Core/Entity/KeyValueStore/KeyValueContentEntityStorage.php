@@ -82,6 +82,9 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
     return NULL;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function resetRevisionCache(array $revision_ids): void {}
 
 }

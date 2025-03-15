@@ -793,13 +793,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       $revisions = $flipped_revision_ids;
     }
 
-    // Ensure that the returned array is ordered the same as the original
-    // $ids array if this was passed in and remove any invalid IDs.
-    if ($revision_ids) {
-      $flipped_ids = array_intersect_key(array_flip($revision_ids), $revisions);
-      $revisions = array_replace($flipped_ids, $revisions);
-    }
-
     return $revisions;
   }
 
@@ -884,7 +877,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
 
     // Use the loaded revision instead of default one to check for data change.
     if (!$entity->isNew() && !$entity->getOriginal() && !$entity->wasDefaultRevision()) {
-      $original = $this->loadRevision($entity->getLoadedRevisionId());
+      $original = $this->loadRevisionUnchanged($entity->getLoadedRevisionId());
       $entity->setOriginal($original);
     }
 
