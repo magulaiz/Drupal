@@ -7,11 +7,27 @@ namespace Drupal\pgsql\Driver\Database\pgsql;
 use Drupal\Core\Database\Exception\IdentifierException;
 use Drupal\Core\Database\Identifier\IdentifierHandlerBase;
 use Drupal\Core\Database\Identifier\IdentifierType;
+use Drupal\Core\Database\Identifier\Schema;
 
 /**
  * MySQL implementation of the identifier handler.
  */
 class IdentifierHandler extends IdentifierHandlerBase {
+
+  /**
+   * The default schema identifier, if specified.
+   */
+  protected ?Schema $schema;
+
+  /**
+   * @todo fill in.
+   */
+  public function setConnectionSchema(Schema $identifier): void {
+    if (isset($this->schema)) {
+      throw new \LogicException("A default schema identifier {$this->schema} is already set for this connection");
+    }
+    $this->schema = $identifier;
+  }
 
   /**
    * {@inheritdoc}
@@ -35,7 +51,7 @@ class IdentifierHandler extends IdentifierHandlerBase {
    * {@inheritdoc}
    */
   protected function resolveTableForMachine(string $canonicalName, array $info): string {
-    if ($info['schema']) {
+    if ($info['schema'] && ($info['schema_default_added'] ?? FALSE) === FALSE) {
       // We are processing a fully qualified table identifier, canonical name
       // should not be processed, just checked it does not exceed max length.
       if (strlen($canonicalName) > $this->getMaxLength(IdentifierType::Table)) {
@@ -64,6 +80,18 @@ class IdentifierHandler extends IdentifierHandlerBase {
       return $this->quote($prefix . substr($canonicalName, 0, $lSize) . $hash . substr($canonicalName, -$rSize));
     }
     return $this->quote($prefix . $canonicalName);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function parseTableIdentifier(string $identifier): array {
+    $parts = parent::parseTableIdentifier($identifier);
+    if (isset($this->schema) && $parts['schema'] === NULL) {
+      $parts['schema'] = $this->schema;
+      $parts['schema_default_added'] = TRUE;
+    }
+    return $parts;
   }
 
 }
