@@ -30,7 +30,7 @@ class ConnectionTest extends UnitTestCase {
    *   - Arguments to pass to Connection::setPrefix().
    *   - Expected result from Connection::getPrefix().
    */
-  public static function providerPrefixRoundTrip() {
+  public static function providerPrefixRoundTrip(): array {
     return [
       [
         [
@@ -49,12 +49,16 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Exercise setPrefix() and getPrefix().
+   * Exercise legacy setPrefix() and getPrefix().
    */
-  #[DataProvider('providerEscapeTables')]
+  #[IgnoreDeprecations]
+  #[DataProvider('providerPrefixRoundTrip')]
   public function testPrefixRoundTrip($expected, $prefix_info): void {
+    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::setPrefix() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass the table prefix to the IdentifierHandler constructor instead. See https://www.drupal.org/node/3513282');
+    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::getPrefix() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/3513282');
+
     $mock_pdo = $this->createMock(StubPDO::class);
-    $connection = new StubConnection($mock_pdo, []);
+    $connection = new StubConnection($mock_pdo, ['prefix' =>  $prefix_info]);
 
     // setPrefix() is protected, so we make it accessible with reflection.
     $reflection = new \ReflectionClass(StubConnection::class);
@@ -457,7 +461,7 @@ class ConnectionTest extends UnitTestCase {
    *   testEscapeField. The first value is the expected value, and the second
    *   value is the value to test.
    */
-  public static function providerEscapeTables() {
+  public static function providerEscapeTables(): array {
     return [
       ['nocase', 'nocase'],
       ['camelCase', 'camelCase'],
@@ -474,12 +478,12 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Tests legacy ::escapeTable
+   * Tests legacy ::escapeTable.
    */
   #[IgnoreDeprecations]
   #[DataProvider('providerEscapeTables')]
   public function testEscapeTable($expected, $name, array $identifier_quote = ['"', '"']): void {
-    $this->expectDeprecation('Drupal\Core\Database\Connection::escapeTable() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312');
+    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::escapeTable() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/3513282');
     $mock_pdo = $this->createMock(StubPDO::class);
     $connection = new StubConnection($mock_pdo, [], $identifier_quote);
 
@@ -559,7 +563,7 @@ class ConnectionTest extends UnitTestCase {
    *   testEscapeField. The first value is the expected value, and the second
    *   value is the value to test.
    */
-  public static function providerEscapeDatabase() {
+  public static function providerEscapeDatabase(): array {
     return [
       ['/name/', 'name', ['/', '/']],
       ['`backtick`', 'backtick', ['`', '`']],
@@ -570,12 +574,12 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Tests legacy ::escapeDatabase
+   * Tests legacy ::escapeDatabase.
    */
   #[IgnoreDeprecations]
   #[DataProvider('providerEscapeDatabase')]
   public function testEscapeDatabase($expected, $name, array $identifier_quote = ['"', '"']): void {
-    $this->expectDeprecation('Drupal\Core\Database\Connection::escapeDatabase() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312');
+    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::escapeDatabase() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/3513282');
     $mock_pdo = $this->createMock(StubPDO::class);
     $connection = new StubConnection($mock_pdo, [], $identifier_quote);
 
