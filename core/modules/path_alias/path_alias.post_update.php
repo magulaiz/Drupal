@@ -56,11 +56,14 @@ function path_alias_post_update_entity_updates(&$sandbox = []): void {
   $field_storage_definitions['path']->setRevisionable(TRUE);
   $field_storage_definitions['alias']->setRevisionable(TRUE);
 
-  $fields['changed'] = BaseFieldDefinition::create('changed')
+  $field_storage_definitions['changed'] = BaseFieldDefinition::create('changed')
+    ->setName('changed')
+    ->setTargetEntityTypeId('path_alias')
+    ->setTargetBundle(NULL)
     ->setLabel(t('Changed'))
-    ->setDescription(t('The time the Path alias was last edited.'))
-    ->setTranslatable(TRUE)
-    ->setRevisionable(TRUE);
+    ->setDescription(t('The time when alias was last edited.'))
+    ->setRevisionable(TRUE)
+    ->setTranslatable(TRUE);
 
   $field_storage_definitions['revision_id'] = BaseFieldDefinition::create('integer')
     ->setName('revision_id')
