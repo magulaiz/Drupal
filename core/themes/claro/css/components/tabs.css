@@ -172,6 +172,15 @@
   box-shadow: none;
 }
 
+.tabs__trigger .hamburger-icon,
+.tabs__trigger .close-icon {
+  line-height: normal;
+}
+
+.tabs__trigger .close-icon {
+  display: none;
+}
+
 @media screen and (min-width: 48em) {
   .tabs-wrapper {
     display: flex;
