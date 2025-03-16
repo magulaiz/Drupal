@@ -1,35 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views_test_ajax_subscriber\EventSubscriber;
 
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Class ViewsTestAjaxSubscriberEvent.
- *
- * @package Drupal\views_test_ajax_subscriber
+ * Event subscriber used by EmbeddedViewPaginationAJAXTest.
  */
 class ViewsTestAjaxSubscriberEvent implements EventSubscriberInterface {
 
   /**
    * {@inheritdoc}
    */
-  static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [KernelEvents::RESPONSE => [['onResponse']]];
   }
 
   /**
-   * This method is called whenever the kernel.response event is
-   * dispatched.
+   * This method is called whenever the kernel.response event is dispatched.
    *
-   * @param Event $event
+   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
+   *   The response event.
+   *
    * @throws \Drupal\views_test_ajax_subscriber\EventSubscriber\UnexpectedViewAjaxException
    */
-  public function onResponse(Event $event) {
-    /** @var ViewAjaxResponse $response */
+  public function onResponse(ResponseEvent $event): void {
+    /** @var \Drupal\views\Ajax\ViewAjaxResponse $response */
     $response = $event->getResponse();
 
     // Only alter views ajax responses.
@@ -45,4 +46,7 @@ class ViewsTestAjaxSubscriberEvent implements EventSubscriberInterface {
 
 }
 
+/**
+ * Exception thrown when the AJAX request comes from the wrong view.
+ */
 class UnexpectedViewAjaxException extends \Exception {}

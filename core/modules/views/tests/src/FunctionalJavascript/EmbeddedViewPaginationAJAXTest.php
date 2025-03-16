@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
-use Drupal\simpletest\ContentTypeCreationTrait;
-use Drupal\simpletest\NodeCreationTrait;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -12,7 +14,7 @@ use Drupal\views\Tests\ViewTestData;
  *
  * @group views
  */
-class EmbeddedViewPaginationAJAXTest extends JavascriptTestBase {
+class EmbeddedViewPaginationAJAXTest extends WebDriverTestBase {
 
   use ContentTypeCreationTrait;
   use NodeCreationTrait;
@@ -20,18 +22,23 @@ class EmbeddedViewPaginationAJAXTest extends JavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'views', 'views_test_config', 'views_test_ajax_subscriber'];
+  protected static $modules = ['node', 'views', 'views_test_config', 'views_test_ajax_subscriber'];
 
   /**
    * @var array
    * Test Views to enable.
    */
-  public static $testViews = ['test_content_ajax', 'test_view_area_ajax'];
+  public static array $testViews = ['test_content_ajax', 'test_view_area_ajax'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     ViewTestData::createTestViews(self::class, ['views_test_config']);
@@ -52,19 +59,18 @@ class EmbeddedViewPaginationAJAXTest extends JavascriptTestBase {
   }
 
   /**
-   * Checks if embedded views send pager requests as themselves and not as
-   * enclosing view.
+   * Checks if embedded views send pager requests as themselves and not as enclosing view.
+   *
+   * @see \Drupal\views_test_ajax_subscriber\EventSubscriber\EventSubscriberViewsTestAjaxSubscriberEvent
    */
-  public function testPaginationInEmbeddedAjaxView() {
+  public function testPaginationInEmbeddedAjaxView(): void {
     $this->drupalGet('test-view-area-ajax');
 
     $session_assert = $this->assertSession();
 
-    /**
+    /*
      * Tell the event subscriber to expect a pager request sent by the
      * test_content_ajax view.
-     *
-     * @see \Drupal\views_test_ajax_subscriber\EventSubscriberViewsTestAjaxSubscriberEvent
      */
     \Drupal::state()->set('views_test_ajax_subscriber', 'test_content_ajax');
     $session_assert->waitForLink('Next ›')->click();
