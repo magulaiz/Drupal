@@ -104,21 +104,21 @@ class IdentifierTest extends UnitTestCase {
         'prefix' => 'prefix____12345678901234567890123456789012345678901',
         'expectedCanonical' => 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar',
         'expectedMachine' => '',
-        'expectedException' => 'Table canonical identifier \'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar\' cannot be converted into a machine identifier; table prefix \'prefix____12345678901234567890123456789012345678901\'',
+        'expectedException' => 'Table canonical identifier \'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar\' cannot be converted into a machine identifier; prefix \'prefix____12345678901234567890123456789012345678901\'',
       ],
       'Prefix too long to fit, table does not require shortening' => [
         'identifier' => 'nocase',
         'prefix' => 'VeryVeryVeryVeryVeryVeryVeryVeryLongLongLongLongLongLongLongPrefix',
         'expectedCanonical' => 'nocase',
         'expectedMachine' => '',
-        'expectedException' => 'Table canonical identifier \'nocase\' cannot be converted into a machine identifier; table prefix \'VeryVeryVeryVeryVeryVeryVeryVeryLongLongLongLongLongLongLongPrefix\'',
+        'expectedException' => 'Table canonical identifier \'nocase\' cannot be converted into a machine identifier; prefix \'VeryVeryVeryVeryVeryVeryVeryVeryLongLongLongLongLongLongLongPrefix\'',
       ],
       'Prefix too long to fit, table requires shortening' => [
         'identifier' => 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar',
         'prefix' => 'VeryVeryVeryVeryVeryVeryVeryVeryLongLongLongLongLongLongLongPrefix',
         'expectedCanonical' => 'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar',
         'expectedMachine' => '',
-        'expectedException' => 'Table canonical identifier \'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar\' cannot be converted into a machine identifier; table prefix \'VeryVeryVeryVeryVeryVeryVeryVeryLongLongLongLongLongLongLongPrefix\'',
+        'expectedException' => 'Table canonical identifier \'VeryVeryVeryVeryHungryHungryHungryHungryHungryHungryHungryCaterpillar\' cannot be converted into a machine identifier; prefix \'VeryVeryVeryVeryVeryVeryVeryVeryLongLongLongLongLongLongLongPrefix\'',
       ],
       // Sometimes, table names are following the pattern database.schema.table.
       'Fully qualified - too many parts: 4' => [

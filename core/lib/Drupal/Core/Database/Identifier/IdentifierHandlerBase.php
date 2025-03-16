@@ -196,6 +196,25 @@ abstract class IdentifierHandlerBase {
   /**
    * @todo fill in.
    */
+  protected function cropByHashing(string $canonicalName, array $info, IdentifierType $type, string $prefix, int $length, int $hashLength): string {
+    $allowedLength = $length - strlen($prefix) - $hashLength;
+    if ($allowedLength < 4) {
+      throw new IdentifierException(sprintf(
+        '%s canonical identifier \'%s\' cannot be converted into a machine identifier%s',
+        ucfirst($type->value),
+        $canonicalName,
+        $prefix !== '' ? "; prefix '{$prefix}'" : '',
+      ));
+    }
+    $hash = substr(hash('sha256', $canonicalName), 0, $hashLength);
+    $lSize = (int) ($allowedLength / 2);
+    $rSize = $allowedLength - $lSize;
+    return $prefix . substr($canonicalName, 0, $lSize) . $hash . substr($canonicalName, -$rSize);
+  }
+
+  /**
+   * @todo fill in.
+   */
   protected function resolveTableForMachine(string $canonicalName, array $info): string {
     if (strlen($info['needs_prefix'] ? $this->tablePrefix : '' . $canonicalName) > $this->getMaxLength(IdentifierType::Table)) {
       throw new IdentifierException(sprintf(

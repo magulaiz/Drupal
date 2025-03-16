@@ -10,7 +10,7 @@ use Drupal\Core\Database\Identifier\IdentifierType;
 use Drupal\Core\Database\Identifier\Schema;
 
 /**
- * MySQL implementation of the identifier handler.
+ * PostgreSql implementation of the identifier handler.
  */
 class IdentifierHandler extends IdentifierHandlerBase {
 
@@ -28,10 +28,7 @@ class IdentifierHandler extends IdentifierHandlerBase {
    *   The default schema to use for database operations. If not specified,
    *   it's assumed to use the 'public' schema.
    * @param array{0:string, 1:string} $identifierQuotes
-   *   The identifier quote characters for the database type. An array
-   *   containing the start and end identifier quote characters for the
-   *   database type. The ANSI SQL standard identifier quote character is a
-   *   double quotation mark.
+   *   The identifier quote characters.
    */
   public function __construct(
     string $tablePrefix,
@@ -41,6 +38,9 @@ class IdentifierHandler extends IdentifierHandlerBase {
     parent::__construct($tablePrefix, $identifierQuotes);
     if ($defaultSchema !== '' && $defaultSchema !== 'public') {
       $this->defaultSchema = $this->schema($defaultSchema);
+    }
+    else {
+      $this->defaultSchema = NULL;
     }
   }
 
@@ -81,18 +81,8 @@ class IdentifierHandler extends IdentifierHandlerBase {
 
     $prefix = $info['needs_prefix'] ? $this->tablePrefix : '';
     if (strlen($prefix . $canonicalName) > $this->getMaxLength(IdentifierType::Table)) {
-      $hash = substr(hash('sha256', $canonicalName), 0, 10);
-      $allowedLength = $this->getMaxLength(IdentifierType::Table) - strlen($this->tablePrefix) - 10;
-      if ($allowedLength < 4) {
-        throw new IdentifierException(sprintf(
-          'Table canonical identifier \'%s\' cannot be converted into a machine identifier%s',
-          $canonicalName,
-          $info['needs_prefix'] ? "; table prefix '{$this->tablePrefix}'" : '',
-        ));
-      }
-      $lSize = (int) ($allowedLength / 2);
-      $rSize = $allowedLength - $lSize;
-      return $this->quote($prefix . substr($canonicalName, 0, $lSize) . $hash . substr($canonicalName, -$rSize));
+      // We shorten too long table names.
+      return $this->quote($this->cropByHashing($canonicalName, $info, IdentifierType::Table, $prefix, $this->getMaxLength(IdentifierType::Table), 10));
     }
     return $this->quote($prefix . $canonicalName);
   }
@@ -103,6 +93,8 @@ class IdentifierHandler extends IdentifierHandlerBase {
   public function parseTableIdentifier(string $identifier): array {
     $parts = parent::parseTableIdentifier($identifier);
     if (isset($this->defaultSchema) && $parts['schema'] === NULL) {
+      // When a non-public schema is defined for the connection, machine names
+      // for table identifiers should be in the "schema"."table" format.
       $parts['schema'] = $this->defaultSchema;
       $parts['schema_default_added'] = TRUE;
     }

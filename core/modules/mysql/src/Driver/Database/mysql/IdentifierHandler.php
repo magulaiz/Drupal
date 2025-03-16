@@ -67,18 +67,8 @@ class IdentifierHandler extends IdentifierHandlerBase {
 
     $prefix = $info['needs_prefix'] ? $this->tablePrefix : '';
     if (strlen($prefix . $canonicalName) > $this->getMaxLength(IdentifierType::Table)) {
-      $hash = substr(hash('sha256', $canonicalName), 0, 10);
-      $allowedLength = $this->getMaxLength(IdentifierType::Table) - strlen($this->tablePrefix) - 10;
-      if ($allowedLength < 4) {
-        throw new IdentifierException(sprintf(
-          'Table canonical identifier \'%s\' cannot be converted into a machine identifier%s',
-          $canonicalName,
-          $info['needs_prefix'] ? "; table prefix '{$this->tablePrefix}'" : '',
-        ));
-      }
-      $lSize = (int) ($allowedLength / 2);
-      $rSize = $allowedLength - $lSize;
-      return $this->quote($prefix . substr($canonicalName, 0, $lSize) . $hash . substr($canonicalName, -$rSize));
+      // We shorten too long table names.
+      return $this->quote($this->cropByHashing($canonicalName, $info, IdentifierType::Table, $prefix, $this->getMaxLength(IdentifierType::Table), 10));
     }
     return $this->quote($prefix . $canonicalName);
   }
