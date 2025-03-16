@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\Core\Hook\OrderOperation;
 
-class AbsoluteOrderOperation implements OrderOperationInterface {
+class FirstOrLast implements OrderOperationInterface {
 
   /**
    * Constructor.

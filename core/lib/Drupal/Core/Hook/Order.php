@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Hook;
 
-use Drupal\Core\Hook\OrderOperation\AbsoluteOrderOperation;
+use Drupal\Core\Hook\OrderOperation\FirstOrLast;
 use Drupal\Core\Hook\OrderOperation\OrderOperationInterface;
 
 /**
@@ -19,7 +19,7 @@ enum Order: int implements OrderInterface {
   case Last = 0;
 
   public function getOperation(string $identifier): OrderOperationInterface {
-    return new AbsoluteOrderOperation($identifier, $this === self::Last);
+    return new FirstOrLast($identifier, $this === self::Last);
   }
 
 }
