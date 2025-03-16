@@ -32,7 +32,6 @@ class FileManagedStateTest extends WebDriverTestBase {
 
     // Wait until the page has fully loaded including the ajax load of the
     // managed files.
-    $this->assertSession()->assertWaitOnAjaxRequest();
     $page = $this->getSession()->getPage();
 
     // Now get the fields from the page.
