@@ -31,9 +31,7 @@ use Symfony\Component\Routing\RouteCollection;
 class SystemMenuBlockTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',
@@ -315,6 +313,7 @@ class SystemMenuBlockTest extends KernelTestBase {
 
   /**
    * @return array
+   *   An array of test cases for the config expanded option.
    */
   public static function configExpandedTestCases() {
     return [

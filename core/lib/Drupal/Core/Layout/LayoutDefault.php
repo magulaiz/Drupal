@@ -73,6 +73,7 @@ class LayoutDefault extends ConfigurablePluginBase implements LayoutInterface, P
    *
    * @return \Drupal\Core\Layout\LayoutDefinition
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getPluginDefinition() {
     return parent::getPluginDefinition();
   }

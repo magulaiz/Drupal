@@ -8,7 +8,7 @@ use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Plugin\ConfigurablePluginBase;
 
 /**
- * A fixture to test Configurable Plugins.
+ * A configurable plugin implementation used for testing.
  */
 class TestConfigurablePlugin extends ConfigurablePluginBase implements DependentPluginInterface {
 
