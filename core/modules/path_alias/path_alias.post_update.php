@@ -51,11 +51,16 @@ function path_alias_post_update_entity_updates(&$sandbox = []): void {
   ];
   $entity_type->set('revision_metadata_keys', $revision_metadata_keys);
 
-  // Update the field storage definitions and add the new ones required by a
-  // revisionable entity type.
+  // Update the field storage definitions for path alias.
   $field_storage_definitions['langcode']->setRevisionable(TRUE);
   $field_storage_definitions['path']->setRevisionable(TRUE);
   $field_storage_definitions['alias']->setRevisionable(TRUE);
+
+  $fields['changed'] = BaseFieldDefinition::create('changed')
+    ->setLabel(t('Changed'))
+    ->setDescription(t('The time the Path alias was last edited.'))
+    ->setTranslatable(TRUE)
+    ->setRevisionable(TRUE);
 
   $field_storage_definitions['revision_id'] = BaseFieldDefinition::create('integer')
     ->setName('revision_id')
@@ -101,6 +106,7 @@ function path_alias_post_update_entity_updates(&$sandbox = []): void {
     ->setDescription(new TranslatableMarkup('Briefly describe the changes you have made.'))
     ->setRevisionable(TRUE)
     ->setDefaultValue('');
+
   $definition_update_manager->updateFieldableEntityType($entity_type, $field_storage_definitions, $sandbox);
 
 }
