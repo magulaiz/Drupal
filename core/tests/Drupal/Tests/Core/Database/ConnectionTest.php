@@ -23,6 +23,52 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 class ConnectionTest extends UnitTestCase {
 
   /**
+   * Data provider for testPrefixRoundTrip().
+   *
+   * @return array
+   *   Array of arrays with the following elements:
+   *   - Arguments to pass to Connection::setPrefix().
+   *   - Expected result from Connection::getPrefix().
+   */
+  public static function providerPrefixRoundTrip() {
+    return [
+      [
+        [
+          '' => 'test_',
+        ],
+        'test_',
+      ],
+      [
+        [
+          'fooTable' => 'foo_',
+          'barTable' => 'foo_',
+        ],
+        'foo_',
+      ],
+    ];
+  }
+
+  /**
+   * Exercise setPrefix() and getPrefix().
+   */
+  #[DataProvider('providerEscapeTables')]
+  public function testPrefixRoundTrip($expected, $prefix_info): void {
+    $mock_pdo = $this->createMock(StubPDO::class);
+    $connection = new StubConnection($mock_pdo, []);
+
+    // setPrefix() is protected, so we make it accessible with reflection.
+    $reflection = new \ReflectionClass(StubConnection::class);
+    $set_prefix = $reflection->getMethod('setPrefix');
+
+    // Set the prefix data.
+    $set_prefix->invokeArgs($connection, [$prefix_info]);
+    // Check the round-trip.
+    foreach ($expected as $prefix) {
+      $this->assertEquals($prefix, $connection->getPrefix());
+    }
+  }
+
+  /**
    * Data provider for testPrefixTables().
    *
    * @return array
@@ -428,10 +474,10 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::escapeTable
-   * @dataProvider providerEscapeTables
-   * @group legacy
+   * Tests legacy ::escapeTable
    */
+  #[IgnoreDeprecations]
+  #[DataProvider('providerEscapeTables')]
   public function testEscapeTable($expected, $name, array $identifier_quote = ['"', '"']): void {
     $this->expectDeprecation('Drupal\Core\Database\Connection::escapeTable() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312');
     $mock_pdo = $this->createMock(StubPDO::class);
@@ -524,10 +570,10 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::escapeDatabase
-   * @dataProvider providerEscapeDatabase
-   * @group legacy
+   * Tests legacy ::escapeDatabase
    */
+  #[IgnoreDeprecations]
+  #[DataProvider('providerEscapeDatabase')]
   public function testEscapeDatabase($expected, $name, array $identifier_quote = ['"', '"']): void {
     $this->expectDeprecation('Drupal\Core\Database\Connection::escapeDatabase() is deprecated in drupal:11.9.0 and is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/7654312');
     $mock_pdo = $this->createMock(StubPDO::class);
