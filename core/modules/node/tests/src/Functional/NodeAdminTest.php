@@ -273,8 +273,7 @@ class NodeAdminTest extends NodeTestBase {
     }
     // Confirm that the nodes are visible to the less privileged user.
     foreach ($nodes_visible as $node) {
-      $this->drupalGet($node->toUrl('canonical'));
-      $this->assertSession()->statusCodeEquals(200);
+      self::assertTrue($node->access('view', $view_user));
       $this->drupalGet('admin/content');
       $this->assertSession()->linkByHrefExists('node/' . $node->id(), 0, sprintf('The "%s" node is visible on the admin/content page.', $node->getTitle()));
     }
@@ -290,8 +289,7 @@ class NodeAdminTest extends NodeTestBase {
       ],
     ]));
     $unpublished_node_by_admin = $this->drupalCreateNode(['type' => 'page', 'uid' => $this->adminUser->id(), 'title' => 'Unpublished page by admin', 'status' => 0]);
-    $this->drupalGet($unpublished_node_by_admin->toUrl('canonical'));
-    $this->assertSession()->statusCodeEquals(403);
+    self::assertFalse($unpublished_node_by_admin->access('view'));
     $this->drupalGet('admin/content');
     $this->assertSession()->linkByHrefNotExists('node/' . $unpublished_node_by_admin->id());
   }
