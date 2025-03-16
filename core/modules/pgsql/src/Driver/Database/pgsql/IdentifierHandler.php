@@ -17,16 +17,31 @@ class IdentifierHandler extends IdentifierHandlerBase {
   /**
    * The default schema identifier, if specified.
    */
-  protected ?Schema $schema;
+  public readonly ?Schema $defaultSchema;
 
   /**
-   * @todo fill in.
+   * Constructor.
+   *
+   * @param string $tablePrefix
+   *   The table prefix to be used by the database connection.
+   * @param string $defaultSchema
+   *   The default schema to use for database operations. If not specified,
+   *   it's assumed to use the 'public' schema.
+   * @param array{0:string, 1:string} $identifierQuotes
+   *   The identifier quote characters for the database type. An array
+   *   containing the start and end identifier quote characters for the
+   *   database type. The ANSI SQL standard identifier quote character is a
+   *   double quotation mark.
    */
-  public function setConnectionSchema(Schema $identifier): void {
-    if (isset($this->schema)) {
-      throw new \LogicException("A default schema identifier {$this->schema} is already set for this connection");
+  public function __construct(
+    string $tablePrefix,
+    string $defaultSchema = '',
+    array $identifierQuotes = ['"', '"'],
+  ) {
+    parent::__construct($tablePrefix, $identifierQuotes);
+    if ($defaultSchema !== '' && $defaultSchema !== 'public') {
+      $this->defaultSchema = $this->schema($defaultSchema);
     }
-    $this->schema = $identifier;
   }
 
   /**
@@ -87,8 +102,8 @@ class IdentifierHandler extends IdentifierHandlerBase {
    */
   public function parseTableIdentifier(string $identifier): array {
     $parts = parent::parseTableIdentifier($identifier);
-    if (isset($this->schema) && $parts['schema'] === NULL) {
-      $parts['schema'] = $this->schema;
+    if (isset($this->defaultSchema) && $parts['schema'] === NULL) {
+      $parts['schema'] = $this->defaultSchema;
       $parts['schema_default_added'] = TRUE;
     }
     return $parts;

@@ -87,17 +87,14 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * Constructs a connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
-    // Get the IdentifierHandler early to process the schema if needed.
-    $identifierHandler = new IdentifierHandler($connection_options['prefix'] ?? '');
+    // Manage the table prefix.
+    $prefix = $connection_options['prefix'] ?? '';
+    assert(is_string($prefix), 'The \'prefix\' connection option to ' . __METHOD__ . '() must be a string.');
 
-    // Sanitize the schema name here.
-    if (isset($connection_options['schema']) && ($connection_options['schema'] !== 'public')) {
-      $schema = $identifierHandler->schema($connection_options['schema']);
-      $identifierHandler->setConnectionSchema($schema);
-      $connection_options['schema'] = $schema->canonical();
-    }
+    // Manage the schema name.
+    $defaultSchema = $connection_options['schema'] ?? '';
 
-    parent::__construct($connection, $connection_options, $identifierHandler);
+    parent::__construct($connection, $connection_options, new IdentifierHandler($prefix, $defaultSchema));
 
     // Force PostgreSQL to use the UTF-8 character set by default.
     $this->connection->exec("SET NAMES 'UTF8'");
