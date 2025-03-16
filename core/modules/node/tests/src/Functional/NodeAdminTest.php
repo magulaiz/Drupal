@@ -273,7 +273,7 @@ class NodeAdminTest extends NodeTestBase {
     }
     // Confirm that the nodes are visible to the less privileged user.
     foreach ($nodes_visible as $node) {
-      self::assertTrue($node->access('view', $view_user));
+      self::assertTrue($node->access('view', $viewer_user));
       $this->drupalGet('admin/content');
       $this->assertSession()->linkByHrefExists('node/' . $node->id(), 0, sprintf('The "%s" node is visible on the admin/content page.', $node->getTitle()));
     }
