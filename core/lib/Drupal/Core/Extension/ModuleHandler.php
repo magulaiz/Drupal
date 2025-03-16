@@ -481,12 +481,20 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   List of implementation callables.
    */
   protected function getCombinedListeners(string $main_hook, string ...$extra_hooks): array {
-    if (!$extra_hooks) {
+    $extra_listeners_by_hook = $extra_hooks
+      ? array_filter(array_map(
+        $this->getHookListeners(...),
+        array_combine($extra_hooks, $extra_hooks),
+      ))
+      : [];
+    if (!$extra_listeners_by_hook) {
+      // No extra hooks were provided in the call, or none of them has any
+      // listeners.
       return $this->getFlatHookListeners($main_hook);
     }
     $listeners_by_module = $this->getHookListeners($main_hook);
-    foreach ($extra_hooks as $extra_hook) {
-      foreach ($this->getHookListeners($extra_hook) as $module => $extra_listeners) {
+    foreach ($extra_listeners_by_hook as $extra_listeners_by_module) {
+      foreach ($extra_listeners_by_module as $module => $extra_listeners) {
         foreach ($extra_listeners as $extra_listener) {
           $listeners_by_module[$module][] = $extra_listener;
         }
