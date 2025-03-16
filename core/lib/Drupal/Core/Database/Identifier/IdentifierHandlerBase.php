@@ -17,8 +17,6 @@ abstract class IdentifierHandlerBase {
 
   /**
    * A cache of all identifiers handled.
-   *
-   * @var array{'identifier':array<string,array<string,string>>,'machine':array<string,array<string,string>>}
    */
   protected array $identifiers;
 
@@ -41,75 +39,113 @@ abstract class IdentifierHandlerBase {
   }
 
   /**
-   * @todo fill in.
+   * Returns a database identifier value object.
+   *
+   * @param string|\Drupal\Core\Database\Identifier\Database $identifier
+   *   A database name as a string, or a Database value object.
+   *
+   * @return \Drupal\Core\Database\Identifier\Database
+   *   A database identifier value object.
    */
   public function database(string|Database $identifier): Database {
-    if ($identifier instanceof Database) {
-      $identifier = $identifier->identifier;
-    }
-    if ($this->hasIdentifier($identifier, IdentifierType::Database)) {
-      $database = $this->getIdentifier($identifier, IdentifierType::Database);
-    }
-    else {
-      $database = new Database($this, $identifier);
-      $this->setIdentifier($identifier, IdentifierType::Database, $database);
-    }
-    return $database;
+    return $this->getIdentifierValueObject(IdentifierType::Database, $identifier);
   }
 
   /**
-   * @todo fill in.
+   * Returns a schema identifier value object.
+   *
+   * @param string|\Drupal\Core\Database\Identifier\Schema $identifier
+   *   A schema name as a string, or a Schema value object.
+   *
+   * @return \Drupal\Core\Database\Identifier\Schema
+   *   A schema identifier value object.
    */
   public function schema(string|Schema $identifier): Schema {
-    if ($identifier instanceof Schema) {
+    return $this->getIdentifierValueObject(IdentifierType::Schema, $identifier);
+  }
+
+  /**
+   * Returns a table identifier value object.
+   *
+   * @param string|\Drupal\Core\Database\Identifier\Table $identifier
+   *   A table name as a string, or a Table value object.
+   *
+   * @return \Drupal\Core\Database\Identifier\Table
+   *   A table identifier value object.
+   */
+  public function table(string|Table $identifier): Table {
+    return $this->getIdentifierValueObject(IdentifierType::Table, $identifier);
+  }
+
+  /**
+   * Returns the value object of an identifier.
+   *
+   * @param \Drupal\Core\Database\Identifier\IdentifierType $type
+   *   The type of identifier.
+   * @param string|\Drupal\Core\Database\Identifier\IdentifierBase $identifier
+   *   An identifier as a string, or an identifier value object.
+   *
+   * @return \Drupal\Core\Database\Identifier\IdentifierBase
+   *   An identifier value object.
+   */
+  protected function getIdentifierValueObject(IdentifierType $type, string|IdentifierBase $identifier): IdentifierBase {
+    $valueObjectClass = IdentifierType::valueObjectClass($type);
+    if ($identifier instanceof $valueObjectClass) {
       $identifier = $identifier->identifier;
     }
-    if ($this->hasIdentifier($identifier, IdentifierType::Schema)) {
-      $schema = $this->getIdentifier($identifier, IdentifierType::Schema);
+    if ($this->isCached($identifier, $type)) {
+      $valueObject = $this->fromCache($identifier, $type);
     }
     else {
-      $schema = new Schema($this, $identifier);
-      $this->setIdentifier($identifier, IdentifierType::Schema, $schema);
+      $valueObject = new $valueObjectClass($this, $identifier);
+      $this->toCache($identifier, $type, $valueObject);
     }
-    return $schema;
+    return $valueObject;
   }
 
   /**
-   * @todo fill in.
+   * Adds an identifier value object to the local cache.
+   *
+   * @param string $identifier
+   *   The raw identifier string.
+   * @param \Drupal\Core\Database\Identifier\IdentifierType $type
+   *   The type of identifier.
+   * @param \Drupal\Core\Database\Identifier\IdentifierBase $identifierValueObject
+   *   The identifier value object.
    */
-  public function table(string|Table $tableIdentifier): Table {
-    if ($tableIdentifier instanceof Table) {
-      $tableIdentifier = $tableIdentifier->identifier;
-    }
-    if ($this->hasIdentifier($tableIdentifier, IdentifierType::Table)) {
-      $table = $this->getIdentifier($tableIdentifier, IdentifierType::Table);
-    }
-    else {
-      $table = new Table($this, $tableIdentifier);
-      $this->setIdentifier($tableIdentifier, IdentifierType::Table, $table);
-    }
-    return $table;
+  protected function toCache(string $identifier, IdentifierType $type, IdentifierBase $identifierValueObject): void {
+    $this->identifiers['identifier'][$identifier][$type->value] = $identifierValueObject;
   }
 
   /**
-   * @todo fill in.
+   * Checks if an identifier value object is present in the local cache.
+   *
+   * @param string $identifier
+   *   The raw identifier string.
+   * @param \Drupal\Core\Database\Identifier\IdentifierType $type
+   *   The type of identifier.
+   *
+   * @return bool
+   *   TRUE if the identifier value object is available in tha local cache,
+   *   FALSE otherwise.
    */
-  protected function setIdentifier(string $id, IdentifierType $type, IdentifierBase $identifier): void {
-    $this->identifiers['identifier'][$id][$type->value] = $identifier;
+  protected function isCached(string $identifier, IdentifierType $type): bool {
+    return isset($this->identifiers['identifier'][$identifier][$type->value]);
   }
 
   /**
-   * @todo fill in.
+   * Gets an identifier value object from the local cache.
+   *
+   * @param string $identifier
+   *   The raw identifier string.
+   * @param \Drupal\Core\Database\Identifier\IdentifierType $type
+   *   The type of identifier.
+   *
+   * @return \Drupal\Core\Database\Identifier\IdentifierBase
+   *   The identifier value object.
    */
-  protected function hasIdentifier(string $id, IdentifierType $type): bool {
-    return isset($this->identifiers['identifier'][$id][$type->value]);
-  }
-
-  /**
-   * @todo fill in.
-   */
-  protected function getIdentifier(string $id, IdentifierType $type): IdentifierBase {
-    return $this->identifiers['identifier'][$id][$type->value];
+  protected function fromCache(string $identifier, IdentifierType $type): IdentifierBase {
+    return $this->identifiers['identifier'][$identifier][$type->value];
   }
 
   /**
@@ -121,7 +157,13 @@ abstract class IdentifierHandlerBase {
   abstract public function getMaxLength(IdentifierType $type): int;
 
   /**
-   * @todo fill in.
+   * Returns a string with initial and final quote characters.
+   *
+   * @param string $value
+   *   The input string
+   *
+   * @return string
+   *   The quoted string.
    */
   public function quote(string $value): string {
     return $this->identifierQuotes[0] . $value . $this->identifierQuotes[1];
@@ -184,17 +226,30 @@ abstract class IdentifierHandlerBase {
   }
 
   /**
-   * @todo fill in.
-   */
-  public function resolveForMachine(string $canonicalName, array $info, IdentifierType $type): string {
-    return match ($type) {
-      IdentifierType::Table => $this->resolveTableForMachine($canonicalName, $info),
-      default => $this->quote($canonicalName),
-    };
-  }
-
-  /**
-   * @todo fill in.
+   * Shortens an identifier's canonical name by adding an hash.
+   *
+   * This method calculates an hash of the canonical name and then returns a
+   * string suitable for machine use. The hash is insterted in the middle of
+   * the remaining part of the canonical name once a prefix has been added.
+   *
+   * @param string $canonicalName
+   *   A canonical identifier string.
+   * @param array<string,mixed> $info
+   *   An associative array of context information.
+   * @param \Drupal\Core\Database\Identifier\IdentifierType $type
+   *   The type of identifier.
+   * @param string $prefix
+   *   A prefix that cannot be part of the shortening.
+   * @param positive-int $length
+   *   The maximum length of the returned string.
+   * @param positive-int $hashLength
+   *   The length of the hashed part in the returned string.
+   *
+   * @return string
+   *   The shortened string.
+   *
+   * @throws \Drupal\Core\Database\Exception\IdentifierException
+   *   If a shortened string could not be calculated.
    */
   protected function cropByHashing(string $canonicalName, array $info, IdentifierType $type, string $prefix, int $length, int $hashLength): string {
     $allowedLength = $length - strlen($prefix) - $hashLength;
@@ -213,7 +268,46 @@ abstract class IdentifierHandlerBase {
   }
 
   /**
-   * @todo fill in.
+   * Returns the machine accepted string for an identifer.
+   *
+   * This method converts a canonical identifier in the machine readable
+   * version. It could shorten the canonical name or perform other
+   * transformation as necessary. The returned value is stored in the
+   * identifier's $machineName property.
+   *
+   * @param string $canonicalName
+   *   A canonical identifier string.
+   * @param array<string,mixed> $info
+   *   An associative array of context information.
+   * @param \Drupal\Core\Database\Identifier\IdentifierType $type
+   *   The type of identifier.
+   *
+   * @return string
+   *   The machine accepted string for an identifer.
+   *
+   * @throws \Drupal\Core\Database\Exception\IdentifierException
+   *   If a machine string could not be determined.
+   */
+  public function resolveForMachine(string $canonicalName, array $info, IdentifierType $type): string {
+    return match ($type) {
+      IdentifierType::Table => $this->resolveTableForMachine($canonicalName, $info),
+      default => $this->quote($canonicalName),
+    };
+  }
+
+  /**
+   * Returns the machine accepted string for a table.
+   *
+   * @param string $canonicalName
+   *   A canonical table name string.
+   * @param array<string,mixed> $info
+   *   An associative array of context information.
+   *
+   * @return string
+   *   The machine accepted string for a table.
+   *
+   * @throws \Drupal\Core\Database\Exception\IdentifierException
+   *   If a machine string could not be determined.
    */
   protected function resolveTableForMachine(string $canonicalName, array $info): string {
     if (strlen($info['needs_prefix'] ? $this->tablePrefix : '' . $canonicalName) > $this->getMaxLength(IdentifierType::Table)) {
@@ -229,7 +323,21 @@ abstract class IdentifierHandlerBase {
   }
 
   /**
-   * @todo fill in.
+   * Parses a raw table identifier string into its components.
+   *
+   * A raw table identifier may include database and/or schema information in
+   * the format [database.][schema.]table and may include quote characters.
+   * This method returns the parts that can be used to get a Table identifier
+   * value object.
+   *
+   * @param string $identifier
+   *   A raw table identifier string.
+   *
+   * @return array{database: \Drupal\Core\Database\Identifier\Database|null,schema: \Drupal\Core\Database\Identifier\Schema|null, table: string, needs_prefix: bool}
+   *   The parts that can be used to get a Table identifier value object.
+   *
+   * @throws \Drupal\Core\Database\Exception\IdentifierException
+   *   If an error occurred.
    */
   public function parseTableIdentifier(string $identifier): array {
     $parts = explode(".", $identifier);
@@ -243,10 +351,7 @@ abstract class IdentifierHandlerBase {
       )),
     };
     if ($this->tablePrefix !== '') {
-      $needsPrefix = match (count($parts)) {
-        1 => TRUE,
-        default => FALSE,
-      };
+      $needsPrefix = count($parts) === 1;
     }
     else {
       $needsPrefix = FALSE;

@@ -10,7 +10,7 @@ namespace Drupal\Core\Database\Identifier;
  * When using full notation, a table can be identified as
  * [database.][schema.]table.
  */
-class Table extends IdentifierBase {
+final class Table extends IdentifierBase {
 
   /**
    * The database identifier, if specified.

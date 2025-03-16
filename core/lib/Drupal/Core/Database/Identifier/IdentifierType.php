@@ -18,4 +18,22 @@ enum IdentifierType: string {
   case Alias = 'alias';
 
   case Unknown = 'unknown';
+
+  /**
+   * Returns the value object class for an identifier type.
+   *
+   * @param Drupal\Core\Database\Identifier\IdentifierType $case
+   *   The identifier type.
+   *
+   * @return class-string<\Drupal\Core\Database\Identifier\IdentifierBase>
+   *   The class of the identifier type value object.
+   */
+  public static function valueObjectClass(self $case): string {
+    return match ($case) {
+      IdentifierType::Database => Database::class,
+      IdentifierType::Schema => Schema::class,
+      IdentifierType::Table => Table::class,
+    };
+  }
+
 }
