@@ -52,7 +52,7 @@ class LazyRouteCollection extends RouteCollection {
    * Gets a route by name.
    *
    * @param string $name
-   *   The route name
+   *   The route name.
    *
    * @return \Symfony\Component\Routing\Route|null
    *   A Route instance or null when not found
@@ -61,7 +61,7 @@ class LazyRouteCollection extends RouteCollection {
     try {
       return $this->provider->getRouteByName($name);
     }
-    catch (RouteNotFoundException $e) {
+    catch (RouteNotFoundException) {
       return NULL;
     }
   }

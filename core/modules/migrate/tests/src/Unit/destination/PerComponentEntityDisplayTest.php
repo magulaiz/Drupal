@@ -18,7 +18,7 @@ class PerComponentEntityDisplayTest extends MigrateTestCase {
   /**
    * Tests the entity display import method.
    */
-  public function testImport() {
+  public function testImport(): void {
     $values = [
       'entity_type' => 'entity_type_test',
       'bundle' => 'bundle_test',
@@ -47,9 +47,24 @@ class PerComponentEntityDisplayTest extends MigrateTestCase {
 
 }
 
+/**
+ * Test class used for testing per component entity display.
+ */
 class TestPerComponentEntityDisplay extends ComponentEntityDisplayBase {
   const MODE_NAME = 'view_mode';
+
+  /**
+   * The arguments of getEntity.
+   *
+   * @var string[]
+   */
   protected $testValues;
+
+  /**
+   * The test entity.
+   *
+   * @var \PHPUnit\Framework\MockObject\MockObject
+   */
   protected $entity;
 
   public function __construct($entity) {

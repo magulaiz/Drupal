@@ -35,6 +35,11 @@ class PaginationAJAXTest extends WebDriverTestBase {
    */
   public static $testViews = ['test_content_ajax'];
 
+  /**
+   * The test user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
   protected $user;
 
   /**
@@ -67,7 +72,7 @@ class PaginationAJAXTest extends WebDriverTestBase {
   /**
    * Tests if pagination via AJAX works for the "Content" View.
    */
-  public function testBasicPagination() {
+  public function testBasicPagination(): void {
     // Visit the content page.
     $this->drupalGet('test-content-ajax');
 
@@ -144,7 +149,7 @@ class PaginationAJAXTest extends WebDriverTestBase {
   /**
    * Tests if pagination via AJAX works for the filter with default value.
    */
-  public function testDefaultFilterPagination() {
+  public function testDefaultFilterPagination(): void {
     // Add default value to the title filter.
     $view = \Drupal::configFactory()->getEditable('views.view.test_content_ajax');
     $display = $view->get('display');
