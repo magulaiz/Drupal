@@ -323,7 +323,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       ],
     ];
     $this->schema->createTable($table_name, $table_specification);
-    $prefixed_table_name = $this->connection->getPrefix($table_name) . $table_name;
+    $prefixed_table_name = $this->connection->identifiers->tablePrefix . $table_name;
 
     // Three different calls to the method Schema::tableExists() with an
     // unprefixed table name.
