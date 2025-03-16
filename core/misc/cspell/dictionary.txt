@@ -38,6 +38,7 @@ bakeware
 barchart
 beatle
 bebebe
+beforebegin
 beforeclose
 beforecreate
 behat
@@ -384,6 +385,9 @@ prepopulation
 prerendered
 presave
 preuninstall
+prevall
+processlist
+proname
 prophesize
 protossl
 pseudotag

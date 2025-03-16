@@ -78,7 +78,7 @@
   Drupal.behaviors.blockDrag = {
     attach(context, settings) {
       // tableDrag is required and we should be on the blocks admin page.
-      if (typeof Drupal?.tableDrag?.blocks === 'undefined') {
+      if (typeof Drupal?.TableDrag.instances?.blocks === 'undefined') {
         return;
       }
 
@@ -102,7 +102,7 @@
               rowObject.method !== 'keyboard' ||
               rowObject.direction === 'down'
             ) {
-              rowObject.swap('after', this);
+              rowObject.swap('afterend', this);
             }
           }
           // This region has become empty.
@@ -164,9 +164,9 @@
 
       const table = $('#blocks');
       // Get the blocks tableDrag object.
-      const tableDrag = Drupal.tableDrag.blocks;
+      const tableDrag = Drupal.TableDrag.instances.blocks;
       // Add a handler for when a row is swapped, update empty regions.
-      tableDrag.row.prototype.onSwap = function (swappedRow) {
+      tableDrag.onSwap = function (swappedRow) {
         checkEmptyRegions(table, this);
         updateLastPlaced(table, this);
       };
@@ -222,7 +222,7 @@
           const select = $(this);
           // Find the correct region and insert the row as the last in the
           // region.
-          tableDrag.rowObject = new tableDrag.row(row[0]);
+          tableDrag.rowObject = tableDrag.row(row[0]);
           const regionMessage = table.find(
             `.region-${select[0].value}-message`,
           );
