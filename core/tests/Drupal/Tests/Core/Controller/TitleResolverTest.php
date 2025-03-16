@@ -197,6 +197,17 @@ class TitleResolverTest extends UnitTestCase {
     $this->assertEquals('test example', $this->titleResolver->getTitle($request, $route));
   }
 
+  /**
+   * Tests a null title.
+   *
+   * @see \Drupal\Core\Controller\TitleResolver::getTitle()
+   */
+  public function testNullTitle(): void {
+    $request = new Request();
+    $route = new Route('/test-route', ['_title' => NULL]);
+    $this->assertNull($this->titleResolver->getTitle($request, $route));
+  }
+
 }
 
 /**
