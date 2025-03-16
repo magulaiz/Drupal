@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 class ConfigurablePluginBaseTest extends TestCase {
 
   /**
-   * tests __construct().
+   * Tests the Constructor.
    */
   public function testConstructor(): void {
     $provided_configuration = [
