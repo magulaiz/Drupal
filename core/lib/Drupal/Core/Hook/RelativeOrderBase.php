@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Hook;
 
 use Drupal\Core\Hook\OrderOperation\OrderOperationInterface;
-use Drupal\Core\Hook\OrderOperation\RelativeOrderOperation;
+use Drupal\Core\Hook\OrderOperation\BeforeOrAfter;
 
 /**
  * Orders an implementation relative to other implementations.
@@ -42,7 +42,7 @@ abstract readonly class RelativeOrderBase implements OrderInterface {
    * {@inheritdoc}
    */
   public function getOperation(string $identifier): OrderOperationInterface {
-    return new RelativeOrderOperation(
+    return new BeforeOrAfter(
       $identifier,
       $this->modules,
       array_map(

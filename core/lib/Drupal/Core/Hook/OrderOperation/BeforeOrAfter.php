@@ -9,7 +9,7 @@ namespace Drupal\Core\Hook\OrderOperation;
  *
  * @internal
  */
-class RelativeOrderOperation implements OrderOperationInterface {
+class BeforeOrAfter implements OrderOperationInterface {
 
   /**
    * Constructor.
