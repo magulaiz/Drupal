@@ -514,6 +514,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     // That hook was designed in older Drupal versions where all hook
     // implementations were procedural, and each module could implement each
     // hook only once.
+    // This call to ->alter() does not cause infinite recursion, because it is
+    // called with only one alter type, so we don't end up in this line again.
     $this->alter('module_implements', $module_implements, $main_hook);
     // Convert the list into a different structure to pass to the hook order
     // operations.
