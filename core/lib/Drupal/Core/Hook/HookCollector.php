@@ -398,10 +398,14 @@ class HookCollector {
               self::checkForProceduralOnlyHooks($attribute, $class);
               $this->oopImplementations[$attribute->hook][$class . '::' . ($attribute->method ?: $method)] = $attribute->module ?? $module;
               if ($attribute->order !== NULL) {
+                // Use a lower weight for order operations that are declared
+                // together with the hook listener they apply to.
                 $this->orderOperations[$attribute->hook][0][] = $attribute->order->getOperation("$class::$method");
               }
             }
             elseif ($attribute instanceof ReOrderHook) {
+              // Use a higher weight for order operations that target other hook
+              // listeners.
               $this->orderOperations[$attribute->hook][1][] = $attribute->order->getOperation($attribute->class . '::' . $attribute->method);
             }
             elseif ($attribute instanceof RemoveHook) {
