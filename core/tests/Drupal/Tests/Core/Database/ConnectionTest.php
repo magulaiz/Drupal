@@ -58,7 +58,7 @@ class ConnectionTest extends UnitTestCase {
     $this->expectDeprecation('Drupal\\Core\\Database\\Connection::getPrefix() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/3513282');
 
     $mock_pdo = $this->createMock(StubPDO::class);
-    $connection = new StubConnection($mock_pdo, ['prefix' =>  $prefix_info]);
+    $connection = new StubConnection($mock_pdo, ['prefix' => $prefix_info]);
 
     // setPrefix() is protected, so we make it accessible with reflection.
     $reflection = new \ReflectionClass(StubConnection::class);
