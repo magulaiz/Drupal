@@ -14,10 +14,10 @@ use Drupal\Component\Utility\NestedArray;
  * configuration. This trait provides the appropriate getters and setters to
  * handle this logic, removing the need for excess boilerplate.
  *
- * If you use this trait, you must also implement ConfigurableInterface in your
- * class and call setConfiguration() in your constructor after calling the
- * parent constructor in order to merge the default configuration into the
- * plugin's provided configuration.
+ * To use this trait implement ConfigurableInterface and add a constructor. In
+ * the constructor call the parent constructor and then call setConfiguration().
+ * That will merge the explicitly define plugin configuration and the default
+ * plugin configuration.
  *
  * @ingroup Plugin
  */
@@ -50,9 +50,9 @@ trait ConfigurableTrait {
   /**
    * Sets the configuration for this plugin instance.
    *
-   * The provided configuration is merged with the default configuration and
-   * stored in the plugin's $configuration member. If a configuration key exists
-   * in both, then the provided configuration will override the default.
+   * The provided configuration is merged with the plugin default configuration.
+   * If the same configuration key exists in both configurations, then the value
+   * in the provided configuration will override the default.
    *
    * @param array $configuration
    *   An associative array containing the plugin's configuration.
