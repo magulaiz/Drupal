@@ -16,7 +16,7 @@ use Drupal\Component\Utility\NestedArray;
  *
  * To use this trait implement ConfigurableInterface and add a constructor. In
  * the constructor call the parent constructor and then call setConfiguration().
- * That will merge the explicitly define plugin configuration and the default
+ * That will merge the explicitly defined plugin configuration and the default
  * plugin configuration.
  *
  * @ingroup Plugin
@@ -50,9 +50,9 @@ trait ConfigurableTrait {
   /**
    * Sets the configuration for this plugin instance.
    *
-   * The provided configuration is merged with the plugin default configuration.
-   * If the same configuration key exists in both configurations, then the value
-   * in the provided configuration will override the default.
+   * The provided configuration is merged with the plugin's default
+   * configuration. If the same configuration key exists in both configurations,
+   * then the value in the provided configuration will override the default.
    *
    * @param array $configuration
    *   An associative array containing the plugin's configuration.
