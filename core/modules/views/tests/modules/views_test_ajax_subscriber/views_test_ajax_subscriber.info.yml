@@ -4,4 +4,4 @@ description: Tests views ajax responses.
 core: 8.x
 package: Testing
 dependencies:
-  - views
+  - drupal:views

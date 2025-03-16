@@ -71,7 +71,9 @@
       return {
         key,
         value: ajaxViews[key],
-        nestingLevel: $(ajaxViews[key].selector).parents('[class*=js-view-dom-id-]').length,
+        nestingLevel: $(ajaxViews[key].selector).parents(
+          '[class*=js-view-dom-id-]',
+        ).length,
       };
     });
 
