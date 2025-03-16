@@ -8,6 +8,7 @@ use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\HookCollector;
 use Drupal\Core\Hook\OrderOperation\OrderOperation;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -115,6 +116,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     $root,
     array $module_list,
     protected EventDispatcherInterface $eventDispatcher,
+    protected readonly LoggerInterface $logger,
     protected array $hookImplementationsMap,
     protected array $groupIncludes = [],
     protected array $packedOrderOperations = [],
@@ -523,11 +525,45 @@ class ModuleHandler implements ModuleHandlerInterface {
         $identifier = is_array($listener)
           ? get_class($listener[0]) . '::' . $listener[1]
           : ProceduralCall::class . '::' . $listener;
-        $listeners_by_identifier[$identifier] = $listener;
-        if (isset($modules_by_identifier[$identifier]) && $modules_by_identifier[$identifier] !== $module) {
-          $other_module = $modules_by_identifier[$identifier];
-          throw new \LogicException("$identifier defines two hooks which belongs to two different modules: $module and $other_module, this is not supported for ModuleHandler::alter() called with these two hooks.");
+        // Detect if the implementation is already part of the list.
+        // In general, a method can implement more than one hook. However, if
+        // both of these hooks are part of the same ->alter() call, that is
+        // almost always by mistake.
+        if ($other_module = $modules_by_identifier[$identifier] ?? NULL) {
+          $log_message_replacements = [
+            '@implementation' => is_array($listener)
+              ? ('method ' . $identifier . '()')
+              : ('function ' . $listener[1] . '()'),
+            '@hooks' => "['" . implode("', '", [$main_hook, ...$extra_hooks]) . "']",
+          ];
+          if ($other_module !== $module) {
+            // There is conflicting information about on behalf of which module
+            // this implementation is registered. At this point we cannot even
+            // be sure if the module is the one from the main hook or the extra
+            // hook.
+            // The module is mostly irrelevant for alter hooks, except for its
+            // impact on ordering.
+            $this->logger->warning(
+              'The @implementation is registered for more than one of the alter hooks @hooks from the current ->alter() call, on behalf of different modules @module and @other_module. Only one instance will be part of the implementation list for this hook combination. For the purpose of ordering, the module @module will be used.',
+              [
+                ...$log_message_replacements,
+                '@module' => "'$module'",
+                '@other_module' => "'$other_module'",
+              ],
+            );
+          }
+          else {
+            // There is no conflict, but probably one or more redundant #[Hook]
+            // attributes should be removed.
+            $this->logger->notice(
+              'The @implementation is registered for more than one of the alter hooks @hooks from the current ->alter() call. Only one instance will be part of the implementation list for this hook combination.',
+              $log_message_replacements,
+            );
+          }
+          // Don't add an identifier more than once.
+          continue;
         }
+        $listeners_by_identifier[$identifier] = $listener;
         $modules_by_identifier[$identifier] = $module;
         $identifiers[] = $identifier;
       }
