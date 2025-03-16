@@ -12,6 +12,7 @@ use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\FormElementBase;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Symfony\Component\HttpFoundation\Request;
@@ -328,14 +329,6 @@ class ManagedFile extends FormElementBase {
       $element['upload']['#attributes']['accept'] = $element['#accept'];
     }
 
-    // #states uses label_for however the original element will not have label.
-    // Only the upload elements will have label. Therefore move the
-    // #states to upload element if it exists.
-    if (isset($element['#states'])) {
-      $element['upload']['#states'] = $element['#states'];
-      unset($element['#states']);
-    }
-
     // Indicate that $element['#title'] should be used as the HTML label for the
     // file upload field.
     $element['#label_for'] = $element['upload']['#id'];
@@ -376,8 +369,27 @@ class ManagedFile extends FormElementBase {
       $element['upload']['#attached']['drupalSettings']['file']['elements']['#' . $id] = $extension_list;
     }
 
+    // Add states to ajax wrapper so states.js can potentially attach this
+    // element as a Dependent.
+    $attributes = new Attribute(['id' => $ajax_wrapper_id]);
+    if (isset($element['#states']) && !empty($element['#states'])) {
+      $attributes->offsetSet('data-drupal-states', json_encode($element['#states']));
+
+      // If we already have a file, we don't show the upload controls.
+      if ($fids) {
+        // So let field label's 'for' correspond to element with file IDs.
+        $element['#id'] = &$element['fids']['#id'];
+        // And add states to this element.
+        $element['fids']['#states'] = $element['#states'];
+      }
+      else {
+        // Add states to the file form element itself.
+        $element['upload']['#states'] = $element['#states'];
+      }
+    }
+
     // Prefix and suffix used for Ajax replacement.
-    $element['#prefix'] = '<div id="' . $ajax_wrapper_id . '">';
+    $element['#prefix'] = '<div' . $attributes . '>';
     $element['#suffix'] = '</div>';
 
     return $element;
