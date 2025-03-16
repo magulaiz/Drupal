@@ -13,7 +13,7 @@ namespace Drupal\Core\Hook\OrderOperation;
 class OrderOperation {
 
   const array KNOWN_CLASSES = [
-    'absolute' => AbsoluteOrderOperation::class,
+    'absolute' => FirstOrLast::class,
     'relative' => RelativeOrderOperation::class,
   ];
 
