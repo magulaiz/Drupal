@@ -11,8 +11,11 @@ use Drupal\Component\Plugin\ConfigurableInterface;
  *
  * Provides boilerplate methods for implementing
  * Drupal\Component\Plugin\ConfigurableInterface. Configurable plugins may
- * extend this base class, or use \Drupal\Component\Plugin\ConfigurableTrait
- * directly.
+ * extend this base class instead of PluginBase. If your plugin must extend a
+ * different base class, you may use \Drupal\Component\Plugin\ConfigurableTrait
+ * directly and call setConfiguration() in your constructor.
+ *
+ * @see \Drupal\Core\Plugin\ConfigurableTrait
  */
 abstract class ConfigurablePluginBase extends PluginBase implements ConfigurableInterface {
   use ConfigurableTrait;
