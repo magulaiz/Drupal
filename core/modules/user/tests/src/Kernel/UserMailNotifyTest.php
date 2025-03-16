@@ -16,9 +16,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class UserMailNotifyTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'locale',
@@ -33,6 +31,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    * Data provider for user mail testing.
    *
    * @return array
+   *   An array of operations and the mail keys they should send.
    */
   public static function userMailsProvider() {
     return [

@@ -27,6 +27,7 @@ class MigrationPluginListTest extends KernelTestBase {
   protected static $modules = [
     'migrate',
     // Test with all modules containing Drupal migrations.
+    // @todo Remove Ban in https://www.drupal.org/project/drupal/issues/3488827
     'ban',
     'block',
     'block_content',
@@ -111,7 +112,7 @@ class MigrationPluginListTest extends KernelTestBase {
         try {
           $source_plugin->checkRequirements();
         }
-        catch (RequirementsException $e) {
+        catch (RequirementsException) {
           unset($source_plugins[$id]);
         }
       }

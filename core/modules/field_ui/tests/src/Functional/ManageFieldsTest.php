@@ -16,7 +16,6 @@ use Drupal\user\Entity\User;
  * Tests the Manage Display page of a fieldable entity type.
  *
  * @group field_ui
- * @group #slow
  */
 class ManageFieldsTest extends BrowserTestBase {
 
@@ -163,6 +162,8 @@ class ManageFieldsTest extends BrowserTestBase {
       'field_name' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
+    // Test Breadcrumbs.
+    $this->getSession()->getPage()->findLink('Test field');
     $this->assertSession()->statusMessageNotContains('Saved');
 
     // Change the storage form values.
