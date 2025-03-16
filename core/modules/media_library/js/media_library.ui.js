@@ -425,8 +425,12 @@
    *   when the media library modal is opened.
    */
   Drupal.behaviors.mediaLibraryScrollOnOpen = {
-    attach: function (context, settings) {
-      const input = once('mediaLibraryScrollOnOpen', 'input[type="file"]', context)[0];
+    attach(context, settings) {
+      const input = once(
+        'mediaLibraryScrollOnOpen',
+        'input[type="file"]',
+        context,
+      )[0];
       if (input) {
         const modalContent = input.closest('#drupal-modal');
         if (modalContent) {
@@ -438,7 +442,7 @@
           }, 100);
         }
       }
-    }
+    },
   };
 
   /**
