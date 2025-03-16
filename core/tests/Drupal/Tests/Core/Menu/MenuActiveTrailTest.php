@@ -124,6 +124,21 @@ class MenuActiveTrailTest extends UnitTestCase {
     // match the current route, where "first" is determined by sorting by key.
     $data[] = [$request, ['baby_llama_link_1' => $link_1, 'baby_llama_link_2' => $link_2], Random::machineName(), $link_1, $link_1_parent_ids];
 
+    // Test disabled parent link.
+    MenuLinkMock::create(['id' => 'baby_llama_link_1', 'route_name' => 'baby_llama', 'title' => 'Baby llama', 'parent' => 'mama_llama_link', 'enabled' => FALSE]);
+    $link_2 = MenuLinkMock::create(['id' => 'baby_llama_link_2', 'route_name' => 'baby_llama', 'title' => 'Baby llama', 'parent' => 'baby_llama_link_1']);
+
+    // Skip the "baby_llama_link_1" menu from parent ids as it is disabled.
+    $link_2_parent_ids = ['mama_llama_link', ''];
+    $data[] = [$request, ['baby_llama_link_2' => $link_2], Random::machineName(), $link_2, $link_2_parent_ids];
+
+    // Test disabled child link.
+    MenuLinkMock::create(['id' => 'baby_llama_link_1', 'route_name' => 'baby_llama', 'title' => 'Baby llama', 'parent' => 'mama_llama_link']);
+    $link_2 = MenuLinkMock::create(['id' => 'baby_llama_link_2', 'route_name' => 'baby_llama', 'title' => 'Baby llama', 'parent' => 'baby_llama_link_1', 'enabled' => FALSE]);
+
+    // No active link is returned when the only matching link is disabled.
+    $data[] = [$request, ['baby_llama_link_2' => $link_2], Random::machineName(), NULL, $empty_active_trail];
+
     // No active link is returned in case of a 403.
     $request = new Request();
     $request->attributes->set('_exception_statuscode', 403);
@@ -132,14 +147,6 @@ class MenuActiveTrailTest extends UnitTestCase {
     // No active link is returned when the route name is missing.
     $request = new Request();
     $data[] = [$request, FALSE, Random::machineName(), NULL, $empty_active_trail];
-
-    // Test disabled parent link.
-    $disabled_link = MenuLinkMock::create(['id' => 'baby_llama_link_1', 'route_name' => 'baby_llama', 'title' => 'Baby llama', 'parent' => 'mama_llama_link', 'enabled' => FALSE]);
-    $link_2 = MenuLinkMock::create(['id' => 'baby_llama_link_2', 'route_name' => 'baby_llama', 'title' => 'Baby llama', 'parent' => 'baby_llama_link_1']);
-
-    // Skip the "baby_llama_link_1" menu from parent ids as it is disabled.
-    $link_2_parent_ids = ['mama_llama_link', ''];
-    $data[] = [$request, ['baby_llama_link_2' => $link_2], $this->randomMachineName(), $link_2, $link_2_parent_ids];
 
     return $data;
   }
