@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace Drupal\Core\Hook\OrderOperation;
 
 /**
+ * Moves one listener to be called before or after other listeners.
+ *
  * @internal
  */
 class RelativeOrderOperation implements OrderOperationInterface {
@@ -13,16 +15,16 @@ class RelativeOrderOperation implements OrderOperationInterface {
    * Constructor.
    *
    * @param string $identifier
-   *   Identifier of the hook implementation to move to a new position.
+   *   Identifier of the hook listener to move to a new position.
    *   The format is "$class::$method".
    * @param list<string> $modulesToOrderAgainst
-   *   Module names the implementations of which to order against.
-   * @param array $identifiersToOrderAgainst
-   *   Identifiers of implementations to order against.
+   *   Module names of listeners to order against.
+   * @param list<string> $identifiersToOrderAgainst
+   *   Identifiers of listeners to order against.
    *   The format is "$class::$method".
    * @param bool $isAfter
-   *   TRUE, if the implementation to move should be after the implementations
-   *   to order against.
+   *   TRUE, if the listener to move should be moved after the listener to order
+   *   against, FALSE if it should be moved before.
    */
   public function __construct(
     protected readonly string $identifier,
