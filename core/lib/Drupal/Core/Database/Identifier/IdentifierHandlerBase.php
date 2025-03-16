@@ -160,7 +160,7 @@ abstract class IdentifierHandlerBase {
    * Returns a string with initial and final quote characters.
    *
    * @param string $value
-   *   The input string
+   *   The input string.
    *
    * @return string
    *   The quoted string.
@@ -229,7 +229,7 @@ abstract class IdentifierHandlerBase {
    * Shortens an identifier's canonical name by adding an hash.
    *
    * This method calculates an hash of the canonical name and then returns a
-   * string suitable for machine use. The hash is insterted in the middle of
+   * string suitable for machine use. The hash is inserted in the middle of
    * the remaining part of the canonical name once a prefix has been added.
    *
    * @param string $canonicalName
@@ -268,7 +268,7 @@ abstract class IdentifierHandlerBase {
   }
 
   /**
-   * Returns the machine accepted string for an identifer.
+   * Returns the machine accepted string for an identifier.
    *
    * This method converts a canonical identifier in the machine readable
    * version. It could shorten the canonical name or perform other
@@ -283,7 +283,7 @@ abstract class IdentifierHandlerBase {
    *   The type of identifier.
    *
    * @return string
-   *   The machine accepted string for an identifer.
+   *   The machine accepted string for an identifier.
    *
    * @throws \Drupal\Core\Database\Exception\IdentifierException
    *   If a machine string could not be determined.
