@@ -143,7 +143,7 @@
       'ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a',
     );
     once('ajax-pager', this.$pager_links).forEach((linkElement) => {
-      this.attachPagerLinkAjax.bind(this, linkElement);
+      this.attachPagerLinkAjax.call(this, linkElement);
     });
 
     // Add a trigger to update this view specifically. In order to trigger a
