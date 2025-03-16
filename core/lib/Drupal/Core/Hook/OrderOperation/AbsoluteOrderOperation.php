@@ -43,6 +43,7 @@ class AbsoluteOrderOperation implements OrderOperationInterface {
     else {
       $identifiers = [$this->identifier, ...$identifiers];
     }
+    $identifiers = array_values($identifiers);
   }
 
 }
