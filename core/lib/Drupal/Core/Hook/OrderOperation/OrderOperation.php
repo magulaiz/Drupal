@@ -14,7 +14,7 @@ class OrderOperation {
 
   const array KNOWN_CLASSES = [
     'absolute' => FirstOrLast::class,
-    'relative' => RelativeOrderOperation::class,
+    'relative' => BeforeOrAfter::class,
   ];
 
   /**
