@@ -494,6 +494,8 @@ class ModuleHandler implements ModuleHandlerInterface {
       // listeners.
       return $this->getFlatHookListeners($main_hook);
     }
+    // Combine the listeners from all hooks that are part of the ->alter() call.
+    // At first they need to be grouped by module.
     $listeners_by_module = $this->getHookListeners($main_hook);
     foreach ($extra_listeners_by_hook as $extra_listeners_by_module) {
       foreach ($extra_listeners_by_module as $module => $extra_listeners) {
@@ -502,12 +504,19 @@ class ModuleHandler implements ModuleHandlerInterface {
         }
       }
     }
-    $modules = array_intersect(
+    // Build an array to pass to hook_module_implements_alter().
+    // The initial order is the one from 'container.modules' service parameter.
+    $module_implements = array_fill_keys(array_intersect(
       array_keys($this->moduleList),
       array_keys($listeners_by_module),
-    );
-    $module_implements = array_fill_keys($modules, FALSE);
+    ), FALSE);
+    // Call hook_module_implements_alter() with the main hook.
+    // That hook was designed in older Drupal versions where all hook
+    // implementations were procedural, and each module could implement each
+    // hook only once.
     $this->alter('module_implements', $module_implements, $main_hook);
+    // Convert the list into a different structure to pass to the hook order
+    // operations.
     $listeners_by_identifier = [];
     $modules_by_identifier = [];
     $identifiers = [];
