@@ -65,7 +65,7 @@ class RelativeOrderOperation implements OrderOperationInterface {
       array_splice($identifiers, $max_index_to_order_against + 1, 0, $this->identifier);
       // Remove the element after splicing.
       unset($identifiers[$index]);
-      return;
+      $identifiers = array_values($identifiers);
     }
     else {
       $min_index_to_order_against = min($indices_to_order_against);

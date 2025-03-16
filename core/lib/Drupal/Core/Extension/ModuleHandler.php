@@ -573,8 +573,12 @@ class ModuleHandler implements ModuleHandlerInterface {
     foreach ([$main_hook, ...$extra_hooks] as $hook) {
       foreach ($this->getHookOrderingRules($hook) as $rule) {
         $rule->apply($identifiers, $modules_by_identifier);
+        // Order operations must not:
+        // - Insert duplicate keys.
+        // - Change the array to be not a list.
+        // - Add or remove values.
         assert($identifiers === array_unique($identifiers));
-        $identifiers = array_values($identifiers);
+        assert(array_is_list($identifiers));
         assert(!array_diff($identifiers, array_keys($modules_by_identifier)));
         assert(!array_diff(array_keys($modules_by_identifier), $identifiers));
       }
