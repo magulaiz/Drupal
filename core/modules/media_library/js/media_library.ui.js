@@ -421,16 +421,23 @@
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches behavior to ensure the file input scrolls into view 
+   *   Attaches behavior to ensure the file input scrolls into view
    *   when the media library modal is opened.
    */
-  Drupal.behaviors.mediaLibraryScrollFix = {
+  Drupal.behaviors.mediaLibraryScrollOnOpen = {
     attach: function (context, settings) {
-      once('mediaLibraryScrollFix', 'input[type="file"]', context).forEach((input) => {
-        setTimeout(() => {
-          input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
-      });
+      const input = once('mediaLibraryScrollOnOpen', 'input[type="file"]', context)[0];
+      if (input) {
+        const modalContent = input.closest('#drupal-modal');
+        if (modalContent) {
+          setTimeout(() => {
+            modalContent.scrollTo({
+              top: modalContent.offsetTop - modalContent.scrollTop,
+              behavior: 'smooth',
+            });
+          }, 100);
+        }
+      }
     }
   };
 
