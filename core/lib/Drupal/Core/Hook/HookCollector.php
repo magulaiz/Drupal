@@ -426,13 +426,13 @@ class HookCollector {
             }
             if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches) && !StaticReflectionParser::hasAttribute($attributes, LegacyModuleImplementsAlter::class)) {
               assert($function === $matches['module'] . '_' . $matches['hook']);
-              $implementations[] = ['function' => $function, 'module' => $matches['module'], 'hook' => $matches['hook']];
+              $implementations[] = ['module' => $matches['module'], 'hook' => $matches['hook']];
             }
           }
           $procedural_hook_file_cache->set($filename, $implementations);
         }
         foreach ($implementations as $implementation) {
-          $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module'], $implementation['function']);
+          $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module']);
         }
       }
       if ($extension === 'inc') {
@@ -471,13 +471,11 @@ class HookCollector {
    * @param string $hook
    *   The name of the hook.
    * @param string $module
-   *   The module of the hook. Note this might be different from the module the
-   *   function is in.
-   * @param string $function
-   *   The name of function implementing the hook.
+   *   The module implementing the hook, or on behalf of which the hook is
+   *   implemented.
    */
-  protected function addProceduralImplementation(\SplFileInfo $fileinfo, string $hook, string $module, string $function): void {
-    assert($function === $module . '_' . $hook);
+  protected function addProceduralImplementation(\SplFileInfo $fileinfo, string $hook, string $module): void {
+    $function = $module . '_' . $hook;
     if ($hook === 'hook_info') {
       $this->hookInfo[] = $function;
     }
