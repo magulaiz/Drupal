@@ -610,12 +610,18 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function getDrupalSettings() {
     $html = $this->getSession()->getPage()->getContent();
-    if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $html, $matches)) {
-      $settings = Json::decode($matches[1]);
-      if (isset($settings['ajaxPageState']['libraries'])) {
-        $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
+    $dom = new \DOMDocument();
+    @$dom->loadHTML($html);
+    $xpath = new \DOMXPath($dom);
+    $script = $xpath->query('//script[@type="application/json" and @data-drupal-selector="drupal-settings-json"]')->item(0);
+    if ($script) {
+      $settings = Json::decode($script->nodeValue);
+      if (json_last_error() === JSON_ERROR_NONE) {
+        if (isset($settings['ajaxPageState']['libraries'])) {
+          $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
+        }
+        return $settings;
       }
-      return $settings;
     }
     return [];
   }
