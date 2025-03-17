@@ -28486,12 +28486,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/tests/src/Kernel/NodeAccessTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function _options_values_in_use\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/options/options.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListItemBase\\:\\:addMoreAjax\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
