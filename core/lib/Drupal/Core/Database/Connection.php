@@ -170,7 +170,7 @@ abstract class Connection {
       $this->identifiers = $identifierHandler;
     }
     else {
-      @trigger_error("Not passing an IdentiferHandler object to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3513282", E_USER_DEPRECATED);
+      @trigger_error("Not passing an IdentifierHandler object to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3513282", E_USER_DEPRECATED);
       $this->identifiers = new class($connection_options['prefix'] ?? '') extends IdentifierHandlerBase {
 
         /**
