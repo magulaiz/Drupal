@@ -353,7 +353,7 @@ class UserPermissionsTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the permissions table HTML is correct.
+   * Tests that module header rows in the permissions table have a single cell.
    */
   public function testPermissionTableHtml(): void {
     $this->drupalLogin($this->adminUser);
