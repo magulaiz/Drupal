@@ -29514,7 +29514,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathItem\\:\\:postSave\\(\\) should return bool but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
-	'count' => 3,
+	'count' => 4,
 	'path' => __DIR__ . '/modules/path/src/Plugin/Field/FieldType/PathItem.php',
 ];
 $ignoreErrors[] = [
