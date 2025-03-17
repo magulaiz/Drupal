@@ -384,7 +384,6 @@ prerendered
 presave
 preuninstall
 prewarmable
-prewarmables
 prewarmer
 prewarmers
 prophesize
