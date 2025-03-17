@@ -95,11 +95,12 @@ class TestEventDispatcher implements EventDispatcherInterface {
   public function dispatch(object $event, ?string $eventName = NULL): object {
     assert($event instanceof ResponseEvent);
     $response = $event->getResponse();
-    assert($response instanceof HtmlResponse);
-    $response->addAttachments([
-      'library' => [],
-      'drupalSettings' => ['ajaxPageState' => []],
-    ]);
+    if ($response instanceof HtmlResponse) {
+      $response->addAttachments([
+        'library' => [],
+        'drupalSettings' => ['ajaxPageState' => []],
+      ]);
+    }
 
     return $event;
   }
