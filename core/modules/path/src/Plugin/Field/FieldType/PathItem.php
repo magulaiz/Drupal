@@ -49,15 +49,20 @@ class PathItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function isEmpty() {
-    return ($this->alias === NULL || $this->alias === '') && ($this->pid === NULL || $this->pid === '') && ($this->langcode === NULL || $this->langcode === '');
+    $alias = $this->get('alias')->getValue();
+    $pid = $this->get('pid')->getValue();
+    $langcode = $this->get('langcode')->getValue();
+
+    return ($alias === NULL || $alias === '') && ($pid === NULL || $pid === '') && ($langcode === NULL || $langcode === '');
   }
 
   /**
    * {@inheritdoc}
    */
   public function preSave() {
-    if ($this->alias !== NULL) {
-      $this->alias = trim($this->alias);
+    $alias = $this->get('alias')->getValue();
+    if ($alias !== NULL) {
+      $this->set('alias', trim($alias));
     }
   }
 
@@ -67,13 +72,15 @@ class PathItem extends FieldItemBase {
   public function postSave($update) {
     $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
     $entity = $this->getEntity();
+    $alias = $this->get('alias')->getValue();
+    $pid = $this->get('pid')->getValue();
 
     // Load the path alias entity if the entity is being updated and its ID is
     // known.
     $path_alias = NULL;
-    if ($update && $this->pid) {
+    if ($update && $pid) {
       /** @var \Drupal\path_alias\PathAliasInterface $path_alias */
-      $path_alias = $path_alias_storage->load($this->pid);
+      $path_alias = $path_alias_storage->load($pid);
     }
 
     // Stop at this point if the alias hasn't been changed, even if it's a
@@ -82,7 +89,7 @@ class PathItem extends FieldItemBase {
     if ($path_alias) {
       $existing_alias = $path_alias->getAlias();
     }
-    if ($this->alias == $existing_alias) {
+    if ($alias == $existing_alias) {
       return;
     }
 
@@ -101,22 +108,22 @@ class PathItem extends FieldItemBase {
     }
 
     // If we have an alias, we need to update or create a path alias entity.
-    if ($this->alias && $has_own_alias) {
-      $path_alias->setAlias($this->alias);
+    if ($alias && $has_own_alias) {
+      $path_alias->setAlias($alias);
       $path_alias->save();
     }
-    elseif ($this->alias && !$has_own_alias) {
+    elseif ($alias && !$has_own_alias) {
       $path_alias = $path_alias_storage->create([
         'path' => '/' . $entity->toUrl()->getInternalPath(),
-        'alias' => $this->alias,
+        'alias' => $alias,
         'langcode' => $this->getLangcode(),
       ]);
       $path_alias->save();
-      $this->pid = $path_alias->id();
+      $this->set('pid', $path_alias->id());
     }
     // Otherwise, delete the old alias if the user erased it.
     elseif ($has_own_alias) {
-      $path_alias = $path_alias_storage->load($this->pid);
+      $path_alias = $path_alias_storage->load($pid);
       if ($entity->isDefaultRevision()) {
         $path_alias_storage->delete([$path_alias]);
       }
