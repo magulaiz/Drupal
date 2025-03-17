@@ -1995,6 +1995,23 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               }
             }
 
+            // Update the setting "default_revision" to TRUE when it is the
+            // current revision or to FALSE when the revision id is not equal
+            // to the current revision.
+            if ($current_revision_id && isset($revision->{$this->revisionKey}) && isset($revision->{$revision_default_field})) {
+              if ($revision->{$this->revisionKey} == $current_revision_id) {
+                $revision->{$revision_default_field} = TRUE;
+              }
+              else {
+                // All revisions that are not the current revision should have
+                // set the value of "revision_default" to FALSE.
+                $revision->{$revision_default_field} = FALSE;
+              }
+            }
+
+            // The revisions in the all revisions can have double revisions and
+            // for every double revision needs to oldest revision version needs
+            // to be filtered out.
             $exists = FALSE;
             foreach ($revisions_langcodes as $revision_langcode) {
               if ($this->entityType->isTranslatable()) {
@@ -2005,17 +2022,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               else {
                 if (($revision_langcode['revision_id'] == $revision->{$this->revisionKey})) {
                   $exists = TRUE;
-                }
-              }
-
-              if ($current_revision_id && isset($revision->{$this->revisionKey}) && isset($revision->{$revision_default_field})) {
-                if ($revision->{$this->revisionKey} == $current_revision_id) {
-                  $revision->{$revision_default_field} = TRUE;
-                }
-                else {
-                  // All revisions that are not the current revision should have
-                  // set the value of "revision_default" to FALSE.
-                  $revision->{$revision_default_field} = FALSE;
                 }
               }
             }
