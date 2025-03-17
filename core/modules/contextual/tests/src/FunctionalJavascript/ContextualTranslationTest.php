@@ -22,7 +22,7 @@ class ContextualTranslationTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'olivero';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -106,7 +106,7 @@ class ContextualTranslationTest extends WebDriverTestBase {
 
     // The edit link text should be using the translated string.
     $this->drupalGet($node1->toUrl('canonical'));
-    $this->clickContextualLink('article.node', $edit_translation);
+    $this->clickContextualLink('article', $edit_translation);
     $this->assertSession()->addressEquals($node1->toUrl('edit-form'));
 
     // Change the preferred admin language.
@@ -115,7 +115,7 @@ class ContextualTranslationTest extends WebDriverTestBase {
 
     // The edit link text should be using the english string.
     $this->drupalGet($node1->toUrl('canonical'));
-    $this->clickContextualLink('article.node', 'Edit');
+    $this->clickContextualLink('article', 'Edit');
     $this->assertSession()->addressEquals($node1->toUrl('edit-form'));
   }
 
