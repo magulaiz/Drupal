@@ -5,6 +5,7 @@ namespace Drupal\Core\Database;
 use Drupal\Core\Database\Event\DatabaseEvent;
 use Drupal\Core\Database\Exception\EventException;
 use Drupal\Core\Database\Identifier\IdentifierHandlerBase;
+use Drupal\Core\Database\Identifier\IdentifierType;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
 use Drupal\Core\Database\Query\Insert;
@@ -132,6 +133,11 @@ abstract class Connection {
   protected TransactionManagerInterface $transactionManager;
 
   /**
+   * The identifiers handler.
+   */
+  public readonly IdentifierHandlerBase $identifiers;
+
+  /**
    * Constructs a Connection object.
    *
    * @param object $connection
@@ -141,13 +147,13 @@ abstract class Connection {
    *   - prefix
    *   - namespace
    *   - Other driver-specific options.
-   * @param \Drupal\Core\Database\Identifier\IdentifierHandlerBase|null $identifiers
+   * @param \Drupal\Core\Database\Identifier\IdentifierHandlerBase|null $identifierHandler
    *   The identifiers handler.
    */
   public function __construct(
     object $connection,
     array $connection_options,
-    public readonly ?IdentifierHandlerBase $identifiers,
+    ?IdentifierHandlerBase $identifierHandler = NULL,
   ) {
     // Manage the table prefix.
     $connection_options['prefix'] = $connection_options['prefix'] ?? '';
@@ -160,21 +166,107 @@ abstract class Connection {
       $connection_options['namespace'] = (new \ReflectionObject($this))->getNamespaceName();
     }
 
+    if ($identifierHandler) {
+      $this->identifiers = $identifierHandler;
+    }
+    else {
+      @trigger_error("Not passing an IdentiferHandler object to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3513282", E_USER_DEPRECATED);
+      $this->identifiers = new class($connection_options['prefix'] ?? '') extends IdentifierHandlerBase {
+
+        /**
+         * {@inheritdoc}
+         */
+        public function getMaxLength(IdentifierType $type): int {
+          return 128;
+        }
+
+      };
+    }
+
     $this->connection = $connection;
     $this->connectionOptions = $connection_options;
   }
 
   /**
    * Implements the magic __get() method.
-   *
-   * @todo Remove the method in Drupal 1x.
    */
-  public function __get($name): mixed {
-    if (in_array($name, ['prefix', 'escapedTables', 'identifierQuotes', 'tablePlaceholderReplacements'])) {
-      @trigger_error("Accessing Connection::\${$name} is deprecated in drupal:11.9.0 and the property is removed from drupal:12.0.0. This is no longer used. See https://www.drupal.org/node/3513282", E_USER_DEPRECATED);
-      return [];
+  public function __get(string $name): mixed {
+    switch ($name) {
+      case 'prefix':
+        @trigger_error("Accessing Connection::\${$name} is deprecated in drupal:11.2.0 and the property is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/3513282", E_USER_DEPRECATED);
+        return $this->identifiers->tablePrefix ?? '';
+
+      case 'escapedTables':
+        @trigger_error("Accessing Connection::\${$name} is deprecated in drupal:11.2.0 and the property is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/3513282", E_USER_DEPRECATED);
+        return [];
+
+      case 'identifierQuotes':
+        @trigger_error("Accessing Connection::\${$name} is deprecated in drupal:11.2.0 and the property is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/3513282", E_USER_DEPRECATED);
+        return $this->identifiers->identifierQuotes ?? '';
+
+      case 'tablePlaceholderReplacements':
+        @trigger_error("Accessing Connection::\${$name} is deprecated in drupal:11.2.0 and the property is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/3513282", E_USER_DEPRECATED);
+        $identifierQuotes = $this->identifiers->identifierQuotes ?? ['"', '"'];
+        return [
+          $identifierQuotes[0] . str_replace('.', $identifierQuotes[1] . '.' . $identifierQuotes[0], $this->identifiers->tablePrefix ?? ''),
+          $identifierQuotes[1],
+        ];
+
+      default:
+        throw new \LogicException("The \${$name} property is undefined in " . __CLASS__);
+
     }
-    return NULL;
+  }
+
+  /**
+   * Implements the magic __set() method.
+   */
+  public function __set(string $name, mixed $value): void {
+    switch ($name) {
+      case 'prefix':
+      case 'escapedTables':
+      case 'identifierQuotes':
+      case 'tablePlaceholderReplacements':
+        @trigger_error("Accessing Connection::\${$name} is deprecated in drupal:11.2.0 and the property is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/3513282", E_USER_DEPRECATED);
+        return;
+
+      default:
+        throw new \LogicException("The \${$name} property is undefined in " . __CLASS__);
+    }
+  }
+
+  /**
+   * Implements the magic __isset() method.
+   */
+  public function __isset(string $name): bool {
+    switch ($name) {
+      case 'prefix':
+      case 'escapedTables':
+      case 'identifierQuotes':
+      case 'tablePlaceholderReplacements':
+        @trigger_error("Accessing Connection::\${$name} is deprecated in drupal:11.2.0 and the property is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/3513282", E_USER_DEPRECATED);
+        return TRUE;
+
+      default:
+        throw new \LogicException("The \${$name} property is undefined in " . __CLASS__);
+    }
+  }
+
+  /**
+   * Implements the magic __unset() method.
+   */
+  public function __unset(string $name): void {
+    switch ($name) {
+      case 'prefix':
+      case 'escapedTables':
+      case 'identifierQuotes':
+      case 'tablePlaceholderReplacements':
+        @trigger_error("Accessing Connection::\${$name} is deprecated in drupal:11.2.0 and the property is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/3513282", E_USER_DEPRECATED);
+        return;
+
+      default:
+        throw new \LogicException("The \${$name} property is undefined in " . __CLASS__);
+    }
   }
 
   /**
