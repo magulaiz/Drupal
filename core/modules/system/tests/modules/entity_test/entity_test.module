@@ -49,3 +49,23 @@ function entity_test_delete_bundle($bundle, $entity_type = 'entity_test') {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\entity_test\EntityTestHelper::deleteBundle() instead. See https://www.drupal.org/node/3497049', E_USER_DEPRECATED);
   EntityTestHelper::deleteBundle($bundle, $entity_type);
 }
+
+/**
+ * Implements hook_entity_preload().
+ *
+ * Loads non-default revision when loading an entity.
+ */
+function entity_test_entity_preload(array $ids, $entity_type_id): array {
+  $entities = [];
+  if ($revisions_load = \Drupal::state()
+    ->get($entity_type_id . '.preload_entities')
+  ) {
+    foreach ($revisions_load as $id => $revision_id) {
+      $revisions = \Drupal::entityTypeManager()
+        ->getStorage($entity_type_id)
+        ->loadMultipleRevisions([$revision_id]);
+      $entities[$id] = $revisions[$revision_id];
+    }
+  }
+  return $entities;
+}
