@@ -45,8 +45,10 @@ class FileSystemRequirementsTest extends KernelTestBase {
    *   An array of system requirements.
    */
   protected function checkSystemRequirements() {
+    // Loading the install file ensures that the required requirements constants
+    // are loaded too.
     $this->container->get('module_handler')->loadInclude('system', 'install');
-    return system_requirements('runtime');
+    return \Drupal::moduleHandler()->invoke('system', 'runtime_requirements');
   }
 
 }
