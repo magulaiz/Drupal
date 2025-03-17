@@ -23,6 +23,7 @@ class ConnectionLegacyTest extends UnitTestCase {
   public function testMissingIdentifierHandler(): void {
     $this->expectDeprecation('Not passing an IdentifierHandler object to Drupal\\Core\\Database\\Connection::__construct() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3513282');
     $connection = new StubLegacyConnection($this->createMock(StubPDO::class), ['prefix' => 'foo']);
+    $this->assertInstanceOf(StubLegacyConnection::class, $connection);
   }
 
   /**
