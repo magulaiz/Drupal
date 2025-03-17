@@ -68,9 +68,33 @@ class MenuLinkTreeTest extends KernelTestBase {
     $storage->create(['id' => 'menu1', 'label' => 'Menu 1'])->save();
     $storage->create(['id' => 'menu2', 'label' => 'Menu 2'])->save();
 
-    \Drupal::entityTypeManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu1', 'bundle' => 'menu_link_content', 'title' => 'Link test'])->save();
-    \Drupal::entityTypeManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu1', 'bundle' => 'menu_link_content', 'title' => 'Link test'])->save();
-    \Drupal::entityTypeManager()->getStorage('menu_link_content')->create(['link' => ['uri' => 'internal:/menu_name_test'], 'menu_name' => 'menu2', 'bundle' => 'menu_link_content', 'title' => 'Link test'])->save();
+    \Drupal::entityTypeManager()
+      ->getStorage('menu_link_content')
+      ->create([
+        'link' => ['uri' => 'internal:/menu_name_test'],
+        'menu_name' => 'menu1',
+        'bundle' => 'menu_link_content',
+        'title' => 'Link test',
+      ])
+      ->save();
+    \Drupal::entityTypeManager()
+      ->getStorage('menu_link_content')
+      ->create([
+        'link' => ['uri' => 'internal:/menu_name_test'],
+        'menu_name' => 'menu1',
+        'bundle' => 'menu_link_content',
+        'title' => 'Link test',
+      ])
+      ->save();
+    \Drupal::entityTypeManager()
+      ->getStorage('menu_link_content')
+      ->create([
+        'link' => ['uri' => 'internal:/menu_name_test'],
+        'menu_name' => 'menu2',
+        'bundle' => 'menu_link_content',
+        'title' => 'Link test',
+      ])
+      ->save();
 
     $output = $this->linkTree->load('menu1', new MenuTreeParameters());
     $this->assertCount(2, $output);
@@ -102,14 +126,57 @@ class MenuLinkTreeTest extends KernelTestBase {
     // With link 6 being the only external link.
 
     $links = [
-      1 => MenuLinkMock::create(['id' => 'test.example1', 'route_name' => 'example1', 'title' => 'foo', 'parent' => '']),
-      2 => MenuLinkMock::create(['id' => 'test.example2', 'route_name' => 'example2', 'title' => 'bar', 'parent' => 'test.example1', 'route_parameters' => ['foo' => 'bar']]),
-      3 => MenuLinkMock::create(['id' => 'test.example3', 'route_name' => 'example3', 'title' => 'baz', 'parent' => 'test.example2', 'route_parameters' => ['baz' => 'qux']]),
-      4 => MenuLinkMock::create(['id' => 'test.example4', 'route_name' => 'example4', 'title' => 'qux', 'parent' => 'test.example3']),
-      5 => MenuLinkMock::create(['id' => 'test.example5', 'route_name' => 'example5', 'title' => 'title5', 'parent' => '']),
-      6 => MenuLinkMock::create(['id' => 'test.example6', 'route_name' => '', 'url' => 'https://www.drupal.org/', 'title' => 'bar_bar', 'parent' => '']),
-      7 => MenuLinkMock::create(['id' => 'test.example7', 'route_name' => 'example7', 'title' => 'title7', 'parent' => '']),
-      8 => MenuLinkMock::create(['id' => 'test.example8', 'route_name' => 'example8', 'title' => 'title8', 'parent' => '']),
+      1 => MenuLinkMock::create([
+        'id' => 'test.example1',
+        'route_name' => 'example1',
+        'title' => 'foo',
+        'parent' => '',
+      ]),
+      2 => MenuLinkMock::create([
+        'id' => 'test.example2',
+        'route_name' => 'example2',
+        'title' => 'bar',
+        'parent' => 'test.example1',
+        'route_parameters' => ['foo' => 'bar'],
+      ]),
+      3 => MenuLinkMock::create([
+        'id' => 'test.example3',
+        'route_name' => 'example3',
+        'title' => 'baz',
+        'parent' => 'test.example2',
+        'route_parameters' => ['baz' => 'qux'],
+      ]),
+      4 => MenuLinkMock::create([
+        'id' => 'test.example4',
+        'route_name' => 'example4',
+        'title' => 'qux',
+        'parent' => 'test.example3',
+      ]),
+      5 => MenuLinkMock::create([
+        'id' => 'test.example5',
+        'route_name' => 'example5',
+        'title' => 'title5',
+        'parent' => '',
+      ]),
+      6 => MenuLinkMock::create([
+        'id' => 'test.example6',
+        'route_name' => '',
+        'url' => 'https://www.drupal.org/',
+        'title' => 'bar_bar',
+        'parent' => '',
+      ]),
+      7 => MenuLinkMock::create([
+        'id' => 'test.example7',
+        'route_name' => 'example7',
+        'title' => 'title7',
+        'parent' => '',
+      ]),
+      8 => MenuLinkMock::create([
+        'id' => 'test.example8',
+        'route_name' => 'example8',
+        'title' => 'title8',
+        'parent' => '',
+      ]),
     ];
     foreach ($links as $instance) {
       $this->menuLinkManager->addDefinition($instance->getPluginId(), $instance->getPluginDefinition());

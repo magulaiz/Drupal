@@ -351,7 +351,20 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // This matches both the original and new current revisions, multiple
     // revisions are returned for some entities.
-    $assert = [16 => '4', 17 => '5', 18 => '6', 19 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 20 => '12', 21 => '13', 22 => '14', 23 => '15'];
+    $assert = [
+      16 => '4',
+      17 => '5',
+      18 => '6',
+      19 => '7',
+      8 => '8',
+      9 => '9',
+      10 => '10',
+      11 => '11',
+      20 => '12',
+      21 => '13',
+      22 => '14',
+      23 => '15',
+    ];
     $this->assertSame($assert, $results);
     $results = $this->storage
       ->getQuery()
@@ -380,7 +393,24 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->sort('revision_id')
       ->execute();
     // Now we get everything.
-    $assert = [4 => '4', 5 => '5', 6 => '6', 7 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 12 => '12', 20 => '12', 13 => '13', 21 => '13', 14 => '14', 22 => '14', 15 => '15', 23 => '15'];
+    $assert = [
+      4 => '4',
+      5 => '5',
+      6 => '6',
+      7 => '7',
+      8 => '8',
+      9 => '9',
+      10 => '10',
+      11 => '11',
+      12 => '12',
+      20 => '12',
+      13 => '13',
+      21 => '13',
+      14 => '14',
+      22 => '14',
+      15 => '15',
+      23 => '15',
+    ];
     $this->assertSame($assert, $results);
 
     // Check that a query on the latest revisions without any condition returns
@@ -392,7 +422,23 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->sort('id')
       ->sort('revision_id')
       ->execute();
-    $expected = [1 => '1', 2 => '2', 3 => '3', 16 => '4', 17 => '5', 18 => '6', 19 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 20 => '12', 21 => '13', 22 => '14', 23 => '15'];
+    $expected = [
+      1 => '1',
+      2 => '2',
+      3 => '3',
+      16 => '4',
+      17 => '5',
+      18 => '6',
+      19 => '7',
+      8 => '8',
+      9 => '9',
+      10 => '10',
+      11 => '11',
+      20 => '12',
+      21 => '13',
+      22 => '14',
+      23 => '15',
+    ];
     $this->assertSame($expected, $results);
   }
 

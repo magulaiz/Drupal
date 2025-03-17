@@ -1165,7 +1165,10 @@ trait AssertContentTrait {
   protected function assertOption($id, $option, $message = '') {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
-    $this->assertTrue(isset($options[0]), $message ?: new FormattableMarkup('Option @option for field @id exists.', ['@option' => $option, '@id' => $id]));
+    $this->assertTrue(
+      isset($options[0]),
+      $message ?: new FormattableMarkup('Option @option for field @id exists.', ['@option' => $option, '@id' => $id])
+    );
   }
 
   /**
@@ -1205,8 +1208,17 @@ trait AssertContentTrait {
    */
   protected function assertOptionWithDrupalSelector($drupal_selector, $option, $message = '') {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
-    $options = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
-    $this->assertTrue(isset($options[0]), $message ?: new FormattableMarkup('Option @option for field @data_drupal_selector exists.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]));
+    $options = $this->xpath(
+      '//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]',
+      [':data_drupal_selector' => $drupal_selector, ':option' => $option]
+    );
+    $this->assertTrue(
+      isset($options[0]),
+      $message ?: new FormattableMarkup(
+        'Option @option for field @data_drupal_selector exists.',
+        ['@option' => $option, '@data_drupal_selector' => $drupal_selector]
+      )
+    );
   }
 
   /**
@@ -1233,7 +1245,10 @@ trait AssertContentTrait {
    */
   protected function assertNoOption($id, $option, $message = ''): bool {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
-    $message = $message ?: new FormattableMarkup('Option @option for field @id does not exist.', ['@option' => $option, '@id' => $id]);
+    $message = $message ?: new FormattableMarkup(
+      'Option @option for field @id does not exist.',
+      ['@option' => $option, '@id' => $id]
+    );
     $selects = $this->xpath('//select[@id=:id]', [':id' => $id]);
     $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
     $this->assertArrayHasKey(0, $selects, $message);
@@ -1267,7 +1282,10 @@ trait AssertContentTrait {
    */
   protected function assertOptionSelected($id, $option, $message = ''): bool {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
-    $message = $message ?: new FormattableMarkup('Option @option for field @id is selected.', ['@option' => $option, '@id' => $id]);
+    $message = $message ?: new FormattableMarkup(
+      'Option @option for field @id is selected.',
+      ['@option' => $option, '@id' => $id]
+    );
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
     $this->assertNotEmpty($elements, $message);
     $this->assertNotEmpty($elements[0]['selected'], $message);
@@ -1300,8 +1318,14 @@ trait AssertContentTrait {
    */
   protected function assertOptionSelectedWithDrupalSelector($drupal_selector, $option, $message = ''): bool {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
-    $message = $message ?: new FormattableMarkup('Option @option for field @data_drupal_selector is selected.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]);
-    $elements = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
+    $message = $message ?: new FormattableMarkup(
+      'Option @option for field @data_drupal_selector is selected.',
+      ['@option' => $option, '@data_drupal_selector' => $drupal_selector]
+    );
+    $elements = $this->xpath(
+      '//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]',
+      [':data_drupal_selector' => $drupal_selector, ':option' => $option]
+    );
     $this->assertNotEmpty($elements, $message);
     $this->assertNotEmpty($elements[0]['selected'], $message);
     return TRUE;
@@ -1331,7 +1355,10 @@ trait AssertContentTrait {
    */
   protected function assertNoOptionSelected($id, $option, $message = ''): bool {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
-    $message = $message ?: new FormattableMarkup('Option @option for field @id is not selected.', ['@option' => $option, '@id' => $id]);
+    $message = $message ?: new FormattableMarkup(
+      'Option @option for field @id is not selected.',
+      ['@option' => $option, '@id' => $id]
+    );
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
     $this->assertNotEmpty($elements, $message);
     $this->assertEmpty($elements[0]['selected'], $message);
