@@ -98,8 +98,8 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
   /**
    * Returns the hashed password.
    *
-   * @return string
-   *   The hashed password.
+   * @return string|null
+   *   The hashed password, or NULL if a password is not set.
    */
   public function getPassword();
 
@@ -107,12 +107,12 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    * Sets the user password.
    *
    * @param string $password
-   *   The new unhashed password.
+   *   The new un-hashed password.
    *
    * @return $this
    *   The called user entity.
    */
-  public function setPassword($password);
+  public function setPassword(#[\SensitiveParameter] $password);
 
   /**
    * Sets the email address of the user.
@@ -213,7 +213,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @return $this
    */
-  public function setExistingPassword($password);
+  public function setExistingPassword(#[\SensitiveParameter] $password);
 
   /**
    * Checks the existing password if set.

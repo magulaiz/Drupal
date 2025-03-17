@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
@@ -23,9 +25,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     'datetime_range',
     'language',
     'telephone',
-    'book',
-    'forum',
-    'statistics',
     'syslog',
     'update',
     // Test migrations states.
@@ -44,18 +43,17 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSourceBasePath() {
+  protected function getSourceBasePath(): string {
     return __DIR__ . '/files';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAvailablePaths() {
+  protected function getAvailablePaths(): array {
     return [
       'Blog',
       'Blog API',
-      'Book',
       'Calendar Signup',
       'Comment',
       'Contact',
@@ -81,7 +79,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'FileField',
       'FileField Meta',
       'Filter',
-      'Forum',
       'Help',
       'ImageAPI',
       'ImageAPI GD2',
@@ -95,6 +92,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Node',
       'Nodeaccess',
       'Node Reference',
+      'Node Reference URL Widget',
       'Number',
       'OpenID',
       'PHP filter',
@@ -104,14 +102,11 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Poll',
       'Profile',
       'Search',
-      'Statistics',
       'Syslog',
       'System',
       'Taxonomy',
       'Text',
       'Throttle',
-      // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
-      'Tracker',
       'Trigger',
       'Update status',
       'Upload',
@@ -128,25 +123,27 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getIncompletePaths() {
+  protected function getIncompletePaths(): array {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getMissingPaths() {
+  protected function getMissingPaths(): array {
     return [
       'Aggregator',
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
       'Block translation',
+      'Book',
       'CCK translation',
       'Color',
       'Content type translation',
       'Devel',
       'Devel generate',
       'Devel node access',
+      'Forum',
       'Internationalization',
       'Menu translation',
       'migrate_status_active_test',
@@ -154,9 +151,11 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Option Widgets',
       'Poll aggregate',
       'Profile translation',
+      'Statistics',
       'String translation',
       'Synchronize translations',
       'Taxonomy translation',
+      'Tracker',
       'Views',
       'Views translation',
     ];

@@ -2,7 +2,10 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
+
+// cspell:ignore localizable
 
 /**
  * Drupal 6 vocabularies with associated node types source from database.
@@ -11,12 +14,11 @@ use Drupal\migrate\Row;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_taxonomy_vocabulary_per_type",
- *   source_module = "taxonomy"
- * )
  */
+#[MigrateSource(
+  id: 'd6_taxonomy_vocabulary_per_type',
+  source_module: 'taxonomy',
+)]
 class VocabularyPerType extends Vocabulary {
 
   /**

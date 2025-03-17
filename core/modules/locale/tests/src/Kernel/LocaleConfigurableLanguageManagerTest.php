@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\locale\Kernel;
 
 use Drupal\Core\Language\LanguageInterface;
@@ -20,7 +22,10 @@ class LocaleConfigurableLanguageManagerTest extends KernelTestBase {
    */
   protected static $modules = ['language', 'locale'];
 
-  public function testGetLanguages() {
+  /**
+   * Tests retrieving languages from the language manager.
+   */
+  public function testGetLanguages(): void {
     $this->installSchema('locale', ['locales_source', 'locales_target', 'locales_location']);
     $default_language = ConfigurableLanguage::create(['label' => $this->randomMachineName(), 'id' => 'default', 'weight' => 0]);
     $default_language->save();

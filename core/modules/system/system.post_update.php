@@ -8,7 +8,7 @@
 /**
  * Implements hook_removed_post_updates().
  */
-function system_removed_post_updates() {
+function system_removed_post_updates(): array {
   return [
     'system_post_update_recalculate_configuration_entity_dependencies' => '9.0.0',
     'system_post_update_add_region_to_entity_displays' => '9.0.0',
@@ -41,13 +41,54 @@ function system_removed_post_updates() {
     'system_post_update_delete_authorize_settings' => '10.0.0',
     'system_post_update_sort_all_config' => '10.0.0',
     'system_post_update_enable_provider_database_driver' => '10.0.0',
+    'system_post_update_linkset_settings' => '11.0.0',
+    'system_post_update_enable_password_compatibility' => '11.0.0',
+    'system_post_update_remove_asset_entries' => '11.0.0',
+    'system_post_update_remove_asset_query_string' => '11.0.0',
+    'system_post_update_add_description_to_entity_view_mode' => '11.0.0',
+    'system_post_update_add_description_to_entity_form_mode' => '11.0.0',
+    'system_post_update_set_blank_log_url_to_null' => '11.0.0',
+    'system_post_update_mailer_dsn_settings' => '11.0.0',
+    'system_post_update_mailer_structured_dsn_settings' => '11.0.0',
+    'system_post_update_amend_config_sync_readme_url' => '11.0.0',
+    'system_post_update_mail_notification_setting' => '11.0.0',
+    'system_post_update_set_cron_logging_setting_to_boolean' => '11.0.0',
+    'system_post_update_move_development_settings_to_keyvalue' => '11.0.0',
+    'system_post_update_add_langcode_to_all_translatable_config' => '11.0.0',
   ];
 }
 
 /**
- * Add new menu linkset endpoint setting.
+ * Updates system.date config to NULL for empty country and timezone defaults.
  */
-function system_post_update_linkset_settings() {
-  $config = \Drupal::configFactory()->getEditable('system.feature_flags');
-  $config->set('linkset_endpoint', FALSE)->save();
+function system_post_update_convert_empty_country_and_timezone_settings_to_null(): void {
+  $system_date_settings = \Drupal::configFactory()->getEditable('system.date');
+  $changed = FALSE;
+  if ($system_date_settings->get('country.default') === '') {
+    $system_date_settings->set('country.default', NULL);
+    $changed = TRUE;
+  }
+  if ($system_date_settings->get('timezone.default') === '') {
+    $system_date_settings->set('timezone.default', NULL);
+    $changed = TRUE;
+  }
+  if ($changed) {
+    $system_date_settings->save();
+  }
+}
+
+/**
+ * Uninstall the sdc module if installed.
+ */
+function system_post_update_sdc_uninstall() {
+  if (\Drupal::moduleHandler()->moduleExists('sdc')) {
+    \Drupal::service('module_installer')->uninstall(['sdc'], FALSE);
+  }
+}
+
+/**
+ * Rebuild the container to fix HTML in RSS feeds.
+ */
+function system_post_update_remove_rss_cdata_subscriber(): void {
+  // Empty update to trigger container rebuild.
 }

@@ -3,8 +3,11 @@
 namespace Drupal\menu_link_content\Plugin\migrate\source;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
+
+// cspell:ignore mlid objectid plid textgroup tsid
 
 /**
  * Drupal 6/7 menu link source from database.
@@ -37,12 +40,11 @@ use Drupal\migrate\Row;
  * For additional configuration keys, refer to the parent classes:
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "menu_link",
- *   source_module = "menu"
- * )
  */
+#[MigrateSource(
+  id: 'menu_link',
+  source_module: 'menu',
+)]
 class MenuLink extends DrupalSqlBase {
 
   /**
@@ -50,7 +52,11 @@ class MenuLink extends DrupalSqlBase {
    */
   public function query() {
     $query = $this->select('menu_links', 'ml')
-      ->fields('ml');
+      ->fields('ml')
+      // Shortcut set links are migrated by the d7_shortcut migration.
+      // Shortcuts are not used in Drupal 6.
+      // @see Drupal\shortcut\Plugin\migrate\source\d7\Shortcut::query()
+      ->condition('ml.menu_name', 'shortcut-set-%', 'NOT LIKE');
     $and = $query->andConditionGroup()
       ->condition('ml.module', 'menu')
       ->condition('ml.router_path', ['admin/build/menu-customize/%', 'admin/structure/menu/manage/%'], 'NOT IN');
@@ -99,13 +105,19 @@ class MenuLink extends DrupalSqlBase {
       'p9' => $this->t('The ninth mlid in the materialized path. See p1.'),
       'updated' => $this->t('Flag that indicates that this link was generated during the update from Drupal 5.'),
     ];
-    $schema = $this->getDatabase()->schema();
-    if ($schema->fieldExists('menu_links', 'language')) {
-      $fields['language'] = $this->t("Menu link language code.");
+
+    // The database connection may not exist, for example, when building
+    // the Migrate Message form.
+    if ($source_database = $this->database) {
+      $schema = $source_database->schema();
+      if ($schema->fieldExists('menu_links', 'language')) {
+        $fields['language'] = $this->t("Menu link language code.");
+      }
+      if ($schema->fieldExists('menu_links', 'i18n_tsid')) {
+        $fields['i18n_tsid'] = $this->t("Translation set id.");
+      }
     }
-    if ($schema->fieldExists('menu_links', 'i18n_tsid')) {
-      $fields['i18n_tsid'] = $this->t("Translation set id.");
-    }
+
     return $fields;
   }
 

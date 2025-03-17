@@ -3,19 +3,21 @@
 namespace Drupal\views\Plugin\Block;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Element\View;
+use Drupal\views\Plugin\Derivative\ViewsBlock as ViewsBlockDeriver;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Provides a generic Views block.
- *
- * @Block(
- *   id = "views_block",
- *   admin_label = @Translation("Views Block"),
- *   deriver = "Drupal\views\Plugin\Derivative\ViewsBlock"
- * )
  */
+#[Block(
+  id: "views_block",
+  admin_label: new TranslatableMarkup("Views Block"),
+  deriver: ViewsBlockDeriver::class
+)]
 class ViewsBlock extends ViewsBlockBase {
 
   /**
@@ -58,8 +60,13 @@ class ViewsBlock extends ViewsBlockBase {
       // #pre_render callback has already been applied.
       $output = View::preRenderViewElement($output);
 
-      // Override the label to the dynamic title configured in the view.
-      if (empty($this->configuration['views_label']) && $this->view->getTitle()) {
+      // Inject the overridden block title into the view.
+      if (!empty($this->configuration['views_label'])) {
+        $this->view->setTitle($this->configuration['views_label']);
+      }
+
+      // Override the block title to match the view title.
+      if ($this->view->getTitle()) {
         $output['#title'] = ['#markup' => $this->view->getTitle(), '#allowed_tags' => Xss::getHtmlTagList()];
       }
 

@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\RenderElement;
+
 /**
  * Provides a messages element.
  *
@@ -13,10 +15,9 @@ namespace Drupal\Core\Render\Element;
  *   '#type' => 'status_messages',
  * ];
  * @endcode
- *
- * @RenderElement("status_messages")
  */
-class StatusMessages extends RenderElement {
+#[RenderElement('status_messages')]
+class StatusMessages extends RenderElementBase {
 
   /**
    * {@inheritdoc}
@@ -30,14 +31,16 @@ class StatusMessages extends RenderElement {
       // of that specific type.
       '#display' => NULL,
       '#pre_render' => [
-        get_class() . '::generatePlaceholder',
+        static::class . '::generatePlaceholder',
       ],
       '#include_fallback' => FALSE,
     ];
   }
 
   /**
-   * #pre_render callback to generate a placeholder.
+   * Render API callback: Generates a placeholder.
+   *
+   * This function is assigned as a #lazy_builder callback.
    *
    * @param array $element
    *   A renderable array.
@@ -47,7 +50,7 @@ class StatusMessages extends RenderElement {
    */
   public static function generatePlaceholder(array $element) {
     $build = [
-      '#lazy_builder' => [get_class() . '::renderMessages', [$element['#display']]],
+      '#lazy_builder' => [static::class . '::renderMessages', [$element['#display']]],
       '#create_placeholder' => TRUE,
     ];
 
@@ -68,16 +71,18 @@ class StatusMessages extends RenderElement {
   }
 
   /**
-   * #lazy_builder callback; replaces placeholder with messages.
+   * Render API callback: Replaces placeholder with messages.
+   *
+   * This function is assigned as a #lazy_builder callback.
    *
    * @param string|null $type
    *   Limit the messages returned by type. Defaults to NULL, meaning all types.
    *   Passed on to \Drupal\Core\Messenger\Messenger::deleteByType(). These
    *   values are supported:
-   *   - NULL
-   *   - 'status'
-   *   - 'warning'
-   *   - 'error'
+   *   - NULL.
+   *   - 'status'.
+   *   - 'warning'.
+   *   - 'error'.
    *
    * @return array
    *   A renderable array containing the messages.

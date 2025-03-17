@@ -2,6 +2,7 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 
@@ -39,12 +40,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @todo Support term_relation, term_synonym table if possible.
- *
- * @MigrateSource(
- *   id = "d7_taxonomy_term",
- *   source_module = "taxonomy"
- * )
  */
+#[MigrateSource(
+  id: 'd7_taxonomy_term',
+  source_module: 'taxonomy',
+)]
 class Term extends FieldableEntity {
 
   /**
@@ -131,11 +131,6 @@ class Term extends FieldableEntity {
       ->execute()
       ->fetchCol();
     $row->setSourceProperty('parent', $parents);
-
-    // Determine if this is a forum container.
-    $forum_container_tids = $this->variableGet('forum_containers', []);
-    $current_tid = $row->getSourceProperty('tid');
-    $row->setSourceProperty('is_container', in_array($current_tid, $forum_container_tids));
 
     // If the term name or term description were replaced by real fields using
     // the Drupal 7 Title module, use the fields value instead of the term name
