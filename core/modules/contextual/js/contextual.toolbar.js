@@ -25,7 +25,7 @@
       return;
     }
 
-    const contextualToolbar = Drupal.contextualToolbar;
+    const { contextualToolbar } = Drupal;
 
     const viewOptions = {
       el: $('.toolbar .toolbar-bar .contextual-toolbar-tab'),
@@ -61,12 +61,9 @@
    */
   Drupal.contextualToolbar = {
     /**
-     * The {@link Drupal.contextualToolbar.StateModel} instance.
+     * The {@link Drupal.contextual.ContextualToolbarModelView} instance.
      *
-     * @type {?Drupal.contextualToolbar.StateModel}
-     *
-     * @deprecated in drupal:9.4.0 and is removed from drupal:12.0.0. There is
-     * no replacement.
+     * @type {?Drupal.contextual.ContextualToolbarModelView}
      */
     model: null,
   };

@@ -15,8 +15,6 @@ drupal.contextual-links:
     - core/drupal
     - core/drupal.ajax
     - core/drupalSettings
-    # @todo Remove this in https://www.drupal.org/project/drupal/issues/3203920
-    - core/internal.backbone
     - core/once
     - core/drupal.touchevents-test
 
@@ -30,9 +28,8 @@ drupal.contextual-toolbar:
       css/contextual.toolbar.css: {}
   dependencies:
     - core/jquery
+    - contextual/drupal.contextual-links
     - core/drupal
-    # @todo Remove this in https://www.drupal.org/project/drupal/issues/3203920
-    - core/internal.backbone
     - core/once
     - core/drupal.tabbingmanager
     - core/drupal.announce

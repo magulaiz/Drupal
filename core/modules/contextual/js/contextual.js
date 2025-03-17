@@ -118,40 +118,6 @@
       options,
     );
     contextual.instances.push(contextualModelView);
-    // Create a model and the appropriate views.
-    const model = new contextual.StateModel({
-      title,
-    });
-    const viewOptions = $.extend({ el: $contextual, model }, options);
-    contextual.views.push({
-      visual: new contextual.VisualView(viewOptions),
-      aural: new contextual.AuralView(viewOptions),
-      keyboard: new contextual.KeyboardView(viewOptions),
-    });
-    contextual.regionViews.push(
-      new contextual.RegionView($.extend({ el: $region, model }, options)),
-    );
-
-    // Add the model to the collection. This must happen after the views have
-    // been associated with it, otherwise collection change event handlers can't
-    // trigger the model change event handler in its views.
-    contextual.collection.add(model);
-
-    // Let other JavaScript react to the adding of a new contextual link.
-    $(document).trigger(
-      'drupalContextualLinkAdded',
-      Drupal.deprecatedProperty({
-        target: {
-          $el: $contextual,
-          $region,
-          model,
-        },
-        deprecatedProperty: 'model',
-        message:
-          'The model property is deprecated in drupal:9.4.0 and is removed from drupal:12.0.0. There is no replacement.',
-      }),
-    );
-
     // Fix visual collisions between contextual link triggers.
     adjustIfNestedAndOverlapping($contextual);
   }

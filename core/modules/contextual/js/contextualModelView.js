@@ -1,4 +1,4 @@
-(($, Drupal, Modernizr) => {
+(($, Drupal) => {
   Drupal.contextual.ContextualModelView = class {
     constructor($contextual, $region, options) {
       this.title = options.title || '';
@@ -12,7 +12,7 @@
       this.$region = $region;
       this.$contextual = $contextual;
 
-      if (!Modernizr.touchevents) {
+      if (!document.body.classList.contains('touchevents')) {
         $region.on({
           mouseenter: () => {
             this.regionIsHovered = true;
@@ -82,7 +82,7 @@
         .toggleClass('visually-hidden', !isVisible);
 
       this.$contextual.find('.contextual-links').prop('hidden', !isOpen);
-      const trigger = this.$contextual.find('.trigger').eq(0);
+      const trigger = this.$contextual.find('.trigger').get(0);
       trigger.textContent = Drupal.t('@action @title configuration options', {
         '@action': !isOpen ? this.strings.open : this.strings.close,
         '@title': this.title,
