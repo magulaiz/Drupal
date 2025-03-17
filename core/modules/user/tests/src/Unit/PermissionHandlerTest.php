@@ -253,10 +253,22 @@ EOF
     $this->callableResolver->expects($this->exactly(4))
       ->method('getCallableFromDefinition')
       ->willReturnMap([
-        ['Drupal\\user\\Tests\\TestPermissionCallbacks::singleDescription', [new TestPermissionCallbacks(), 'singleDescription']],
-        ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription', [new TestPermissionCallbacks(), 'titleDescription']],
-        ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleProvider', [new TestPermissionCallbacks(), 'titleProvider']],
-        ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess', [new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess']],
+        [
+          'Drupal\\user\\Tests\\TestPermissionCallbacks::singleDescription',
+          [new TestPermissionCallbacks(), 'singleDescription'],
+        ],
+        [
+          'Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription',
+          [new TestPermissionCallbacks(), 'titleDescription'],
+        ],
+        [
+          'Drupal\\user\\Tests\\TestPermissionCallbacks::titleProvider',
+          [new TestPermissionCallbacks(), 'titleProvider'],
+        ],
+        [
+          'Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess',
+          [new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess'],
+        ],
       ]);
 
     $module_extension_list = $this->createMock(ModuleExtensionList::class);
@@ -323,7 +335,7 @@ EOF
    * Checks that the permissions are like expected.
    *
    * @param array $actual_permissions
-   *   The actual permissions
+   *   The actual permissions.
    *
    * @internal
    */
@@ -341,6 +353,9 @@ EOF
 
 }
 
+/**
+ * Provider for testing permissions callbacks.
+ */
 class TestPermissionCallbacks {
 
   public function singleDescription() {
