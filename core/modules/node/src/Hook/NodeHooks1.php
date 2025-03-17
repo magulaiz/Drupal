@@ -5,6 +5,7 @@ namespace Drupal\node\Hook;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\language\ConfigurableLanguageInterface;
+use Drupal\comment\CommentInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Access\AccessResult;
@@ -519,6 +520,9 @@ class NodeHooks1 {
 
   /**
    * Reindex the node when comments are added, updated, or deleted.
+   * 
+   * @param \Drupal\comment\CommentInterface $comment
+   *   A comment entity.
    */
   private function reindexNodeIfCommentOnNode($comment): void {
     // Reindex the node when comments are added and if the node is the default revision.
