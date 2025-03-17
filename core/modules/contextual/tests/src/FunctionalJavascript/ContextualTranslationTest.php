@@ -8,7 +8,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\locale\StringStorageInterface;
-use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Tests contextual link translation.
@@ -39,9 +39,9 @@ class ContextualTranslationTest extends WebDriverTestBase {
   /**
    * The admin user.
    *
-   * @var \Drupal\user\Entity\User
+   * @var \Drupal\user\UserInterface
    */
-  protected User $adminUser;
+  protected UserInterface $adminUser;
 
   /**
    * The language manager.
