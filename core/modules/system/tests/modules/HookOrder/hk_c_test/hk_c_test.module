@@ -15,6 +15,13 @@ function hk_c_test_test_hook(): string {
 }
 
 /**
+ * Implements hook_sparse_test_hook().
+ */
+function hk_c_test_sparse_test_hook(): string {
+  return __FUNCTION__;
+}
+
+/**
  * Implements hook_procedural_alter().
  */
 function hk_c_test_procedural_alter(array &$calls): void {
