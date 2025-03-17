@@ -22,7 +22,7 @@ class ContextualTranslationTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'olivero';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
