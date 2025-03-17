@@ -7,20 +7,31 @@ namespace Drupal\node\Hook;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\Form\NodePreviewForm;
+use Drupal\node\NodeGrantDatabaseStorageInterface;
 use Drupal\node\NodeInterface;
+use Drupal\node\NodeStorageInterface;
 use Drupal\user\UserInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 
 /**
  * Hook implementations for node.
@@ -28,6 +39,29 @@ use Drupal\user\UserInterface;
 class NodeHooks {
 
   use StringTranslationTrait;
+
+  public function __construct(
+    #[AutowireServiceClosure(AccountProxyInterface::class)]
+    protected \Closure $currentUserClosure,
+    #[AutowireServiceClosure(MessengerInterface::class)]
+    protected \Closure $messengerClosure,
+    #[AutowireServiceClosure(ModuleHandlerInterface::class)]
+    protected \Closure $moduleHandlerClosure,
+    #[AutowireServiceClosure(EntityTypeManagerInterface::class)]
+    protected \Closure $entityTypeManagerClosure,
+    #[AutowireServiceClosure(StateInterface::class)]
+    protected \Closure $stateClosure,
+    #[AutowireServiceClosure(RouteMatchInterface::class)]
+    protected \Closure $routeMatchClosure,
+    #[AutowireServiceClosure(FormBuilderInterface::class)]
+    protected \Closure $formBuilderClosure,
+    #[AutowireServiceClosure(ConfigFactoryInterface::class)]
+    protected \Closure $configFactoryClosure,
+    #[AutowireServiceClosure(NodeGrantDatabaseStorageInterface::class)]
+    protected \Closure $nodeGrantDatabaseStorageClosure,
+    #[AutowireServiceClosure(RendererInterface::class)]
+    protected \Closure $rendererClosure,
+  ) {}
 
   /**
    * Implements hook_help().
@@ -37,7 +71,7 @@ class NodeHooks {
     // Remind site administrators about the {node_access} table being flagged
     // for rebuild. We don't need to issue the message on the confirm form, or
     // while the rebuild is being processed.
-    if ($route_name != 'node.configure_rebuild_confirm' && $route_name != 'system.batch_page.html' && $route_name != 'help.page.node' && $route_name != 'help.main' && \Drupal::currentUser()->hasPermission('administer nodes') && node_access_needs_rebuild()) {
+    if ($route_name != 'node.configure_rebuild_confirm' && $route_name != 'system.batch_page.html' && $route_name != 'help.page.node' && $route_name != 'help.main' && ($this->currentUserClosure)()->hasPermission('administer nodes') && node_access_needs_rebuild()) {
       if ($route_name == 'system.status') {
         $message = $this->t('The content access permissions need to be rebuilt.');
       }
@@ -46,7 +80,7 @@ class NodeHooks {
           ':node_access_rebuild' => Url::fromRoute('node.configure_rebuild_confirm')->toString(),
         ]);
       }
-      \Drupal::messenger()->addError($message);
+      ($this->messengerClosure)()->addError($message);
     }
     switch ($route_name) {
       case 'help.page.node':
@@ -201,14 +235,15 @@ class NodeHooks {
     // Calculate the oldest and newest node created times, for use in search
     // rankings. (Note that field aliases have to be variables passed by
     // reference.)
-    if (\Drupal::moduleHandler()->moduleExists('search')) {
+    if (($this->moduleHandlerClosure)()->moduleExists('search')) {
       $min_alias = 'min_created';
       $max_alias = 'max_created';
-      $result = \Drupal::entityQueryAggregate('node')->accessCheck(FALSE)->aggregate('created', 'MIN', NULL, $min_alias)->aggregate('created', 'MAX', NULL, $max_alias)->execute();
+      $aggregate_query = $this->getNodeStorage()->getAggregateQuery();
+      $result = $aggregate_query->accessCheck(FALSE)->aggregate('created', 'MIN', NULL, $min_alias)->aggregate('created', 'MAX', NULL, $max_alias)->execute();
       if (isset($result[0])) {
         // Make an array with definite keys and store it in the state system.
         $array = ['min_created' => $result[0][$min_alias], 'max_created' => $result[0][$max_alias]];
-        \Drupal::state()->set('node.min_max_update_time', $array);
+        ($this->stateClosure)()->set('node.min_max_update_time', $array);
       }
     }
   }
@@ -238,7 +273,7 @@ class NodeHooks {
     ];
     // Add relevance based on updated date, but only if it the scale values have
     // been calculated in node_cron().
-    if ($node_min_max = \Drupal::state()->get('node.min_max_update_time')) {
+    if ($node_min_max = ($this->stateClosure)()->get('node.min_max_update_time')) {
       $ranking['recent'] = [
         'title' => $this->t('Recently created'),
         // Exponential decay with half life of 14% of the age range of nodes.
@@ -259,9 +294,9 @@ class NodeHooks {
   public function userPredelete($account): void {
     // Delete nodes (current revisions).
     // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
-    $nids = \Drupal::entityQuery('node')->condition('uid', $account->id())->accessCheck(FALSE)->execute();
+    $nids = $this->getNodeStorage()->getQuery('node')->condition('uid', $account->id())->accessCheck(FALSE)->execute();
     // Delete old revisions.
-    $storage_controller = \Drupal::entityTypeManager()->getStorage('node');
+    $storage_controller = $this->getNodeStorage();
     $nodes = $storage_controller->loadMultiple($nids);
     $storage_controller->delete($nodes);
     $revisions = $storage_controller->userRevisionIds($account);
@@ -276,7 +311,7 @@ class NodeHooks {
   #[Hook('page_top')]
   public function pageTop(array &$page_top): void {
     // Add 'Back to content editing' link on preview page.
-    $route_match = \Drupal::routeMatch();
+    $route_match = ($this->routeMatchClosure)();
     if ($route_match->getRouteName() == 'entity.node.preview') {
       $page_top['node_preview'] = [
         '#type' => 'container',
@@ -286,7 +321,7 @@ class NodeHooks {
             'container-inline',
           ],
         ],
-        'view_mode' => \Drupal::formBuilder()->getForm(NodePreviewForm::class, $route_match->getParameter('node_preview')),
+        'view_mode' => ($this->formBuilderClosure)()->getForm(NodePreviewForm::class, $route_match->getParameter('node_preview')),
       ];
     }
   }
@@ -308,7 +343,7 @@ class NodeHooks {
           'modules' => 'system',
         ])->toString(),
       ]),
-      '#default_value' => \Drupal::configFactory()->getEditable('node.settings')->get('use_admin_theme'),
+      '#default_value' => ($this->configFactoryClosure)()->getEditable('node.settings')->get('use_admin_theme'),
     ];
     $form['#submit'][] = 'node_form_system_themes_admin_form_submit';
   }
@@ -415,7 +450,7 @@ class NodeHooks {
   public function queryNodeAccessAlter(AlterableInterface $query): void {
     // Read meta-data from query, if provided.
     if (!($account = $query->getMetaData('account'))) {
-      $account = \Drupal::currentUser();
+      $account = ($this->currentUserClosure)();
     }
     if (!($op = $query->getMetaData('op'))) {
       $op = 'view';
@@ -426,7 +461,7 @@ class NodeHooks {
     if ($account->hasPermission('bypass node access')) {
       return;
     }
-    if (!\Drupal::moduleHandler()->hasImplementations('node_grants')) {
+    if (!($this->moduleHandlerClosure)()->hasImplementations('node_grants')) {
       return;
     }
     if ($op == 'view' && node_access_view_all_nodes($account)) {
@@ -437,7 +472,7 @@ class NodeHooks {
     // If the base table is not given, default to one of the node base tables.
     if (!$base_table) {
       /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-      $table_mapping = \Drupal::entityTypeManager()->getStorage('node')->getTableMapping();
+      $table_mapping = $this->getNodeStorage()->getTableMapping();
       $node_base_tables = $table_mapping->getTableNames();
       foreach ($tables as $table_info) {
         if (!$table_info instanceof SelectInterface) {
@@ -461,10 +496,10 @@ class NodeHooks {
       }
     }
     // Update the query for the given storage method.
-    \Drupal::service('node.grant_storage')->alterQuery($query, $tables, $op, $account, $base_table);
+    ($this->nodeGrantDatabaseStorageClosure)()->alterQuery($query, $tables, $op, $account, $base_table);
     // Bubble the 'user.node_grants:$op' cache context to the current render
     // context.
-    $renderer = \Drupal::service('renderer');
+    $renderer = ($this->rendererClosure)();
     if ($renderer->hasRenderContext()) {
       $build = ['#cache' => ['contexts' => ['user.node_grants:' . $op]]];
       $renderer->render($build);
@@ -482,7 +517,7 @@ class NodeHooks {
   public function modulesInstalled(array $modules): void {
     // Check if any of the newly enabled modules require the node_access table
     // to be rebuilt.
-    if (!node_access_needs_rebuild() && \Drupal::moduleHandler()->hasImplementations('node_grants', $modules)) {
+    if (!node_access_needs_rebuild() && ($this->moduleHandlerClosure)()->hasImplementations('node_grants', $modules)) {
       node_access_needs_rebuild(TRUE);
     }
   }
@@ -500,13 +535,13 @@ class NodeHooks {
       // check whether a hook implementation function exists and do not invoke
       // it. Node access also needs to be rebuilt if language module is disabled
       // to remove any language-specific grants.
-      if (!node_access_needs_rebuild() && (\Drupal::moduleHandler()->hasImplementations('node_grants', $module) || $module == 'language')) {
+      if (!node_access_needs_rebuild() && (($this->moduleHandlerClosure)()->hasImplementations('node_grants', $module) || $module == 'language')) {
         node_access_needs_rebuild(TRUE);
       }
     }
     // If there remains no more node_access module, rebuilding will be
     // straightforward, we can do it right now.
-    if (node_access_needs_rebuild() && !\Drupal::moduleHandler()->hasImplementations('node_grants')) {
+    if (node_access_needs_rebuild() && !($this->moduleHandlerClosure)()->hasImplementations('node_grants')) {
       node_access_rebuild();
     }
   }
@@ -517,7 +552,7 @@ class NodeHooks {
   #[Hook('configurable_language_delete')]
   public function configurableLanguageDelete(ConfigurableLanguageInterface $language): void {
     // On nodes with this language, unset the language.
-    \Drupal::entityTypeManager()->getStorage('node')->clearRevisionsLanguage($language);
+    $this->getNodeStorage()->clearRevisionsLanguage($language);
   }
 
   /**
@@ -569,11 +604,11 @@ class NodeHooks {
   #[Hook('user_cancel')]
   public function userCancelBlockUnpublish($edit, UserInterface $account, $method): void {
     if ($method === 'user_cancel_block_unpublish') {
-      $nids = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
+      $nids = $this->getNodeStorage()->getQuery()
         ->accessCheck(FALSE)
         ->condition('uid', $account->id())
         ->execute();
-      \Drupal::moduleHandler()->invoke('node', 'mass_update', [$nids, ['status' => 0], NULL, TRUE]);
+      ($this->moduleHandlerClosure)()->invoke('node', 'mass_update', [$nids, ['status' => 0], NULL, TRUE]);
     }
   }
 
@@ -585,9 +620,16 @@ class NodeHooks {
   #[Hook('user_cancel')]
   public function userCancelReassign($edit, UserInterface $account, $method): void {
     if ($method === 'user_cancel_reassign') {
-      $vids = \Drupal::entityTypeManager()->getStorage('node')->userRevisionIds($account);
-      \Drupal::moduleHandler()->invoke('node', 'mass_update', [$vids, ['uid' => 0, 'revision_uid' => 0], NULL, TRUE, TRUE]);
+      $vids = $this->getNodeStorage()->userRevisionIds($account);
+      ($this->moduleHandlerClosure)()->invoke('node', 'mass_update', [$vids, ['uid' => 0, 'revision_uid' => 0], NULL, TRUE, TRUE]);
     }
+  }
+
+  /**
+   * Gets the node storage.
+   */
+  protected function getNodeStorage(): NodeStorageInterface {
+    return ($this->entityTypeManagerClosure)()->getStorage('node');
   }
 
 }
