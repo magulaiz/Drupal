@@ -22,4 +22,9 @@ class DHooks {
     return __METHOD__;
   }
 
+  #[Hook('sparse_test_hook')]
+  public function sparseTestHook(): string {
+    return __METHOD__;
+  }
+
 }
