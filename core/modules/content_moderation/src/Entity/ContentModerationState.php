@@ -10,7 +10,6 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\user\EntityOwnerTrait;
 use Drupal\views\EntityViewsData;
