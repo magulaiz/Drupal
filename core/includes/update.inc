@@ -45,7 +45,7 @@ function update_system_schema_requirements(): array {
 /**
  * Checks update requirements and reports errors and (optionally) warnings.
  */
-function update_check_requirements() {
+function update_check_requirements(): array {
   // Because this is one of the earliest points in the update process,
   // detect and fix missing schema versions for modules here to ensure
   // it runs on all update code paths.

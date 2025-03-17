@@ -94,7 +94,7 @@ function content_translation_translate_access(EntityInterface $entity) {
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  */
-function content_translation_enable_widget($entity_type, $bundle, array &$form, FormStateInterface $form_state) {
+function content_translation_enable_widget($entity_type, $bundle, array &$form, FormStateInterface $form_state): array {
   $key = $form_state->get(['content_translation', 'key']);
   $context = $form_state->get(['language', $key]) ?: [];
   $context += ['entity_type' => $entity_type, 'bundle' => $bundle];

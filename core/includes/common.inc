@@ -130,7 +130,7 @@ const JS_THEME = 100;
  * - http://example.com returns "/" because the path is empty.
  * - http://example.com/drupal/folder returns "/drupal/folder/".
  */
-function base_path() {
+function base_path(): string {
   return $GLOBALS['base_path'];
 }
 

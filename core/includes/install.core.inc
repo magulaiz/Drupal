@@ -1191,7 +1191,7 @@ function install_verify_database_ready(): void {
 /**
  * Checks a database connection and returns any errors.
  */
-function install_database_errors($database, $settings_file) {
+function install_database_errors($database, $settings_file): array {
   $errors = [];
 
   try {
@@ -2104,7 +2104,7 @@ function install_check_translations($langcode, $server_pattern): array {
 /**
  * Checks installation requirements and reports any errors.
  */
-function install_check_requirements($install_state) {
+function install_check_requirements($install_state): array {
   $requirements = [];
   $profile = $install_state['parameters']['profile'];
 
@@ -2594,7 +2594,7 @@ function _install_config_locale_overrides_process_batch(array $names, array $lan
  * @internal
  *   All installer code is internal.
  */
-function install_recipe_required_modules() {
+function install_recipe_required_modules(): array {
   // We need to manually trigger the installation of core-provided entity types,
   // as those will not be handled by the module installer.
   // @see install_profile_modules()
@@ -2642,7 +2642,7 @@ function install_recipe_required_modules() {
  * @internal
  *   This API is experimental.
  */
-function install_recipe_batch(&$install_state) {
+function install_recipe_batch(&$install_state): array {
   $batch_builder = new BatchBuilder();
   $batch_builder
     ->setTitle(t('Installing recipe'))
