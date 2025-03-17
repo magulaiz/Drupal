@@ -364,8 +364,8 @@ class UserPermissionsTest extends BrowserTestBase {
     // Verify that if a permission has the same name as a module, that its
     // table cells aren't combined into the module's header row. The header row
     // should have a single cell in that case.
-    $next_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-module-user-permissions-test\'][count(td)=1]');
-    $this->assertNotEmpty($next_row);
+    $header_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-module-user-permissions-test\'][count(td)=1]');
+    $this->assertNotEmpty($header_row);
   }
 
 }
