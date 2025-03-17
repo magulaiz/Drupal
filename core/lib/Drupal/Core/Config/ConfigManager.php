@@ -304,8 +304,8 @@ class ConfigManager implements ConfigManagerInterface {
     foreach ($entities as $entity_type_id => $entities_to_load) {
       $storage = $this->entityTypeManager->getStorage($entity_type_id);
       $loaded_entities = $storage->loadMultiple($entities_to_load);
-      foreach ($entities_to_load as $config_name => $id) {
-        $entities_to_return[$config_name] = $loaded_entities[$id];
+      foreach ($loaded_entities as $id => $loaded_entity) {
+        $entities_to_return[$loaded_entity->getConfigDependencyName()] = $loaded_entity;
       }
     }
     // Return entities list with NULL entries removed.
