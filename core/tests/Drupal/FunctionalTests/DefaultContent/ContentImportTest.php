@@ -213,6 +213,9 @@ class ContentImportTest extends BrowserTestBase {
 
   /**
    * Asserts that the default content was imported as expected.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The account that should own the imported content.
    */
   private function assertContentWasImported(AccountInterface $account): void {
     /** @var \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository */
