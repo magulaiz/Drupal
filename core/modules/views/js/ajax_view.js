@@ -99,6 +99,7 @@
             because that is what happens without AJAX.
              */
             name !== 'page' &&
+            name !== 'reset' &&
             name !== 'sort' &&
             name !== 'order'
           );
