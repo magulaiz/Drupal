@@ -363,9 +363,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
 
         // Sort by weight and alphabetically if weights are the same.
         foreach ($data as $key => $values) {
-          $weights = array_map(function ($input) {
-            return $input['#weight'];
-          }, $values);
+          $weights = array_column($values, '#weight');
           array_multisort(
             $weights, SORT_ASC, SORT_NUMERIC,
             array_keys($values), SORT_ASC, SORT_NATURAL,
