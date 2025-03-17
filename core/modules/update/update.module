@@ -369,7 +369,7 @@ function update_clear_update_disk_cache(): void {
  * @return bool
  *   TRUE if the file is stale and deleted successfully, FALSE otherwise.
  */
-function update_delete_file_if_stale($path) {
+function update_delete_file_if_stale($path): bool {
   if (file_exists($path)) {
     $filectime = filectime($path);
     $max_age = \Drupal::config('system.file')->get('temporary_maximum_age');

@@ -1150,7 +1150,7 @@ function install_verify_completed_task() {
  * @return bool
  *   TRUE if there are no database errors.
  */
-function install_verify_database_settings($site_path) {
+function install_verify_database_settings($site_path): bool {
   if ($database = Database::getConnectionInfo()) {
     $database = $database['default'];
     $settings_file = './' . $site_path . '/settings.php';
@@ -1466,7 +1466,7 @@ function install_retrieve_file($uri, $destination) {
  * @return string
  *   TRUE if the URI was contacted successfully, FALSE if not.
  */
-function install_check_localization_server($uri) {
+function install_check_localization_server($uri): bool {
   try {
     \Drupal::httpClient()->head($uri);
     return TRUE;
