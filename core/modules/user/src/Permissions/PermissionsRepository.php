@@ -162,6 +162,19 @@ class PermissionsRepository implements PermissionsRepositoryInterface {
     return $ret;
   }
 
+  /**
+   * Copies the sections data from the top level into each
+   * set of permissions.
+   *
+   * @param string $provider
+   *   The provider machine name, such as a module machine name.
+   *
+   * @param array $permissions
+   *   The permissions data.
+   *
+   * @return array
+   *   The permissions, possibly empty.
+   */
   protected function addSectionsToPermissions($provider, $permissions) {
     foreach ($permissions as $name => $permission) {
       if (!empty($permission['section'])) {

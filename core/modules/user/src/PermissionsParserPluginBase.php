@@ -57,16 +57,27 @@ abstract class PermissionsParserPluginBase extends PluginBase implements Contain
     return (string) $this->pluginDefinition['description'];
   }
 
-  protected function tWrapper($s, $options = [], $context = []) {
-    if (is_object($s) || is_array($s)) {
-      return $s;
+  /**
+   * A wrapper around t() that deals with different types of input.
+   *
+   * @param string $string
+   *   Possibly a string containing the English text to translate.
+   *   If it's an object or array, that's returned.
+   *   If it's not an object, array, or string, it's cast to a string.
+   *
+   * @see \Drupal\Core\StringTranslation\TranslationInterface::translate()
+   *   The other parameters and the return value are the same.
+   */
+  protected function tWrapper($string, $options = [], $context = []) {
+    if (is_object($string) || is_array($string)) {
+      return $string;
     }
 
-    if (!is_string($s)) {
-      $s = '' . $s;
+    if (!is_string($string)) {
+      $string = '' . $string;
     }
 
-    return $this->t($s, $options, $context);
+    return $this->t($string, $options, $context);
   }
 
 }
