@@ -31,7 +31,6 @@ use Drupal\node\NodeGrantDatabaseStorageInterface;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeStorageInterface;
 use Drupal\user\UserInterface;
-use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 
 /**
  * Hook implementations for node.
@@ -41,26 +40,16 @@ class NodeHooks {
   use StringTranslationTrait;
 
   public function __construct(
-    #[AutowireServiceClosure(AccountProxyInterface::class)]
-    protected \Closure $currentUserClosure,
-    #[AutowireServiceClosure(MessengerInterface::class)]
-    protected \Closure $messengerClosure,
-    #[AutowireServiceClosure(ModuleHandlerInterface::class)]
-    protected \Closure $moduleHandlerClosure,
-    #[AutowireServiceClosure(EntityTypeManagerInterface::class)]
-    protected \Closure $entityTypeManagerClosure,
-    #[AutowireServiceClosure(StateInterface::class)]
-    protected \Closure $stateClosure,
-    #[AutowireServiceClosure(RouteMatchInterface::class)]
-    protected \Closure $routeMatchClosure,
-    #[AutowireServiceClosure(FormBuilderInterface::class)]
-    protected \Closure $formBuilderClosure,
-    #[AutowireServiceClosure(ConfigFactoryInterface::class)]
-    protected \Closure $configFactoryClosure,
-    #[AutowireServiceClosure(NodeGrantDatabaseStorageInterface::class)]
-    protected \Closure $nodeGrantDatabaseStorageClosure,
-    #[AutowireServiceClosure(RendererInterface::class)]
-    protected \Closure $rendererClosure,
+    protected AccountProxyInterface $currentUser,
+    protected MessengerInterface $messenger,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected StateInterface $state,
+    protected RouteMatchInterface $routeMatch,
+    protected FormBuilderInterface $formBuilder,
+    protected ConfigFactoryInterface $configFactory,
+    protected NodeGrantDatabaseStorageInterface $nodeGrantDatabaseStorage,
+    protected RendererInterface $renderer,
   ) {}
 
   /**
@@ -71,7 +60,7 @@ class NodeHooks {
     // Remind site administrators about the {node_access} table being flagged
     // for rebuild. We don't need to issue the message on the confirm form, or
     // while the rebuild is being processed.
-    if ($route_name != 'node.configure_rebuild_confirm' && $route_name != 'system.batch_page.html' && $route_name != 'help.page.node' && $route_name != 'help.main' && ($this->currentUserClosure)()->hasPermission('administer nodes') && node_access_needs_rebuild()) {
+    if ($route_name != 'node.configure_rebuild_confirm' && $route_name != 'system.batch_page.html' && $route_name != 'help.page.node' && $route_name != 'help.main' && $this->currentUser->hasPermission('administer nodes') && node_access_needs_rebuild()) {
       if ($route_name == 'system.status') {
         $message = $this->t('The content access permissions need to be rebuilt.');
       }
@@ -80,7 +69,7 @@ class NodeHooks {
           ':node_access_rebuild' => Url::fromRoute('node.configure_rebuild_confirm')->toString(),
         ]);
       }
-      ($this->messengerClosure)()->addError($message);
+      $this->messenger->addError($message);
     }
     switch ($route_name) {
       case 'help.page.node':
@@ -235,7 +224,7 @@ class NodeHooks {
     // Calculate the oldest and newest node created times, for use in search
     // rankings. (Note that field aliases have to be variables passed by
     // reference.)
-    if (($this->moduleHandlerClosure)()->moduleExists('search')) {
+    if ($this->moduleHandler->moduleExists('search')) {
       $min_alias = 'min_created';
       $max_alias = 'max_created';
       $aggregate_query = $this->getNodeStorage()->getAggregateQuery();
@@ -243,7 +232,7 @@ class NodeHooks {
       if (isset($result[0])) {
         // Make an array with definite keys and store it in the state system.
         $array = ['min_created' => $result[0][$min_alias], 'max_created' => $result[0][$max_alias]];
-        ($this->stateClosure)()->set('node.min_max_update_time', $array);
+        $this->state->set('node.min_max_update_time', $array);
       }
     }
   }
@@ -273,7 +262,7 @@ class NodeHooks {
     ];
     // Add relevance based on updated date, but only if it the scale values have
     // been calculated in node_cron().
-    if ($node_min_max = ($this->stateClosure)()->get('node.min_max_update_time')) {
+    if ($node_min_max = $this->state->get('node.min_max_update_time')) {
       $ranking['recent'] = [
         'title' => $this->t('Recently created'),
         // Exponential decay with half life of 14% of the age range of nodes.
@@ -311,7 +300,7 @@ class NodeHooks {
   #[Hook('page_top')]
   public function pageTop(array &$page_top): void {
     // Add 'Back to content editing' link on preview page.
-    $route_match = ($this->routeMatchClosure)();
+    $route_match = $this->routeMatch;
     if ($route_match->getRouteName() == 'entity.node.preview') {
       $page_top['node_preview'] = [
         '#type' => 'container',
@@ -321,7 +310,7 @@ class NodeHooks {
             'container-inline',
           ],
         ],
-        'view_mode' => ($this->formBuilderClosure)()->getForm(NodePreviewForm::class, $route_match->getParameter('node_preview')),
+        'view_mode' => $this->formBuilder->getForm(NodePreviewForm::class, $route_match->getParameter('node_preview')),
       ];
     }
   }
@@ -343,7 +332,7 @@ class NodeHooks {
           'modules' => 'system',
         ])->toString(),
       ]),
-      '#default_value' => ($this->configFactoryClosure)()->getEditable('node.settings')->get('use_admin_theme'),
+      '#default_value' => $this->configFactory->getEditable('node.settings')->get('use_admin_theme'),
     ];
     $form['#submit'][] = 'node_form_system_themes_admin_form_submit';
   }
@@ -450,7 +439,7 @@ class NodeHooks {
   public function queryNodeAccessAlter(AlterableInterface $query): void {
     // Read meta-data from query, if provided.
     if (!($account = $query->getMetaData('account'))) {
-      $account = ($this->currentUserClosure)();
+      $account = $this->currentUser;
     }
     if (!($op = $query->getMetaData('op'))) {
       $op = 'view';
@@ -461,7 +450,7 @@ class NodeHooks {
     if ($account->hasPermission('bypass node access')) {
       return;
     }
-    if (!($this->moduleHandlerClosure)()->hasImplementations('node_grants')) {
+    if (!$this->moduleHandler->hasImplementations('node_grants')) {
       return;
     }
     if ($op == 'view' && node_access_view_all_nodes($account)) {
@@ -496,10 +485,10 @@ class NodeHooks {
       }
     }
     // Update the query for the given storage method.
-    ($this->nodeGrantDatabaseStorageClosure)()->alterQuery($query, $tables, $op, $account, $base_table);
+    $this->nodeGrantDatabaseStorage->alterQuery($query, $tables, $op, $account, $base_table);
     // Bubble the 'user.node_grants:$op' cache context to the current render
     // context.
-    $renderer = ($this->rendererClosure)();
+    $renderer = $this->renderer;
     if ($renderer->hasRenderContext()) {
       $build = ['#cache' => ['contexts' => ['user.node_grants:' . $op]]];
       $renderer->render($build);
@@ -517,7 +506,7 @@ class NodeHooks {
   public function modulesInstalled(array $modules): void {
     // Check if any of the newly enabled modules require the node_access table
     // to be rebuilt.
-    if (!node_access_needs_rebuild() && ($this->moduleHandlerClosure)()->hasImplementations('node_grants', $modules)) {
+    if (!node_access_needs_rebuild() && $this->moduleHandler->hasImplementations('node_grants', $modules)) {
       node_access_needs_rebuild(TRUE);
     }
   }
@@ -535,13 +524,13 @@ class NodeHooks {
       // check whether a hook implementation function exists and do not invoke
       // it. Node access also needs to be rebuilt if language module is disabled
       // to remove any language-specific grants.
-      if (!node_access_needs_rebuild() && (($this->moduleHandlerClosure)()->hasImplementations('node_grants', $module) || $module == 'language')) {
+      if (!node_access_needs_rebuild() && ($this->moduleHandler->hasImplementations('node_grants', $module) || $module == 'language')) {
         node_access_needs_rebuild(TRUE);
       }
     }
     // If there remains no more node_access module, rebuilding will be
     // straightforward, we can do it right now.
-    if (node_access_needs_rebuild() && !($this->moduleHandlerClosure)()->hasImplementations('node_grants')) {
+    if (node_access_needs_rebuild() && !$this->moduleHandler->hasImplementations('node_grants')) {
       node_access_rebuild();
     }
   }
@@ -608,7 +597,7 @@ class NodeHooks {
         ->accessCheck(FALSE)
         ->condition('uid', $account->id())
         ->execute();
-      ($this->moduleHandlerClosure)()->invoke('node', 'mass_update', [$nids, ['status' => 0], NULL, TRUE]);
+      $this->moduleHandler->invoke('node', 'mass_update', [$nids, ['status' => 0], NULL, TRUE]);
     }
   }
 
@@ -621,7 +610,7 @@ class NodeHooks {
   public function userCancelReassign($edit, UserInterface $account, $method): void {
     if ($method === 'user_cancel_reassign') {
       $vids = $this->getNodeStorage()->userRevisionIds($account);
-      ($this->moduleHandlerClosure)()->invoke('node', 'mass_update', [$vids, ['uid' => 0, 'revision_uid' => 0], NULL, TRUE, TRUE]);
+      $this->moduleHandler->invoke('node', 'mass_update', [$vids, ['uid' => 0, 'revision_uid' => 0], NULL, TRUE, TRUE]);
     }
   }
 
@@ -629,7 +618,7 @@ class NodeHooks {
    * Gets the node storage.
    */
   protected function getNodeStorage(): NodeStorageInterface {
-    return ($this->entityTypeManagerClosure)()->getStorage('node');
+    return $this->entityTypeManager->getStorage('node');
   }
 
 }
