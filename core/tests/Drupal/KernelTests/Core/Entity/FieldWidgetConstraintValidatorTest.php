@@ -17,6 +17,9 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class FieldWidgetConstraintValidatorTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'entity_test',
     'field',
@@ -68,7 +71,7 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
    * Gets the form errors for a given entity.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity
+   *   The entity.
    * @param array $hidden_fields
    *   (optional) A list of hidden fields.
    *

@@ -18,8 +18,23 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class LanguageNegotiationUrlTest extends UnitTestCase {
 
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
   protected $languageManager;
+
+  /**
+   * The test user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
   protected $user;
+
+  /**
+   * An array of languages.
+   */
   protected array $languages;
 
   /**
@@ -252,7 +267,8 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $this->assertSame('foo', $method->processOutbound('foo', $options, $request, $cacheability));
     $expected_cacheability = new BubbleableMetadata();
     if ($expected_langcode !== FALSE && count($domains) > 1) {
-      $expected_cacheability->setCacheMaxAge(Cache::PERMANENT)->setCacheContexts(['languages:' . LanguageInterface::TYPE_URL, 'url.site']);
+      $expected_cacheability->setCacheMaxAge(
+        Cache::PERMANENT)->setCacheContexts(['languages:' . LanguageInterface::TYPE_URL, 'url.site']);
     }
     $this->assertEquals($expected_cacheability, $cacheability);
   }
