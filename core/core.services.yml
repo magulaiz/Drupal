@@ -8,7 +8,11 @@ parameters:
   # function properly before that runs.
   cache_default_bin_backends: []
   memory_cache_default_bin_backends: []
+  entity.memory_cache.slots: 1000
   security.enable_super_user: true
+  core.moved_classes:
+    'Drupal\Core\StringTranslation\TranslationWrapper':
+      class: 'Drupal\Core\StringTranslation\TranslatableMarkup'
   session.storage.options:
     gc_probability: 1
     gc_divisor: 100
@@ -237,6 +241,9 @@ services:
       - { name: cache_tags_invalidator}
       - { name: backend_overridable }
   Drupal\Core\Cache\CacheTagsChecksumInterface: '@cache_tags.invalidator.checksum'
+  cache_tags.preloader:
+    class: Drupal\Core\Cache\EventSubscriber\CacheTagPreloadSubscriber
+    autowire: true
   cache.backend.chainedfast:
     class: Drupal\Core\Cache\ChainedFastBackendFactory
     arguments: ['@settings']
@@ -704,8 +711,8 @@ services:
     arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state', '@extension.list.module', '@theme.registry', '@extension.list.theme']
   Drupal\Core\Extension\ThemeInstallerInterface: '@theme_installer'
   entity.memory_cache:
-    class: Drupal\Core\Cache\MemoryCache\MemoryCache
-    arguments: ['@datetime.time']
+    class: Drupal\Core\Cache\MemoryCache\LruMemoryCache
+    arguments: ['@datetime.time', '%entity.memory_cache.slots%']
   Drupal\Core\Cache\MemoryCache\MemoryCacheInterface: '@entity.memory_cache'
   entity_type.manager:
     class: Drupal\Core\Entity\EntityTypeManager
@@ -1840,8 +1847,6 @@ services:
   response_filter.active_link:
     class: Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
     arguments: ['@current_user', '@path.current', '@path.matcher', '@language_manager']
-  response_filter.rss.cdata:
-    class: Drupal\Core\EventSubscriber\RssResponseCdata
   response_filter.rss.relative_url:
     class: Drupal\Core\EventSubscriber\RssResponseRelativeUrlFilter
   messenger:
