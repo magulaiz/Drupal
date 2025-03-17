@@ -10,8 +10,6 @@ use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -22,7 +20,6 @@ use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\Form\NodePreviewForm;
 use Drupal\node\NodeInterface;
-use Drupal\node\NodeStorageInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -31,28 +28,6 @@ use Drupal\user\UserInterface;
 class NodeHooks {
 
   use StringTranslationTrait;
-
-  /**
-   * The Node Storage.
-   *
-   * @var \Drupal\node\NodeStorageInterface
-   */
-  protected NodeStorageInterface $nodeStorage;
-
-  /**
-   * NodeHooks constructor.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The entity type manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler.
-   */
-  public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    protected ModuleHandlerInterface $moduleHandler,
-  ) {
-    $this->nodeStorage = $entityTypeManager->getStorage('node');
-  }
 
   /**
    * Implements hook_help().
@@ -594,11 +569,11 @@ class NodeHooks {
   #[Hook('user_cancel')]
   public function userCancelBlockUnpublish($edit, UserInterface $account, $method): void {
     if ($method === 'user_cancel_block_unpublish') {
-      $nids = $this->nodeStorage->getQuery()
+      $nids = \Drupal::entityTypeManager()->getStorage('node')->getQuery()
         ->accessCheck(FALSE)
         ->condition('uid', $account->id())
         ->execute();
-      $this->moduleHandler->invoke('node', 'mass_update', [$nids, ['status' => 0], NULL, TRUE]);
+      \Drupal::moduleHandler()->invoke('node', 'mass_update', [$nids, ['status' => 0], NULL, TRUE]);
     }
   }
 
@@ -610,8 +585,8 @@ class NodeHooks {
   #[Hook('user_cancel')]
   public function userCancelReassign($edit, UserInterface $account, $method): void {
     if ($method === 'user_cancel_reassign') {
-      $vids = $this->nodeStorage->userRevisionIds($account);
-      $this->moduleHandler->invoke('node', 'mass_update', [$vids, ['uid' => 0, 'revision_uid' => 0], NULL, TRUE, TRUE]);
+      $vids = \Drupal::entityTypeManager()->getStorage('node')->userRevisionIds($account);
+      \Drupal::moduleHandler()->invoke('node', 'mass_update', [$vids, ['uid' => 0, 'revision_uid' => 0], NULL, TRUE, TRUE]);
     }
   }
 
