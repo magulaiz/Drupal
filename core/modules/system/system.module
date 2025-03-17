@@ -286,7 +286,7 @@ function system_authorized_batch_processing_url(array $options = []) {
  *
  * @see system_authorized_init()
  */
-function system_authorized_run($callback, $file, $arguments = [], $page_title = NULL) {
+function system_authorized_run($callback, $file, $arguments = [], $page_title = NULL): \Symfony\Component\HttpFoundation\RedirectResponse {
   @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
 
   system_authorized_init($callback, $file, $arguments, $page_title);
@@ -416,7 +416,7 @@ function system_region_list($theme, $show = REGIONS_ALL): array {
  *
  * @see \Drupal\Core\Extension\Extension::sortByName()
  */
-function system_sort_themes($a, $b) {
+function system_sort_themes($a, $b): int {
   if ($a->is_default) {
     return -1;
   }
@@ -469,7 +469,7 @@ function system_admin_compact_mode() {
  * @return bool
  *   TRUE if Claro is the admin theme but not the active theme.
  */
-function _system_is_claro_admin_and_not_active() {
+function _system_is_claro_admin_and_not_active(): bool {
   $admin_theme = \Drupal::configFactory()->get('system.theme')->get('admin');
   $active_theme = \Drupal::theme()->getActiveTheme()->getName();
   return $active_theme !== 'claro' && $admin_theme === 'claro';

@@ -995,7 +995,7 @@ function install_get_form($form_id, array &$install_state) {
  *
  * @see install_full_redirect_url()
  */
-function install_redirect_url($install_state) {
+function install_redirect_url($install_state): string {
   return 'core/install.php?' . UrlHelper::buildQuery($install_state['parameters']);
 }
 
@@ -1010,7 +1010,7 @@ function install_redirect_url($install_state) {
  *
  * @see install_redirect_url()
  */
-function install_full_redirect_url($install_state) {
+function install_full_redirect_url($install_state): string {
   global $base_url;
   return $base_url . '/' . install_redirect_url($install_state);
 }

@@ -310,7 +310,7 @@ function views_view_is_enabled(View $view) {
  * @return bool
  *   Returns TRUE if a view is disabled, FALSE otherwise.
  */
-function views_view_is_disabled(View $view) {
+function views_view_is_disabled(View $view): bool {
   return !$view->status();
 }
 

@@ -82,7 +82,7 @@ define('DRUPAL_ROOT', dirname(__DIR__, 2));
  *
  * @ingroup sanitization
  */
-function t($string, array $args = [], array $options = []) {
+function t($string, array $args = [], array $options = []): \Drupal\Core\StringTranslation\TranslatableMarkup {
   // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
   return new TranslatableMarkup($string, $args, $options);
 }
@@ -218,7 +218,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
  * @return string|null
  *   The user agent, or NULL on failure.
  */
-function drupal_generate_test_ua($prefix) {
+function drupal_generate_test_ua($prefix): ?string {
   static $key, $last_prefix;
 
   if (!isset($key) || $last_prefix != $prefix) {

@@ -603,7 +603,7 @@ function update_build_dependency_graph($update_functions): array {
  *   TRUE if the provided module update is not installed or is not in the
  *   provided list of updates to run; FALSE otherwise.
  */
-function update_is_missing($module, $number, $update_functions) {
+function update_is_missing($module, $number, $update_functions): bool {
   return !isset($update_functions[$module][$number]) || !function_exists($update_functions[$module][$number]);
 }
 
@@ -619,7 +619,7 @@ function update_is_missing($module, $number, $update_functions) {
  *   TRUE if the database schema indicates that the update has already been
  *   performed; FALSE otherwise.
  */
-function update_already_performed($module, $number) {
+function update_already_performed($module, $number): bool {
   return $number <= \Drupal::service('update.update_hook_registry')->getInstalledVersion($module);
 }
 

@@ -528,7 +528,7 @@ function _filter_url($text, $filter) {
  *
  * Callback for preg_replace_callback() within _filter_url().
  */
-function _filter_url_parse_full_links($match) {
+function _filter_url_parse_full_links($match): string {
   // The $i:th parenthesis in the regexp contains the URL.
   $i = 1;
 
@@ -543,7 +543,7 @@ function _filter_url_parse_full_links($match) {
  *
  * Callback for preg_replace_callback() within _filter_url().
  */
-function _filter_url_parse_email_links($match) {
+function _filter_url_parse_email_links($match): string {
   // The $i:th parenthesis in the regexp contains the URL.
   $i = 0;
 
@@ -558,7 +558,7 @@ function _filter_url_parse_email_links($match) {
  *
  * Callback for preg_replace_callback() within _filter_url().
  */
-function _filter_url_parse_partial_links($match) {
+function _filter_url_parse_partial_links($match): string {
   // The $i:th parenthesis in the regexp contains the URL.
   $i = 1;
 
@@ -723,7 +723,7 @@ function _filter_autop($text) {
 /**
  * Escapes all HTML tags, so they will be visible instead of being effective.
  */
-function _filter_html_escape($text) {
+function _filter_html_escape($text): string {
   return trim(Html::escape($text));
 }
 

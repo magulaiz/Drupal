@@ -25,7 +25,7 @@ use Drupal\user\UserInterface;
  * add/edit/delete forms and populate the 'picture' variable during the
  * preprocess stage.
  */
-function user_picture_enabled() {
+function user_picture_enabled(): bool {
   $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('user', 'user');
   return isset($field_definitions['user_picture']);
 }
@@ -102,7 +102,7 @@ function user_validate_name($name) {
  * Drupal\user\UserInterface::isBlocked() instead.
  * @see https://www.drupal.org/node/3411040
  */
-function user_is_blocked($name) {
+function user_is_blocked($name): bool {
   @trigger_error('user_is_blocked() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Use \Drupal\user\UserInterface::isBlocked() instead. See https://www.drupal.org/node/3411040', E_USER_DEPRECATED);
   return (bool) \Drupal::entityQuery('user')
     ->accessCheck(FALSE)

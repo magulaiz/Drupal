@@ -179,7 +179,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
  *
  * @internal
  */
-function _content_translation_is_field_translatability_configurable(EntityTypeInterface $entity_type, FieldStorageDefinitionInterface $definition) {
+function _content_translation_is_field_translatability_configurable(EntityTypeInterface $entity_type, FieldStorageDefinitionInterface $definition): bool {
   // Allow to configure only fields supporting multilingual storage. We skip our
   // own fields as they are always translatable. Additionally we skip a set of
   // well-known fields implementing entity system business logic.

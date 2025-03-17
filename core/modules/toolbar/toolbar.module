@@ -136,7 +136,7 @@ function toolbar_preprocess_html(&$variables): void {
  *   - 'subtrees': the rendered subtrees
  *   - 'cacheability: the associated cacheability.
  */
-function toolbar_get_rendered_subtrees() {
+function toolbar_get_rendered_subtrees(): array {
   $data = [
     '#pre_render' => [[ToolbarController::class, 'preRenderGetRenderedSubtrees']],
     '#cache' => [
@@ -163,7 +163,7 @@ function toolbar_get_rendered_subtrees() {
  * @return array
  *   An array with the hash of the toolbar subtrees and cacheability.
  */
-function _toolbar_get_subtrees_hash() {
+function _toolbar_get_subtrees_hash(): array {
   [$subtrees, $cacheability] = toolbar_get_rendered_subtrees();
   $hash = Crypt::hashBase64(serialize($subtrees));
   return [$hash, $cacheability];

@@ -67,7 +67,7 @@ function contextual_preprocess(&$variables, $hook, $info): void {
  *   A serialized representation of a #contextual_links property value array for
  *   use in a data- attribute.
  */
-function _contextual_links_to_id($contextual_links) {
+function _contextual_links_to_id($contextual_links): string {
   $ids = [];
   $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId();
   foreach ($contextual_links as $group => $args) {

@@ -71,7 +71,7 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
  *
  * @see \Drupal\Core\Extension\ThemeExtensionList::$defaults
  */
-function _system_default_theme_features() {
+function _system_default_theme_features(): array {
   return [
     'favicon',
     'logo',
