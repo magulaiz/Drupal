@@ -6,6 +6,9 @@ namespace Drupal\layout_discovery\Install\Requirements;
 
 use Drupal\Core\Extension\InstallRequirementsInterface;
 
+/**
+ * Install time requirements for the layout_discovery module.
+ */
 class LayoutDiscoveryRequirements implements InstallRequirementsInterface {
 
   /**
