@@ -145,32 +145,6 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
       // (instead of the loaded revision ID).
       $revision_id = $entity->getLoadedRevisionId() ?: $entity->getRevisionId();
 
-      if ((\Drupal::database()->driver() === 'mongodb') && $entity->getLoadedRevisionId() && $entity->getRevisionId() && ($entity->getLoadedRevisionId() != $entity->getRevisionId())) {
-        // Get the langcodes for the entity.
-        $entity_langcodes = array_keys($entity->getTranslationLanguages());
-        // Load the revision for the loaded revision id.
-        $loaded_revision = $storage->loadRevision($entity->getLoadedRevisionId());
-        if ($loaded_revision && !empty($entity_langcodes)) {
-          $loaded_revision_langcodes = array_keys($loaded_revision->getTranslationLanguages());
-
-          // When the entity langcode is unspecified and the loaded revision
-          // has only a single langcode, then do not switch to the entity
-          // revision ID.
-          $switch_the_revision_id = TRUE;
-          if (($entity_langcodes === [LanguageInterface::LANGCODE_NOT_SPECIFIED]) && (count($loaded_revision_langcodes) === 1)) {
-            $switch_the_revision_id = FALSE;
-          }
-
-          // When there langcodes missing from the revision from the loaded
-          // revision ID compared to the ones in the entity, should we use the
-          // entity revision ID instead of the loaded revision ID.
-          $missing_langcodes = array_diff($loaded_revision_langcodes, $entity_langcodes);
-          if (!empty($loaded_revision_langcodes) && !empty($missing_langcodes) && $switch_the_revision_id) {
-            $revision_id = $entity->getRevisionId();
-          }
-        }
-      }
-
       $ids = $storage->getQuery()
         ->accessCheck(FALSE)
         ->condition('content_entity_type_id', $entity->getEntityTypeId())

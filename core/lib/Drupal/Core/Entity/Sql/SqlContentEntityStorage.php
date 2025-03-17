@@ -2010,8 +2010,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             }
 
             // The revisions in the all revisions can have double revisions and
-            // for every double revision needs to oldest revision version needs
-            // to be filtered out.
+            // for every double revision the oldest revision version needs to
+            // be filtered out.
             $exists = FALSE;
             foreach ($revisions_langcodes as $revision_langcode) {
               if ($this->entityType->isTranslatable()) {
