@@ -134,7 +134,7 @@ function _batch_needs_update($new_value = NULL) {
  * @see _batch_progress_page_js()
  * @see _batch_process()
  */
-function _batch_do(): \Symfony\Component\HttpFoundation\JsonResponse {
+function _batch_do(): JsonResponse {
   // Perform actual processing.
   [$percentage, $message, $label] = _batch_process();
 

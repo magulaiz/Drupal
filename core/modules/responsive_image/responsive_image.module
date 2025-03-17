@@ -305,7 +305,7 @@ function template_preprocess_responsive_image(&$variables): void {
  * @return \Drupal\Core\Template\Attribute
  *   An object of attributes for the source tag.
  */
-function _responsive_image_build_source_attributes(array $variables, BreakpointInterface $breakpoint, array $multipliers): \Drupal\Core\Template\Attribute {
+function _responsive_image_build_source_attributes(array $variables, BreakpointInterface $breakpoint, array $multipliers): Attribute {
   if ((empty($variables['width']) || empty($variables['height']))) {
     $image = \Drupal::service('image.factory')->get($variables['uri']);
     $width = $image->getWidth();

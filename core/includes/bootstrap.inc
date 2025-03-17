@@ -82,7 +82,7 @@ define('DRUPAL_ROOT', dirname(__DIR__, 2));
  *
  * @ingroup sanitization
  */
-function t($string, array $args = [], array $options = []): \Drupal\Core\StringTranslation\TranslatableMarkup {
+function t($string, array $args = [], array $options = []): TranslatableMarkup {
   // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
   return new TranslatableMarkup($string, $args, $options);
 }
