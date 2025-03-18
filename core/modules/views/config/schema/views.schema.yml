@@ -97,7 +97,7 @@ views.view.*:
     display:
       type: sequence
       label: 'Displays'
-      orderby: ~
+      orderby:key
       sequence:
         type: mapping
         label: 'Display settings'
