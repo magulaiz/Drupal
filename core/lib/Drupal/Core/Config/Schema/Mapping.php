@@ -167,7 +167,7 @@ class Mapping extends ArrayElement {
     $possible_type_definitions = array_intersect_key($all_type_definitions, array_fill_keys($possible_types, TRUE));
     // TRICKY: \Drupal\Core\Config\TypedConfigManager::getDefinition() does the
     // necessary resolving, but TypedConfigManager::getDefinitions() does not!
-    // 🤷‍♂️.
+    // 🤷‍♂️
     // @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
     // @see ::getValidKeys()
     $valid_keys_per_type = [];
@@ -273,7 +273,7 @@ class Mapping extends ArrayElement {
     // use in a regex. So:
     // `module\.something\.foo_.*`
     // or
-    // `.*\.third_party\..*`.
+    // `.*\.third_party\..*`
     $regex = str_replace(['.', '[]'], ['\.', '.*'], $name);
     // Now find all possible types:
     // 1. `module.something.foo_foo`, `module.something.foo_bar`, etc.

@@ -132,7 +132,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertSession()->fieldEnabled('modules[system_no_module_version_dependency_test][enable]');
     $this->assertSession()->fieldDisabled('modules[system_no_module_version_test][enable]');
 
-    // Remove the version requirement from the dependency definition.
+    // Remove the version requirement from the dependency definition
     $info = [
       'type' => 'module',
       'core_version_requirement' => '*',

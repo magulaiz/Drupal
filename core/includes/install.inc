@@ -672,12 +672,12 @@ function drupal_check_module($module) {
   if (is_file($file)) {
     require_once $file;
   }
-  // Check requirements.
+  // Check requirements
   $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']) ?? [];
   $requirements = array_merge($requirements, install_check_class_requirements($extension));
 
   if (!empty($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {
-    // Print any error messages.
+    // Print any error messages
     foreach ($requirements as $requirement) {
       if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
         $message = $requirement['description'];

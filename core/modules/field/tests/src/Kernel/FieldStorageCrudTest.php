@@ -375,13 +375,13 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     $field = FieldConfig::load('entity_test.' . $field_definition['bundle'] . '.' . $field_definition['field_name']);
     $this->assertFalse($field->isDeleted());
 
-    // Save an entity with data for the field.
+    // Save an entity with data for the field
     $entity = EntityTest::create();
     $values[0]['value'] = mt_rand(1, 127);
     $entity->{$field_storage->getName()}->value = $values[0]['value'];
     $entity = $this->entitySaveReload($entity);
 
-    // Verify the field is present on load.
+    // Verify the field is present on load
     $this->assertCount(1, $entity->{$field_storage->getName()}, "Data in previously deleted field saves and loads correctly");
     foreach ($values as $delta => $value) {
       $this->assertEquals($values[$delta]['value'], $entity->{$field_storage->getName()}[$delta]->value, "Data in previously deleted field saves and loads correctly");

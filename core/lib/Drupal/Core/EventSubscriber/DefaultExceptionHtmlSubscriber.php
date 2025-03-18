@@ -168,7 +168,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
 
       $response = $this->httpKernel->handle($sub_request, HttpKernelInterface::SUB_REQUEST);
       // Only 2xx responses should have their status code overridden; any
-      // other status code should be passed on: redirects (3xx), error (5xx)….
+      // other status code should be passed on: redirects (3xx), error (5xx)…
       // @see https://www.drupal.org/node/2603788#comment-10504916
       if ($response->isSuccessful()) {
         $response->setStatusCode($status_code);
