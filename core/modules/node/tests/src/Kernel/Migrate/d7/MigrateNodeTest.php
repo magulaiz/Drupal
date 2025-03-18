@@ -199,11 +199,11 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertEquals(CommentItemInterface::OPEN, $node->comment_node_article->status);
     $term_ref = $node->get('field_vocab_localize')->target_id;
     $this->assertSame('20', $term_ref);
-    $this->assertSame('DS9', Term::load($term_ref)->getName());
+    $this->assertSame('DS9', Term::load($term_ref)->label());
 
     $term_ref = $node->get('field_vocab_translate')->target_id;
     $this->assertSame('21', $term_ref);
-    $this->assertSame('High council', Term::load($term_ref)->getName());
+    $this->assertSame('High council', Term::load($term_ref)->label());
 
     $term_ref = $node->get('field_vocab_fixed')->target_id;
     $this->assertSame('24', $term_ref);
@@ -218,11 +218,11 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $this->assertEquals('Home', $translation->field_link->title);
     $term_ref = $translation->get('field_vocab_localize')->target_id;
     $this->assertSame('20', $term_ref);
-    $this->assertSame('DS9', Term::load($term_ref)->getName());
+    $this->assertSame('DS9', Term::load($term_ref)->label());
 
     $term_ref = $translation->get('field_vocab_translate')->target_id;
     $this->assertSame('23', $term_ref);
-    $this->assertSame('is - High council', Term::load($term_ref)->getName());
+    $this->assertSame('is - High council', Term::load($term_ref)->label());
 
     $term_ref = $translation->get('field_vocab_fixed')->target_id;
     $this->assertNulL($term_ref);

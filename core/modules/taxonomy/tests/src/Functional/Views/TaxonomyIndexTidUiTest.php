@@ -125,7 +125,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
         $prefix = $this->terms[$i][$j]->parent->target_id ? '-' : '';
         $tid = $option->getAttribute('value');
 
-        $this->assertEquals($prefix . $this->terms[$i][$j]->getName(), $option->getText());
+        $this->assertEquals($prefix . $this->terms[$i][$j]->label(), $option->getText());
         $this->assertEquals($this->terms[$i][$j]->id(), $tid);
       }
     }

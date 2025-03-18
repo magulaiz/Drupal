@@ -274,7 +274,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
       ]);
 
       if ($is_multilingual) {
-        $term->addTranslation('ca', ['name' => $term->getName() . ' (ca)']);
+        $term->addTranslation('ca', ['name' => $term->label() . ' (ca)']);
       }
 
       $term->save();
