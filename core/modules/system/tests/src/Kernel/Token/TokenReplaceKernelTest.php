@@ -195,7 +195,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       $this->assertEquals($expected, $output, "Date token $input replaced.");
     }
   }
- 
+
   /**
    * Tests the generation of all system date format tokens when formats change.
    */

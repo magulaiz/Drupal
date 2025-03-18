@@ -65,7 +65,7 @@ class SystemTokensHooks {
     foreach ($date_formats as $date_format) {
       $date[$date_format->id()] = [
         'name' => $date_format->label(),
-        'description' => t('A date in the %name format. (%date)', [
+        'description' => $this->t('A date in the %name format. (%date)', [
           '%name' => $date_format->label(),
           '%date' => $date_formatter->format($request_time, $date_format->id()),
         ]),
