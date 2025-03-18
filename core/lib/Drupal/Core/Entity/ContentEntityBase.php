@@ -1026,6 +1026,22 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   }
 
   /**
+   * Get the translation langcodes that have been removed from the entity.
+   *
+   * @return array
+   *   The list of translation langcodes.
+   */
+  public function getRemovedTranslationLangcodes() {
+    $removed = [];
+    foreach ($this->translations as $langcode => $translation) {
+      if ($translation['status'] === static::TRANSLATION_REMOVED) {
+        $removed[] = $langcode;
+      }
+    }
+    return $removed;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getTranslationStatus($langcode) {

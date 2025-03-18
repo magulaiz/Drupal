@@ -1744,7 +1744,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           // querying the entity for revision data the query will fail, because
           // there are two sets of revision data. The older revision data needs
           // to be removed.
-          $this->cleanupEntityAllRevisionData($entity->id());
+          $this->cleanupEntityAllRevisionData($entity->id(), $entity->getRemovedTranslationLangcodes());
         }
       }
       else {
@@ -1898,8 +1898,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *
    * @param string|int $entity_id
    *   The table name to save to. Defaults to the data table.
+   * @param array $removed_translation_langcodes
+   *   The list of translation langcodes that have removed from the entity.
    */
-  protected function cleanupEntityAllRevisionData($entity_id) {
+  protected function cleanupEntityAllRevisionData($entity_id, array $removed_translation_langcodes = []) {
     try {
       // Only do this if the entity is revisionable.
       if ($this->entityType->isRevisionable()) {
@@ -1939,7 +1941,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           ],
         );
 
-        $current_langcodes = [];
         $current_revision_id = NULL;
         $non_revisionable_non_translatable_field_data = [];
         $non_revisionable_translatable_field_data = [];
@@ -1949,10 +1950,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             // Get the current revision id for setting the default revision field.
             if (isset($revision->{$this->revisionKey})) {
               $current_revision_id = $revision->{$this->revisionKey};
-            }
-
-            if (isset($revision->{$this->langcodeKey})) {
-              $current_langcodes[] = $revision->{$this->langcodeKey};
             }
 
             // Get the non-revisionable non-translatable field values from the
@@ -2031,8 +2028,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               }
             }
 
-            // Remove all revisions with a langcode that is not in the current revision.
-            if ($this->entityType->isTranslatable() && !in_array($revision->{$this->langcodeKey}, $current_langcodes, TRUE) && ($revision->{$this->revisionKey} <= $current_revision_id)) {
+            // Remove all translation that have been removed from the entity
+            // from all revisions.
+            if ($this->entityType->isTranslatable() && in_array($revision->{$this->langcodeKey}, $removed_translation_langcodes, TRUE)) {
               $exists = TRUE;
             }
 

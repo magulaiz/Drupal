@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\Database\Database;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -191,7 +190,7 @@ class EntityRepositoryTest extends KernelTestBase {
     $storage->save($it_revision2);
 
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
-    if (Database::getConnection()->driver() != 'mongodb') {
+    if (\Drupal::database()->driver() != 'mongodb') {
       // @todo Fix this for MongoDB. This looks like it is a result of a bug in
       // the EntityQuery tool.
       $this->assertSame($it_revision2->getLoadedRevisionId(), $active->getLoadedRevisionId());
