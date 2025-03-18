@@ -19,7 +19,9 @@ use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\Error;
 use Drupal\Core\Utility\PhpRequirements;
+use Psr\Http\Client\ClientExceptionInterface;
 
 /**
  * Requirements hook for system module.
@@ -192,7 +194,7 @@ class RequirementHooks {
           'severity' => REQUIREMENT_WARNING,
         ];
       }
-      _system_advisories_requirements($requirements);
+      $this->advisoryRequirements($requirements);
     }
 
     // Web server information.
@@ -1455,6 +1457,57 @@ class RequirementHooks {
     }
 
     return $requirements;
+  }
+
+  /**
+   * Display requirements from security advisories.
+   *
+   * @param array[] $requirements
+   *   The requirements array as specified in hook_requirements().
+   */
+  protected function advisoryRequirements(array &$requirements): void {
+    if (!\Drupal::config('system.advisories')->get('enabled')) {
+      return;
+    }
+
+    /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
+    $fetcher = \Drupal::service('system.sa_fetcher');
+    try {
+      $advisories = $fetcher->getSecurityAdvisories(TRUE, 5);
+    }
+    catch (ClientExceptionInterface $exception) {
+      $requirements['system_advisories']['title'] = t('Critical security announcements');
+      $requirements['system_advisories']['severity'] = REQUIREMENT_WARNING;
+      $requirements['system_advisories']['description'] = ['#theme' => 'system_security_advisories_fetch_error_message'];
+      Error::logException(\Drupal::logger('system'), $exception, 'Failed to retrieve security advisory data.');
+      return;
+    }
+
+    if (!empty($advisories)) {
+      $advisory_links = [];
+      $severity = REQUIREMENT_WARNING;
+      foreach ($advisories as $advisory) {
+        if (!$advisory->isPsa()) {
+          $severity = REQUIREMENT_ERROR;
+        }
+        $advisory_links[] = new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
+      }
+      $requirements['system_advisories']['title'] = t('Critical security announcements');
+      $requirements['system_advisories']['severity'] = $severity;
+      $requirements['system_advisories']['description'] = [
+        'list' => [
+          '#theme' => 'item_list',
+          '#items' => $advisory_links,
+        ],
+      ];
+      if (\Drupal::moduleHandler()->moduleExists('help')) {
+        $requirements['system_advisories']['description']['help_link'] = Link::createFromRoute(
+          'What are critical security announcements?',
+          'help.page', ['name' => 'system'],
+          ['fragment' => 'security-advisories']
+        )->toRenderable();
+      }
+    }
   }
 
 }
