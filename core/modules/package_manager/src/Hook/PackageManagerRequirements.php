@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\media\Hook;
+namespace Drupal\package_manager\Hook;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Hook\Attribute\Hook;
