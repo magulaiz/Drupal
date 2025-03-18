@@ -33,13 +33,6 @@ class NodeHooks {
   use StringTranslationTrait;
 
   /**
-   * The Node Storage.
-   *
-   * @var \Drupal\node\NodeStorageInterface
-   */
-  protected NodeStorageInterface $nodeStorage;
-
-  /**
    * NodeHooks constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
@@ -48,10 +41,9 @@ class NodeHooks {
    *   The module handler.
    */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
+    protected EntityTypeManagerInterface $entityTypeManager,
     protected ModuleHandlerInterface $moduleHandler,
   ) {
-    $this->nodeStorage = $entityTypeManager->getStorage('node');
   }
 
   /**
@@ -594,7 +586,7 @@ class NodeHooks {
   #[Hook('user_cancel')]
   public function userCancelBlockUnpublish($edit, UserInterface $account, $method): void {
     if ($method === 'user_cancel_block_unpublish') {
-      $nids = $this->nodeStorage->getQuery()
+      $nids = $this->nodeStorage()->getQuery()
         ->accessCheck(FALSE)
         ->condition('uid', $account->id())
         ->execute();
@@ -610,9 +602,19 @@ class NodeHooks {
   #[Hook('user_cancel')]
   public function userCancelReassign($edit, UserInterface $account, $method): void {
     if ($method === 'user_cancel_reassign') {
-      $vids = $this->nodeStorage->userRevisionIds($account);
+      $vids = $this->nodeStorage()->userRevisionIds($account);
       $this->moduleHandler->invoke('node', 'mass_update', [$vids, ['uid' => 0, 'revision_uid' => 0], NULL, TRUE, TRUE]);
     }
+  }
+
+  /**
+   * Returns the node storage.
+   *
+   * @return \Drupal\node\NodeStorageInterface
+   *   The node storage.
+   */
+  protected function nodeStorage(): NodeStorageInterface {
+    return $this->entityTypeManager->getStorage('node');
   }
 
 }
