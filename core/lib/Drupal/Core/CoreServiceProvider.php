@@ -186,7 +186,7 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     // termination to the test runner.
     $container
       ->register('test.http_middleware.wait_terminate_middleware', 'Drupal\Core\Test\StackMiddleware\TestWaitTerminateMiddleware')
-      ->setArguments([new Reference('state'), new Reference('lock')])
+      ->setArguments([new Reference('keyvalue'), new Reference('lock')])
       ->addTag('http_middleware', ['priority' => -1024]);
   }
 
