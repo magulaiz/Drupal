@@ -59,8 +59,8 @@ class StatusMessages extends RenderElementBase {
       // big pipe namespaced is reference, PHP happily uses the '::class' magic
       // property without needing to load the class, so this works when big_pipe
       // module is not installed.
-      '#placeholder_strategy_deny_list' => [
-        BigPipeStrategy::class => FALSE,
+      '#placeholder_strategy_denylist' => [
+        BigPipeStrategy::class => TRUE,
       ],
     ];
 

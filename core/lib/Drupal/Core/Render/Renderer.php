@@ -342,7 +342,7 @@ class Renderer implements RendererInterface {
         '#cache',
         '#create_placeholder',
         '#lazy_builder_preview',
-        '#placeholder_strategy',
+        '#placeholder_strategy_denylist',
         '#preview',
         // The keys below are not actually supported, but these are added
         // automatically by the Renderer. Adding them as though they are

@@ -50,7 +50,7 @@ class ChainedPlaceholderStrategy implements PlaceholderStrategyInterface {
     foreach ($this->placeholderStrategies as $strategy) {
       $candidate_placeholders = [];
       foreach ($placeholders as $key => $placeholder) {
-        if (empty($placeholder['#placeholder_strategy'][$strategy::class])) {
+        if (empty($placeholder['#placeholder_strategy_denylist'][$strategy::class])) {
           $candidate_placeholders[$key] = $placeholder;
         }
       }
