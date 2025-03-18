@@ -2028,7 +2028,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               }
             }
 
-            // Remove all translation that have been removed from the entity
+            // Remove all translations that have been removed from the entity
             // from all revisions.
             if ($this->entityType->isTranslatable() && in_array($revision->{$this->langcodeKey}, $removed_translation_langcodes, TRUE)) {
               $exists = TRUE;
