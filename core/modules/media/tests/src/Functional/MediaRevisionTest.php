@@ -312,7 +312,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $media = $this->createMedia('Initial title');
     $this->createMediaWithRevision($media);
     $originalRevisionId = $media->getRevisionId();
-    $originalRevisionLabel = $media->getName();
+    $originalRevisionLabel = $media->label();
 
     // Cannot revert latest revision.
     $this->drupalGet($media->toUrl('revision-revert-form'));
