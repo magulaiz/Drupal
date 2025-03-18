@@ -72,13 +72,12 @@ final class FieldStorageAddController extends ControllerBase {
    * @return array
    *   The field selection links.
    */
-  public function resetField(?string $entity_type_id = NULL, ?string $bundle = NULL, ?string $field_name = NULL)
-  {
+  public function resetField(?string $entity_type_id = NULL, ?string $bundle = NULL, ?string $field_name = NULL) {
     if (!empty($field_name)) {
       // Delete stored field data in case user changes field type.
       $this->tempStore->delete("$entity_type_id:$field_name");
     }
-    return $this->getFieldSelectionLinks($entity_type_id,$bundle);
+    return $this->getFieldSelectionLinks($entity_type_id, $bundle);
   }
 
   /**
