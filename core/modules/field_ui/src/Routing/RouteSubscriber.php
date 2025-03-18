@@ -95,10 +95,13 @@ class RouteSubscriber extends RouteSubscriberBase {
         $route = new Route(
           "$path/fields/reset-add-field/{field_name}",
           [
-            '_controller' => FieldStorageAddController::class . '::getFieldSelectionLinks',
+            '_controller' => FieldStorageAddController::class . '::resetField',
             '_title' => 'Add field',
           ] + $defaults,
-          ['_permission' => 'administer ' . $entity_type_id . ' fields'],
+          [
+            '_permission' => 'administer ' . $entity_type_id . ' fields',
+            '_csrf_token' => 'TRUE',
+          ],
           $options
         );
         $collection->add("field_ui.field_storage_config_reset_add_$entity_type_id", $route);

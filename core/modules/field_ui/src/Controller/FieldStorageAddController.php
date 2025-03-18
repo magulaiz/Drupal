@@ -60,7 +60,7 @@ final class FieldStorageAddController extends ControllerBase {
   }
 
   /**
-   * Builds the field selection links.
+   * Deletes stored field data and builds the field selection links.
    *
    * @param string|null $entity_type_id
    *   The name of the entity type.
@@ -72,11 +72,28 @@ final class FieldStorageAddController extends ControllerBase {
    * @return array
    *   The field selection links.
    */
-  public function getFieldSelectionLinks(?string $entity_type_id = NULL, ?string $bundle = NULL, ?string $field_name = NULL) {
-    $build = [];
+  public function resetField(?string $entity_type_id = NULL, ?string $bundle = NULL, ?string $field_name = NULL)
+  {
     if (!empty($field_name)) {
+      // Delete stored field data in case user changes field type.
       $this->tempStore->delete("$entity_type_id:$field_name");
     }
+    return $this->getFieldSelectionLinks($entity_type_id,$bundle);
+  }
+
+  /**
+   * Builds the field selection links.
+   *
+   * @param string|null $entity_type_id
+   *   The name of the entity type.
+   * @param string|null $bundle
+   *   The entity bundle.
+   *
+   * @return array
+   *   The field selection links.
+   */
+  public function getFieldSelectionLinks(?string $entity_type_id = NULL, ?string $bundle = NULL) {
+    $build = [];
     $this->entityTypeId = $entity_type_id;
     $this->bundle = $bundle;
     $ui_definitions = $this->fieldTypePluginManager->getEntityTypeUiDefinitions($entity_type_id);
