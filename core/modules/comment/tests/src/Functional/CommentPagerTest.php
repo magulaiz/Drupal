@@ -186,7 +186,7 @@ class CommentPagerTest extends CommentTestBase {
     //   - 3
     //     - 6
     // - 2
-    //   - 5
+    //   - 5.
 
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_FLAT, 'Comment paging changed.');
 
@@ -283,7 +283,7 @@ class CommentPagerTest extends CommentTestBase {
     // - 1
     //   - 3
     // - 2
-    //   - 5
+    //   - 5.
 
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_FLAT, 'Comment paging changed.');
 

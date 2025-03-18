@@ -346,7 +346,7 @@ JS;
 
     // Select the first paragraph and observe changes in:
     // - styles dropdown label
-    // - button states
+    // - button states.
     $this->selectTextInsideElement('p');
     $this->assertSame('Styles', $style_dropdown->getText());
     $style_dropdown->click();
@@ -373,7 +373,7 @@ JS;
 
     // Select the blockquote and observe changes in:
     // - styles dropdown label
-    // - button states
+    // - button states.
     $this->selectTextInsideElement('blockquote');
     $this->assertSame('Famous', $style_dropdown->getText());
     $style_dropdown->click();
@@ -657,7 +657,7 @@ JS;
     // 5. the `data-analysis` class has been added to the `<table>`
     // 6. the `reliable` class has been added to the `<a>`
     // 7. The `deep-dive` class has been added to the `<div>`
-    // 8. The `caution` class has been added to the `<caption>`
+    // 8. The `caution` class has been added to the `<caption>`.
     $this->assertSame('<h2 class="red-heading">Upgrades</h2><p>Drupal has historically been difficult to upgrade from one major version to the next.</p><p class="highlighted interesting">This changed with Drupal 8.</p><blockquote class="famous"><p>Updating from Drupal 8\'s latest version to Drupal 9.0.0 should be as easy as updating between minor versions of Drupal 8.</p></blockquote><p>— <a class="reliable" href="https://dri.es/making-drupal-upgrades-easy-forever">Dries</a></p><div class="deep-dive"><ul class="items"><li>Update Drupal core using Composer</li><li>Update Drupal core manually</li><li>Update Drupal core using Drush</li></ul><ol class="steps"><li>Back up your files and database</li><li>Put your site into maintenance mode</li><li>Update the code and apply changes</li><li>Deactivate maintenance mode</li></ol><table class="data-analysis"><caption class="caution">Drupal upgrades are now easy, with a few caveats.</caption><tbody><tr><td>First</td><td>Second</td></tr><tr><td>Data value 1</td><td>Data value 2</td></tr></tbody></table></div>', $this->getEditorDataAsHtmlString());
   }
 

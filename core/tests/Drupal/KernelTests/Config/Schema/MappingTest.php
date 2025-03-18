@@ -219,7 +219,7 @@ class MappingTest extends KernelTestBase {
     // Special case: deprecated  is needed for deprecated config schema:
     // - deprecated keys are treated as optional
     // - if a deprecated property path is itself a mapping, then the keys inside
-    //   are not optional
+    //   are not optional.
     yield 'No dynamic type: config_schema_deprecated_test.settings' => [
       'config_schema_deprecated_test.settings',
       NULL,
