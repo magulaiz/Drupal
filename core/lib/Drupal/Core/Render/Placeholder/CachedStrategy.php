@@ -21,7 +21,18 @@ class CachedStrategy implements PlaceholderStrategyInterface {
    * {@inheritdoc}
    */
   public function processPlaceholders(array $placeholders) {
-    return $this->renderCache->getMultiple($placeholders);
+    $return = $this->renderCache->getMultiple($placeholders);
+
+    foreach ($return as $key => $placeholder) {
+      if (!empty($placeholder['#attached']['placeholders'])) {
+        $cached = $this->renderCache->getMultiple($placeholder['#attached']['placeholders']);
+        foreach ($cached as $cache_key => $value) {
+          $return[$key]['#attached']['placeholders'][$cache_key] = $value;
+        }
+      }
+    }
+
+    return $return;
   }
 
 }
