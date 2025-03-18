@@ -9,6 +9,7 @@ use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -98,8 +99,21 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    *   The block content UUID lookup service.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
+   *   The entity repository.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockManagerInterface $block_manager, EntityTypeManagerInterface $entity_type_manager, AccountInterface $account, UrlGeneratorInterface $url_generator, BlockContentUuidLookup $uuid_lookup, EntityDisplayRepositoryInterface $entity_display_repository) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    BlockManagerInterface $block_manager,
+    EntityTypeManagerInterface $entity_type_manager,
+    AccountInterface $account,
+    UrlGeneratorInterface $url_generator,
+    BlockContentUuidLookup $uuid_lookup,
+    EntityDisplayRepositoryInterface $entity_display_repository,
+    protected EntityRepositoryInterface $entityRepository,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->blockManager = $block_manager;
@@ -123,7 +137,8 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
       $container->get('current_user'),
       $container->get('url_generator'),
       $container->get('block_content.uuid_lookup'),
-      $container->get('entity_display.repository')
+      $container->get('entity_display.repository'),
+      $container->get(EntityRepositoryInterface::class),
     );
   }
 
@@ -216,7 +231,8 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
         $this->blockContent = $this->entityTypeManager->getStorage('block_content')->load($id);
       }
     }
-    return $this->blockContent;
+    /** @var \Drupal\block_content\BlockContentInterface|null */
+    return $this->entityRepository->getTranslationFromContext($this->blockContent);
   }
 
 }
