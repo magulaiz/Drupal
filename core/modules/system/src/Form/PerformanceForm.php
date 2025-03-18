@@ -102,7 +102,6 @@ class PerformanceForm extends ConfigFormBase {
     $form['caching']['page_cache_maximum_age'] = [
       '#type' => 'number',
       '#min' => 0,
-      '#step' => 10,
       '#title' => $this->t('Browser and proxy cache maximum age'),
       '#config_target' => 'system.performance:cache.page.max_age',
       '#description' => $this->t('This is used as the value for max-age in Cache-Control headers.'),
