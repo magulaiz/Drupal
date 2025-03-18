@@ -166,8 +166,8 @@ class Mapping extends ArrayElement {
     $all_type_definitions = $typed_data_manager->getDefinitions();
     $possible_type_definitions = array_intersect_key($all_type_definitions, array_fill_keys($possible_types, TRUE));
     // TRICKY: \Drupal\Core\Config\TypedConfigManager::getDefinition() does the
-    // necessary resolving, but TypedConfigManager::getDefinitions() does not!
-    // 🤷‍♂️.
+    // necessary resolving, but TypedConfigManager::getDefinitions() does not
+    // 🤷‍♂️!
     // @see \Drupal\Core\Config\TypedConfigManager::getDefinitionWithReplacements()
     // @see ::getValidKeys()
     $valid_keys_per_type = [];
