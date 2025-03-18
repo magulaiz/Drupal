@@ -153,7 +153,7 @@ class FileListingTest extends FileFieldTestBase {
       $usage = $file_usage->listUsage($file);
       $this->drupalGet('admin/content/files/usage/' . $file->id());
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertSession()->pageTextContains($node->getTitle());
+      $this->assertSession()->pageTextContains($node->label());
       // Verify that registering entity type is found on usage page.
       $this->assertSession()->pageTextContains('node');
       // Verify that registering module is found on usage page.
