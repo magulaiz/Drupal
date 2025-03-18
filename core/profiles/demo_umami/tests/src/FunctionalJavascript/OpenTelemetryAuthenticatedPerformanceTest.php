@@ -20,6 +20,9 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
    */
   protected $profile = 'demo_umami';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $user = $this->drupalCreateUser();
@@ -36,10 +39,6 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'authenticatedFrontPage');
-    $this->assertSame(2, $performance_data->getStylesheetCount());
-    $this->assertLessThan(44000, $performance_data->getStylesheetBytes());
-    $this->assertSame(1, $performance_data->getScriptCount());
-    $this->assertLessThan(125000, $performance_data->getScriptBytes());
 
     $expected_queries = [
       'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
@@ -49,13 +48,28 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(4, $performance_data->getQueryCount());
-    $this->assertSame(42, $performance_data->getCacheGetCount());
-    $this->assertSame(0, $performance_data->getCacheSetCount());
-    $this->assertSame(0, $performance_data->getCacheDeleteCount());
-    $this->assertSame(0, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(11, $performance_data->getCacheTagIsValidCount());
-    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+
+    $expected = [
+      'QueryCount' => 4,
+      'CacheGetCount' => 42,
+      'CacheGetCountByBin' => [
+        'config' => 22,
+        'discovery' => 5,
+        'data' => 7,
+        'bootstrap' => 4,
+        'dynamic_page_cache' => 2,
+        'render' => 2,
+      ],
+      'CacheSetCount' => 0,
+      'CacheDeleteCount' => 0,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 4,
+      'ScriptCount' => 2,
+      'ScriptBytes' => 123850,
+      'StylesheetCount' => 2,
+      'StylesheetBytes' => 42500,
+    ];
+    $this->assertMetrics($expected, $performance_data);
   }
 
 }

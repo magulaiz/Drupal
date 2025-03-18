@@ -84,8 +84,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('');
     }, 'standardFrontPage');
     $this->assertNoJavaScript($performance_data);
-    $this->assertSame(1, $performance_data->getStylesheetCount());
-    $this->assertLessThan(3500, $performance_data->getStylesheetBytes());
 
     $expected_queries = [
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/node" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
@@ -127,21 +125,89 @@ class StandardPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(36, $performance_data->getQueryCount());
-    $this->assertSame(123, $performance_data->getCacheGetCount());
-    $this->assertSame(45, $performance_data->getCacheSetCount());
-    $this->assertSame(0, $performance_data->getCacheDeleteCount());
-    $this->assertSame(37, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(43, $performance_data->getCacheTagIsValidCount());
-    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $expected = [
+      'QueryCount' => 36,
+      'CacheGetCount' => 132,
+      'CacheGetCountByBin' => [
+        'page' => 1,
+        'config' => 21,
+        'data' => 8,
+        'discovery' => 38,
+        'bootstrap' => 8,
+        'dynamic_page_cache' => 2,
+        'render' => 45,
+        'default' => 5,
+        'entity' => 2,
+        'menu' => 2,
+      ],
+      'CacheSetCount' => 45,
+      'CacheDeleteCount' => 0,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 17,
+      'CacheTagGroupedLookups' => [
+        [
+          'route_match',
+          'access_policies',
+          'routes',
+          'router',
+          'entity_types',
+          'entity_field_info',
+          'entity_bundles',
+          'local_task',
+          'library_info',
+        ],
+        ['config:views.view.frontpage'],
+        ['config:core.extension', 'views_data'],
+        ['node:1', 'node_list'],
+        ['rendered', 'user:0', 'user_view'],
+        ['config:filter.format.restricted_html', 'node_view'],
+        [
+          'block_view',
+          'config:block.block.stark_site_branding',
+          'config:system.site',
+        ],
+        [
+          'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
+          'config:block.block.stark_search_form_narrow',
+          'config:search.settings',
+        ],
+        ['config:block.block.stark_main_menu', 'config:system.menu.main'],
+        ['config:block.block.stark_search_form_wide'],
+        ['config:block.block.stark_account_menu', 'config:system.menu.account'],
+        ['config:block.block.stark_messages'],
+        ['config:block.block.stark_help'],
+        ['config:block.block.stark_powered'],
+        ['config:block.block.stark_syndicate'],
+        [
+          'config:block.block.stark_breadcrumbs',
+          'config:block.block.stark_content',
+          'config:block.block.stark_page_title',
+          'config:block.block.stark_primary_admin_actions',
+          'config:block.block.stark_primary_local_tasks',
+          'config:block.block.stark_secondary_local_tasks',
+          'config:block_list',
+          'http_response',
+        ],
+        ['config:user.role.anonymous'],
+      ],
+      'StylesheetCount' => 1,
+      'StylesheetBytes' => 2250,
+    ];
+    $this->assertMetrics($expected, $performance_data);
+    $expected_default_cache_cids = [
+      'views_data:node_field_data:en',
+      'views_data:en',
+      'views_data:views:en',
+      'views_data:node:en',
+      'theme_registry:stark',
+    ];
+    $this->assertSame($expected_default_cache_cids, $performance_data->getCacheOperations()['get']['default']);
 
     // Test node page.
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
     }, 'standardNodePage');
     $this->assertNoJavaScript($performance_data);
-    $this->assertSame(1, $performance_data->getStylesheetCount());
-    $this->assertLessThan(3500, $performance_data->getStylesheetBytes());
 
     $expected_queries = [
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/node/1" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
@@ -157,13 +223,61 @@ class StandardPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(10, $performance_data->getQueryCount());
-    $this->assertSame(93, $performance_data->getCacheGetCount());
-    $this->assertSame(16, $performance_data->getCacheSetCount());
-    $this->assertSame(0, $performance_data->getCacheDeleteCount());
-    $this->assertCountBetween(24, 25, $performance_data->getCacheTagChecksumCount());
-    $this->assertCountBetween(39, 40, $performance_data->getCacheTagIsValidCount());
-    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $expected = [
+      'QueryCount' => 10,
+      'CacheGetCount' => 102,
+      'CacheSetCount' => 16,
+      'CacheDeleteCount' => 0,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 14,
+      'CacheTagGroupedLookups' => [
+        [
+          'route_match',
+          'access_policies',
+          'routes',
+          'router',
+          'entity_types',
+          'entity_field_info',
+          'entity_bundles',
+          'local_task',
+          'library_info',
+        ],
+        ['rendered', 'user:0', 'user_view'],
+        ['config:filter.format.restricted_html', 'node:1', 'node_view'],
+        [
+          'block_view',
+          'config:block.block.stark_site_branding',
+          'config:system.site',
+        ],
+        [
+          'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
+          'config:block.block.stark_search_form_narrow',
+          'config:search.settings',
+        ],
+        ['config:block.block.stark_main_menu', 'config:system.menu.main'],
+        ['config:block.block.stark_search_form_wide'],
+        ['config:block.block.stark_account_menu', 'config:system.menu.account'],
+        ['config:block.block.stark_messages'],
+        ['config:block.block.stark_help'],
+        ['config:block.block.stark_powered'],
+        ['config:block.block.stark_syndicate'],
+
+        [
+          'config:block.block.stark_breadcrumbs',
+          'config:block.block.stark_content',
+          'config:block.block.stark_page_title',
+          'config:block.block.stark_primary_admin_actions',
+          'config:block.block.stark_primary_local_tasks',
+          'config:block.block.stark_secondary_local_tasks',
+          'config:block_list',
+          'http_response',
+        ],
+        ['config:user.role.anonymous'],
+      ],
+      'StylesheetCount' => 1,
+      'StylesheetBytes' => 2250,
+    ];
+    $this->assertMetrics($expected, $performance_data);
 
     // Test user profile page.
     $this->user = $this->drupalCreateUser();
@@ -171,8 +285,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('user/' . $this->user->id());
     }, 'standardUserPage');
     $this->assertNoJavaScript($performance_data);
-    $this->assertSame(1, $performance_data->getStylesheetCount());
-    $this->assertLessThan(3500, $performance_data->getStylesheetBytes());
 
     $expected_queries = [
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/user/2" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
@@ -192,13 +304,17 @@ class StandardPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(14, $performance_data->getQueryCount());
-    $this->assertSame(78, $performance_data->getCacheGetCount());
-    $this->assertSame(17, $performance_data->getCacheSetCount());
-    $this->assertSame(0, $performance_data->getCacheDeleteCount());
-    $this->assertSame(23, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(32, $performance_data->getCacheTagIsValidCount());
-    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $expected = [
+      'QueryCount' => 14,
+      'CacheGetCount' => 87,
+      'CacheSetCount' => 17,
+      'CacheDeleteCount' => 0,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 13,
+      'StylesheetCount' => 1,
+      'StylesheetBytes' => 1950,
+    ];
+    $this->assertMetrics($expected, $performance_data);
   }
 
   /**
@@ -209,7 +325,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // form so that we repeat the same steps when recording performance data. Do
     // this twice so that any caches which take two requests to warm are also
     // covered.
-    foreach (range(0, 1) as $index) {
+    for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('node');
       $this->drupalGet('user/login');
       $this->submitLoginForm($this->user);
@@ -243,13 +359,67 @@ class StandardPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(17, $performance_data->getQueryCount());
-    $this->assertSame(84, $performance_data->getCacheGetCount());
-    $this->assertSame(1, $performance_data->getCacheSetCount());
-    $this->assertSame(1, $performance_data->getCacheDeleteCount());
-    $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(37, $performance_data->getCacheTagIsValidCount());
-    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $expected = [
+      'QueryCount' => 17,
+      'CacheGetCount' => 83,
+      'CacheSetCount' => 1,
+      'CacheDeleteCount' => 1,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 17,
+      'CacheTagGroupedLookups' => [
+        // Form submission and login.
+        [
+          'route_match',
+          'access_policies',
+          'routes',
+          'router',
+          'entity_types',
+          'entity_field_info',
+          'entity_bundles',
+          'local_task',
+          'library_info',
+        ],
+        // The user page after the redirect.
+        [
+          'route_match',
+          'access_policies',
+          'routes',
+          'router',
+          'entity_types',
+          'entity_field_info',
+          'entity_bundles',
+          'local_task',
+          'library_info',
+        ],
+        ['rendered', 'user:2', 'user_view'],
+        [
+          'block_view',
+          'config:block.block.stark_site_branding',
+          'config:system.site',
+        ],
+        [
+          'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
+          'config:block.block.stark_search_form_narrow',
+          'config:search.settings',
+        ],
+        ['config:system.menu.account', 'config:system.menu.main'],
+        ['config:block.block.stark_main_menu'],
+        ['config:block.block.stark_search_form_wide'],
+        ['config:block.block.stark_account_menu'],
+        ['config:block.block.stark_breadcrumbs'],
+        ['config:block.block.stark_primary_admin_actions'],
+        ['config:block.block.stark_messages'],
+        [
+          'config:block.block.stark_primary_local_tasks',
+          'config:user.role.authenticated',
+        ],
+        ['config:block.block.stark_secondary_local_tasks'],
+        ['config:block.block.stark_help'],
+        ['config:block.block.stark_powered'],
+        ['config:block.block.stark_syndicate'],
+      ],
+    ];
+    $this->assertMetrics($expected, $performance_data);
     $this->drupalLogout();
   }
 
@@ -262,7 +432,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // we repeat the same steps when recording performance data. Do this twice
     // so that any caches which take two requests to warm are also covered.
 
-    foreach (range(0, 1) as $index) {
+    for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('node');
       $this->assertSession()->responseContains('Password');
       $this->submitLoginForm($this->user);
@@ -297,13 +467,15 @@ class StandardPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(18, $performance_data->getQueryCount());
-    $this->assertSame(105, $performance_data->getCacheGetCount());
-    $this->assertSame(1, $performance_data->getCacheSetCount());
-    $this->assertSame(1, $performance_data->getCacheDeleteCount());
-    $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(43, $performance_data->getCacheTagIsValidCount());
-    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $expected = [
+      'QueryCount' => 18,
+      'CacheGetCount' => 105,
+      'CacheSetCount' => 1,
+      'CacheDeleteCount' => 1,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 19,
+    ];
+    $this->assertMetrics($expected, $performance_data);
   }
 
   /**

@@ -667,6 +667,7 @@ class FieldTest extends UnitTestCase {
    * Returns a mocked base field storage object.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit\Framework\MockObject\MockObject
+   *   The mocked field storage object.
    */
   protected function getBaseFieldStorage() {
     $title_storage = $this->createMock('Drupal\Core\Field\FieldStorageDefinitionInterface');
@@ -686,6 +687,7 @@ class FieldTest extends UnitTestCase {
    * Returns a mocked configurable field storage object.
    *
    * @return \Drupal\field\FieldStorageConfigInterface|\PHPUnit\Framework\MockObject\MockObject
+   *   The mocked field storage object.
    */
   protected function getConfigFieldStorage() {
     $title_storage = $this->createMock('Drupal\field\FieldStorageConfigInterface');
@@ -705,6 +707,7 @@ class FieldTest extends UnitTestCase {
    * Provides sort orders for clickSort() test methods.
    *
    * @return array
+   *   An array of sort orders.
    */
   public static function providerSortOrders() {
     return [
@@ -720,7 +723,7 @@ class FieldTest extends UnitTestCase {
    *
    * @param \Drupal\views\Plugin\views\field\EntityField $handler
    *   The field handler.
-   * @param $definition
+   * @param array $definition
    *   An array with entity type definition data.
    */
   protected function setupLanguageRenderer(EntityField $handler, $definition): void {
@@ -754,6 +757,9 @@ class FieldTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing EntityField methods.
+ */
 class FieldTestEntityField extends EntityField {
 
   public function executePrepareItemsByDelta(array $all_values) {
