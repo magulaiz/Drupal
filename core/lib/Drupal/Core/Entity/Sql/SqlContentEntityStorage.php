@@ -1939,6 +1939,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           ],
         );
 
+        $current_langcodes = [];
         $current_revision_id = NULL;
         $non_revisionable_non_translatable_field_data = [];
         $non_revisionable_translatable_field_data = [];
@@ -1948,6 +1949,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             // Get the current revision id for setting the default revision field.
             if (isset($revision->{$this->revisionKey})) {
               $current_revision_id = $revision->{$this->revisionKey};
+            }
+
+            if (isset($revision->{$this->langcodeKey})) {
+              $current_langcodes[] = $revision->{$this->langcodeKey};
             }
 
             // Get the non-revisionable non-translatable field values from the
@@ -2025,6 +2030,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
                 }
               }
             }
+
+            // Remove all revisions with a langcode that is not in the current revision.
+            if ($this->entityType->isTranslatable() && !in_array($revision->{$this->langcodeKey}, $current_langcodes, TRUE) && ($revision->{$this->revisionKey} <= $current_revision_id)) {
+              $exists = TRUE;
+            }
+
             if (!$exists) {
               $revisions_langcodes[] = [
                 'revision_id' => $revision->{$this->revisionKey},
