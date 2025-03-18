@@ -619,11 +619,10 @@ window.Drupal = { behaviors: {}, locale: {} };
     if (typeof Drupal.theme?.[func] === 'function') {
       return Drupal.theme[func](...args);
     }
-    else {
-      Drupal.throwError(new TypeError(
-        `Drupal.theme.${func} must be function type.`
-      ));
-    }
+
+    Drupal.throwError(
+      new TypeError(`Drupal.theme.${func} must be function type.`),
+    );
   };
 
   /**
