@@ -184,7 +184,7 @@ ckeditor5.plugin.ckeditor5_codeBlock:
           message: "Enable at least one language, otherwise disable the Code Block plugin."
         UniqueLabelInList:
           labelKey: label
-      orderby: key
+      orderby: value
       sequence:
         type: mapping
         label: 'Language'
