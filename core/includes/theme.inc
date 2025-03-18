@@ -330,9 +330,9 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
  *
  * @param array $variables
  *   An associative array possibly containing:
- *   - attributes['timestamp']:
- *   - timestamp:
- *   - text:
+ *   - "attributes['timestamp']:".
+ *   - "timestamp:".
+ *   - "text:".
  */
 function template_preprocess_time(&$variables): void {
   /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
@@ -620,6 +620,7 @@ function template_preprocess_links(&$variables): void {
  *   - attributes: Associative array of attributes to be placed in the img tag.
  *   - srcset: Array of multiple URIs and sizes/multipliers.
  *   - sizes: The sizes attribute for viewport-based selection of images.
+ *     phpcs:ignore
  *     - http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#introduction-3:viewport-based-selection-2
  */
 function template_preprocess_image(&$variables): void {
@@ -825,8 +826,8 @@ function template_preprocess_table(&$variables): void {
 
         // Track responsive classes for each column as needed. Only the header
         // cells for a column are marked up with the responsive classes by a
-        // module developer or themer. The responsive classes on the header cells
-        // must be transferred to the content cells.
+        // module developer or themer. The responsive classes on the header
+        // cells must be transferred to the content cells.
         if (!empty($cell['class']) && is_array($cell['class'])) {
           if (in_array(RESPONSIVE_PRIORITY_MEDIUM, $cell['class'])) {
             $responsive_classes[$responsive_index] = RESPONSIVE_PRIORITY_MEDIUM;
@@ -1060,20 +1061,23 @@ function template_preprocess_maintenance_task_list(&$variables): void {
  *
  * See the @link themeable Default theme implementations topic @endlink for
  * details.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is
+ *   no replacement, default preprocess variables are added for all theme hooks
+ *   directly in \Drupal\Core\Theme\ThemeManager.
+ *
+ * @see https://www.drupal.org/node/2340341
  */
 function template_preprocess(&$variables, $hook, $info) {
-  // Merge in variables that don't depend on hook and don't change during a
-  // single page request.
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['default_variables'] = &drupal_static(__FUNCTION__);
+  @trigger_error('template_preprocess() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement, default preprocess variables are added for all theme hooks directly in \Drupal\Core\Theme\ThemeManager. See https://www.drupal.org/node/2340341', E_USER_DEPRECATED);
+
+  $themeManager = \Drupal::service('theme.manager');
+  // ThemeManager::getDefaultTemplateVariables() is not on the interface, it is
+  // internal and only public for backwards compatibility, verify it really
+  // exists.
+  if (method_exists($themeManager, 'getDefaultTemplateVariables')) {
+    $variables += $themeManager->getDefaultTemplateVariables();
   }
-  $default_variables = &$drupal_static_fast['default_variables'];
-  if (!isset($default_variables)) {
-    $default_variables = _template_preprocess_default_variables();
-  }
-  $variables += $default_variables;
 
   // When theming a render element, merge its #attributes into
   // $variables['attributes'].
@@ -1083,31 +1087,6 @@ function template_preprocess(&$variables, $hook, $info) {
       $variables['attributes'] = AttributeHelper::mergeCollections($variables['attributes'], $variables[$key]['#attributes']);
     }
   }
-}
-
-/**
- * Returns hook-independent variables to template_preprocess().
- */
-function _template_preprocess_default_variables() {
-  // Variables that don't depend on a database connection.
-  $variables = [
-    'attributes' => [],
-    'title_attributes' => [],
-    'content_attributes' => [],
-    'title_prefix' => [],
-    'title_suffix' => [],
-    'db_is_active' => !defined('MAINTENANCE_MODE'),
-    'is_admin' => FALSE,
-    'logged_in' => FALSE,
-  ];
-
-  // Give modules a chance to alter the default template variables.
-  \Drupal::moduleHandler()->alter('template_preprocess_default_variables', $variables);
-
-  // Tell all templates where they are located.
-  $variables['directory'] = \Drupal::theme()->getActiveTheme()->getPath();
-
-  return $variables;
 }
 
 /**
