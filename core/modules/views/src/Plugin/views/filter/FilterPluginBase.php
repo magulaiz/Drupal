@@ -1226,8 +1226,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         continue;
       }
       // Each rows contains three widgets:
-      // a) The title, where users define how they identify a pair of operator | value
-      // b) The operator
+      // a) The title, where users define how they identify a pair of operator | value.
+      // b) The operator.
       // c) The value (or values) to use in the filter with the selected operator.
 
       // In each row, we have to display the operator form and the value from
