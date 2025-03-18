@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Session;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\UserSession;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * @coversDefaultClass \Drupal\Core\Session\UserSession
@@ -79,6 +81,23 @@ class UserSessionTest extends UnitTestCase {
     $this->assertTrue($user3->hasRole(RoleInterface::AUTHENTICATED_ID));
     $this->assertFalse($user3->hasRole(RoleInterface::ANONYMOUS_ID));
     $this->assertTrue($user4->hasRole(RoleInterface::ANONYMOUS_ID));
+  }
+
+  #[IgnoreDeprecations]
+  /**
+   * Tests the name property deprecation.
+   *
+   * @covers ::__get
+   * @covers ::__isset
+   */
+  public function testNamePropertyDeprecation(): void {
+    $user = new UserSession([
+      'name' => 'test',
+    ]);
+    $this->expectDeprecation('Getting the name property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3295826');
+    self::assertEquals($user->name, $user->getAccountName());
+    $this->expectDeprecation('Checking for the name property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3295826');
+    $this->assertTrue(isset($user->name));
   }
 
 }
