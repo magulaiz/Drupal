@@ -489,8 +489,8 @@ abstract class Connection {
     if ($tableIdentifier->database || $tableIdentifier->schema) {
       return $tableIdentifier->forMachine();
     }
-    // Return as <schema>.<table>.
-    return $this->identifiers->schema($this->getConnectionOptions()['database'])->forMachine() . '.' . $tableIdentifier->machineName;
+    // Return as "<schema>"."<table>".
+    return $this->identifiers->schema($this->getConnectionOptions()['database'])->quotedMachineName . '.' . $tableIdentifier->quotedMachineName;
   }
 
   /**

@@ -62,19 +62,19 @@ class Schema extends DatabaseSchema {
   protected function createIndexSql($tablename, $schema) {
     // In SQLite, the 'CREATE [UNIQUE] INDEX' DDL statements requires that the
     // table name be NOT prefixed by the schema name. We cannot use the
-    // Table::forMachine() method but should rather pick Table->machineName
-    // directly.
+    // Table::forMachine() method but should rather pick
+    // Table->quotedMachineName directly.
     // @see https://www.sqlite.org/syntax/create-index-stmt.html
     $sql = [];
     $info = $this->getPrefixInfo($tablename);
     if (!empty($schema['unique keys'])) {
       foreach ($schema['unique keys'] as $key => $fields) {
-        $sql[] = 'CREATE UNIQUE INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $key . '] ON ' . $this->connection->identifiers->table($info['table'])->machineName . ' (' . $this->createKeySql($fields) . ")\n";
+        $sql[] = 'CREATE UNIQUE INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $key . '] ON ' . $this->connection->identifiers->table($info['table'])->quotedMachineName . ' (' . $this->createKeySql($fields) . ")\n";
       }
     }
     if (!empty($schema['indexes'])) {
       foreach ($schema['indexes'] as $key => $fields) {
-        $sql[] = 'CREATE INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $key . '] ON ' . $this->connection->identifiers->table($info['table'])->machineName . ' (' . $this->createKeySql($fields) . ")\n";
+        $sql[] = 'CREATE INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $key . '] ON ' . $this->connection->identifiers->table($info['table'])->quotedMachineName . ' (' . $this->createKeySql($fields) . ")\n";
       }
     }
     return $sql;
@@ -273,11 +273,11 @@ class Schema extends DatabaseSchema {
 
     // SQLite doesn't allow you to rename tables outside of the current schema,
     // so the syntax '... RENAME TO schema.table' would fail. We cannot use the
-    // Table::forMachine() method but should rather pick Table->machineName
-    // directly.
+    // Table::forMachine() method but should rather pick
+    // Table->quotedMachineName directly.
     // @see https://www.sqlite.org/syntax/alter-table-stmt.html
     $info = $this->getPrefixInfo($new_name);
-    $this->executeDdlStatement('ALTER TABLE ' . $this->connection->identifiers->table($table)->forMachine() . ' RENAME TO ' . $this->connection->identifiers->table($info['table'])->machineName);
+    $this->executeDdlStatement('ALTER TABLE ' . $this->connection->identifiers->table($table)->forMachine() . ' RENAME TO ' . $this->connection->identifiers->table($info['table'])->quotedMachineName);
 
     // Drop the indexes, there is no RENAME INDEX command in SQLite.
     if (!empty($schema['unique keys'])) {

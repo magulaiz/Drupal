@@ -334,12 +334,12 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       return $tableIdentifier->forMachine();
     }
     // The fully qualified table name in PostgreSQL is in the form of
-    // <database>.<schema>.<table>.
+    // "<database>"."<schema>"."<table>".
     $options = $this->getConnectionOptions();
     $schema = $options['schema'] ?? 'public';
-    return $this->identifiers->database($options['database'])->forMachine() . '.' .
-      $this->identifiers->schema($schema)->forMachine() . '.' .
-      $tableIdentifier->machineName;
+    return $this->identifiers->database($options['database'])->quotedMachineName . '.' .
+      $this->identifiers->schema($schema)->quotedMachineName . '.' .
+      $tableIdentifier->quotedMachineName;
   }
 
   /**

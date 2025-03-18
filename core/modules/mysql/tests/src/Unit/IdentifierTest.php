@@ -193,7 +193,7 @@ class IdentifierTest extends UnitTestCase {
     $this->assertSame($expectedMachine, $handler->table($identifier)->forMachine());
     // The machine name includes the quote characters so we need to subtract
     // those from the length.
-    $this->assertLessThanOrEqual($handler->getMaxLength(IdentifierType::Table), strlen($handler->table($identifier)->forMachine()) - 2, 'Invalid machine table length.');
+    $this->assertLessThanOrEqual($handler->getMaxLength(IdentifierType::Table), strlen($handler->table($identifier)->machineName), 'Invalid machine table length.');
   }
 
 }
