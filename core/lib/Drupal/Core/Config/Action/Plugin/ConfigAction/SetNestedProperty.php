@@ -43,7 +43,12 @@ final class SetNestedProperty implements ConfigActionPluginInterface, ContainerF
         throw new ConfigActionException("The setNested config action requires a nested property path.");
       }
       $parts = explode('.', $property_name);
+
       $property_value = $entity->get($parts[0]) ?? [];
+      if (!is_array($property_value)) {
+        throw new ConfigActionException('The setNested config action can only work on array values.');
+      }
+
       NestedArray::setValue($property_value, array_slice($parts, 1), $value['value']);
       $entity->set($parts[0], $property_value);
     }
