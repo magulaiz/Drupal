@@ -5,10 +5,10 @@ namespace Drupal\Core\Render\Placeholder;
 /**
  * Renders placeholders using a chain of placeholder strategies.
  *
- * Render arrays may specify an allowlist of placeholder strategies by using
- * $element['#placeholder_strategy'][ClassName::class] = TRUE at the same level
- * as #lazy_builder. When this is set, placeholder strategies not specified will
- * be skipped.
+ * Render arrays may specify an denylist of placeholder strategies by using
+ * $element['#placeholder_strategy_denylist'][ClassName::class] = TRUE at the
+ * same level as #lazy_builder. When this is set, placeholder strategies
+ * specified will be skipped.
  */
 class ChainedPlaceholderStrategy implements PlaceholderStrategyInterface {
 
@@ -50,7 +50,7 @@ class ChainedPlaceholderStrategy implements PlaceholderStrategyInterface {
     foreach ($this->placeholderStrategies as $strategy) {
       $candidate_placeholders = [];
       foreach ($placeholders as $key => $placeholder) {
-        if (!isset($placeholder['#placeholder_strategy']) || !empty($placeholder['#placeholder_strategy'][$strategy::class])) {
+        if (empty($placeholder['#placeholder_strategy'][$strategy::class])) {
           $candidate_placeholders[$key] = $placeholder;
         }
       }
