@@ -152,7 +152,6 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
     $site_config = $this->configFactory->get('system.site');
 
     $logo_uri = theme_get_setting('logo.url');
-    $extension = pathinfo($logo_uri, PATHINFO_EXTENSION);
     $build['site_logo'] = [
       '#theme' => 'image',
       '#uri' => $logo_uri,
@@ -166,7 +165,7 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
       $build['site_logo']['height'] = $image->getHeight();
     }
     else {
-     dump('boo');
+      dump('boo');
     }
 
     $build['site_name'] = [
