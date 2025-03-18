@@ -12,6 +12,7 @@ use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 #[ConfigAction(
   id: 'setNested',
@@ -23,6 +24,15 @@ final class SetNestedProperty implements ConfigActionPluginInterface, ContainerF
   public function __construct(
     private readonly ConfigManagerInterface $configManager,
   ) {}
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $container->get(ConfigManagerInterface::class),
+    );
+  }
 
   /**
    * {@inheritdoc}
