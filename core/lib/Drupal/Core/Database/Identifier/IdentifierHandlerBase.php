@@ -291,7 +291,7 @@ abstract class IdentifierHandlerBase {
   public function resolveForMachine(string $canonicalName, array $info, IdentifierType $type): string {
     return match ($type) {
       IdentifierType::Table => $this->resolveTableForMachine($canonicalName, $info),
-      default => $this->quote($canonicalName),
+      default => $canonicalName,
     };
   }
 
@@ -319,7 +319,7 @@ abstract class IdentifierHandlerBase {
         $this->getMaxLength(IdentifierType::Table),
       ));
     }
-    return $this->quote($info['needs_prefix'] ? $this->tablePrefix . $canonicalName : $canonicalName);
+    return $info['needs_prefix'] ? $this->tablePrefix . $canonicalName : $canonicalName;
   }
 
   /**

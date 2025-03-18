@@ -47,7 +47,7 @@ class IdentifierHandler extends IdentifierHandlerBase {
    * {@inheritdoc}
    */
   protected function resolveTableForMachine(string $canonicalName, array $info): string {
-    return $this->quote($canonicalName);
+    return $canonicalName;
   }
 
 }

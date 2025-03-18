@@ -35,7 +35,7 @@ final class Table extends IdentifierBase {
 
     $canonicalName = $identifierHandler->canonicalize($parts['table'], IdentifierType::Table);
     $machineName = $identifierHandler->resolveForMachine($canonicalName, $parts, IdentifierType::Table);
-    parent::__construct($identifier, $canonicalName, $machineName);
+    parent::__construct($identifier, $canonicalName, $machineName, $identifierHandler->quote($machineName));
 
     $this->database = $parts['database'];
     $this->schema = $parts['schema'];
@@ -46,8 +46,8 @@ final class Table extends IdentifierBase {
    * {@inheritdoc}
    */
   public function canonical(): string {
-    $ret = isset($this->database) ? $this->database->canonical() . '.' : '';
-    $ret .= isset($this->schema) ? $this->schema->canonical() . '.' : '';
+    $ret = isset($this->database) ? $this->database->canonicalName . '.' : '';
+    $ret .= isset($this->schema) ? $this->schema->canonicalName . '.' : '';
     $ret .= $this->canonicalName;
     return $ret;
   }
@@ -56,9 +56,9 @@ final class Table extends IdentifierBase {
    * {@inheritdoc}
    */
   public function forMachine(): string {
-    $ret = isset($this->database) ? $this->database->forMachine() . '.' : '';
-    $ret .= isset($this->schema) ? $this->schema->forMachine() . '.' : '';
-    $ret .= $this->machineName;
+    $ret = isset($this->database) ? $this->database->quotedMachineName . '.' : '';
+    $ret .= isset($this->schema) ? $this->schema->quotedMachineName . '.' : '';
+    $ret .= $this->quotedMachineName;
     return $ret;
   }
 

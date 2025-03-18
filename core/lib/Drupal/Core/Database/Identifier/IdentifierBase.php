@@ -13,6 +13,7 @@ abstract class IdentifierBase implements \Stringable {
     public readonly string $identifier,
     public readonly string $canonicalName,
     public readonly string $machineName,
+    public readonly string $quotedMachineName,
   ) {
   }
 
@@ -33,7 +34,7 @@ abstract class IdentifierBase implements \Stringable {
    *   The identifier in a format suitable for including in SQL queries.
    */
   public function forMachine(): string {
-    return $this->machineName;
+    return $this->quotedMachineName;
   }
 
   /**

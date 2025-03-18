@@ -18,7 +18,7 @@ final class Database extends IdentifierBase {
   ) {
     $canonicalName = $identifierHandler->canonicalize($identifier, IdentifierType::Database);
     $machineName = $identifierHandler->resolveForMachine($canonicalName, [], IdentifierType::Database);
-    parent::__construct($identifier, $canonicalName, $machineName);
+    parent::__construct($identifier, $canonicalName, $machineName, $identifierHandler->quote($machineName));
   }
 
 }

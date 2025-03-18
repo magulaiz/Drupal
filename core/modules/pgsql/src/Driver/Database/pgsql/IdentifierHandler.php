@@ -76,15 +76,15 @@ class IdentifierHandler extends IdentifierHandlerBase {
           $this->getMaxLength(IdentifierType::Table),
         ));
       }
-      return $this->quote($canonicalName);
+      return $canonicalName;
     }
 
     $prefix = $info['needs_prefix'] ? $this->tablePrefix : '';
     if (strlen($prefix . $canonicalName) > $this->getMaxLength(IdentifierType::Table)) {
       // We shorten too long table names.
-      return $this->quote($this->cropByHashing($canonicalName, $info, IdentifierType::Table, $prefix, $this->getMaxLength(IdentifierType::Table), 10));
+      return $this->cropByHashing($canonicalName, $info, IdentifierType::Table, $prefix, $this->getMaxLength(IdentifierType::Table), 10);
     }
-    return $this->quote($prefix . $canonicalName);
+    return $prefix . $canonicalName;
   }
 
   /**
