@@ -166,6 +166,10 @@ class NodeSaveTest extends NodeTestBase {
     $node->title = 'updated';
     $node->save();
 
+    // Test if the node instance contains the default revision after the new
+    // changes have been applied, so other tasks can be performed after this
+    $this->assertTrue($node->isDefaultRevision(), "Node " . $node->id() . " is the current revision and other post-update tasks can be executed.");
+
     // The hook implementations node_test_node_presave() and
     // node_test_node_update() determine changes and change the title.
     $this->assertEquals('updated_presave_update', $node->label(), 'Changes have been determined.');
