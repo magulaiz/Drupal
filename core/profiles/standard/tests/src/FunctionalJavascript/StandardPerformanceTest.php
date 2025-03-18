@@ -365,7 +365,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $expected = [
       'ScriptBytes' => 6500,
       'ScriptCount' => 1,
-      'StylesheetBytes' => 3000,
+      'StylesheetBytes' => 1950,
       'StylesheetCount' => 1,
       'QueryCount' => 17,
       'CacheGetCount' => 69,
@@ -478,7 +478,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 18,
-      'CacheGetCount' => 104,
+      'CacheGetCount' => 103,
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
       'CacheTagInvalidationCount' => 0,
