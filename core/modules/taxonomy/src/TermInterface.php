@@ -54,7 +54,7 @@ interface TermInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @return string
    *   The term name.
    *
-   * @deprecated in drupal:11.2.0, will be removed from drupal:12.0.0. Use
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
    *   \Drupal\taxonomy\Entity\Term::label() instead
    *
    * @see https://www.drupal.org/node/3085319
