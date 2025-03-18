@@ -709,7 +709,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     $this->assertArrayHasKey('meta', $resource);
     $this->assertArrayHasKey('relationship_meta_name', $resource['meta']);
     // Test that the tag is added to the meta of the document.
-    $this->assertEquals([$node->get('field_tags')->entity->getName()], $resource['meta']['relationship_meta_name']);
+    $this->assertEquals([$node->get('field_tags')->entity->label()], $resource['meta']['relationship_meta_name']);
   }
 
   /**

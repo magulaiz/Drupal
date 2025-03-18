@@ -265,13 +265,13 @@ class TermTest extends TaxonomyTestBase {
 
     // Verify that the terms appear on the node page after the two terms were
     // deleted.
-    $term_names = [$term_objects['term3']->getName(), $term_objects['term4']->getName()];
+    $term_names = [$term_objects['term3']->label(), $term_objects['term4']->label()];
     $this->drupalGet('node/' . $node->id());
     foreach ($term_names as $term_name) {
       $this->assertSession()->pageTextContains($term_name);
     }
-    $this->assertSession()->pageTextNotContains($term_objects['term1']->getName());
-    $this->assertSession()->pageTextNotContains($term_objects['term2']->getName());
+    $this->assertSession()->pageTextNotContains($term_objects['term1']->label());
+    $this->assertSession()->pageTextNotContains($term_objects['term2']->label());
   }
 
   /**
@@ -433,7 +433,7 @@ class TermTest extends TaxonomyTestBase {
 
     // The term appears on the vocab list page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
-    $this->assertSession()->pageTextContains($term->getName());
+    $this->assertSession()->pageTextContains($term->label());
   }
 
   /**

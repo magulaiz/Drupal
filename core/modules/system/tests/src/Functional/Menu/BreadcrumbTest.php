@@ -295,7 +295,7 @@ class BreadcrumbTest extends BrowserTestBase {
       $tree += [
         $link_path => $link->getTitle(),
       ];
-      $this->assertBreadcrumb($link_path, $trail, $term->getName(), $tree, TRUE, 'menu__item--active-trail');
+      $this->assertBreadcrumb($link_path, $trail, $term->label(), $tree, TRUE, 'menu__item--active-trail');
       // Ensure that the tagged node is found.
       $this->assertSession()->assertEscaped($parent->label());
 
@@ -308,7 +308,7 @@ class BreadcrumbTest extends BrowserTestBase {
       // Next iteration should expect this tag as parent link.
       // Note: Term name, not link name, due to taxonomy_term_page().
       $trail += [
-        $link_path => $term->getName(),
+        $link_path => $term->label(),
       ];
     }
 

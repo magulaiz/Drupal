@@ -79,7 +79,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
       return $entry['type'] === 'taxonomy_term--tags';
     });
     $tag_name = $this->nodes[0]->get('field_tags')->entity
-      ->getTranslation('ca')->getName();
+      ->getTranslation('ca')->label();
     $this->assertEquals($tag_name, reset($included_tags)['attributes']['name']);
     $alt = $this->nodes[0]->getTranslation('ca')->get('field_image')->alt;
     $this->assertSame($alt, $output['data']['relationships']['field_image']['data']['meta']['alt']);

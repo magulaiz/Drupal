@@ -98,7 +98,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $assert->statusCodeEquals(200);
 
     // Confirm the revision page shows the correct title.
-    $assert->pageTextContains($media->getName());
+    $assert->pageTextContains($media->label());
   }
 
   /**
