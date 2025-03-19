@@ -45,8 +45,12 @@ abstract class ContentEntityConfirmFormBase extends ContentEntityForm implements
    * @return string
    *   The internal form name.
    */
-  public function getFormName() {
-    @trigger_error('ConfirmFormBase::getFormName() is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Implementations should remove this method. See https://www.drupal.org/node/3505037', E_USER_DEPRECATED);
+  public function getFormName(): string {
+    @trigger_error(
+      'ContentEntityConfirmFormBase::getFormName() is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. 
+      Implementations should remove this method. See https://www.drupal.org/node/3505037',
+      E_USER_DEPRECATED
+    );
     return 'confirm';
   }
 
