@@ -181,8 +181,8 @@ function hook_module_preinstall($module, bool $is_syncing): void {
  * This function differs from hook_install() in that it gives all other modules
  * a chance to perform actions when a module is installed, whereas
  * hook_install() is only called on the module actually being installed. See
- * \Drupal\Core\Extension\ModuleInstaller::install() for a detailed description of
- * the order in which install hooks are invoked.
+ * \Drupal\Core\Extension\ModuleInstaller::install() for a detailed description
+ * of the order in which install hooks are invoked.
  *
  * This hook should be implemented in a .module file, not in an .install file.
  *
@@ -536,6 +536,8 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
   $tasks['install_configure_form']['function'] = 'my_profile_install_configure_form';
 }
 
+// phpcs:disable Drupal.Commenting.DocComment.ParamNotFirst
+
 /**
  * Perform a single update between minor versions.
  *
@@ -776,6 +778,7 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * @see \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
  * @see https://www.drupal.org/node/2535316
  */
+// phpcs:enable
 function hook_update_N(&$sandbox) {
   // For non-batch updates, the signature can simply be:
   // function hook_update_N() {
@@ -831,6 +834,8 @@ function hook_update_N(&$sandbox) {
   return t('All foo bars were updated with the new suffix');
 }
 
+// phpcs:disable Drupal.Commenting.DocComment.ParamNotFirst
+
 /**
  * Executes an update which is intended to update data, like entities.
  *
@@ -883,6 +888,7 @@ function hook_update_N(&$sandbox) {
  * @see hook_update_N()
  * @see hook_removed_post_updates()
  */
+// phpcs:enable
 function hook_post_update_NAME(&$sandbox) {
   // Example of updating some content.
   $node = \Drupal\node\Entity\Node::load(123);
@@ -1020,6 +1026,10 @@ function hook_update_last_removed(): int {
  *
  * @ingroup update_api
  *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3512364
  * @see drupal_get_updaters()
  * @see hook_updater_info_alter()
  */
@@ -1050,6 +1060,10 @@ function hook_updater_info(): array {
  *
  * @ingroup update_api
  *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
+ *   replacement. Use composer to manage the code for your site.
+ *
+ * @see https://www.drupal.org/node/3512364
  * @see drupal_get_updaters()
  * @see hook_updater_info()
  */

@@ -12,8 +12,8 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * This class extends the basic component and adds in Drupal-specific
  * handling, like translation of the format() method.
  *
- * Static methods in base class can also be used to create DrupalDateTime objects.
- * For example:
+ * Static methods in base class can also be used to create DrupalDateTime
+ * objects. For example:
  *
  * @code
  * DrupalDateTime::createFromArray(['year' => 2010, 'month' => 9, 'day' => 28])
@@ -70,6 +70,7 @@ class DrupalDateTime extends DateTimePlus {
    *   timezone are ignored when the $time parameter either is a UNIX timestamp
    *   (e.g. @946684800) or specifies a timezone
    *   (e.g. 2010-01-28T15:00:00+02:00).
+   *   phpcs:ignore Drupal.Commenting.FunctionComment.ParamCommentFullStop
    *   @see http://php.net/manual/datetime.construct.php
    * @param array $settings
    *   - validate_format: (optional) Boolean choice to validate the
