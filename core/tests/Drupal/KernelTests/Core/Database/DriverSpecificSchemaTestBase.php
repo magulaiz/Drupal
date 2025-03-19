@@ -255,7 +255,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Test the primary key columns.
     $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
-    $this->assertSame(['test_serial'], $method->invoke($this->schema, 'test_table'));
+    $this->assertSame(['test_serial'], $method->invoke($this->schema, $this->connection->identifiers->table('test_table')));
 
     $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
     $max1 = $this->connection->query('SELECT MAX([test_serial]) FROM {test_table}')->fetchField();
@@ -270,7 +270,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $this->schema->addField('test_table', 'test_composite_primary_key', ['type' => 'int', 'not null' => TRUE, 'default' => 0], ['primary key' => ['test_serial', 'test_composite_primary_key']]);
 
     // Test the primary key columns.
-    $this->assertSame(['test_serial', 'test_composite_primary_key'], $method->invoke($this->schema, 'test_table'));
+    $this->assertSame(['test_serial', 'test_composite_primary_key'], $method->invoke($this->schema, $this->connection->identifiers->table('test_table')));
 
     // Test renaming of keys and constraints.
     $this->schema->dropTable('test_table');
@@ -295,21 +295,21 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     // SQLite does not have any limit. Use the lowest common value and create a
     // table name as long as possible in order to cover edge cases around
     // identifier names for the table's primary or unique key constraints.
-    $table_name = strtolower($this->getRandomGenerator()->name(63 - strlen($this->getDatabasePrefix())));
-    $this->schema->createTable($table_name, $table_specification);
+    $table = $this->connection->identifiers->table(strtolower($this->getRandomGenerator()->name(63 - strlen($this->getDatabasePrefix()))));
+    $this->schema->createTable($table, $table_specification);
 
-    $this->assertIndexOnColumns($table_name, ['id'], 'primary');
-    $this->assertIndexOnColumns($table_name, ['test_field'], 'unique');
+    $this->assertIndexOnColumns($table, ['id'], 'primary');
+    $this->assertIndexOnColumns($table, ['test_field'], 'unique');
 
-    $new_table_name = strtolower($this->getRandomGenerator()->name(63 - strlen($this->getDatabasePrefix())));
-    $this->assertNull($this->schema->renameTable($table_name, $new_table_name));
+    $new_table = $this->connection->identifiers->table(strtolower($this->getRandomGenerator()->name(63 - strlen($this->getDatabasePrefix()))));
+    $this->assertNull($this->schema->renameTable($table, $new_table));
 
     // Test for renamed primary and unique keys.
-    $this->assertIndexOnColumns($new_table_name, ['id'], 'primary');
-    $this->assertIndexOnColumns($new_table_name, ['test_field'], 'unique');
+    $this->assertIndexOnColumns($new_table, ['id'], 'primary');
+    $this->assertIndexOnColumns($new_table, ['test_field'], 'unique');
 
     // Check that the ID sequence gets renamed when the table is renamed.
-    $this->checkSequenceRenaming($new_table_name);
+    $this->checkSequenceRenaming($new_table->identifier);
   }
 
   /**
@@ -582,7 +582,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $find_primary_key_columns = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
 
     // Test making the field the primary key of the table upon creation.
-    $table_name = 'test_table';
+    $table_name = $this->connection->identifiers->table('test_table');
     $table_spec = [
       'fields' => [
         'test_field' => ['type' => 'int', 'not null' => TRUE],
@@ -908,7 +908,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
       ],
       'primary key' => ['id'],
     ]);
-    $this->assertSame(['id'], $method->invoke($this->schema, 'table_with_pk_0'));
+    $this->assertSame(['id'], $method->invoke($this->schema, $this->connection->identifiers->table('table_with_pk_0')));
 
     // Test with multiple column primary key.
     $this->schema->createTable('table_with_pk_1', [
@@ -929,7 +929,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
       ],
       'primary key' => ['id0', 'id1'],
     ]);
-    $this->assertSame(['id0', 'id1'], $method->invoke($this->schema, 'table_with_pk_1'));
+    $this->assertSame(['id0', 'id1'], $method->invoke($this->schema, $this->connection->identifiers->table('table_with_pk_1')));
 
     // Test with multiple column primary key and not being the first column of
     // the table definition.
@@ -955,7 +955,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
       ],
       'primary key' => ['id4', 'id3'],
     ]);
-    $this->assertSame(['id4', 'id3'], $method->invoke($this->schema, 'table_with_pk_2'));
+    $this->assertSame(['id4', 'id3'], $method->invoke($this->schema, $this->connection->identifiers->table('table_with_pk_2')));
 
     // Test with multiple column primary key in a different order. For the
     // PostgreSQL and the SQLite drivers is sorting used to get the primary key
@@ -982,7 +982,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
       ],
       'primary key' => ['id3', 'test_field_2', 'id4'],
     ]);
-    $this->assertSame(['id3', 'test_field_2', 'id4'], $method->invoke($this->schema, 'table_with_pk_3'));
+    $this->assertSame(['id3', 'test_field_2', 'id4'], $method->invoke($this->schema, $this->connection->identifiers->table('table_with_pk_3')));
 
     // Test with table without a primary key.
     $this->schema->createTable('table_without_pk_1', [
@@ -998,7 +998,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
         ],
       ],
     ]);
-    $this->assertSame([], $method->invoke($this->schema, 'table_without_pk_1'));
+    $this->assertSame([], $method->invoke($this->schema, $this->connection->identifiers->table('table_without_pk_1')));
 
     // Test with table with an empty primary key.
     $this->schema->createTable('table_without_pk_2', [
@@ -1015,10 +1015,10 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
       ],
       'primary key' => [],
     ]);
-    $this->assertSame([], $method->invoke($this->schema, 'table_without_pk_2'));
+    $this->assertSame([], $method->invoke($this->schema, $this->connection->identifiers->table('table_without_pk_2')));
 
     // Test with non existing table.
-    $this->assertFalse($method->invoke($this->schema, 'non_existing_table'));
+    $this->assertFalse($method->invoke($this->schema, $this->connection->identifiers->table('non_existing_table')));
   }
 
   /**
@@ -1271,7 +1271,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Check the primary key columns.
     $find_primary_key_columns = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
-    $this->assertEquals([$field_name], $find_primary_key_columns->invoke($this->schema, $table_name_new));
+    $this->assertEquals([$field_name], $find_primary_key_columns->invoke($this->schema, $this->connection->identifiers->table($table_name_new)));
 
     // Dropping a primary key.
     $this->schema->dropPrimaryKey($table_name_new);
@@ -1288,7 +1288,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Check the unique key columns.
     $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
-    $this->assertEquals([$field_name_new], $introspect_index_schema->invoke($this->schema, $table_name_new)['unique keys'][$unique_key_introspect_name]);
+    $this->assertEquals([$field_name_new], $introspect_index_schema->invoke($this->schema, $this->connection->identifiers->table($table_name_new))['unique keys'][$unique_key_introspect_name]);
 
     // Dropping an unique key
     $this->schema->dropUniqueKey($table_name_new, $unique_key_name);
@@ -1303,7 +1303,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $this->assertTrue($this->schema->indexExists($table_name_new, $index_name));
 
     // Check the index columns.
-    $this->assertEquals(['update'], $introspect_index_schema->invoke($this->schema, $table_name_new)['indexes'][$index_introspect_name]);
+    $this->assertEquals(['update'], $introspect_index_schema->invoke($this->schema, $this->connection->identifiers->table($table_name_new))['indexes'][$index_introspect_name]);
 
     // Dropping an index.
     $this->schema->dropIndex($table_name_new, $index_name);

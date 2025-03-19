@@ -96,7 +96,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     unset($table_specification['fields']);
 
     $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
-    $index_schema = $introspect_index_schema->invoke($this->schema, $table_name);
+    $index_schema = $introspect_index_schema->invoke($this->schema, $this->connection->identifiers->table($table_name));
 
     $this->assertEquals($table_specification, $index_schema);
   }

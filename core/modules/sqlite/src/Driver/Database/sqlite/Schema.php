@@ -2,6 +2,7 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
+use Drupal\Core\Database\Identifier\Table as TableIdentifier;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
@@ -29,16 +30,30 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function tableExists($table, $add_prefix = TRUE) {
-    $info = $this->getPrefixInfo($table, $add_prefix);
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
 
-    // Don't use {} around sqlite_master table.
-    return (bool) $this->connection->query('SELECT 1 FROM [' . $info['schema'] . '].sqlite_master WHERE type = :type AND name = :name', [':type' => 'table', ':name' => $info['table']])->fetchField();
+    $schema = $table->schema ?? $this->defaultSchema;
+
+    $sql = sprintf(
+      'SELECT 1 FROM %s WHERE type = :type AND name = :name',
+      $this->connection->identifiers->table($schema . '.sqlite_master'),
+    );
+
+    return (bool) $this->connection->query($sql, [':type' => 'table', ':name' => $table->machineName])->fetchField();
   }
 
   /**
    * {@inheritdoc}
    */
   public function fieldExists($table, $column) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     $schema = $this->introspectSchema($table);
     return !empty($schema['fields'][$column]);
   }
@@ -47,12 +62,17 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function createTableSql($name, $table) {
+    if (!$name instanceof TableIdentifier) {
+      $name = $this->connection->identifiers->table($name);
+    }
+    assert($name instanceof TableIdentifier);
+
     if (!empty($table['primary key']) && is_array($table['primary key'])) {
       $this->ensureNotNullPrimaryKey($table['primary key'], $table['fields']);
     }
 
     $sql = [];
-    $sql[] = "CREATE TABLE {" . $name . "} (\n" . $this->createColumnsSql($name, $table) . "\n)\n";
+    $sql[] = "CREATE TABLE " . $name->forMachine() . " (\n" . $this->createColumnsSql($name, $table) . "\n)\n";
     return array_merge($sql, $this->createIndexSql($name, $table));
   }
 
@@ -60,16 +80,41 @@ class Schema extends DatabaseSchema {
    * Build the SQL expression for indexes.
    */
   protected function createIndexSql($tablename, $schema) {
+    if (!$tablename instanceof TableIdentifier) {
+      @trigger_error("Passing a table identifier as a string to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a Table identifier value object instead. See https://www.drupal.org/node/7654132", E_USER_DEPRECATED);
+      $table = $this->connection->identifiers->table($tablename);
+    }
+    else {
+      $table = $tablename;
+    }
+    assert($table instanceof TableIdentifier);
+
+    // In SQLite, the 'CREATE [UNIQUE] INDEX' DDL statements requires that the
+    // table name be NOT prefixed by the schema name. We cannot use the
+    // Table::forMachine() method but should rather pick
+    // Table->quotedMachineName directly.
+    // @see https://www.sqlite.org/syntax/create-index-stmt.html
     $sql = [];
-    $info = $this->getPrefixInfo($tablename);
     if (!empty($schema['unique keys'])) {
       foreach ($schema['unique keys'] as $key => $fields) {
-        $sql[] = 'CREATE UNIQUE INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $key . '] ON [' . $info['table'] . '] (' . $this->createKeySql($fields) . ")\n";
+        $sql[] = sprintf(
+          "CREATE UNIQUE INDEX %s.%s ON %s (%s)\n",
+          $table->schema,
+          '[' . $table->machineName . '_' . $key . ']',
+          $table->quotedMachineName,
+          $this->createKeySql($fields),
+        );
       }
     }
     if (!empty($schema['indexes'])) {
       foreach ($schema['indexes'] as $key => $fields) {
-        $sql[] = 'CREATE INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $key . '] ON [' . $info['table'] . '] (' . $this->createKeySql($fields) . ")\n";
+        $sql[] = sprintf(
+          "CREATE INDEX %s.%s ON %s (%s)\n",
+          $table->schema,
+          '[' . $table->machineName . '_' . $key . ']',
+          $table->quotedMachineName,
+          $this->createKeySql($fields),
+        );
       }
     }
     return $sql;
@@ -79,6 +124,15 @@ class Schema extends DatabaseSchema {
    * Build the SQL expression for creating columns.
    */
   protected function createColumnsSql($tablename, $schema) {
+    if (!$tablename instanceof TableIdentifier) {
+      @trigger_error("Passing a table identifier as a string to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a Table identifier value object instead. See https://www.drupal.org/node/7654132", E_USER_DEPRECATED);
+      $table = $this->connection->identifiers->table($tablename);
+    }
+    else {
+      $table = $tablename;
+    }
+    assert($table instanceof TableIdentifier);
+
     $sql_array = [];
 
     // Add the SQL statement for each field.
@@ -257,6 +311,15 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function renameTable($table, $new_name) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+    if (!$new_name instanceof TableIdentifier) {
+      $new_name = $this->connection->identifiers->table($new_name);
+    }
+    assert($new_name instanceof TableIdentifier);
+
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot rename '$table' to '$new_name': table '$table' doesn't exist.");
     }
@@ -266,13 +329,12 @@ class Schema extends DatabaseSchema {
 
     $schema = $this->introspectSchema($table);
 
-    // SQLite doesn't allow you to rename tables outside of the current
-    // database. So the syntax '... RENAME TO database.table' would fail.
-    // So we must determine the full table name here rather than surrounding
-    // the table with curly braces in case the db_prefix contains a reference
-    // to a database outside of our existing database.
-    $info = $this->getPrefixInfo($new_name);
-    $this->executeDdlStatement('ALTER TABLE {' . $table . '} RENAME TO [' . $info['table'] . ']');
+    // SQLite doesn't allow you to rename tables outside of the current schema,
+    // so the syntax '... RENAME TO schema.table' would fail. We cannot use the
+    // Table::forMachine() method but should rather pick
+    // Table->quotedMachineName directly.
+    // @see https://www.sqlite.org/syntax/alter-table-stmt.html
+    $this->executeDdlStatement(sprintf('ALTER TABLE %s RENAME TO %s', $table->forMachine(), $new_name->quotedMachineName));
 
     // Drop the indexes, there is no RENAME INDEX command in SQLite.
     if (!empty($schema['unique keys'])) {
@@ -297,11 +359,16 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function dropTable($table) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     if (!$this->tableExists($table)) {
       return FALSE;
     }
     $this->connection->tableDropped = TRUE;
-    $this->executeDdlStatement('DROP TABLE {' . $table . '}');
+    $this->executeDdlStatement('DROP TABLE ' . $table->forMachine());
     return TRUE;
   }
 
@@ -309,6 +376,11 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function addField($table, $field, $specification, $keys_new = []) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot add field '$table.$field': table doesn't exist.");
     }
@@ -325,7 +397,7 @@ class Schema extends DatabaseSchema {
     if (empty($keys_new) && (empty($specification['not null']) || isset($specification['default']))) {
       // When we don't have to create new keys and we are not creating a NOT
       // NULL column without a default value, we can use the quicker version.
-      $query = 'ALTER TABLE {' . $table . '} ADD ' . $this->createFieldSql($field, $this->processField($specification));
+      $query = 'ALTER TABLE ' . $table->forMachine() . ' ADD ' . $this->createFieldSql($field, $this->processField($specification));
       $this->executeDdlStatement($query);
 
       // Apply the initial value if set.
@@ -338,12 +410,12 @@ class Schema extends DatabaseSchema {
           $expression = $specification['initial_from_field'];
           $arguments = [];
         }
-        $this->connection->update($table)
+        $this->connection->update($table->identifier)
           ->expression($field, $expression, $arguments)
           ->execute();
       }
       elseif (isset($specification['initial'])) {
-        $this->connection->update($table)
+        $this->connection->update($table->identifier)
           ->fields([$field => $specification['initial']])
           ->execute();
       }
@@ -415,15 +487,21 @@ class Schema extends DatabaseSchema {
    *       that will be used as an expression field.
    */
   protected function alterTable($table, $old_schema, $new_schema, array $mapping = []) {
+    if (!$table instanceof TableIdentifier) {
+      @trigger_error("Passing a table identifier as a string to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a Table identifier value object instead. See https://www.drupal.org/node/7654132", E_USER_DEPRECATED);
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     $i = 0;
     do {
-      $new_table = $table . '_' . $i++;
+      $new_table = $this->connection->identifiers->table($table->canonicalName . '_' . $i++);
     } while ($this->tableExists($new_table));
 
     $this->createTable($new_table, $new_schema);
 
     // Build a SQL query to migrate the data from the old table to the new.
-    $select = $this->connection->select($table);
+    $select = $this->connection->select($table->identifier);
 
     // Complete the mapping.
     $possible_keys = array_keys($new_schema['fields']);
@@ -445,12 +523,12 @@ class Schema extends DatabaseSchema {
     }
 
     // Execute the data migration query.
-    $this->connection->insert($new_table)
+    $this->connection->insert($new_table->identifier)
       ->from($select)
       ->execute();
 
-    $old_count = $this->connection->query('SELECT COUNT(*) FROM {' . $table . '}')->fetchField();
-    $new_count = $this->connection->query('SELECT COUNT(*) FROM {' . $new_table . '}')->fetchField();
+    $old_count = $this->connection->query('SELECT COUNT(*) FROM ' . $table->forMachine())->fetchField();
+    $new_count = $this->connection->query('SELECT COUNT(*) FROM ' . $new_table->forMachine())->fetchField();
     if ($old_count == $new_count) {
       $this->dropTable($table);
       $this->renameTable($new_table, $table);
@@ -474,6 +552,12 @@ class Schema extends DatabaseSchema {
    *   If a column of the table could not be parsed.
    */
   protected function introspectSchema($table) {
+    if (!$table instanceof TableIdentifier) {
+      @trigger_error("Passing a table identifier as a string to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a Table identifier value object instead. See https://www.drupal.org/node/7654132", E_USER_DEPRECATED);
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     $mapped_fields = array_flip($this->getFieldTypeMap());
     $schema = [
       'fields' => [],
@@ -482,8 +566,7 @@ class Schema extends DatabaseSchema {
       'indexes' => [],
     ];
 
-    $info = $this->getPrefixInfo($table);
-    $result = $this->connection->query('PRAGMA [' . $info['schema'] . '].table_info([' . $info['table'] . '])');
+    $result = $this->connection->query('PRAGMA ' . $table->schema . '.table_info(' . $table->quotedMachineName . ')');
     foreach ($result as $row) {
       if (preg_match('/^([^(]+)\((.*)\)$/', $row->type, $matches)) {
         $type = $matches[1];
@@ -539,7 +622,7 @@ class Schema extends DatabaseSchema {
     $schema['primary key'] = array_values($schema['primary key']);
 
     $indexes = [];
-    $result = $this->connection->query('PRAGMA [' . $info['schema'] . '].index_list([' . $info['table'] . '])');
+    $result = $this->connection->query('PRAGMA ' . $table->schema . '.index_list(' . $table->quotedMachineName . ')');
     foreach ($result as $row) {
       if (!str_starts_with($row->name, 'sqlite_autoindex_')) {
         $indexes[] = [
@@ -551,8 +634,8 @@ class Schema extends DatabaseSchema {
     foreach ($indexes as $index) {
       $name = $index['name'];
       // Get index name without prefix.
-      $index_name = substr($name, strlen($info['table']) + 1);
-      $result = $this->connection->query('PRAGMA [' . $info['schema'] . '].index_info([' . $name . '])');
+      $index_name = substr($name, strlen($table->machineName) + 1);
+      $result = $this->connection->query('PRAGMA ' . $table->schema . '.index_info([' . $name . '])');
       foreach ($result as $row) {
         $schema[$index['schema_key']][$index_name][] = $row->name;
       }
@@ -564,6 +647,11 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function dropField($table, $field) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     if (!$this->fieldExists($table, $field)) {
       return FALSE;
     }
@@ -600,6 +688,11 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function changeField($table, $field, $field_new, $spec, $keys_new = []) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     if (!$this->fieldExists($table, $field)) {
       throw new SchemaObjectDoesNotExistException("Cannot change the definition of field '$table.$field': field doesn't exist.");
     }
@@ -673,6 +766,11 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function addIndex($table, $name, $fields, array $spec) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot add index '$name' to table '$table': table doesn't exist.");
     }
@@ -691,29 +789,40 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function indexExists($table, $name) {
-    $info = $this->getPrefixInfo($table);
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
 
-    return $this->connection->query('PRAGMA [' . $info['schema'] . '].index_info([' . $info['table'] . '_' . $name . '])')->fetchField() != '';
+    return $this->connection->query('PRAGMA ' . $table->schema . '.index_info([' . $table->machineName . '_' . $name . '])')->fetchField() != '';
   }
 
   /**
    * {@inheritdoc}
    */
   public function dropIndex($table, $name) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     if (!$this->indexExists($table, $name)) {
       return FALSE;
     }
 
-    $info = $this->getPrefixInfo($table);
-
-    $this->executeDdlStatement('DROP INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $name . ']');
-    return TRUE;
+    $this->executeDdlStatement('DROP INDEX ' . $table->schema . '.[' . $table->machineName . '_' . $name . ']');
+      return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function addUniqueKey($table, $name, $fields) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot add unique key '$name' to table '$table': table doesn't exist.");
     }
@@ -732,13 +841,16 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function dropUniqueKey($table, $name) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     if (!$this->indexExists($table, $name)) {
       return FALSE;
     }
 
-    $info = $this->getPrefixInfo($table);
-
-    $this->executeDdlStatement('DROP INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $name . ']');
+    $this->executeDdlStatement('DROP INDEX ' . $table->schema . '.[' . $table->machineName . '_' . $name . ']');
     return TRUE;
   }
 
@@ -746,6 +858,11 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function addPrimaryKey($table, $fields) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot add primary key to table '$table': table doesn't exist.");
     }
@@ -766,6 +883,11 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function dropPrimaryKey($table) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     $old_schema = $this->introspectSchema($table);
     $new_schema = $old_schema;
 
@@ -782,6 +904,12 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   protected function findPrimaryKeyColumns($table) {
+    if (!$table instanceof TableIdentifier) {
+      @trigger_error("Passing a table identifier as a string to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a Table identifier value object instead. See https://www.drupal.org/node/7654132", E_USER_DEPRECATED);
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     if (!$this->tableExists($table)) {
       return FALSE;
     }
@@ -793,6 +921,13 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   protected function introspectIndexSchema($table) {
+    if (!$table instanceof TableIdentifier) {
+      @trigger_error("Passing a table identifier as a string to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a Table identifier value object instead. See https://www.drupal.org/node/7654132", E_USER_DEPRECATED);
+#      throw new \Exception("Passing a table identifier as a string to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a Table identifier value object instead. See https://www.drupal.org/node/7654132");
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
+
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("The table $table doesn't exist.");
     }
