@@ -47,6 +47,23 @@ class FilterHtmlTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::process
+   *
+   * @dataProvider providerProcess
+   *
+   * @param string $html
+   *   Input HTML.
+   * @param array $expected
+   *   The expected output string.
+   */
+  public function testProcess($html, $expected): void {
+    $currentConfiguration = $this->filter->getConfiguration();
+    $currentConfiguration['settings']['allowed_html'] = "<p>";
+    $this->filter->setConfiguration($currentConfiguration);
+    $this->assertSame($expected, $this->filter->process($html, NULL)->getProcessedText());
+  }
+
+  /**
    * Provides data for testFilterAttributes.
    *
    * @return array
@@ -109,6 +126,24 @@ class FilterHtmlTest extends UnitTestCase {
         '<ul style="display: none;" alpaca-wool="wooly-warm strong majestic"></ul>',
         '<ul alpaca-wool="wooly-warm strong"></ul>',
       ],
+    ];
+  }
+
+  /**
+   * Provides data for testProcess.
+   *
+   * @return array
+   *   An array of test data.
+   */
+  public static function providerProcess() {
+    return [
+      // Preserve <p>.
+      ['<p>content</p>', '<p>content</p>'],
+      // Remove other tags.
+      ['<a>link text</a>', 'link text'],
+      ['<em>emphasis</em>', 'emphasis'],
+      // Preserve summary delimiter.
+      ['<p>some content</p><!--break--><p>some more content</p>', '<p>some content</p><!--break--><p>some more content</p>'],
     ];
   }
 
