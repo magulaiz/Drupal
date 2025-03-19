@@ -75,8 +75,7 @@ class VariationCache implements VariationCacheInterface {
     foreach ($items as $index => [$keys, $cacheability]) {
       $cid = $initial_cid = $this->createCacheIdFast($keys, $cacheability);
 
-      // Immediately set cache misses on the results or fast-forward the CID map
-      // to look from the last known redirect onwards.
+      // Try to optimize based on the redirect chain cache.
       if (isset($this->redirectChainCache[$cid]) && $this->redirectChainIsValid($keys, $this->redirectChainCache[$cid])) {
         $last_item = end($this->redirectChainCache[$cid]);
 
