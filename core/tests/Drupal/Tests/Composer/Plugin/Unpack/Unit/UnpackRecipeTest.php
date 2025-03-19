@@ -22,6 +22,11 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
+/**
+ * Tests recipe unpacking.
+ *
+ * @group Unpack
+ */
 class UnpackRecipeTest extends TestCase {
 
   use ProphecyTrait;

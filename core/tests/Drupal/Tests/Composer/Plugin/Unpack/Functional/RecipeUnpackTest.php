@@ -11,6 +11,8 @@ use Drupal\Tests\Composer\Plugin\Scaffold\ExecTrait;
 
 /**
  * Tests recipe unpacking.
+ *
+ * @group Unpack
  */
 class RecipeUnpackTest extends BuildTestBase {
   use ExecTrait;
