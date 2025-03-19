@@ -237,8 +237,6 @@ class UnpackRecipeTest extends TestCase {
    */
   protected function getPropertyReflection(object $object, string $property): mixed {
     $ref = new \ReflectionProperty($object, $property);
-    $ref->setAccessible(TRUE);
-
     return $ref->getValue($object);
   }
 
