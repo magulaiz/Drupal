@@ -48,7 +48,7 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     $this->assertCountBetween(630, 760, $performance_data->getCacheGetCount());
     $this->assertCountBetween(415, 435, $performance_data->getCacheSetCount());
     $this->assertCountBetween(1, 2, $performance_data->getCacheDeleteCount());
-    $this->assertCountBetween(55, 65, $performance_data->getCacheTagLookupQueryCount());
+    $this->assertCountBetween(50, 65, $performance_data->getCacheTagLookupQueryCount());
     $expected = [
       'CacheTagInvalidationCount' => 0,
       'ScriptCount' => 1,
@@ -115,11 +115,11 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 106,
-      'CacheGetCount' => 285,
+      'CacheGetCount' => 289,
       'CacheSetCount' => 90,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 34,
+      'CacheTagLookupQueryCount' => 32,
       'CacheTagGroupedLookups' => [
         [
           'entity_types',
@@ -160,34 +160,6 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
         ['config:block.block.umami_main_menu', 'config:system.menu.main'],
         ['config:block.block.umami_messages'],
         ['config:block.block.umami_help'],
-        ['config:block.block.umami_local_tasks'],
-        [
-          'config:core.entity_view_display.media.image.scale_crop_7_3_large',
-          'config:image.style.scale_crop_7_3_large',
-          'config:image.style.scale_crop_7_3_medium',
-          'config:image.style.scale_crop_7_3_tiny',
-          'config:image.style.scale_crop_7_3_wide',
-          'config:responsive_image.styles.hero',
-          'media:18',
-        ],
-        [
-          'block_content:3',
-          'block_content_view',
-          'config:block.block.umami_banner_home',
-          'config:core.entity_view_display.block_content.banner_block.default',
-        ],
-        ['node:18'],
-        ['media:17'],
-        ['config:core.entity_view_display.node.article.card_common'],
-        [
-          'config:core.entity_view_display.media.image.square',
-          'config:image.style.square_large',
-          'config:image.style.square_medium',
-          'config:image.style.square_small',
-          'config:responsive_image.styles.square',
-        ],
-        ['config:core.entity_view_display.node.recipe.card_common_alt'],
-        ['config:block.block.umami_views_block__promoted_items_block_1'],
         [
           'config:block.block.umami_views_block__recipe_collections_block',
           'taxonomy_term:1',
@@ -210,6 +182,7 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
         ],
         [
           'block_content:2',
+          'block_content_view',
           'config:block.block.umami_footer_promo',
           'config:core.entity_view_display.block_content.footer_promo_block.default',
           'config:core.entity_view_display.media.image.medium_8_7',
@@ -221,22 +194,47 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
         ['config:block.block.umami_disclaimer', 'config:filter.format.basic_html'],
         [
           'block_content:1',
+          'block_content:3',
+          'config:block.block.umami_banner_home',
           'config:block.block.umami_banner_recipes',
           'config:block.block.umami_breadcrumbs',
           'config:block.block.umami_content',
           'config:block.block.umami_languageswitcher',
+          'config:block.block.umami_local_tasks',
           'config:block.block.umami_page_title',
           'config:block.block.umami_views_block__articles_aside_block_1',
+          'config:block.block.umami_views_block__promoted_items_block_1',
           'config:block_list',
           'config:configurable_language_list',
           'http_response',
         ],
+        ['node:18'],
+        ['media:17'],
+        ['config:core.entity_view_display.node.article.card_common'],
+        [
+          'config:core.entity_view_display.media.image.square',
+          'config:image.style.square_large',
+          'config:image.style.square_medium',
+          'config:image.style.square_small',
+          'config:responsive_image.styles.square',
+        ],
+        ['config:core.entity_view_display.node.recipe.card_common_alt'],
+        [
+          'config:core.entity_view_display.media.image.scale_crop_7_3_large',
+          'config:image.style.scale_crop_7_3_large',
+          'config:image.style.scale_crop_7_3_medium',
+          'config:image.style.scale_crop_7_3_tiny',
+          'config:image.style.scale_crop_7_3_wide',
+          'config:responsive_image.styles.hero',
+          'media:18',
+        ],
+        ['config:core.entity_view_display.block_content.banner_block.default'],
         ['config:user.role.anonymous'],
       ],
       'ScriptCount' => 1,
       'ScriptBytes' => 12000,
       'StylesheetCount' => 2,
-      'StylesheetBytes' => 41000,
+      'StylesheetBytes' => 40000,
     ];
     $this->assertMetrics($expected, $performance_data);
   }

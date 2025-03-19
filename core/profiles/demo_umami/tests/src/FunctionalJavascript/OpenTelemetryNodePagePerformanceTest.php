@@ -57,7 +57,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'ScriptCount' => 1,
       'ScriptBytes' => 12000,
       'StylesheetCount' => 2,
-      'StylesheetBytes' => 43000,
+      'StylesheetBytes' => 41500,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
@@ -85,8 +85,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 1,
-      'CacheTagChecksumCount' => 0,
-      'CacheTagIsValidCount' => 1,
       'CacheTagGroupedLookups' => [
         [
           'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
@@ -178,7 +176,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'ScriptCount' => 1,
       'ScriptBytes' => 12000,
       'StylesheetCount' => 2,
-      'StylesheetBytes' => 43000,
+      'StylesheetBytes' => 41500,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
@@ -202,11 +200,11 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 192,
-      'CacheGetCount' => 255,
+      'CacheGetCount' => 261,
       'CacheSetCount' => 65,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 28,
+      'CacheTagLookupQueryCount' => 27,
       'CacheTagGroupedLookups' => [
         [
           'entity_types',
@@ -254,9 +252,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
         ['config:block.block.umami_main_menu', 'config:system.menu.main'],
         ['config:block.block.umami_messages'],
         ['config:block.block.umami_help'],
-        ['config:block.block.umami_local_tasks', 'config:workflows.workflow.editorial'],
-        ['config:views.view.recipes'],
-        ['config:block.block.umami_breadcrumbs'],
         [
           'config:block.block.umami_views_block__recipe_collections_block',
           'taxonomy_term:1',
@@ -292,8 +287,10 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
           'block_content:1',
           'config:block.block.umami_banner_home',
           'config:block.block.umami_banner_recipes',
+          'config:block.block.umami_breadcrumbs',
           'config:block.block.umami_content',
           'config:block.block.umami_languageswitcher',
+          'config:block.block.umami_local_tasks',
           'config:block.block.umami_page_title',
           'config:block.block.umami_views_block__articles_aside_block_1',
           'config:block.block.umami_views_block__promoted_items_block_1',
@@ -301,12 +298,14 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
           'config:configurable_language_list',
           'http_response',
         ],
+        ['config:views.view.recipes'],
+        ['config:workflows.workflow.editorial'],
         ['config:user.role.anonymous'],
       ],
       'ScriptCount' => 1,
       'ScriptBytes' => 12000,
       'StylesheetCount' => 2,
-      'StylesheetBytes' => 43000,
+      'StylesheetBytes' => 41500,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
