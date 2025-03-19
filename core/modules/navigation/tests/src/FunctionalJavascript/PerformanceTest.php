@@ -67,12 +67,13 @@ class PerformanceTest extends PerformanceTestBase {
       'SELECT * FROM "users_field_data" "u" WHERE "u"."uid" = "2" AND "u"."default_langcode" = 1',
       'SELECT "roles_target_id" FROM "user__roles" WHERE "entity_id" = "2"',
       'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
+      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "wait" ) AND "collection" = "test_wait_terminate"',
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
 
     $expected = [
-      'QueryCount' => 4,
+      'QueryCount' => 5,
       'CacheGetCount' => 59,
       'CacheGetCountByBin' => [
         'config' => 11,
