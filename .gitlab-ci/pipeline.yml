@@ -131,6 +131,6 @@ variables:
   when: manual
   allow_failure: true
   variables:
-    REPEAT_TEST_CLASS: '\Drupal\Tests\path\Functional\PathAdminTest'
+    REPEAT_TEST_CLASS: '\Drupal\Tests\path\Functional\PathAliasTest'
   services:
     - <<: *with-database
