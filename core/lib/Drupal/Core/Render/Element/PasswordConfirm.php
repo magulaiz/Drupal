@@ -13,7 +13,8 @@ use Drupal\Core\Render\Attribute\FormElement;
  *
  * Properties:
  * - #size: The size of the input element in characters.
- * - #pass2_attributes: An array of attributes to apply to the confirm password field.
+ * - #pass2_attributes: An array of attributes to apply to the
+ *   confirm password field.
  *
  * Usage example:
  * @code
