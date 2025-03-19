@@ -8,7 +8,7 @@ use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests drupal_flush_all_caches() during an install.
+ * Tests Drupal\Core\Cache\Rebuilder::rebuildAll() during an install.
  *
  * @group Installer
  */
@@ -44,7 +44,7 @@ class DrupalFlushAllCachesInInstallerTest extends BrowserTestBase {
 function cache_flush_test_install() {
   // Note it is bad practice to call this method during hook_install() as it
   // results in an additional expensive container rebuild.
-  drupal_flush_all_caches();
+  \Drupal\Core\Cache\Rebuilder\Rebuilder::rebuildAll();
   // Ensure services are available after calling drupal_flush_all_caches().
   \Drupal::state()->set('cache_flush_test', \Drupal::hasService('language_negotiator'));
 }

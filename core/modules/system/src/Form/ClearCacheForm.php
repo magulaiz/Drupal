@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -35,7 +36,7 @@ class ClearCacheForm extends FormBase {
    * Clears the caches.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     $this->messenger()->addStatus($this->t('Caches cleared.'));
   }
 

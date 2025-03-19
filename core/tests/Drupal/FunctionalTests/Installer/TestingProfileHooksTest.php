@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -29,7 +30,7 @@ class TestingProfileHooksTest extends BrowserTestBase {
   public function testHookPickup(): void {
     $this->assertFalse(isset($GLOBALS['profile_procedural']));
     $this->assertFalse(isset($GLOBALS['profile_oop']));
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     $this->assertTrue(isset($GLOBALS['profile_procedural']));
     $this->assertTrue(isset($GLOBALS['profile_oop']));
   }

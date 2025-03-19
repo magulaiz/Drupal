@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Core\DrupalKernel;
+
 /**
  * Helper methods for cache rebuild.
  *
@@ -52,10 +54,6 @@ class Rebuilder {
    * fresh and current system data. All modules must be able to rely on this
    * contract.
    *
-   * @see \Drupal\Core\Cache\CacheHelper::getBins()
-   * @see hook_cache_flush()
-   * @see hook_rebuild()
-   *
    * This function also resets the theme, which means it is not initialized
    * anymore and all previously added JavaScript and CSS is gone. Normally, this
    * function is called as an end-of-POST-request operation that is followed by
@@ -71,17 +69,15 @@ class Rebuilder {
    * @todo Add a global lock to ensure that caches are not primed in concurrent
    *   requests.
    *
-   * @param \Drupal\Core\DrupalKernel|array $kernel
+   * @param ?\Drupal\Core\DrupalKernel $kernel
    *   (optional) The Drupal Kernel. It is the caller's responsibility to
-   *   rebuild the container if this is passed in. Sometimes
-   *   Rebuilder::rebuildAll() is used as a batch operation so $kernel will be
-   *   an array, in this instance it will be treated as if it is NULL.
+   *   rebuild the container if this is passed in.
    *
    * @see \Drupal\Core\Cache\CacheHelper::getBins()
    * @see hook_cache_flush()
    * @see hook_rebuild()
    */
-  public static function rebuildAll($kernel): void {
+  public static function rebuildAll(?DrupalKernel $kernel = NULL): void {
     // This is executed based on old/previously known information if $kernel is
     // not passed in, which is sufficient, since new extensions cannot have any
     // primed caches yet.

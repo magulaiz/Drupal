@@ -395,7 +395,7 @@ function show(&$element) {
  * convenience, this function automatically re-initializes the maintenance theme
  * if it was initialized before.
  *
- * @param \Drupal\Core\DrupalKernel|array $kernel
+ * @param \Drupal\Core\DrupalKernel|array|null $kernel
  *   (optional) The Drupal Kernel. It is the caller's responsibility to rebuild
  *   the container if this is passed in. Sometimes drupal_flush_all_caches is
  *   used as a batch operation so $kernel will be an array, in this instance it
@@ -419,6 +419,12 @@ function show(&$element) {
  */
 function drupal_flush_all_caches($kernel = NULL) {
   @trigger_error('drupal_flush_all_caches() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Cache\Rebuilder::rebuildAll() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
+
+  if (!$kernel instanceof DrupalKernel) {
+    $kernel = \Drupal::service('kernel');
+    $kernel->invalidateContainer();
+    $kernel->rebuildContainer();
+  }
   Rebuilder::rebuildAll($kernel);
 }
 
