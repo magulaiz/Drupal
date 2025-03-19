@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
-namespace core\tests\Drupal\Tests\Composer\Plugin\Unpack\Functional;
+namespace Drupal\Tests\Composer\Plugin\Unpack\Functional;
 
 use Composer\Util\Filesystem;
-use core\tests\Drupal\Tests\Composer\Plugin\Unpack\Fixtures;
+use Drupal\Tests\Composer\Plugin\Unpack\Fixtures;
 use Drupal\BuildTests\Framework\BuildTestBase;
 use Drupal\Tests\Composer\Plugin\Scaffold\ExecTrait;
 
+/**
+ * Tests recipe unpacking.
+ */
 class RecipeUnpackTest extends BuildTestBase {
   use ExecTrait;
 
@@ -29,7 +32,7 @@ class RecipeUnpackTest extends BuildTestBase {
   /**
    * The Fixtures object.
    *
-   * @var \core\tests\Drupal\Tests\Composer\Plugin\Unpack\Fixtures
+   * @var Drupal\Tests\Composer\Plugin\Unpack\Fixtures
    */
   protected Fixtures $fixtures;
 

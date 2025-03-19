@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace core\tests\Drupal\Tests\Composer\Plugin\Unpack\Unit;
+namespace Drupal\Tests\Composer\Plugin\Unpack\Unit;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;

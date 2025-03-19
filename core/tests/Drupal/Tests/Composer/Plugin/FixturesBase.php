@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace core\tests\Drupal\Tests\Composer\Plugin;
+namespace Drupal\Tests\Composer\Plugin;
 
 use Composer\Composer;
 use Composer\Console\Application;

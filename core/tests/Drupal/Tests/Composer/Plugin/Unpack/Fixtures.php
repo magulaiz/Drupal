@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace core\tests\Drupal\Tests\Composer\Plugin\Unpack;
+namespace Drupal\Tests\Composer\Plugin\Unpack;
 
-use core\tests\Drupal\Tests\Composer\Plugin\FixturesBase;
+use Drupal\Tests\Composer\Plugin\FixturesBase;
 
 class Fixtures extends FixturesBase {
 
