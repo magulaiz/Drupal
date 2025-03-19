@@ -15,7 +15,7 @@ use Drupal\media\Entity\MediaType;
 /**
  * Hook implementations for media.
  */
-class MediaRequirements {
+class MediaRequirementsHooks {
 
   use StringTranslationTrait;
 

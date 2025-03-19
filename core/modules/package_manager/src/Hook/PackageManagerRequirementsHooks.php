@@ -13,7 +13,7 @@ use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
 /**
  * Hook implementations for media.
  */
-class PackageManagerRequirements {
+class PackageManagerRequirementsHooks {
 
   use StringTranslationTrait;
 
