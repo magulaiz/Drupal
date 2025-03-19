@@ -244,6 +244,7 @@ variables:
     REPEAT_TEST_CLASS: '\Drupal\Tests\media\FunctionalJavascript\MediaSourceFileTest'
   services:
     - <<: *with-database
+    - <<: *with-selenium-chrome
 
 '🚲 Performance tests':
   <<: [ *default-job-settings ]
