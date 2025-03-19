@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Session;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Session\UserSession;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\RoleInterface;
@@ -83,13 +82,13 @@ class UserSessionTest extends UnitTestCase {
     $this->assertTrue($user4->hasRole(RoleInterface::ANONYMOUS_ID));
   }
 
-  #[IgnoreDeprecations]
   /**
    * Tests the name property deprecation.
    *
    * @covers ::__get
    * @covers ::__isset
    */
+  #[IgnoreDeprecations]
   public function testNamePropertyDeprecation(): void {
     $user = new UserSession([
       'name' => 'test',

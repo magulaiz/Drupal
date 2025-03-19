@@ -211,9 +211,9 @@ class UserSession implements AccountInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Implements magic __get() method.
    */
-  public function __get($name) {
+  public function __get($name): mixed {
     if ($name === 'name') {
       @trigger_error("Getting the name property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3295826", E_USER_DEPRECATED);
       return $this->getAccountName();
@@ -222,9 +222,9 @@ class UserSession implements AccountInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Implements magic __isset() method.
    */
-  public function __isset($name) {
+  public function __isset($name): bool {
     if ($name === 'name') {
       @trigger_error("Checking for the name property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3295826", E_USER_DEPRECATED);
       return $this->getAccountName();
