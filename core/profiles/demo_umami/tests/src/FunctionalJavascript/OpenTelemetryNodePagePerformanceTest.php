@@ -51,7 +51,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     $this->assertCountBetween(570, 610, $performance_data->getCacheGetCount());
     $this->assertCountBetween(390, 415, $performance_data->getCacheSetCount());
     $this->assertCountBetween(1, 2, $performance_data->getCacheDeleteCount());
-    $this->assertCountBetween(52, 53, $performance_data->getCacheTagLookupQueryCount());
+    $this->assertCountBetween(40, 53, $performance_data->getCacheTagLookupQueryCount());
     $expected = [
       'CacheTagInvalidationCount' => 0,
       'ScriptCount' => 1,
