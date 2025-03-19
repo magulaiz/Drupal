@@ -71,7 +71,7 @@ class VariationCache implements VariationCacheInterface {
     // property documentation of $this->redirectChainCache.
     //
     // Create a map of CIDs with their associated $items index and cache keys.
-    $cid_map = $results = [];
+    $cid_map = [];
     foreach ($items as $index => [$keys, $cacheability]) {
       $cid = $initial_cid = $this->createCacheIdFast($keys, $cacheability);
 
@@ -79,9 +79,8 @@ class VariationCache implements VariationCacheInterface {
       if (isset($this->redirectChainCache[$cid]) && $this->redirectChainIsValid($keys, $this->redirectChainCache[$cid])) {
         $last_item = end($this->redirectChainCache[$cid]);
 
-        // Immediately set cache misses on the results.
+        // Immediately skip processing the CID for cache misses.
         if ($last_item === FALSE) {
-          $results[$index] = $last_item;
           continue;
         }
         // Prime the CID map with the last known redirect for the initial CID.
@@ -100,6 +99,7 @@ class VariationCache implements VariationCacheInterface {
     // Go over all CIDs and update the map according to found redirects. If the
     // map is empty, it means we've followed all CIDs to their final result or
     // lack thereof.
+    $results = [];
     while (!empty($cid_map)) {
       $new_cid_map = [];
 
