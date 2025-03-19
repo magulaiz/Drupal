@@ -106,7 +106,7 @@ class RecipeUnpacker implements UnpackerInterface {
   }
 
   /**
-   * Update the composer.json content with the package being unpacked.
+   * Updates the composer.json content with the package being unpacked.
    *
    * This method will add all the package dependencies to the root composer.json
    * content and also remove the package itself from the root composer.json.
@@ -152,7 +152,7 @@ class RecipeUnpacker implements UnpackerInterface {
   }
 
   /**
-   * Update the composer.lock content.
+   * Updates the composer.lock content.
    *
    * This method will remove the package itself from the composer.lock content
    * in the root composer.

@@ -8,15 +8,15 @@ namespace Drupal\Composer\Plugin\Unpack\Unpackers;
 interface UnpackerInterface {
 
   /**
-   * Unpack the package dependencies.
+   * Unpacks the package dependencies.
    */
   public function unpackDependencies(): void;
 
   /**
-   * Whether the unpacker should remove itself from the root composer.json.
+   * Determines if the unpacker should be removed from the root composer.json.
    *
    * @return bool
-   *   TRUE if the unpacker should remove itself from the root composer.json.
+   *   TRUE if the unpacker should be removed from the root composer.json.
    */
   public function removeSelf(): bool;
 

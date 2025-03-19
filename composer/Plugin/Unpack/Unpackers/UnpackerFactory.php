@@ -27,7 +27,7 @@ final class UnpackerFactory {
    *   The package to unpack.
    *
    * @return \Drupal\Composer\Plugin\Unpack\Unpackers\UnpackerInterface|null
-   *   The unpacker or NULL if the package is not unpackable.
+   *   The unpacker or NULL if the package cannot be unpacked.
    */
   public function create(PackageInterface $package): ?UnpackerInterface {
     return match ($package->getType()) {
@@ -50,9 +50,9 @@ final class UnpackerFactory {
    *   The package to unpack.
    *
    * @return bool
-   *   TRUE if the package is unpackable, FALSE otherwise.
+   *   TRUE if the package can be unpacked, FALSE otherwise.
    */
-  public function isUnpackable(PackageInterface $package): bool {
+  public function canBeUnpacked(PackageInterface $package): bool {
     return $this->create($package) !== NULL;
   }
 

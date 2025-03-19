@@ -3,10 +3,7 @@
 namespace Drupal\Composer\Plugin\Unpack;
 
 use Composer\Composer;
-use Composer\DependencyResolver\Operation\InstallOperation;
-use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\IO\IOInterface;
-use Composer\Installer\PackageEvent;
 use Composer\Package\PackageInterface;
 use Drupal\Composer\Plugin\Unpack\Unpackers\UnpackerFactory;
 use Drupal\Composer\Plugin\Unpack\Unpackers\UnpackerInterface;
@@ -54,15 +51,14 @@ final class UnpackManager {
   /**
    * Register a package for unpacking.
    *
-   * If the package is unpackable, it will be added into the package queue in
+   * If the package can be unpacked, it will be added into the package queue in
    * the UnpackCollection.
    *
-   * @param \Composer\Installer\PackageEvent $event
-   *   Composer package event sent on install/update/remove.
+   * @param \Composer\Package\PackageInterface $package
+   *   The package to register for unpacking.
    */
-  public function registerPackage(PackageEvent $event): void {
-    $package = self::getPackage($event);
-    if ($this->unpackerFactory->isUnpackable($package)) {
+  public function registerPackage(PackageInterface $package): void {
+    if ($this->unpackerFactory->canBeUnpacked($package)) {
       $this->unpackCollection->enqueuePackage($package);
     }
   }
@@ -99,23 +95,6 @@ final class UnpackManager {
    */
   public static function getUnpackOptions(PackageInterface $package, UnpackerInterface $unpacker): UnpackOptions {
     return UnpackOptions::create($package->getExtra());
-  }
-
-  /**
-   * Get the package from a package event.
-   *
-   * @param \Composer\Installer\PackageEvent $event
-   *   Composer package event sent on install/update/remove.
-   *
-   * @return \Composer\Package\PackageInterface
-   *   The package from the event.
-   */
-  private static function getPackage(PackageEvent $event): PackageInterface {
-    $operation = $event->getOperation();
-    return match (get_class($operation)) {
-      InstallOperation::class => $operation->getPackage(),
-      UpdateOperation::class => $operation->getTargetPackage(),
-    };
   }
 
 }

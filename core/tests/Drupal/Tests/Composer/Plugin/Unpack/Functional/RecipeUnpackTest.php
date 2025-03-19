@@ -110,7 +110,7 @@ class RecipeUnpackTest extends BuildTestBase {
   }
 
   /**
-   * The packages dependencies that should be unpacked.
+   * Gets the packages dependencies that should be unpacked.
    *
    * @return array<string, array<string>>
    *   The packages that need to be unpacked and their dependencies.
@@ -128,7 +128,7 @@ class RecipeUnpackTest extends BuildTestBase {
   }
 
   /**
-   * Get the contents of a file as an array.
+   * Gets the contents of a file as an array.
    *
    * @param string $path
    *   The path to the file.
@@ -144,7 +144,7 @@ class RecipeUnpackTest extends BuildTestBase {
   }
 
   /**
-   * Get the package type from the package name.
+   * Gets the package type from the package name.
    *
    * The package name should follow 'fixtures/[PACKAGE_TYPE]-[PACKAGE]' format.
    * For example, 'fixtures/recipe-a' will return 'drupal-recipe'.
@@ -165,7 +165,7 @@ class RecipeUnpackTest extends BuildTestBase {
   }
 
   /**
-   * Check if a package is in the composer.lock.
+   * Checks if a package is in the composer.lock.
    *
    * @param string $package_name
    *   The package name.

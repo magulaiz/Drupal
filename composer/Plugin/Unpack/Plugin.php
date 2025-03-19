@@ -72,7 +72,7 @@ final class Plugin implements PluginInterface, EventSubscriberInterface {
   }
 
   /**
-   * Get the package from a package event.
+   * Gets the package from a package event.
    *
    * @param \Composer\Installer\PackageEvent $event
    *   Composer package event sent on install/update/remove.

@@ -98,7 +98,7 @@ class UnpackRecipeTest extends TestCase {
   }
 
   /**
-   * Test that only supported packages are registered.
+   * Tests that only supported packages are registered.
    */
   public function testRegisterPackage(): void {
     $recipe_package = $this->createPackage('drupal-recipe', 'drupal/recipe-a');
@@ -113,21 +113,21 @@ class UnpackRecipeTest extends TestCase {
   }
 
   /**
-   * Test that only unpackable packages are handled.
+   * Tests that only packages that can be unpacked are handled.
    */
-  public function testPackageIsUnpackable(): void {
+  public function testPackageCanBeUnpacked(): void {
     $recipe_package = $this->createPackage('drupal-recipe', 'drupal/recipe-a');
-    $this->assertTrue($this->unpackerFactory->isUnpackable($recipe_package));
+    $this->assertTrue($this->unpackerFactory->canBeUnpacked($recipe_package));
     $unpacker = $this->unpackerFactory->create($recipe_package);
     $this->assertInstanceOf(UnpackerInterface::class, $unpacker);
 
     $non_recipe_package = $this->createPackage('drupal-module', 'drupal/module-a');
-    $this->assertFalse($this->unpackerFactory->isUnpackable($non_recipe_package));
+    $this->assertFalse($this->unpackerFactory->canBeUnpacked($non_recipe_package));
     $this->assertNull($this->unpackerFactory->create($non_recipe_package));
   }
 
   /**
-   * Test that required packages from a recipe are unpacked.
+   * Tests that required packages from a recipe are unpacked.
    */
   public function testUnpacksRequiredPackages(): void {
     // Simulate an already unpacked recipe.
@@ -188,7 +188,7 @@ class UnpackRecipeTest extends TestCase {
   }
 
   /**
-   * Create a package mock.
+   * Creates a package mock.
    *
    * @param string $type
    *   The package type.
@@ -211,7 +211,7 @@ class UnpackRecipeTest extends TestCase {
   }
 
   /**
-   * Create an install event mock.
+   * Creates an install event mock.
    *
    * @param \Composer\Package\PackageInterface $package
    *   The package mock.
@@ -230,7 +230,7 @@ class UnpackRecipeTest extends TestCase {
   }
 
   /**
-   * Get a protected property from a class instance.
+   * Gets a protected property from a class instance.
    *
    * @param object $object
    *   The class instance to return the property from.

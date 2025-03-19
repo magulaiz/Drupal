@@ -42,7 +42,7 @@ final class UnpackCollection implements \IteratorAggregate {
   }
 
   /**
-   * Add a package to the queue of packages to unpack.
+   * Adds a package to the queue of packages to unpack.
    *
    * @param \Composer\Package\PackageInterface $package
    *   The package to add to the queue.
@@ -54,7 +54,7 @@ final class UnpackCollection implements \IteratorAggregate {
   }
 
   /**
-   * Get the queue of packages to unpack.
+   * Gets the queue of packages to unpack.
    *
    * @return \Composer\Package\PackageInterface[]
    *   The queue of packages to unpack.
@@ -64,7 +64,7 @@ final class UnpackCollection implements \IteratorAggregate {
   }
 
   /**
-   * Add a package to the list of unpacked packages.
+   * Adds a package to the list of unpacked packages.
    *
    * @param \Composer\Package\PackageInterface $package
    *   The package that has been unpacked.
@@ -74,7 +74,7 @@ final class UnpackCollection implements \IteratorAggregate {
   }
 
   /**
-   * Get the list of unpacked packages.
+   * Gets the list of unpacked packages.
    *
    * @return array
    *   The list of unpacked packages.
@@ -84,7 +84,7 @@ final class UnpackCollection implements \IteratorAggregate {
   }
 
   /**
-   * Check if a package has been unpacked or it's queued for unpacking.
+   * Checks if a package has been unpacked or it's queued for unpacking.
    *
    * @param \Composer\Package\PackageInterface $package
    *   The package to check.
@@ -97,7 +97,7 @@ final class UnpackCollection implements \IteratorAggregate {
   }
 
   /**
-   * Add a dependency to the list of dependencies that have been unpacked.
+   * Adds a dependency to the list of dependencies that have been unpacked.
    *
    * @param \Composer\Package\Link $package_link
    *   The package link.
@@ -119,7 +119,7 @@ final class UnpackCollection implements \IteratorAggregate {
   }
 
   /**
-   * Pop a dependency from the list of dependencies that have been unpacked.
+   * Pops a dependency from the list of dependencies that have been unpacked.
    *
    * @return array
    *   The dependency in the queue.
@@ -129,7 +129,7 @@ final class UnpackCollection implements \IteratorAggregate {
   }
 
   /**
-   * Check if a dependency has been unpacked.
+   * Checks if a dependency has been unpacked.
    *
    * In this case, a dependency is defined as being unpacked if it has been
    * added to the list of dependencies that need to be unpacked into the main
@@ -146,7 +146,7 @@ final class UnpackCollection implements \IteratorAggregate {
   }
 
   /**
-   * Pop a package from the queue of packages to unpack.
+   * Pops a package from the queue of packages to unpack.
    *
    * @return \Composer\Package\PackageInterface|null
    *   The package in the queue.

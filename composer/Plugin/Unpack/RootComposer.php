@@ -44,7 +44,7 @@ final class RootComposer {
   ) {}
 
   /**
-   * Get the root composer.json content.
+   * Gets the root composer.json content.
    *
    * @return array<string, mixed>
    *   The root composer.json content.
@@ -66,7 +66,7 @@ final class RootComposer {
   }
 
   /**
-   * Get the locked root composer.json content.
+   * Gets the locked root composer.json content.
    *
    * @return array<string, mixed>
    *   The locked root composer.json content.
@@ -77,7 +77,7 @@ final class RootComposer {
   }
 
   /**
-   * Remove an element from the composer lock.
+   * Removes an element from the composer lock.
    *
    * @param string $key
    *   The key of the element to remove.
@@ -89,7 +89,7 @@ final class RootComposer {
   }
 
   /**
-   * Update the root composer.json and composer.lock files.
+   * Updates the root composer.json and composer.lock files.
    *
    * @throws \RuntimeException
    *   If the root composer could not be updated.
@@ -100,7 +100,7 @@ final class RootComposer {
   }
 
   /**
-   * Update the root composer.json file with the unpacked dependencies.
+   * Updates the root composer.json file with the unpacked dependencies.
    *
    * @throws \RuntimeException
    *   If the root composer could not be updated.
@@ -113,7 +113,7 @@ final class RootComposer {
   }
 
   /**
-   * Update the root composer.lock file.
+   * Updates the root composer.lock file.
    */
   public function updateComposerLockFile(): void {
     $composer_content = self::getRawComposerContent();
@@ -130,7 +130,7 @@ final class RootComposer {
   }
 
   /**
-   * Get the raw contents of the root composer.json file.
+   * Gets the raw contents of the root composer.json file.
    *
    * @return string
    *   The raw contents of the root composer.json file.

@@ -183,7 +183,7 @@ abstract class FixturesBase {
   }
 
   /**
-   * Create an isolated cache directory for Composer.
+   * Creates an isolated cache directory for Composer.
    */
   public function createIsolatedComposerCacheDir(): void {
     $cacheDir = $this->mkTmpDir('composer-cache');
