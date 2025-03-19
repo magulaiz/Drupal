@@ -126,7 +126,7 @@ final class FieldStorageAddController extends ControllerBase {
 
     $field_type_options_radios = [];
     foreach ($field_type_options as $id => $field_type) {
-      /** @var  \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
+      /** @var \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
       $category_info = $this->fieldTypeCategoryManager->createInstance($field_type['category'], $field_type);
       $entity_type = $this->entityTypeManager()->getDefinition($this->entityTypeId);
       $display_as_group = !($category_info instanceof FallbackFieldTypeCategory);
