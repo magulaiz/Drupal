@@ -15,6 +15,18 @@ class VariationCache implements VariationCacheInterface {
   /**
    * Stores redirect chain lookups until the next set, invalidate or delete.
    *
+   * Array keys are the cache IDs constructed from the cache keys and initial
+   * cacheability and values are arrays where each step of a redirect chain is
+   * recorded.
+   *
+   * These arrays are indexed by the cache IDs being followed during the chain
+   * and the CacheRedirect objects that construe the chain. At the end there
+   * should always be a value of FALSE for a cache miss, or a CacheRedirect for
+   * a cache hit because we cannot store the cache hit itself into a property
+   * that does not support invalidation based on cache metadata. By storing the
+   * last CacheRedirect that led to the hit, we can at least avoid having to
+   * retrieve the entire chain again to get to the actual cached data.
+   *
    * @var array
    */
   protected array $redirectChainCache = [];
@@ -52,21 +64,43 @@ class VariationCache implements VariationCacheInterface {
     // following of redirect chains by calling ::getMultiple() on the underlying
     // cache backend.
     //
+    // However, ::getRedirectChain() has an internal cache that we could both
+    // benefit from and contribute to whenever we call this function. So any use
+    // or manipulation of $this->redirectChainCache below is for optimization
+    // purposes. You can read up on how the internal cache is structured on the
+    // property documentation of $this->redirectChainCache.
+    //
     // Create a map of CIDs with their associated $items index and cache keys.
-    $cid_map = [];
+    $cid_map = $results = [];
     foreach ($items as $index => [$keys, $cacheability]) {
-      $cid = $this->createCacheIdFast($keys, $cacheability);
+      $cid = $initial_cid = $this->createCacheIdFast($keys, $cacheability);
+
+      // Immediately set cache misses on the results or fast-forward the CID map
+      // to look from the last known redirect onwards.
+      if (isset($this->redirectChainCache[$cid]) && $this->redirectChainIsValid($keys, $this->redirectChainCache[$cid])) {
+        $last_item = end($this->redirectChainCache[$cid]);
+
+        // Immediately set cache misses on the results.
+        if ($last_item === FALSE) {
+          $results[$index] = $last_item;
+          continue;
+        }
+        // Prime the CID map with the last known redirect for the initial CID.
+        if ($last_item->data instanceof CacheRedirect) {
+          $cid = $this->createCacheIdFast($keys, $last_item->data);
+        }
+      }
 
       $cid_map[$cid] = [
         'index' => $index,
         'keys' => $keys,
+        'initial' => $initial_cid,
       ];
     }
 
     // Go over all CIDs and update the map according to found redirects. If the
     // map is empty, it means we've followed all CIDs to their final result or
     // lack thereof.
-    $results = [];
     while (!empty($cid_map)) {
       $new_cid_map = [];
 
@@ -79,10 +113,18 @@ class VariationCache implements VariationCacheInterface {
         if ($result->data instanceof CacheRedirect) {
           $redirect_cid = $this->createCacheIdFast($info['keys'], $result->data);
           $new_cid_map[$redirect_cid] = $info;
+          $this->redirectChainCache[$info['initial']][$cid] = $result;
           continue;
         }
 
         $results[$info['index']] = $result;
+      }
+
+      // Any CID that did not get a cache hit is still in $fetch_cids. Add them
+      // to the internal redirect chain cache as a miss.
+      foreach ($fetch_cids as $fetch_cid) {
+        $info = $cid_map[$fetch_cid];
+        $this->redirectChainCache[$info['initial']][$fetch_cid] = FALSE;
       }
 
       $cid_map = $new_cid_map;
