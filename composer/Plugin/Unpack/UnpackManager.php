@@ -6,7 +6,6 @@ use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Drupal\Composer\Plugin\Unpack\Unpackers\UnpackerFactory;
-use Drupal\Composer\Plugin\Unpack\Unpackers\UnpackerInterface;
 
 /**
  * Core class to handle operations on dependencies.
@@ -34,17 +33,26 @@ final class UnpackManager {
    */
   private RootComposer $rootComposer;
 
+  /**
+   * The unpack options.
+   *
+   * @var \Drupal\Composer\Plugin\Unpack\unpackOptions
+   */
+  public readonly UnpackOptions $unpackOptions;
+
   public function __construct(
     Composer $composer,
     private readonly IOInterface $io,
   ) {
     $this->unpackCollection = new UnpackCollection();
     $this->rootComposer = new RootComposer($composer, $this->io);
+    $this->unpackOptions = UnpackManager::getUnpackOptions($composer->getPackage());
     $this->unpackerFactory = new UnpackerFactory(
       $composer,
       $this->io,
       $this->unpackCollection,
       $this->rootComposer,
+      $this->unpackOptions
     );
   }
 
@@ -87,13 +95,11 @@ final class UnpackManager {
    *
    * @param \Composer\Package\PackageInterface $package
    *   The package to unpack.
-   * @param \Drupal\Composer\Plugin\Unpack\UnpackerInterface $unpacker
-   *   The unpacker to use.
    *
-   * @return \Drupal\Composer\Plugin\Unpack\Unpackers\UnpackOptions
+   * @return \Drupal\Composer\Plugin\Unpack\UnpackOptions
    *   The unpack options.
    */
-  public static function getUnpackOptions(PackageInterface $package, UnpackerInterface $unpacker): UnpackOptions {
+  public static function getUnpackOptions(PackageInterface $package): UnpackOptions {
     return UnpackOptions::create($package->getExtra());
   }
 

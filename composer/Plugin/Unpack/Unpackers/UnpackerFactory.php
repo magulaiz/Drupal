@@ -7,6 +7,7 @@ use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Drupal\Composer\Plugin\Unpack\RootComposer;
 use Drupal\Composer\Plugin\Unpack\UnpackCollection;
+use Drupal\Composer\Plugin\Unpack\UnpackOptions;
 
 /**
  * Unpacker factory for dependency unpackers.
@@ -18,6 +19,7 @@ final class UnpackerFactory {
     private readonly IOInterface $io,
     private readonly UnpackCollection $unpackCollection,
     private readonly RootComposer $rootComposer,
+    private readonly UnpackOptions $unpackOptions,
   ) {}
 
   /**
@@ -31,7 +33,7 @@ final class UnpackerFactory {
    */
   public function create(PackageInterface $package): ?UnpackerInterface {
     return match ($package->getType()) {
-      RecipeUnpacker::PROJECT_TYPE => new RecipeUnpacker($package, $this->composer, $this->io, $this->rootComposer, $this->unpackCollection),
+      RecipeUnpacker::PROJECT_TYPE => new RecipeUnpacker($package, $this->composer, $this->io, $this->rootComposer, $this->unpackCollection, $this->unpackOptions),
       default => NULL,
     };
   }

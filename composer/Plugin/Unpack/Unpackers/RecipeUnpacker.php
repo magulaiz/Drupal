@@ -8,7 +8,6 @@ use Composer\Package\Link;
 use Composer\Package\PackageInterface;
 use Drupal\Composer\Plugin\Unpack\RootComposer;
 use Drupal\Composer\Plugin\Unpack\UnpackCollection;
-use Drupal\Composer\Plugin\Unpack\UnpackManager;
 use Drupal\Composer\Plugin\Unpack\UnpackOptions;
 
 /**
@@ -26,13 +25,6 @@ class RecipeUnpacker implements UnpackerInterface {
   public const PROJECT_TYPE = 'drupal-recipe';
 
   /**
-   * The unpack options for this unpacker.
-   *
-   * @var \Drupal\Composer\Plugin\Unpack\UnpackOptions
-   */
-  protected readonly UnpackOptions $unpackOptions;
-
-  /**
    * UnpackerBase constructor.
    */
   public function __construct(
@@ -41,8 +33,8 @@ class RecipeUnpacker implements UnpackerInterface {
     protected readonly IOInterface $io,
     protected readonly RootComposer $rootComposer,
     protected readonly UnpackCollection $unpackCollection,
+    protected readonly UnpackOptions $unpackOptions,
   ) {
-    $this->unpackOptions = UnpackManager::getUnpackOptions($this->composer->getPackage(), $this);
   }
 
   /**

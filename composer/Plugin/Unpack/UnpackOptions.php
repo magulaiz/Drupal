@@ -13,6 +13,7 @@ namespace Drupal\Composer\Plugin\Unpack;
  *    "drupal-unpack": {
  *      "remove-self": true,
  *      "ignore": ["drupal/core"]
+ *      "on-install-and-update": true
  *    }
  *  }
  * @endcode
@@ -45,6 +46,7 @@ final class UnpackOptions {
     $this->options = $options + [
       'remove-self' => TRUE,
       'ignore' => [],
+      'on-install-and-update' => TRUE,
     ];
   }
 
@@ -58,7 +60,7 @@ final class UnpackOptions {
    *   True if the package should be ignored.
    */
   public function ignorePackage(string $name): bool {
-    return in_array($name, $this->options['ignore']);
+    return in_array($name, $this->options['ignore'], TRUE);
   }
 
   /**

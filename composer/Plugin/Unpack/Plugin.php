@@ -10,20 +10,30 @@ use Composer\IO\IOInterface;
 use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\Package\PackageInterface;
+use Composer\Plugin\Capability\CommandProvider;
+use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\ScriptEvents;
+use Drupal\Composer\Plugin\Unpack\CommandProvider as UnpackCommandProvider;
 
 /**
  * Composer plugin for handling dependency unpacking.
  *
  * @internal
  */
-final class Plugin implements PluginInterface, EventSubscriberInterface {
+final class Plugin implements PluginInterface, EventSubscriberInterface, Capable {
 
   /**
    * The handler for dependency unpacking.
    */
   private UnpackManager $manager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCapabilities() {
+    return [CommandProvider::class => UnpackCommandProvider::class];
+  }
 
   /**
    * {@inheritdoc}
@@ -61,14 +71,19 @@ final class Plugin implements PluginInterface, EventSubscriberInterface {
    *   Composer package event sent on install/update/remove.
    */
   public function postPackage(PackageEvent $event): void {
-    $this->manager->registerPackage($this->getPackage($event));
+    xdebug_break();
+    if ($this->manager->unpackOptions->options['on-install-and-update']) {
+      $this->manager->registerPackage($this->getPackage($event));
+    }
   }
 
   /**
    * Post autoload event callback.
    */
   public function postCmd(): void {
-    $this->manager->unpack();
+    if ($this->manager->unpackOptions->options['on-install-and-update']) {
+      $this->manager->unpack();
+    }
   }
 
   /**
