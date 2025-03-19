@@ -19,11 +19,11 @@ use Drupal\Composer\Plugin\Unpack\UnpackOptions;
 class RecipeUnpacker implements UnpackerInterface {
 
   /**
-   * The ID of the unpacker which it's the same as the composer project type.
+   * The composer project type the unpacker works on.
    *
    * @see \Drupal\Core\Recipe\Recipe::COMPOSER_PROJECT_TYPE
    */
-  public const ID = 'drupal-recipe';
+  public const PROJECT_TYPE = 'drupal-recipe';
 
   /**
    * The unpack options for this unpacker.
@@ -48,64 +48,51 @@ class RecipeUnpacker implements UnpackerInterface {
   /**
    * {@inheritdoc}
    */
-  public function id(): string {
-    return self::ID;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function unpackDependencies(): void {
-    $this->addPackageDependencies($this->package->getRequires());
+    $this->processPackageDependencies($this->package->getRequires());
     $this->updateRootDependencies();
     $this->unpackCollection->addUnpackedPackage($this->package);
   }
 
   /**
-   * The dependencies of the package that is being unpacked.
+   * Processes dependencies of the package that is being unpacked.
    *
    * If the dependency is the same as the current package, we skip it. If the
-   * dependency is of the same type as the current package being unpacked, we
-   * add it into the package queue so that it will be unpacked as well (this
-   * depends on the UnpackerInterface::unpackRecursively() method). If the
-   * dependency is not any of the above, we add it into the dependency array.
+   * dependency a recipe, we add it into the package queue so that it will be
+   * unpacked as well (this depends on the
+   * UnpackerInterface::unpackRecursively() method). If the dependency is not
+   * any of the above, we add it into the dependency array.
    *
-   * @param array<string, \Composer\Package\Link> $package_dependencies
+   * @param array<string, \Composer\Package\Link> $package_dependency_links
    *   The package dependencies.
    */
-  public function addPackageDependencies(array $package_dependencies): void {
-    foreach ($package_dependencies as $package_dependency) {
-      if ($package_dependency->getTarget() === $this->package->getName()) {
+  public function processPackageDependencies(array $package_dependency_links): void {
+    foreach ($package_dependency_links as $link) {
+      if ($link->getTarget() === $this->package->getName()) {
         // This dependency is the same as the current package, so let's skip it.
         continue;
       }
 
-      if ($this->unpackOptions->ignorePackage($package_dependency->getTarget())) {
+      if ($this->unpackOptions->ignorePackage($link->getTarget())) {
         // This dependency should not be unpacked.
         continue;
       }
 
-      $dependency_package = $this->getDependencyPackage($package_dependency);
+      $package = $this->getPackageFromLinkTarget($link);
 
-      if ($dependency_package && $this->unpackCollection->isUnpacked($dependency_package, $this->id())) {
-        // This dependency is already unpacked or enqueued to be unpacked.
+      if ($package && $this->unpackCollection->isUnpacked($package)) {
+        // This dependency is already unpacked.
         continue;
       }
 
-      if (
-        $dependency_package &&
-        $dependency_package->getType() === $this->package->getType()
-      ) {
+      if ($package?->getType() === static::PROJECT_TYPE) {
         // This dependency is of the same type as the current package being
         // unpacked. This  means that this dependency should be unpacked as
         // well, so let's add it into the package queue.
-        $this->unpackCollection->enqueuePackage($dependency_package);
+        $this->unpackCollection->enqueuePackage($package);
       }
       else {
-        $this->unpackCollection->addPackageDependencies(
-          $package_dependency->getTarget(),
-          $package_dependency->getPrettyConstraint(),
-        );
+        $this->unpackCollection->addPackageDependency($link);
       }
     }
   }
@@ -193,7 +180,7 @@ class RecipeUnpacker implements UnpackerInterface {
   }
 
   /**
-   * Get the package object from a link dependency.
+   * Gets the package object from a link's target.
    *
    * @param \Composer\Package\Link $dependency
    *   The link dependency.
@@ -201,7 +188,7 @@ class RecipeUnpacker implements UnpackerInterface {
    * @return \Composer\Package\PackageInterface|null
    *   The package object.
    */
-  protected function getDependencyPackage(Link $dependency): ?PackageInterface {
+  protected function getPackageFromLinkTarget(Link $dependency): ?PackageInterface {
     return $this->composer->getRepositoryManager()
       ->getLocalRepository()
       ->findPackage($dependency->getTarget(), $dependency->getConstraint());

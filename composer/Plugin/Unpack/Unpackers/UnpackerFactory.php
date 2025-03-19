@@ -30,12 +30,10 @@ final class UnpackerFactory {
    *   The unpacker or NULL if the package is not unpackable.
    */
   public function create(PackageInterface $package): ?UnpackerInterface {
-    $unpacker = match ($package->getType()) {
-      RecipeUnpacker::ID => new RecipeUnpacker($package, $this->composer, $this->io, $this->rootComposer, $this->unpackCollection),
+    return match ($package->getType()) {
+      RecipeUnpacker::PROJECT_TYPE => new RecipeUnpacker($package, $this->composer, $this->io, $this->rootComposer, $this->unpackCollection),
       default => NULL,
     };
-
-    return $unpacker;
   }
 
   /**

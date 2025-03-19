@@ -149,9 +149,9 @@ class UnpackRecipeTest extends TestCase {
     // Mock the unpacker.
     $unpacker = $this->getMockBuilder(RecipeUnpacker::class)
       ->setConstructorArgs([$recipe_to_unpack, $this->composer, $this->io, $this->rootComposer, $this->unpackCollection])
-      ->onlyMethods(['getDependencyPackage', 'updateRootDependencies'])
+      ->onlyMethods(['getPackageFromLinkTarget', 'updateRootDependencies'])
       ->getMock();
-    $unpacker->method('getDependencyPackage')
+    $unpacker->method('getPackageFromLinkTarget')
       ->willReturnMap([
         [$recipe_dependencies['module'], $this->createPackage('drupal-module', 'drupal/module-a')],
         [$recipe_dependencies['theme'], $this->createPackage('drupal-theme', 'drupal/theme-a')],

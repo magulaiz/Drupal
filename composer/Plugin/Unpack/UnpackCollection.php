@@ -2,6 +2,7 @@
 
 namespace Drupal\Composer\Plugin\Unpack;
 
+use Composer\Package\Link;
 use Composer\Package\PackageInterface;
 
 /**
@@ -98,20 +99,20 @@ final class UnpackCollection implements \IteratorAggregate {
   /**
    * Add a dependency to the list of dependencies that have been unpacked.
    *
-   * @param string $name
-   *   The name of the dependency.
-   * @param string $version
-   *   The version of the dependency.
+   * @param \Composer\Package\Link $package_link
+   *   The package link.
    */
-  public function addPackageDependencies(string $name, string $version): void {
-    if ($this->dependencyExists($name)) {
-      if (version_compare($this->allPackageDependencies[$name], $version, '<')) {
-        $this->allPackageDependencies[$name] = $version;
+  public function addPackageDependency(Link $package_link): void {
+    $target = $package_link->getTarget();
+    $version = $package_link->getPrettyConstraint();
+    if ($this->dependencyExists($target)) {
+      if (version_compare($this->allPackageDependencies[$target], $version, '<')) {
+        $this->allPackageDependencies[$target] = $version;
       }
     }
     else {
-      $this->allPackageDependencies[$name] = [
-        'name' => $name,
+      $this->allPackageDependencies[$target] = [
+        'name' => $target,
         'version' => $version,
       ];
     }
