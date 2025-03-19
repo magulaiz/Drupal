@@ -241,7 +241,7 @@ variables:
   when: manual
   allow_failure: true
   variables:
-    REPEAT_TEST_CLASS: '\Drupal\Tests\ckeditor5\FunctionalJavascript\ImageTestProviderTest'
+    REPEAT_TEST_CLASS: '\Drupal\Tests\ckeditor5\FunctionalJavascript\ImageUrlProviderTest'
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
