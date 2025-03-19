@@ -634,7 +634,7 @@
   bottom: 0;
   display: block;
   overflow: hidden;
-  max-width: 100%;
+  max-width: calc(100% - 10px);
   max-height: calc(100% - 50px);
   padding: 5px;
   background: white;
