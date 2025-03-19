@@ -134,9 +134,7 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
    *   The parent entity.
    */
   public function handleEntityDelete(EntityInterface $entity) {
-    if ($this->isLayoutCompatibleEntity($entity)) {
-      $this->usage->removeByLayoutEntity($entity);
-    }
+    $this->usage->removeByLayoutEntity($entity);
   }
 
   /**
