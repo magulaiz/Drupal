@@ -70,6 +70,12 @@ class RecipeUnpackTest extends BuildTestBase {
     $this->mustExec('composer install --no-ansi', $root_project_path);
     $this->assertFileExists("$root_project_path/composer.lock");
 
+    // Install a module in require-dev that should be moved to require.
+    $this->mustExec('composer require --dev --no-ansi --no-interaction fixtures/module-a', $root_project_path);
+    // Ensure we have added a the dependency to require-dev
+    $root_composer_json = $this->getFileContents($root_project_path . '/composer.json');
+    $this->assertArrayHasKey('fixtures/module-a', $root_composer_json['require-dev']);
+
     // Install a recipe and unpack it.
     $stdout = $this->mustExec('composer require --no-ansi --no-interaction fixtures/recipe-a', $root_project_path);
     $root_composer_json = $this->getFileContents($root_project_path . '/composer.json');
@@ -89,13 +95,15 @@ class RecipeUnpackTest extends BuildTestBase {
 
       // After being unpacked, the package should be removed from the root
       // composer.json and composer.lock.
-      $this->assertNotTrue(isset($root_composer_json['require'][$package]));
+      $this->assertArrayNotHasKey($package, $root_composer_json['require']);
       $this->assertNotTrue($this->isPackageInComposerLock($package, 'require', $root_composer_lock));
 
       foreach ($dependencies as $dependency) {
         // The package dependencies should be in the root composer.json.
-        $this->assertTrue(isset($root_composer_json['require'][$dependency]));
+        $this->assertArrayHasKey($dependency, $root_composer_json['require']);
       }
+      // The dev dependency has moved.
+      $this->assertEmpty($root_composer_json['require-dev']);
     }
   }
 

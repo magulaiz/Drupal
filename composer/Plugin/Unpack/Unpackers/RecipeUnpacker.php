@@ -127,8 +127,9 @@ class RecipeUnpacker implements UnpackerInterface {
       }
 
       if (isset($composer_json['require-dev'][$dependency_name])) {
-        // This dependency is already in the required-dev section.
-        continue;
+        // This dependency is already in the required-dev section. We should
+        // remove it.
+        $composer_manipulator->removeSubNode('require-dev', $dependency_name);
       }
 
       // Add the dependency to the required section. If it cannot be added, then
