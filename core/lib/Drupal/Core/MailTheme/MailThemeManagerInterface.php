@@ -14,12 +14,14 @@ namespace Drupal\Core\MailTheme;
  *
  * Use the following pattern when preparing or sending mails:
  *
+ * @code
  * $result = $this->mailThemeManager->executeInMailTheme(new MailTemplateId($module, $key), function () {
  *   return $this->renderer->executeInRenderContext(new RenderContext(), function () {
  *     // Do stuff (e.g. replace tokens, render an entity, ...)
  *     return $result;
  *   });
  * });
+ * @endcode
  */
 interface MailThemeManagerInterface {
 
