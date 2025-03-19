@@ -93,9 +93,9 @@ class UserSessionTest extends UnitTestCase {
     $user = new UserSession([
       'name' => 'test',
     ]);
-    $this->expectDeprecation('Getting the name property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3295826');
+    $this->expectDeprecation('Getting the name property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3513856');
     self::assertEquals($user->name, $user->getAccountName());
-    $this->expectDeprecation('Checking for the name property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3295826');
+    $this->expectDeprecation('Checking for the name property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3513856');
     $this->assertTrue(isset($user->name));
   }
 
