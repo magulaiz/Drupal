@@ -62,36 +62,34 @@ final class FieldStorageAddController extends ControllerBase {
   /**
    * Deletes stored field data and builds the field selection links.
    *
-   * @param string|null $entity_type_id
+   * @param string $entity_type_id
    *   The name of the entity type.
-   * @param string|null $bundle
+   * @param string $bundle
    *   The entity bundle.
-   * @param string|null $field_name
+   * @param string $field_name
    *   The field name.
    *
    * @return array
    *   The field selection links.
    */
-  public function resetField(?string $entity_type_id = NULL, ?string $bundle = NULL, ?string $field_name = NULL) {
-    if (!empty($field_name)) {
-      // Delete stored field data in case user changes field type.
-      $this->tempStore->delete("$entity_type_id:$field_name");
-    }
+  public function resetField(string $entity_type_id, string $bundle, string $field_name) {
+    // Delete stored field data in case user changes field type.
+    $this->tempStore->delete("$entity_type_id:$field_name");
     return $this->getFieldSelectionLinks($entity_type_id, $bundle);
   }
 
   /**
    * Builds the field selection links.
    *
-   * @param string|null $entity_type_id
+   * @param string $entity_type_id
    *   The name of the entity type.
-   * @param string|null $bundle
+   * @param string $bundle
    *   The entity bundle.
    *
    * @return array
    *   The field selection links.
    */
-  public function getFieldSelectionLinks(?string $entity_type_id = NULL, ?string $bundle = NULL) {
+  public function getFieldSelectionLinks(string $entity_type_id, string $bundle) {
     $build = [];
     $this->entityTypeId = $entity_type_id;
     $this->bundle = $bundle;
