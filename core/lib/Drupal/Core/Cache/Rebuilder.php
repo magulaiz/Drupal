@@ -66,16 +66,16 @@ class Rebuilder {
    * maintenance theme if it was initialized before.
    *
    * @todo Try to clear page/JS/CSS caches last, so cached pages can still be
-   *   served during this possibly long-running operation. (Conflict on bootstrap
-   *   cache though.)
+   *   served during this possibly long-running operation. (Conflict on
+   *   bootstrap cache though.)
    * @todo Add a global lock to ensure that caches are not primed in concurrent
    *   requests.
    *
    * @param \Drupal\Core\DrupalKernel|array $kernel
-   *   (optional) The Drupal Kernel. It is the caller's responsibility to rebuild
-   *   the container if this is passed in. Sometimes drupal_flush_all_caches is
-   *   used as a batch operation so $kernel will be an array, in this instance it
-   *   will be treated as if it it NULL.
+   *   (optional) The Drupal Kernel. It is the caller's responsibility to
+   *   rebuild the container if this is passed in. Sometimes
+   *   Rebuilder::rebuildAll() is used as a batch operation so $kernel will be
+   *   an array, in this instance it will be treated as if it is NULL.
    *
    * @see \Drupal\Core\Cache\CacheHelper::getBins()
    * @see hook_cache_flush()
@@ -95,7 +95,7 @@ class Rebuilder {
     // Flush asset file caches.
     \Drupal::service('asset.css.collection_optimizer')->deleteAll();
     \Drupal::service('asset.js.collection_optimizer')->deleteAll();
-    \Drupal::service('cache.query_string')->reset();
+    \Drupal::service('asset.query_string')->reset();
 
     // Reset all static caches.
     drupal_static_reset();
@@ -103,7 +103,9 @@ class Rebuilder {
     // Wipe the Twig PHP Storage cache.
     \Drupal::service('twig')->invalidate();
 
-    // Rebuild theme data that is stored in state.
+    // Rebuild profile, profile, theme_engine and theme data.
+    \Drupal::service('extension.list.profile')->reset();
+    \Drupal::service('extension.list.theme_engine')->reset();
     \Drupal::service('theme_handler')->refreshInfo();
     // In case the active theme gets requested later in the same request we need
     // to reset the theme manager.
@@ -118,6 +120,9 @@ class Rebuilder {
     // Rebuild module data that is stored in state.
     \Drupal::service('extension.list.module')->reset();
 
+    // Reload modules.
+    \Drupal::moduleHandler()->reload();
+
     // Rebuild all information based on new module data.
     \Drupal::moduleHandler()->invokeAll('rebuild');
 
@@ -125,8 +130,8 @@ class Rebuilder {
     \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
 
     // Rebuild the menu router based on all rebuilt data.
-    // Important: This rebuild must happen last, so the menu router is guaranteed
-    // to be based on up to date information.
+    // Important: This rebuild must happen last, so the menu router is
+    // guaranteed to be based on up to date information.
     \Drupal::service('router.builder')->rebuild();
 
     // Re-initialize the maintenance theme, if the current request attempted to

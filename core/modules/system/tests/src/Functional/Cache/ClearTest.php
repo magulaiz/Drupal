@@ -12,7 +12,6 @@ use Drupal\Core\Cache\Rebuilder;
  *
  * @group Cache
  */
-
 class ClearTest extends CacheTestBase {
 
   /**

@@ -411,14 +411,14 @@ function show(&$element) {
  * @todo Add a global lock to ensure that caches are not primed in concurrent
  *   requests.
  *
- * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
  * \Drupal\Core\Cache\Rebuilder::rebuildAll() instead.
  *
  *  @see https://www.drupal.org/node/3014783
  *  @see \Drupal\Core\Cache\Rebuilder::rebuildAll()
  */
 function drupal_flush_all_caches($kernel = NULL) {
-  @trigger_error('drupal_flush_all_caches() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\Rebuilder::rebuildAll() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
+  @trigger_error('drupal_flush_all_caches() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Cache\Rebuilder::rebuildAll() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
   Rebuilder::rebuildAll($kernel);
 }
 

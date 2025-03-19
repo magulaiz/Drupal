@@ -28,8 +28,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
   protected static $modules = ['system'];
 
   /**
-   * Tests that Drupal\Core\Cache\Rebuilder::rebuildAll() uses core.extension
-   * properly.
+   * Tests that Drupal\Core\Cache\Rebuilder uses core.extension properly.
    */
   public function testDrupalFlushAllCachesModuleList(): void {
     $this->assertFalse(function_exists('system_test_help'));
