@@ -33,7 +33,11 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
 
     $this->drupalCreateContentType(['type' => 'article']);
     \Drupal::service('router.builder')->rebuildIfNeeded();
-    $node = $this->drupalCreateNode(['type' => 'article', 'title' => 'Example article', 'uuid' => '677f9911-f002-4639-9891-5c39e8b00d9d']);
+    $node = $this->drupalCreateNode([
+      'type' => 'article',
+      'title' => 'Example article',
+      'uuid' => '677f9911-f002-4639-9891-5c39e8b00d9d',
+    ]);
 
     $user = $this->drupalCreateUser();
     $user->addRole('administrator');
@@ -110,7 +114,17 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 3,
       'CacheTagGroupedLookups' => [
-        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'local_task', 'library_info'],
+        [
+          'route_match',
+          'access_policies',
+          'routes',
+          'router',
+          'entity_types',
+          'entity_field_info',
+          'entity_bundles',
+          'local_task',
+          'library_info',
+        ],
         ['jsonapi_resource_types'],
         ['config:filter.format.plain_text', 'http_response', 'node:1'],
       ],
@@ -148,7 +162,17 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 3,
       'CacheTagGroupedLookups' => [
-        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'local_task', 'library_info'],
+        [
+          'route_match',
+          'access_policies',
+          'routes',
+          'router',
+          'entity_types',
+          'entity_field_info',
+          'entity_bundles',
+          'local_task',
+          'library_info',
+        ],
         ['jsonapi_resource_types'],
         ['config:filter.format.plain_text', 'http_response', 'node:1'],
       ],
@@ -201,7 +225,17 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 3,
       'CacheTagGroupedLookups' => [
-        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'local_task', 'library_info'],
+        [
+          'route_match',
+          'access_policies',
+          'routes',
+          'router',
+          'entity_types',
+          'entity_field_info',
+          'entity_bundles',
+          'local_task',
+          'library_info',
+        ],
         ['jsonapi_resource_types'],
         ['config:filter.format.plain_text', 'http_response', 'node:1'],
       ],
