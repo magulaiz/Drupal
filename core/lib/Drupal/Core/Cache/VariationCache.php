@@ -455,6 +455,8 @@ class VariationCache implements VariationCacheInterface {
    * Reset statically cached variables.
    *
    * This is only used by tests.
+   *
+   * @internal
    */
   public function reset(): void {
     $this->redirectChainCache = [];
