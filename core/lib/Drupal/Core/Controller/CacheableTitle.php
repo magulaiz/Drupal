@@ -3,9 +3,10 @@
 namespace Drupal\Core\Controller;
 
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Allows attaching a cacheability metadata to a title.
+ * Allows attaching cacheability metadata to a title.
  */
 class CacheableTitle extends BubbleableMetadata {
 
@@ -14,14 +15,14 @@ class CacheableTitle extends BubbleableMetadata {
    *
    * @var \Drupal\Core\StringTranslation\TranslatableMarkup|string|null
    */
-  protected $title;
+  protected TranslatableMarkup|string|null $title;
 
   /**
    * Gets the title.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string|null
    */
-  public function getTitle() {
+  public function getTitle(): TranslatableMarkup|string|null {
     return $this->title;
   }
 
@@ -31,7 +32,7 @@ class CacheableTitle extends BubbleableMetadata {
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|string|null $title
    *   The title.
    */
-  public function setTitle($title) {
+  public function setTitle(TranslatableMarkup|string $title): void {
     $this->title = $title;
   }
 

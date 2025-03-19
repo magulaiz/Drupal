@@ -19,7 +19,7 @@ interface CacheableTitleResolverInterface extends TitleResolverInterface {
    * @code
    * ['#markup' => 'title', '#allowed_tags' => ['em']]
    * @endcode
-   * If the method returns a string and it is not marked safe then it will be
+   * If the method returns a string and it is not marked safe, then it will be
    * auto-escaped.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -30,6 +30,6 @@ interface CacheableTitleResolverInterface extends TitleResolverInterface {
    * @return \Drupal\Core\Controller\CacheableTitle
    *   The cacheable title for the route.
    */
-  public function getCacheableTitle(Request $request, Route $route);
+  public function getCacheableTitle(Request $request, Route $route): CacheableTitle;
 
 }

@@ -55,10 +55,11 @@ class TitleResolver implements TitleResolverInterface, CacheableTitleResolverInt
   /**
    * {@inheritdoc}
    */
-  public function getCacheableTitle(Request $request, Route $route) {
+  public function getCacheableTitle(Request $request, Route $route): CacheableTitle {
     $cacheable_title = new CacheableTitle();
     $title = $this->doGetTitle($request, $route, $cacheable_title);
     $cacheable_title->setTitle($title);
+
     return $cacheable_title;
   }
 
