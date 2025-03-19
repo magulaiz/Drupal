@@ -20,7 +20,7 @@ class VariationCache implements VariationCacheInterface {
    * recorded.
    *
    * These arrays are indexed by the cache IDs being followed during the chain
-   * and the CacheRedirect objects that construe the chain. At the end there
+   * and the CacheRedirect objects that construct the chain. At the end there
    * should always be a value of FALSE for a cache miss, or a CacheRedirect for
    * a cache hit because we cannot store the cache hit itself into a property
    * that does not support invalidation based on cache metadata. By storing the
