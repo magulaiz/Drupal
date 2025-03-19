@@ -82,6 +82,7 @@ abstract class Schema implements PlaceholderInterface {
    *   A keyed array with information about the schema, table name and prefix.
    */
   protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/7654132", E_USER_DEPRECATED);
     $info = [
       'schema' => $this->defaultSchema,
       'prefix' => isset($this->connection->identifiers) ? $this->connection->identifiers->tablePrefix : '',
@@ -111,6 +112,7 @@ abstract class Schema implements PlaceholderInterface {
    * This prevents using {} around non-table names like indexes and keys.
    */
   public function prefixNonTable($table) {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use IdentifierHandler methods instead. See https://www.drupal.org/node/7654132", E_USER_DEPRECATED);
     $args = func_get_args();
     $info = $this->getPrefixInfo($table);
     $args[0] = $info['table'];
