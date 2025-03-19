@@ -19,7 +19,7 @@ class ContactFormAlterHooks {
   public function __construct(
     protected AccountInterface $currentUser,
     protected UserDataInterface $userData,
-    protected configFactoryInterface $config,
+    protected configFactoryInterface $configFactory,
   ) {}
 
   /**
@@ -44,7 +44,7 @@ class ContactFormAlterHooks {
     $form['contact']['contact'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Personal contact form'),
-      '#default_value' => $account_data ?? \Drupal::config('contact.settings')->get('user_default_enabled'),
+      '#default_value' => $account_data ?? $this->configFactory->getEditable('contact.settings')->get('user_default_enabled'),
       '#description' => $this->t('Allow other users to contact you via a personal contact form which keeps your email address hidden. Note that some privileged users such as site administrators are still able to contact you even if you choose to disable this feature.'),
     ];
     $form['actions']['submit']['#submit'][] = 'contact_user_profile_form_submit';
@@ -67,7 +67,7 @@ class ContactFormAlterHooks {
       '#type' => 'checkbox',
       '#title' => $this->t('Enable the personal contact form by default for new users'),
       '#description' => $this->t('Changing this setting will not affect existing users.'),
-      '#default_value' => $this->config->getEditable('contact.settings')->get('user_default_enabled'),
+      '#default_value' => $this->configFactory->getEditable('contact.settings')->get('user_default_enabled'),
     ];
     // Add submit handler to save contact configuration.
     $form['#submit'][] = 'contact_form_user_admin_settings_submit';
