@@ -1476,7 +1476,7 @@ class RequirementHooks {
       $advisories = $fetcher->getSecurityAdvisories(TRUE, 5);
     }
     catch (ClientExceptionInterface $exception) {
-      $requirements['system_advisories']['title'] = t('Critical security announcements');
+      $requirements['system_advisories']['title'] = $this->t('Critical security announcements');
       $requirements['system_advisories']['severity'] = REQUIREMENT_WARNING;
       $requirements['system_advisories']['description'] = ['#theme' => 'system_security_advisories_fetch_error_message'];
       Error::logException(\Drupal::logger('system'), $exception, 'Failed to retrieve security advisory data.');
@@ -1492,7 +1492,7 @@ class RequirementHooks {
         }
         $advisory_links[] = new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
       }
-      $requirements['system_advisories']['title'] = t('Critical security announcements');
+      $requirements['system_advisories']['title'] = $this->t('Critical security announcements');
       $requirements['system_advisories']['severity'] = $severity;
       $requirements['system_advisories']['description'] = [
         'list' => [
@@ -1502,7 +1502,7 @@ class RequirementHooks {
       ];
       if (\Drupal::moduleHandler()->moduleExists('help')) {
         $requirements['system_advisories']['description']['help_link'] = Link::createFromRoute(
-          'What are critical security announcements?',
+          $this->t('What are critical security announcements?'),
           'help.page', ['name' => 'system'],
           ['fragment' => 'security-advisories']
         )->toRenderable();
