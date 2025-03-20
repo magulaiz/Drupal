@@ -14,6 +14,9 @@ use Drupal\Composer\Plugin\Scaffold\Interpolator;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
+/**
+ * Base class for fixtures to test composer plugins.
+ */
 abstract class FixturesBase {
 
   /**
@@ -52,7 +55,7 @@ abstract class FixturesBase {
    *   Fixtures::getOutput().
    */
   public function io(): IOInterface {
-    if (!$this->io) {
+    if (!isset($this->io)) {
       $this->io = new BufferIO();
     }
     return $this->io;
@@ -65,7 +68,7 @@ abstract class FixturesBase {
    *   The main Composer object, needed by the scaffold Handler, etc.
    */
   public function getComposer(): Composer {
-    if (!$this->composer) {
+    if (!isset($this->composer)) {
       $this->composer = Factory::create($this->io(), NULL, TRUE);
     }
     return $this->composer;

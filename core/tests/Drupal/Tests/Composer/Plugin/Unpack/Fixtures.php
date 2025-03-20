@@ -6,6 +6,9 @@ namespace Drupal\Tests\Composer\Plugin\Unpack;
 
 use Drupal\Tests\Composer\Plugin\FixturesBase;
 
+/**
+ * Fixture for testing the unpack composer plugin.
+ */
 class Fixtures extends FixturesBase {
 
   /**
