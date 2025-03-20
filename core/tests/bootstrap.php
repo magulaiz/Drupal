@@ -9,6 +9,7 @@
 
 declare(strict_types=1);
 
+use Composer\Autoload\ClassLoader;
 use Drupal\TestTools\ErrorHandler\BootstrapErrorHandler;
 use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
 use PHPUnit\Runner\ErrorHandler as PhpUnitErrorHandler;
@@ -114,7 +115,7 @@ if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
  * PHPUnit global state change watcher. The class loader can be retrieved from
  * composer at any time by requiring autoload.php.
  */
-function drupal_phpunit_populate_class_loader() {
+function drupal_phpunit_populate_class_loader(): ClassLoader {
 
   /** @var \Composer\Autoload\ClassLoader $loader */
   $loader = require __DIR__ . '/../../autoload.php';
