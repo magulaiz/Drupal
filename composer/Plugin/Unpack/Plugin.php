@@ -71,7 +71,6 @@ final class Plugin implements PluginInterface, EventSubscriberInterface, Capable
    *   Composer package event sent on install/update/remove.
    */
   public function postPackage(PackageEvent $event): void {
-    xdebug_break();
     if ($this->manager->unpackOptions->options['on-install-and-update']) {
       $this->manager->registerPackage($this->getPackage($event));
     }

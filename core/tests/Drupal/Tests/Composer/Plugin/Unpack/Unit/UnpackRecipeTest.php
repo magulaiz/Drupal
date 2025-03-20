@@ -18,6 +18,7 @@ use Drupal\Composer\Plugin\Unpack\Unpackers\RecipeUnpacker;
 use Drupal\Composer\Plugin\Unpack\Unpackers\UnpackerFactory;
 use Drupal\Composer\Plugin\Unpack\Unpackers\UnpackerInterface;
 use Drupal\Composer\Plugin\Unpack\UnpackManager;
+use Drupal\Composer\Plugin\Unpack\UnpackOptions;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -60,6 +61,13 @@ class UnpackRecipeTest extends TestCase {
   protected RootComposer $rootComposer;
 
   /**
+   * The unpack options.
+   *
+   * @var \Drupal\Composer\Plugin\Unpack\UnpackOptions
+   */
+  protected UnpackOptions $unpackOptions;
+
+  /**
    * The composer.
    *
    * @var \Composer\Composer
@@ -95,6 +103,7 @@ class UnpackRecipeTest extends TestCase {
     $this->unpackCollection = $this->getPropertyReflection($this->unpackManager, 'unpackCollection');
     $this->rootComposer = $this->getPropertyReflection($this->unpackManager, 'rootComposer');
     $this->unpackerFactory = $this->getPropertyReflection($this->unpackManager, 'unpackerFactory');
+    $this->unpackOptions = $this->getPropertyReflection($this->unpackManager, 'unpackOptions');
   }
 
   /**
@@ -102,13 +111,11 @@ class UnpackRecipeTest extends TestCase {
    */
   public function testRegisterPackage(): void {
     $recipe_package = $this->createPackage('drupal-recipe', 'drupal/recipe-a');
-    $recipe_event = $this->createInstallEvent($recipe_package);
-    $this->unpackManager->registerPackage($recipe_event);
+    $this->unpackManager->registerPackage($recipe_package);
     $this->assertEquals($this->unpackCollection->popPackageQueue(), $recipe_package);
 
     $non_recipe_package = $this->createPackage('drupal-module', 'drupal/module-a');
-    $non_recipe_event = $this->createInstallEvent($non_recipe_package);
-    $this->unpackManager->registerPackage($non_recipe_event);
+    $this->unpackManager->registerPackage($non_recipe_package);
     $this->assertNull($this->unpackCollection->popPackageQueue());
   }
 
@@ -153,7 +160,14 @@ class UnpackRecipeTest extends TestCase {
 
     // Mock the unpacker.
     $unpacker = $this->getMockBuilder(RecipeUnpacker::class)
-      ->setConstructorArgs([$recipe_to_unpack, $this->composer, $this->io, $this->rootComposer, $this->unpackCollection])
+      ->setConstructorArgs([
+        $recipe_to_unpack,
+        $this->composer,
+        $this->io,
+        $this->rootComposer,
+        $this->unpackCollection,
+        $this->unpackOptions,
+      ])
       ->onlyMethods(['getPackageFromLinkTarget', 'updateRootDependencies'])
       ->getMock();
     $unpacker->method('getPackageFromLinkTarget')
