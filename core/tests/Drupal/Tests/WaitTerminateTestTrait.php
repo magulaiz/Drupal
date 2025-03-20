@@ -17,7 +17,7 @@ trait WaitTerminateTestTrait {
    * event need to enable this.
    */
   protected function setWaitForTerminate() {
-    $this->container->get('state')->set('drupal.test_wait_terminate', TRUE);
+    \Drupal::keyValue('test_wait_terminate')->set('wait', TRUE);
   }
 
 }

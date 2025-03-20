@@ -2,8 +2,8 @@
 
 namespace Drupal\Core\Test\StackMiddleware;
 
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\State\StateInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -18,14 +18,14 @@ class TestWaitTerminateMiddleware implements HttpKernelInterface {
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   The decorated kernel.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state server.
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $keyValue
+   *   The key/value store factory.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
    */
   public function __construct(
     protected HttpKernelInterface $httpKernel,
-    protected StateInterface $state,
+    protected KeyValueFactoryInterface $keyValue,
     protected LockBackendInterface $lock,
   ) {
   }
@@ -36,7 +36,7 @@ class TestWaitTerminateMiddleware implements HttpKernelInterface {
   public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
     $result = $this->httpKernel->handle($request, $type, $catch);
 
-    if ($this->state->get('drupal.test_wait_terminate')) {
+    if ($this->keyValue->get('test_wait_terminate')->get('wait')) {
       // Set a header on the response to instruct the test runner that it must
       // await the lock. Note that the lock acquired here is automatically
       // released from within a shutdown function.
