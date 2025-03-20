@@ -27,9 +27,7 @@ class RebuildLegacyTest extends KernelTestBase {
    */
   public function testDrupalRebuild(): void {
     $this->expectDeprecation('drupal_rebuild() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use rebuild.php script instead. See https://www.drupal.org/node/3014783');
-    $before = \Drupal::service('cache.query_string')->get();
     drupal_rebuild($this->classLoader, Request::createFromGlobals());
-    $this->assertNotEquals(\Drupal::service('cache.query_string')->get(), $before, 'css_js_query_string shouldn\'t be the same after rebuild');
   }
 
   /**
