@@ -11,7 +11,7 @@ editor.settings.ckeditor5:
         items:
           type: sequence
           label: 'Items'
-          orderby: value
+          orderby: ~
           sequence:
             type: ckeditor5.toolbar_item
             label: 'Button'
