@@ -46,7 +46,6 @@ filter.format.*:
         label: 'Role'
     filters:
       type: sequence
-      orderby: key
       label: 'Enabled filters'
       orderby: key
       sequence:
