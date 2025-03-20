@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\path\Kernel\Migrate\d6;
 
 use Drupal\path_alias\PathAliasInterface;
@@ -43,9 +45,6 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
     $this->executeMigrations([
       'language',
       'd6_node_settings',
-      'd6_node',
-      'd6_node_translation',
-      'd6_url_alias',
     ]);
   }
 
@@ -58,8 +57,10 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
    *   The path conditions.
    * @param \Drupal\path_alias\PathAliasInterface $path_alias
    *   The path alias.
+   *
+   * @internal
    */
-  private function assertPath($pid, $conditions, PathAliasInterface $path_alias) {
+  private function assertPath(int $pid, array $conditions, PathAliasInterface $path_alias): void {
     $this->assertSame($pid, (int) $path_alias->id());
     $this->assertSame($conditions['alias'], $path_alias->getAlias());
     $this->assertSame($conditions['langcode'], $path_alias->get('langcode')->value);
@@ -67,9 +68,32 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Tests the url alias migration.
+   * Tests the URL alias migration.
    */
-  public function testUrlAlias() {
+  public function testUrlAlias(): void {
+    $this->executeMigrations([
+      'd6_node',
+      'd6_node_translation',
+      'd6_url_alias',
+    ]);
+    $this->checkUrlMigration();
+  }
+
+  /**
+   * Tests the URL alias migration using the node complete migration.
+   */
+  public function testNodeCompleteUrlAlias(): void {
+    $this->executeMigrations([
+      'd6_node_complete',
+      'd6_url_alias',
+    ]);
+    $this->checkUrlMigration();
+  }
+
+  /**
+   * Checks the migration results.
+   */
+  protected function checkUrlMigration(): void {
     $id_map = $this->getMigration('d6_url_alias')->getIdMap();
     // Test that the field exists.
     $conditions = [

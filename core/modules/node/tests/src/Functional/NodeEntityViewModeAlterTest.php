@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Cache\Cache;
@@ -16,6 +18,8 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
 
   /**
    * Enable dummy module that implements hook_ENTITY_TYPE_view() for nodes.
+   *
+   * @var string[]
    */
   protected static $modules = ['node_test'];
 
@@ -27,7 +31,7 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
   /**
    * Create a "Basic page" node and verify its consistency in the database.
    */
-  public function testNodeViewModeChange() {
+  public function testNodeViewModeChange(): void {
     $web_user = $this->drupalCreateUser([
       'create page content',
       'edit own page content',
@@ -37,8 +41,8 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
     // Create a node.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
-    $edit['body[0][value]'] = t('Data that should appear only in the body for the node.');
-    $edit['body[0][summary]'] = t('Extra data that should appear only in the teaser for the node.');
+    $edit['body[0][value]'] = 'Data that should appear only in the body for the node.';
+    $edit['body[0][summary]'] = 'Extra data that should appear only in the teaser for the node.';
     $this->drupalGet('node/add/page');
     $this->submitForm($edit, 'Save');
 
@@ -52,7 +56,7 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
     // Check that teaser mode is viewed.
     $this->assertSession()->pageTextContains('Extra data that should appear only in the teaser for the node.');
     // Make sure body text is not present.
-    $this->assertNoText('Data that should appear only in the body for the node.');
+    $this->assertSession()->pageTextNotContains('Data that should appear only in the body for the node.');
 
     // Test that the correct build mode has been set.
     $build = $this->buildEntityView($node);

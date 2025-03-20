@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Functional;
 
 use Drupal\field\Entity\FieldConfig;
@@ -17,9 +19,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
   use CronRunTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'field',
@@ -34,6 +34,9 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -49,7 +52,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
    *
    * @see field_system_info_alter()
    */
-  public function testReEnabledField() {
+  public function testReEnabledField(): void {
     // Add a telephone field to the article content type.
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_telephone',
@@ -92,7 +95,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
       'field_telephone[0][value]' => "123456789",
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertRaw('<a href="tel:123456789">');
+    $this->assertSession()->responseContains('<a href="tel:123456789">');
 
     // Test that the module can't be uninstalled from the UI while there is data
     // for its fields.
@@ -127,10 +130,13 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
     $field_storage2->delete();
 
     $this->drupalGet('admin/modules/uninstall');
+    $this->assertSession()->pageTextContains('Uninstall');
     $this->assertSession()->pageTextContains('Fields pending deletion');
     $this->cronRun();
-    $this->assertNoText("The Telephone number field type is used in the following field: node.field_telephone");
-    $this->assertNoText('Fields pending deletion');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->assertSession()->pageTextContains('Uninstall');
+    $this->assertSession()->pageTextNotContains("The Telephone number field type is used in the following field: node.field_telephone");
+    $this->assertSession()->pageTextNotContains('Fields pending deletion');
   }
 
 }

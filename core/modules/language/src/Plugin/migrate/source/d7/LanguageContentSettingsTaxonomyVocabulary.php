@@ -2,20 +2,21 @@
 
 namespace Drupal\language\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\taxonomy\Plugin\migrate\source\d7\Vocabulary;
 
 /**
  * Drupal 7 i18n vocabularies source from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBas
- *
- * @MigrateSource(
- *   id = "d7_language_content_settings_taxonomy_vocabulary",
- *   source_module = "i18n_taxonomy"
- * )
  */
+#[MigrateSource(
+  id: 'd7_language_content_settings_taxonomy_vocabulary',
+  source_module: 'i18n_taxonomy',
+)]
 class LanguageContentSettingsTaxonomyVocabulary extends Vocabulary {
 
   /**

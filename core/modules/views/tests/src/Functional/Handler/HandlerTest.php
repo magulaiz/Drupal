@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Functional\Handler;
 
 use Drupal\comment\Tests\CommentTestTrait;
@@ -8,6 +10,8 @@ use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Views;
+
+// cspell:ignore wõrd
 
 /**
  * Tests abstract handler definitions.
@@ -26,9 +30,7 @@ class HandlerTest extends ViewTestBase {
   public static $testViews = ['test_view', 'test_view_handler_weight', 'test_handler_relationships', 'test_handler_test_access', 'test_filter_in_operator_ui'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views_ui', 'comment', 'node'];
 
@@ -37,8 +39,11 @@ class HandlerTest extends ViewTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
     $this->drupalCreateContentType(['type' => 'page']);
     $this->addDefaultCommentField('node', 'page');
     $this->enableViewsTestModule();
@@ -71,47 +76,47 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the breakString method.
    */
-  public function testBreakString() {
+  public function testBreakString(): void {
     // Check defaults.
     $this->assertEquals((object) ['value' => [], 'operator' => NULL], HandlerBase::breakString(''));
 
     // Test ors
     $handler = HandlerBase::breakString('word1 word2+word');
-    $this->assertEqualValue(['word1', 'word2', 'word'], $handler);
+    $this->assertEquals(['word1', 'word2', 'word'], $handler->value);
     $this->assertEquals('or', $handler->operator);
     $handler = HandlerBase::breakString('word1+word2+word');
-    $this->assertEqualValue(['word1', 'word2', 'word'], $handler);
+    $this->assertEquals(['word1', 'word2', 'word'], $handler->value);
     $this->assertEquals('or', $handler->operator);
     $handler = HandlerBase::breakString('word1 word2 word');
-    $this->assertEqualValue(['word1', 'word2', 'word'], $handler);
+    $this->assertEquals(['word1', 'word2', 'word'], $handler->value);
     $this->assertEquals('or', $handler->operator);
     $handler = HandlerBase::breakString('word-1+word-2+word');
-    $this->assertEqualValue(['word-1', 'word-2', 'word'], $handler);
+    $this->assertEquals(['word-1', 'word-2', 'word'], $handler->value);
     $this->assertEquals('or', $handler->operator);
     $handler = HandlerBase::breakString('wõrd1+wõrd2+wõrd');
-    $this->assertEqualValue(['wõrd1', 'wõrd2', 'wõrd'], $handler);
+    $this->assertEquals(['wõrd1', 'wõrd2', 'wõrd'], $handler->value);
     $this->assertEquals('or', $handler->operator);
 
     // Test ands.
     $handler = HandlerBase::breakString('word1,word2,word');
-    $this->assertEqualValue(['word1', 'word2', 'word'], $handler);
+    $this->assertEquals(['word1', 'word2', 'word'], $handler->value);
     $this->assertEquals('and', $handler->operator);
     $handler = HandlerBase::breakString('word1 word2,word');
-    $this->assertEqualValue(['word1 word2', 'word'], $handler);
+    $this->assertEquals(['word1 word2', 'word'], $handler->value);
     $this->assertEquals('and', $handler->operator);
     $handler = HandlerBase::breakString('word1,word2 word');
-    $this->assertEqualValue(['word1', 'word2 word'], $handler);
+    $this->assertEquals(['word1', 'word2 word'], $handler->value);
     $this->assertEquals('and', $handler->operator);
     $handler = HandlerBase::breakString('word-1,word-2,word');
-    $this->assertEqualValue(['word-1', 'word-2', 'word'], $handler);
+    $this->assertEquals(['word-1', 'word-2', 'word'], $handler->value);
     $this->assertEquals('and', $handler->operator);
     $handler = HandlerBase::breakString('wõrd1,wõrd2,wõrd');
-    $this->assertEqualValue(['wõrd1', 'wõrd2', 'wõrd'], $handler);
+    $this->assertEquals(['wõrd1', 'wõrd2', 'wõrd'], $handler->value);
     $this->assertEquals('and', $handler->operator);
 
     // Test a single word
     $handler = HandlerBase::breakString('word');
-    $this->assertEqualValue(['word'], $handler);
+    $this->assertEquals(['word'], $handler->value);
     $this->assertEquals('and', $handler->operator);
 
     $s1 = $this->randomMachineName();
@@ -122,45 +127,45 @@ class HandlerTest extends ViewTestBase {
 
     // Test "or"s.
     $handlerBase = HandlerBase::breakString("$s1 $n2+$n3");
-    $this->assertEqualValue([$s1, $n2, $n3], $handlerBase);
+    $this->assertEquals([$s1, $n2, $n3], $handlerBase->value);
     $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1+$n2+$n3");
-    $this->assertEqualValue([$s1, $n2, $n3], $handlerBase);
+    $this->assertEquals([$s1, $n2, $n3], $handlerBase->value);
     $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1 $n2 $n3");
-    $this->assertEqualValue([$s1, $n2, $n3], $handlerBase);
+    $this->assertEquals([$s1, $n2, $n3], $handlerBase->value);
     $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1 $n2++$n3");
-    $this->assertEqualValue([$s1, $n2, $n3], $handlerBase);
+    $this->assertEquals([$s1, $n2, $n3], $handlerBase->value);
     $this->assertEquals('or', $handlerBase->operator);
 
     // Test "and"s.
     $handlerBase = HandlerBase::breakString("$s1,$n2,$n3");
-    $this->assertEqualValue([$s1, $n2, $n3], $handlerBase);
+    $this->assertEquals([$s1, $n2, $n3], $handlerBase->value);
     $this->assertEquals('and', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1,,$n2,$n3");
-    $this->assertEqualValue([$s1, $n2, $n3], $handlerBase);
+    $this->assertEquals([$s1, $n2, $n3], $handlerBase->value);
     $this->assertEquals('and', $handlerBase->operator);
 
     // Enforce int values.
     $handlerBase = HandlerBase::breakString("$n1,$n2,$n3", TRUE);
-    $this->assertEqualValue([$n1, $n2, $n3], $handlerBase);
+    $this->assertEquals([$n1, $n2, $n3], $handlerBase->value);
     $this->assertEquals('and', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$n1+$n2+$n3", TRUE);
-    $this->assertEqualValue([$n1, $n2, $n3], $handlerBase);
+    $this->assertEquals([$n1, $n2, $n3], $handlerBase->value);
     $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1,$n2,$n3", TRUE);
-    $this->assertEqualValue([(int) $s1, $n2, $n3], $handlerBase);
+    $this->assertEquals([(int) $s1, $n2, $n3], $handlerBase->value);
     $this->assertEquals('and', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1+$n2+$n3", TRUE);
-    $this->assertEqualValue([(int) $s1, $n2, $n3], $handlerBase);
+    $this->assertEquals([(int) $s1, $n2, $n3], $handlerBase->value);
     $this->assertEquals('or', $handlerBase->operator);
 
     // Generate three random decimals which can be used below;
@@ -170,35 +175,35 @@ class HandlerTest extends ViewTestBase {
 
     // Test "or"s.
     $handlerBase = HandlerBase::breakString("$s1 $d1+$d2");
-    $this->assertEqualValue([$s1, $d1, $d2], $handlerBase);
+    $this->assertEquals([$s1, $d1, $d2], $handlerBase->value);
     $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1+$d1+$d3");
-    $this->assertEqualValue([$s1, $d1, $d3], $handlerBase);
+    $this->assertEquals([$s1, $d1, $d3], $handlerBase->value);
     $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1 $d2 $d3");
-    $this->assertEqualValue([$s1, $d2, $d3], $handlerBase);
+    $this->assertEquals([$s1, $d2, $d3], $handlerBase->value);
     $this->assertEquals('or', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1 $d2++$d3");
-    $this->assertEqualValue([$s1, $d2, $d3], $handlerBase);
+    $this->assertEquals([$s1, $d2, $d3], $handlerBase->value);
     $this->assertEquals('or', $handlerBase->operator);
 
     // Test "and"s.
     $handlerBase = HandlerBase::breakString("$s1,$d2,$d3");
-    $this->assertEqualValue([$s1, $d2, $d3], $handlerBase);
+    $this->assertEquals([$s1, $d2, $d3], $handlerBase->value);
     $this->assertEquals('and', $handlerBase->operator);
 
     $handlerBase = HandlerBase::breakString("$s1,,$d2,$d3");
-    $this->assertEqualValue([$s1, $d2, $d3], $handlerBase);
+    $this->assertEquals([$s1, $d2, $d3], $handlerBase->value);
     $this->assertEquals('and', $handlerBase->operator);
   }
 
   /**
    * Tests the order of handlers is the same before and after saving.
    */
-  public function testHandlerWeights() {
+  public function testHandlerWeights(): void {
     $handler_types = ['fields', 'filters', 'sorts'];
 
     $view = Views::getView('test_view_handler_weight');
@@ -222,33 +227,9 @@ class HandlerTest extends ViewTestBase {
   }
 
   /**
-   * Check to see if a value is the same as the value on a certain handler.
-   *
-   * @param $expected
-   *   The expected value to check.
-   * @param \Drupal\views\Plugin\views\ViewsHandlerInterface $handler
-   *   The handler that has the $handler->value property to compare with first.
-   * @param string $message
-   *   The message to display along with the assertion.
-   * @param string $group
-   *   The type of assertion - examples are "Browser", "PHP".
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded.
-   */
-  protected function assertEqualValue($expected, $handler, $message = '', $group = 'Other') {
-    if (empty($message)) {
-      $message = t('Comparing @first and @second', ['@first' => implode(',', $expected), '@second' => implode(',', $handler->value)]);
-    }
-
-    $this->assertEquals($expected, $handler->value, $message);
-    return TRUE;
-  }
-
-  /**
    * Tests the relationship ui for field/filter/argument/relationship.
    */
-  public function testRelationshipUI() {
+  public function testRelationshipUI(): void {
     $views_admin = $this->drupalCreateUser(['administer views']);
     $this->drupalLogin($views_admin);
 
@@ -277,6 +258,12 @@ class HandlerTest extends ViewTestBase {
     $expected_options = ['none', 'nid'];
     $this->assertEquals($expected_options, $options);
 
+    // Change the Row plugin to display "Content".
+    $this->drupalGet('admin/structure/views/nojs/display/test_handler_relationships/default/row');
+    $this->submitForm(['row[type]' => 'entity:node'], 'Apply');
+    $this->assertSession()->fieldExists('row_options[relationship]');
+    $this->submitForm(['row_options[view_mode]' => 'default'], 'Apply');
+
     // Remove the relationship and make sure no relationship option appears.
     $this->drupalGet('admin/structure/views/nojs/handler/test_handler_relationships/default/relationship/nid');
     $this->submitForm([], 'Remove');
@@ -284,7 +271,11 @@ class HandlerTest extends ViewTestBase {
     $this->assertSession()->fieldNotExists($relationship_name);
 
     // Create a view of comments with node relationship.
-    View::create(['base_table' => 'comment_field_data', 'id' => 'test_get_entity_type'])->save();
+    View::create([
+      'base_table' => 'comment_field_data',
+      'id' => 'test_get_entity_type',
+      'label' => 'Test',
+    ])->save();
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_get_entity_type/default/relationship');
     $this->submitForm(['name[comment_field_data.node]' => 'comment_field_data.node'], 'Add and configure relationships');
     $this->submitForm([], 'Apply');
@@ -302,7 +293,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the relationship method on the base class.
    */
-  public function testSetRelationship() {
+  public function testSetRelationship(): void {
     $view = Views::getView('test_handler_relationships');
     $view->setDisplay();
     // Setup a broken relationship.
@@ -326,7 +317,7 @@ class HandlerTest extends ViewTestBase {
 
     $field->options['relationship'] = 'valid_relationship';
     $field->setRelationship();
-    $this->assertFalse(!empty($field->relationship), 'Make sure that the relationship alias was not set without building a views query before.');
+    $this->assertEmpty($field->relationship, 'Make sure that the relationship alias was not set without building a views query before.');
 
     // Remove the invalid relationship.
     unset($view->relationship['broken_relationship']);
@@ -341,7 +332,7 @@ class HandlerTest extends ViewTestBase {
    *
    * @see \Drupal\views\Plugin\views\HandlerBase::placeholder()
    */
-  public function testPlaceholder() {
+  public function testPlaceholder(): void {
     $view = Views::getView('test_view');
     $view->initHandlers();
     $view->initQuery();
@@ -373,7 +364,7 @@ class HandlerTest extends ViewTestBase {
    *
    * @see views_test_data_handler_test_access_callback
    */
-  public function testAccess() {
+  public function testAccess(): void {
     $view = Views::getView('test_handler_test_access');
     $views_data = $this->viewsData();
     $views_data = $views_data['views_test_data'];

@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\image\Kernel\Migrate\d6;
 
 use Drupal\Core\Database\Database;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageEffectPluginCollection;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
@@ -26,7 +29,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   /**
    * Tests that an exception is thrown when ImageCache is not installed.
    */
-  public function testMissingTable() {
+  public function testMissingTable(): void {
     $this->sourceDatabase->update('system')
       ->fields([
         'status' => 0,
@@ -44,7 +47,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   /**
    * Tests basic passing migrations.
    */
-  public function testPassingMigration() {
+  public function testPassingMigration(): void {
     $this->executeMigration('d6_imagecache_presets');
 
     /** @var \Drupal\image\Entity\ImageStyle $style */
@@ -81,22 +84,22 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   /**
    * Tests that missing actions causes failures.
    */
-  public function testMissingEffectPlugin() {
+  public function testMissingEffectPlugin(): void {
     Database::getConnection('default', 'migrate')->insert("imagecache_action")
       ->fields([
-       'presetid',
-       'weight',
-       'module',
-       'action',
-       'data',
-     ])
+        'presetid',
+        'weight',
+        'module',
+        'action',
+        'data',
+      ])
       ->values([
-       'presetid' => '1',
-       'weight' => '0',
-       'module' => 'imagecache',
-       'action' => 'imagecache_deprecated_scale',
-       'data' => 'a:3:{s:3:"fit";s:7:"outside";s:5:"width";s:3:"200";s:6:"height";s:3:"200";}',
-     ])->execute();
+        'presetid' => '1',
+        'weight' => '0',
+        'module' => 'imagecache',
+        'action' => 'imagecache_deprecated_scale',
+        'data' => 'a:3:{s:3:"fit";s:7:"outside";s:5:"width";s:3:"200";s:6:"height";s:3:"200";}',
+      ])->execute();
 
     $this->startCollectingMessages();
     $this->executeMigration('d6_imagecache_presets');
@@ -109,25 +112,25 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   /**
    * Tests that missing action's causes failures.
    */
-  public function testInvalidCropValues() {
+  public function testInvalidCropValues(): void {
     Database::getConnection('default', 'migrate')->insert("imagecache_action")
       ->fields([
-       'presetid',
-       'weight',
-       'module',
-       'action',
-       'data',
-     ])
+        'presetid',
+        'weight',
+        'module',
+        'action',
+        'data',
+      ])
       ->values([
-       'presetid' => '1',
-       'weight' => '0',
-       'module' => 'imagecache',
-       'action' => 'imagecache_crop',
-       'data' => serialize([
-         'xoffset' => '10',
-         'yoffset' => '10',
-       ]),
-     ])->execute();
+        'presetid' => '1',
+        'weight' => '0',
+        'module' => 'imagecache',
+        'action' => 'imagecache_crop',
+        'data' => serialize([
+          'xoffset' => '10',
+          'yoffset' => '10',
+        ]),
+      ])->execute();
 
     $this->startCollectingMessages();
     $this->executeMigration('d6_imagecache_presets');
@@ -141,27 +144,27 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   /**
    * Assert that a given image effect is migrated.
    *
-   * @param array $collection
-   *   Collection of effects
-   * @param $id
+   * @param \Drupal\image\ImageEffectPluginCollection $collection
+   *   Collection of effects.
+   * @param string $id
    *   Id that should exist in the collection.
-   * @param $config
+   * @param array $config
    *   Expected configuration for the collection.
    *
-   * @return bool
+   * @internal
    */
-  protected function assertImageEffect($collection, $id, $config) {
+  protected function assertImageEffect(ImageEffectPluginCollection $collection, string $id, array $config): void {
     /** @var \Drupal\image\ConfigurableImageEffectBase $effect */
     foreach ($collection as $effect) {
       $effect_config = $effect->getConfiguration();
 
       if ($effect_config['id'] == $id && $effect_config['data'] == $config) {
-        // We found this effect so succeed and return.
-        return TRUE;
+        // We found this effect so the assertion is successful.
+        return;
       }
     }
     // The loop did not find the effect so we it was not imported correctly.
-    return $this->fail('Effect ' . $id . ' did not import correctly');
+    $this->fail('Effect ' . $id . ' did not import correctly');
   }
 
 }

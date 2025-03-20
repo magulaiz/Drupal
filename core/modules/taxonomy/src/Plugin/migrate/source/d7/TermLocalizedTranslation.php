@@ -2,23 +2,25 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
-use Drupal\content_translation\Plugin\migrate\source\I18nQueryTrait;
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Plugin\migrate\source\I18nQueryTrait;
+
+// cspell:ignore ltlanguage objectid
 
 /**
- * Drupal 7 i18n taxonomy terms from source database.
+ * Drupal 7 i18n taxonomy terms source from database.
  *
  * For available configuration keys, refer to the parent classes.
  *
  * @see \Drupal\taxonomy\Plugin\migrate\source\d7\Term
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_term_localized_translation",
- *   source_module = "i18n_taxonomy"
- * )
  */
+#[MigrateSource(
+  id: 'd7_term_localized_translation',
+  source_module: 'i18n_taxonomy',
+)]
 class TermLocalizedTranslation extends Term {
 
   use I18nQueryTrait;

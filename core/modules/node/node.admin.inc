@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Content administration and module settings user interface.
  */
 
 use Drupal\Core\Batch\BatchBuilder;
@@ -38,7 +37,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
     $batch_builder = (new BatchBuilder())
       // The operations do not live in the .module file, so we need to
       // tell the batch engine which file to load before calling them.
-      ->setFile(drupal_get_path('module', 'node') . '/node.admin.inc')
+      ->setFile(\Drupal::service('extension.list.module')->getPath('node') . '/node.admin.inc')
       ->addOperation('_node_mass_update_batch_process', [$nodes, $updates, $langcode, $load, $revisions])
       ->setFinishCallback('_node_mass_update_batch_finished')
       ->setTitle(t('Processing'))
@@ -82,7 +81,7 @@ function node_mass_update(array $nodes, array $updates, $langcode = NULL, $load 
 function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode = NULL) {
   $langcodes = isset($langcode) ? [$langcode] : array_keys($node->getTranslationLanguages());
   // For efficiency manually save the original node before applying any changes.
-  $node->original = clone $node;
+  $node->setOriginal(clone $node);
   foreach ($langcodes as $langcode) {
     foreach ($updates as $name => $value) {
       $node->getTranslation($langcode)->$name = $value;

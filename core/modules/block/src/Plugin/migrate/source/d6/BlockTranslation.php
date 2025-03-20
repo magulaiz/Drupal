@@ -3,21 +3,22 @@
 namespace Drupal\block\Plugin\migrate\source\d6;
 
 use Drupal\block\Plugin\migrate\source\Block;
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Row;
 
 /**
- * Gets i18n block data from source database.
+ * Drupal 6 i18n block data from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_block_translation",
- *   source_module = "i18nblocks"
- * )
  */
+#[MigrateSource(
+  id: 'd6_block_translation',
+  source_module: 'i18nblocks',
+)]
 class BlockTranslation extends Block {
 
   /**

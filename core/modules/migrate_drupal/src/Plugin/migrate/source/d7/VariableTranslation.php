@@ -4,11 +4,12 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source\d7;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Gets Drupal variable_store source from database.
+ * Drupal 7 variable_store source from database.
  *
  * Available configuration keys:
  * - variables: (required) The list of variable translations to retrieve from
@@ -25,15 +26,15 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * In this example the translations for site_name and site_slogan variables are
  * retrieved from the source database.
  *
- * For additional configuration keys, refer to the parent classes:
+ * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_variable_translation",
- *   source_module = "i18n_variable",
- * )
  */
+#[MigrateSource(
+  id: 'd7_variable_translation',
+  source_module: 'i18n_variable',
+)]
 class VariableTranslation extends DrupalSqlBase {
   /**
    * The variable names to fetch.
@@ -93,7 +94,7 @@ class VariableTranslation extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function count($refresh = FALSE) {
+  protected function doCount() {
     return $this->initializeIterator()->count();
   }
 

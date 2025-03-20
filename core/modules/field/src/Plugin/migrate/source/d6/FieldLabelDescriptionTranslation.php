@@ -2,20 +2,23 @@
 
 namespace Drupal\field\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
+
+// cspell:ignore objectid
 
 /**
  * Drupal 6 i18n field label and description source from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_field_instance_label_description_translation",
- *   source_module = "i18ncck"
- * )
  */
+#[MigrateSource(
+  id: 'd6_field_instance_label_description_translation',
+  source_module: 'i18ncck',
+)]
 class FieldLabelDescriptionTranslation extends DrupalSqlBase {
 
   /**

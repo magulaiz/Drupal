@@ -2,19 +2,21 @@
 
 namespace Drupal\field\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
+
 /**
  * Drupal 7 field instance per view mode source class.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\field\Plugin\migrate\source\d7\FieldInstance
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_field_instance_per_view_mode",
- *   source_module = "field"
- * )
  */
+#[MigrateSource(
+  id: 'd7_field_instance_per_view_mode',
+  source_module: 'field',
+)]
 class FieldInstancePerViewMode extends FieldInstance {
 
   /**

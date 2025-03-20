@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\Core\Database\Database;
@@ -29,7 +31,7 @@ class TaxonomyQueryAlterTest extends KernelTestBase {
   /**
    * Tests that appropriate tags are added when querying the database.
    */
-  public function testTaxonomyQueryAlter() {
+  public function testTaxonomyQueryAlter(): void {
     $this->installEntitySchema('taxonomy_term');
 
     // Create a new vocabulary and add a few terms to it.
@@ -117,7 +119,7 @@ class TaxonomyQueryAlterTest extends KernelTestBase {
   /**
    * Sets up the hooks in the test module.
    */
-  protected function setupQueryTagTestHooks() {
+  protected function setupQueryTagTestHooks(): void {
     $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->resetCache();
     $state = $this->container->get('state');
     $state->set('taxonomy_test_query_alter', 0);
@@ -134,8 +136,10 @@ class TaxonomyQueryAlterTest extends KernelTestBase {
    * @param int $expected_specific_invocations
    *   The number of times the tag-specific query_alter hooks are expected to
    *   have been invoked.
+   *
+   * @internal
    */
-  protected function assertQueryTagTestResult($expected_generic_invocations, $expected_specific_invocations) {
+  protected function assertQueryTagTestResult(int $expected_generic_invocations, int $expected_specific_invocations): void {
     $state = $this->container->get('state');
     $this->assertEquals($expected_generic_invocations, $state->get('taxonomy_test_query_alter'));
     $this->assertEquals($expected_specific_invocations, $state->get('taxonomy_test_query_term_access_alter'));

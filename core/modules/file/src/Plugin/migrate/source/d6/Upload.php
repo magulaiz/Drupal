@@ -2,17 +2,22 @@
 
 namespace Drupal\file\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
  * Drupal 6 upload source from database.
  *
- * @MigrateSource(
- *   id = "d6_upload",
- *   source_module = "upload"
- * )
+ * For available configuration keys, refer to the parent classes.
+ *
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
+#[MigrateSource(
+  id: 'd6_upload',
+  source_module: 'upload',
+)]
 class Upload extends DrupalSqlBase {
 
   /**

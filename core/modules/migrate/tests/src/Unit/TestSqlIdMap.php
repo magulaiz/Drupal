@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\Database\Connection;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\id_map\Sql;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -28,23 +31,18 @@ class TestSqlIdMap extends Sql implements \Iterator {
    *   The migration to do.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher service.
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_manager
+   *   The migration manager.
    */
-  public function __construct(Connection $database, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(Connection $database, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher, MigrationPluginManagerInterface $migration_manager) {
     $this->database = $database;
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $event_dispatcher);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $event_dispatcher, $migration_manager);
   }
 
   /**
    * {@inheritdoc}
    */
   public $message;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDatabase() {
-    return parent::getDatabase();
-  }
 
   /**
    * Gets the field schema.
@@ -84,6 +82,7 @@ class TestSqlIdMap extends Sql implements \Iterator {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod
   public function ensureTables() {
     parent::ensureTables();
   }

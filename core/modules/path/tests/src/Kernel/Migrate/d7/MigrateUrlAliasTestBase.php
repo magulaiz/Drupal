@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\path\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
@@ -29,7 +31,7 @@ abstract class MigrateUrlAliasTestBase extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('node');
@@ -48,7 +50,7 @@ abstract class MigrateUrlAliasTestBase extends MigrateDrupal7TestBase {
   /**
    * Tests the URL alias migration.
    */
-  public function testUrlAlias() {
+  public function testUrlAlias(): void {
     $path_alias = $this->loadPathAliasByConditions([
       'path' => '/taxonomy/term/4',
       'alias' => '/term33',
@@ -59,7 +61,7 @@ abstract class MigrateUrlAliasTestBase extends MigrateDrupal7TestBase {
     $this->assertSame('und', $path_alias->language()->getId());
 
     // Alias with no slash.
-    $path_alias = $this->loadPathAliasByConditions(['alias' => '/source-noslash']);
+    $path_alias = $this->loadPathAliasByConditions(['alias' => '/source-noSlash']);
     $this->assertSame('/admin', $path_alias->getPath());
     $this->assertSame('und', $path_alias->language()->getId());
   }

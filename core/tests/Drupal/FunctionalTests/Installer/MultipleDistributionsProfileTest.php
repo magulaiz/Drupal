@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
@@ -26,7 +28,7 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
     // Create two distributions.
     foreach (['distribution_one', 'distribution_two'] as $name) {
@@ -37,7 +39,7 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
         'distribution' => [
           'name' => $name,
           'install' => [
-            'theme' => 'bartik',
+            'theme' => 'claro',
           ],
         ],
       ];
@@ -53,13 +55,13 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage() {
+  protected function setUpLanguage(): void {
     // Verify that the distribution name appears.
-    $this->assertRaw('distribution_one');
+    $this->assertSession()->pageTextContains('distribution_one');
     // Verify that the requested theme is used.
-    $this->assertRaw('bartik');
+    $this->assertSession()->responseContains('claro');
     // Verify that the "Choose profile" step does not appear.
-    $this->assertNoText('profile');
+    $this->assertSession()->pageTextNotContains('profile');
 
     parent::setUpLanguage();
   }
@@ -67,14 +69,14 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpProfile() {
+  protected function setUpProfile(): void {
     // This step is skipped, because there is a distribution profile.
   }
 
   /**
    * Confirms that the installation succeeded.
    */
-  public function testInstalled() {
+  public function testInstalled(): void {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that we are logged-in after installation.

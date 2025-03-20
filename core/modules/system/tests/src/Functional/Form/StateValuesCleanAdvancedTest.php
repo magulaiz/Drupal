@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * Tests proper removal of submitted form values using
- * \Drupal\Core\Form\FormState::cleanValues() when having forms with elements
- * containing buttons like "managed_file".
+ * Tests the removal of internal Form API elements from submitted form values.
  *
  * @group Form
  */
@@ -19,9 +19,7 @@ class StateValuesCleanAdvancedTest extends BrowserTestBase {
   }
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['file', 'form_test'];
 
@@ -40,7 +38,7 @@ class StateValuesCleanAdvancedTest extends BrowserTestBase {
   /**
    * Tests \Drupal\Core\Form\FormState::cleanValues().
    */
-  public function testFormStateValuesCleanAdvanced() {
+  public function testFormStateValuesCleanAdvanced(): void {
 
     // Get an image for uploading.
     $image_files = $this->drupalGetTestFiles('image');
@@ -58,7 +56,7 @@ class StateValuesCleanAdvancedTest extends BrowserTestBase {
 
     // Expecting a 200 HTTP code.
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw(t('You WIN!'));
+    $this->assertSession()->pageTextContains("You WIN!");
   }
 
 }

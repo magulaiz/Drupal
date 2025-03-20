@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 /**
  * Tests that a missing source provider error message is displayed.
  *
  * @group migrate_drupal_ui
+ * @group #slow
  */
 class SourceProviderTest extends MigrateUpgradeTestBase {
 
@@ -23,8 +26,8 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
    *
    * @dataProvider providerSourceProvider
    */
-  public function testSourceProvider($path_to_database) {
-    $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . $path_to_database);
+  public function testSourceProvider($path_to_database): void {
+    $this->loadFixture($this->getModulePath('migrate_drupal') . $path_to_database);
 
     $session = $this->assertSession();
 
@@ -32,8 +35,8 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
     $this->submitCredentialForm();
 
     // Ensure we get errors about missing modules.
-    $session->pageTextContains(t('Resolve all issues below to continue the upgrade.'));
-    $session->pageTextContains(t('The no_source_module plugin must define the source_module property.'));
+    $session->pageTextContains('Resolve all issues below to continue the upgrade.');
+    $session->pageTextContains('The no_source_module plugin must define the source_module property.');
 
     // Uninstall the module causing the missing module error messages.
     $this->container->get('module_installer')
@@ -45,16 +48,16 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
     $this->submitForm($this->edits, 'Review upgrade');
 
     // Ensure there are no errors about missing modules from the test module.
-    $session->pageTextNotContains(t('Source module not found for migration_provider_no_annotation.'));
-    $session->pageTextNotContains(t('Source module not found for migration_provider_test.'));
+    $session->pageTextNotContains('Source module not found for migration_provider_no_annotation.');
+    $session->pageTextNotContains('Source module not found for migration_provider_test.');
     // Ensure there are no errors about any other missing migration providers.
-    $session->pageTextNotContains(t('module not found'));
+    $session->pageTextNotContains('module not found');
   }
 
   /**
    * Data provider for testSourceProvider.
    */
-  public function providerSourceProvider() {
+  public static function providerSourceProvider() {
     return [
       [
         'path_to_database' => '/tests/fixtures/drupal6.php',
@@ -68,35 +71,35 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSourceBasePath() {
+  protected function getSourceBasePath(): string {
     return '';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAvailablePaths() {
+  protected function getAvailablePaths(): array {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEntityCounts() {
+  protected function getEntityCounts(): array {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEntityCountsIncremental() {
+  protected function getEntityCountsIncremental(): array {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getMissingPaths() {
+  protected function getMissingPaths(): array {
     return [];
   }
 

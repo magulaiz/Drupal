@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\System;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
@@ -17,9 +18,7 @@ class PageNotFoundTest extends BrowserTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system_test'];
 
@@ -28,8 +27,16 @@ class PageNotFoundTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * The test user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -45,7 +52,10 @@ class PageNotFoundTest extends BrowserTestBase {
     user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['access user profiles']);
   }
 
-  public function testPageNotFound() {
+  /**
+   * Tests page not found.
+   */
+  public function testPageNotFound(): void {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet($this->randomMachineName(10));
     $this->assertSession()->pageTextContains('Page not found');
@@ -56,7 +66,7 @@ class PageNotFoundTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/system/site-information');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertRaw(new FormattableMarkup("The path '%path' has to start with a slash.", ['%path' => $edit['site_404']]));
+    $this->assertSession()->pageTextContains("The path '{$edit['site_404']}' has to start with a slash.");
 
     // Use a custom 404 page.
     $edit = [
@@ -72,12 +82,12 @@ class PageNotFoundTest extends BrowserTestBase {
   /**
    * Tests that an inaccessible custom 404 page falls back to the default.
    */
-  public function testPageNotFoundCustomPageWithAccessDenied() {
+  public function testPageNotFoundCustomPageWithAccessDenied(): void {
     // Sets up a 404 page not accessible by the anonymous user.
     $this->config('system.site')->set('page.404', '/system-test/custom-4xx')->save();
 
     $this->drupalGet('/this-path-does-not-exist');
-    $this->assertNoText('Admin-only 4xx response');
+    $this->assertSession()->pageTextNotContains('Admin-only 4xx response');
     $this->assertSession()->pageTextContains('The requested page could not be found.');
     $this->assertSession()->statusCodeEquals(404);
     // Verify the access cacheability metadata for custom 404 is bubbled.
@@ -86,7 +96,7 @@ class PageNotFoundTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('/this-path-does-not-exist');
     $this->assertSession()->pageTextContains('Admin-only 4xx response');
-    $this->assertNoText('The requested page could not be found.');
+    $this->assertSession()->pageTextNotContains('The requested page could not be found.');
     $this->assertSession()->statusCodeEquals(404);
     // Verify the access cacheability metadata for custom 404 is bubbled.
     $this->assertCacheContext('user.roles');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Kernel\d7;
 
 use Drupal\comment\Entity\CommentType;
@@ -10,7 +12,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\migrate_drupal\Traits\FieldDiscoveryTestTrait;
 use Drupal\field_discovery_test\FieldDiscoveryTestClass;
 
-// cspell:ignore imagelink
+// cspell:ignore filefield imagelink entityreference nodelink spamspan
 
 /**
  * Test FieldDiscovery Service against Drupal 7.
@@ -28,6 +30,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
   protected static $modules = [
     'comment',
     'datetime',
+    'datetime_range',
     'file',
     'image',
     'link',
@@ -69,7 +72,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(static::$modules);
     $node_types = [
@@ -85,7 +88,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
     foreach ($node_types as $node_type => $comment_type) {
       NodeType::create([
         'type' => $node_type,
-        'label' => $this->randomString(),
+        'name' => $this->randomString(),
       ])->save();
 
       CommentType::create([
@@ -95,7 +98,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
       ])->save();
     }
 
-    Vocabulary::create(['vid' => 'test_vocabulary'])->save();
+    Vocabulary::create(['vid' => 'test_vocabulary', 'name' => 'Test'])->save();
     $this->executeMigrations([
       'd7_field',
       'd7_comment_type',
@@ -114,7 +117,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    *
    * @covers ::addAllFieldProcesses
    */
-  public function testAddAllFieldProcesses() {
+  public function testAddAllFieldProcesses(): void {
     $expected_process_keys = [
       'comment_body',
       'field_integer',
@@ -169,7 +172,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    * @covers ::addAllFieldProcesses
    * @dataProvider addAllFieldProcessesAltersData
    */
-  public function testAddAllFieldProcessesAlters($field_plugin_method, $expected_process) {
+  public function testAddAllFieldProcessesAlters($field_plugin_method, $expected_process): void {
     $this->assertFieldProcess($this->fieldDiscovery, $this->migrationPluginManager, FieldDiscoveryInterface::DRUPAL_7, $field_plugin_method, $expected_process);
   }
 
@@ -179,7 +182,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    * @return array
    *   The data.
    */
-  public function addAllFieldProcessesAltersData() {
+  public static function addAllFieldProcessesAltersData() {
     return [
       'Field Instance' => [
         'field_plugin_method' => 'alterFieldInstanceMigration',
@@ -209,6 +212,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                   'taxonomy_term_reference_plain' => 'entity_reference_label',
                   'taxonomy_term_reference_rss_category' => 'entity_reference_label',
                   'i18n_taxonomy_term_reference_link' => 'entity_reference_label',
+                  'i18n_taxonomy_term_reference_plain' => 'entity_reference_label',
                   'entityreference_entity_view' => 'entity_reference_entity_view',
                 ],
                 'link_field' => [
@@ -251,6 +255,11 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                   'image_nodelink' => 'image',
                   'image_imagelink' => 'image',
                 ],
+                'datetime' => [
+                  'date_default' => 'datetime_default',
+                  'format_interval' => 'datetime_time_ago',
+                  'date_plain' => 'datetime_plain',
+                ],
                 'email' => [
                   'email_formatter_default' => 'email_mailto',
                   'email_formatter_contact' => 'basic_string',
@@ -263,11 +272,6 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                 ],
                 'phone' => [
                   'phone' => 'basic_string',
-                ],
-                'datetime' => [
-                  'date_default' => 'datetime_default',
-                  'format_interval' => 'datetime_time_ago',
-                  'date_plain' => 'datetime_plain',
                 ],
                 'telephone' => [
                   'text_plain' => 'string',
@@ -300,11 +304,11 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                 'list' => 'list_default',
                 'file_mfw' => 'file_generic',
                 'filefield_widget' => 'file_generic',
-                'email_textfield' => 'email_default',
-                'phone' => 'phone_default',
                 'date' => 'datetime_default',
                 'datetime' => 'datetime_default',
                 'datestamp' => 'datetime_timestamp',
+                'email_textfield' => 'email_default',
+                'phone' => 'phone_default',
               ],
             ],
           ],
@@ -318,7 +322,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    *
    * @covers ::getAllFields
    */
-  public function testGetAllFields() {
+  public function testGetAllFields(): void {
     $field_discovery_test = new FieldDiscoveryTestClass($this->fieldPluginManager, $this->migrationPluginManager, $this->logger);
     $actual_fields = $field_discovery_test->getAllFields('7');
     $this->assertSame(['comment', 'node', 'user', 'taxonomy_term'], array_keys($actual_fields));
@@ -330,7 +334,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
     $this->assertCount(23, $actual_fields['node']['test_content_type']);
     foreach ($actual_fields as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle => $fields) {
-        foreach ($fields as $field_name => $field_info) {
+        foreach ($fields as $field_info) {
           $this->assertArrayHasKey('field_definition', $field_info);
           $this->assertEquals($entity_type_id, $field_info['entity_type']);
           $this->assertEquals($bundle, $field_info['bundle']);
@@ -344,18 +348,20 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    *
    * @covers ::getSourcePlugin
    */
-  public function testGetSourcePlugin() {
+  public function testGetSourcePlugin(): void {
     $this->assertSourcePlugin('7', FieldInstance::class, [
-      'requirements_met' => TRUE,
-      'id' => 'd7_field_instance',
-      'source_module' => 'field',
       'class' => 'Drupal\\field\\Plugin\\migrate\\source\\d7\\FieldInstance',
-      'provider' => [
+      'provider' => 'field',
+      'id' => 'd7_field_instance',
+      'providers' => [
         0 => 'field',
         1 => 'migrate_drupal',
         2 => 'migrate',
         4 => 'core',
       ],
+      'source_module' => 'field',
+      'requirements_met' => TRUE,
+      'minimum_version' => NULL,
     ]);
   }
 

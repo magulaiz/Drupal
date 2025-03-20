@@ -2,6 +2,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\source;
 
+use Drupal\migrate\Attribute\MigrateSource;
+
 /**
  * Source returning a row based on the constants provided.
  *
@@ -21,12 +23,11 @@ namespace Drupal\migrate\Plugin\migrate\source;
  *
  * For additional configuration keys, refer to the parent class:
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "empty",
- *   source_module = "migrate"
- * )
  */
+#[MigrateSource(
+  id: 'empty',
+  source_module: 'migrate',
+)]
 class EmptySource extends SourcePluginBase {
 
   /**
@@ -34,7 +35,7 @@ class EmptySource extends SourcePluginBase {
    */
   public function fields() {
     return [
-      'id' => t('ID'),
+      'id' => $this->t('ID'),
     ];
   }
 
@@ -63,7 +64,7 @@ class EmptySource extends SourcePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function count($refresh = FALSE) {
+  protected function doCount() {
     return 1;
   }
 

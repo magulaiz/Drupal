@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media_library\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -53,7 +55,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
   /**
    * Tests that the Media Library can automatically configure display modes.
    */
-  public function testDisplayModes() {
+  public function testDisplayModes(): void {
     $this->createMediaType('file', [
       'id' => 'type_one',
     ]);
@@ -83,6 +85,9 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
 
     // Display modes are created on install.
     $this->container->get('module_installer')->install(['media_library']);
+    // The container was rebuilt during module installation, so ensure we have
+    // an up-to-date reference to it.
+    $this->container = $this->kernel->getContainer();
 
     // For a non-image media type without a mapped name field, the media_library
     // form mode should only contain the name field.
@@ -112,8 +117,8 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
       'source' => 'file',
     ];
     $this->drupalGet('admin/structure/media/add');
-    $this->submitForm($edit, 'Save');
-    $this->submitForm([], 'Save');
+    $this->submitForm($edit, 'Save and manage fields');
+    $this->submitForm([], 'Save and manage fields');
     $this->assertSession()->pageTextContains("Media Library form and view displays have been created for the $type_five_id media type.");
     $this->assertFormDisplay($type_five_id, TRUE, FALSE);
     $this->assertViewDisplay($type_five_id, 'medium');
@@ -183,6 +188,10 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
     $this->assertFormDisplay($type_id, FALSE, FALSE);
     $this->assertViewDisplay($type_id, 'medium');
 
+    // Now that all our media types have been created, ensure the bundle info
+    // cache is up-to-date.
+    $this->container->get('entity_type.bundle.info')->clearCachedBundles();
+
     // Delete a form and view display.
     EntityFormDisplay::load('media.type_one.media_library')->delete();
     EntityViewDisplay::load('media.type_one.media_library')->delete();
@@ -222,8 +231,10 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
    * @param bool $has_source_field
    *   Whether the media library form display should contain the source field or
    *   not.
+   *
+   * @internal
    */
-  protected function assertFormDisplay($type_id, $has_name, $has_source_field) {
+  protected function assertFormDisplay(string $type_id, bool $has_name, bool $has_source_field): void {
     // These components are added by default and invisible.
     $components = [
       'revision_log_message',
@@ -254,8 +265,10 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
    *   The media type ID.
    * @param string $image_style
    *   The ID of the image style that should be configured for the thumbnail.
+   *
+   * @internal
    */
-  protected function assertViewDisplay($type_id, $image_style) {
+  protected function assertViewDisplay(string $type_id, string $image_style): void {
     $view_display = EntityViewDisplay::load('media.' . $type_id . '.media_library');
     $this->assertInstanceOf(EntityViewDisplay::class, $view_display);
     // Assert the media library view display contains only the thumbnail.

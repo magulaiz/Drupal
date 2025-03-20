@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\Core\TypedData\DataDefinition;
@@ -20,6 +22,9 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
    */
   protected $typedData;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->typedData = $this->container->get('typed_data_manager');
@@ -30,7 +35,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
    *
    * For testing we define an integer with a set of allowed values.
    */
-  public function testValidation() {
+  public function testValidation(): void {
     // Create a definition that specifies some AllowedValues.
     $definition = DataDefinition::create('integer')
       ->addConstraint('AllowedValues', [1, 2, 3]);
@@ -47,7 +52,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations[0];
-    $this->assertEquals(t('The value you selected is not a valid choice.'), $violation->getMessage(), 'The message for invalid value is correct.');
+    $this->assertEquals('The value you selected is not a valid choice.', $violation->getMessage(), 'The message for invalid value is correct.');
     $this->assertEquals($typed_data, $violation->getRoot(), 'Violation root is correct.');
     $this->assertEquals(4, $violation->getInvalidValue(), 'The invalid value is set correctly in the violation.');
 
@@ -60,7 +65,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests the AllowedValuesConstraintValidator with callbacks.
    */
-  public function testValidationCallback() {
+  public function testValidationCallback(): void {
     // Create a definition that specifies some AllowedValues and a callback.
     // This tests that callbacks have a higher priority than a supplied list of
     // values and can be used to coerce the value to the correct type.
@@ -100,7 +105,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests the AllowedValuesConstraintValidator with an invalid callback.
    */
-  public function testValidationCallbackException() {
+  public function testValidationCallbackException(): void {
     // Create a definition that specifies some AllowedValues and a callback.
     // This tests that callbacks have a higher priority than a supplied list of
     // values and can be used to coerce the value to the correct type.

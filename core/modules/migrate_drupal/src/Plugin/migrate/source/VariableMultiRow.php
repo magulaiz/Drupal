@@ -2,10 +2,13 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 
+// cspell:ignore multirow
+
 /**
- * Multiple variables source from database.
+ * Drupal 6/7 multiple variables source from database.
  *
  * Unlike the variable source plugin, this one returns one row per
  * variable.
@@ -27,15 +30,15 @@ use Drupal\migrate\Row;
  * In this example the specified variables are retrieved from the source
  * database one row per variable.
  *
- * For additional configuration keys, refer to the parent classes:
+ * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "variable_multirow",
- *   source_module = "system",
- * )
  */
+#[MigrateSource(
+  id: 'variable_multirow',
+  source_module: 'system',
+)]
 class VariableMultiRow extends DrupalSqlBase {
 
   /**

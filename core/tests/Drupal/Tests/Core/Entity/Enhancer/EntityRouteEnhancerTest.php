@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Entity\Enhancer;
 
 use Drupal\Core\Entity\Enhancer\EntityRouteEnhancer;
@@ -19,7 +21,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Entity\Enhancer\EntityRouteEnhancer::enhancer()
    */
-  public function testEnhancer() {
+  public function testEnhancer(): void {
     $route_enhancer = new EntityRouteEnhancer();
 
     // Set a controller to ensure it is not overridden.
@@ -85,7 +87,7 @@ class EntityRouteEnhancerTest extends UnitTestCase {
     $defaults = $route_enhancer->enhance($defaults, $request);
     $this->assertEquals('\Drupal\Core\Entity\Controller\EntityViewController::view', $defaults['_controller'], 'The entity view controller was not set.');
     $this->assertEquals('Mock entity', $defaults['_entity']);
-    $this->assertTrue(empty($defaults['view_mode']));
+    $this->assertArrayNotHasKey('view_mode', $defaults);
     $this->assertFalse(isset($defaults['_entity_view']));
   }
 

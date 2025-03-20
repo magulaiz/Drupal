@@ -2,21 +2,22 @@
 
 namespace Drupal\language\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
  * Drupal 6 i18n node settings from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBas
- *
- * @MigrateSource(
- *   id = "d6_language_content_settings",
- *   source_module = "locale"
- * )
  */
+#[MigrateSource(
+  id: 'd6_language_content_settings',
+  source_module: 'locale',
+)]
 class LanguageContentSettings extends DrupalSqlBase {
 
   /**

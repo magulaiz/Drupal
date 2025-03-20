@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\image\Functional;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * Tests validation functions such as min/max resolution.
+ * Tests validation functions such as min/max dimensions.
  *
  * @group image
  */
@@ -25,12 +27,12 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   /**
    * Tests image validity.
    */
-  public function testValid() {
+  public function testValid(): void {
     $file_system = $this->container->get('file_system');
     $image_files = $this->drupalGetTestFiles('image');
 
-    $field_name = strtolower($this->randomMachineName());
-    $this->createImageField($field_name, 'article', [], ['file_directory' => 'test-upload']);
+    $field_name = $this->randomMachineName();
+    $this->createImageField($field_name, 'node', 'article', [], ['file_directory' => 'test-upload']);
     $expected_path = 'public://test-upload';
 
     // Create alt text for the image.
@@ -45,7 +47,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->submitForm([], 'Remove');
     $this->submitForm([], 'Save');
 
-    // Get invalid image test files from simpletest.
+    // Get invalid image test files.
     $dir = 'core/tests/fixtures/files';
     $files = [];
     if (is_dir($dir)) {
@@ -85,13 +87,13 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   }
 
   /**
-   * Tests min/max resolution settings.
+   * Tests min/max dimensions settings.
    */
-  public function testResolution() {
+  public function testResolution(): void {
     $field_names = [
-      0 => strtolower($this->randomMachineName()),
-      1 => strtolower($this->randomMachineName()),
-      2 => strtolower($this->randomMachineName()),
+      0 => $this->randomMachineName(),
+      1 => $this->randomMachineName(),
+      2 => $this->randomMachineName(),
     ];
     $min_resolution = [
       'width' => 50,
@@ -122,9 +124,9 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       1 => $this->getFieldSettings($no_height_min_resolution, $no_height_max_resolution),
       2 => $this->getFieldSettings($no_width_min_resolution, $no_width_max_resolution),
     ];
-    $this->createImageField($field_names[0], 'article', [], $field_settings[0]);
-    $this->createImageField($field_names[1], 'article', [], $field_settings[1]);
-    $this->createImageField($field_names[2], 'article', [], $field_settings[2]);
+    $this->createImageField($field_names[0], 'node', 'article', [], $field_settings[0]);
+    $this->createImageField($field_names[1], 'node', 'article', [], $field_settings[1]);
+    $this->createImageField($field_names[2], 'node', 'article', [], $field_settings[2]);
 
     // We want a test image that is too small, and a test image that is too
     // big, so cycle through test image files until we have what we need.
@@ -145,29 +147,25 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       }
     }
     $this->uploadNodeImage($image_that_is_too_small, $field_names[0], 'article');
-    $this->assertRaw(t('The specified file %name could not be uploaded.', ['%name' => $image_that_is_too_small->filename]));
-    $this->assertRaw(t('The image is too small. The minimum dimensions are %dimensions pixels and the image size is %widthx%height pixels.', [
-      '%dimensions' => '50x50',
-      '%width' => $image_that_is_too_small_file->getWidth(),
-      '%height' => $image_that_is_too_small_file->getHeight(),
-      ]));
+    $this->assertSession()->statusMessageContains("The specified file {$image_that_is_too_small->filename} could not be uploaded.", 'error');
+    $this->assertSession()->statusMessageContains("The image is too small. The minimum dimensions are 50x50 pixels and the image size is {$image_that_is_too_small_file->getWidth()}x{$image_that_is_too_small_file->getHeight()} pixels.", 'error');
     $this->uploadNodeImage($image_that_is_too_big, $field_names[0], 'article');
-    $this->assertSession()->pageTextContains('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.');
+    $this->assertSession()->statusMessageContains('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.', 'status');
     $this->uploadNodeImage($image_that_is_too_small, $field_names[1], 'article');
-    $this->assertRaw(t('The specified file %name could not be uploaded.', ['%name' => $image_that_is_too_small->filename]));
+    $this->assertSession()->statusMessageContains("The specified file {$image_that_is_too_small->filename} could not be uploaded.", 'error');
     $this->uploadNodeImage($image_that_is_too_big, $field_names[1], 'article');
-    $this->assertSession()->pageTextContains('The image was resized to fit within the maximum allowed width of 100 pixels.');
+    $this->assertSession()->statusMessageContains('The image was resized to fit within the maximum allowed width of 100 pixels.', 'status');
     $this->uploadNodeImage($image_that_is_too_small, $field_names[2], 'article');
-    $this->assertRaw(t('The specified file %name could not be uploaded.', ['%name' => $image_that_is_too_small->filename]));
+    $this->assertSession()->statusMessageContains("The specified file {$image_that_is_too_small->filename} could not be uploaded.", 'error');
     $this->uploadNodeImage($image_that_is_too_big, $field_names[2], 'article');
-    $this->assertSession()->pageTextContains('The image was resized to fit within the maximum allowed height of 100 pixels.');
+    $this->assertSession()->statusMessageContains('The image was resized to fit within the maximum allowed height of 100 pixels.', 'status');
   }
 
   /**
    * Tests that required alt/title fields gets validated right.
    */
-  public function testRequiredAttributes() {
-    $field_name = strtolower($this->randomMachineName());
+  public function testRequiredAttributes(): void {
+    $field_name = $this->randomMachineName();
     $field_settings = [
       'alt_field' => 1,
       'alt_field_required' => 1,
@@ -175,7 +173,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       'title_field_required' => 1,
       'required' => 1,
     ];
-    $instance = $this->createImageField($field_name, 'article', [], $field_settings);
+    $instance = $this->createImageField($field_name, 'node', 'article', [], $field_settings);
     $images = $this->drupalGetTestFiles('image');
     // Let's just use the first image.
     $image = $images[0];
@@ -184,8 +182,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     // Look for form-required for the alt text.
     $this->assertSession()->elementExists('xpath', '//label[@for="edit-' . $field_name . '-0-alt" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-alt"]');
     $this->assertSession()->elementExists('xpath', '//label[@for="edit-' . $field_name . '-0-title" and @class="js-form-required form-required"]/following-sibling::input[@id="edit-' . $field_name . '-0-title"]');
-    $this->assertSession()->pageTextContains('Alternative text field is required.');
-    $this->assertSession()->pageTextContains('Title field is required.');
+    $this->assertSession()->statusMessageContains('Alternative text field is required.', 'error');
+    $this->assertSession()->statusMessageContains('Title field is required.', 'error');
 
     $instance->setSetting('alt_field_required', 0);
     $instance->setSetting('title_field_required', 0);
@@ -197,8 +195,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
 
-    $this->assertNoText('Alternative text field is required.');
-    $this->assertNoText('Title field is required.');
+    $this->assertSession()->statusMessageNotContains('Alternative text field is required.');
+    $this->assertSession()->statusMessageNotContains('Title field is required.');
 
     $instance->setSetting('required', 0);
     $instance->setSetting('alt_field_required', 1);
@@ -211,8 +209,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
 
-    $this->assertNoText('Alternative text field is required.');
-    $this->assertNoText('Title field is required.');
+    $this->assertSession()->statusMessageNotContains('Alternative text field is required.');
+    $this->assertSession()->statusMessageNotContains('Title field is required.');
   }
 
   /**
@@ -223,8 +221,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
    *
    * @dataProvider providerTestEmpty
    */
-  public function testEmpty($field_name, $required, $cardinality, $form_element_name, $expected_page_text_when_edit_access_allowed, $expected_page_text_when_edit_access_forbidden) {
-    $this->createImageField($field_name, 'article', ['cardinality' => $cardinality], ['required' => $required]);
+  public function testEmpty($field_name, $required, $cardinality, $form_element_name, $expected_page_text_when_edit_access_allowed, $expected_page_text_when_edit_access_forbidden): void {
+    $this->createImageField($field_name, 'node', 'article', ['cardinality' => $cardinality], ['required' => $required]);
 
     // Test with field edit access allowed.
     $this->drupalGet('node/add/article');
@@ -252,7 +250,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
    * @return array
    *   Test cases.
    */
-  public function providerTestEmpty() {
+  public static function providerTestEmpty() {
     return [
       'optional-single' => ['field_image', FALSE, 1, 'files[field_image_0]', 'Article Article with edit-access-allowed image field has been created.', 'Article Article with edit-access-forbidden image field has been created.'],
       'optional-unlimited' => ['field_image', FALSE, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED, 'files[field_image_0][]', 'Article Article with edit-access-allowed image field has been created.', 'Article Article with edit-access-forbidden image field has been created.'],
@@ -269,13 +267,14 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
    * Returns field settings.
    *
    * @param int[] $min_resolution
-   *   The minimum width and height resolution setting.
+   *   The minimum width and height setting.
    * @param int[] $max_resolution
-   *   The maximum width and height resolution setting.
+   *   The maximum width and height setting.
    *
    * @return array
+   *   List of field settings.
    */
-  protected function getFieldSettings($min_resolution, $max_resolution) {
+  protected function getFieldSettings($min_resolution, $max_resolution): array {
     return [
       'max_resolution' => $max_resolution['width'] . 'x' . $max_resolution['height'],
       'min_resolution' => $min_resolution['width'] . 'x' . $min_resolution['height'],

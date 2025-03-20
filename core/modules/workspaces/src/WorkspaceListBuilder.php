@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -121,7 +122,9 @@ class WorkspaceListBuilder extends EntityListBuilder {
           '#url' => $entity->toUrl(),
         ],
       ],
-      'owner' => $entity->getOwner()->getDisplayname(),
+      'owner' => (($owner = $entity->getOwner()) && $owner instanceof UserInterface)
+        ? $owner->getDisplayName()
+        : $this->t('N/A'),
     ];
     $row['data'] = $row['data'] + parent::buildRow($entity);
 
@@ -190,6 +193,14 @@ class WorkspaceListBuilder extends EntityListBuilder {
       'weight' => 5,
       'url' => $entity->toUrl(),
     ];
+
+    // Because the listing page is viewable by various levels of access,
+    // including read-only users, filter out disallowed URLs.
+    foreach ($operations as $key => $operation) {
+      if (!$operation['url']->access(NULL, TRUE)->isAllowed()) {
+        unset($operations[$key]);
+      }
+    }
 
     return $operations;
   }
@@ -308,7 +319,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
             ['query' => ['destination' => $active_workspace->toUrl('collection')->toString()]]
           ),
           '#attributes' => [
-            'class' => ['button', 'active-workspace__button'],
+            'class' => ['button', 'button--primary', 'active-workspace__button'],
           ],
         ];
       }
@@ -326,7 +337,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
             ]
           ),
           '#attributes' => [
-            'class' => ['button', 'active-workspace__button'],
+            'class' => ['button', 'button--primary', 'active-workspace__button'],
           ],
         ];
       }

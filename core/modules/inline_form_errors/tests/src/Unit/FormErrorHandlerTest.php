@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\inline_form_errors\Unit;
 
 use Drupal\Core\Form\FormState;
@@ -117,25 +119,33 @@ class FormErrorHandlerTest extends UnitTestCase {
    * @covers ::displayErrorMessages
    * @covers ::setElementErrorsFromFormState
    */
-  public function testErrorMessagesInline() {
-    $this->messenger->expects($this->exactly(4))
+  public function testErrorMessagesInline(): void {
+    $messages = [
+      'no title given',
+      'element is invisible',
+      'this missing element is invalid',
+      '3 errors have been found: <ul-comma-list-mock><li-mock>Test 1</li-mock><li-mock>Test 2 &amp; a half</li-mock><li-mock>Test 3</li-mock></ul-comma-list-mock>',
+    ];
+
+    $this->messenger->expects($this->exactly(count($messages)))
       ->method('addError')
-      ->withConsecutive(
-        ['no title given', FALSE],
-        ['element is invisible', FALSE],
-        ['this missing element is invalid', FALSE],
-        ['3 errors have been found: <ul-comma-list-mock><li-mock>Test 1</li-mock><li-mock>Test 2 &amp; a half</li-mock><li-mock>Test 3</li-mock></ul-comma-list-mock>', FALSE],
+      ->with(
+        $this->callback(function (string $message) use (&$messages): bool {
+          return array_shift($messages) === $message;
+        }),
+        FALSE
       );
 
     $this->renderer->expects($this->once())
-      ->method('renderPlain')
-      ->will($this->returnCallback(function ($render_array) {
+      ->method('renderInIsolation')
+      ->willReturnCallback(function ($render_array) {
         $links = [];
         foreach ($render_array[1]['#items'] as $item) {
           $links[] = htmlspecialchars($item['#title']);
         }
+
         return $render_array[0]['#markup'] . '<ul-comma-list-mock><li-mock>' . implode('</li-mock><li-mock>', $links) . '</li-mock></ul-comma-list-mock>';
-      }));
+      });
 
     $form_state = new FormState();
     $form_state->setErrorByName('test1', 'invalid');
@@ -159,22 +169,30 @@ class FormErrorHandlerTest extends UnitTestCase {
   /**
    * Tests that opting out of Inline Form Errors works.
    */
-  public function testErrorMessagesNotInline() {
+  public function testErrorMessagesNotInline(): void {
     // Asserts all messages are summarized.
-    $this->messenger->expects($this->exactly(7))
+    $messages = [
+      'invalid',
+      'invalid',
+      'invalid',
+      'no error message',
+      'no title given',
+      'element is invisible',
+      'this missing element is invalid',
+    ];
+
+    $this->messenger->expects($this->exactly(count($messages)))
       ->method('addMessage')
-      ->withConsecutive(
-        ['invalid', 'error', FALSE],
-        ['invalid', 'error', FALSE],
-        ['invalid', 'error', FALSE],
-        ['no error message', 'error', FALSE],
-        ['no title given', 'error', FALSE],
-        ['element is invisible', 'error', FALSE],
-        ['this missing element is invalid', 'error', FALSE],
+      ->with(
+        $this->callback(function (string $message) use (&$messages): bool {
+          return array_shift($messages) === $message;
+        }),
+        'error',
+        FALSE
       );
 
     $this->renderer->expects($this->never())
-      ->method('renderPlain');
+      ->method('renderInIsolation');
 
     $this->testForm['#disable_inline_form_errors'] = TRUE;
 

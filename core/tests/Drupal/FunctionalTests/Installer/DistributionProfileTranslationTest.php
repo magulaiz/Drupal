@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Serialization\Yaml;
@@ -33,7 +35,7 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
     // We set core_version_requirement to '*' for the test so that it does not
     // need to be updated between major versions.
@@ -45,14 +47,14 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
         'name' => 'My Distribution',
         'langcode' => $this->langcode,
         'install' => [
-          'theme' => 'bartik',
+          'theme' => 'claro',
         ],
       ],
     ];
     // File API functions are not available yet.
-    $path = $this->root . DIRECTORY_SEPARATOR . $this->siteDirectory . '/profiles/my_distro';
+    $path = $this->root . DIRECTORY_SEPARATOR . $this->siteDirectory . '/profiles/my_distribution';
     mkdir($path, 0777, TRUE);
-    file_put_contents("$path/my_distro.info.yml", Yaml::encode($this->info));
+    file_put_contents("$path/my_distribution.info.yml", Yaml::encode($this->info));
 
     // Place a custom local translation in the translations directory.
     mkdir($this->root . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
@@ -62,7 +64,7 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage() {
+  protected function setUpLanguage(): void {
     // This step is skipped, because the distribution profile uses a fixed
     // language.
   }
@@ -70,29 +72,28 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpProfile() {
+  protected function setUpProfile(): void {
     // This step is skipped, because there is a distribution profile.
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function setUpSettings() {
+  protected function setUpSettings(): void {
     // The language should have been automatically detected, all following
     // screens should be translated already.
     $this->assertSession()->buttonExists('Save and continue de');
     $this->translations['Save and continue'] = 'Save and continue de';
 
     // Check the language direction.
-    $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEquals('ltr', $direction);
+    $this->assertSession()->elementTextEquals('xpath', '/@dir', 'ltr');
 
     // Verify that the distribution name appears.
-    $this->assertRaw($this->info['distribution']['name']);
+    $this->assertSession()->pageTextContains($this->info['distribution']['name']);
     // Verify that the requested theme is used.
-    $this->assertRaw($this->info['distribution']['install']['theme']);
+    $this->assertSession()->responseContains($this->info['distribution']['install']['theme']);
     // Verify that the "Choose profile" step does not appear.
-    $this->assertNoText('profile');
+    $this->assertSession()->pageTextNotContains('profile');
 
     parent::setUpSettings();
   }
@@ -100,7 +101,7 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
   /**
    * Confirms that the installation succeeded.
    */
-  public function testInstalled() {
+  public function testInstalled(): void {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -109,8 +110,9 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
 
     // Verify German was configured but not English.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertSession()->pageTextContains('German');
-    $this->assertNoText('English');
+    // cspell:ignore deutsch
+    $this->assertSession()->pageTextContains('Deutsch');
+    $this->assertSession()->pageTextNotContains('English');
   }
 
   /**
@@ -122,14 +124,14 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
    * @return string
    *   Contents for the test .po file.
    */
-  protected function getPo($langcode) {
-    return <<<ENDPO
+  protected function getPo($langcode): string {
+    return <<<PO
 msgid ""
 msgstr ""
 
 msgid "Save and continue"
 msgstr "Save and continue $langcode"
-ENDPO;
+PO;
   }
 
 }

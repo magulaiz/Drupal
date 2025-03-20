@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
+
+// cspell:ignore displaymessage
 
 /**
  * Tests that the block plugin can work properly without a supporting entity.
@@ -13,6 +17,9 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class BlockInterfaceTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['system', 'block', 'block_test', 'user'];
 
   /**
@@ -29,7 +36,7 @@ class BlockInterfaceTest extends KernelTestBase {
    * subsequent method calls are just attempting to cause a failure if a
    * dependency outside of the plugin configuration is required.
    */
-  public function testBlockInterface() {
+  public function testBlockInterface(): void {
     $manager = $this->container->get('plugin.manager.block');
     $configuration = [
       'label' => 'Custom Display Message',
@@ -37,8 +44,8 @@ class BlockInterfaceTest extends KernelTestBase {
     $expected_configuration = [
       'id' => 'test_block_instantiation',
       'label' => 'Custom Display Message',
-      'provider' => 'block_test',
       'label_display' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
+      'provider' => 'block_test',
       'display_message' => 'no message set',
     ];
     // Initial configuration of the block at construction time.
@@ -59,7 +66,7 @@ class BlockInterfaceTest extends KernelTestBase {
       ],
       'admin_label' => [
         '#type' => 'item',
-        '#title' => t('Block description'),
+        '#title' => 'Block description',
         '#plain_text' => $definition['admin_label'],
       ],
       'label' => [
@@ -78,7 +85,7 @@ class BlockInterfaceTest extends KernelTestBase {
       'context_mapping' => [],
       'display_message' => [
         '#type' => 'textfield',
-        '#title' => t('Display message'),
+        '#title' => 'Display message',
         '#default_value' => 'My custom display message.',
       ],
     ];

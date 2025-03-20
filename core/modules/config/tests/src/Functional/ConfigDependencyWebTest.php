@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
@@ -18,9 +20,7 @@ class ConfigDependencyWebTest extends BrowserTestBase {
   const MAX_ID_LENGTH = ConfigEntityStorage::MAX_ID_LENGTH;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config_test'];
 
@@ -34,7 +34,7 @@ class ConfigDependencyWebTest extends BrowserTestBase {
    *
    * @see \Drupal\Core\Config\Entity\ConfigDependencyDeleteFormTrait
    */
-  public function testConfigDependencyDeleteFormTrait() {
+  public function testConfigDependencyDeleteFormTrait(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
     ]));
@@ -66,10 +66,10 @@ class ConfigDependencyWebTest extends BrowserTestBase {
     $entity2->save();
 
     $this->drupalGet($entity2->toUrl('delete-form'));
-    $this->assertNoText('Configuration updates');
-    $this->assertNoText('Configuration deletions');
+    $this->assertSession()->pageTextNotContains('Configuration updates');
+    $this->assertSession()->pageTextNotContains('Configuration deletions');
     $this->drupalGet($entity1->toUrl('delete-form'));
-    $this->assertNoText('Configuration updates');
+    $this->assertSession()->pageTextNotContains('Configuration updates');
     $this->assertSession()->pageTextContains('Configuration deletions');
     $this->assertSession()->pageTextContains($entity2->id());
     $this->drupalGet($entity1->toUrl('delete-form'));
@@ -119,10 +119,10 @@ class ConfigDependencyWebTest extends BrowserTestBase {
 
     $this->drupalGet($entity1->toUrl('delete-form'));
     $this->assertSession()->pageTextContains('Configuration updates');
-    $this->assertNoText('Configuration deletions');
-    $this->assertNoText($entity2->id());
+    $this->assertSession()->pageTextNotContains('Configuration deletions');
+    $this->assertSession()->pageTextNotContains($entity2->id());
     $this->assertSession()->pageTextContains($entity2->label());
-    $this->assertNoText($entity3->id());
+    $this->assertSession()->pageTextNotContains($entity3->id());
     $this->drupalGet($entity1->toUrl('delete-form'));
     $this->submitForm([], 'Delete');
     $storage->resetCache();

@@ -88,7 +88,7 @@ class ModuleExtensionList extends ExtensionList {
   protected function getExtensionDiscovery() {
     $discovery = parent::getExtensionDiscovery();
 
-    if ($active_profile = $this->getActiveProfile()) {
+    if ($this->getActiveProfile()) {
       $discovery->setProfileDirectories($this->getProfileDirectories($discovery));
     }
 
@@ -162,7 +162,7 @@ class ModuleExtensionList extends ExtensionList {
     // Add status, weight, and schema version.
     $installed_modules = $this->configFactory->get('core.extension')->get('module') ?: [];
     foreach ($extensions as $name => $module) {
-      $module->weight = isset($installed_modules[$name]) ? $installed_modules[$name] : 0;
+      $module->weight = $installed_modules[$name] ?? 0;
       $module->status = (int) isset($installed_modules[$name]);
       $module->schema_version = UpdateHookRegistry::SCHEMA_UNINSTALLED;
     }
@@ -180,8 +180,6 @@ class ModuleExtensionList extends ExtensionList {
         $active_profile->info['hidden'] = TRUE;
       }
 
-      // The installation profile is required.
-      $active_profile->info['required'] = TRUE;
       // Add a default distribution name if the profile did not provide one.
       // @see install_profile_info()
       // @see drupal_install_profile_distribution_name()

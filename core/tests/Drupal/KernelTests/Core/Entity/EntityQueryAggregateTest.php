@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\field\Entity\FieldConfig;
@@ -14,11 +16,9 @@ use Drupal\field\Entity\FieldStorageConfig;
 class EntityQueryAggregateTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  protected static $modules = [];
+  protected static $modules = ['field_test'];
 
   /**
    * The entity_test storage to create the test entities.
@@ -34,6 +34,9 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
    */
   protected $queryResult;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -110,8 +113,8 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
   /**
    * Tests aggregation support.
    */
-  public function testAggregation() {
-    // Apply a simple groupby.
+  public function testAggregation(): void {
+    // Apply a simple group by.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
       ->groupBy('user_id')
@@ -139,11 +142,11 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       // We need to check that a character exists before and after the table,
       // column and alias identifiers. These would be the quote characters
       // specific for each database system.
-      $this->assertMatchesRegularExpression('/' . $aggregation_function . '\(.entity_test.\..id.\) AS .id_' . $aggregation_function . './', (string) $query, 'The argument to the aggregation function should be a quoted field.');
+      $this->assertMatchesRegularExpression('/' . $aggregation_function . '\(.*entity_test.\..id.\).* AS .id_' . $aggregation_function . './', (string) $query, 'The argument to the aggregation function should be a quoted field.');
       $this->assertEquals($expected, $this->queryResult);
     }
 
-    // Apply aggregation and groupby on the same query.
+    // Apply aggregation and group by on the same query.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
       ->aggregate('id', 'COUNT')
@@ -181,7 +184,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       ->execute();
     $this->assertResults([['id_count' => 6]]);
 
-    // Apply aggregation, a groupby and a condition which matches partially via
+    // Apply aggregation, a group by and a condition which matches partially via
     // the operator '='.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
@@ -191,7 +194,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       ->execute();
     $this->assertResults([['id_count' => 2, 'user_id' => 3]]);
 
-    // Apply aggregation, a groupby and a condition which matches partially via
+    // Apply aggregation, a group by and a condition which matches partially via
     // the operator '>'.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
@@ -220,7 +223,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       ->execute();
     $this->assertSortedResults([['id_count' => 6]]);
 
-    // Apply aggregation, groupby and a sort descending.
+    // Apply aggregation, group by and a sort descending.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
       ->aggregate('id', 'COUNT')
@@ -233,7 +236,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       ['user_id' => 1, 'id_count' => 1],
     ]);
 
-    // Apply aggregation, groupby and a sort ascending.
+    // Apply aggregation, group by and a sort ascending.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
       ->aggregate('id', 'COUNT')
@@ -246,7 +249,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       ['user_id' => 2, 'id_count' => 3],
     ]);
 
-    // Apply aggregation, groupby, an aggregation condition and a sort with the
+    // Apply aggregation, group by, an aggregation condition and a sort with the
     // operator '='.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
@@ -257,7 +260,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       ->execute();
     $this->assertSortedResults([['id_count' => 2, 'user_id' => 3]]);
 
-    // Apply aggregation, groupby, an aggregation condition and a sort with the
+    // Apply aggregation, group by, an aggregation condition and a sort with the
     // operator '<' and order ASC.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
@@ -271,7 +274,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       ['id_count' => 2, 'user_id' => 3],
     ]);
 
-    // Apply aggregation, groupby, an aggregation condition and a sort with the
+    // Apply aggregation, group by, an aggregation condition and a sort with the
     // operator '<' and order DESC.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
@@ -285,7 +288,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       ['id_count' => 1, 'user_id' => 1],
     ]);
 
-    // Test aggregation/groupby support for fieldapi fields.
+    // Test aggregation/group by support for fieldapi fields.
 
     // Just group by a fieldapi field.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
@@ -474,7 +477,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
     ]);
 
     // Group by a normal property and aggregate a fieldapi field and sort by the
-    // groupby field.
+    // group by field.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
       ->aggregate('field_test_1', 'COUNT')
@@ -534,7 +537,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       ['user_id' => 2, 'field_test_1_count' => 3],
     ]);
 
-    // Group by and aggregate by fieldapi field, and sort by the groupby field.
+    // Group by and aggregate by fieldapi field, and sort by the group by field.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
       ->groupBy('field_test_1')
@@ -588,7 +591,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
   /**
    * Tests preparing a query and executing twice.
    */
-  public function testRepeatedExecution() {
+  public function testRepeatedExecution(): void {
     $query = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
       ->groupBy('user_id');
@@ -619,13 +622,55 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests that entity query alter hooks are invoked for aggregate queries.
+   *
+   * Hook functions in field_test.module add additional conditions to the query
+   * removing entities with specific ids.
+   */
+  public function testAlterHook(): void {
+    $basicQuery = $this->entityStorage->getAggregateQuery()
+      ->accessCheck(FALSE)
+      ->groupBy('id');
+
+    // Verify assumptions about the unaltered result.
+    $query = clone $basicQuery;
+    $this->queryResult = $query->execute();
+    $this->assertResults([
+      ['id' => 1],
+      ['id' => 2],
+      ['id' => 3],
+      ['id' => 4],
+      ['id' => 5],
+      ['id' => 6],
+    ]);
+
+    // field_test_entity_query_alter() removes the entity with id '5'.
+    $query = clone $basicQuery;
+    $this->queryResult = $query
+      // Add a tag that no hook function matches.
+      ->addTag('entity_query_alter_hook_test')
+      ->execute();
+    $this->assertResults([
+      ['id' => 1],
+      ['id' => 2],
+      ['id' => 3],
+      ['id' => 4],
+      ['id' => 6],
+    ]);
+  }
+
+  /**
    * Asserts the results as expected regardless of order between and in rows.
    *
    * @param array $expected
    *   An array of the expected results.
    * @param bool $sorted
+   *   (optiOnal) Whether the array keys of the expected are sorted, defaults to
+   *   FALSE.
+   *
+   * @internal
    */
-  protected function assertResults($expected, $sorted = FALSE) {
+  protected function assertResults(array $expected, bool $sorted = FALSE): void {
     $found = TRUE;
     $expected_keys = array_keys($expected);
     foreach ($this->queryResult as $key => $row) {
@@ -647,9 +692,11 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
    *
    * @param array $expected
    *   An array of the expected results.
+   *
+   * @internal
    */
-  protected function assertSortedResults($expected) {
-    return $this->assertResults($expected, TRUE);
+  protected function assertSortedResults(array $expected): void {
+    $this->assertResults($expected, TRUE);
   }
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -46,6 +48,9 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
    */
   protected $searchableNodes;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -87,7 +92,7 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
   /**
    * Verify that comment count display toggles properly on comment status of node.
    */
-  public function testSearchCommentCountToggle() {
+  public function testSearchCommentCountToggle(): void {
     // Search for the nodes by string in the node body.
     $edit = [
       'keys' => "'SearchCommentToggleTestCase'",
@@ -106,7 +111,7 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
     $this->searchableNodes['1 comment']->save();
 
     $this->submitForm($edit, 'Search');
-    $this->assertNoText('0 comments');
+    $this->assertSession()->pageTextNotContains('0 comments');
     $this->assertSession()->pageTextContains('1 comment');
 
     // Test comment count display for nodes with comment status set to Hidden
@@ -116,8 +121,8 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
     $this->searchableNodes['1 comment']->save();
 
     $this->submitForm($edit, 'Search');
-    $this->assertNoText('0 comments');
-    $this->assertNoText('1 comment');
+    $this->assertSession()->pageTextNotContains('0 comments');
+    $this->assertSession()->pageTextNotContains('1 comment');
   }
 
 }

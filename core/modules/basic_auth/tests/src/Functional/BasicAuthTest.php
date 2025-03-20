@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\basic_auth\Functional;
 
 use Drupal\Core\Url;
@@ -37,7 +39,7 @@ class BasicAuthTest extends BrowserTestBase {
   /**
    * Tests http basic authentication.
    */
-  public function testBasicAuth() {
+  public function testBasicAuth(): void {
     // Enable page caching.
     $config = $this->config('system.performance');
     $config->set('cache.page.max_age', 300);
@@ -51,13 +53,13 @@ class BasicAuthTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($account->getAccountName());
     $this->assertSession()->statusCodeEquals(200);
     $this->mink->resetSessions();
-    $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'UNCACHEABLE (request policy)');
     // Check that Cache-Control is not set to public.
     $this->assertSession()->responseHeaderNotContains('Cache-Control', 'public');
 
     // Ensure that invalid authentication details give access denied.
     $this->basicAuthGet($url, $account->getAccountName(), $this->randomMachineName());
-    $this->assertNoText($account->getAccountName());
+    $this->assertSession()->pageTextNotContains($account->getAccountName());
     $this->assertSession()->statusCodeEquals(403);
     $this->mink->resetSessions();
 
@@ -85,7 +87,7 @@ class BasicAuthTest extends BrowserTestBase {
     $this->drupalGet($url);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->basicAuthGet($url, $account->getAccountName(), $account->pass_raw);
-    $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'UNCACHEABLE (request policy)');
     // Check that Cache-Control is not set to public.
     $this->assertSession()->responseHeaderNotContains('Cache-Control', 'public');
   }
@@ -93,7 +95,7 @@ class BasicAuthTest extends BrowserTestBase {
   /**
    * Tests the global login flood control.
    */
-  public function testGlobalLoginFloodControl() {
+  public function testGlobalLoginFloodControl(): void {
     $this->config('user.flood')
       ->set('ip_limit', 2)
       // Set a high per-user limit out so that it is not relevant in the test.
@@ -118,7 +120,7 @@ class BasicAuthTest extends BrowserTestBase {
   /**
    * Tests the per-user login flood control.
    */
-  public function testPerUserLoginFloodControl() {
+  public function testPerUserLoginFloodControl(): void {
     $this->config('user.flood')
       // Set a high global limit out so that it is not relevant in the test.
       ->set('ip_limit', 4000)
@@ -156,7 +158,7 @@ class BasicAuthTest extends BrowserTestBase {
   /**
    * Tests compatibility with locale/UI translation.
    */
-  public function testLocale() {
+  public function testLocale(): void {
     ConfigurableLanguage::createFromLangcode('de')->save();
     $this->config('system.site')->set('default_langcode', 'de')->save();
 
@@ -171,7 +173,7 @@ class BasicAuthTest extends BrowserTestBase {
   /**
    * Tests if a comprehensive message is displayed when the route is denied.
    */
-  public function testUnauthorizedErrorMessage() {
+  public function testUnauthorizedErrorMessage(): void {
     $account = $this->drupalCreateUser();
     $url = Url::fromRoute('router_test.11');
 
@@ -179,8 +181,8 @@ class BasicAuthTest extends BrowserTestBase {
     // unauthorized message is displayed.
     $this->drupalGet($url);
     $this->assertSession()->statusCodeEquals(401);
-    $this->assertNoText('Exception');
-    $this->assertSession()->pageTextContains('Please log in to access this page.');
+    $this->assertSession()->pageTextNotContains('Exception');
+    $this->assertSession()->pageTextContains('Log in to access this page.');
 
     // Case when empty credentials are passed, a user friendly access denied
     // message is displayed.
@@ -203,15 +205,14 @@ class BasicAuthTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the cacheability of Basic Auth's 401 response.
+   * Tests the cacheability of the Basic Auth 401 response.
    *
    * @see \Drupal\basic_auth\Authentication\Provider\BasicAuth::challengeException()
    */
-  public function testCacheabilityOf401Response() {
-    $session = $this->getSession();
+  public function testCacheabilityOf401Response(): void {
     $url = Url::fromRoute('router_test.11');
 
-    $assert_response_cacheability = function ($expected_page_cache_header_value, $expected_dynamic_page_cache_header_value) use ($session, $url) {
+    $assert_response_cacheability = function ($expected_page_cache_header_value, $expected_dynamic_page_cache_header_value) use ($url) {
       $this->drupalGet($url);
       $this->assertSession()->statusCodeEquals(401);
       $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', $expected_page_cache_header_value);
@@ -234,7 +235,7 @@ class BasicAuthTest extends BrowserTestBase {
     // If the permissions of the 'anonymous' role change, it may no longer be
     // necessary to be authenticated to access this route. Therefore the cached
     // 401 responses should be invalidated.
-    $this->grantPermissions(Role::load(Role::ANONYMOUS_ID), [$this->randomMachineName()]);
+    $this->grantPermissions(Role::load(Role::ANONYMOUS_ID), ['access content']);
     $assert_response_cacheability('MISS', 'MISS');
     $assert_response_cacheability('HIT', 'MISS');
     // Idem for when the 'system.site' config changes.
@@ -248,22 +249,22 @@ class BasicAuthTest extends BrowserTestBase {
    *
    * @see https://www.drupal.org/node/2817727
    */
-  public function testControllerNotCalledBeforeAuth() {
+  public function testControllerNotCalledBeforeAuth(): void {
     $this->drupalGet('/basic_auth_test/state/modify');
     $this->assertSession()->statusCodeEquals(401);
     $this->drupalGet('/basic_auth_test/state/read');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw('nope');
+    $this->assertSession()->pageTextContains('nope');
 
     $account = $this->drupalCreateUser();
     $this->basicAuthGet('/basic_auth_test/state/modify', $account->getAccountName(), $account->pass_raw);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw('Done');
+    $this->assertSession()->pageTextContains('Done');
 
     $this->mink->resetSessions();
     $this->drupalGet('/basic_auth_test/state/read');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw('yep');
+    $this->assertSession()->pageTextContains('yep');
   }
 
 }

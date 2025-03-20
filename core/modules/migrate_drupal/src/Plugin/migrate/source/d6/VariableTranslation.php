@@ -4,12 +4,13 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Drupal i18n_variable source from database.
+ * Drupal 6 i18n_variable source from database.
  *
  * Available configuration keys:
  * - variables: (required) The list of variable translations to retrieve from
@@ -25,15 +26,15 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * In this example the translations for site_offline_message variable are
  * retrieved from the source database.
  *
- * For additional configuration keys, refer to the parent classes:
+ * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_variable_translation",
- *   source_module = "i18n",
- * )
  */
+#[MigrateSource(
+  id: 'd6_variable_translation',
+  source_module: 'i18n',
+)]
 class VariableTranslation extends DrupalSqlBase {
 
   /**
@@ -88,7 +89,7 @@ class VariableTranslation extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function count($refresh = FALSE) {
+  protected function doCount() {
     return $this->initializeIterator()->count();
   }
 

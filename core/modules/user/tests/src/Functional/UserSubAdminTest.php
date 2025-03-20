@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -24,7 +26,7 @@ class UserSubAdminTest extends BrowserTestBase {
   /**
    * Tests create and cancel forms as 'sub-admin'.
    */
-  public function testSubAdmin() {
+  public function testSubAdmin(): void {
     $user = $this->drupalCreateUser(['sub-admin']);
     $this->drupalLogin($user);
 
@@ -53,18 +55,19 @@ class UserSubAdminTest extends BrowserTestBase {
     $cancel_user = $this->createUser();
     $this->drupalGet('user/' . $cancel_user->id() . '/cancel');
     $this->assertSession()->responseContains('Are you sure you want to cancel the account ' . $cancel_user->getAccountName() . '?');
-    $this->assertSession()->responseContains('Disable the account and keep its content. This action cannot be undone.');
+    $this->assertSession()->responseContains('Disable the account and keep its content.');
 
     // Test that cancel confirmation gives an admin style message.
-    $this->submitForm([], 'Cancel account');
-    $this->assertSession()->pageTextContains($cancel_user->getAccountName() . ' has been disabled.');
+    $this->submitForm([], 'Confirm');
+    $this->assertSession()->pageTextContains('Account ' . $cancel_user->getAccountName() . ' has been disabled.');
 
     // Repeat with permission to select account cancellation method.
-    $user->addRole($this->drupalCreateRole(['select account cancellation method']));
-    $user->save();
+    $user
+      ->addRole($this->drupalCreateRole(['select account cancellation method']))
+      ->save();
     $cancel_user = $this->createUser();
     $this->drupalGet('user/' . $cancel_user->id() . '/cancel');
-    $this->assertSession()->pageTextContains('Select the method to cancel the account above.');
+    $this->assertSession()->pageTextContains('Cancellation method');
   }
 
 }

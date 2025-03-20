@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 
 /**
@@ -19,6 +22,13 @@ trait UpdatePathTestTrait {
    * @var bool
    */
   protected $checkFailedUpdates = TRUE;
+
+  /**
+   * Fail the test if there are entity field definition updates needed.
+   *
+   * @var bool
+   */
+  protected $checkEntityFieldDefinitionUpdates = TRUE;
 
   /**
    * Helper function to run pending database updates.
@@ -44,11 +54,11 @@ trait UpdatePathTestTrait {
 
     $this->drupalGet($update_url);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
 
     $this->doSelectionTest();
     // Run the update hooks.
-    $this->clickLink(t('Apply pending updates'));
+    $this->clickLink('Apply pending updates');
     $this->checkForMetaRefresh();
 
     // Ensure there are no failed updates.
@@ -62,6 +72,7 @@ trait UpdatePathTestTrait {
       foreach (['update', 'post_update'] as $update_type) {
         switch ($update_type) {
           case 'update':
+            drupal_load_updates();
             $all_updates = update_get_update_list();
             break;
 
@@ -87,10 +98,7 @@ trait UpdatePathTestTrait {
       $modules_installed = FALSE;
       // Modules that are in configuration but not the module handler have been
       // installed.
-      foreach (array_keys(array_diff_key($config_module_list, $module_handler_list)) as $module) {
-        $module_handler->addModule($module, drupal_get_path('module', $module));
-        $modules_installed = TRUE;
-      }
+      $modules_installed = !empty(array_diff_key($config_module_list, $module_handler_list));
       $modules_uninstalled = FALSE;
       $module_handler_list = $module_handler->getModuleList();
       // Modules that are in the module handler but not configuration have been
@@ -103,6 +111,15 @@ trait UpdatePathTestTrait {
         // Note that resetAll() does not reset the kernel module list so we
         // have to do that manually.
         $this->kernel->updateModules($module_handler_list, $module_handler_list);
+      }
+
+      // Close any open database connections. This allows DB drivers that store
+      // static information to refresh it in the update runner.
+      // @todo https://drupal.org/i/3222121 consider doing this in
+      //   \Drupal\Core\DrupalKernel::initializeContainer() for container
+      //   rebuilds.
+      foreach (Database::getAllConnectionInfo() as $key => $info) {
+        Database::closeConnection(NULL, $key);
       }
 
       // If we have successfully clicked 'Apply pending updates' then we need to
@@ -130,17 +147,19 @@ trait UpdatePathTestTrait {
       }
 
       // Ensure that the update hooks updated all entity schema.
-      $needs_updates = \Drupal::entityDefinitionUpdateManager()->needsUpdates();
-      if ($needs_updates) {
-        foreach (\Drupal::entityDefinitionUpdateManager()->getChangeSummary() as $entity_type_id => $summary) {
-          $entity_type_label = \Drupal::entityTypeManager()->getDefinition($entity_type_id)->getLabel();
-          foreach ($summary as $message) {
-            $this->fail("$entity_type_label: $message");
+      if ($this->checkEntityFieldDefinitionUpdates) {
+        $needs_updates = \Drupal::entityDefinitionUpdateManager()->needsUpdates();
+        if ($needs_updates) {
+          foreach (\Drupal::entityDefinitionUpdateManager()->getChangeSummary() as $entity_type_id => $summary) {
+            $entity_type_label = \Drupal::entityTypeManager()->getDefinition($entity_type_id)->getLabel();
+            foreach ($summary as $message) {
+              $this->fail("$entity_type_label: $message");
+            }
           }
+          // The above calls to `fail()` should prevent this from ever being
+          // called, but it is here in case something goes really wrong.
+          $this->assertFalse($needs_updates, 'After all updates ran, entity schema is up to date.');
         }
-        // The above calls to `fail()` should prevent this from ever being
-        // called, but it is here in case something goes really wrong.
-        $this->assertFalse($needs_updates, 'After all updates ran, entity schema is up to date.');
       }
     }
   }

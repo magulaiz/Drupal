@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -43,7 +44,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
+   *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
@@ -102,7 +103,10 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase:defineOptions().
+   * Overrides view display plugin base.
+   *
+   * Overrides display plugin definition options with
+   * \Drupal\views\Plugin\views\display\DisplayPluginBase:defineOptions().
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -133,7 +137,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     ];
 
     // @todo How do we apply argument validation?
-    $bits = explode('/', $this->getOption('path'));
+    $path = $this->getOption('path');
+
     // @todo Figure out validation/argument loading.
     // Replace % with %views_arg for menu autoloading and add to the
     // page arguments so the argument actually comes through.
@@ -144,23 +149,27 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     $argument_map = [];
 
-    // Replace arguments in the views UI (defined via %) with parameters in
-    // routes (defined via {}). As a name for the parameter use arg_$key, so
-    // it can be pulled in the views controller from the request.
-    foreach ($bits as $pos => $bit) {
-      if ($bit == '%') {
-        // Generate the name of the parameter using the key of the argument
-        // handler.
-        $arg_id = 'arg_' . $arg_counter++;
-        $bits[$pos] = '{' . $arg_id . '}';
-        $argument_map[$arg_id] = $arg_id;
-      }
-      elseif (strpos($bit, '%') === 0) {
-        // Use the name defined in the path.
-        $parameter_name = substr($bit, 1);
-        $arg_id = 'arg_' . $arg_counter++;
-        $argument_map[$arg_id] = $parameter_name;
-        $bits[$pos] = '{' . $parameter_name . '}';
+    $bits = [];
+    if (is_string($path)) {
+      $bits = explode('/', $path);
+      // Replace arguments in the views UI (defined via %) with parameters in
+      // routes (defined via {}). As a name for the parameter use arg_$key, so
+      // it can be pulled in the views controller from the request.
+      foreach ($bits as $pos => $bit) {
+        if ($bit == '%') {
+          // Generate the name of the parameter using the key of the argument
+          // handler.
+          $arg_id = 'arg_' . $arg_counter++;
+          $bits[$pos] = '{' . $arg_id . '}';
+          $argument_map[$arg_id] = $arg_id;
+        }
+        elseif (str_starts_with($bit, '%')) {
+          // Use the name defined in the path.
+          $parameter_name = substr($bit, 1);
+          $arg_id = 'arg_' . $arg_counter++;
+          $argument_map[$arg_id] = $parameter_name;
+          $bits[$pos] = '{' . $parameter_name . '}';
+        }
       }
     }
 
@@ -240,8 +249,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    *   TRUE, when the view should override the given route.
    */
   protected function overrideApplies($view_path, Route $view_route, Route $route) {
-    return $this->overrideAppliesPathAndMethod($view_path, $view_route, $route)
-      && (!$route->hasRequirement('_format') || $route->getRequirement('_format') === 'html');
+    return (!$route->hasRequirement('_format') || $route->getRequirement('_format') === 'html')
+      && $this->overrideAppliesPathAndMethod($view_path, $view_route, $route);
   }
 
   /**
@@ -333,13 +342,10 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     // Replace % with %views_arg for menu autoloading and add to the
     // page arguments so the argument actually comes through.
-    foreach ($bits as $pos => $bit) {
-      if ($bit == '%') {
-        // If a view requires any arguments we cannot create a static menu link.
-        return [];
-      }
+    if (in_array('%', $bits, TRUE)) {
+      // If a view requires any arguments we cannot create a static menu link.
+      return [];
     }
-
     $path = implode('/', $bits);
     $view_id = $this->view->storage->id();
     $display_id = $this->display['id'];
@@ -424,7 +430,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $options['path'] = [
       'category' => 'page',
       'title' => $this->t('Path'),
-      'value' => views_ui_truncate($path, 24),
+      'value' => Unicode::truncate($path, 24, FALSE, TRUE),
     ];
   }
 
@@ -490,7 +496,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    */
   protected function validatePath($path) {
     $errors = [];
-    if (strpos($path, '%') === 0) {
+    if (str_starts_with($path, '%')) {
       $errors[] = $this->t('"%" may not be used for the first segment of a path.');
     }
 
@@ -515,7 +521,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         && is_numeric($matches[1]));
     });
     if (!empty($numeric_placeholders)) {
-      $errors[] = $this->t("Numeric placeholders may not be used. Please use plain placeholders (%).");
+      $errors[] = $this->t("Numeric placeholders may not be used. Use plain placeholders (%).");
     }
     return $errors;
   }
@@ -549,7 +555,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     // Check for overridden route names.
     $view_route_names = $this->getAlteredRouteNames();
 
-    return (isset($view_route_names[$view_route_key]) ? $view_route_names[$view_route_key] : "view.$view_route_key");
+    return $view_route_names[$view_route_key] ?? "view.$view_route_key";
   }
 
   /**

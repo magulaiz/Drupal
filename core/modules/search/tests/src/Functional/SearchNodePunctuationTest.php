@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -28,6 +30,9 @@ class SearchNodePunctuationTest extends BrowserTestBase {
    */
   public $testUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -47,7 +52,7 @@ class SearchNodePunctuationTest extends BrowserTestBase {
   /**
    * Tests that search works with punctuation and HTML entities.
    */
-  public function testPhraseSearchPunctuation() {
+  public function testPhraseSearchPunctuation(): void {
     $node = $this->drupalCreateNode(['body' => [['value' => "The bunny's ears were fluffy."]]]);
     // cSpell:disable-next-line
     $this->drupalCreateNode(['body' => [['value' => 'Dignissim Aliquam &amp; Quieligo meus natu quae quia te. Damnum&copy; erat&mdash; neo pneum. Facilisi feugiat ibidem ratis.']]]);
@@ -72,14 +77,14 @@ class SearchNodePunctuationTest extends BrowserTestBase {
     $edit = ['keys' => '&'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertNoRaw('<strong>&</strong>amp;');
-    $this->assertSession()->pageTextContains('You must include at least one keyword');
+    $this->assertSession()->responseNotContains('<strong>&</strong>amp;');
+    $this->assertSession()->statusMessageContains('You must include at least one keyword', 'warning');
 
     $edit = ['keys' => '&amp;'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertNoRaw('<strong>&</strong>amp;');
-    $this->assertSession()->pageTextContains('You must include at least one keyword');
+    $this->assertSession()->responseNotContains('<strong>&</strong>amp;');
+    $this->assertSession()->statusMessageContains('You must include at least one keyword', 'warning');
   }
 
 }

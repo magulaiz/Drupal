@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\Tests\SchemaCheckTestTrait;
@@ -28,7 +30,7 @@ class FilterNumericWebTest extends UITestBase {
   /**
    * Tests the filter numeric UI.
    */
-  public function testFilterNumericUI() {
+  public function testFilterNumericUI(): void {
     // Add a page display to the test_view to be able to test the filtering.
     $path = 'test_view-path';
     $this->drupalGet('admin/structure/views/view/test_view/edit');
@@ -76,9 +78,9 @@ class FilterNumericWebTest extends UITestBase {
     $this->submitForm(['age' => '2'], 'Apply');
     $this->assertSession()->pageTextContains('John');
     $this->assertSession()->pageTextContains('Paul');
-    $this->assertNoText('Ringo');
+    $this->assertSession()->pageTextNotContains('Ringo');
     $this->assertSession()->pageTextContains('George');
-    $this->assertNoText('Meredith');
+    $this->assertSession()->pageTextNotContains('Meredith');
 
     // Change the filter to a single filter to test the schema when the operator
     // is not exposed.
@@ -94,16 +96,16 @@ class FilterNumericWebTest extends UITestBase {
     // Test that the filter works as expected.
     $this->drupalGet('test_view-path');
     $this->assertSession()->pageTextContains('John');
-    $this->assertNoText('Paul');
-    $this->assertNoText('Ringo');
-    $this->assertNoText('George');
-    $this->assertNoText('Meredith');
+    $this->assertSession()->pageTextNotContains('Paul');
+    $this->assertSession()->pageTextNotContains('Ringo');
+    $this->assertSession()->pageTextNotContains('George');
+    $this->assertSession()->pageTextNotContains('Meredith');
     $this->submitForm(['age' => '26'], 'Apply');
-    $this->assertNoText('John');
+    $this->assertSession()->pageTextNotContains('John');
     $this->assertSession()->pageTextContains('Paul');
-    $this->assertNoText('Ringo');
-    $this->assertNoText('George');
-    $this->assertNoText('Meredith');
+    $this->assertSession()->pageTextNotContains('Ringo');
+    $this->assertSession()->pageTextNotContains('George');
+    $this->assertSession()->pageTextNotContains('Meredith');
 
     // Change the filter to a 'between' filter to test if the label and
     // description are set for the 'minimum' filter element.
@@ -144,8 +146,7 @@ class FilterNumericWebTest extends UITestBase {
 
     // Make sure the label is visible and that there's no fieldset wrapper.
     $this->assertSession()->elementsCount('xpath', '//label[contains(@for, "edit-age") and contains(text(), "Age greater than")]', 1);
-    $fieldset = $this->xpath('//fieldset[contains(@id, "edit-age-wrapper")]');
-    $this->assertEmpty($fieldset);
+    $this->assertSession()->elementNotExists('xpath', '//fieldset[contains(@id, "edit-age-wrapper")]');
   }
 
 }

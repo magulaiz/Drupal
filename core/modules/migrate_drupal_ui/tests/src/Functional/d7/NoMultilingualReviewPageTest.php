@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
 
-// cspell:ignore Multiupload Imagefield
+// cspell:ignore Filefield Multiupload Imagefield rulesets
 
 /**
  * Tests Drupal 7 upgrade without translations.
@@ -19,15 +21,12 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'aggregator',
-    'book',
     'config_translation',
     'content_translation',
+    'datetime_range',
     'file',
-    'forum',
     'language',
     'migrate_drupal_ui',
-    'statistics',
     'telephone',
   ];
 
@@ -36,29 +35,26 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . '/tests/fixtures/drupal7.php');
+    $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal7.php');
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getSourceBasePath() {
+  protected function getSourceBasePath(): string {
     return __DIR__ . '/files';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAvailablePaths() {
+  protected function getAvailablePaths(): array {
     return [
-      'Aggregator',
       'Block',
       'Block languages',
-      'Book',
       'Bulk Export',
       'Chaos Tools (CTools) AJAX Example',
       'Chaos tools',
-      'Color',
       'Comment',
       'Contact',
       'Custom content panes',
@@ -84,7 +80,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Field SQL storage',
       'File',
       'Filter',
-      'Forum',
       'Image',
       'Internationalization',
       'Link',
@@ -105,11 +100,9 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Phone',
       'Poll',
       'Profile',
-      'RDF',
       'Search',
       'Search embedded form',
       'Shortcut',
-      'Statistics',
       'String translation',
       'Stylizer',
       'Synchronize translations',
@@ -146,27 +139,33 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getIncompletePaths() {
+  protected function getIncompletePaths(): array {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getMissingPaths() {
+  protected function getMissingPaths(): array {
     return [
+      'Aggregator',
+      'Book',
       'Breakpoints',
+      'Color',
       'Contact translation',
       'Entity Translation Menu',
       'Entity Translation Upgrade',
       'FlexSlider Picture',
+      'Forum',
       'Multilingual content',
       'Multilingual forum',
       'Multilingual select',
       'Path translation',
       'Picture',
+      'RDF',
       'References',
       'References UUID',
+      'Statistics',
       'Translation redirect',
       'Translation sets',
       'User mail translation',

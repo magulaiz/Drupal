@@ -2,22 +2,23 @@
 
 namespace Drupal\user\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
  * Drupal 6 user picture source from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @todo Support default picture?
- *
- * @MigrateSource(
- *   id = "d6_user_picture",
- *   source_module = "user"
- * )
  */
+#[MigrateSource(
+  id: 'd6_user_picture',
+  source_module: 'user',
+)]
 class UserPicture extends DrupalSqlBase {
 
   /**

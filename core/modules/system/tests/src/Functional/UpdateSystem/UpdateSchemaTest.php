@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Core\Database\Database;
@@ -55,7 +57,7 @@ class UpdateSchemaTest extends BrowserTestBase {
   /**
    * Tests that update hooks are properly run.
    */
-  public function testUpdateHooks() {
+  public function testUpdateHooks(): void {
     $connection = Database::getConnection();
 
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
@@ -71,10 +73,10 @@ class UpdateSchemaTest extends BrowserTestBase {
     $this->drupalLogin($this->user);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
-    $this->assertRaw('Schema version 8001.');
+    $this->clickLink('Continue');
+    $this->assertSession()->pageTextContains('Schema version 8001.');
     // Run the update hooks.
-    $this->clickLink(t('Apply pending updates'));
+    $this->clickLink('Apply pending updates');
     $this->checkForMetaRefresh();
 
     // Ensure schema has changed.

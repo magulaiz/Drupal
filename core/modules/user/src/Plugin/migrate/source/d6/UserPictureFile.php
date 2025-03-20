@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
 
@@ -12,15 +13,15 @@ use Drupal\migrate\Row;
  * - site_path: (optional) The path to the site directory relative to Drupal
  *   root. Defaults to 'sites/default'.
  *
- * For additional configuration keys, refer to the parent classes:
+ * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_user_picture_file",
- *   source_module = "user"
- * )
  */
+#[MigrateSource(
+  id: 'd6_user_picture_file',
+  source_module: 'user',
+)]
 class UserPictureFile extends DrupalSqlBase {
 
   /**
@@ -51,7 +52,7 @@ class UserPictureFile extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function initializeIterator() {
-    $site_path = isset($this->configuration['site_path']) ? $this->configuration['site_path'] : 'sites/default';
+    $site_path = $this->configuration['site_path'] ?? 'sites/default';
     $this->filePath = $this->variableGet('file_directory_path', $site_path . '/files') . '/';
     $this->tempFilePath = $this->variableGet('file_directory_temp', '/tmp') . '/';
     return parent::initializeIterator();

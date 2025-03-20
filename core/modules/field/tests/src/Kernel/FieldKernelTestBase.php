@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -15,9 +17,7 @@ use Drupal\KernelTests\KernelTestBase;
 abstract class FieldKernelTestBase extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'user',
@@ -38,26 +38,30 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    * - $this->fieldTestData->field[suffix]
    * - $this->fieldTestData->field_definition[suffix]
    *
-   * @see \Drupal\field\Tests\FieldUnitTestBase::createFieldWithStorage()
-   *
    * @var \ArrayObject
+   *
+   * @see \Drupal\field\Tests\FieldUnitTestBase::createFieldWithStorage()
    */
   protected $fieldTestData;
 
   /**
+   * @var string
+   */
+  protected string $entityId;
+
+  /**
    * Set the default field storage backend for fields created during tests.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fieldTestData = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
 
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
 
     // Set default storage backend and configure the theme system.
-    $this->installConfig(['field', 'system']);
+    $this->installConfig(['field', 'system', 'user']);
 
     // Create user 1.
     $storage = \Drupal::entityTypeManager()->getStorage('user');
@@ -94,7 +98,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
     $field = 'field' . $suffix;
     $field_definition = 'field_definition' . $suffix;
 
-    $this->fieldTestData->$field_name = mb_strtolower($this->randomMachineName() . '_field_name' . $suffix);
+    $this->fieldTestData->$field_name = $this->randomMachineName() . '_field_name' . $suffix;
     $this->fieldTestData->$field_storage = FieldStorageConfig::create([
       'field_name' => $this->fieldTestData->$field_name,
       'entity_type' => $entity_type,
@@ -135,7 +139,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The entity, freshly reloaded from storage.
    */
-  protected function entitySaveReload(EntityInterface $entity) {
+  protected function entitySaveReload(EntityInterface $entity): EntityInterface {
     $entity->save();
     $controller = $this->container->get('entity_type.manager')->getStorage($entity->getEntityTypeId());
     $controller->resetCache();
@@ -151,7 +155,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
   protected function entityValidateAndSave(EntityInterface $entity) {
     $violations = $entity->validate();
     if ($violations->count()) {
-      $this->fail($violations);
+      $this->fail((string) $violations);
     }
     else {
       $entity->save();
@@ -161,10 +165,10 @@ abstract class FieldKernelTestBase extends KernelTestBase {
   /**
    * Generate random values for a field_test field.
    *
-   * @param $cardinality
+   * @param int $cardinality
    *   Number of values to generate.
    *
-   * @return
+   * @return array
    *   An array of random values, in the format expected for field values.
    */
   protected function _generateTestFieldValues($cardinality) {
@@ -183,14 +187,14 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to test.
-   * @param $field_name
-   *   The name of the field to test
-   * @param $expected_values
+   * @param string $field_name
+   *   The name of the field to test.
+   * @param array $expected_values
    *   The array of expected values.
-   * @param $langcode
+   * @param string $langcode
    *   (Optional) The language code for the values. Defaults to
    *   \Drupal\Core\Language\LanguageInterface::LANGCODE_NOT_SPECIFIED.
-   * @param $column
+   * @param string $column
    *   (Optional) The name of the column to check. Defaults to 'value'.
    */
   protected function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, $column = 'value') {

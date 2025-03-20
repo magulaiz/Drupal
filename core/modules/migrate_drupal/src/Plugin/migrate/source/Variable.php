@@ -4,10 +4,11 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Plugin\MigrationInterface;
 
 /**
- * Drupal variable source from database.
+ * Drupal 6/7 variable source from database.
  *
  * This source class fetches variables from the source Drupal database.
  * Depending on the configuration, this returns zero or a single row and as such
@@ -70,15 +71,15 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *     - book_allowed_types
  * @endcode
  *
- * For additional configuration keys, refer to the parent classes:
+ * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "variable",
- *   source_module = "system",
- * )
  */
+#[MigrateSource(
+  id: 'variable',
+  source_module: 'system',
+)]
 class Variable extends DrupalSqlBase {
 
   /**
@@ -134,7 +135,7 @@ class Variable extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function count($refresh = FALSE) {
+  protected function doCount() {
     if (empty($this->variablesNoRowIfMissing)) {
       return 1;
     }

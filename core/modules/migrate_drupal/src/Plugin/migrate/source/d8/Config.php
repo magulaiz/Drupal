@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\source\d8;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -42,15 +43,15 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * As a result, French versions of specified configuration objects are retrieved
  * from the source database.
  *
- * For additional configuration keys, refer to the parent classes:
+ * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d8_config",
- *   source_module = "system",
- * )
  */
+#[MigrateSource(
+  id: 'd8_config',
+  source_module: 'system',
+)]
 class Config extends DrupalSqlBase {
 
   /**

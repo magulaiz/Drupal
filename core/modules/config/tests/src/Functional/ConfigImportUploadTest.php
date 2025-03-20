@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Site\Settings;
@@ -23,9 +25,7 @@ class ConfigImportUploadTest extends BrowserTestBase {
   protected $webUser;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config'];
 
@@ -34,6 +34,9 @@ class ConfigImportUploadTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -44,7 +47,7 @@ class ConfigImportUploadTest extends BrowserTestBase {
   /**
    * Tests importing configuration.
    */
-  public function testImport() {
+  public function testImport(): void {
     // Verify access to the config upload form.
     $this->drupalGet('admin/config/development/configuration/full/import');
     $this->assertSession()->statusCodeEquals(200);
@@ -60,7 +63,7 @@ class ConfigImportUploadTest extends BrowserTestBase {
     $directory = Settings::get('config_sync_directory');
     \Drupal::service('file_system')->chmod($directory, 0555);
     $this->drupalGet('admin/config/development/configuration/full/import');
-    $this->assertRaw(t('The directory %directory is not writable.', ['%directory' => $directory]));
+    $this->assertSession()->pageTextContains("The directory $directory is not writable.");
     // Ensure submit button for \Drupal\config\Form\ConfigImportForm is
     // disabled.
     $submit_is_disabled = $this->cssSelect('form.config-import-form input[type="submit"]:disabled');

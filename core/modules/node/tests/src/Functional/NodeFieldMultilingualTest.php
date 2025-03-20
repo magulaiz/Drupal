@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\field\Entity\FieldStorageConfig;
@@ -16,17 +18,18 @@ use Drupal\Tests\BrowserTestBase;
 class NodeFieldMultilingualTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'language'];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -56,8 +59,8 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
       'language_configuration[language_alterable]' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save content type');
-    $this->assertRaw(t('The content type %type has been updated.', ['%type' => 'Basic page']));
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
 
     // Make node body translatable.
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
@@ -68,7 +71,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
   /**
    * Tests whether field languages are correctly set through the node form.
    */
-  public function testMultilingualNodeForm() {
+  public function testMultilingualNodeForm(): void {
     // Create "Basic page" content.
     $langcode = language_get_default_langcode('node', 'page');
     $title_key = 'title[0][value]';
@@ -109,18 +112,18 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     $this->drupalGet("it/node/{$node->id()}");
     // Verify that body is correctly displayed using Italian as requested
     // language.
-    $this->assertRaw($body_value);
+    $this->assertSession()->pageTextContains($body_value);
 
     $this->drupalGet("node/{$node->id()}");
     // Verify that body is correctly displayed using English as requested
     // language.
-    $this->assertRaw($body_value);
+    $this->assertSession()->pageTextContains($body_value);
   }
 
   /**
    * Tests multilingual field display settings.
    */
-  public function testMultilingualDisplaySettings() {
+  public function testMultilingualDisplaySettings(): void {
     // Create "Basic page" content.
     $title_key = 'title[0][value]';
     $title_value = $this->randomMachineName(8);
@@ -140,7 +143,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
 
     // Check if node body is showed.
     $this->drupalGet('node/' . $node->id());
-    $this->assertSession()->elementTextEquals('xpath', "//article[contains(concat(' ', normalize-space(@class), ' '), ' node ')]//div[contains(concat(' ', normalize-space(@class), ' '), 'node__content')]/descendant::p", $node->body->value);
+    $this->assertSession()->elementTextEquals('xpath', "//article/div//p", $node->body->value);
   }
 
 }

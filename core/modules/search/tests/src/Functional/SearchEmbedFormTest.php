@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -35,6 +37,9 @@ class SearchEmbedFormTest extends BrowserTestBase {
    */
   protected $submitCount = 0;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -60,7 +65,7 @@ class SearchEmbedFormTest extends BrowserTestBase {
   /**
    * Tests that the embedded form appears and can be submitted.
    */
-  public function testEmbeddedForm() {
+  public function testEmbeddedForm(): void {
     // First verify we can submit the form from the module's page.
     $this->drupalGet('search_embedded_form');
     $this->submitForm(['name' => 'John'], 'Send away');
@@ -82,7 +87,7 @@ class SearchEmbedFormTest extends BrowserTestBase {
     // our form being submitted.
     $this->drupalGet('search');
     $this->submitForm(['keys' => 'foo'], 'Search');
-    $this->assertNoText('Test form was submitted');
+    $this->assertSession()->pageTextNotContains('Test form was submitted');
     $count = \Drupal::state()->get('search_embedded_form.submit_count');
     $this->assertEquals($this->submitCount, $count, 'Form submission count is correct');
     $this->submitCount = $count;

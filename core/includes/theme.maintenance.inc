@@ -13,9 +13,9 @@ use Drupal\Core\Site\Settings;
  *
  * Used for site installs, updates and when the site is in maintenance mode.
  * It also applies when the database is unavailable or bootstrap was not
- * complete. Seven is always used for the initial install and update
- * operations. In other cases, Bartik is used, but this can be overridden by
- * setting a "maintenance_theme" key in the $settings variable in settings.php.
+ * complete. Claro is always used for the initial install and update
+ * operations, but this can be overridden by setting a "maintenance_theme" key
+ * in the $settings variable in settings.php.
  */
 function _drupal_maintenance_theme() {
   // If the theme is already set, assume the others are set too, and do nothing.
@@ -25,16 +25,16 @@ function _drupal_maintenance_theme() {
 
   require_once __DIR__ . '/theme.inc';
   require_once __DIR__ . '/common.inc';
-  require_once __DIR__ . '/file.inc';
   require_once __DIR__ . '/module.inc';
 
-  // Install and update pages are treated differently to prevent theming overrides.
+  // Install and update pages are treated differently to prevent theming
+  // overrides.
   if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
     if (InstallerKernel::installationAttempted()) {
       $custom_theme = $GLOBALS['install_state']['theme'];
     }
     else {
-      $custom_theme = Settings::get('maintenance_theme', 'seven');
+      $custom_theme = Settings::get('maintenance_theme', 'claro');
     }
   }
   else {
@@ -47,15 +47,15 @@ function _drupal_maintenance_theme() {
         $custom_theme = $config->get('default');
       }
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Whatever went wrong (often a database connection problem), we are
       // about to fall back to a sensible theme so there is no need for special
       // handling.
     }
     if (!$custom_theme) {
       // We have been unable to identify the configured theme, so fall back to
-      // a safe default. Bartik is reasonably user friendly and fairly generic.
-      $custom_theme = 'bartik';
+      // a safe default. Claro is reasonably user friendly and fairly generic.
+      $custom_theme = 'claro';
     }
   }
 
@@ -109,7 +109,7 @@ function _drupal_maintenance_theme() {
  *   An associative array containing:
  *   - messages: An array of result messages.
  */
-function template_preprocess_authorize_report(&$variables) {
+function template_preprocess_authorize_report(&$variables): void {
   $messages = [];
   if (!empty($variables['messages'])) {
     foreach ($variables['messages'] as $heading => $logs) {

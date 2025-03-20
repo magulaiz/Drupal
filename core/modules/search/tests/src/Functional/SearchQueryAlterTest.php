@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -24,7 +26,7 @@ class SearchQueryAlterTest extends BrowserTestBase {
   /**
    * Tests that the query alter works.
    */
-  public function testQueryAlter() {
+  public function testQueryAlter(): void {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
@@ -55,7 +57,7 @@ class SearchQueryAlterTest extends BrowserTestBase {
     $this->submitForm(['keys' => 'pizza'], 'Search');
     // The article should be there but not the page.
     $this->assertSession()->pageTextContains('article');
-    $this->assertNoText('page');
+    $this->assertSession()->pageTextNotContains('page');
   }
 
 }

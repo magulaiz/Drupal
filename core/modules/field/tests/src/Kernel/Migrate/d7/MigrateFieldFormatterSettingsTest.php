@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel\Migrate\d7;
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -13,9 +15,13 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'comment',
     'datetime',
+    'datetime_range',
     'image',
     'link',
     'menu_ui',
@@ -42,8 +48,10 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
    *
    * @param string $id
    *   The view display ID.
+   *
+   * @internal
    */
-  protected function assertEntity($id) {
+  protected function assertEntity(string $id): void {
     $display = EntityViewDisplay::load($id);
     $this->assertInstanceOf(EntityViewDisplayInterface::class, $display);
   }
@@ -61,8 +69,10 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
    *   The expected label of the component.
    * @param int $weight
    *   The expected weight of the component.
+   *
+   * @internal
    */
-  protected function assertComponent($display_id, $component_id, $type, $label, $weight) {
+  protected function assertComponent(string $display_id, string $component_id, string $type, string $label, int $weight): void {
     $component = EntityViewDisplay::load($display_id)->getComponent($component_id);
     $this->assertIsArray($component);
     $this->assertSame($type, $component['type']);
@@ -77,8 +87,10 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
    *   The display ID.
    * @param string $component_id
    *   The component ID.
+   *
+   * @internal
    */
-  protected function assertComponentNotExists($display_id, $component_id) {
+  protected function assertComponentNotExists(string $display_id, string $component_id): void {
     $component = EntityViewDisplay::load($display_id)->getComponent($component_id);
     $this->assertNull($component);
   }
@@ -86,7 +98,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
   /**
    * Tests migration of D7 field formatter settings.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $this->assertEntity('comment.comment_node_article.default');
     $this->assertComponent('comment.comment_node_article.default', 'comment_body', 'text_default', 'hidden', 0);
 
