@@ -64,8 +64,10 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
    *   The typed data manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
+   * @param array $bundle_classes
+   *   An array of bundle classes.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager, CacheBackendInterface $cache_backend) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager, CacheBackendInterface $cache_backend, protected array $bundleClasses = []) {
     $this->entityTypeManager = $entity_type_manager;
     $this->languageManager = $language_manager;
     $this->moduleHandler = $module_handler;
@@ -109,9 +111,7 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
         }
 
         // Bundle classes.
-        // @todo how to inject container to get params?
-        $bundle_classes = \Drupal::getContainer()->getParameter('entity.bundle_classes');
-        foreach ($bundle_classes as $class => $info) {
+        foreach ($this->bundleClasses as $class => $info) {
           $this->bundleInfo[$info['entityTypeId']][$info['bundle']]['class'] = $class;
           $this->bundleInfo[$info['entityTypeId']][$info['bundle']]['label'] = $info['label']
             ?? $this->bundleInfo[$info['entityTypeId']][$info['bundle']]['label']
