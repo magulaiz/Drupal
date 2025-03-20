@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * @file
+ * Definition of Drupal\node\Tests\NodeRevisionsAuthorTest.
+ */
+
+namespace Drupal\node\Tests;
+
+use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
+use Drupal\Tests\node\Functional\NodeTestBase;
+use Drupal\user\UserInterface;
+
+/**
+ * Creates a new node, initially authored by $user1 (r0), and then
+ * revised by $user2 (including a change to the node's author information
+ * to $user3) (r1). Tests to ensure that when r1 is reverted to r0,
+ * and then subsequently reverted to r1, that all of the various
+ * authors and revision authors are appropriately retained.
+ *
+ * @see https://www.drupal.org/node/1528028#comment-6830378
+ *
+ * @group node
+ */
+class NodeRevisionsAuthorTest extends NodeTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * Tests node authorship is retained after reverting revisions.
+   */
+  function testNodeRevisionRevertAuthors(): void {
+    // Create and log in user.
+    $initialUser = $this->drupalCreateUser([
+      'view page revisions',
+      'revert page revisions',
+      'edit any page content',
+    ]);
+    $initialRevisionUser = $this->drupalCreateUser();
+    // Third user is an author only and needs no permissions
+    $initialRevisionAuthor = $this->drupalCreateUser();
+
+    // Create initial node (author: $user1).
+    $this->drupalLogin($initialUser);
+    $node = $this->drupalCreateNode();
+    $originalRevisionId = $node->getRevisionId();
+    $originalBody = $node->body->value;
+    $originalTitle = $node->getTitle();
+
+    // Create a revision (as $user2) showing $user3 as author.
+    $node->setRevisionLogMessage('Changed author');
+    $revisedTitle = $this->randomMachineName();
+    $node->setTitle($revisedTitle);
+    $revisedBody = $this->randomMachineName(32);
+    $node->set('body', [
+      'value' => $revisedBody,
+      'format' => filter_default_format(),
+    ]);
+    $node->setOwnerId($initialRevisionAuthor->id());
+    $node->setRevisionUserId($initialRevisionUser->id());
+    $node->setNewRevision();
+    $node->save();
+    $revisedRevisionId = $node->getRevisionId();
+
+    $nodeStorage = \Drupal::entityTypeManager()->getStorage('node');
+
+    // Confirm that in the revised node, $user3 is the author and $user2 is
+    // the revision user.
+    self::assertEquals($node->getOwnerId(), $initialRevisionAuthor->id());
+    self::assertEquals($node->getRevisionUserId(), $initialRevisionUser->id());
+
+    // Revert to the original node revision.
+    $this->drupalGet(Url::fromRoute('node.revision_revert_confirm', [
+      'node' => $node->id(),
+      'node_revision' => $originalRevisionId,
+    ]));
+    $this->submitForm([], 'Revert');
+    $this->assertSession()->pageTextContains(\sprintf('Basic page %s has been reverted', $originalTitle));
+
+    // With the revert done, reload the node and verify that the authorship
+    // fields have reverted correctly.
+    $nodeStorage->resetCache([$node->id()]);
+    /** @var \Drupal\node\NodeInterface $revertedNode */
+    $revertedNode = $nodeStorage->load($node->id());
+    self::assertEquals($originalBody, $revertedNode->body->value);
+    self::assertEquals($initialUser->id(), $revertedNode->getOwnerId());
+    self::assertEquals($initialUser->id(), $revertedNode->getRevisionUserId());
+
+    // Revert again to the revised version and check that node author and
+    // revision author fields are correct.
+    // Revert to the original node.
+    $this->drupalGet(Url::fromRoute('node.revision_revert_confirm', [
+      'node' => $revertedNode->id(),
+      'node_revision' => $revisedRevisionId,
+    ]));
+    $this->submitForm([], 'Revert');
+    $this->assertSession()->pageTextContains(\sprintf('Basic page %s has been reverted', $revisedTitle));
+
+    // With the reversion done, reload the node and verify that the
+    // authorship fields have reverted correctly.
+    $nodeStorage->resetCache([$revertedNode->id()]);
+    /** @var \Drupal\node\NodeInterface $re_reverted_node */
+    $re_reverted_node = $nodeStorage->load($revertedNode->id());
+    self::assertEquals($revisedBody, $re_reverted_node->body->value);
+    self::assertEquals($initialRevisionAuthor->id(), $re_reverted_node->getOwnerId());
+    // The new revision user will be the current logged in user as set in
+    // NodeRevisionRevertForm.
+    self::assertEquals($initialUser->id(), $re_reverted_node->getRevisionUserId());
+  }
+
+}
