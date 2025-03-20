@@ -23,27 +23,22 @@ use Drupal\Core\Session\AccountInterface;
 class NodeAccessGrantsCacheContext extends UserCacheContextBase implements CalculatedCacheContextInterface {
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a new cache context instance.
    *
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|NULL $entityTypeManager
    *   The entity type manager service.
    */
-  public function __construct(AccountInterface $user, EntityTypeManagerInterface $entity_type_manager = NULL) {
+  public function __construct(
+    AccountInterface $user,
+    protected ?EntityTypeManagerInterface $entityTypeManager = NULL,
+  ) {
     parent::__construct($user);
-    if (!$entity_type_manager) {
-      @trigger_error('Calling NodeAccessGrantsCacheContext::__construct() without the $entity_type_manager argument is deprecated in drupal:9.3.0 and the $entity_type_manager argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3038909', E_USER_DEPRECATED);
-      $entity_type_manager = \Drupal::entityTypeManager();
+    if (!$entityTypeManager) {
+      @trigger_error('Calling NodeAccessGrantsCacheContext::__construct() without the $entity_type_manager argument is deprecated in drupal:11.2.0 and the $entity_type_manager argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3038909', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::entityTypeManager();
     }
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
