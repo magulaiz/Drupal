@@ -649,6 +649,7 @@ class Select extends Query implements SelectInterface {
       $table = $this->connection->identifiers->table($table);
     }
     assert($table instanceof TableIdentifier || $table instanceof SelectInterface);
+
     if (empty($alias)) {
       if ($table instanceof SelectInterface) {
         $alias = 'subquery';
@@ -669,9 +670,11 @@ class Select extends Query implements SelectInterface {
       $condition = str_replace('%alias', $alias, $condition);
     }
 
+    // The 'table' key must store a string and not a Table identifier for BC
+    // reasons.
     $this->tables[$alias] = [
       'join type' => $type,
-      'table' => $table,
+      'table' => $table instanceof TableIdentifier ? $table->identifier : $table,
       'alias' => $alias,
       'condition' => $condition,
       'arguments' => $arguments,
@@ -875,7 +878,7 @@ class Select extends Query implements SelectInterface {
         $table_string = '(' . (string) $subquery . ')';
       }
       else {
-        $table_string = (string) $table['table'];
+        $table_string = $this->connection->identifiers->table($table['table']);
       }
 
       // Don't use the AS keyword for table aliases, as some
