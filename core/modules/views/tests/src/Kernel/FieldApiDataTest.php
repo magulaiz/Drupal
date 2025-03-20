@@ -367,11 +367,6 @@ class FieldApiDataTest extends ViewsKernelTestBase {
     $view->setDisplay('embed_5');
     $this->executeView($view);
     $expected = [
-      // Why is this one returned?
-      [
-        'nid' => $node2->id(),
-        'langcode' => 'fr',
-      ],
       [
         'nid' => $node1->id(),
         'langcode' => 'es',
@@ -379,6 +374,11 @@ class FieldApiDataTest extends ViewsKernelTestBase {
       [
         'nid' => $node2->id(),
         'langcode' => 'es',
+      ],
+      // Why is this one returned?
+      [
+        'nid' => $node2->id(),
+        'langcode' => 'fr',
       ],
     ];
 

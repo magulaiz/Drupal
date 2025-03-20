@@ -65,10 +65,10 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
    * @param string[] $expected_toolbar_items
    *   The items which should be in the editor toolbar, in the expected order.
    *
-   * @testWith ["sourceEditing", ["heading", "bold", "italic", "sourceEditing"]]
+   * @testWith ["sourceEditing", ["bold", "heading", "italic", "sourceEditing"]]
    *   [{"item_name": "sourceEditing"}, ["bold", "heading", "italic", "sourceEditing"]]
    *   [{"item_name": "sourceEditing", "position": 1}, ["bold", "heading", "italic", "sourceEditing"]]
-   *   [{"item_name": "sourceEditing", "position": 1, "replace": true}, ["heading", "italic", "sourceEditing"]]
+   *   [{"item_name": "sourceEditing", "position": 1, "replace": true}, ["bold", "italic", "sourceEditing"]]
    */
   public function testAddItemToToolbar(string|array $action, array $expected_toolbar_items): void {
     $recipe = $this->createRecipe([
