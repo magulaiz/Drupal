@@ -68,7 +68,9 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
    * @testWith ["sourceEditing", ["bold", "heading", "italic", "sourceEditing"]]
    *   [{"item_name": "sourceEditing"}, ["bold", "heading", "italic", "sourceEditing"]]
    *   [{"item_name": "sourceEditing", "position": 1}, ["bold", "heading", "italic", "sourceEditing"]]
-   *   [{"item_name": "sourceEditing", "position": 1, "replace": true}, ["bold", "italic", "sourceEditing"]]
+   *   [{"item_name": "sourceEditing", "position": 1, "replace": true}, ["heading", "sourceEditing", "italic"]]
+   *   [{"item_name": "bold"}, ["bold", "heading", "italic"]]
+   *   [{"item_name": "bold", "allow_duplicate": true}, ["bold", "bold", "heading", "italic"]]
    */
   public function testAddItemToToolbar(string|array $action, array $expected_toolbar_items): void {
     $recipe = $this->createRecipe([
@@ -86,10 +88,16 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
     /** @var array{toolbar: array{items: string[]}, plugins: array<string, array<mixed>>} $settings */
     $settings = Editor::load('filter_test')?->getSettings();
     $this->assertSame($expected_toolbar_items, $settings['toolbar']['items']);
+
     // The plugin's default settings should have been added.
-    $this->assertSame([], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
+    if (in_array('sourceEditing', $expected_toolbar_items, TRUE)) {
+      $this->assertSame([], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
+    }
   }
 
+  /**
+   * Tests that adding non-existent toolbar item to CKEditor triggers an error.
+   */
   public function testAddNonExistentItem(): void {
     $recipe = $this->createRecipe([
       'name' => 'Add an invalid toolbar item',
@@ -107,6 +115,9 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
     RecipeRunner::processRecipe($recipe);
   }
 
+  /**
+   * Tests that the `addItemToToolbar` config action requires CKEditor 5.
+   */
   public function testActionRequiresCKEditor5(): void {
     $this->enableModules(['editor_test']);
     Editor::load('filter_test')?->setEditor('unicorn')->setSettings([])->save();
