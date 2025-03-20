@@ -105,7 +105,7 @@ class RecipeUnpackTest extends BuildTestBase {
         $this->assertArrayHasKey($dependency, $root_composer_json['require']);
       }
       // The dev dependency has moved.
-      $this->assertEmpty($root_composer_json['require-dev']);
+      $this->assertArrayNotHasKey('require-dev', $root_composer_json);
     }
   }
 
