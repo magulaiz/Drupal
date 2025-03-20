@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\node\Tests;
+namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Url;
-use Drupal\Tests\node\Functional\NodeTestBase;
 
 /**
  * Tests reverting node revisions correctly sets authorship information.
