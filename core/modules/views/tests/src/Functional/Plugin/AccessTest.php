@@ -22,7 +22,12 @@ class AccessTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_access_none', 'test_access_static', 'test_access_dynamic', 'test_content_access_filter'];
+  public static $testViews = [
+    'test_access_none',
+    'test_access_static',
+    'test_access_dynamic',
+    'test_content_access_filter',
+  ];
 
   /**
    * {@inheritdoc}
@@ -67,11 +72,6 @@ class AccessTest extends ViewTestBase {
     $this->normalUser->addRole($normal_role);
     // @todo when all the plugin information is cached make a reset function and
     // call it here.
-
-    // Create Page content type.
-    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
-    $this->drupalCreateNode();
-    $this->drupalCreateNode();
   }
 
   /**
@@ -121,7 +121,7 @@ class AccessTest extends ViewTestBase {
   /**
    * Tests that node_access table is joined when hook_node_grants() is implemented.
    */
-  public function testContentAccessFilter() {
+  public function testContentAccessFilter(): void {
     $view = Views::getView('test_content_access_filter');
     $view->setDisplay('page_1');
 
