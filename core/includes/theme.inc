@@ -91,7 +91,6 @@ function _system_default_theme_features() {
  *   The extension that these templates will have.
  * @param string $path
  *   The path to search.
- * @return non-empty-array<('base hook' | 'path' | 'render element' | 'template' | 'variables'), mixed>[]
  */
 function drupal_find_theme_templates($cache, $extension, $path): array {
   $implementations = [];

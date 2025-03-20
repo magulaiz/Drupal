@@ -540,7 +540,6 @@ function locale_translation_file_history_delete($projects = [], $langcodes = [])
  * Gets the current translation status.
  *
  * @todo What is 'translation status'?
- * @return non-empty-array<mixed>[]
  */
 function locale_translation_get_status($projects = NULL, $langcodes = NULL): array {
   $result = [];

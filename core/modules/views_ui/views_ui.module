@@ -103,7 +103,6 @@ function views_ui_view_preview_section_display_category_links(ViewExecutable $vi
 
 /**
  * Returns all contextual links for the main content part of the view.
- * @return mixed[]
  */
 function views_ui_view_preview_section_rows_links(ViewExecutable $view): array {
   $links = [];
