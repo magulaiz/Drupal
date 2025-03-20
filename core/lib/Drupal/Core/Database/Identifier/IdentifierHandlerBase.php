@@ -90,9 +90,14 @@ abstract class IdentifierHandlerBase {
    */
   protected function getIdentifierValueObject(IdentifierType $type, string|IdentifierBase $identifier): IdentifierBase {
     $valueObjectClass = IdentifierType::valueObjectClass($type);
+
+    // If the identifier is a value object already, just return it.
     if ($identifier instanceof $valueObjectClass) {
-      $identifier = $identifier->identifier;
+      return $identifier;
     }
+
+    // Get the value object from the cache if existing, or create a new
+    // instance and cache it.
     if ($this->isCached($identifier, $type)) {
       $valueObject = $this->fromCache($identifier, $type);
     }
