@@ -336,7 +336,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   /**
    * {@inheritdoc}
    */
-  public function resetCache() {
+  public function resetCache(): void {
     $this->viewAllNodesCache = [];
     parent::resetCache();
   }
