@@ -18,7 +18,7 @@ class BundleClassCollectorPass implements CompilerPassInterface {
   /**
    * The bundle classes.
    *
-   * @var array<class-string, class-string>
+   * @var array<class-string, array{'entityTypeId': string, 'bundle': string|null, 'label': \Drupal\Core\StringTranslation\TranslatableMarkup|null}>
    */
   protected array $bundleClasses = [];
 
@@ -62,7 +62,7 @@ class BundleClassCollectorPass implements CompilerPassInterface {
       }
       $reflection = new \ReflectionClass($fqcn);
       $attributes = $reflection->getAttributes(Bundle::class);
-      if (count($attributes) >= 0) {
+      if (count($attributes) > 0) {
         $this->bundleClasses[$fqcn] = $attributes[0]->getArguments();
       }
     }
