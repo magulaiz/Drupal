@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\image\Kernel;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -13,6 +14,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
+use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\user\Entity\Role;
 
 /**
@@ -170,6 +172,14 @@ class ImageItemTest extends FieldKernelTestBase {
     $imageItem = $entity->image_test_generation->first()->getValue();
     $this->assertEquals('800', $imageItem['width']);
     $this->assertEquals('800', $imageItem['height']);
+
+    // Test file URIs for image items with empty and custom directories.
+    $this->validateImageUriForDirectory(
+      '', 'public://'
+    );
+    $this->validateImageUriForDirectory(
+      'custom_directory/subdir', 'public://custom_directory/subdir/'
+    );
   }
 
   /**
@@ -196,6 +206,38 @@ class ImageItemTest extends FieldKernelTestBase {
     $this->assertEquals(serialize($arguments), $logged);
     $this->assertEmpty($entity->image_test->width);
     $this->assertEmpty($entity->image_test->height);
+  }
+
+  /**
+   * Validates the image file URI generated for a given file directory.
+   *
+   * @param string $file_directory
+   *   The file directory to test (e.g., empty or 'custom_directory/subdir').
+   * @param string $expected_start
+   *   The expected starting string of the file URI (e.g., 'public://').
+   */
+  private function validateImageUriForDirectory($file_directory, $expected_start): void {
+    // Mock the field definition with the specified file directory.
+    $definition = $this->createMock(FieldDefinitionInterface::class);
+    $definition->expects($this->any())
+      ->method('getSettings')
+      ->willReturn([
+        'file_extensions' => 'jpg',
+        'file_directory' => $file_directory,
+        'uri_scheme' => 'public',
+      ]);
+    // Generate sample value and check the URI format.
+    $value = ImageItem::generateSampleValue($definition);
+    $this->assertNotEmpty($value);
+
+    // Load the file entity and get its URI.
+    $fid = $value['target_id'];
+    $file = File::load($fid);
+    $fileUri = $file->getFileUri();
+
+    // Verify the file URI starts with the expected protocol and structure.
+    $this->assertStringStartsWith($expected_start, $fileUri);
+    $this->assertMatchesRegularExpression('#^' . preg_quote($expected_start, '#') . '[^/]+#', $fileUri);
   }
 
 }
