@@ -27,7 +27,7 @@ class NodeAccessGrantsCacheContext extends UserCacheContextBase implements Calcu
    *
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|NULL $entityTypeManager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entityTypeManager
    *   The entity type manager service.
    */
   public function __construct(
