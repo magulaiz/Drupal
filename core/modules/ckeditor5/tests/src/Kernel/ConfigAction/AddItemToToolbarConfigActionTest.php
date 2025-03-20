@@ -56,7 +56,7 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
 
     /** @var array{toolbar: array{items: array<int, string>}} $settings */
     $settings = Editor::load('filter_test')?->getSettings();
-    $this->assertSame(['heading', 'bold', 'italic'], $settings['toolbar']['items']);
+    $this->assertSame(['bold', 'heading', 'italic'], $settings['toolbar']['items']);
   }
 
   /**
@@ -66,9 +66,9 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
    *   The items which should be in the editor toolbar, in the expected order.
    *
    * @testWith ["sourceEditing", ["heading", "bold", "italic", "sourceEditing"]]
-   *   [{"item_name": "sourceEditing"}, ["heading", "bold", "italic", "sourceEditing"]]
-   *   [{"item_name": "sourceEditing", "position": 1}, ["heading", "sourceEditing", "bold", "italic"]]
-   *   [{"item_name": "sourceEditing", "position": 1, "replace": true}, ["heading", "sourceEditing", "italic"]]
+   *   [{"item_name": "sourceEditing"}, ["bold", "heading", "italic", "sourceEditing"]]
+   *   [{"item_name": "sourceEditing", "position": 1}, ["bold", "heading", "italic", "sourceEditing"]]
+   *   [{"item_name": "sourceEditing", "position": 1, "replace": true}, ["heading", "italic", "sourceEditing"]]
    */
   public function testAddItemToToolbar(string|array $action, array $expected_toolbar_items): void {
     $recipe = $this->createRecipe([
