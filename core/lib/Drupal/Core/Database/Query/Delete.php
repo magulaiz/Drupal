@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Identifier\Table as TableIdentifier;
 
 /**
  * General class for an abstracted DELETE operation.
@@ -16,7 +17,7 @@ class Delete extends Query implements ConditionInterface {
   /**
    * The table from which to delete.
    *
-   * @var string
+   * @var string|\Drupal\Core\Database\Identifier\Table
    */
   protected $table;
 
@@ -25,13 +26,17 @@ class Delete extends Query implements ConditionInterface {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A Connection object.
-   * @param string $table
+   * @param string $table|\Drupal\Core\Database\Identifier\Table
    *   Name of the table to associate with this query.
    * @param array $options
    *   Array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
     parent::__construct($connection, $options);
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
     $this->table = $table;
 
     $this->condition = $this->connection->condition('AND');
@@ -70,7 +75,7 @@ class Delete extends Query implements ConditionInterface {
     // Create a sanitized comment string to prepend to the query.
     $comments = $this->connection->makeComment($this->comments);
 
-    $query = $comments . 'DELETE FROM ' . $this->connection->identifiers->table($this->table)->forMachine();
+    $query = $comments . "DELETE FROM $this->table";
 
     if (count($this->condition)) {
 

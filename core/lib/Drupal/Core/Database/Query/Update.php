@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Identifier\Table as TableIdentifier;
 
 /**
  * General class for an abstracted UPDATE operation.
@@ -16,7 +17,7 @@ class Update extends Query implements ConditionInterface {
   /**
    * The table to update.
    *
-   * @var string
+   * @var string|\Drupal\Core\Database\Identifier\Table
    */
   protected $table;
 
@@ -54,13 +55,17 @@ class Update extends Query implements ConditionInterface {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A Connection object.
-   * @param string $table
+   * @param string|\Drupal\Core\Database\Identifier\Table $table
    *   Name of the table to associate with this query.
    * @param array $options
    *   Array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
     parent::__construct($connection, $options);
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
     $this->table = $table;
 
     $this->condition = $this->connection->condition('AND');
@@ -166,7 +171,7 @@ class Update extends Query implements ConditionInterface {
       $update_fields[] = $this->connection->escapeField($field) . '=' . $placeholders[$max_placeholder++];
     }
 
-    $query = $comments . 'UPDATE ' . $this->connection->identifiers->table($this->table)->forMachine() . ' SET ' . implode(', ', $update_fields);
+    $query = $comments . "UPDATE $this->table SET " . implode(', ', $update_fields);
 
     if (count($this->condition)) {
       $this->condition->compile($this->connection, $this);

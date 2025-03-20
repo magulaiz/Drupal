@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Database\Query;
 
+use Drupal\Core\Database\Identifier\Table as TableIdentifier;
+
 /**
  * General class for an abstracted INSERT query.
  *
@@ -23,13 +25,17 @@ class Insert extends Query implements \Countable {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A Connection object.
-   * @param string $table
+   * @param string $table|\Drupal\Core\Database\Identifier\Table
    *   Name of the table to associate with this query.
    * @param array $options
    *   Array of database options.
    */
   public function __construct($connection, $table, array $options = []) {
     parent::__construct($connection, $options);
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
     $this->table = $table;
   }
 
@@ -116,7 +122,7 @@ class Insert extends Query implements \Countable {
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
 
     if (!empty($this->fromQuery)) {
-      return $comments . 'INSERT INTO ' . $this->connection->identifiers->table($this->table)->forMachine() . ' (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
+      return $comments . "INSERT INTO $this->table (" . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
     }
 
     // For simplicity, we will use the $placeholders array to inject
@@ -126,7 +132,7 @@ class Insert extends Query implements \Countable {
     $placeholders = array_pad($placeholders, count($this->defaultFields), 'default');
     $placeholders = array_pad($placeholders, count($this->insertFields), '?');
 
-    return $comments . 'INSERT INTO ' . $this->connection->identifiers->table($this->table)->forMachine() . ' (' . implode(', ', $insert_fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
+    return $comments . "INSERT INTO $this->table (" . implode(', ', $insert_fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
   }
 
   /**

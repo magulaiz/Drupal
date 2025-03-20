@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Identifier\Table as TableIdentifier;
 
 /**
  * General class for an abstracted "Upsert" (UPDATE or INSERT) query operation.
@@ -28,13 +29,17 @@ abstract class Upsert extends Query implements \Countable {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A Connection object.
-   * @param string $table
+   * @param string|\Drupal\Core\Database\Identifier\Table $table
    *   Name of the table to associate with this query.
    * @param array $options
    *   (optional) An array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
     parent::__construct($connection, $options);
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
     $this->table = $table;
   }
 

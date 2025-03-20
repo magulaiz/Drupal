@@ -19,7 +19,7 @@ class Truncate extends QueryTruncate {
     // Create a sanitized comment string to prepend to the query.
     $comments = $this->connection->makeComment($this->comments);
 
-    return $comments . 'DELETE FROM ' . $this->connection->identifiers->table($this->table)->forMachine();
+    return $comments . "DELETE FROM $this->table";
   }
 
 }

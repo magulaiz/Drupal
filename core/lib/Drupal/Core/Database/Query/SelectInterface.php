@@ -247,7 +247,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *
    * This method is a convenience method for innerJoin().
    *
-   * @param \Drupal\Core\Database\Query\SelectInterface|string $table
+   * @param \Drupal\Core\Database\Query\SelectInterface|string|\Drupal\Core\Database\Identifier\Table $table
    *   The table against which to join. May be a string or another SelectQuery
    *   object. If a query object is passed, it will be used as a subselect.
    *   Unless the table name starts with the database / schema name and a dot
@@ -274,7 +274,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Inner Join against another table in the database.
    *
-   * @param \Drupal\Core\Database\Query\SelectInterface|string $table
+   * @param \Drupal\Core\Database\Query\SelectInterface|string|\Drupal\Core\Database\Identifier\Table $table
    *   The table against which to join. May be a string or another SelectQuery
    *   object. If a query object is passed, it will be used as a subselect.
    *   Unless the table name starts with the database / schema name and a dot
@@ -301,7 +301,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Left Outer Join against another table in the database.
    *
-   * @param \Drupal\Core\Database\Query\SelectInterface|string $table
+   * @param \Drupal\Core\Database\Query\SelectInterface|string|\Drupal\Core\Database\Identifier\Table $table
    *   The table against which to join. May be a string or another SelectQuery
    *   object. If a query object is passed, it will be used as a subselect.
    *   Unless the table name starts with the database / schema name and a dot
@@ -334,7 +334,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *
    * @param string $type
    *   The type of join. Typically one of INNER, LEFT OUTER, and RIGHT OUTER.
-   * @param \Drupal\Core\Database\Query\SelectInterface|string $table
+   * @param \Drupal\Core\Database\Query\SelectInterface|string|\Drupal\Core\Database\Identifier\Table $table
    *   The table against which to join. May be a string or another SelectQuery
    *   object. If a query object is passed, it will be used as a subselect.
    *   Unless the table name starts with the database / schema name and a dot

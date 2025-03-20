@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Identifier\Table as TableIdentifier;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 
 /**
@@ -59,14 +60,14 @@ class Merge extends Query implements ConditionInterface {
   /**
    * The table to be used for INSERT and UPDATE.
    *
-   * @var string
+   * @var string|\Drupal\Core\Database\Identifier\Table
    */
   protected $table;
 
   /**
    * The table or subquery to be used for the condition.
    *
-   * @var string
+   * @var string|\Drupal\Core\Database\Identifier\Table
    */
   protected $conditionTable;
 
@@ -127,13 +128,17 @@ class Merge extends Query implements ConditionInterface {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A Connection object.
-   * @param string $table
+   * @param string $table|\Drupal\Core\Database\Identifier\Table
    *   Name of the table to associate with this query.
    * @param array $options
    *   Array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
     parent::__construct($connection, $options);
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
     $this->table = $table;
     $this->conditionTable = $table;
     $this->condition = $this->connection->condition('AND');
@@ -142,7 +147,7 @@ class Merge extends Query implements ConditionInterface {
   /**
    * Sets the table or subquery to be used for the condition.
    *
-   * @param \Drupal\Core\Database\Query\Select|string $table
+   * @param \Drupal\Core\Database\Query\Select|string|\Drupal\Core\Database\Identifier\Table $table
    *   The table name or the subquery to be used. Use a Select query object to
    *   pass in a subquery.
    *
@@ -150,6 +155,10 @@ class Merge extends Query implements ConditionInterface {
    *   The called object.
    */
   protected function conditionTable($table) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
     $this->conditionTable = $table;
     return $this;
   }

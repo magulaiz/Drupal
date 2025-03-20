@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Identifier\Table as TableIdentifier;
 
 /**
  * General class for an abstracted TRUNCATE operation.
@@ -12,7 +13,7 @@ class Truncate extends Query {
   /**
    * The table to truncate.
    *
-   * @var string
+   * @var string|\Drupal\Core\Database\Identifier\Table
    */
   protected $table;
 
@@ -21,13 +22,17 @@ class Truncate extends Query {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A Connection object.
-   * @param string $table
+   * @param string|\Drupal\Core\Database\Identifier\Table $table
    *   Name of the table to associate with this query.
    * @param array $options
    *   Array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
     parent::__construct($connection, $options);
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
     $this->table = $table;
   }
 
@@ -75,10 +80,10 @@ class Truncate extends Query {
     // The statement actually built depends on whether a transaction is active.
     // @see ::execute()
     if ($this->connection->inTransaction()) {
-      return $comments . 'DELETE FROM ' . $this->connection->identifiers->table($this->table)->forMachine();
+      return $comments . "DELETE FROM $this->table";
     }
     else {
-      return $comments . 'TRUNCATE ' . $this->connection->identifiers->table($this->table)->forMachine();
+      return $comments . "TRUNCATE $this->table";
     }
   }
 

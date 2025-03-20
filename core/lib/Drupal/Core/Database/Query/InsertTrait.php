@@ -12,7 +12,7 @@ trait InsertTrait {
   /**
    * The table on which to insert.
    *
-   * @var string
+   * @var string|\Drupal\Core\Database\Identifier\Table
    */
   protected $table;
 
