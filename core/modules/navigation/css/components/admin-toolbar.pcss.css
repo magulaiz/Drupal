@@ -206,6 +206,7 @@ body {
   justify-content: space-between;
   margin-block-start: calc(var(--admin-toolbar-sidebar-header) * -1);
   padding-block-start: var(--admin-toolbar-space-16);
+  padding-block-end: var(--admin-toolbar-space-16);
   background-color: var(--admin-toolbar-color-white);
 
   & + .toolbar-block {
