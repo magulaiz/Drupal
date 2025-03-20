@@ -54,7 +54,6 @@ mapping:
     # By default, allow the explicitly listed mapping keys, and require their
     # presence unless `requiredKey: false` is specified.
     ValidKeys: '<infer>'
-orderby: key
 sequence:
   label: Sequence
   class: '\Drupal\Core\Config\Schema\Sequence'
