@@ -320,7 +320,7 @@ class NodeCreationTest extends NodeTestBase {
       'body[0][value]' => $this->randomMachineName(16),
     ], 'Save');
 
-    $this->assertSession()->pageTextNotContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextNotContains('The website encountered an unexpected error.');
     $this->assertSession()->pageTextContains('The content could not be saved. Contact the site administrator if the problem persists.');
   }
 
