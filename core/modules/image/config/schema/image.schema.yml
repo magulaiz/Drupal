@@ -29,6 +29,7 @@ image.style.*:
             type: weight
           data:
             type: image.effect.[%parent.id]
+            orderby: key
 
 image.effect.*:
   type: mapping
@@ -82,6 +83,7 @@ image.effect.image_scale:
 # The image desaturate effect has no settings.
 image.effect.image_desaturate:
   type: sequence
+  orderby: key
 
 image.effect.image_scale_and_crop:
   type: image_size
