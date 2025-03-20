@@ -2366,7 +2366,7 @@ function install_display_requirements($install_state, $requirements) {
  *
  * @see install_tasks()
  */
-function install_config_import_batch() {
+function install_config_import_batch(): array {
   // We need to manually trigger the installation of core-provided entity types,
   // as those will not be handled by the module installer.
   // @see install_profile_modules()
@@ -2428,6 +2428,7 @@ function install_config_import_batch() {
     }
     install_display_output(['#title' => t('Configuration validation')], $install_state);
   }
+  return [];
 }
 
 /**
