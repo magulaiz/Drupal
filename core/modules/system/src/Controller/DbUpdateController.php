@@ -645,7 +645,7 @@ class DbUpdateController extends ControllerBase {
     if ($post_updates) {
       // Now we rebuild all caches and after that execute the hook_post_update()
       // functions.
-      $batch_builder->addOperation([Rebuilder::class, 'rebuildAll'], []);
+      $batch_builder->addOperation([Rebuilder::class, 'rebuildAll'], [NULL]);
       foreach ($post_updates as $function) {
         $batch_builder->addOperation('update_invoke_post_update', [$function]);
       }
