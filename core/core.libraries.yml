@@ -494,11 +494,23 @@ drupal.collapse:
     misc/details-summarized-content.js: {}
     misc/details-aria.js: {}
     misc/details.js: {}
+  css:
+    component:
+      misc/components/details.module.css: { weight: -10 }
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupal.form
     - core/once
+  moved_files:
+    system/base:
+      deprecation_version: 11.2.0
+      removed_version: 12.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/details.module.css:
+            base: misc/components/details.module.css
 
 drupal.debounce:
   version: VERSION
