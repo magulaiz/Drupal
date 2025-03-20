@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test_bundle_class\Entity;
 
+use Drupal\Core\Entity\Attribute\Bundle;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\entity_test\Entity\EntityTest;
 
 /**
  * The bundle class for the bundle_class bundle of the entity_test entity.
  */
+#[Bundle(
+  entityTypeId: 'entity_test',
+  bundle: 'bundle_class',
+)]
 class EntityTestBundleClass extends EntityTest {
 
   /**

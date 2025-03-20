@@ -10,6 +10,7 @@ use Drupal\Core\DependencyInjection\Compiler\BackwardsCompatibilityClassLoaderPa
 use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\DeprecatedServicePass;
 use Drupal\Core\DependencyInjection\Compiler\DevelopmentSettingsPass;
+use Drupal\Core\Entity\BundleClassCollectorPass;
 use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\Core\DependencyInjection\Compiler\LoggerAwarePass;
 use Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass;
@@ -114,6 +115,8 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     // Collect moved classes for the backwards compatibility class loader.
     $container->addCompilerPass(new BackwardsCompatibilityClassLoaderPass());
+
+    $container->addCompilerPass(new BundleClassCollectorPass());
 
     $container->registerForAutoconfiguration(EventSubscriberInterface::class)
       ->addTag('event_subscriber');
