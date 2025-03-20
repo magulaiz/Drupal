@@ -12,6 +12,7 @@ editor.settings.ckeditor5:
           type: sequence
           orderby: ~
           label: 'Items'
+          orderby: key
           sequence:
             type: ckeditor5.toolbar_item
             label: 'Button'
@@ -67,6 +68,7 @@ ckeditor5.plugin.ckeditor5_heading:
       constraints:
         NotBlank:
           message: "Enable at least one heading, otherwise disable the Heading plugin."
+      orderby: key
       sequence:
         type: string
         label: 'Heading type'
@@ -98,6 +100,7 @@ ckeditor5.plugin.ckeditor5_sourceEditing:
       type: sequence
       orderby: ~
       label: 'Allowed Tags'
+      orderby: key
       sequence:
         type: ckeditor5.element
         label: 'Allowed Tag'
@@ -119,6 +122,7 @@ ckeditor5.plugin.ckeditor5_alignment:
       constraints:
         NotBlank:
           message: "Enable at least one alignment, otherwise disable the Alignment button."
+      orderby: key
       sequence:
         type: string
         label: 'Alignment type'
@@ -185,6 +189,7 @@ ckeditor5.plugin.ckeditor5_codeBlock:
           message: "Enable at least one language, otherwise disable the Code Block plugin."
         UniqueLabelInList:
           labelKey: label
+      orderby: key
       sequence:
         type: mapping
         label: 'Language'
@@ -212,6 +217,7 @@ ckeditor5.plugin.ckeditor5_style:
           message: "Enable at least one style, otherwise disable the Style plugin."
         UniqueLabelInList:
           labelKey: label
+      orderby: key
       sequence:
         type: mapping
         label: 'Style'

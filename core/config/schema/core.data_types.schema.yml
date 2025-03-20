@@ -54,6 +54,7 @@ mapping:
     # By default, allow the explicitly listed mapping keys, and require their
     # presence unless `requiredKey: false` is specified.
     ValidKeys: '<infer>'
+orderby: key
 sequence:
   label: Sequence
   class: '\Drupal\Core\Config\Schema\Sequence'
@@ -257,6 +258,7 @@ filter:
 action_configuration_default:
   type: sequence
   label: 'Action configuration'
+  orderby: key
   sequence:
     type: string
 
@@ -324,6 +326,7 @@ theme_settings:
       requiredKey: false
       type: sequence
       label: 'Third party settings'
+      orderby: key
       sequence:
         type: theme_settings.third_party.[%key]
 
@@ -338,6 +341,7 @@ route:
     route_params:
       type: sequence
       label: 'Route Params'
+      orderby: key
       sequence:
         type: string
         label: 'Param'
@@ -351,6 +355,7 @@ config_dependencies_base:
       requiredKey: false
       type: sequence
       label: 'Configuration entity dependencies'
+      orderby: key
       sequence:
         type: string
         constraints:
@@ -361,6 +366,7 @@ config_dependencies_base:
       requiredKey: false
       type: sequence
       label: 'Content entity dependencies'
+      orderby: key
       sequence:
         type: string
     module:
@@ -368,6 +374,7 @@ config_dependencies_base:
       requiredKey: false
       type: sequence
       label: 'Module dependencies'
+      orderby: key
       sequence:
         type: string
         constraints:
@@ -379,6 +386,7 @@ config_dependencies_base:
       requiredKey: false
       type: sequence
       label: 'Theme dependencies'
+      orderby: key
       sequence:
         type: string
         constraints:
@@ -420,6 +428,7 @@ config_entity:
       requiredKey: false
       type: sequence
       label: 'Third party settings'
+      orderby: key
       sequence:
         type: '[%parent.%parent.%type].third_party.[%key]'
     _core:
@@ -458,6 +467,7 @@ block_settings:
       requiredKey: false
       type: sequence
       label: 'Context assignments'
+      orderby: key
       sequence:
         type: string
 
@@ -480,6 +490,7 @@ condition.plugin:
     context_mapping:
       type: sequence
       label: 'Context assignments'
+      orderby: key
       sequence:
         type: string
 
@@ -488,6 +499,7 @@ condition.plugin.entity_bundle:*:
   mapping:
     bundles:
       type: sequence
+      orderby: key
       sequence:
         type: string
 
@@ -517,6 +529,7 @@ layout_plugin.settings:
     context_mapping:
       type: sequence
       label: 'Context assignments'
+      orderby: key
       sequence:
         type: string
 
@@ -563,6 +576,7 @@ field_config_base:
     default_value:
       type: sequence
       label: 'Default values'
+      orderby: key
       sequence:
         type: field.value.[%parent.%parent.field_type]
         label: 'Default value'
@@ -811,6 +825,7 @@ field.value.boolean:
 field.field_settings.email:
   type: mapping
   label: 'Email settings'
+  orderby: key
   sequence:
     type: string
     label: 'Setting'
@@ -986,6 +1001,7 @@ entity_reference_selection.default:
       type: sequence
       label: 'types'
       nullable: true
+      orderby: key
       sequence:
         type: string
         label: 'Bundle'
@@ -1058,6 +1074,7 @@ mailer_dsn:
 mailer_dsn.options.*:
   type: sequence
   label: 'Options'
+  orderby: key
   sequence:
     type: string
     label: Option

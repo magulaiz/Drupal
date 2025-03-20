@@ -188,6 +188,7 @@ condition.plugin.user_role:
   mapping:
     roles:
       type: sequence
+      orderby: key
       sequence:
         type: string
 
@@ -206,6 +207,7 @@ entity_reference_selection.default:user:
         role:
           type: sequence
           label: 'Restrict to the selected roles'
+          orderby: key
           sequence:
             type: string
             label: 'Role'

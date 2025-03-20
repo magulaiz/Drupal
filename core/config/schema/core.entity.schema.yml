@@ -62,11 +62,13 @@ core.entity_view_display.*.*.*:
     content:
       type: sequence
       label: 'Field formatters'
+      orderby: key
       sequence:
         type: field_formatter.entity_view_display
     hidden:
       type: sequence
       label: 'Field display setting'
+      orderby: key
       sequence:
         type: boolean
         label: 'Value'
@@ -94,6 +96,7 @@ field_formatter:
       requiredKey: false
       type: sequence
       label: 'Third party settings'
+      orderby: key
       sequence:
         type: field.formatter.third_party.[%key]
 
@@ -132,6 +135,7 @@ core.entity_form_display.*.*.*:
     content:
       type: sequence
       label: 'Field widgets'
+      orderby: key
       sequence:
         type: mapping
         label: 'Field widget'
@@ -158,11 +162,13 @@ core.entity_form_display.*.*.*:
             requiredKey: false
             type: sequence
             label: 'Third party settings'
+            orderby: key
             sequence:
               type: field.widget.third_party.[%key]
     hidden:
       type: sequence
       label: 'Hidden'
+      orderby: key
       sequence:
         type: boolean
         label: 'Component'

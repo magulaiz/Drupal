@@ -386,6 +386,7 @@ system.mail:
     interface:
       type: sequence
       label: 'Interfaces'
+      orderby: key
       sequence:
         type: string
         label: 'Interface'
@@ -473,6 +474,7 @@ condition.plugin.response_status:
   mapping:
     status_codes:
       type: sequence
+      orderby: key
       sequence:
         type: integer
 

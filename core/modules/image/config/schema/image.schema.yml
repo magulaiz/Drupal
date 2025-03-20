@@ -13,6 +13,7 @@ image.style.*:
       label: 'Label'
     effects:
       type: sequence
+      orderby: key
       sequence:
         type: mapping
         mapping:

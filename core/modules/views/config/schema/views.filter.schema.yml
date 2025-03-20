@@ -27,6 +27,7 @@ views.filter.combine:
     fields:
       type: sequence
       label: 'Fields'
+      orderby: key
       sequence:
         type: string
         label: 'Field'
@@ -45,6 +46,7 @@ views.filter.in_operator:
     value:
       type: sequence
       label: 'Values'
+      orderby: key
       sequence:
         type: string
         label: 'Value'
@@ -58,6 +60,7 @@ views.filter.in_operator:
     group_info:
       mapping:
         group_items:
+          orderby: key
           sequence:
             type: views.filter.group_item.in_operator
             label: 'Group item'
@@ -206,6 +209,7 @@ views.filter.date:
 views.filter_value.in_operator:
   type: sequence
   label: 'Values'
+  orderby: key
   sequence:
     type: string
     label: 'Value'
