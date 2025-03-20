@@ -140,7 +140,7 @@ class Rebuilder {
   }
 
   /**
-   * Collects all bins and deletes all cache items in the each bin.
+   * Collects all bins and deletes all items in each bin.
    */
   public static function deleteAllCacheBins(): void {
     foreach (Cache::getBins() as $bin) {

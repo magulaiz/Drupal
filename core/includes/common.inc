@@ -421,9 +421,7 @@ function drupal_flush_all_caches($kernel = NULL) {
   @trigger_error('drupal_flush_all_caches() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Cache\Rebuilder::rebuildAll() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
 
   if (!$kernel instanceof DrupalKernel) {
-    $kernel = \Drupal::service('kernel');
-    $kernel->invalidateContainer();
-    $kernel->rebuildContainer();
+    $kernel = NULL;
   }
   Rebuilder::rebuildAll($kernel);
 }
