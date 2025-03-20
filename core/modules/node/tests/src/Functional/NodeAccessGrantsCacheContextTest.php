@@ -173,6 +173,7 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
 
     // Uninstall the node_access_test module
     $this->container->get('module_installer')->uninstall(['node_access_test']);
+    \Drupal::moduleHandler()->resetImplementations();
     $this->accessHandler->resetCache();
     $this->assertUserCacheContext([
       0 => 'view.all',
