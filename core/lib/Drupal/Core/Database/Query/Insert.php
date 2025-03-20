@@ -25,7 +25,7 @@ class Insert extends Query implements \Countable {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A Connection object.
-   * @param string $table|\Drupal\Core\Database\Identifier\Table
+   * @param string|\Drupal\Core\Database\Identifier\Table $table
    *   Name of the table to associate with this query.
    * @param array $options
    *   Array of database options.

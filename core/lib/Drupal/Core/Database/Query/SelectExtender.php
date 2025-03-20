@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Identifier\Table as TableIdentifier;
 
 /**
  * The base extender class for Select queries.
