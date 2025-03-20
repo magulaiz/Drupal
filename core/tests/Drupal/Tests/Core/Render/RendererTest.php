@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
+use Drupal\Core\Render\RenderContext;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
@@ -1074,8 +1075,28 @@ class RendererTest extends RendererTestBase {
     ];
   }
 
+  /**
+   * @covers ::hasRenderContext
+   */
+  public function testHasRenderContext(): void {
+    // Tests with no render context.
+    $this->assertFalse($this->renderer->hasRenderContext());
+
+    // Tests in a render context.
+    $this->renderer->executeInRenderContext(new RenderContext(), function () {
+      $this->assertTrue($this->renderer->hasRenderContext());
+    });
+
+    // Test that the method works with no current request.
+    $this->requestStack->pop();
+    $this->assertFalse($this->renderer->hasRenderContext());
+  }
+
 }
 
+/**
+ * Test class for mocking the access callback.
+ */
 class TestAccessClass implements TrustedCallbackInterface {
 
   public static function accessTrue() {
@@ -1103,6 +1124,9 @@ class TestAccessClass implements TrustedCallbackInterface {
 
 }
 
+/**
+ * Mock callable for testing the pre_render callback.
+ */
 class TestCallables implements TrustedCallbackInterface {
 
   public function preRenderPrinted($elements) {

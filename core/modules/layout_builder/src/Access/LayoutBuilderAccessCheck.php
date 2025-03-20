@@ -3,6 +3,7 @@
 namespace Drupal\layout_builder\Access;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -65,7 +66,14 @@ class LayoutBuilderAccessCheck implements AccessInterface {
     }
 
     if ($access instanceof RefinableCacheableDependencyInterface) {
-      $access->addCacheableDependency($section_storage);
+      // @todo https://www.drupal.org/project/drupal/issues/3446509 Decide if
+      // this logic needs to be changed.
+      if ($section_storage instanceof CacheableDependencyInterface) {
+        $access->addCacheableDependency($section_storage);
+      }
+      else {
+        $access->setCacheMaxAge(0);
+      }
     }
     return $access;
   }
