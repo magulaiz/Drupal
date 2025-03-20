@@ -22,7 +22,7 @@ class NodeRevisionsAuthorTest extends NodeTestBase {
   /**
    * Tests node authorship is retained after reverting revisions.
    */
-  function testNodeRevisionRevertAuthors(): void {
+  public function testNodeRevisionRevertAuthors(): void {
     // Create and log in user.
     $initialUser = $this->drupalCreateUser([
       'view page revisions',
