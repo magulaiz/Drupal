@@ -341,7 +341,7 @@ function system_preprocess_block(&$variables): void {
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  */
-function system_check_directory($form_element, FormStateInterface $form_state) {
+function system_check_directory($form_element, FormStateInterface $form_state): array {
   $directory = $form_element['#value'];
   if (strlen($directory) == 0) {
     return $form_element;

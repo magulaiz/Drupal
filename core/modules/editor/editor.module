@@ -44,7 +44,7 @@ function editor_form_filter_admin_format_editor_configure($form, FormStateInterf
 /**
  * AJAX callback handler for filter_format_form().
  */
-function editor_form_filter_admin_form_ajax($form, FormStateInterface $form_state) {
+function editor_form_filter_admin_form_ajax($form, FormStateInterface $form_state): array {
   return $form['editor']['settings'];
 }
 

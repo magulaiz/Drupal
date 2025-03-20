@@ -611,7 +611,7 @@ function _filter_url_escape_comments($match, $escape = NULL) {
 /**
  * Shortens a long URL to a given length ending with an ellipsis.
  */
-function _filter_url_trim($text, $length = NULL) {
+function _filter_url_trim($text, $length = NULL): ?string {
   static $_length;
   if ($length !== NULL) {
     $_length = $length;

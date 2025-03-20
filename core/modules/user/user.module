@@ -673,7 +673,7 @@ function _user_mail_notify($op, AccountInterface $account) {
  * elements to add the JavaScript and string translations for dynamic password
  * validation.
  */
-function user_form_process_password_confirm($element) {
+function user_form_process_password_confirm($element): array {
   $password_settings = [
     'confirmTitle' => t('Passwords match:'),
     'confirmSuccess' => t('yes'),
