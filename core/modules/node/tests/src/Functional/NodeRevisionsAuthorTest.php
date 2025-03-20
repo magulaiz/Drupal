@@ -1,26 +1,14 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\node\Tests\NodeRevisionsAuthorTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\node\Tests;
 
 use Drupal\Core\Url;
-use Drupal\node\Entity\Node;
-use Drupal\node\NodeInterface;
 use Drupal\Tests\node\Functional\NodeTestBase;
-use Drupal\user\UserInterface;
 
 /**
- * Creates a new node, initially authored by $user1 (r0), and then
- * revised by $user2 (including a change to the node's author information
- * to $user3) (r1). Tests to ensure that when r1 is reverted to r0,
- * and then subsequently reverted to r1, that all of the various
- * authors and revision authors are appropriately retained.
- *
- * @see https://www.drupal.org/node/1528028#comment-6830378
+ * Tests reverting node revisions correctly sets authorship information.
  *
  * @group node
  */
