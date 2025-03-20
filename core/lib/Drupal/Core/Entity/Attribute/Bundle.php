@@ -7,7 +7,7 @@ namespace Drupal\Core\Entity\Attribute;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Attribute for registering a bundle class.
+ * Defines an attribute for registering a bundle class.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class Bundle {

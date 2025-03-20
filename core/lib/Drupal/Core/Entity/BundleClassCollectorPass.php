@@ -61,8 +61,9 @@ class BundleClassCollectorPass implements CompilerPassInterface {
         continue;
       }
       $reflection = new \ReflectionClass($fqcn);
-      if ($reflection->getAttributes(Bundle::class)) {
-        $this->bundleClasses[$fqcn] = $fqcn;
+      $attributes = $reflection->getAttributes(Bundle::class);
+      if (count($attributes) >= 0) {
+        $this->bundleClasses[$fqcn] = $attributes[0]->getArguments();
       }
     }
   }

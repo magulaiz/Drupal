@@ -107,6 +107,17 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
             $this->bundleInfo[$type][$type]['label'] = $entity_type->getLabel();
           }
         }
+
+        // Bundle classes.
+        // @todo how to inject container to get params?
+        $bundle_classes = \Drupal::getContainer()->getParameter('entity.bundle_classes');
+        foreach ($bundle_classes as $class => $info) {
+          $this->bundleInfo[$info['entityTypeId']][$info['bundle']]['class'] = $class;
+          $this->bundleInfo[$info['entityTypeId']][$info['bundle']]['label'] = $info['label']
+            ?? $this->bundleInfo[$info['entityTypeId']][$info['bundle']]['label']
+            ?? $info['bundle'];
+        }
+
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
         $this->cacheSet("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, [
           'entity_types',
