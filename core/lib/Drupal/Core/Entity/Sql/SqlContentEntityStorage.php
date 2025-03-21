@@ -596,12 +596,23 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
 
         // Set the isDefaultRevision field.
-        if (isset($record->{$this->revisionKey}) && $load_from_revision) {
-          if ($record->{$this->revisionKey} == $load_from_revision) {
-            $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '1';
+        if (isset($record->{$this->revisionKey})) {
+          if ($load_from_revision) {
+            if ($record->{$this->revisionKey} == $load_from_revision) {
+              // We are loading a specific revision and the specific revision
+              // is the same as the current revision.
+              $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '1';
+            }
+            else {
+              // We are loading a specific revision and the specific revision
+              // is not the same as the current revision.
+              $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '0';
+            }
           }
           else {
-            $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '0';
+            // We are not loading a specific revision, therefore we are loading
+            // the current revision and that is always the default revision.
+            $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '1';
           }
         }
       }
