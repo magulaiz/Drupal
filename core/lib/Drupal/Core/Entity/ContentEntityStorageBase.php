@@ -21,7 +21,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   /**
    * The entity bundle key.
    *
-   * @var string|bool
+   * @var string|false
    */
   protected $bundleKey = FALSE;
 
