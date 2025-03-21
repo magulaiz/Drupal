@@ -12,14 +12,14 @@ use Drupal\Composer\Plugin\Unpack\UnpackOptions;
 /**
  * Unpacker factory for dependency unpackers.
  */
-final class UnpackerFactory {
+final readonly class UnpackerFactory {
 
   public function __construct(
-    private readonly Composer $composer,
-    private readonly IOInterface $io,
-    private readonly UnpackCollection $unpackCollection,
-    private readonly RootComposer $rootComposer,
-    private readonly UnpackOptions $unpackOptions,
+    private Composer $composer,
+    private IOInterface $io,
+    private UnpackCollection $unpackCollection,
+    private RootComposer $rootComposer,
+    private UnpackOptions $unpackOptions,
   ) {}
 
   /**

@@ -27,14 +27,14 @@ class UnpackRecipeTest extends BuildTestBase {
   /**
    * The Symfony FileSystem component.
    *
-   * @var \Symfony\Component\Filesystem\Filesystem
+   * @var \Composer\Util\Filesystem
    */
   protected Filesystem $fileSystem;
 
   /**
    * The Fixtures object.
    *
-   * @var Drupal\Tests\Composer\Plugin\Unpack\Fixtures
+   * @var \Drupal\Tests\Composer\Plugin\Unpack\Fixtures
    */
   protected Fixtures $fixtures;
 
@@ -56,7 +56,7 @@ class UnpackRecipeTest extends BuildTestBase {
    * {@inheritdoc}
    */
   protected function tearDown(): void {
-    // Remove any temporary directories et. al. that were created.
+    // Remove any temporary directories that were created.
     $this->fixtures->tearDown();
     parent::tearDown();
   }
@@ -74,7 +74,7 @@ class UnpackRecipeTest extends BuildTestBase {
 
     // Install a module in require-dev that should be moved to require.
     $this->mustExec('composer require --dev --no-ansi --no-interaction fixtures/module-a', $root_project_path);
-    // Ensure we have added a the dependency to require-dev
+    // Ensure we have added the dependency to require-dev
     $root_composer_json = $this->getFileContents($root_project_path . '/composer.json');
     $this->assertArrayHasKey('fixtures/module-a', $root_composer_json['require-dev']);
 
@@ -138,9 +138,7 @@ class UnpackRecipeTest extends BuildTestBase {
    */
   protected function getFileContents(string $path): array {
     $file = file_get_contents($path);
-    $file_decoded = json_decode($file, TRUE);
-
-    return $file_decoded;
+    return json_decode($file, TRUE);
   }
 
   /**

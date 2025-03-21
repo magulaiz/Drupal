@@ -34,7 +34,7 @@ final class UnpackOptions {
    *
    * @var string
    */
-  const ID = 'drupal-core-composer-unpack';
+  const string ID = 'drupal-core-composer-unpack';
 
   /**
    * The raw data from the 'extras' section of the top-level composer.json file.

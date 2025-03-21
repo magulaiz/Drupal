@@ -31,7 +31,7 @@ final class Plugin implements PluginInterface, EventSubscriberInterface, Capable
   /**
    * {@inheritdoc}
    */
-  public function getCapabilities() {
+  public function getCapabilities(): array {
     return [CommandProvider::class => UnpackCommandProvider::class];
   }
 

@@ -22,7 +22,7 @@ class RecipeUnpacker implements UnpackerInterface {
    *
    * @see \Drupal\Core\Recipe\Recipe::COMPOSER_PROJECT_TYPE
    */
-  public const PROJECT_TYPE = 'drupal-recipe';
+  public const string PROJECT_TYPE = 'drupal-recipe';
 
   /**
    * UnpackerBase constructor.

@@ -77,9 +77,7 @@ final class UnpackManager {
   public function unpack(): void {
     while ($package = $this->unpackCollection->popPackageQueue()) {
       $unpacker = $this->unpackerFactory->create($package);
-      if ($unpacker) {
-        $unpacker->unpackDependencies();
-      }
+      $unpacker?->unpackDependencies();
     }
 
     $this->rootComposer->updateComposer();

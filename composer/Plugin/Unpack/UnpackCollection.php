@@ -84,7 +84,7 @@ final class UnpackCollection implements \IteratorAggregate {
   }
 
   /**
-   * Checks if a package has been unpacked or it's queued for unpacking.
+   * Checks if a package has been unpacked, or it's queued for unpacking.
    *
    * @param \Composer\Package\PackageInterface $package
    *   The package to check.
@@ -121,8 +121,8 @@ final class UnpackCollection implements \IteratorAggregate {
   /**
    * Pops a dependency from the list of dependencies that have been unpacked.
    *
-   * @return array
-   *   The dependency in the queue.
+   * @return array|null
+   *   The dependency in the queue, or NULL if the queue is empty.
    */
   public function popPackageDependencies(): ?array {
     return array_shift($this->allPackageDependencies);
