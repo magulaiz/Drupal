@@ -274,7 +274,7 @@ class EntityOperations {
     }
 
     if ($revision_id = array_search($query->getMetaData('entity_id'), $tracked_entities[$entity_type->id()])) {
-      $query->condition($entity_type->getKey('revision'), $revision_id, '<=');
+      $query->condition($entity_type->getKey('revision'), (int) $revision_id, '<=');
       $conditions = $query->orConditionGroup();
       $conditions->condition($entity_type->getRevisionMetadataKey('workspace'), $active_workspace->id());
       $conditions->condition($entity_type->getRevisionMetadataKey('revision_default'), TRUE);

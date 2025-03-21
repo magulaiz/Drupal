@@ -590,11 +590,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
         }
 
-        // @todo Check if we can remove the next if-statement.
-        if ($load_from_revision && ($record->{$this->revisionKey} != $load_from_revision)) {
-          $values[$id][$this->revisionKey][LanguageInterface::LANGCODE_DEFAULT] = (string) $load_from_revision;
-        }
-
         // Set the isDefaultRevision field.
         if (isset($record->{$this->revisionKey})) {
           if ($load_from_revision) {
