@@ -1908,8 +1908,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // Only do this if the entity is revisionable.
       if ($this->entityType->isRevisionable()) {
         $table_mapping = $this->getTableMapping();
-        // Get the field name for the default revision field.
-        $revision_default_field = $table_mapping->getColumnNames($this->entityType->getRevisionMetadataKey('revision_default'))['value'];
 
         // Make sure that the entity_id is of the correct type (integer or string).
         $base_table_entity_id_data = $this->database->tableInformation()->getTableField($this->baseTable, $this->idKey);
