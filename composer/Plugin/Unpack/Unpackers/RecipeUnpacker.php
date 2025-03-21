@@ -142,6 +142,8 @@ class RecipeUnpacker implements UnpackerInterface {
     if ($this->removeSelf()) {
       $composer_manipulator->removeSubNode('require', $this->package->getName());
     }
+
+    $composer_manipulator->removeMainKeyIfEmpty('require-dev');
   }
 
   /**
