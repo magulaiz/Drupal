@@ -50,14 +50,15 @@ class NodeTemplateSuggestionsTest extends KernelTestBase {
     $variables['elements'] = $build;
     $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_node', [$variables]);
 
+    $sanitised_uuid = str_replace('-', '_', $node->uuid());
     $this->assertEquals([
       'node__full',
       'node__page',
       'node__page__full',
       'node__' . $node->id(),
       'node__' . $node->id() . '__full',
-      'node__' . $node->uuid(),
-      'node__' . $node->uuid() . '__full',
+      'node__' . $sanitised_uuid,
+      'node__' . $sanitised_uuid . '__full',
     ],
     $suggestions,
     'Found expected node suggestions.');
@@ -75,8 +76,8 @@ class NodeTemplateSuggestionsTest extends KernelTestBase {
       'node__page__node_my_custom_view_mode',
       'node__' . $node->id(),
       'node__' . $node->id() . '__node_my_custom_view_mode',
-      'node__' . $node->uuid(),
-      'node__' . $node->uuid() . '__node_my_custom_view_mode',
+      'node__' . $sanitised_uuid,
+      'node__' . $sanitised_uuid . '__node_my_custom_view_mode',
     ],
     $suggestions,
     'Found expected node suggestions.');
