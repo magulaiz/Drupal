@@ -109,6 +109,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
 
     $exclude = [
       'drupal/core',
+      'drupal/core-composer-unpack',
       'drupal/core-project-message',
       'drupal/core-vendor-hardening',
     ];
