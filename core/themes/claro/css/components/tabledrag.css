@@ -133,6 +133,11 @@ body.drag-y {
   }
 }
 
+.draggable a.tabledrag-handle {
+  float: none;
+  vertical-align: middle;
+}
+
 /* Change icon and cursor if only vertical drag is allowed. */
 
 .tabledrag-handle.tabledrag-handle-y {
@@ -256,13 +261,6 @@ body.drag-y {
 
 .tabledrag-cell-content__item:empty {
   display: none;
-}
-
-@media screen and (max-width: 47.9375rem) {
-  .tabledrag-cell-content__item {
-    display: flex;
-    align-items: center;
-  }
 }
 
 /**

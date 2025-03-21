@@ -3,6 +3,13 @@
  * Claro styles for Tables.
  */
 
+.claro-table-scroll-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
 table {
   width: 100%;
   margin-block: var(--space-l);
