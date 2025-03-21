@@ -112,6 +112,13 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     if (count($grants) > 0) {
       $query->condition($grants);
     }
+    if ($query->execute()->fetchField()) {
+      $access_result = AccessResult::allowed();
+    }
+    else {
+      $access_result = AccessResult::neutral();
+    }
+    $access_result->addCacheContexts(['user.node_grants:' . $operation]);
 
     // Only the 'view' node grant can currently be cached; the others currently
     // don't have any cacheability metadata. Hopefully, we can add that in the
@@ -119,20 +126,10 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     // cases. For now, this must remain marked as uncacheable, even when it is
     // theoretically cacheable, because we don't have the necessary metadata to
     // know it for a fact.
-    $set_cacheability = function (AccessResult $access_result) use ($operation) {
-      $access_result->addCacheContexts(['user.node_grants:' . $operation]);
-      if ($operation !== 'view') {
-        $access_result->setCacheMaxAge(0);
-      }
-      return $access_result;
-    };
-
-    if ($query->execute()->fetchField()) {
-      return $set_cacheability(AccessResult::allowed());
+    if ($operation !== 'view') {
+      $access_result->setCacheMaxAge(0);
     }
-    else {
-      return $set_cacheability(AccessResult::neutral());
-    }
+    return $access_result;
   }
 
   /**
@@ -140,7 +137,8 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    */
   public function checkAll(AccountInterface $account) {
     $query = $this->database->select('node_access');
-    $query->addExpression('COUNT(*)');
+    // The method should return 0 or 1 so start with SELECT 1.
+    $query->addExpression('1');
     $query
       ->condition('nid', 0)
       ->condition('grant_view', 1, '>=');
@@ -150,7 +148,9 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     if (count($grants) > 0) {
       $query->condition($grants);
     }
-    return $query->execute()->fetchField();
+    // The query either returns 1 from SELECT 1 or FALSE, cast to int to make
+    // sure the return value is 0 or 1 as prescribed on the interface.
+    return (int) $query->range(0, 1)->execute()->fetchField();
   }
 
   /**
