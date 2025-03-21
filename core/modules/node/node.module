@@ -29,8 +29,9 @@ use Drupal\node\NodeTypeInterface;
  *   query joins the {comment_entity_statistics} table so that the comment_count
  *   field is available, a title attribute will be added to show the number of
  *   comments.
- * @param $title
- *   (optional) A heading for the resulting list.
+ * @param string|null $title
+ *   (optional) A heading for the resulting list. NULL results in no heading.
+ *   Defaults to NULL.
  *
  * @return array|false
  *   A renderable array containing a list of linked node titles fetched from
@@ -278,7 +279,7 @@ function node_preprocess_field__node(&$variables): void {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function node_theme_suggestions_node(array $variables) {
+function node_theme_suggestions_node(array $variables): array {
   $suggestions = [];
   $node = $variables['elements']['#node'];
   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
@@ -446,7 +447,7 @@ function node_access_grants($operation, AccountInterface $account) {
  * 'node_access'; when this function returns TRUE, no node access joins are
  * added to the query.
  *
- * @param $account
+ * @param \Drupal\Core\Session\AccountProxyInterface|null $account
  *   (optional) The user object for the user whose access is being checked. If
  *   omitted, the current user is used. Defaults to NULL.
  *
@@ -491,8 +492,9 @@ function node_access_view_all_nodes($account = NULL) {
  * When unsure if the current user is an administrator, node_access_rebuild()
  * should be used instead.
  *
- * @param $rebuild
- *   (optional) The boolean value to be written.
+ * @param bool|null $rebuild
+ *   (optional) The boolean value to be written. Defaults to NULL, which returns
+ *   the current value.
  *
  * @return bool|null
  *   The current value of the flag if no value was provided for $rebuild. If a
@@ -524,13 +526,15 @@ function node_access_needs_rebuild($rebuild = NULL) {
  * Note : As of Drupal 6, node access modules are not required to (and actually
  * should not) call node_access_rebuild() in hook_install/uninstall anymore.
  *
- * @param $batch_mode
+ * @param bool $batch_mode
  *   (optional) Set to TRUE to process in 'batch' mode, spawning processing over
  *   several HTTP requests (thus avoiding the risk of PHP timeout if the site
  *   has a large number of nodes). hook_update_N() and any form submit handler
  *   are safe contexts to use the 'batch mode'. Less decidable cases (such as
  *   calls from hook_user(), hook_taxonomy(), etc.) might consider using the
- *   non-batch mode. Defaults to FALSE.
+ *   non-batch mode. Defaults to FALSE. Calling this method multiple times in
+ *   the same request with $batch_mode set to TRUE will only result in one batch
+ *   set being added.
  *
  * @see node_access_needs_rebuild()
  */
@@ -542,11 +546,14 @@ function node_access_rebuild($batch_mode = FALSE) {
   // Only recalculate if the site is using a node_access module.
   if (\Drupal::moduleHandler()->hasImplementations('node_grants')) {
     if ($batch_mode) {
-      $batch_builder = (new BatchBuilder())
-        ->setTitle(t('Rebuilding content access permissions'))
-        ->addOperation('_node_access_rebuild_batch_operation', [])
-        ->setFinishCallback('_node_access_rebuild_batch_finished');
-      batch_set($batch_builder->toArray());
+      if (!BatchBuilder::isSetIdRegistered(__FUNCTION__)) {
+        $batch_builder = (new BatchBuilder())
+          ->setTitle(t('Rebuilding content access permissions'))
+          ->addOperation('_node_access_rebuild_batch_operation', [])
+          ->setFinishCallback('_node_access_rebuild_batch_finished')
+          ->registerSetId(__FUNCTION__);
+        batch_set($batch_builder->toArray());
+      }
     }
     else {
       // Try to allocate enough time to rebuild node grants
