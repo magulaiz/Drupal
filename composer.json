@@ -11,6 +11,7 @@
     "require": {
         "composer/installers": "^2.3",
         "drupal/core": "self.version",
+        "drupal/core-composer-unpack": "self.version",
         "drupal/core-project-message": "self.version",
         "drupal/core-vendor-hardening": "self.version"
     },
@@ -61,6 +62,7 @@
         "allow-plugins": {
             "composer/installers": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
+            "drupal/core-composer-unpack": true,
             "drupal/core-project-message": true,
             "drupal/core-vendor-hardening": true,
             "php-http/discovery": true,
@@ -85,6 +87,9 @@
             "drush/Commands/contrib/{$name}": ["type:drupal-drush"],
             "modules/custom/{$name}": ["type:drupal-custom-module"],
             "themes/custom/{$name}": ["type:drupal-custom-theme"]
+        },
+        "drupal-unpack": {
+            "on-install-and-update": false
         },
         "drupal-core-project-message": {
             "post-install-cmd-message": [
@@ -129,6 +134,10 @@
         {
             "type": "path",
             "url": "core"
+        },
+        {
+            "type": "path",
+            "url": "composer/Plugin/Unpack"
         },
         {
             "type": "path",
