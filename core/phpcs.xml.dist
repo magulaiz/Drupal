@@ -31,6 +31,9 @@
   <!-- Drupal sniffs -->
   <rule ref="Drupal.Arrays.Array"/>
   <rule ref="Drupal.Arrays.Array.LongLineDeclaration">
+    <include-pattern>core/*/Unit/*</include-pattern>
+    <include-pattern>core/*/FunctionalJavascript/*</include-pattern>
+    <include-pattern>core/*/Kernel/*</include-pattern>
     <include-pattern>core/lib/*</include-pattern>
     <include-pattern>core/modules/*/tests/modules/*</include-pattern>
   </rule>
@@ -49,7 +52,7 @@
   <rule ref="Drupal.Commenting.ClassComment.Missing">
     <include-pattern>*/Functional/*</include-pattern>
     <include-pattern>*/tests/modules/*</include-pattern>
-    <include-pattern>./core/tests/Drupal/Tests/Core/*</include-pattern>
+    <include-pattern>./core/tests/*</include-pattern>
     <include-pattern>./core/modules/*</include-pattern>
   </rule>
   <rule ref="Drupal.Commenting.DataTypeNamespace"/>
@@ -61,7 +64,6 @@
       TagsNotGrouped, ParamGroup -->
     <exclude name="Drupal.Commenting.DocComment.LongFullStop"/>
     <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
-    <exclude name="Drupal.Commenting.DocComment.ShortNotCapital"/>
   </rule>
   <rule ref="Drupal.Commenting.DocCommentAlignment"/>
   <rule ref="Drupal.Commenting.DocCommentLongArraySyntax"/>
@@ -82,6 +84,7 @@
     <include-pattern>core/modules/*/Plugin/views/style/*</include-pattern>
     <include-pattern>*/Database/*</include-pattern>
     <include-pattern>*/FunctionalJavascript/*</include-pattern>
+    <include-pattern>*/Kernel/*</include-pattern>
     <include-pattern>*/Functional/*</include-pattern>
   </rule>
   <rule ref="Drupal.Commenting.FunctionComment.MissingParamType"/>
@@ -107,6 +110,14 @@
   <rule ref="Drupal.ControlStructures.InlineControlStructure"/>
   <rule ref="Drupal.Files.EndFileNewline"/>
   <rule ref="Drupal.Files.FileEncoding"/>
+  <rule ref="Drupal.Files.LineLength">
+    <include-pattern>*/core/lib/*</include-pattern>
+    <exclude-pattern>*/core/lib/*/*Trait</exclude-pattern>
+    <include-pattern>*/core/includes/*</include-pattern>
+    <include-pattern>*/core/profiles/*</include-pattern>
+    <include-pattern>*/core/recipes/*</include-pattern>
+    <include-pattern>*/core/themes/*</include-pattern>
+  </rule>
   <rule ref="Drupal.Files.TxtFileLineLength"/>
   <rule ref="Drupal.Formatting.MultiLineAssignment"/>
   <rule ref="Drupal.Formatting.MultipleStatementAlignment"/>
