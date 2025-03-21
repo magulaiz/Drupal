@@ -64,17 +64,7 @@ class ChainedPlaceholderStrategy implements PlaceholderStrategyInterface {
         break;
       }
     }
-
-    if (!empty($placeholders)) {
-      foreach ($this->placeholderStrategies as $strategy) {
-        $strategies[$strategy::class] = TRUE;
-      }
-      foreach ($placeholders as $placeholder) {
-        if (isset($placeholder['#placeholder_strategy'])) {
-          assert(array_diff_key($placeholder['#placeholder_strategy'], $strategies), 'A placeholder could not be replaced and specified a placeholder strategy that does not exist');
-        }
-      }
-    }
+    assert(empty($placeholders), 'It was not possible to replace all placeholders in ChainedPlaceholderStrategy::processPlaceholders()');
 
     return $new_placeholders;
   }
