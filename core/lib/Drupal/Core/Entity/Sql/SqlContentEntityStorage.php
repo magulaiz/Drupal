@@ -1621,9 +1621,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       }
 
       $embedded_tables = [];
+      $is_default_revision = FALSE;
       // Not sure about the change on the next line. It fixes the EntityDuplicateTest.
       if ($this->jsonStorageCurrentRevisionTable && ($entity->isDefaultRevision() || ($entity->getRevisionId() == $entity->getLoadedRevisionId()))) {
         $embedded_tables[] = ['table' => $this->jsonStorageCurrentRevisionTable, 'update action' => 'replace'];
+        $is_default_revision = TRUE;
       }
       if ($this->jsonStorageLatestRevisionTable && ($entity->isNewRevision() || ($entity->getRevisionId() >= $this->getLatestRevisionId($entity->id())))) {
         $embedded_tables[] = ['table' => $this->jsonStorageLatestRevisionTable, 'update action' => 'replace'];
@@ -1680,7 +1682,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $records_dedicatedTables = isset($records_allDedicatedTables[$embedded_table_name]) && is_array($records_allDedicatedTables[$embedded_table_name]) ? $records_allDedicatedTables[$embedded_table_name] : [];
 
           // Get the embedded table data.
-          $records_embeddedTable = $this->getEmbeddedTableRecords($entity, $embedded_table_name);
+          $records_embeddedTable = $this->getEmbeddedTableRecords($entity, $embedded_table_name, $is_default_revision);
 
           $data_embeddedTable = NULL;
           foreach ($records_embeddedTable as $record_embeddedTable) {
@@ -1997,20 +1999,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               }
             }
 
-            // Update the setting "default_revision" to TRUE when it is the
-            // current revision or to FALSE when the revision id is not equal
-            // to the current revision.
-            if ($current_revision_id && isset($revision->{$this->revisionKey}) && isset($revision->{$revision_default_field})) {
-              if ($revision->{$this->revisionKey} == $current_revision_id) {
-                $revision->{$revision_default_field} = TRUE;
-              }
-              else {
-                // All revisions that are not the current revision should have
-                // set the value of "revision_default" to FALSE.
-                $revision->{$revision_default_field} = FALSE;
-              }
-            }
-
             // The revisions in the all revisions can have double revisions and
             // for every double revision the oldest revision version needs to
             // be filtered out.
@@ -2068,17 +2056,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               }
             }
 
-            if ($current_revision_id && isset($revision->{$this->revisionKey}) && isset($revision->{$revision_default_field})) {
-              if ($revision->{$this->revisionKey} == $current_revision_id) {
-                $revision->{$revision_default_field} = TRUE;
-              }
-              else {
-                // All revisions that are not the current revision should have
-                // set the value of "revision_default" to FALSE.
-                $revision->{$revision_default_field} = FALSE;
-              }
-            }
-
             $new_latest_revision_data[] = clone $revision;
           }
         }
@@ -2111,15 +2088,15 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The entity object.
    * @param string $table_name
    *   The table name to save to. Defaults to the data table.
+   * @param bool $is_default_revision
+   *   Whether the revision is the default revision.
    *
    * @return array
    *   The records to store for the shared table
    */
-  protected function getEmbeddedTableRecords(ContentEntityInterface $entity, $table_name) {
-    $current_revision_id = NULL;
+  protected function getEmbeddedTableRecords(ContentEntityInterface $entity, string $table_name, bool $is_default_revision) {
     if ($this->entityType->isRevisionable()) {
       $revision_default_field = $this->entityType->getRevisionMetadataKey('revision_default');
-      $current_revision_id = $entity->{$this->revisionKey}->value;
     }
 
     $records = [];
@@ -2127,17 +2104,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $translation = $entity->getTranslation($langcode);
       $record = (array) $this->mapToStorageRecord($translation, $table_name);
 
-      if ($current_revision_id && isset($record[$this->revisionKey])) {
-        if ($record[$this->revisionKey] == $current_revision_id) {
-          // The value for the default revision field is always TRUE when the
-          // current revision id is equal to the record revision id
-          $record[$revision_default_field] = '1';
-        }
-        else {
-          // The value for the default revision field is always FALSE when the
-          // current revision id is not equal to the record revision id
-          $record[$revision_default_field] = '0';
-        }
+      // Set the value the field "revision_default" when the entity is a
+      // revisionable entity.
+      if ($this->entityType->isRevisionable()) {
+        $record[$revision_default_field] = ($is_default_revision ? '1' : '0');
       }
 
       $records[] = $record;
