@@ -6,6 +6,7 @@
          beStrictAboutChangesToGlobalState="true"
          failOnWarning="true"
          cacheResult="false"
+         cacheDirectory=".phpunit.cache"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd">
   <php>
     <!-- Set error reporting to E_ALL. -->
