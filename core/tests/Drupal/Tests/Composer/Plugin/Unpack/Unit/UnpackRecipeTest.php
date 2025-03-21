@@ -87,7 +87,7 @@ class UnpackRecipeTest extends TestCase {
   protected function setUp(): void {
     $root_package = $this->prophesize(RootPackageInterface::class);
     $root_package->getExtra()->willReturn([
-      'drupal-unpack' => [
+      'drupal-core-composer-unpack' => [
         'ignore' => ['drupal/core'],
       ],
     ]);

@@ -88,7 +88,7 @@
             "modules/custom/{$name}": ["type:drupal-custom-module"],
             "themes/custom/{$name}": ["type:drupal-custom-theme"]
         },
-        "drupal-unpack": {
+        "drupal-core-composer-unpack": {
             "on-install-and-update": false
         },
         "drupal-core-project-message": {

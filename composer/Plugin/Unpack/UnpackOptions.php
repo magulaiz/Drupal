@@ -6,11 +6,12 @@ namespace Drupal\Composer\Plugin\Unpack;
  * Per-project options from the 'extras' section of the composer.json file.
  *
  * Projects that implement dependency unpacking plugin can further configure it.
- * This data is pulled from the 'drupal-unpack' portion of the extras section.
+ * This data is pulled from the 'drupal-core-composer-unpack' portion of the
+ * extras section.
  *
  * @code
  *  "extras": {
- *    "drupal-unpack": {
+ *    "drupal-core-composer-unpack": {
  *      "remove-self": true,
  *      "ignore": ["drupal/core"]
  *      "on-install-and-update": true
@@ -33,7 +34,7 @@ final class UnpackOptions {
    *
    * @var string
    */
-  const ID = 'drupal-unpack';
+  const ID = 'drupal-core-composer-unpack';
 
   /**
    * The raw data from the 'extras' section of the top-level composer.json file.
