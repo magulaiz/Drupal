@@ -79,9 +79,7 @@ final class DeprecationHandler {
 
     $environmentVariable = getenv('PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION');
     $phpUnitDeprecationVariable = $environmentVariable !== FALSE ? $environmentVariable : TRUE;
-    $filtered = filter_var($phpUnitDeprecationVariable, \FILTER_VALIDATE_BOOLEAN);
-    dump([$environmentVariable, gettype($environmentVariable), $phpUnitDeprecationVariable, gettype($phpUnitDeprecationVariable), $filtered, gettype($filtered)]);
-    $configuration['failOnPhpunitDeprecation'] = $filtered;
+    $configuration['failOnPhpunitDeprecation'] = filter_var($phpUnitDeprecationVariable, \FILTER_VALIDATE_BOOLEAN);
 
     return $configuration;
   }

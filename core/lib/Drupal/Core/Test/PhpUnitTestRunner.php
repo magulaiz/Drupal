@@ -166,7 +166,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     // Add to the command the file containing the test class to be run.
     $reflectedClass = new \ReflectionClass($test_class_name);
     $command[] = $reflectedClass->getFileName();
-    dump([$command, getenv('PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION'), $deprecationConfiguration]);
+
     // Invoke PHPUnit CLI with the built command line.
     $process = new Process($command, \Drupal::root() . "/core", $process_environment_variables);
     $process->setTimeout(NULL);
