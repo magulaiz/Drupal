@@ -15,9 +15,10 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\media\Entity\Media;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
-use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
-// cspell:ignore alternatif hurlant layercake tatou texte zartan
+// cspell:ignore alternatif drupalelementstyle hurlant layercake tatou texte
+// cspell:ignore zartan
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
@@ -116,7 +117,7 @@ class MediaTest extends MediaTestBase {
     $filter_format->save();
 
     $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
+      function (ConstraintViolationInterface $v) {
         return (string) $v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair(
@@ -170,7 +171,7 @@ class MediaTest extends MediaTestBase {
     ]);
     $filter_format->save();
     $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
+      function (ConstraintViolationInterface $v) {
         return (string) $v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair(
@@ -595,7 +596,7 @@ class MediaTest extends MediaTestBase {
     // Ensure that by default the "Break text" alignment option is selected.
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    $this->assertTrue(($align_button = $this->getBalloonButton('Break text'))->hasClass('ck-on'));
+    $this->assertTrue($this->getBalloonButton('Break text')->hasClass('ck-on'));
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
@@ -610,7 +611,8 @@ class MediaTest extends MediaTestBase {
     $this->assertEquals('center', $drupal_media_element->getAttribute('data-align'));
 
     $page->pressButton('Save');
-    // Check that the 'content has been updated' message status appears to confirm we left the editor.
+    // Check that the 'content has been updated' message status appears to
+    // confirm we left the editor.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.messages.messages--status'));
     // Check that the class is correct in the front end.
     $assert_session->elementExists('css', 'figure.align-center');
@@ -710,7 +712,7 @@ class MediaTest extends MediaTestBase {
     $editor->save();
 
     $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
+      function (ConstraintViolationInterface $v) {
         return (string) $v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair(
@@ -742,7 +744,8 @@ class MediaTest extends MediaTestBase {
     $assert_session->elementNotExists('css', '.ck-widget.drupal-media.arbitrary-class');
     $page->pressButton('Save');
 
-    // Check that the 'content has been updated' message status appears to confirm we left the editor.
+    // Check that the 'content has been updated' message status appears to
+    // confirm we left the editor.
     $assert_session->waitForElementVisible('css', 'messages messages--status');
 
     // Ensure that the class is correct in the front end.
