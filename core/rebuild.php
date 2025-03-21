@@ -6,11 +6,10 @@
  *
  * Needs a token query argument which can be calculated using the
  * scripts/rebuild_token_calculator.sh script.
- *
- * @see drupal_rebuild()
  */
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -21,7 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 chdir('..');
 
 $autoloader = require_once __DIR__ . '/../autoload.php';
-require_once __DIR__ . '/includes/utility.inc';
 
 $request = Request::createFromGlobals();
 // Manually resemble early bootstrap of DrupalKernel::boot().
@@ -48,7 +46,34 @@ if (Settings::get('rebuild_access', FALSE) ||
   ];
   array_map('call_user_func', array_filter($user_caches, 'is_callable'));
 
-  drupal_rebuild($autoloader, $request);
+  // Remove Drupal's error and exception handlers; they rely on a working
+  // service container and other subsystems and will only cause a fatal error
+  // that hides the actual error.
+  restore_error_handler();
+  restore_exception_handler();
+
+  // Invalidate the container.
+  // Bootstrap up to where caches exist and clear them.
+  $kernel = new DrupalKernel('prod', $autoloader);
+  $kernel->setSitePath(DrupalKernel::findSitePath($request));
+  $kernel->invalidateContainer();
+  $kernel->boot();
+  $kernel->preHandle($request);
+  // Ensure our request includes the session if appropriate.
+  if (PHP_SAPI !== 'cli') {
+    $request->setSession($kernel->getContainer()->get('session'));
+  }
+
+  Rebuilder::rebuildAll($kernel);
+
+  // Disable recording of cached pages.
+  \Drupal::service('page_cache_kill_switch')->trigger();
+
+  // Restore Drupal's error and exception handlers.
+  // @see \Drupal\Core\DrupalKernel::boot()
+  set_error_handler('_drupal_error_handler');
+  set_exception_handler('_drupal_exception_handler');
+
   \Drupal::messenger()->addStatus('Cache rebuild complete.');
 }
 $base_path = dirname($request->getBaseUrl(), 2);

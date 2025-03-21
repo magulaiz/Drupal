@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Hook;
 
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -92,11 +93,11 @@ class HookCollectorPassTest extends KernelTestBase {
     $module_installer = $this->container->get('module_installer');
     $this->assertTrue($module_installer->install(['hook_collector_on_behalf']));
     $this->assertTrue($module_installer->install(['hook_collector_on_behalf_procedural']));
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     $this->assertFalse(isset($GLOBALS['on_behalf_oop']));
     $this->assertFalse(isset($GLOBALS['on_behalf_procedural']));
     $this->assertTrue($module_installer->install(['respond_install_uninstall_hook_test']));
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     $this->assertTrue(isset($GLOBALS['on_behalf_oop']));
     $this->assertTrue(isset($GLOBALS['on_behalf_procedural']));
   }
@@ -115,7 +116,7 @@ class HookCollectorPassTest extends KernelTestBase {
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_after_attribute']));
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_find']));
     $this->assertFalse(isset($GLOBALS['skipped_procedural_oop_cache_flush']));
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     $this->assertFalse(isset($GLOBALS['skip_procedural_all']));
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_has_attribute']));
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_after_attribute']));
@@ -132,7 +133,7 @@ class HookCollectorPassTest extends KernelTestBase {
     $this->assertTrue($module_installer->install(['hook_collector_hook_attribute']));
     $this->assertFalse(isset($GLOBALS['hook_named_arguments']));
     $this->assertFalse(isset($GLOBALS['hook_invoke_method']));
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     $this->assertTrue(isset($GLOBALS['hook_named_arguments']));
     $this->assertTrue(isset($GLOBALS['hook_invoke_method']));
   }

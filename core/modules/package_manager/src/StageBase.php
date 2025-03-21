@@ -7,6 +7,7 @@ namespace Drupal\package_manager;
 use Composer\Semver\VersionParser;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Random;
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -521,7 +522,7 @@ abstract class StageBase implements LoggerAwareInterface {
     }
     // Rebuild the container and clear all caches, to ensure that new services
     // are picked up.
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     // Refresh the event dispatcher so that new or changed event subscribers
     // will be called. The other services we depend on are either stateless or
     // unlikely to call newly added code during the current request.

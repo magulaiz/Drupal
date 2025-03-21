@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
@@ -270,7 +271,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $assert_session->pageTextContains('The text format ckeditor5 has been updated.');
 
     // Flush caches so the updated config can be checked.
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
 
     // Confirm that the tags required by the newly-added plugins were correctly
     // saved.
