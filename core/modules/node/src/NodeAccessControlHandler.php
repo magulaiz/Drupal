@@ -39,6 +39,13 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   protected $entityTypeManager;
 
   /**
+   * Memory cache for 'view all nodes' access.
+   *
+   * @var bool[]
+   */
+  protected array $viewAllNodesCache = [];
+
+  /**
    * Map of revision operations.
    *
    * Keys contain revision operations, where values are an array containing the
@@ -307,6 +314,31 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
    */
   public function checkAllGrants(AccountInterface $account) {
     return $this->grantStorage->checkAll($account);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function viewAllNodes(AccountInterface $account): bool {
+    $account_id = $account->id();
+    if (!isset($this->viewAllNodesCache[$account_id])) {
+      // If no modules implement the node access system, access is always TRUE.
+      if (!$this->moduleHandler()->hasImplementations('node_grants')) {
+        $this->viewAllNodesCache[$account_id] = TRUE;
+      }
+      else {
+        $this->viewAllNodesCache[$account_id] = (bool) $this->checkAllGrants($account);
+      }
+    }
+    return $this->viewAllNodesCache[$account_id];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function resetCache(): void {
+    $this->viewAllNodesCache = [];
+    parent::resetCache();
   }
 
 }

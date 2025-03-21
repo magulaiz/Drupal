@@ -143,7 +143,7 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
 
     // Put user accessUser (uid 0) in the realm.
     \Drupal::state()->set('node_access_test.no_access_uid', 0);
-    drupal_static_reset('node_access_view_all_nodes');
+    $this->accessHandler->resetCache();
     $this->assertUserCacheContext([
       0 => 'view.all',
       1 => 'all',
@@ -153,7 +153,7 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
 
     // Put user accessUser (uid 2) in the realm.
     \Drupal::state()->set('node_access_test.no_access_uid', $this->accessUser->id());
-    drupal_static_reset('node_access_view_all_nodes');
+    $this->accessHandler->resetCache();
     $this->assertUserCacheContext([
       0 => 'view.all:0;node_access_test_author:0',
       1 => 'all',
@@ -163,7 +163,7 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
 
     // Put user noAccessUser (uid 3) in the realm.
     \Drupal::state()->set('node_access_test.no_access_uid', $this->noAccessUser->id());
-    drupal_static_reset('node_access_view_all_nodes');
+    $this->accessHandler->resetCache();
     $this->assertUserCacheContext([
       0 => 'view.all:0;node_access_test_author:0',
       1 => 'all',
@@ -173,7 +173,8 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
 
     // Uninstall the node_access_test module
     $this->container->get('module_installer')->uninstall(['node_access_test']);
-    drupal_static_reset('node_access_view_all_nodes');
+    \Drupal::moduleHandler()->resetImplementations();
+    $this->accessHandler->resetCache();
     $this->assertUserCacheContext([
       0 => 'view.all',
       1 => 'all',

@@ -5,6 +5,8 @@ namespace Drupal\node\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CalculatedCacheContextInterface;
 use Drupal\Core\Cache\Context\UserCacheContextBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines the node access view cache context service.
@@ -19,6 +21,25 @@ use Drupal\Core\Cache\Context\UserCacheContextBase;
  * @ingroup node_access
  */
 class NodeAccessGrantsCacheContext extends UserCacheContextBase implements CalculatedCacheContextInterface {
+
+  /**
+   * Constructs a new cache context instance.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The current user.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entityTypeManager
+   *   The entity type manager service.
+   */
+  public function __construct(
+    AccountInterface $user,
+    protected ?EntityTypeManagerInterface $entityTypeManager = NULL,
+  ) {
+    parent::__construct($user);
+    if (!$entityTypeManager) {
+      @trigger_error('Calling NodeAccessGrantsCacheContext::__construct() without the $entity_type_manager argument is deprecated in drupal:11.2.0 and the $entity_type_manager argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3038909', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::entityTypeManager();
+    }
+  }
 
   /**
    * {@inheritdoc}
@@ -66,7 +87,9 @@ class NodeAccessGrantsCacheContext extends UserCacheContextBase implements Calcu
     // this is automatically the case if no node access modules exist (no
     // hook_node_grants() implementations) then we don't need to determine the
     // exact node view grants for the current user.
-    if ($operation === 'view' && node_access_view_all_nodes($this->user)) {
+    /** @var \Drupal\node\NodeAccessControlHandlerInterface $node_access_handler */
+    $node_access_handler = $this->entityTypeManager->getAccessControlHandler('node');
+    if ($operation === 'view' && $node_access_handler->viewAllNodes($this->user)) {
       return 'view.all';
     }
 
