@@ -66,6 +66,7 @@ variables:
   GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
   _TARGET_PHP: "8.3-ubuntu"
+  PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: false
 
 #############
 # Stages    #
