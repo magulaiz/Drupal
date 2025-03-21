@@ -257,7 +257,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   }
 
   /**
-   * Helper callback for uasort() to sort configuration entities by weight and label.
+   * Callback for uasort() to sort configuration entities by weight and label.
    *
    * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
    * \Drupal\Core\Config\Entity\ConfigEntityBase::sortEntities() instead.

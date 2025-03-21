@@ -123,6 +123,9 @@ class BlockRepositoryTest extends UnitTestCase {
     $this->assertEquals($expected_blocks, $result);
   }
 
+  /**
+   * Provides data to testGetVisibleBlocksPerRegion().
+   */
   public static function providerBlocksConfig() {
     $blocks_config = [
       'block1' => [

@@ -331,6 +331,9 @@ class TestSearchPage extends SearchPage {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function label($langcode = NULL) {
     return $this->label;
   }
