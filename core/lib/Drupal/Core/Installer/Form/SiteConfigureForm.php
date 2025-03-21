@@ -114,7 +114,6 @@ class SiteConfigureForm extends ConfigFormBase {
     $form['#attached']['drupalSettings']['copyFieldValue']['edit-site-mail'] = ['edit-account-mail'];
 
     $form['site_information'] = [
-      '#type' => 'fieldgroup',
       '#title' => $this->t('Site information'),
       '#access' => empty($install_state['config_install_path']),
     ];
@@ -146,7 +145,6 @@ class SiteConfigureForm extends ConfigFormBase {
     }
 
     $form['admin_account'] = [
-      '#type' => 'fieldgroup',
       '#title' => $account_label,
     ];
     $form['admin_account']['account']['name'] = [
@@ -170,7 +168,6 @@ class SiteConfigureForm extends ConfigFormBase {
     ];
 
     $form['regional_settings'] = [
-      '#type' => 'fieldgroup',
       '#title' => $this->t('Regional settings'),
       '#access' => empty($install_state['config_install_path']),
     ];
@@ -189,7 +186,6 @@ class SiteConfigureForm extends ConfigFormBase {
     ];
 
     $form['update_notifications'] = [
-      '#type' => 'fieldgroup',
       '#title' => $this->t('Update notifications'),
       '#description' => $this->t('When checking for updates, your site automatically sends anonymous information to Drupal.org. See the <a href="@update-module-docs" target="_blank">Update module documentation</a> for details.', ['@update-module-docs' => 'https://www.drupal.org/node/178772']),
       '#access' => empty($install_state['config_install_path']),
