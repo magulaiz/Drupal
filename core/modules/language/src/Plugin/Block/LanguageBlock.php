@@ -127,5 +127,4 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
     return TRUE;
   }
 
-
 }
