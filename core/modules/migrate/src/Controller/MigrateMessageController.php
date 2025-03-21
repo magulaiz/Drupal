@@ -254,32 +254,26 @@ class MigrateMessageController extends ControllerBase {
     }
 
     // Build the condition.
-    $condition_or = $query->orConditionGroup();
     foreach ($session_filters as $filter) {
       if (empty($filter['value'])) {
         continue;
       }
       switch ($filter['type']) {
         case 'array':
+          $values = array_values($filter['value']);
           if ($filter['field'] === 'msg.level') {
-            $values = array_map(fn($x) => (int) $x, array_values($filter['value']));
+            $values = array_map(fn($x) => (int) $x, $values);
           }
-          else {
-            $values = array_values($filter['value']);
-          }
-          $condition_or->condition($filter['field'], $values, 'IN');
+          $query->condition($filter['field'], $values, 'IN');
           break;
 
         case 'string':
-          $condition_or->condition($filter['field'], '%' . $filter['value'] . '%', 'LIKE');
+          $query->condition($filter['field'], "%{$filter['value']}%", 'LIKE');
           break;
 
         default:
-          $condition_or->condition($filter['field'], $filter['value']);
+          $query->condition($filter['field'], $filter['value']);
       }
-    }
-    if ($condition_or->count() > 0) {
-      $query->condition($condition_or);
     }
   }
 
