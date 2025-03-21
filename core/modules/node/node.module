@@ -281,6 +281,7 @@ function node_preprocess_field__node(&$variables): void {
  */
 function node_theme_suggestions_node(array $variables): array {
   $suggestions = [];
+  /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['elements']['#node'];
   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
 
@@ -289,6 +290,8 @@ function node_theme_suggestions_node(array $variables): array {
   $suggestions[] = 'node__' . $node->bundle() . '__' . $sanitized_view_mode;
   $suggestions[] = 'node__' . $node->id();
   $suggestions[] = 'node__' . $node->id() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'node__' . $node->uuid();
+  $suggestions[] = 'node__' . $node->uuid() . '__' . $sanitized_view_mode;
 
   return $suggestions;
 }

@@ -27,7 +27,7 @@ class NodeTemplateSuggestionsTest extends KernelTestBase {
   ];
 
   /**
-   * Tests if template_preprocess_node() generates the correct suggestions.
+   * Tests if node_theme_suggestions_node() generates the correct suggestions.
    */
   public function testNodeThemeHookSuggestions(): void {
     $this->installEntitySchema('user');
@@ -56,6 +56,8 @@ class NodeTemplateSuggestionsTest extends KernelTestBase {
       'node__page__full',
       'node__' . $node->id(),
       'node__' . $node->id() . '__full',
+      'node__' . $node->uuid(),
+      'node__' . $node->uuid() . '__full',
     ],
     $suggestions,
     'Found expected node suggestions.');
@@ -73,6 +75,8 @@ class NodeTemplateSuggestionsTest extends KernelTestBase {
       'node__page__node_my_custom_view_mode',
       'node__' . $node->id(),
       'node__' . $node->id() . '__node_my_custom_view_mode',
+      'node__' . $node->uuid(),
+      'node__' . $node->uuid() . '__node_my_custom_view_mode',
     ],
     $suggestions,
     'Found expected node suggestions.');
