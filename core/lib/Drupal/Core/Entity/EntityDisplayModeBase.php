@@ -58,7 +58,7 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
   protected $cache = TRUE;
 
   /**
-   * Callback for uasort() to compare configuration entities by label.
+   * Callback for uasort() to compare configuration entities.
    */
   public static function compare(ConfigEntityInterface $a, ConfigEntityInterface $b, \Collator $collator): int {
     /** @var \Drupal\Core\Entity\EntityDisplayModeInterface $a */

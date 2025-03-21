@@ -243,8 +243,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   }
 
   /**
-   * Callback for uasort() to compare configuration entities by weight and
-   * label.
+   * Callback for uasort() to compare configuration entities.
    */
   public static function compare(ConfigEntityInterface $a, ConfigEntityInterface $b, \Collator $collator): int {
     $a_weight = $a->weight ?? 0;
