@@ -92,6 +92,9 @@ class ChunkCacheTest extends UnitTestCase {
  */
 class TestEventDispatcher implements EventDispatcherInterface {
 
+  /**
+   * {@inheritdoc}
+   */
   public function dispatch(object $event, ?string $eventName = NULL): object {
     assert($event instanceof ResponseEvent);
     $response = $event->getResponse();
@@ -112,6 +115,9 @@ class TestEventDispatcher implements EventDispatcherInterface {
  */
 class TestBigPipe extends BigPipe {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function sendChunk($chunk): void {
     parent::sendChunk($chunk);
     if ($chunk instanceof HtmlResponse) {
