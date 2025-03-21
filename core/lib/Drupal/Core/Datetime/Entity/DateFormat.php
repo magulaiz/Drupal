@@ -82,7 +82,7 @@ class DateFormat extends ConfigEntityBase implements DateFormatInterface {
   }
 
   /**
-   * Helper callback for uasort() to compare configuration entities by weight and label.
+   * Callback for uasort() to compare configuration entities by label.
    */
   public static function compare(ConfigEntityInterface $a, ConfigEntityInterface $b, \Collator $collator): int {
     if ($a->isLocked() == $b->isLocked()) {
