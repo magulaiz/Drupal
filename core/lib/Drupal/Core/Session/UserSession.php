@@ -227,7 +227,7 @@ class UserSession implements AccountInterface {
   public function __isset($name): bool {
     if ($name === 'name') {
       @trigger_error("Checking for the name property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3513856", E_USER_DEPRECATED);
-      return $this->getAccountName();
+      return isset($this->name);
     }
     return isset($this->$name);
   }
