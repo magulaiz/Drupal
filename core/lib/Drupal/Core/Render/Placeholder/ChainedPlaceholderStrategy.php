@@ -64,7 +64,7 @@ class ChainedPlaceholderStrategy implements PlaceholderStrategyInterface {
         break;
       }
     }
-    assert(empty($placeholders), 'It was not possible to replace all placeholders in ChainedPlaceholderStrategy::processPlaceholders()');
+    assert(!empty($placeholders), 'It was not possible to replace all placeholders in ChainedPlaceholderStrategy::processPlaceholders()');
 
     return $new_placeholders;
   }
