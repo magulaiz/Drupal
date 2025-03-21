@@ -594,6 +594,16 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         if ($load_from_revision && ($record->{$this->revisionKey} != $load_from_revision)) {
           $values[$id][$this->revisionKey][LanguageInterface::LANGCODE_DEFAULT] = (string) $load_from_revision;
         }
+
+        // Set the isDefaultRevision field.
+        if (isset($record->{$this->revisionKey}) && $load_from_revision) {
+          if ($record->{$this->revisionKey} == $load_from_revision) {
+            $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '1';
+          }
+          else {
+            $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '0';
+          }
+        }
       }
 
       // Initialize translations array.
@@ -864,10 +874,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
                   if ($field_name == $revision_default_field) {
                     if ($table_row[reset($columns)] === FALSE) {
-                      $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '0';
+                      $values[$id][$revision_default_field][LanguageInterface::LANGCODE_DEFAULT] = '0';
                     }
                     else {
-                      $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '1';
+                      $values[$id][$revision_default_field][LanguageInterface::LANGCODE_DEFAULT] = '1';
                     }
                   }
                 }
