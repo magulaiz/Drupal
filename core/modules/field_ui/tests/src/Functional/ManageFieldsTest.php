@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field_ui\Functional;
 
 use Drupal\field\Entity\FieldConfig;
@@ -14,7 +16,6 @@ use Drupal\user\Entity\User;
  * Tests the Manage Display page of a fieldable entity type.
  *
  * @group field_ui
- * @group #slow
  */
 class ManageFieldsTest extends BrowserTestBase {
 
@@ -57,7 +58,7 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Tests drop button operations on the manage fields page.
    */
-  public function testFieldDropButtonOperations() {
+  public function testFieldDropButtonOperations(): void {
     $assert_session = $this->assertSession();
 
     $node_type = $this->drupalCreateContentType();
@@ -129,12 +130,22 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Tests adding a field.
    */
-  public function testAddField() {
+  public function testAddField(): void {
     $page = $this->getSession()->getPage();
     $type = $this->drupalCreateContentType([
       'name' => 'Article',
       'type' => 'article',
     ]);
+
+    // Make sure field descriptions appear, both 1 line and multiple lines.
+    $this->drupalGet('/admin/structure/types/manage/' . $type->id() . '/fields/add-field');
+    $edit = [
+      'new_storage_type' => 'field_test_descriptions',
+    ];
+    $this->submitForm($edit, 'Continue');
+    $this->assertSession()->pageTextContains('This one-line field description is important for testing');
+    $this->assertSession()->pageTextContains('This multiple line description needs to use an array');
+    $this->assertSession()->pageTextContains('This second line contains important information');
 
     // Create a new field without actually saving it.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $type->id(), 'test_field', 'Test field', 'test_field', [], [], FALSE);
@@ -143,11 +154,16 @@ class ManageFieldsTest extends BrowserTestBase {
 
     $this->drupalGet('/admin/structure/types/manage/' . $type->id() . '/fields/add-field');
     $edit = [
-      'label' => 'Test field',
-      'field_name' => 'test_field',
       'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
+    $edit = [
+      'label' => 'Test field',
+      'field_name' => 'test_field',
+    ];
+    $this->submitForm($edit, 'Continue');
+    // Test Breadcrumbs.
+    $this->getSession()->getPage()->findLink('Test field');
     $this->assertSession()->statusMessageNotContains('Saved');
 
     // Change the storage form values.
@@ -161,9 +177,12 @@ class ManageFieldsTest extends BrowserTestBase {
     // Try creating a field with the same machine name.
     $this->drupalGet('/admin/structure/types/manage/' . $type->id() . '/fields/add-field');
     $edit = [
+      'new_storage_type' => 'test_field',
+    ];
+    $this->submitForm($edit, 'Continue');
+    $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
-      'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
     // Assert that the values in the field storage form are reset.
@@ -181,7 +200,7 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Tests multiple users adding a field with the same name.
    */
-  public function testAddFieldWithMultipleUsers() {
+  public function testAddFieldWithMultipleUsers(): void {
     $page = $this->getSession()->getPage();
     // Create two users.
     $user1 = $this->drupalCreateUser(['administer node fields']);
@@ -194,9 +213,12 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->drupalLogin($user1);
     $this->drupalGet($bundle_path . '/fields/add-field');
     $edit = [
+      'new_storage_type' => 'test_field',
+    ];
+    $this->submitForm($edit, 'Continue');
+    $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
-      'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
     // Make changes to the storage form.
@@ -209,9 +231,12 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->drupalLogin($user2);
     $this->drupalGet($bundle_path . '/fields/add-field');
     $edit = [
+      'new_storage_type' => 'test_field',
+    ];
+    $this->submitForm($edit, 'Continue');
+    $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
-      'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
     $allowed_no_of_values = $page->findField('field_storage[subform][cardinality_number]')->getValue();
@@ -237,7 +262,7 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Tests editing field when the field exists in temp store.
    */
-  public function testEditFieldWithLeftOverFieldInTempStore() {
+  public function testEditFieldWithLeftOverFieldInTempStore(): void {
     $user = $this->drupalCreateUser(['administer node fields']);
 
     $node_type = $this->drupalCreateContentType();
@@ -247,9 +272,12 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->drupalLogin($user);
     $this->drupalGet($bundle_path . '/fields/add-field');
     $edit = [
+      'new_storage_type' => 'test_field',
+    ];
+    $this->submitForm($edit, 'Continue');
+    $edit = [
       'label' => 'Test field',
       'field_name' => 'test_field',
-      'new_storage_type' => 'test_field',
     ];
     $this->submitForm($edit, 'Continue');
 
@@ -280,7 +308,7 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Tests creating entity reference field to non-bundleable entity type.
    */
-  public function testEntityReferenceToNonBundleableEntity() {
+  public function testEntityReferenceToNonBundleableEntity(): void {
     $type = $this->drupalCreateContentType([
       'name' => 'kittens',
       'type' => 'kittens',
@@ -302,23 +330,7 @@ class ManageFieldsTest extends BrowserTestBase {
    *
    * @group legacy
    */
-  public function testFieldStorageFormAlter() {
-    $this->container->get('module_installer')->install(['field_ui_test_deprecated']);
-    $this->rebuildContainer();
-
-    $node_type = $this->drupalCreateContentType();
-    $bundle = $node_type->id();
-    $this->expectDeprecation('The deprecated alter hook hook_form_field_storage_config_edit_form_alter() is implemented in these functions: field_ui_test_deprecated_form_field_storage_config_edit_form_alter. Use hook_form_field_config_edit_form_alter() instead. See https://www.drupal.org/node/3386675.');
-    $this->drupalGet("/admin/structure/types/manage/$bundle/fields/node.$bundle.body");
-    $this->assertSession()->elementTextContains('css', '#edit-field-storage', 'Greetings from the field_storage_config_edit_form() alter.');
-  }
-
-  /**
-   * Tests hook_form_field_storage_config_form_edit_alter().
-   *
-   * @group legacy
-   */
-  public function testFieldTypeCardinalityAlter() {
+  public function testFieldTypeCardinalityAlter(): void {
     $node_type = $this->drupalCreateContentType();
     $bundle = $node_type->id();
 
@@ -343,6 +355,31 @@ class ManageFieldsTest extends BrowserTestBase {
 
     $this->drupalGet("/admin/structure/types/manage/$bundle/fields/node.$bundle.field_test_field");
     $this->assertSession()->elementTextContains('css', '#edit-field-storage', 'Greetings from Drupal\field_test\Plugin\Field\FieldType\TestItem::storageSettingsForm');
+  }
+
+  /**
+   * Tests hook_field_info_entity_type_ui_definitions_alter().
+   */
+  public function testFieldUiDefinitionsAlter(): void {
+    $user = $this->drupalCreateUser(['administer node fields']);
+    $node_type = $this->drupalCreateContentType();
+    $this->drupalLogin($user);
+    $this->drupalGet('/admin/structure/types/manage/' . $node_type->id() . '/fields/add-field');
+    $this->assertSession()->pageTextContains('Boolean (overridden by alter)');
+  }
+
+  /**
+   * Ensure field category fallback works for field types without a description.
+   */
+  public function testFieldCategoryFallbackWithoutDescription(): void {
+    $user = $this->drupalCreateUser(['administer node fields']);
+    $node_type = $this->drupalCreateContentType();
+    $this->drupalLogin($user);
+    $this->drupalGet('/admin/structure/types/manage/' . $node_type->id() . '/fields/add-field');
+    $field_type = $this->assertSession()->elementExists('xpath', '//label[text()="Test field"]');
+    $description_container = $field_type->getParent()->find('css', '.field-option__description');
+    $this->assertNotNull($description_container);
+    $this->assertEquals('', $description_container->getText());
   }
 
 }

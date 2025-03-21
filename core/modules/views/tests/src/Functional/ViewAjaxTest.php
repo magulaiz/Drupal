@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Functional;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -35,7 +37,7 @@ class ViewAjaxTest extends ViewTestBase {
   /**
    * Tests an ajax view.
    */
-  public function testAjaxView() {
+  public function testAjaxView(): void {
     $this->drupalGet('test_ajax_view');
 
     $drupal_settings = $this->getDrupalSettings();
@@ -49,7 +51,7 @@ class ViewAjaxTest extends ViewTestBase {
   /**
    * Ensures that non-ajax view cannot be accessed via an ajax HTTP request.
    */
-  public function testNonAjaxViewViaAjax() {
+  public function testNonAjaxViewViaAjax(): void {
     $client = $this->getHttpClient();
     $response = $client->request('POST', $this->buildUrl('views/ajax'), [
       'form_params' => ['view_name' => 'test_ajax_view', 'view_display_id' => 'default'],
@@ -62,6 +64,26 @@ class ViewAjaxTest extends ViewTestBase {
       'http_errors' => FALSE,
     ]);
     $this->assertEquals(403, $response->getStatusCode());
+  }
+
+  /**
+   * Tests that an ajax view response is cacheable.
+   */
+  public function testAjaxViewCache(): void {
+    $this->drupalGet('views/ajax', [
+      'query' => [
+        'view_name' => 'test_ajax_view',
+        'view_display_id' => 'page_1',
+      ],
+    ]);
+
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()
+      ->responseHeaderEquals('X-Drupal-Cache-Tags', 'config:user.role.anonymous config:views.view.test_ajax_view http_response');
+    $this->assertSession()
+      ->responseHeaderEquals('X-Drupal-Cache-Contexts', 'languages:language_interface route theme url.query_args user.permissions');
+    $this->assertSession()
+      ->responseHeaderEquals('X-Drupal-Cache-Max-Age', '-1 (Permanent)');
   }
 
 }

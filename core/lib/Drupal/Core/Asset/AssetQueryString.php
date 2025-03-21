@@ -31,7 +31,7 @@ class AssetQueryString implements AssetQueryStringInterface, CacheClearerInterfa
    */
   public function __construct(
     protected StateInterface $state,
-    protected TimeInterface $time
+    protected TimeInterface $time,
   ) {}
 
   /**

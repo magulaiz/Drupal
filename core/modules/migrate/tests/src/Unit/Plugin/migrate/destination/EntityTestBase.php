@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -57,14 +59,23 @@ class EntityTestBase extends UnitTestCase {
  */
 class BaseFieldDefinitionTest extends BaseFieldDefinition {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create($type) {
     return new static([]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getSettings() {
     return [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getType() {
     return 'integer';
   }
