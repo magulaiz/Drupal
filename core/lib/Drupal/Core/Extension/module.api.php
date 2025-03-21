@@ -779,7 +779,7 @@ function hook_install_tasks_alter(&$tasks, $install_state): void {
  * @see https://www.drupal.org/node/2535316
  */
 // phpcs:enable
-function hook_update_N(&$sandbox): string|null {
+function hook_update_N(&$sandbox): ?string {
   // For non-batch updates, the signature can simply be:
   // function hook_update_N() {
 
@@ -889,7 +889,7 @@ function hook_update_N(&$sandbox): string|null {
  * @see hook_removed_post_updates()
  */
 // phpcs:enable
-function hook_post_update_NAME(&$sandbox): string|null {
+function hook_post_update_NAME(&$sandbox): ?string {
   // Example of updating some content.
   $node = \Drupal\node\Entity\Node::load(123);
   $node->setTitle('foo');
