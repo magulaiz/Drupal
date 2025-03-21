@@ -47,7 +47,7 @@ class StandardJavascriptTest extends WebDriverTestBase {
     $this->drupalGet($node->toUrl());
     $this->assertBigPipePlaceholderReplacementCount(5);
 
-    // Node page second request: One placeholder for the comment form:
+    // Node page second request: One placeholder for the comment form.
     $this->drupalGet($node->toUrl());
     $this->assertBigPipePlaceholderReplacementCount(1);
   }
