@@ -108,6 +108,7 @@ default:
   before_script:
     - composer validate
     - composer install --optimize-autoloader
+    - composer run-script drupal-phpunit-upgrade-check
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
   script:
