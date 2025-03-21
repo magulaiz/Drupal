@@ -1907,8 +1907,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     try {
       // Only do this if the entity is revisionable.
       if ($this->entityType->isRevisionable()) {
-        $table_mapping = $this->getTableMapping();
-
         // Make sure that the entity_id is of the correct type (integer or string).
         $base_table_entity_id_data = $this->database->tableInformation()->getTableField($this->baseTable, $this->idKey);
         if (isset($base_table_entity_id_data['type']) && in_array($base_table_entity_id_data['type'], ['int', 'serial'])) {
