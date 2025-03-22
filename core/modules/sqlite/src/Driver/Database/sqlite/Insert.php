@@ -72,7 +72,7 @@ class Insert extends QueryInsert {
     // If there are no fields in the query, execute an INSERT statement that
     // only populates default values.
     else {
-      $stmt = $this->connection->prepareStatement("INSERT INTO $this->table DEFAULT VALUES", $this->queryOptions);
+      $stmt = $this->connection->prepareStatement("INSERT INTO $this->tableIdentifier DEFAULT VALUES", $this->queryOptions);
       try {
         $stmt->execute(NULL, $this->queryOptions);
       }
@@ -105,10 +105,10 @@ class Insert extends QueryInsert {
     // pass it back, as any remaining options are irrelevant.
     if (!empty($this->fromQuery)) {
       $insert_fields_string = $insert_fields ? ' (' . implode(', ', $insert_fields) . ') ' : ' ';
-      return $comments . "INSERT INTO $this->table" . $insert_fields_string . $this->fromQuery;
+      return $comments . "INSERT INTO $this->tableIdentifier" . $insert_fields_string . $this->fromQuery;
     }
 
-    return $comments . "INSERT INTO $this->table  (" . implode(', ', $insert_fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
+    return $comments . "INSERT INTO $this->tableIdentifier  (" . implode(', ', $insert_fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
   }
 
 }
