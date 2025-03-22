@@ -401,12 +401,11 @@ function show(&$element) {
  *
  * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
  * \Drupal\Core\Cache\ChainCacheClearer::clearCache() instead.
+ * @see https://www.drupal.org/node/3014783
  *
- * @see \Drupal\Core\Cache\CacheHelper::getBins()
+ * @see \Drupal\Core\Cache\ChainCacheClearer::clearCache()
  * @see hook_cache_flush()
  * @see hook_rebuild()
- * @see https://www.drupal.org/node/3014783
- * @see \Drupal\Core\Cache\ChainCacheClearer::clearCache()
  *
  * @todo Add a global lock to ensure that caches are not primed in concurrent
  *   requests.
