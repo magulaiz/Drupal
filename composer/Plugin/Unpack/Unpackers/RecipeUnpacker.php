@@ -109,6 +109,7 @@ class RecipeUnpacker implements UnpackerInterface {
   public function updateComposerJsonPackages(): void {
     $composer_json = $this->rootComposer->getComposerContent();
     $composer_manipulator = $this->rootComposer->getComposerManipulator();
+    $composer_config = $this->composer->getConfig();
 
     while ($package_dependency = $this->unpackCollection->popPackageDependencies()) {
       $dependency_name = $package_dependency['name'];
@@ -130,7 +131,7 @@ class RecipeUnpacker implements UnpackerInterface {
           'require',
           $dependency_name,
           $package_dependency['version'],
-          sortPackages: TRUE
+          sortPackages: $composer_config->get('sort-packages'),
       )) {
         throw new \RuntimeException(sprintf('Unable to manipulate composer.json during the unpack of %s',
           $dependency_name,
