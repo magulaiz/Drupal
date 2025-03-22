@@ -126,9 +126,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       // rows that actually didn't have to be updated because the values didn't
       // change. This matches common behavior among other database systems.
       \PDO::MYSQL_ATTR_FOUND_ROWS => TRUE,
-      // Because MySQL's prepared statements skip the query cache, because it's
-      // dumb.
-      \PDO::ATTR_EMULATE_PREPARES => TRUE,
+      // Native prepares are more secure.
+      \PDO::ATTR_EMULATE_PREPARES => FALSE,
       // Limit SQL to a single statement like mysqli.
       \PDO::MYSQL_ATTR_MULTI_STATEMENTS => FALSE,
       // Convert numeric values to strings when fetching. In PHP 8.1,
