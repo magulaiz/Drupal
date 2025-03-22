@@ -9,7 +9,6 @@
  */
 
 use Drupal\Component\Render\MarkupInterface;
-use Drupal\Core\Template\AttributeString;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
@@ -634,7 +633,7 @@ function template_preprocess_image(&$variables): void {
      * This is used to explicitly bypass XSS filtering
      * so we don't want to cast it to a string.
      */
-    $variables['attributes']['src'] = new AttributeString('src', $variables['uri']);
+    $variables['attributes']['src'] = $variables['uri'];
   }
   elseif (!empty($variables['uri'])) {
     $variables['attributes']['src'] = $file_url_generator->generateString($variables['uri']);

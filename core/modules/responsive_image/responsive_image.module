@@ -7,7 +7,6 @@
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\Core\Template\AttributeString;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
@@ -370,7 +369,7 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
   $source_attributes = new Attribute();
   // The srcset attributes may include data: for 1px gifs so mark it as safe to
   // avoid the data: protocol being escaped.
-  $source_attributes->setAttribute('srcset', new AttributeString('srcset', Markup::create(implode(', ', array_unique($srcset)))));
+  $source_attributes->setAttribute('srcset', Markup::create(implode(', ', array_unique($srcset))));
   $media_query = trim($breakpoint->getMediaQuery());
   if (!empty($media_query)) {
     $source_attributes->setAttribute('media', $media_query);
