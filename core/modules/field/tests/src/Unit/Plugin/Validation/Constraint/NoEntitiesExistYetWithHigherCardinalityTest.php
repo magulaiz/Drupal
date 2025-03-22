@@ -6,8 +6,6 @@ namespace Drupal\Tests\field\Unit\Plugin\Validation\Constraint;
 
 use Drupal\field\Plugin\Validation\Constraint\NoEntitiesExistYetWithHigherCardinality;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 /**
  * Tests the NoEntitiesExistYetWithHigherCardinality constraint.
@@ -41,7 +39,7 @@ class NoEntitiesExistYetWithHigherCardinalityTest extends UnitTestCase {
     ];
     
     $constraint = new NoEntitiesExistYetWithHigherCardinality($options);
-    
+
     $this->assertEquals('node', $constraint->entityType);
     $this->assertEquals('field_test', $constraint->fieldName);
     $this->assertEquals(
@@ -56,7 +54,7 @@ class NoEntitiesExistYetWithHigherCardinalityTest extends UnitTestCase {
   public function testMissingOptions(): void {
     $this->expectException(\Symfony\Component\Validator\Exception\MissingOptionsException::class);
     $this->expectExceptionMessage('The options "entityType" must be set for constraint');
-    
+
     new NoEntitiesExistYetWithHigherCardinality(['fieldName' => 'field_test']);
   }
 
@@ -70,7 +68,7 @@ class NoEntitiesExistYetWithHigherCardinalityTest extends UnitTestCase {
     ];
     
     $constraint = new NoEntitiesExistYetWithHigherCardinality($options);
-    
+
     $defaultConfig = $constraint->getDefaultOption();
     $this->assertNull($defaultConfig);
   }
@@ -87,7 +85,7 @@ class NoEntitiesExistYetWithHigherCardinalityTest extends UnitTestCase {
     ];
     
     $constraint = new NoEntitiesExistYetWithHigherCardinality($options);
-    
+
     // Simulate the violation building process.
     $parameters = [
       '@field_name' => $fieldName,
@@ -103,7 +101,7 @@ class NoEntitiesExistYetWithHigherCardinalityTest extends UnitTestCase {
   /**
    * Data provider for testMessageParameters.
    */
-  public function messageParametersProvider(): array {
+  public static function messageParametersProvider(): array {
     return [
       [
         'node',

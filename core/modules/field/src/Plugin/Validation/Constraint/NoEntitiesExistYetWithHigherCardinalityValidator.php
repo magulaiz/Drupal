@@ -13,6 +13,26 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
+/**
+ * Validates the NoEntitiesExistYetWithHigherCardinality constraint.
+ *
+ * This validator checks whether existing entities of a specified type have more
+ * field values than allowed by the given cardinality limit. It performs an
+ * aggregate query to find the maximum delta (number of field values) for the
+ * specified field across all entities of the given type, and compares it
+ * against the provided cardinality.
+ *
+ * The validation:
+ * - Skips if cardinality is unlimited (-1)
+ * - Skips if the field storage configuration doesn't exist
+ * - Uses EntityTypeManager to query the maximum field delta
+ * - Adds a violation if the maximum delta exceeds the cardinality
+ *
+ * This validator implements ContainerInjectionInterface to access the entity
+ * type manager service from the Drupal service container.
+ *
+ * @see \Drupal\field\Plugin\Validation\Constraint\NoEntitiesExistYetWithHigherCardinality
+ */
 class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   public function __construct(
@@ -36,9 +56,7 @@ class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidat
       return;
     }
 
-    /**
-     * We cannot check this constraint if the field storage does not exist.
-     */
+    // We cannot check this constraint if the field storage does not exist.
     $fieldStorageConfig = $this->entityTypeManager->getStorage('field_storage_config')
       ->load($constraint->entityType . '.' . $constraint->fieldName);
     if ($fieldStorageConfig === NULL) {
