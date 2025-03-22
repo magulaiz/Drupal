@@ -20,7 +20,7 @@ class TextTest extends UnitTestCase {
    * @covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
-    $dependency_key = 'test_key';
+    $dependency_key = 'config';
     $format_id = 'test_format';
 
     $format = $this->createMock(FilterFormatInterface::class);
@@ -29,7 +29,7 @@ class TextTest extends UnitTestCase {
       ->willReturn($dependency_key);
     $format->expects($this->once())
       ->method('getConfigDependencyName')
-      ->willReturn('filter.' . $format_id);
+      ->willReturn('filter.format.' . $format_id);
     $format_storage = $this->createMock(EntityStorageInterface::class);
     $format_storage->expects($this->once())
       ->method('load')
@@ -43,7 +43,7 @@ class TextTest extends UnitTestCase {
 
     $plugin = new Text([], 'text', [], $entity_type_manager);
     $plugin->options['content']['format'] = $format_id;
-    $expected = [$dependency_key => 'filter.' . $format_id];
+    $expected = [$dependency_key => ['filter.format.' . $format_id]];
     $this->assertEquals($expected, $plugin->calculateDependencies());
   }
 

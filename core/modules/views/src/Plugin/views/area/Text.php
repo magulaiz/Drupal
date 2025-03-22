@@ -95,7 +95,7 @@ class Text extends TokenizeAreaPluginBase {
     $format = $this->entityTypeManager->getStorage('filter_format')
       ->load($this->getFormatId());
     return [
-      $format->getConfigDependencyKey() => $format->getConfigDependencyName(),
+      $format->getConfigDependencyKey() => [$format->getConfigDependencyName()],
     ];
   }
 
