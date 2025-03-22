@@ -96,5 +96,21 @@
         {% endif %}
       </div>
     </div>
+    {% for module, data in other_modules %}
+      <div class="system-status-general-info__item card">
+        {% if data.icon %}
+          <span class="system-status-general-info__item-icon system-status-general-info__item-icon--{{ data.icon }}"></span>
+        {% else %}
+          <span class="system-status-general-info__item-icon system-status-general-info__item-icon--drupal"></span>
+        {% endif %}
+        <div class="system-status-general-info__item-details">
+          <h3 class="system-status-general-info__item-title">{{ data.title|t }}</h3>
+          {{ data.value }}
+          {% if data.description %}
+            <div class="description">{{ data.description }}</div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
   </div>
 </div>

@@ -18,7 +18,6 @@
   display: block;
   overflow-x: auto;
   box-sizing: border-box;
-  margin-block-end: var(--space-l);
   padding: 18px;
 }
 
@@ -114,9 +113,9 @@
 
 @media screen and (min-width: 48em) {
   .system-status-general-info__items {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: var(--space-l);
   }
 
   .system-status-general-info__items::after {
@@ -126,10 +125,6 @@
 
   .system-status-general-info__item {
     display: block;
-    width: 32%;
-  }
-  .system-status-general-info__item:last-of-type {
-    margin-inline-start: 2%;
   }
 }
 
