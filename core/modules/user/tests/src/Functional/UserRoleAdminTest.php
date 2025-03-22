@@ -140,4 +140,25 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->assertSame(array_reverse($saved_rids), $rids);
   }
 
+  /**
+   * Tests that the role settings form.
+   */
+  public function testRoleSettingsFormMessage() {
+    // Create a new role for testing.
+    $role = Role::create([
+      'id' => 'test_role',
+      'label' => 'Test Role',
+    ]);
+    $role->save();
+
+    // Go to the role settings form.
+    $this->drupalGet('admin/people/role-settings');
+
+    // Submit the form without changing any values.
+    $this->submitForm([], t('Save configuration'));
+
+    // Check that the success message appears.
+    $this->assertSession()->pageTextContains('The role settings have been updated.');
+  }
+
 }
