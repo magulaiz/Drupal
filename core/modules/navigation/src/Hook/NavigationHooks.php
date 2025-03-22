@@ -3,7 +3,6 @@
 namespace Drupal\navigation\Hook;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -153,8 +152,6 @@ class NavigationHooks {
     $navigation_links = \Drupal::classResolver(NavigationContentLinks::class);
     assert($navigation_links instanceof NavigationContentLinks);
     $navigation_links->addMenuLinks($links);
-    $navigation_links->removeAdminContentLink($links);
-    $navigation_links->removeHelpLink($links);
   }
 
   /**
@@ -271,21 +268,6 @@ class NavigationHooks {
   }
 
   /**
-   * Implements hook_js_settings_alter().
-   */
-  #[Hook('js_settings_alter')]
-  public function jsSettingsAlter(array &$settings, AttachedAssetsInterface $assets): void {
-    // If Navigation's user-block library is not installed, return.
-    if (!in_array('navigation/internal.user-block', $assets->getLibraries())) {
-      return;
-    }
-    // Provide the user name in drupalSettings to allow JavaScript code to
-    // customize the experience for the end user, rather than the server side,
-    // which would break the render cache.
-    $settings['navigation']['user'] = $this->currentUser->getAccountName();
-  }
-
-  /**
    * Implements hook_modules_installed().
    */
   #[Hook('modules_installed')]
@@ -303,6 +285,26 @@ class NavigationHooks {
 
       foreach ($blocks as $block) {
         $this->configActionManager->applyAction('addNavigationBlock', 'navigation.block_layout', $block);
+      }
+    }
+  }
+
+  /**
+   * Implements hook_navigation_menu_link_tree_alter().
+   */
+  #[Hook('navigation_menu_link_tree_alter')]
+  public function navigationMenuLinkTreeAlter(array &$tree): void {
+    foreach ($tree as $key => $item) {
+      // Skip elements where menu is not the 'admin' one.
+      $menu_name = $item->link->getMenuName();
+      if ($menu_name != 'admin') {
+        continue;
+      }
+
+      // Remove unwanted Help and Content menu links.
+      $plugin_id = $item->link->getPluginId();
+      if ($plugin_id == 'help.main' || $plugin_id == 'system.admin_content') {
+        unset($tree[$key]);
       }
     }
   }

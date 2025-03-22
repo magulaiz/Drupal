@@ -6,6 +6,7 @@ use Drupal\Core\Cache\Context\CacheContextsPass;
 use Drupal\Core\Cache\ListCacheBinsPass;
 use Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass;
 use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
+use Drupal\Core\DependencyInjection\Compiler\BackwardsCompatibilityClassLoaderPass;
 use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\DeprecatedServicePass;
 use Drupal\Core\DependencyInjection\Compiler\DevelopmentSettingsPass;
@@ -27,6 +28,7 @@ use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
 use Drupal\Core\Plugin\PluginManagerPass;
+use Drupal\Core\PreWarm\PreWarmableInterface;
 use Drupal\Core\Queue\QueueFactoryInterface;
 use Drupal\Core\Render\MainContent\MainContentRenderersPass;
 use Drupal\Core\Site\Settings;
@@ -110,6 +112,9 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->addCompilerPass(new DeprecatedServicePass());
 
+    // Collect moved classes for the backwards compatibility class loader.
+    $container->addCompilerPass(new BackwardsCompatibilityClassLoaderPass());
+
     $container->registerForAutoconfiguration(EventSubscriberInterface::class)
       ->addTag('event_subscriber');
 
@@ -118,6 +123,9 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->registerForAutoconfiguration(QueueFactoryInterface::class)
       ->addTag('queue_factory');
+
+    $container->registerForAutoconfiguration(PreWarmableInterface::class)
+      ->addTag('cache_prewarmable');
 
     $container->registerForAutoconfiguration(ModuleUninstallValidatorInterface::class)
       ->addTag('module_install.uninstall_validator');
