@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
-use Drupal\Core\Database\Database;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
@@ -175,8 +174,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
 
     // Ensure the default revision is not changed during the sync.
     $reloaded_default_revision = $storage->load($entity->id());
-    if (Database::getConnection()->driver() != 'mongodb') {
-      // @todo The next assertion should pass for MongoDB.
+    if (\Drupal::database()->driver() !== 'mongodb') {
       $this->assertEquals($default_revision_id, $reloaded_default_revision->getRevisionId());
     }
     $this->assertEquals([

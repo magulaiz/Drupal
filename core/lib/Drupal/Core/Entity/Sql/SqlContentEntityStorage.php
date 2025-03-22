@@ -548,7 +548,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
 
     if ($this->database->driver() == 'mongodb') {
-      // @todo remove: Get all the embedded table names without the base table.
+      // Get all the embedded table names for the entity without the base table.
       $embedded_table_names = $this->database->tableInformation()->getTableEmbeddedTables($this->baseTable);
 
       $values_embedded_tables = [];
@@ -567,26 +567,22 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
           elseif ($field_name = strstr($name, '__', TRUE)) {
             $property_name = substr($name, strpos($name, '__') + 2);
-            // @todo Test if typecasting is necessary. Maybe special case if
-            // $value is null.
+            // Typecast the value to a string value as that is how a relational
+            // database returns it values.
             $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = (is_null($value) ? NULL : (string) $value);
           }
-          else {
+          elseif (is_null($value)) {
             // Handle columns named directly after the field (e.g if the field
             // type only stores one property).
-            // @todo Test if typecasting is necessary. Maybe special case if
-            // $value is null.
-            if (is_null($value)) {
-              $values[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = NULL;
-            }
-            elseif ($value === FALSE) {
-              // Drupal expects boolean values with the value FALSE to
-              // have the string value of zero.
-              $values[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = '0';
-            }
-            else {
-              $values[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = (string) $value;
-            }
+            $values[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = NULL;
+          }
+          elseif ($value === FALSE) {
+            // Drupal expects boolean values with the value FALSE to
+            // have the string value of zero.
+            $values[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = '0';
+          }
+          else {
+            $values[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = (string) $value;
           }
         }
 
@@ -806,29 +802,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
         }
       }
-
-      // Get the list of translations from the latest revision.
-      // foreach ($values_embedded_tables as $id => $embedded_tables) {
-      // foreach ($embedded_tables as $embedded_table_name => $embedded_table_rows) {
-      // if (is_array($embedded_table_rows)) {
-      // foreach ($embedded_table_rows as $embedded_table_row) {
-      // if (empty($embedded_table_row[$this->defaultLangcodeKey])) {
-      // $langcode = $embedded_table_row[$this->langcodeKey];
-      // }
-      // else {
-      // $langcode = LanguageInterface::LANGCODE_DEFAULT;
-      // }
-      //
-      // if ($embedded_table_name == $this->jsonStorageLatestRevisionTable) {
-      // $translations[$id][$langcode] = TRUE;
-      // }
-      // elseif ($embedded_table_name == $this->jsonStorageTranslationsTable) {
-      // $translations[$id][$langcode] = TRUE;
-      // }
-      // }
-      // }
-      // }
-      // }
 
       // Use the collected embedded table data to retrieve the entity values.
       foreach ($embedded_table_data as $table_rows) {
