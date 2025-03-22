@@ -103,6 +103,7 @@
       <!-- @todo remove line(s) below once PHPUnit 10 is no longer used; they
           are redundant in PHPUnit 11+ that fully implements globstar (**)
           pattern.
+          @see https://www.drupal.org/project/drupal/issues/3497116
       -->
       <directory>profiles/tests/testing/modules/*/tests/src/Kernel</directory>
     </testsuite>
@@ -118,6 +119,7 @@
       <!-- @todo remove line(s) below once PHPUnit 10 is no longer used; they
           are redundant in PHPUnit 11+ that fully implements globstar (**)
           pattern.
+          @see https://www.drupal.org/project/drupal/issues/3497116
       -->
       <directory>modules/config/tests/config_test/tests/src/Functional</directory>
       <directory>modules/system/tests/modules/entity_test/tests/src/Functional</directory>
