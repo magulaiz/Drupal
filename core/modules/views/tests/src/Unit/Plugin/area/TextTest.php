@@ -38,7 +38,7 @@ class TextTest extends UnitTestCase {
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->once())
       ->method('getStorage')
-      ->with('text_format')
+      ->with('filter_format')
       ->willReturn($format_storage);
 
     $plugin = new Text([], 'text', [], $entity_type_manager);

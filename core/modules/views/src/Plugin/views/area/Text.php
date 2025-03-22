@@ -92,7 +92,7 @@ class Text extends TokenizeAreaPluginBase {
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    $format = $this->entityTypeManager->getStorage('text_format')
+    $format = $this->entityTypeManager->getStorage('filter_format')
       ->load($this->getFormatId());
     return [
       $format->getConfigDependencyKey() => $format->getConfigDependencyName(),
