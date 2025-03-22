@@ -64,10 +64,10 @@ class Insert extends QueryInsert {
     // pass it back, as any remaining options are irrelevant.
     if (!empty($this->fromQuery)) {
       $insert_fields_string = $insert_fields ? ' (' . implode(', ', $insert_fields) . ') ' : ' ';
-      return $comments . 'INSERT INTO {' . $this->table . '}' . $insert_fields_string . $this->fromQuery;
+      return $comments . "INSERT INTO $this->tableIdentifier" . $insert_fields_string . $this->fromQuery;
     }
 
-    $query = $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
+    $query = $comments . "INSERT INTO $this->tableIdentifier (" . implode(', ', $insert_fields) . ') VALUES ';
 
     $values = $this->getInsertPlaceholderFragment($this->insertValues, $this->defaultFields);
     $query .= implode(', ', $values);
