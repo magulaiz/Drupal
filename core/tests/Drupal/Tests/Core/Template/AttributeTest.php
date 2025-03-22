@@ -552,6 +552,7 @@ class AttributeTest extends UnitTestCase {
    *   and an expected attribute array after XSS sanitization.
    */
   public static function providerTestAttributesWithUrls(): array {
+    // cSpell:disable
     $data = [];
     $data['normal-external-url'] = [
       ['href' => "http://example.com/foo"],
@@ -614,6 +615,7 @@ class AttributeTest extends UnitTestCase {
       ['href' => 'javascript:alert(String.fromCharCode(88,83,83))'],
       ' href="alert(String.fromCharCode(88,83,83))"',
     ];
+    // cSpell:enable
 
     return $data;
   }

@@ -367,7 +367,7 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
   // Sort the srcset from small to large image width or multiplier.
   ksort($srcset);
   $source_attributes = new Attribute();
-  // The srcset attributes may include data: for 1px gifs so mark it as safe to
+  // The srcset attributes may include data: for 1px GIFs so mark it as safe to
   // avoid the data: protocol being escaped.
   $source_attributes->setAttribute('srcset', Markup::create(implode(', ', array_unique($srcset))));
   $media_query = trim($breakpoint->getMediaQuery());
