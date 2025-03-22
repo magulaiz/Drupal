@@ -543,8 +543,8 @@ class UserHooks {
     // Set the description for the "Add field" page.
     if (!empty($options['user'])) {
       $options['user']['description'] = [
-        $this->t('Refer to any user on the site.'),
-        $this->t("Examples: show the user's email address or a link to their contact form."),
+        $this->t('Refer to any user on the site'),
+        $this->t("Examples: show the user's email address or a link to their contact form"),
       ];
     }
   }

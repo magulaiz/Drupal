@@ -136,7 +136,7 @@ class TaxonomyHooks {
     // Set the description for the "Add field" page.
     if (!empty($options['taxonomy_term'])) {
       $options['taxonomy_term']['description'] = [
-        $this->t('Attach a term from any vocabulary.'),
+        $this->t('Attach a term from any vocabulary'),
         $this->t('Examples: free tag, site section, article topic'),
       ];
     }

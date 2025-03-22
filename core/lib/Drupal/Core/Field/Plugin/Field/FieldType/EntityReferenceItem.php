@@ -35,7 +35,7 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
 #[FieldType(
   id: "entity_reference",
   label: new TranslatableMarkup("Entity reference"),
-  description: new TranslatableMarkup("Choose from all available options on the next screen."),
+  description: new TranslatableMarkup("Choose from all available options on the next screen"),
   category: "reference",
   default_widget: "entity_reference_autocomplete",
   default_formatter: "entity_reference_label",

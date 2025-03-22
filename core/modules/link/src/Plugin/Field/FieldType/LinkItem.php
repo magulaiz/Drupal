@@ -20,7 +20,7 @@ use Drupal\link\LinkItemInterface;
 #[FieldType(
   id: "link",
   label: new TranslatableMarkup("Link"),
-  description: new TranslatableMarkup("Store URL, choose if link text is allowed and what type of link"),
+  description: new TranslatableMarkup("Store a URL, choose if link text is allowed and what type of link"),
   default_widget: "link_default",
   default_formatter: "link",
   constraints: [

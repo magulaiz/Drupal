@@ -16,9 +16,11 @@ use Drupal\Core\TypedData\DataDefinition;
   id: "timestamp",
   label: new TranslatableMarkup("Timestamp"),
   description: [
-    new TranslatableMarkup("Ideal for using date and time calculations or comparisons"),
-    new TranslatableMarkup("Date and time stored in the form of seconds since January 1, 1970 (UTC)"),
+    new TranslatableMarkup("Date and time stored in seconds since January 1, 1970 (UTC)"),
+    new TranslatableMarkup("Allowed values: 1901-12-13 to 2038-01-19 03:14:07 UTC."),
+    new TranslatableMarkup("Input requires: date, time"),
     new TranslatableMarkup("Compact and efficient for storage, sorting and calculations"),
+    new TranslatableMarkup("Example: 979430400"),
   ],
   category: "date_time",
   default_widget: "datetime_timestamp",

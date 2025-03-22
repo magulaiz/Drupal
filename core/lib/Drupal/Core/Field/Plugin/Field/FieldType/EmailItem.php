@@ -17,7 +17,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 #[FieldType(
   id: "email",
   label: new TranslatableMarkup("Email"),
-  description: new TranslatableMarkup("Email address with option for output link"),
+  description: new TranslatableMarkup("An email address with an output link option"),
   default_widget: "email_default",
   default_formatter: "basic_string"
 )]

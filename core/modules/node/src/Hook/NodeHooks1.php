@@ -207,7 +207,7 @@ class NodeHooks1 {
     // Set the description for the "Add field" page.
     if (!empty($options['node'])) {
       $options['node']['description'] = [
-        $this->t('Link content, such as Basic page or Article.'),
+        $this->t('Link content, such as Basic page or Article'),
         $this->t('Examples: related articles, next/previous links'),
       ];
     }
