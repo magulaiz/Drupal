@@ -120,6 +120,12 @@ class Xss {
     'property',
     'class',
     'datetime',
+    'name',
+    'aria-label',
+    'value',
+    'sizes',
+    'style',
+    'media',
   ];
 
   /**
