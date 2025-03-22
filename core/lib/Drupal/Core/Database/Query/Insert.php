@@ -36,7 +36,7 @@ class Insert extends Query implements \Countable {
       $table = $this->connection->identifiers->table($table);
     }
     assert($table instanceof TableIdentifier);
-    $this->table = $table;
+    $this->tableIdentifier = $table;
   }
 
   /**
@@ -122,7 +122,7 @@ class Insert extends Query implements \Countable {
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
 
     if (!empty($this->fromQuery)) {
-      return $comments . "INSERT INTO $this->table (" . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
+      return $comments . "INSERT INTO $this->tableIdentifier (" . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
     }
 
     // For simplicity, we will use the $placeholders array to inject
@@ -132,7 +132,7 @@ class Insert extends Query implements \Countable {
     $placeholders = array_pad($placeholders, count($this->defaultFields), 'default');
     $placeholders = array_pad($placeholders, count($this->insertFields), '?');
 
-    return $comments . "INSERT INTO $this->table (" . implode(', ', $insert_fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
+    return $comments . "INSERT INTO $this->tableIdentifier (" . implode(', ', $insert_fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
   }
 
   /**

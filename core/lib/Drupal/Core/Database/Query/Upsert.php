@@ -40,7 +40,7 @@ abstract class Upsert extends Query implements \Countable {
       $table = $this->connection->identifiers->table($table);
     }
     assert($table instanceof TableIdentifier);
-    $this->table = $table;
+    $this->tableIdentifier = $table;
   }
 
   /**
