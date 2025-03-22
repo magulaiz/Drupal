@@ -143,7 +143,8 @@ class UserRoleAdminTest extends BrowserTestBase {
   /**
    * Tests that the role settings form.
    */
-  public function testRoleSettingsFormMessage(): void {
+  public function testRoleSettingsForm(): void {
+    $this->drupalLogin($this->adminUser);
     // Create a new role for testing.
     $role = Role::create([
       'id' => 'test_role',
