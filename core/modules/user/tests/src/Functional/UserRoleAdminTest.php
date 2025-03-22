@@ -155,10 +155,11 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people/role-settings');
 
     // Submit the form without changing any values.
-    $this->submitForm([], t('Save configuration'));
+    $this->submitForm([], 'Save configuration');
 
     // Check that the success message appears.
     $this->assertSession()->pageTextContains('The role settings have been updated.');
+
   }
 
 }
