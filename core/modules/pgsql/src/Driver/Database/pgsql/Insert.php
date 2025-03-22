@@ -28,7 +28,7 @@ class Insert extends QueryInsert {
     $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
 
     // Fetch the list of blobs and sequences used on that table.
-    $table_information = $this->connection->schema()->queryTableInformation($this->table);
+    $table_information = $this->connection->schema()->queryTableInformation($this->tableIdentifier->identifier);
 
     $max_placeholder = 0;
     $blobs = [];
@@ -66,7 +66,7 @@ class Insert extends QueryInsert {
             // used twice. However, trying to insert a value into a serial
             // column should only be done in very rare cases and is not thread
             // safe by definition.
-            $this->connection->query("SELECT setval('" . $table_information->sequences[$index] . "', GREATEST(MAX(" . $serial_field . "), :serial_value)) FROM {" . $this->table . "}", [':serial_value' => (int) $serial_value]);
+            $this->connection->query("SELECT setval('" . $table_information->sequences[$index] . "', GREATEST(MAX(" . $serial_field . "), :serial_value)) FROM $this->tableIdentifier", [':serial_value' => (int) $serial_value]);
           }
         }
       }
@@ -123,17 +123,17 @@ class Insert extends QueryInsert {
     // pass it back, as any remaining options are irrelevant.
     if (!empty($this->fromQuery)) {
       $insert_fields_string = $insert_fields ? ' (' . implode(', ', $insert_fields) . ') ' : ' ';
-      $query = $comments . 'INSERT INTO {' . $this->table . '}' . $insert_fields_string . $this->fromQuery;
+      $query = $comments . "INSERT INTO $this->tableIdentifier" . $insert_fields_string . $this->fromQuery;
     }
     else {
-      $query = $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
+      $query = $comments . "INSERT INTO $this->tableIdentifier (" . implode(', ', $insert_fields) . ') VALUES ';
 
       $values = $this->getInsertPlaceholderFragment($this->insertValues, $this->defaultFields);
       $query .= implode(', ', $values);
     }
     try {
       // Fetch the list of blobs and sequences used on that table.
-      $table_information = $this->connection->schema()->queryTableInformation($this->table);
+      $table_information = $this->connection->schema()->queryTableInformation($this->tableIdentifier->identifier);
       if (isset($table_information->serial_fields[0])) {
         // Use RETURNING syntax to get the last insert ID in the same INSERT
         // query, see https://www.postgresql.org/docs/12/dml-returning.html.

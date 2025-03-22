@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Identifier\Table as TableIdentifier;
 
 /**
  * The base extender class for Select queries.
@@ -363,6 +364,10 @@ class SelectExtender implements SelectInterface {
    * {@inheritdoc}
    */
   public function join($table, $alias = NULL, $condition = NULL, $arguments = []) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
     return $this->query->join($table, $alias, $condition, $arguments);
   }
 
@@ -370,6 +375,10 @@ class SelectExtender implements SelectInterface {
    * {@inheritdoc}
    */
   public function innerJoin($table, $alias = NULL, $condition = NULL, $arguments = []) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
     return $this->query->innerJoin($table, $alias, $condition, $arguments);
   }
 
@@ -377,6 +386,10 @@ class SelectExtender implements SelectInterface {
    * {@inheritdoc}
    */
   public function leftJoin($table, $alias = NULL, $condition = NULL, $arguments = []) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
     return $this->query->leftJoin($table, $alias, $condition, $arguments);
   }
 
@@ -384,6 +397,10 @@ class SelectExtender implements SelectInterface {
    * {@inheritdoc}
    */
   public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = []) {
+    if (!$table instanceof TableIdentifier) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier);
     return $this->query->addJoin($type, $table, $alias, $condition, $arguments);
   }
 

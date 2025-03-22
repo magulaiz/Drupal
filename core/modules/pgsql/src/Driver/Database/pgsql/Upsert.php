@@ -22,7 +22,7 @@ class Upsert extends QueryUpsert {
     $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
 
     // Fetch the list of blobs and sequences used on that table.
-    $table_information = $this->connection->schema()->queryTableInformation($this->table);
+    $table_information = $this->connection->schema()->queryTableInformation($this->tableIdentifier->identifier);
 
     $max_placeholder = 0;
     $blobs = [];
@@ -60,7 +60,7 @@ class Upsert extends QueryUpsert {
             // used twice. However, trying to insert a value into a serial
             // column should only be done in very rare cases and is not thread
             // safe by definition.
-            $this->connection->query("SELECT setval('" . $table_information->sequences[$index] . "', GREATEST(MAX(" . $serial_field . "), :serial_value)) FROM {" . $this->table . "}", [':serial_value' => (int) $serial_value]);
+            $this->connection->query("SELECT setval('" . $table_information->sequences[$index] . "', GREATEST(MAX(" . $serial_field . "), :serial_value)) FROM $this->tableIdentifier", [':serial_value' => (int) $serial_value]);
           }
         }
       }
@@ -103,7 +103,7 @@ class Upsert extends QueryUpsert {
       return $this->connection->escapeField($field);
     }, $insert_fields);
 
-    $query = $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
+    $query = $comments . "INSERT INTO $this->tableIdentifier (" . implode(', ', $insert_fields) . ') VALUES ';
 
     $values = $this->getInsertPlaceholderFragment($this->insertValues, $this->defaultFields);
     $query .= implode(', ', $values);

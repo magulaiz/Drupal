@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Identifier\Table as TableIdentifier;
 
 /**
  * Query builder for SELECT statements.
@@ -134,7 +135,7 @@ class Select extends Query implements SelectInterface {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   Database connection object.
-   * @param string|\Drupal\Core\Database\Query\SelectInterface $table
+   * @param string|\Drupal\Core\Database\Identifier\Table|\Drupal\Core\Database\Query\SelectInterface $table
    *   The table name or subquery that is being queried.
    * @param string $alias
    *   The alias for the table.
@@ -143,6 +144,10 @@ class Select extends Query implements SelectInterface {
    */
   public function __construct(Connection $connection, $table, $alias = NULL, $options = []) {
     parent::__construct($connection, $options);
+    if (is_string($table)) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier || $table instanceof SelectInterface);
     $conjunction = $options['conjunction'] ?? 'AND';
     $this->condition = $this->connection->condition($conjunction);
     $this->having = $this->connection->condition($conjunction);
@@ -607,6 +612,10 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function join($table, $alias = NULL, $condition = NULL, $arguments = []) {
+    if (is_string($table)) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier || $table instanceof SelectInterface);
     return $this->addJoin('INNER', $table, $alias, $condition, $arguments);
   }
 
@@ -614,6 +623,10 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function innerJoin($table, $alias = NULL, $condition = NULL, $arguments = []) {
+    if (is_string($table)) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier || $table instanceof SelectInterface);
     return $this->addJoin('INNER', $table, $alias, $condition, $arguments);
   }
 
@@ -621,6 +634,10 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function leftJoin($table, $alias = NULL, $condition = NULL, $arguments = []) {
+    if (is_string($table)) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier || $table instanceof SelectInterface);
     return $this->addJoin('LEFT OUTER', $table, $alias, $condition, $arguments);
   }
 
@@ -628,12 +645,17 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = []) {
+    if (is_string($table)) {
+      $table = $this->connection->identifiers->table($table);
+    }
+    assert($table instanceof TableIdentifier || $table instanceof SelectInterface);
+
     if (empty($alias)) {
       if ($table instanceof SelectInterface) {
         $alias = 'subquery';
       }
       else {
-        $alias = $table;
+        $alias = $table->identifier;
       }
     }
 
@@ -648,9 +670,11 @@ class Select extends Query implements SelectInterface {
       $condition = str_replace('%alias', $alias, $condition);
     }
 
+    // The 'table' key must store a string and not a Table identifier for BC
+    // reasons.
     $this->tables[$alias] = [
       'join type' => $type,
-      'table' => $table,
+      'table' => $table instanceof TableIdentifier ? $table->identifier : $table,
       'alias' => $alias,
       'condition' => $condition,
       'arguments' => $arguments,
@@ -854,11 +878,7 @@ class Select extends Query implements SelectInterface {
         $table_string = '(' . (string) $subquery . ')';
       }
       else {
-        $table_string = $this->connection->escapeTable($table['table']);
-        // Do not attempt prefixing cross database / schema queries.
-        if (!str_contains($table_string, '.')) {
-          $table_string = '{' . $table_string . '}';
-        }
+        $table_string = $this->connection->identifiers->table($table['table']);
       }
 
       // Don't use the AS keyword for table aliases, as some
