@@ -313,4 +313,37 @@ interface QueryInterface extends AlterableInterface {
    */
   public function allRevisions();
 
+  /**
+   * Sets key of the field values to be returned as results.
+   *
+   * By default, the entity query results values are entity IDs. By using this
+   * method, it's possible to set a different field, corresponding to the passed
+   * entity key ($key). E.g., the following query will get a list of entity
+   * UUIDs instead of IDs:
+   * @code
+   * \Drupal::entityQuery('node')->accessCheck(FALSE)
+   *   ->condition('type', 'article')
+   *   ->key('uuid')
+   *   ->execute();
+   * @endcode
+   * While the following query will return a list of node titles:
+   * @code
+   * \Drupal::entityQuery('node')->accessCheck(FALSE)
+   *   ->condition('type', 'article')
+   *   ->key('label')
+   *   ->execute();
+   * @endcode
+   * In all cases, the results are keyed as usual, by entity revision ID if the
+   * entity type is revisionable, and by entity ID on non-revisionable entities.
+   *
+   * @param string $key
+   *   The entity key.
+   *
+   * @return $this
+   *
+   * @throws \InvalidArgumentException
+   *   When an invalid key is passed.
+   */
+  public function key(string $key): self;
+
 }

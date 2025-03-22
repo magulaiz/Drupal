@@ -137,6 +137,11 @@ abstract class QueryBase implements QueryInterface {
   protected string $conjunction;
 
   /**
+   * The entity key corresponding to the field of query results values.
+   */
+  protected string $key = 'id';
+
+  /**
    * Constructs this object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -534,6 +539,17 @@ abstract class QueryBase implements QueryInterface {
     }
     \Drupal::moduleHandler()->alter($hooks, $this);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function key(string $key): QueryInterface {
+    if ($this->entityType->hasKey($key)) {
+      $this->key = $key;
+      return $this;
+    }
+    throw new \InvalidArgumentException("The '$this->entityTypeId' entity type doesn't have a '$key' key.");
   }
 
 }

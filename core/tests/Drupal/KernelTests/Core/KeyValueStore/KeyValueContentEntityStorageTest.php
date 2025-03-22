@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\KeyValueStore;
 
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\entity_test\Entity\EntityTestLabel;
 
@@ -171,6 +172,46 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
   public function testUninstall(): void {
     $uninstall_validator_reasons = \Drupal::service('content_uninstall_validator')->validate('keyvalue_test');
     $this->assertEmpty($uninstall_validator_reasons);
+  }
+
+  /**
+   * Tests the key/value storage entity query.
+   */
+  public function testEntityQuery(): void {
+    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test_label');
+
+    $uuids = $names = [];
+    EntityTestHelper::createBundle('bundle_0', entity_type: 'entity_test_label');
+    EntityTestHelper::createBundle('bundle_1', entity_type: 'entity_test_label');
+    foreach (range(1, 10) as $i) {
+      $entity = $storage->create([
+        'id' => $i,
+        'type' => 'bundle_' . $i % 2,
+        'name' => "Entity $i",
+      ]);
+      $entity->save();
+      $uuids[$i] = $entity->uuid();
+      $names[$i] = $entity->label();
+    }
+
+    $even = range(2, 10, 2);
+    $odd = range(1, 9, 2);
+
+    foreach (['bundle_0' => $even, 'bundle_1' => $odd] as $bundle => $ids) {
+      $query = $storage->getQuery()->accessCheck(FALSE)->condition('type.0.value', $bundle);
+
+      $results = (clone $query)->execute();
+      $this->assertEquals(array_combine($ids, $ids), $results);
+
+      $results = (clone $query)->key('uuid')->execute();
+      $this->assertSame(array_combine($ids, array_intersect_key($uuids, array_flip($ids))), $results);
+
+      $results = (clone $query)->key('label')->execute();
+      $this->assertSame(array_combine($ids, array_intersect_key($names, array_flip($ids))), $results);
+
+      $results = (clone $query)->key('bundle')->execute();
+      $this->assertSame(array_combine($ids, array_fill(0, 5, $bundle)), $results);
+    }
   }
 
 }

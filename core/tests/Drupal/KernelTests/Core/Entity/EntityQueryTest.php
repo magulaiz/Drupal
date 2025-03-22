@@ -70,6 +70,13 @@ class EntityQueryTest extends EntityKernelTestBase {
   protected $storage;
 
   /**
+   * List of UUIDs.
+   *
+   * @var array<positive-int, string>
+   */
+  protected array $uuid;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -143,6 +150,10 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Make these languages available to the greetings field.
     ConfigurableLanguage::createFromLangcode('tr')->save();
     ConfigurableLanguage::createFromLangcode('pl')->save();
+
+    $uuid = $this->container->get('uuid');
+    $this->uuid = array_map(fn() => $uuid->generate(), array_fill_keys(range(1, 15), NULL));
+
     // Calculate the cartesian product of the unit array by looking at the
     // bits of $i and add the unit at the bits that are 1. For example,
     // decimal 13 is binary 1101 so unit 3,2 and 0 will be added to the
@@ -150,20 +161,18 @@ class EntityQueryTest extends EntityKernelTestBase {
     for ($i = 1; $i <= 15; $i++) {
       $entity = EntityTestMulRev::create([
         'type' => $bundles[$i & 1],
-        'name' => $this->randomMachineName(),
+        'name' => "Entity $i",
         'langcode' => 'en',
+        'uuid' => $this->uuid[$i],
       ]);
       // Make sure the name is set for every language that we might create.
       foreach (['tr', 'pl'] as $langcode) {
-        $entity->addTranslation($langcode)->name = $this->randomMachineName();
+        $entity->addTranslation($langcode)->name = "Entity $i $langcode";
       }
       foreach (array_reverse(str_split(decbin($i))) as $key => $bit) {
         if ($bit) {
-          // @todo https://www.drupal.org/project/drupal/issues/3001920 Doing
-          //   [$field_name, $langcode, $values] = $units[$key]; causes
-          //   problems in PHP 7.3. Revert to better variable names once
-          //   https://bugs.php.net/bug.php?id=76937 is fixed.
-          $entity->getTranslation($units[$key][1])->{$units[$key][0]}[] = $units[$key][2];
+          [$field_name, $langcode, $values] = $units[$key];
+          $entity->getTranslation($langcode)->{$field_name}[] = $values;
         }
       }
       $entity->save();
@@ -180,16 +189,27 @@ class EntityQueryTest extends EntityKernelTestBase {
   public function testEntityQuery(): void {
     $greetings = $this->greetings;
     $figures = $this->figures;
-    $this->queryResults = $this->storage
+    $query = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
       ->exists($greetings, 'tr')
       ->condition("$figures.color", 'red')
-      ->sort('id')
-      ->execute();
+      ->sort('id');
+    $this->queryResults = (clone $query)->execute();
     // As unit 0 was the red triangle and unit 2 was the turkish greeting,
     // bit 0 and bit 2 needs to be set.
     $this->assertResult(5, 7, 13, 15);
+
+    // Test querying for field with a key different from 'id'.
+    $query->key('label');
+    $this->queryResults = (clone $query)->condition('langcode', 'tr')->execute();
+    $this->assertRevisionResult([5, 7, 13, 15], ['Entity 5 tr', 'Entity 7 tr', 'Entity 13 tr', 'Entity 15 tr']);
+    $query->key('uuid');
+    $this->queryResults = (clone $query)->execute();
+    $this->assertRevisionResult([5, 7, 13, 15], [$this->uuid[5], $this->uuid[7], $this->uuid[13], $this->uuid[15]]);
+    $query->key('bundle');
+    $this->queryResults = (clone $query)->execute();
+    $this->assertRevisionResult([5, 7, 13, 15], [$this->bundles[1], $this->bundles[1], $this->bundles[1], $this->bundles[1]]);
 
     $query = $this->storage
       ->getQuery('OR')

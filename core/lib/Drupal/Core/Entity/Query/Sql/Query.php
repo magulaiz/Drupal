@@ -99,43 +99,56 @@ class Query extends QueryBase implements QueryInterface {
       if (!$base_table = $this->entityType->getRevisionTable()) {
         throw new QueryException("No revision table for " . $this->entityTypeId . ", invalid query.");
       }
+      $data_table = $this->entityType->getRevisionDataTable();
     }
     else {
       if (!$base_table = $this->entityType->getBaseTable()) {
         throw new QueryException("No base table for " . $this->entityTypeId . ", invalid query.");
       }
+      $data_table = $this->entityType->getDataTable();
     }
-    $simple_query = TRUE;
-    if ($this->entityType->getDataTable()) {
-      $simple_query = FALSE;
-    }
+
+    // @todo Figure out how to get the storage.
+    /** @var \Drupal\Core\Entity\Sql\SqlEntityStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage($this->entityTypeId);
+
+    $simple_query = (bool) $data_table;
     $this->sqlQuery = $this->connection->select($base_table, 'base_table', ['conjunction' => $this->conjunction]);
     // Reset the tables structure, as it might have been built for a previous
     // execution of this query.
     $this->tables = NULL;
     $this->sqlQuery->addMetaData('entity_type', $this->entityTypeId);
-    $id_field = $this->entityType->getKey('id');
+
+    $main_field = $this->entityType->getKey($this->key);
+    $field_tables = $storage->getTableMapping()->getAllFieldTableNames($main_field);
+    $revision_field = $this->entityType->getKey('revision');
+    $table_alias = 'base_table';
+    if ($data_table && !in_array($base_table, $field_tables, TRUE) && in_array($data_table, $field_tables, TRUE)) {
+      $join_field = $revision_field ?: $this->entityType->getKey('id');
+      $this->sqlQuery->innerJoin($data_table, 'data_table', "base_table.$join_field = data_table.$join_field");
+      $table_alias = 'data_table';
+    }
     // Add the key field for fetchAllKeyed().
-    if (!$revision_field = $this->entityType->getKey('revision')) {
+    if (!$revision_field) {
       // When there is no revision support, the key field is the entity key.
-      $this->sqlFields["base_table.$id_field"] = ['base_table', $id_field];
+      $this->sqlFields["$table_alias.$main_field"] = [$table_alias, $main_field];
       // Now add the value column for fetchAllKeyed(). This is always the
       // entity id.
-      $this->sqlFields["base_table.$id_field" . '_1'] = ['base_table', $id_field];
+      $this->sqlFields["$table_alias.$main_field" . '_1'] = [$table_alias, $main_field];
     }
     else {
       // When there is revision support, the key field is the revision key.
-      $this->sqlFields["base_table.$revision_field"] = ['base_table', $revision_field];
+      $this->sqlFields["$table_alias.$revision_field"] = [$table_alias, $revision_field];
       // Now add the value column for fetchAllKeyed(). This is always the
       // entity id.
-      $this->sqlFields["base_table.$id_field"] = ['base_table', $id_field];
+      $this->sqlFields["$table_alias.$main_field"] = [$table_alias, $main_field];
     }
 
     // Add a self-join to the base revision table if we're querying only the
     // latest revisions.
     if ($this->latestRevision && $revision_field) {
-      $this->sqlQuery->leftJoin($base_table, 'base_table_2', "[base_table].[$id_field] = [base_table_2].[$id_field] AND [base_table].[$revision_field] < [base_table_2].[$revision_field]");
-      $this->sqlQuery->isNull("base_table_2.$id_field");
+      $this->sqlQuery->leftJoin($base_table, 'base_table_2', "[base_table].[$main_field] = [base_table_2].[$main_field] AND [base_table].[$revision_field] < [base_table_2].[$revision_field]");
+      $this->sqlQuery->isNull("base_table_2.$main_field");
     }
 
     if (is_null($this->accessCheck)) {
