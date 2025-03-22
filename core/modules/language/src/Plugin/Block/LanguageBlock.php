@@ -5,6 +5,7 @@ namespace Drupal\language\Plugin\Block;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\CacheOptionalInterface;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -23,7 +24,7 @@ use Drupal\language\Plugin\Derivative\LanguageBlock as LanguageBlockDeriver;
   category: new TranslatableMarkup("System"),
   deriver: LanguageBlockDeriver::class
 )]
-class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface, CacheOptionalInterface {
 
   /**
    * The language manager.
