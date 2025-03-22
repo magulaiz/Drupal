@@ -3,6 +3,7 @@
 namespace Drupal\node\Hook;
 
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -188,6 +189,28 @@ class NodeHooks1 {
       ];
     }
     return $extra;
+  }
+
+  /**
+   * Implements hook_field_ui_preconfigured_options_alter().
+   */
+  #[Hook('field_ui_preconfigured_options_alter')]
+  public function preConfiguredDescription(array &$options, $field_type): void {
+    // If the field is not an "entity_reference"-based field, bail out.
+    /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    $class = $field_type_manager->getPluginClass($field_type);
+    if (!is_a($class, EntityReferenceItem::class, TRUE)) {
+      return;
+    }
+
+    // Set the description for the "Add field" page.
+    if (!empty($options['node'])) {
+      $options['node']['description'] = [
+        $this->t('Link content, such as Basic page or Article.'),
+        $this->t('Examples: related articles, next/previous links'),
+      ];
+    }
   }
 
   /**

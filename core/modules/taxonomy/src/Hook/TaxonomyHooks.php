@@ -2,6 +2,7 @@
 
 namespace Drupal\taxonomy\Hook;
 
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\Entity\EntityInterface;
@@ -117,6 +118,28 @@ class TaxonomyHooks {
       ];
     }
     return $operations;
+  }
+
+  /**
+   * Implements hook_field_ui_preconfigured_options_alter().
+   */
+  #[Hook('field_ui_preconfigured_options_alter')]
+  public function preConfiguredDescription(array &$options, $field_type): void {
+    // If the field is not an "entity_reference"-based field, bail out.
+    /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    $class = $field_type_manager->getPluginClass($field_type);
+    if (!is_a($class, EntityReferenceItem::class, TRUE)) {
+      return;
+    }
+
+    // Set the description for the "Add field" page.
+    if (!empty($options['taxonomy_term'])) {
+      $options['taxonomy_term']['description'] = [
+        $this->t('Attach a term from any vocabulary.'),
+        $this->t('Examples: free tag, site section, article topic'),
+      ];
+    }
   }
 
   /**
