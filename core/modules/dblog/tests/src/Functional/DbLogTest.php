@@ -271,7 +271,7 @@ class DbLogTest extends BrowserTestBase {
     // Verify message.
     $message = $table->findAll('xpath', "//tr/th[contains(text(), 'Message')]/../td");
     $this->assertCount(1, $message);
-    $regex = "@Path: .+admin/reports\. Drupal\\\\Core\\\\Http\\\\Exception\\\\CacheableAccessDeniedHttpException: The 'access dblog reports' permission is required\. in Drupal\\\\Core\\\\Routing\\\\AccessAwareRouter->checkAccess\(\) \(line \d+ of .+/core/lib/Drupal/Core/Routing/AccessAwareRouter\.php\)\.@";
+    $regex = "@Path: .+admin/reports\. Drupal\\\\Core\\\\Http\\\\Exception\\\\CacheableAccessDeniedHttpException: The 'access site reports' permission is required\. in Drupal\\\\Core\\\\Routing\\\\AccessAwareRouter->checkAccess\(\) \(line \d+ of .+/core/lib/Drupal/Core/Routing/AccessAwareRouter\.php\)\.@";
     $this->assertMatchesRegularExpression($regex, $message[0]->getText());
   }
 
