@@ -11,7 +11,8 @@ abstract class OrderOperation {
 
   const array KNOWN_CLASSES = [
     FirstOrLast::class,
-    BeforeOrAfter::class,
+    BeforeOrAfterModule::class,
+    BeforeOrAfterIdentifier::class,
   ];
 
   /**

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Hook;
 
-use Drupal\Core\Hook\OrderOperation\BeforeOrAfter;
-use Drupal\Core\Hook\OrderOperation\OrderOperation;
+use Drupal\Core\Hook\OrderOperation\BeforeOrAfterIdentifier;
+use Drupal\Core\Hook\OrderOperation\BeforeOrAfterModule;
 
 /**
  * Orders an implementation relative to other implementations.
@@ -41,16 +41,23 @@ abstract readonly class RelativeOrderBase implements OrderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getOperation(string $identifier): OrderOperation {
-    return new BeforeOrAfter(
-      $identifier,
-      $this->modules,
-      array_map(
-        static fn(array $class_and_method) => implode('::', $class_and_method),
-        $this->classesAndMethods,
-      ),
-      $this->isAfter(),
-    );
+  public function getOperations(string $identifier): array {
+    $operations = [];
+    foreach ($this->modules as $module) {
+      $operations[] = new BeforeOrAfterModule(
+        $identifier,
+        $module,
+        $this->isAfter(),
+      );
+    }
+    foreach ($this->classesAndMethods as [$class, $method]) {
+      $operations[] = new BeforeOrAfterIdentifier(
+        $identifier,
+        $class . '::' . $method,
+        $this->isAfter(),
+      );
+    }
+    return $operations;
   }
 
 }

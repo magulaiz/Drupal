@@ -9,7 +9,7 @@ namespace Drupal\Core\Hook\OrderOperation;
  *
  * @internal
  */
-class BeforeOrAfter extends OrderOperation {
+class BeforeOrAfterIdentifier extends OrderOperation {
 
   /**
    * Constructor.
@@ -17,9 +17,7 @@ class BeforeOrAfter extends OrderOperation {
    * @param string $identifier
    *   Identifier of the hook listener to move to a new position.
    *   The format is "$class::$method".
-   * @param list<string> $modulesToOrderAgainst
-   *   Module names of listeners to order against.
-   * @param list<string> $identifiersToOrderAgainst
+   * @param string $identifierToOrderAgainst
    *   Identifiers of listeners to order against.
    *   The format is "$class::$method".
    * @param bool $isAfter
@@ -28,8 +26,7 @@ class BeforeOrAfter extends OrderOperation {
    */
   public function __construct(
     protected readonly string $identifier,
-    protected readonly array $modulesToOrderAgainst,
-    protected readonly array $identifiersToOrderAgainst,
+    protected readonly string $identifierToOrderAgainst,
     protected readonly bool $isAfter,
   ) {}
 
@@ -43,37 +40,28 @@ class BeforeOrAfter extends OrderOperation {
       // Nothing to reorder.
       return;
     }
-    $identifiers_to_order_against = $this->identifiersToOrderAgainst;
-    if ($this->modulesToOrderAgainst) {
-      $identifiers_to_order_against = [
-        ...$identifiers_to_order_against,
-        ...array_keys(array_intersect($module_finder, $this->modulesToOrderAgainst)),
-      ];
-    }
-    $indices_to_order_against = array_keys(array_intersect($identifiers, $identifiers_to_order_against));
-    if ($indices_to_order_against === []) {
+    $index_to_order_against = array_search($this->identifierToOrderAgainst, $identifiers);
+    if ($index_to_order_against === FALSE) {
       return;
     }
     if ($this->isAfter) {
-      $max_index_to_order_against = max($indices_to_order_against);
-      if ($index >= $max_index_to_order_against) {
-        // The element is already after the other elements.
+      if ($index >= $index_to_order_against) {
+        // The element is already after the other element.
         return;
       }
-      array_splice($identifiers, $max_index_to_order_against + 1, 0, $this->identifier);
+      array_splice($identifiers, $index_to_order_against + 1, 0, $this->identifier);
       // Remove the element after splicing.
       unset($identifiers[$index]);
       $identifiers = array_values($identifiers);
     }
     else {
-      $min_index_to_order_against = min($indices_to_order_against);
-      if ($index <= $min_index_to_order_against) {
+      if ($index <= $index_to_order_against) {
         // The element is already before the other elements.
         return;
       }
       // Remove the element before splicing.
       unset($identifiers[$index]);
-      array_splice($identifiers, $min_index_to_order_against, 0, $this->identifier);
+      array_splice($identifiers, $index_to_order_against, 0, $this->identifier);
     }
   }
 

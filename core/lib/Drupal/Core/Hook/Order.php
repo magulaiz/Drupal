@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Core\Hook;
 
 use Drupal\Core\Hook\OrderOperation\FirstOrLast;
-use Drupal\Core\Hook\OrderOperation\OrderOperation;
 
 /**
  * Set this implementation to be first or last.
@@ -21,8 +20,8 @@ enum Order: int implements OrderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getOperation(string $identifier): OrderOperation {
-    return new FirstOrLast($identifier, $this === self::Last);
+  public function getOperations(string $identifier): array {
+    return [new FirstOrLast($identifier, $this === self::Last)];
   }
 
 }

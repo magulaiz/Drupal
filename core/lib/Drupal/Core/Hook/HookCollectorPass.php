@@ -417,13 +417,17 @@ class HookCollectorPass implements CompilerPassInterface {
               if ($attribute->order !== NULL) {
                 // Use a lower weight for order operations that are declared
                 // together with the hook listener they apply to.
-                $this->orderOperations[$attribute->hook][0][] = $attribute->order->getOperation("$class::$method");
+                foreach ($attribute->order->getOperations("$class::$method") as $operation) {
+                  $this->orderOperations[$attribute->hook][0][] = $operation;
+                }
               }
             }
             elseif ($attribute instanceof ReOrderHook) {
               // Use a higher weight for order operations that target other hook
               // listeners.
-              $this->orderOperations[$attribute->hook][1][] = $attribute->order->getOperation($attribute->class . '::' . $attribute->method);
+              foreach ($attribute->order->getOperations($attribute->class . '::' . $attribute->method) as $operation) {
+                $this->orderOperations[$attribute->hook][1][] = $operation;
+              }
             }
             elseif ($attribute instanceof RemoveHook) {
               $this->removeHookIdentifiers[$attribute->hook][] = $attribute->class . '::' . $attribute->method;
