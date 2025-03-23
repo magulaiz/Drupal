@@ -46,10 +46,9 @@ class RoutePreloader implements EventSubscriberInterface {
    */
   public function onRequest(KernelEvent $event) {
     // Only preload on normal HTML pages, as they will display menu links.
-    if ($this->routeProvider instanceof PreloadableRouteProviderInterface && $event->getRequest()->getRequestFormat() == 'html') {
-
+    if ($this->routeProvider instanceof CacheableRouteProviderInterface && $event->getRequest()->getRequestFormat() == 'html') {
       $routes = $this->state->get('routing.non_admin_routes', []);
-      if ($routes && method_exists($this->routeProvider, 'setCacheableRoutes')) {
+      if ($routes) {
         $this->routeProvider->setCacheableRoutes($routes);
       }
     }

@@ -133,6 +133,8 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    *   'router'.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   (Optional) The language manager.
+   * @param \Drupal\Core\Cache\CacheBackendInterface|null $bootstrapCache
+   *   The bootstrap cache.
    */
   public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', ?LanguageManagerInterface $language_manager = NULL, protected ?CacheBackendInterface $bootstrapCache = NULL) {
     $this->connection = $connection;
@@ -240,7 +242,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    * Sets routes that are worth caching.
    *
    * @param array $routes
-   *   List of routes
+   *   List of routes.
    */
   public function setCacheableRoutes(array $routes): void {
     $this->cacheableRoutes = array_merge($this->cacheableRoutes, $routes);

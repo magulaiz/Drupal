@@ -17,4 +17,12 @@ interface CacheableRouteProviderInterface extends RouteProviderInterface {
    */
   public function addExtraCacheKeyPart($cache_key_provider, $cache_key_part);
 
+  /**
+   * Sets routes that are worth caching.
+   *
+   * @param string[] $routes
+   *   List of routes.
+   */
+  public function setCacheableRoutes(array $routes): void;
+
 }
