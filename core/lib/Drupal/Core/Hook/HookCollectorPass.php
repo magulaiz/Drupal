@@ -36,6 +36,39 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class HookCollectorPass implements CompilerPassInterface {
 
   /**
+   * OOP implementation module names keyed by hook name and "$class::$method".
+   *
+   * @var array<string, array<string, string>>
+   */
+  protected array $oopImplementations = [];
+
+  /**
+   * Procedural implementation module names by hook name.
+   *
+   * @var array<string, list<string>>
+   */
+  protected array $proceduralImplementations = [];
+
+  /**
+   * Order operations grouped by hook name and weight.
+   *
+   * Operations with higher weight are applied last, which means they can
+   * override the changes from previous operations.
+   *
+   * @var array<string, array<int, list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface>>>
+   *
+   * @todo Review how to combine operations from different hooks.
+   */
+  protected array $orderOperations = [];
+
+  /**
+   * Identifiers to remove, as "$class::$method", keyed by hook name.
+   *
+   * @var array<string, list<string>>
+   */
+  protected array $removeHookIdentifiers = [];
+
+  /**
    * A map of include files by function name.
    *
    * (This is required only for BC.)
@@ -68,39 +101,6 @@ class HookCollectorPass implements CompilerPassInterface {
    * @var array<string, list<string>>
    */
   private array $groupIncludes = [];
-
-  /**
-   * OOP implementation module names keyed by hook name and "$class::$method".
-   *
-   * @var array<string, array<string, string>>
-   */
-  protected array $oopImplementations = [];
-
-  /**
-   * Procedural implementation module names by hook name.
-   *
-   * @var array<string, list<string>>
-   */
-  protected array $proceduralImplementations = [];
-
-  /**
-   * Order operations grouped by hook name and weight.
-   *
-   * Operations with higher weight are applied last, which means they can
-   * override the changes from previous operations.
-   *
-   * @var array<string, array<int, list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface>>>
-   *
-   * @todo Review how to combine operations from different hooks.
-   */
-  protected array $orderOperations = [];
-
-  /**
-   * Identifiers to remove, as "$class::$method", keyed by hook name.
-   *
-   * @var array<string, list<string>>
-   */
-  protected array $removeHookIdentifiers = [];
 
   /**
    * Constructor. Should not be called directly.
