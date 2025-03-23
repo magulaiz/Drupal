@@ -130,10 +130,11 @@ default:
     - composer validate
     - composer install --optimize-autoloader
     - composer update phpunit/phpunit --with-dependencies
-    - composer require brianium/paratest:^7.8.3
+    - composer require brianium/paratest:^7.8.3 --with-dependencies
     - docker-php-ext-enable pcov
   script:
-    - vendor/bin/paratest -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --coverage-text=component-coverage-report.txt --coverage-cobertura=component-coverage-cobertura.xml --log-junit junit.xml --fail-on-deprecation --fail-on-phpunit-deprecation
+    # '--fail-on-phpunit-deprecation' is not yet supported by paratest.
+    - vendor/bin/paratest -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --coverage-text=component-coverage-report.txt --coverage-cobertura=component-coverage-cobertura.xml --log-junit junit.xml --fail-on-deprecation
     # Process the coverage text report to produce an OpenMetrics report.
     - php .gitlab-ci/scripts/component-coverage-metrics.php
   artifacts:
