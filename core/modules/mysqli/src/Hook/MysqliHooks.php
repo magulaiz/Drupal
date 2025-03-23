@@ -17,7 +17,7 @@ class MysqliHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match): array {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.mysqli':
         $output = '';
@@ -26,7 +26,7 @@ class MysqliHooks {
         return $output;
 
     }
-    return [];
+    return NULL;
   }
 
 }
