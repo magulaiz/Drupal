@@ -418,6 +418,7 @@ class HookCollectorPass implements CompilerPassInterface {
                 // Use a lower weight for order operations that are declared
                 // together with the hook listener they apply to.
                 foreach ($attribute->order->getOperations("$class::$method") as $operation) {
+                  $weight = $operation->getSpecifity();
                   $this->orderOperations[$attribute->hook][0][] = $operation;
                 }
               }
@@ -426,6 +427,7 @@ class HookCollectorPass implements CompilerPassInterface {
               // Use a higher weight for order operations that target other hook
               // listeners.
               foreach ($attribute->order->getOperations($attribute->class . '::' . $attribute->method) as $operation) {
+                $weight = $operation->getSpecifity() + 3;
                 $this->orderOperations[$attribute->hook][1][] = $operation;
               }
             }

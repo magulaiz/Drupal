@@ -45,4 +45,21 @@ abstract class OrderOperation {
     return new $class(...$args);
   }
 
+  /**
+   * Gets a specififity for this order operation.
+   *
+   * Operations with higher specifity are applied later.
+   *
+   * @return int
+   *   Specifity for the operation.
+   *   This will be one of 0, 1 or 2.
+   */
+  final public function getSpecifity(): int {
+    $type_index = array_search(get_class($this), self::KNOWN_CLASSES);
+    if ($type_index === FALSE) {
+      throw new \LogicException(sprintf('Unknown subclass %s of internal class %s.', static::class, self::class));
+    }
+    return $type_index;
+  }
+
 }
