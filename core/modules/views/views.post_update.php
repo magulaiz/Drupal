@@ -92,7 +92,7 @@ function views_post_update_table_css_class(?array &$sandbox = NULL): void {
 /**
  * Fix views with filter_format dependencies.
  */
-function views_post_update_filter_format_dependencies() {
+function views_post_update_filter_format_dependencies(): void {
   $views = View::loadMultiple();
   array_walk($views, function (View $view) {
     $old_dependencies = $view->getDependencies();
