@@ -5,31 +5,27 @@ declare(strict_types = 1);
 namespace Drupal\Core\Hook\OrderOperation;
 
 /**
- * Static methods related to order operations.
- *
- * These should be used instead of serialize() or unserialize(), to avoid
- * security issues with unserialize(), and for additional validation.
+ * Base class for order operations.
  */
-class OrderOperation {
+abstract class OrderOperation implements OrderOperationInterface{
 
   const array KNOWN_CLASSES = [
-    'absolute' => FirstOrLast::class,
-    'relative' => BeforeOrAfter::class,
+    FirstOrLast::class,
+    BeforeOrAfter::class,
   ];
 
   /**
    * Serializes an order operation object.
    *
-   * @param \Drupal\Core\Hook\OrderOperation\OrderOperationInterface $operation
-   *   Order operation object.
-   *
    * @return array
    *   Packed operation.
    */
-  public static function pack(OrderOperationInterface $operation): array {
-    $type = array_search(get_class($operation), static::KNOWN_CLASSES)
-      ?: throw new \InvalidArgumentException('Unsupported order operation class ' . get_class($operation));
-    return [$type, $operation->pack()];
+  final public function pack(): array {
+    $type_index = array_search(get_class($this), self::KNOWN_CLASSES);
+    if ($type_index === FALSE) {
+      throw new \LogicException(sprintf('Unknown subclass %s of internal class %s.', static::class, self::class));
+    }
+    return [$type_index, get_object_vars($this)];
   }
 
   /**
@@ -41,10 +37,10 @@ class OrderOperation {
    * @return \Drupal\Core\Hook\OrderOperation\OrderOperationInterface
    *   Unpacked operation.
    */
-  public static function unpack(array $packed_operation): OrderOperationInterface {
-    [$type, $args] = $packed_operation;
-    $class = static::KNOWN_CLASSES[$type]
-      ?? throw new \InvalidArgumentException('Unsupported order operation type ' . $type);
+  final public static function unpack(array $packed_operation): OrderOperationInterface {
+    [$type_index, $args] = $packed_operation;
+    $class = static::KNOWN_CLASSES[$type_index]
+      ?? throw new \InvalidArgumentException('Unsupported order operation type index ' . $type_index);
     return new $class(...$args);
   }
 

@@ -9,7 +9,7 @@ namespace Drupal\Core\Hook\OrderOperation;
  *
  * @internal
  */
-class BeforeOrAfter implements OrderOperationInterface {
+class BeforeOrAfter extends OrderOperation {
 
   /**
    * Constructor.
@@ -32,13 +32,6 @@ class BeforeOrAfter implements OrderOperationInterface {
     protected readonly array $identifiersToOrderAgainst,
     protected readonly bool $isAfter,
   ) {}
-
-  /**
-   * {@inheritdoc}
-   */
-  public function pack(): array {
-    return get_object_vars($this);
-  }
 
   /**
    * {@inheritdoc}
