@@ -18,6 +18,9 @@ enum Order: int implements OrderInterface {
   // This implementation should fire last.
   case Last = 0;
 
+  /**
+   * {@inheritdoc}
+   */
   public function getOperation(string $identifier): OrderOperationInterface {
     return new FirstOrLast($identifier, $this === self::Last);
   }

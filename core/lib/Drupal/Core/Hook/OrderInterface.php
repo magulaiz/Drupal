@@ -6,9 +6,14 @@ namespace Drupal\Core\Hook;
 
 use Drupal\Core\Hook\OrderOperation\OrderOperationInterface;
 
+/**
+ * Interface for order specifiers used in hook attributes.
+ */
 interface OrderInterface {
 
   /**
+   * Gets order operations specified by this object.
+   *
    * @param string $identifier
    *   Identifier of the implementation to move to a new position.
    *   The format is "$class::$module".
