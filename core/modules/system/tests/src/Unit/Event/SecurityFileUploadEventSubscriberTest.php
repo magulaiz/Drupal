@@ -85,7 +85,11 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
       'no extension produces no errors' => ['foo', '', 'foo'],
       'filename is munged' => ['foo.phar.png.php.jpg', 'jpg png', 'foo.phar_.png_.php_.jpg'],
       'filename is munged regardless of case' => ['FOO.pHAR.PNG.PhP.jpg', 'jpg png', 'FOO.pHAR_.PNG_.PhP_.jpg'],
-      'null bytes are removed even if some extensions are allowed' => ['foo' . chr(0) . '.html' . chr(0), 'txt', 'foo.html'],
+      'null bytes are removed even if some extensions are allowed' => [
+        'foo' . chr(0) . '.html' . chr(0),
+        'txt',
+        'foo.html',
+      ],
       'dot files are renamed' => ['.git', '', 'git'],
       'htaccess files are renamed even if allowed' => ['.htaccess', 'htaccess txt', 'htaccess'],
       '.phtml extension allowed with .phtml file' => ['foo.phtml', 'phtml', 'foo.phtml'],
