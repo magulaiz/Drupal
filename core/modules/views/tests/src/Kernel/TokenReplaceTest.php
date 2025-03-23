@@ -30,7 +30,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpFixtures() {
+  protected function setUpFixtures(): void {
     $this->installConfig('filter');
     parent::setUpFixtures();
   }
