@@ -103,6 +103,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   The event dispatcher.
    * @param array<string, array<class-string, array<string, string>>> $hookImplementationsMap
    *   An array keyed by hook, classname, method and the value is the module.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger.
    * @param array<string, list<string>> $groupIncludes
    *   Lists of *.inc file paths that contain procedural implementations, keyed
    *   by hook name.
@@ -116,8 +118,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     $root,
     array $module_list,
     protected EventDispatcherInterface $eventDispatcher,
-    protected readonly LoggerInterface $logger,
     protected array $hookImplementationsMap,
+    protected ?LoggerInterface $logger = NULL,
     protected array $groupIncludes = [],
     protected array $packedOrderOperations = [],
   ) {
@@ -125,6 +127,10 @@ class ModuleHandler implements ModuleHandlerInterface {
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
       $this->moduleList[$name] = new Extension($this->root, $module['type'], $module['pathname'], $module['filename']);
+    }
+    if ($this->logger === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3515207', E_USER_DEPRECATED);
+      $this->logger = \Drupal::service('logger.channel.default');
     }
   }
 
