@@ -137,8 +137,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    */
   public function checkAll(AccountInterface $account) {
     $query = $this->database->select('node_access');
-    // The method should return 0 or 1 so start with SELECT 1.
-    $query->addExpression('1');
+    $query->addExpression('COUNT(*)');
     $query
       ->condition('nid', 0)
       ->condition('grant_view', 1, '>=');
@@ -148,9 +147,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     if (count($grants) > 0) {
       $query->condition($grants);
     }
-    // The query either returns 1 from SELECT 1 or FALSE, cast to int to make
-    // sure the return value is 0 or 1 as prescribed on the interface.
-    return (int) $query->range(0, 1)->execute()->fetchField();
+    return $query->execute()->fetchField();
   }
 
   /**
