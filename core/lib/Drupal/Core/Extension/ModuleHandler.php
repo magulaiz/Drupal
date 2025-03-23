@@ -86,7 +86,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * Ordering rules by hook name.
    *
-   * @var array<string, list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface>>
+   * @var array<string, list<\Drupal\Core\Hook\OrderOperation\OrderOperation>>
    */
   protected array $orderingRules = [];
 
@@ -598,7 +598,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @param string $hook
    *   Hook name.
    *
-   * @return list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface>
+   * @return list<\Drupal\Core\Hook\OrderOperation\OrderOperation>
    *   List of order operations for the hook.
    */
   protected function getHookOrderingRules(string $hook): array {
