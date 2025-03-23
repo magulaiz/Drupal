@@ -62,7 +62,7 @@ user.settings:
       label: 'Password reset timeout'
       constraints:
         Range:
-          min: 1
+          min: 300
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
