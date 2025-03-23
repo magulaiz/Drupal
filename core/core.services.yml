@@ -653,7 +653,7 @@ services:
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
   module_handler:
     class: Drupal\Core\Extension\ModuleHandler
-    arguments: ['%app.root%', '%container.modules%', '@event_dispatcher', '@logger.channel.default', '%hook_implementations_map%']
+    arguments: ['%app.root%', '%container.modules%', '@event_dispatcher', '%hook_implementations_map%', '@logger.channel.default']
   Drupal\Core\Extension\ModuleHandlerInterface: '@module_handler'
   module_installer:
     class: Drupal\Core\Extension\ModuleInstaller
