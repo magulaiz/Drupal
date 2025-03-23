@@ -39,7 +39,8 @@ class NodeRevisionsAuthorTest extends NodeTestBase {
     $originalBody = $node->body->value;
     $originalTitle = $node->getTitle();
 
-    // Create a revision (as $user2) showing $user3 as author.
+    // Create a revision (as $initialUser) showing $initialRevisionAuthor
+    // as author.
     $node->setRevisionLogMessage('Changed author');
     $revisedTitle = $this->randomMachineName();
     $node->setTitle($revisedTitle);
@@ -56,8 +57,6 @@ class NodeRevisionsAuthorTest extends NodeTestBase {
 
     $nodeStorage = \Drupal::entityTypeManager()->getStorage('node');
 
-    // Confirm that in the revised node, $user3 is the author and $user2 is
-    // the revision user.
     self::assertEquals($node->getOwnerId(), $initialRevisionAuthor->id());
     self::assertEquals($node->getRevisionUserId(), $initialRevisionUser->id());
 
