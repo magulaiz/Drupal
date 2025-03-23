@@ -55,7 +55,7 @@ class HookCollectorPass implements CompilerPassInterface {
    * Operations with higher weight are applied last, which means they can
    * override the changes from previous operations.
    *
-   * @var array<string, array<int, list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface>>>
+   * @var array<string, array<int, list<\Drupal\Core\Hook\OrderOperation\OrderOperation>>>
    *
    * @todo Review how to combine operations from different hooks.
    */
@@ -243,7 +243,7 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Gets order operations by hook.
    *
-   * @return array<string, list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface>>
+   * @return array<string, list<\Drupal\Core\Hook\OrderOperation\OrderOperation>>
    *   Order operations by hook name.
    */
   protected function getOrderOperations(): array {
@@ -261,7 +261,7 @@ class HookCollectorPass implements CompilerPassInterface {
    * @param array<string, string> $implementation_list
    *   Implementation list for one hook, as module names keyed by
    *   "$class::$method" identifiers.
-   * @param list<\Drupal\Core\Hook\OrderOperation\OrderOperationInterface> $order_operations
+   * @param list<\Drupal\Core\Hook\OrderOperation\OrderOperation> $order_operations
    *   A list of order operations for one hook.
    */
   public static function applyOrderOperations(array &$implementation_list, array $order_operations): void {
