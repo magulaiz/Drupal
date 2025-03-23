@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Database;
 
+use Drupal\Core\Database\Identifier\Table as TableIdentifier;
+
 /**
  * Provides methods for testing database schema characteristics.
  */
@@ -21,6 +23,15 @@ trait SchemaIntrospectionTestTrait {
    *   'primary'. Defaults to 'index'.
    */
   protected function assertIndexOnColumns($table_name, array $column_names, $index_type = 'index') {
+    if (!$table_name instanceof TableIdentifier) {
+      @trigger_error("Passing a table identifier as a string to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a Table identifier value object instead. See https://www.drupal.org/node/7654132", E_USER_DEPRECATED);
+      $table = $this->connection->identifiers->table($table_name);
+    }
+    else {
+      $table = $table_name;
+    }
+    assert($table instanceof TableIdentifier);
+
     foreach ($this->getIndexColumnNames($table_name, $index_type) as $index_columns) {
       if ($column_names == $index_columns) {
         $this->assertTrue(TRUE);
@@ -42,7 +53,16 @@ trait SchemaIntrospectionTestTrait {
    *   'primary'. Defaults to 'index'.
    */
   protected function assertNoIndexOnColumns($table_name, array $column_names, $index_type = 'index') {
-    foreach ($this->getIndexColumnNames($table_name, $index_type) as $index_columns) {
+    if (!$table_name instanceof TableIdentifier) {
+      @trigger_error("Passing a table identifier as a string to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a Table identifier value object instead. See https://www.drupal.org/node/7654132", E_USER_DEPRECATED);
+      $table = $this->connection->identifiers->table($table_name);
+    }
+    else {
+      $table = $table_name;
+    }
+    assert($table instanceof TableIdentifier);
+
+    foreach ($this->getIndexColumnNames($table, $index_type) as $index_columns) {
       if ($column_names == $index_columns) {
         $this->assertTrue(FALSE);
       }
@@ -63,11 +83,20 @@ trait SchemaIntrospectionTestTrait {
    *   the given type.
    */
   protected function getIndexColumnNames($table_name, $index_type) {
+    if (!$table_name instanceof TableIdentifier) {
+      @trigger_error("Passing a table identifier as a string to " . __METHOD__ . "() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Pass a Table identifier value object instead. See https://www.drupal.org/node/7654132", E_USER_DEPRECATED);
+      $table = $this->connection->identifiers->table($table_name);
+    }
+    else {
+      $table = $table_name;
+    }
+    assert($table instanceof TableIdentifier);
+
     assert(in_array($index_type, ['index', 'unique', 'primary'], TRUE));
 
     $schema = \Drupal::database()->schema();
     $introspect_index_schema = new \ReflectionMethod(get_class($schema), 'introspectIndexSchema');
-    $index_schema = $introspect_index_schema->invoke($schema, $table_name);
+    $index_schema = $introspect_index_schema->invoke($schema, $table);
 
     // Filter the indexes by type.
     if ($index_type === 'primary') {

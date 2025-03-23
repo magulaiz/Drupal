@@ -29812,12 +29812,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/pgsql/src/Driver/Database/pgsql/Connection.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\pgsql\\\\Driver\\\\Database\\\\pgsql\\\\Connection\\:\\:setPrefix\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/pgsql/src/Driver/Database/pgsql/Connection.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\pgsql\\\\Driver\\\\Database\\\\pgsql\\\\Install\\\\Tasks\\:\\:checkBinaryOutput\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -55669,6 +55663,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Database/Stub/StubConnection.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Database\\\\Stub\\\\StubLegacyConnection\\:\\:createDatabase\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Database/Stub/StubLegacyConnection.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Database\\\\Stub\\\\StubSchema\\:\\:addField\\(\\) has no return type specified\\.$#',

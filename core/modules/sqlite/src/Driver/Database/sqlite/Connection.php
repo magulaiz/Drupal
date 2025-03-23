@@ -68,27 +68,22 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   protected $transactionalDDLSupport = TRUE;
 
   /**
-   * {@inheritdoc}
-   */
-  protected $identifierQuotes = ['"', '"'];
-
-  /**
    * Constructs a \Drupal\sqlite\Driver\Database\sqlite\Connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
-    parent::__construct($connection, $connection_options);
-
     // Empty prefix means query the main database -- no need to attach anything.
-    $prefix = $this->connectionOptions['prefix'] ?? '';
+    $prefix = $connection_options['prefix'] ?? '';
+    assert(is_string($prefix), 'The \'prefix\' connection option to ' . __METHOD__ . '() must be a string.');
     if ($prefix !== '') {
-      $this->attachDatabase($prefix);
+      $attachedDatabaseName = $prefix;
       // Add a ., so queries become prefix.table, which is proper syntax for
       // querying an attached database.
       $prefix .= '.';
     }
-
-    // Regenerate the prefix.
-    $this->setPrefix($prefix);
+    parent::__construct($connection, $connection_options, new IdentifierHandler($prefix));
+    if (isset($attachedDatabaseName)) {
+      $this->attachDatabase($attachedDatabaseName);
+    }
   }
 
   /**
@@ -387,12 +382,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   }
 
   /**
-   * Overrides \Drupal\Core\Database\Connection::createDatabase().
-   *
-   * @param string $database
-   *   The name of the database to create.
-   *
-   * @throws \Drupal\Core\Database\DatabaseNotFoundException
+   * {@inheritdoc}
    */
   public function createDatabase($database) {
     // Verify the database is writable.
@@ -432,10 +422,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * {@inheritdoc}
    */
   public function getFullQualifiedTableName($table) {
-    $prefix = $this->getPrefix();
-
     // Don't include the SQLite database file name as part of the table name.
-    return $prefix . $table;
+    return $this->identifiers->table($table)->forMachine();
   }
 
   /**
