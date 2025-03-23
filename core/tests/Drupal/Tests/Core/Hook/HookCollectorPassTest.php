@@ -22,8 +22,8 @@ class HookCollectorPassTest extends UnitTestCase {
   use GroupIncludesTestTrait;
 
   /**
-   * @covers \Drupal\Core\Hook\HookCollector::collectAllHookImplementations
-   * @covers \Drupal\Core\Hook\HookCollector::filterIterator
+   * @covers \Drupal\Core\Hook\HookCollectorPass::collectAllHookImplementations
+   * @covers \Drupal\Core\Hook\HookCollectorPass::filterIterator
    */
   public function testCollectAllHookImplementations(): void {
     vfsStream::setup('drupal_root');
@@ -72,7 +72,7 @@ __EOF__
 
   /**
    * @covers ::process
-   * @covers \Drupal\Core\Hook\HookCollector::collectModuleHookImplementations
+   * @covers \Drupal\Core\Hook\HookCollectorPass::collectModuleHookImplementations
    */
   public function testGroupIncludes(): void {
     $module_filenames = self::setupGroupIncludes();
