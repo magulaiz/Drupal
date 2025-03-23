@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\views\Entity\View;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewsConfigUpdater;
 
@@ -85,5 +86,19 @@ function views_post_update_table_css_class(?array &$sandbox = NULL): void {
   $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
     return $view_config_updater->needsTableCssClassUpdate($view);
+  });
+}
+
+/**
+ * Fix views with filter_format dependencies.
+ */
+function views_post_update_filter_format_dependencies() {
+  $views = View::loadMultiple();
+  array_walk($views, function (View $view) {
+    $old_dependencies = $view->getDependencies();
+    $new_dependencies = $view->calculateDependencies()->getDependencies();
+    if ($old_dependencies !== $new_dependencies) {
+      $view->save();
+    }
   });
 }
