@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Routing;
 
+use Drupal\Core\Routing\CacheableRouteProviderInterface;
 use Drupal\Core\Routing\RoutePreloader;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Component\EventDispatcher\Event;
@@ -44,7 +45,7 @@ class RoutePreloaderTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->routeProvider = $this->createMock('Drupal\Core\Routing\PreloadableRouteProviderInterface');
+    $this->routeProvider = $this->createMock(CacheableRouteProviderInterface::class);
     $this->state = $this->createMock('\Drupal\Core\State\StateInterface');
     $this->preloader = new RoutePreloader($this->routeProvider, $this->state);
   }
@@ -166,7 +167,7 @@ class RoutePreloaderTest extends UnitTestCase {
       ->willReturn($request);
 
     $this->routeProvider->expects($this->once())
-      ->method('preLoadRoutes')
+      ->method('setCacheableRoutes')
       ->with(['test2']);
     $this->state->expects($this->once())
       ->method('get')
