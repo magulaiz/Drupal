@@ -9,7 +9,7 @@ namespace Drupal\Core\Hook\OrderOperation;
  *
  * @internal
  */
-class FirstOrLast implements OrderOperationInterface {
+class FirstOrLast extends OrderOperation {
 
   /**
    * Constructor.
@@ -24,13 +24,6 @@ class FirstOrLast implements OrderOperationInterface {
     protected readonly string $identifier,
     protected readonly bool $isLast,
   ) {}
-
-  /**
-   * {@inheritdoc}
-   */
-  public function pack(): array {
-    return get_object_vars($this);
-  }
 
   /**
    * {@inheritdoc}

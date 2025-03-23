@@ -103,13 +103,13 @@ class HookCollectorPass implements CompilerPassInterface {
   private array $groupIncludes = [];
 
   /**
-   * Constructor. Should not be called directly.
+   * Constructor.
    *
    * @param list<string> $modules
    *   Names of installed modules.
    *   When used as a compiler pass, this parameter should be omitted.
    */
-  protected function __construct(
+  public function __construct(
     protected readonly array $modules = [],
   ) {}
 
@@ -162,7 +162,7 @@ class HookCollectorPass implements CompilerPassInterface {
     $order_operations = $this->getOrderOperations();
     foreach (preg_grep('@_alter$@', array_keys($order_operations)) as $alter_hook) {
       $packed_order_operations[$alter_hook] = array_map(
-        OrderOperation::pack(...),
+        fn (OrderOperation $operation) => $operation->pack(),
         $order_operations[$alter_hook],
       );
     }
