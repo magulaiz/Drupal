@@ -1583,13 +1583,14 @@ function template_preprocess_field_multiple_value_without_order_form(&$variables
           continue;
         }
 
-        // Delay rendering of the "Display" option and the weight selector, so that
-        // each can be rendered later in its own column.
+        // Delay rendering of the "Display" option and the weight selector, so
+        // that each can be rendered later in its own column.
         if ($element['#display_field']) {
           hide($widget['display']);
         }
 
-        // Render everything else together in a column, without the normal wrappers.
+        // Render everything else together in a column, without the normal
+        // wrappers.
         $widget['#theme_wrappers'] = [];
         if ($element['#display_field']) {
           unset($widget['display']['#title']);

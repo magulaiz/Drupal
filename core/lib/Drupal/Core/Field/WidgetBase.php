@@ -666,7 +666,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
 
     if ($this->fieldDefinition->getFieldStorageDefinition()->getCardinality() != 1) {
       $orderable = $this->getSetting('orderable');
-      $summary[] = t('Orderable: @orderable', ['@orderable' => ($orderable ? t('Yes') : t('No'))]);
+      $summary[] = $this->t('Orderable: @orderable', ['@orderable' => ($orderable ? $this->t('Yes') : $this->t('No'))]);
     }
 
     return $summary;
