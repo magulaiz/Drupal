@@ -173,9 +173,14 @@ class ArgumentSummaryTest extends ViewsKernelTestBase {
     template_preprocess_views_view_summary_unformatted($variables);
     $this->assertFalse($variables['rows'][0]->active);
 
+    template_preprocess_views_view_summary($variables);
+    $this->assertFalse($variables['rows'][0]->active);
+
     // Checks that the row with the current path is active.
     \Drupal::service('path.current')->setPath('/test-argument-summary');
     template_preprocess_views_view_summary_unformatted($variables);
+    $this->assertTrue($variables['rows'][0]->active);
+    template_preprocess_views_view_summary($variables);
     $this->assertTrue($variables['rows'][0]->active);
   }
 
