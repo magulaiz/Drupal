@@ -1552,7 +1552,7 @@ function template_preprocess_field_multiple_value_form(&$variables): void {
  *   An associative array containing:
  *   - element: A render element representing the form element.
  */
-function template_preprocess_field_multiple_value_without_order_form(&$variables) {
+function template_preprocess_field_multiple_value_without_order_form(&$variables): void {
   $element = $variables['element'];
   $variables['multiple'] = $element['#cardinality_multiple'];
 
@@ -1579,7 +1579,7 @@ function template_preprocess_field_multiple_value_without_order_form(&$variables
         if (empty($widget['#files'])) {
           $widget['#title'] = $element['#file_upload_title'];
           $widget['#title_display'] = 'hidden';
-          $widget['#description'] = \Drupal::service('renderer')->renderPlain($element['#file_upload_description']);
+          $widget['#description'] = \Drupal::service('renderer')->renderInIsolation($element['#file_upload_description']);
           continue;
         }
 
