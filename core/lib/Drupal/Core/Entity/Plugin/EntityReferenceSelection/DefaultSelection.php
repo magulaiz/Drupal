@@ -436,12 +436,11 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
       $message = \sprintf(
         "Cannot auto-create entity: Missing required fields."
       );
-        throw new EntityStorageException($message);
+      throw new EntityStorageException($message);
     }
 
     return $entity;
-}
-
+  }
 
   /**
    * {@inheritdoc}
