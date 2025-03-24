@@ -224,6 +224,7 @@ default:
       allow_failure: true
   variables:
     COMPOSER_UPDATE: "1"
+    CHROME_VERSION: "latest"
   trigger:
     include: .gitlab-ci.yml
 
