@@ -995,7 +995,7 @@ class Sql extends QueryPluginBase {
    *   If the group does not yet exist it will be created as an AND group.
    * @param string $snippet
    *   The snippet to check. This can be either a column or
-   *   a complex expression like "UPPER(table.field) = 'value'"
+   *   a complex expression like "UPPER(table.field) = 'value'".
    * @param array $args
    *   An associative array of arguments.
    *
@@ -1033,7 +1033,7 @@ class Sql extends QueryPluginBase {
    *   If the group does not yet exist it will be created as an AND group.
    * @param string $snippet
    *   The snippet to check. This can be either a column or
-   *   a complex expression like "COUNT(table.field) > 3"
+   *   a complex expression like "COUNT(table.field) > 3".
    * @param array $args
    *   An associative array of arguments.
    *
@@ -1790,7 +1790,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1800,7 +1799,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodDistinct',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1810,7 +1808,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1820,7 +1817,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1830,7 +1826,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1840,7 +1835,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1850,7 +1844,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
