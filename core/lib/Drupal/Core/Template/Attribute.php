@@ -109,6 +109,11 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    * {@inheritdoc}
    */
   public function offsetSet($name, $value): void {
+    // Check if the attribute name contains a space.
+    if (strpos($name, ' ') !== false) {
+      \Drupal::logger('system')->warning('Invalid attribute name "@name" detected. Attribute names cannot contain spaces.', ['@name' => $name]);
+      return;
+    }
     $this->storage[$name] = $this->createAttributeValue($name, $value);
   }
 
