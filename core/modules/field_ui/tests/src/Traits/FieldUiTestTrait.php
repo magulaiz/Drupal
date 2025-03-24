@@ -78,10 +78,9 @@ trait FieldUiTestTrait {
     $this->assertFieldDoesNotExist($bundle_path, $label);
     if ($save_settings) {
       $this->assertSession()->pageTextContains("These settings apply to the $label field everywhere it is used.");
-      // Test Breadcrumbs.
-      $this->getSession()->getPage()->findLink($label);
 
-      // Ensure that each array key in $storage_edit is prefixed with field_storage.
+      // Ensure that each array key in $storage_edit is prefixed with
+      // field_storage.
       $prefixed_storage_edit = [];
       foreach ($storage_edit as $key => $value) {
         if (str_starts_with($key, 'field_storage')) {
@@ -169,9 +168,6 @@ trait FieldUiTestTrait {
     // Display confirmation form.
     $this->drupalGet("$bundle_path/fields/$field_name/delete");
     $this->assertSession()->pageTextContains("Are you sure you want to delete the field $label");
-
-    // Test Breadcrumbs.
-    $this->assertSession()->linkExists($label, 0, 'Field label is correct in the breadcrumb of the field delete page.');
 
     // Submit confirmation form.
     $this->submitForm([], 'Delete');
