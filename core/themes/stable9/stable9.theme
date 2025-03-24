@@ -45,7 +45,7 @@ function stable9_preprocess_views_view(&$variables): void {
  *   - view: A ViewExecutable object.
  *   - rows: The raw row data.
  */
-function stable9_preprocess_views_view_table(&$variables) {
+function stable9_preprocess_views_view_table(&$variables): void {
   $view = $variables['view'];
   $options = $view->style_plugin->options;
   $handler = $view->style_plugin;

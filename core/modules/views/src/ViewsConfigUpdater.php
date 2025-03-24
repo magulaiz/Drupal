@@ -180,6 +180,11 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
         }
       }
     }
+    $deprecations_triggered = &$this->triggeredDeprecations['3436855'][$view->id()];
+    if ($this->deprecationsEnabled && $return && !$deprecations_triggered) {
+      $deprecations_triggered = TRUE;
+      @trigger_error(sprintf('The update to convert the align table style options for view "%s" is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3515029', $view->id()), E_USER_DEPRECATED);
+    }
     $view->set('display', $displays);
     return $return;
   }
