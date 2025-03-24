@@ -9,6 +9,8 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests integration of the container with environment variables.
+ *
+ * @group DependencyInjection
  */
 class EnvironmentVariableTest extends KernelTestBase {
 
