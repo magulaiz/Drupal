@@ -13,26 +13,28 @@ class CacheableTitle extends BubbleableMetadata {
   /**
    * The title.
    *
-   * @var \Drupal\Core\StringTranslation\TranslatableMarkup|string|null
+   * @var \Drupal\Core\StringTranslation\TranslatableMarkup|array|string|null
+   *   The title.
    */
-  protected TranslatableMarkup|string|null $title;
+  protected TranslatableMarkup|array|string|null $title;
 
   /**
    * Gets the title.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string|null
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|array|string|null
+   *   The title.
    */
-  public function getTitle(): TranslatableMarkup|string|null {
+  public function getTitle(): TranslatableMarkup|array|string|null {
     return $this->title;
   }
 
   /**
    * Sets the title.
    *
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|string|null $title
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|array|string|null $title
    *   The title.
    */
-  public function setTitle(TranslatableMarkup|string $title): void {
+  public function setTitle(TranslatableMarkup|array|string|null $title): void {
     $this->title = $title;
   }
 
