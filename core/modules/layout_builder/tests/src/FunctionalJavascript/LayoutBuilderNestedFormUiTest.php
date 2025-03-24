@@ -155,13 +155,13 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
 
     // Save the defaults.
     $page->pressButton('Save layout');
-    $assert_session->pageTextContains($expected_save_message);
+    $this->assertTrue($assert_session->waitForText($expected_save_message));
     $assert_session->addressEquals($path);
 
     // Go back to edit layout and try to re-save.
     $this->drupalGet($path . '/layout');
     $page->pressButton('Save layout');
-    $assert_session->pageTextContains($expected_save_message);
+    $this->assertTrue($assert_session->waitForText($expected_save_message));
     $assert_session->addressEquals($path);
   }
 
