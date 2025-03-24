@@ -385,6 +385,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $page->fillField('settings[label_display]', TRUE);
     $page->pressButton('Add block');
 
+    $assert_session->waitForDocumentReady();
     $assert_session->addressEquals($layout_url);
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->pageTextContains('The block label');
@@ -396,6 +397,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
       'delta' => 0,
     ]));
     $page->pressButton('Remove');
+    $assert_session->waitForDocumentReady();
     $assert_session->addressEquals($layout_url);
     $assert_session->pageTextNotContains('Powered by Drupal');
     $assert_session->pageTextNotContains('The block label');
