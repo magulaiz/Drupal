@@ -747,4 +747,14 @@ JS;
     parent::statusMessageNotContains($message, $type);
   }
 
+  /**
+   * Wait until the document is ready.
+   */
+  public function waitForDocumentReady(): bool {
+    // Wait for a very short time to allow page state to update after clicking.
+    usleep(5000);
+    return $this->waitForHelper(10000, fn () =>
+      $this->session->evaluateScript('document.readyState === "complete"'));
+  }
+
 }

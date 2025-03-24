@@ -309,6 +309,7 @@ class ManageFieldsTest extends WebDriverTestBase {
       $group_field_card = $page->find('css', "[name='new_storage_type'][value='$field_type_category']")->getParent();
       $group_field_card->click();
       $page->pressButton('Continue');
+      $this->assertSession()->waitForDocumentReady();
       $field_types = $page->findAll('css', '.subfield-option .option');
       $field_type_labels = [];
       foreach ($field_types as $field_type) {
@@ -328,6 +329,7 @@ class ManageFieldsTest extends WebDriverTestBase {
       $this->assertSame($expected_field_types, $field_type_labels);
       // Return to the first step of the form.
       $page->pressButton('Back');
+      $this->assertSession()->waitForDocumentReady();
     }
   }
 
