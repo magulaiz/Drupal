@@ -17,11 +17,11 @@ class IdentifierHandler extends IdentifierHandlerBase {
    * {@inheritdoc}
    */
   public function getMaxLength(IdentifierType $type): int {
+    // MySql allows 64 chars long identifiers, with exception of aliases
+    // that can be 256 char long. However in Drupal, at the moment, we
+    // treat all identifiers as max 64 chars long.
     // @see https://dev.mysql.com/doc/refman/8.4/en/identifier-length.html
-    return match ($type) {
-      IdentifierType::Alias => 256,
-      default => 64,
-    };
+    return 64;
   }
 
   /**
