@@ -56,11 +56,6 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
    * Tests moderating nodes in a workspace.
    */
   public function testModerationInWorkspace(): void {
-    if (\Drupal::database()->driver() === 'mongodb') {
-      // @todo Fix this test for MongoDB.
-      $this->markTestSkipped();
-    }
-
     $stage = Workspace::load('stage');
     $this->switchToWorkspace($stage);
 

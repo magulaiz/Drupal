@@ -64,6 +64,10 @@ class MongodbHooks {
         $entity_types['view']->setStorageClass('Drupal\mongodb\modules\views\ViewStorage');
         $entity_types['view']->setClass('Drupal\mongodb\modules\views\View');
       }
+
+      if (!empty($entity_types['workspace'])) {
+        $entity_types['workspace']->setClass('Drupal\mongodb\modules\workspaces\Workspace');
+      }
     }
   }
 

@@ -385,13 +385,30 @@ class Query extends CoreQuery {
     if ($this->count) {
       try {
         if ($this->allRevisions) {
-          $entities = $this->mongodbSelect->execute()->fetchAll();
-          $count = 0;
+          // For an entity query with the options all revisions the returned
+          // revision_id must be located from the embedded all revisions table.
+          // All other entity queries return the current revision_id from the base
+          // table.
           $all_revisions_table = \Drupal::entityTypeManager()->getStorage($this->entityType->id())->getJsonStorageAllRevisionsTable();
-          foreach ($entities as $entity) {
-            $count += count($entity->$all_revisions_table);
+          $id_field = $this->entityType->getKey('id');
+          $entity_ids = [];
+
+          $results = $this->mongodbSelect->execute()->fetchAll();
+          $condition = $this->mongodbSelect->cloneCondition();
+
+          foreach ($results as $result) {
+            $entity_id = $result->{$id_field};
+            $revisions = $result->{$all_revisions_table};
+            if (is_array($revisions)) {
+              foreach ($revisions as $revision) {
+                if ($revision_id = $this->testRevisionForCondition($condition, $all_revisions_table, $revision)) {
+                  $entity_ids[$revision_id] = $entity_id;
+                }
+              }
+            }
           }
-          return $count;
+
+          return count($entity_ids);
         }
         else {
           return $this->mongodbSelect->countQuery()->execute()->fetchField();
