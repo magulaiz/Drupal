@@ -3,12 +3,13 @@
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
+use Drupal\Core\Cache\CacheClearerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 /**
  * Defines a class which is capable of clearing the cache on plugin managers.
  */
-class CachedDiscoveryClearer implements CachedDiscoveryClearerInterface {
+class CachedDiscoveryClearer implements CachedDiscoveryClearerInterface, CacheClearerInterface {
 
   /**
    * The legacy stored discoveries.
@@ -60,6 +61,13 @@ class CachedDiscoveryClearer implements CachedDiscoveryClearerInterface {
     foreach ($this->legacyCachedDiscoveries as $cached_discovery) {
       $cached_discovery->clearCachedDefinitions();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearCache(): void {
+    $this->clearCachedDefinitions();
   }
 
 }

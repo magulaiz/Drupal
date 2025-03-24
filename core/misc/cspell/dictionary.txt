@@ -95,6 +95,8 @@ classmap
 classmaps
 classtype
 cldr
+clearer
+clearers
 clearfix
 closethick
 codesniffer
