@@ -25,7 +25,7 @@ class FilterFormatDependencyUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * @covers views_post_update_filter_format_dependencies
+   * @covers views_post_update_views_filter_format_dependencies
    */
   public function testViewsFieldPluginConversion(): void {
     $view = View::load('test_filter_format_dependencies');
