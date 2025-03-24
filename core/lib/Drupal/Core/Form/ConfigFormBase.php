@@ -71,7 +71,7 @@ abstract class ConfigFormBase extends FormBase {
    * @see https://www.drupal.org/node/3515066
    */
   protected function typedConfigManager() {
-    @trigger_error( __METHOD__. 'is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use $this->typedConfigManager instead. See https://www.drupal.org/node/3515066', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . 'is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use $this->typedConfigManager instead. See https://www.drupal.org/node/3515066', E_USER_DEPRECATED);
     return $this->typedConfigManager;
   }
 
