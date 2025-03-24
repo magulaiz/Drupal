@@ -110,7 +110,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    */
   public function offsetSet($name, $value): void {
     // Check if the attribute name contains a space.
-    if (strpos($name, ' ') !== false) {
+    if (strpos($name, ' ') !== FALSE) {
       \Drupal::logger('system')->warning('Invalid attribute name "@name" detected. Attribute names cannot contain spaces.', ['@name' => $name]);
       return;
     }
