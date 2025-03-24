@@ -541,7 +541,7 @@ trait AssertContentTrait {
    */
   protected function assertTextHelper($text, $message = '', $group = NULL, $not_exists = TRUE): void {
     if (!$message) {
-      $message = !$not_exists ? "'$text'' found" : "'$text' not found";
+      $message = !$not_exists ? "'$text' found" : "'$text' not found";
     }
     if ($not_exists) {
       $this->assertStringNotContainsString((string) $text, $this->getTextContent(), (string) $message);
