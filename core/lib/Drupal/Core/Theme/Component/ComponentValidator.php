@@ -36,6 +36,37 @@ class ComponentValidator {
   }
 
   /**
+   * Utility method to call nullifyClassPropsSchema() on every sub-property.
+   *
+   * @param array $schema_props
+   *   The schema for all the props.
+   *
+   * @return array
+   *   The new schema.
+   */
+  protected function nullifyClassPropsRecursive(array $schema_props): array {
+    if (isset($schema_props['properties'])) {
+      // If the schema is on object, we nullify its class properties.
+      $schema_props = $this->nullifyClassPropsSchema(
+        $schema_props,
+        $this->getClassProps($schema_props)
+      );
+
+      // And also look for sub-properties.
+      foreach ($schema_props['properties'] ?? [] as $key => $property) {
+        $schema_props['properties'][$key] = $this->nullifyClassPropsRecursive($property);
+      }
+    }
+
+    if (isset($schema_props['items'])) {
+      // If schema is an array, we look for properties on array items.
+      $schema_props['items'] = $this->nullifyClassPropsRecursive($schema_props['items']);
+    }
+
+    return $schema_props;
+  }
+
+  /**
    * Validates the component metadata file.
    *
    * A valid component metadata file can be validated against the
@@ -116,13 +147,15 @@ class ComponentValidator {
         ),
       ];
     }
+
     // Remove the non JSON Schema types for validation down below.
-    $definition['props'] = $this->nullifyClassPropsSchema(
-      $schema,
-      $classes_per_prop
-    );
+    $definition['props'] = $this->nullifyClassPropsRecursive($definition['props']);
 
     $definition_object = Validator::arrayToObjectRecursive($definition);
+    // If there are no props, force casting to object instead of array.
+    if (($definition_object->props->properties ?? NULL) === []) {
+      $definition_object->props->properties = new \stdClass();
+    }
     $this->validator->validate(
       $definition_object,
       (object) ['$ref' => 'file://' . dirname(__DIR__, 5) . '/assets/schemas/v1/metadata-full.schema.json']
@@ -280,7 +313,8 @@ class ComponentValidator {
       // Remove the non JSON Schema types for later JSON Schema validation.
       $props_raw[$prop_name] = NULL;
     }
-    $props_schema = $this->nullifyClassPropsSchema($props_schema, $classes_per_prop);
+
+    $props_schema = $this->nullifyClassPropsRecursive($props_schema);
     if (!empty($error_messages)) {
       $message = implode("\n", $error_messages);
       throw new InvalidComponentException($message);

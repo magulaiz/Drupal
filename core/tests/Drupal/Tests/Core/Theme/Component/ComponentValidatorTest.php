@@ -149,6 +149,14 @@ class ComponentValidatorTest extends TestCase {
         'my-banner',
         static::loadComponentDefinitionFromFs('my-banner'),
       ],
+      [
+        [
+          'single_level_array' => [['attributes' => new Attribute(['key' => 'value'])]],
+          'two_levels_array' => [[['attributes' => new Attribute(['key' => 'value'])]]],
+        ],
+        'props-in-props',
+        static::loadComponentDefinitionFromFs('props-in-props'),
+      ],
     ];
   }
 

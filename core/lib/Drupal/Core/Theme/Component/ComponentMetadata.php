@@ -125,7 +125,7 @@ class ComponentMetadata {
     $this->group = $metadata_info['group'] ?? $this->t('All Components');
 
     // Save the schemas.
-    $this->parseSchemaInfo($metadata_info);
+    $this->schema = $this->parseSchemaInfo($metadata_info);
     $this->slots = $metadata_info['slots'] ?? [];
   }
 
@@ -137,7 +137,7 @@ class ComponentMetadata {
    *
    * @throws \Drupal\Core\Render\Component\Exception\InvalidComponentException
    */
-  private function parseSchemaInfo(array $metadata_info): void {
+  private function parseSchemaInfo(array $metadata_info): ?array {
     if (empty($metadata_info['props'])) {
       if ($this->mandatorySchemas) {
         throw new InvalidComponentException(sprintf('The component "%s" does not provide schema information. Schema definitions are mandatory for components declared in modules. For components declared in themes, schema definitions are only mandatory if the "enforce_prop_schemas" key is set to "true" in the theme info file.', $metadata_info['id']));
@@ -155,16 +155,41 @@ class ComponentMetadata {
       $schema['additionalProperties'] = FALSE;
       // All props should also support "object" this allows deferring rendering
       // in Twig to the render pipeline.
-      $schema_props = $metadata_info['props'];
-      foreach ($schema_props['properties'] ?? [] as $name => $prop_schema) {
-        $type = $prop_schema['type'] ?? '';
-        $schema['properties'][$name]['type'] = array_unique([
-          ...(array) $type,
-          'object',
-        ]);
-      }
+      $schema = $this->addObjectToSchemaRecursive($schema);
     }
-    $this->schema = $schema;
+
+    return $schema;
+  }
+
+  /**
+   * Add object type to every property in the schema.
+   *
+   * @param array $schema
+   *   The schema for all the props.
+   *
+   * @return array
+   *   The new schema.
+   */
+  protected function addObjectToSchemaRecursive(array $schema): array {
+    foreach ($schema['properties'] ?? [] as $name => $prop_schema) {
+      $type = $prop_schema['type'] ?? '';
+      $schema['properties'][$name]['type'] = array_unique([
+        ...(array) $type,
+        'object',
+      ]);
+    }
+
+    // And also look for sub-properties.
+    foreach ($schema['properties'] ?? [] as $key => $property) {
+      $schema['properties'][$key] = $this->addObjectToSchemaRecursive($property);
+    }
+
+    if (isset($schema['items'])) {
+      // If schema is an array, we look for properties on array items.
+      $schema['items'] = $this->addObjectToSchemaRecursive($schema['items']);
+    }
+
+    return $schema;
   }
 
   /**
