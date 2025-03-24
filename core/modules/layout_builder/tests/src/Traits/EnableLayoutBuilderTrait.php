@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Traits;
 
+use Drupal\FunctionalJavascriptTests\WebDriverWebAssert;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 
 /**
@@ -55,12 +56,21 @@ trait EnableLayoutBuilderTrait {
    *   The view mode that Layout Builder is being disabled on.
    */
   protected function disableLayoutBuilderFromUi(string $bundle, string $viewMode): void {
+    $assert_session = $this->assertSession();
+    $wait = $assert_session instanceof WebDriverWebAssert;
     $path = sprintf('admin/structure/types/manage/%s/display/%s', $bundle, $viewMode);
     $page = $this->getSession()->getPage();
     $this->drupalGet($path);
     $page->uncheckField('layout[enabled]');
     $page->pressButton('Save');
+    if ($wait) {
+      $assert_session->waitForDocumentReady();
+    }
+
     $page->pressButton('Confirm');
+    if ($wait) {
+      $assert_session->waitForDocumentReady();
+    }
   }
 
 }
