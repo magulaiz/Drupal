@@ -512,25 +512,14 @@ class ModuleHandler implements ModuleHandlerInterface {
         }
       }
     }
-    // Build an array to pass to hook_module_implements_alter().
-    // The initial order is the one from 'container.modules' service parameter.
-    $module_implements = array_fill_keys(array_intersect(
-      array_keys($this->moduleList),
-      array_keys($listeners_by_module),
-    ), FALSE);
-    // Call hook_module_implements_alter() with the main hook.
-    // That hook was designed in older Drupal versions where all hook
-    // implementations were procedural, and each module could implement each
-    // hook only once.
-    // This call to ->alter() does not cause infinite recursion, because it is
-    // called with only one alter type, so we don't end up in this line again.
-    $this->alter('module_implements', $module_implements, $main_hook);
+    $modules = array_keys($listeners_by_module);
+    $modules = $this->reOrderModulesForAlter($modules, $main_hook);
     // Convert the list into a different structure to pass to the hook order
     // operations.
     $listeners_by_identifier = [];
     $modules_by_identifier = [];
     $identifiers = [];
-    foreach (array_keys($module_implements) as $module) {
+    foreach ($modules as $module) {
       foreach ($listeners_by_module[$module] ?? [] as $listener) {
         $identifier = is_array($listener)
           ? get_class($listener[0]) . '::' . $listener[1]
@@ -612,6 +601,32 @@ class ModuleHandler implements ModuleHandlerInterface {
       OrderOperation::unpack(...),
       $this->packedOrderOperations[$hook] ?? [],
     );
+  }
+
+  /**
+   * Reorder modules for alters.
+   *
+   * @param array $modules
+   *   A list of modules.
+   * @param string $hook
+   *   The hook being worked on, for example form_alter.
+   *
+   * @return array
+   *   The list, potentially reordered and changed by
+   *   hook_module_implements_alter().
+   */
+  protected function reOrderModulesForAlter(array $modules, string $hook): array {
+    // Order by module order first.
+    $modules = array_intersect(array_keys($this->moduleList), $modules);
+    // Alter expects the module list to be in the keys.
+    $implementations = array_fill_keys($modules, FALSE);
+    // Let modules adjust the order solely based on the primary hook. This
+    // ensures the same module order regardless of whether this block
+    // runs. Calling $this->alter() recursively in this way does not
+    // result in an infinite loop, because this call is for a single
+    // $type, so we won't end up in this method again.
+    $this->alter('module_implements', $implementations, $hook);
+    return array_keys($implementations);
   }
 
   /**
