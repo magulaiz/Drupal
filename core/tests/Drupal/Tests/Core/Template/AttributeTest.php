@@ -46,6 +46,52 @@ class AttributeTest extends UnitTestCase {
     $this->assertEquals(new AttributeArray('class', ['example-class']), $attribute['class']);
   }
 
+/**
+ * Tests updating attribute values correctly.
+ */
+public function testUpdateAttribute(): void {
+  $attribute = new Attribute(['class' => ['original-class']]);
+
+  // Ensure the initial value is correct.
+  $this->assertEquals(['original-class'], $attribute['class']->value());
+
+  // Update the 'class' attribute with a new value.
+  $attribute->setAttribute('class', ['new-class']);
+
+  // Verify that the attribute was actually updated.
+  $this->assertNotEquals(['original-class'], $attribute['class']->value());
+  $this->assertEquals(['new-class'], $attribute['class']->value());
+
+  // Update an existing attribute to a different type (string instead of array).
+  $attribute->setAttribute('class', 'single-class');
+  $this->assertEquals('single-class', $attribute['class']->value());
+
+  // Ensure adding a new attribute works.
+  $attribute->setAttribute('id', 'new-id');
+  $this->assertEquals('new-id', $attribute['id']);
+
+  // Update the 'id' attribute and check if it is actually updated.
+  $attribute->setAttribute('id', 'updated-id');
+  $this->assertNotEquals('new-id', $attribute['id']);
+  $this->assertEquals('updated-id', $attribute['id']);
+
+  // Check updating a boolean attribute.
+  $attribute->setAttribute('checked', TRUE);
+  $this->assertTrue($attribute['checked']->value());
+
+  // Change the boolean attribute and check.
+  $attribute->setAttribute('checked', FALSE);
+  $this->assertFalse($attribute['checked']->value());
+
+  // Test updating a string attribute.
+  $attribute->setAttribute('title', 'First Title');
+  $this->assertEquals('First Title', $attribute['title']);
+
+  $attribute->setAttribute('title', 'Updated Title');
+  $this->assertNotEquals('First Title', $attribute['title']);
+  $this->assertEquals('Updated Title', $attribute['title']);
+}
+
   /**
    * Tests set of values.
    */
