@@ -66,8 +66,7 @@ abstract class ConfigFormBase extends FormBase {
    *   The typed config manager service.
    *
    * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0.
-   *   This method is no longer used by Drupal core. There is no
-   *   replacement.
+   *   There is no replacement.
    *
    * @see https://www.drupal.org/project/drupal/issues/3477616
    */
