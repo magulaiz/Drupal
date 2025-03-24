@@ -6,6 +6,7 @@ use Drupal\Core\Cache\Context\CacheContextsPass;
 use Drupal\Core\Cache\ListCacheBinsPass;
 use Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass;
 use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
+use Drupal\Core\DependencyInjection\Compiler\BackwardsCompatibilityClassLoaderPass;
 use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\DeprecatedServicePass;
 use Drupal\Core\DependencyInjection\Compiler\DevelopmentSettingsPass;
@@ -27,6 +28,7 @@ use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
 use Drupal\Core\Plugin\PluginManagerPass;
+use Drupal\Core\PreWarm\PreWarmableInterface;
 use Drupal\Core\Queue\QueueFactoryInterface;
 use Drupal\Core\Render\MainContent\MainContentRenderersPass;
 use Drupal\Core\Site\Settings;
@@ -56,7 +58,8 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
   public function register(ContainerBuilder $container) {
     $this->registerTest($container);
 
-    // Only register the private file stream wrapper if a file path has been set.
+    // Only register the private file stream wrapper if a file path has been
+    // set.
     if (Settings::get('file_private_path')) {
       $container->register('stream_wrapper.private', 'Drupal\Core\StreamWrapper\PrivateStream')
         ->addTag('stream_wrapper', ['scheme' => 'private']);
@@ -109,6 +112,9 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->addCompilerPass(new DeprecatedServicePass());
 
+    // Collect moved classes for the backwards compatibility class loader.
+    $container->addCompilerPass(new BackwardsCompatibilityClassLoaderPass());
+
     $container->registerForAutoconfiguration(EventSubscriberInterface::class)
       ->addTag('event_subscriber');
 
@@ -117,6 +123,9 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->registerForAutoconfiguration(QueueFactoryInterface::class)
       ->addTag('queue_factory');
+
+    $container->registerForAutoconfiguration(PreWarmableInterface::class)
+      ->addTag('cache_prewarmable');
 
     $container->registerForAutoconfiguration(ModuleUninstallValidatorInterface::class)
       ->addTag('module_install.uninstall_validator');
