@@ -257,12 +257,8 @@ function template_preprocess_views_view_summary(&$variables): void {
   $active_urls = [
     // Force system path.
     Url::fromUserInput($currentPath, ['alias' => TRUE])->toString(),
-    // Force system path.
-    Url::fromRouteMatch(\Drupal::routeMatch())->setOption('alias', TRUE)->toString(),
     // Could be an alias.
     Url::fromUserInput($currentPath)->toString(),
-    // Could be an alias.
-    Url::fromRouteMatch(\Drupal::routeMatch())->toString(),
   ];
   $active_urls = array_combine($active_urls, $active_urls);
 
