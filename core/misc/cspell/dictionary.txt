@@ -366,6 +366,7 @@ pickable
 pingback
 placeholdered
 placeholdering
+playsinline
 plusthick
 porterstemmer
 postcondition
@@ -383,6 +384,9 @@ prepopulation
 prerendered
 presave
 preuninstall
+prewarmable
+prewarmer
+prewarmers
 prophesize
 protossl
 pseudotag
@@ -572,6 +576,7 @@ userinfo
 versionable
 vfsstream
 viewports
+warmable
 wcag
 webcal
 webflo
