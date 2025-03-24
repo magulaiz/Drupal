@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\plugin_test\Plugin\plugin_test\mock_block;
 
 use Drupal\Component\Plugin\Derivative\DeriverInterface;
@@ -22,6 +24,7 @@ class MockLayoutBlockDeriver implements DeriverInterface {
     if (isset($derivatives[$derivative_id])) {
       return $derivatives[$derivative_id];
     }
+    return NULL;
   }
 
   /**

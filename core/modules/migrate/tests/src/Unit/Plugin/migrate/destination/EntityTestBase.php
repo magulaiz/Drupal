@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\Plugin\migrate\destination\EntityTestBase.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 
@@ -62,14 +59,23 @@ class EntityTestBase extends UnitTestCase {
  */
 class BaseFieldDefinitionTest extends BaseFieldDefinition {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function create($type) {
     return new static([]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getSettings() {
     return [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getType() {
     return 'integer';
   }

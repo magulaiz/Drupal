@@ -5,7 +5,7 @@
 
 (function (Drupal, Backbone) {
   /**
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:9.4.0 and is removed from drupal:12.0.0. There is no
    *  replacement.
    */
   Drupal.contextualToolbar.VisualView = Backbone.View.extend(
@@ -70,7 +70,7 @@
        *
        * @param {Drupal.contextualToolbar.StateModel} model
        *   A {@link Drupal.contextualToolbar.StateModel} model.
-       * @param {bool} isViewing
+       * @param {boolean} isViewing
        *   The value of the isViewing attribute in the model.
        */
       persist(model, isViewing) {

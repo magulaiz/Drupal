@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\error_service_test;
 
 use Drupal\Core\Site\Settings;
@@ -67,20 +69,7 @@ class MonkeysInTheControlRoom implements HttpKernelInterface {
       throw new \Exception('Deforestation');
     }
 
-    if ($this->settings->get('teapots', FALSE) && class_exists('\TypeError')) {
-      try {
-        $return = $this->app->handle($request, $type, $catch);
-      }
-      catch (\TypeError $e) {
-        header('HTTP/1.1 418 I\'m a teapot');
-        print('Oh oh, flying teapots');
-        exit;
-      }
-    }
-    else {
-      $return = $this->app->handle($request, $type, $catch);
-    }
-    return $return;
+    return $this->app->handle($request, $type, $catch);
   }
 
 }

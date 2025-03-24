@@ -2,7 +2,10 @@
 
 namespace Drupal\config_translation\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\user\Plugin\migrate\source\ProfileField;
+
+// cspell:ignore nprofile objectid
 
 /**
  * Drupal 6 i18n strings profile field source from database.
@@ -11,12 +14,11 @@ use Drupal\user\Plugin\migrate\source\ProfileField;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_profile_field_translation",
- *   source_module = "i18nprofile"
- * )
  */
+#[MigrateSource(
+  id: 'd6_profile_field_translation',
+  source_module: 'i18nprofile',
+)]
 class ProfileFieldTranslation extends ProfileField {
 
   /**

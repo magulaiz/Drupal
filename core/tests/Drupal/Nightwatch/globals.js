@@ -1,8 +1,6 @@
-const { spawn } = require('child_process');
-const path = require('path');
-const fs = require('fs');
+const path = require('node:path');
+const fs = require('node:fs');
 const mkdirp = require('mkdirp');
-const chromedriver = require('chromedriver');
 const nightwatchSettings = require('./nightwatch.conf');
 
 const commandAsWebserver = (command) => {
@@ -13,18 +11,6 @@ const commandAsWebserver = (command) => {
 };
 
 module.exports = {
-  before: (done) => {
-    if (JSON.parse(process.env.DRUPAL_TEST_CHROMEDRIVER_AUTOSTART)) {
-      chromedriver.start();
-    }
-    done();
-  },
-  after: (done) => {
-    if (JSON.parse(process.env.DRUPAL_TEST_CHROMEDRIVER_AUTOSTART)) {
-      chromedriver.stop();
-    }
-    done();
-  },
   afterEach: (browser, done) => {
     // Writes the console log - used by the "logAndEnd" command.
     if (

@@ -37,7 +37,12 @@ final class Settings {
    *
    * @see self::handleDeprecations()
    */
-  private static $deprecatedSettings = [];
+  private static $deprecatedSettings = [
+    'state_cache' => [
+      'replacement' => '',
+      'message' => 'The "state_cache" setting is deprecated in drupal:11.0.0. This setting should be removed from the settings file, since its usage has been removed. See https://www.drupal.org/node/3177901.',
+    ],
+  ];
 
   /**
    * Constructor.
@@ -56,7 +61,7 @@ final class Settings {
    * A singleton is used because this class is used before the container is
    * available.
    *
-   * @return \Drupal\Core\Site\Settings
+   * @return $this
    *
    * @throws \BadMethodCallException
    *   Thrown when the settings instance has not been initialized yet.
@@ -77,7 +82,7 @@ final class Settings {
   /**
    * Prevents settings from being serialized.
    */
-  public function __sleep() {
+  public function __sleep(): array {
     throw new \LogicException('Settings can not be serialized. This probably means you are serializing an object that has an indirect reference to the Settings object. Adjust your code so that is not necessary.');
   }
 
@@ -100,6 +105,7 @@ final class Settings {
     // If the caller is asking for the value of a deprecated setting, trigger a
     // deprecation message about it.
     if (isset(self::$deprecatedSettings[$name])) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
       @trigger_error(self::$deprecatedSettings[$name]['message'], E_USER_DEPRECATED);
     }
     return self::$instance->storage[$name] ?? $default;

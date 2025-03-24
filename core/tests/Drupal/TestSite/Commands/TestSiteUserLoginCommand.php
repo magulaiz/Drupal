@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\TestSite\Commands;
 
 use Drupal\Core\DrupalKernel;
@@ -22,7 +24,7 @@ class TestSiteUserLoginCommand extends Command {
   /**
    * The class loader to use for installation and initialization of setup.
    *
-   * @var \Symfony\Component\Classloader\Classloader
+   * @var \Composer\Autoload\ClassLoader
    */
   protected $classLoader;
 

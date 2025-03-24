@@ -16,7 +16,7 @@
 
   // Use the data embedded in the page, if available.
   let embeddedLastReadTimestamps = false;
-  if (drupalSettings.history && drupalSettings.history.lastReadTimestamps) {
+  if (drupalSettings.history?.lastReadTimestamps) {
     embeddedLastReadTimestamps = drupalSettings.history.lastReadTimestamps;
   }
 
@@ -67,7 +67,7 @@
      */
     getLastRead(nodeID) {
       // Use the data embedded in the page, if available.
-      if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
+      if (embeddedLastReadTimestamps?.[nodeID]) {
         return parseInt(embeddedLastReadTimestamps[nodeID], 10);
       }
       return parseInt(
@@ -90,10 +90,7 @@
         success(timestamp) {
           // If the data is embedded in the page, don't store on the client
           // side.
-          if (
-            embeddedLastReadTimestamps &&
-            embeddedLastReadTimestamps[nodeID]
-          ) {
+          if (embeddedLastReadTimestamps?.[nodeID]) {
             return;
           }
 
@@ -118,7 +115,7 @@
      * @param {number} contentTimestamp
      *   The time at which some content (e.g. a comment) was published.
      *
-     * @return {bool}
+     * @return {boolean}
      *   Whether a server check is necessary for the given node and its
      *   timestamp.
      */
@@ -130,7 +127,7 @@
       }
 
       // Use the data embedded in the page, if available.
-      if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
+      if (embeddedLastReadTimestamps?.[nodeID]) {
         return (
           contentTimestamp > parseInt(embeddedLastReadTimestamps[nodeID], 10)
         );

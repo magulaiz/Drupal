@@ -1,5 +1,5 @@
-const path = require('path');
-const fs = require('fs');
+const path = require('node:path');
+const fs = require('node:fs');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -56,7 +56,7 @@ getDirectories(path.resolve(__dirname, './js/ckeditor5_plugins')).forEach((dir) 
       }),
     ],
     module: {
-      rules: [{ test: /\.svg$/, use: 'raw-loader' }],
+      rules: [{ test: /\.svg$/, type: 'asset/source' }],
     },
   };
 

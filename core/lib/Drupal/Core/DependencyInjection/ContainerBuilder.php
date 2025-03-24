@@ -3,7 +3,6 @@
 namespace Drupal\Core\DependencyInjection;
 
 use Drupal\Component\DependencyInjection\ContainerInterface;
-use Drupal\Component\DependencyInjection\ServiceIdHashTrait;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SymfonyContainerBuilder;
 use Symfony\Component\DependencyInjection\Container as SymfonyContainer;
@@ -19,12 +18,10 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInterface {
 
-  use ServiceIdHashTrait;
-
   /**
    * {@inheritdoc}
    */
-  public function __construct(ParameterBagInterface $parameterBag = NULL) {
+  public function __construct(?ParameterBagInterface $parameterBag = NULL) {
     parent::__construct($parameterBag);
     $this->setResourceTracking(FALSE);
   }
@@ -40,10 +37,7 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
    *   ContainerBuilder class should be fixed to allow setting synthetic
    *   services in a frozen builder.
    */
-  public function set($id, $service) {
-    if (strtolower($id) !== $id) {
-      throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
-    }
+  public function set($id, $service): void {
     SymfonyContainer::set($id, $service);
   }
 
@@ -51,9 +45,6 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
    * {@inheritdoc}
    */
   public function register($id, $class = NULL): Definition {
-    if (strtolower($id) !== $id) {
-      throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
-    }
     $definition = new Definition($class);
     // As of Symfony 5.2 all services are private by default, but in Drupal
     // services are still public by default.
@@ -74,7 +65,7 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
   /**
    * {@inheritdoc}
    */
-  public function setParameter($name, $value) {
+  public function setParameter($name, $value): void {
     if (strtolower($name) !== $name) {
       throw new \InvalidArgumentException("Parameter names must be lowercase: $name");
     }
@@ -84,7 +75,7 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     assert(FALSE, 'The container was serialized.');
     return array_keys(get_object_vars($this));
   }

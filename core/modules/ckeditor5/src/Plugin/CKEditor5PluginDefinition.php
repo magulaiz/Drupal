@@ -6,6 +6,7 @@ namespace Drupal\ckeditor5\Plugin;
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Component\Assertion\Inspector;
+use Drupal\Component\Plugin\Definition\DerivablePluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
@@ -16,7 +17,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Provides an implementation of a CKEditor 5 plugin definition.
  */
-final class CKEditor5PluginDefinition extends PluginDefinition implements PluginDefinitionInterface {
+final class CKEditor5PluginDefinition extends PluginDefinition implements PluginDefinitionInterface, DerivablePluginDefinitionInterface {
 
   use SchemaCheckTrait;
 
@@ -40,28 +41,24 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * @param array $definition
    *   An array of values from the annotation/YAML.
    *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \InvalidArgumentException
    */
   public function __construct(array $definition) {
-    $this->id = $id = $definition['id'];
-
-    $expected_prefix = sprintf("%s_", $definition['provider']);
-    if (strpos($id, $expected_prefix) !== 0) {
-      throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition must have a plugin ID that starts with "%s".', $id, $expected_prefix));
+    foreach ($definition as $property => $value) {
+      if (property_exists($this, $property)) {
+        $this->{$property} = $value;
+      }
+      else {
+        throw new \InvalidArgumentException(sprintf('Property %s with value %s does not exist on %s.', $property, $value, __CLASS__));
+      }
     }
-    $this->provider = $definition['provider'];
-
-    static::validateCKEditor5Aspects($id, $definition);
-    $this->ckeditor5 = $definition['ckeditor5'];
-
-    $this->validateDrupalAspects($id, $definition);
-    $this->drupal = $definition['drupal'];
   }
 
   /**
    * Gets an array representation of this CKEditor 5 plugin definition.
    *
    * @return array
+   *   The array representation of this CKEditor 5 plugin definition.
    */
   public function toArray(): array {
     return [
@@ -81,8 +78,11 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    *   The plugin definition to validate.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   *
+   * @internal
+   * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::processDefinition()
    */
-  private static function validateCKEditor5Aspects(string $id, array $definition): void {
+  public static function validateCKEditor5Aspects(string $id, array $definition): void {
     if (!isset($definition['ckeditor5'])) {
       throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition must contain a "ckeditor5" key.', $id));
     }
@@ -122,8 +122,11 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    *   The plugin definition to validate.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   *
+   * @internal
+   * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::processDefinition()
    */
-  private function validateDrupalAspects(string $id, array $definition): void {
+  public function validateDrupalAspects(string $id, array $definition): void {
     if (!isset($definition['drupal'])) {
       throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition must contain a "drupal" key.', $id));
     }
@@ -305,6 +308,31 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
   }
 
   /**
+   * {@inheritdoc}
+   *
+   * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$deriver
+   */
+  public function getDeriver() {
+    // TRICKY: this is the only key that is allowed to not be set, because it is
+    // possible that this plugin definition is a partial/incomplete one, and the
+    // default from the annotation is only applied automatically for class
+    // annotation CKEditor 5 plugin definitions (because they create an instance
+    // of the DrupalAspectsOfCKEditor5Plugin annotation level), not for CKEditor
+    // 5 plugin definitions in YAML.
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::processDefinition()
+    // @see \Drupal\ckeditor5\Annotation\CKEditor5Plugin::__construct()
+    return $this->drupal['deriver'] ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDeriver($deriver) {
+    $this->drupal['deriver'] = $deriver;
+    return $this;
+  }
+
+  /**
    * Whether this plugin is configurable by the user.
    *
    * @return bool
@@ -320,12 +348,14 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Gets the human-readable name of the CKEditor plugin.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The human-readable name of the CKEditor plugin.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$label
    */
   public function label(): TranslatableMarkup {
     $label = $this->drupal['label'];
     if (!$label instanceof TranslatableMarkup) {
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $label = new TranslatableMarkup($label);
     }
     return $label;
@@ -353,6 +383,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin has conditions.
    *
    * @return bool
+   *   TRUE if the plugin has conditions, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$conditions
    */
@@ -376,6 +407,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin has toolbar items.
    *
    * @return bool
+   *   TRUE if the plugin has toolbar items, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$toolbar_items
    */
@@ -405,6 +437,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin has an asset library to load.
    *
    * @return bool
+   *   TRUE if the plugin has an asset library to load, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$library
    */
@@ -434,6 +467,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin has an asset library to load on the admin UI.
    *
    * @return bool
+   *   TRUE if the plugin has an asset library to load on the admin UI, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$admin_library
    */
@@ -499,6 +533,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin allows creating/editing elements and attributes.
    *
    * @return bool
+   *   TRUE if the plugin has elements, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$elements
    */
@@ -522,6 +557,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin loads CKEditor 5 plugin classes.
    *
    * @return bool
+   *   TRUE if the plugin loads CKEditor 5 plugin classes, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\CKEditor5AspectsOfCKEditor5Plugin::$plugins
    */
@@ -530,7 +566,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
   }
 
   /**
-   * Gets keyed array of additional values for the CKEditor5 constructor config.
+   * Gets keyed array of additional values for the CKEditor 5 configuration.
    *
    * @return array
    *   The CKEditor 5 constructor config.
@@ -542,9 +578,10 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
   }
 
   /**
-   * Whether this plugin has additional values for the CKEditor5 constructor.
+   * Whether this plugin has additional values for the CKEditor 5 configuration.
    *
    * @return bool
+   *   TRUE if there are additional configuration values, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\CKEditor5AspectsOfCKEditor5Plugin::$config
    */
