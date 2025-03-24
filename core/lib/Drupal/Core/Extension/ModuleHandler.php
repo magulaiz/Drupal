@@ -240,8 +240,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     $filename = file_exists($php_file_path) ? "$name.$type" : NULL;
     $this->moduleList[$name] = new Extension($this->root, $type, $pathname, $filename);
     $this->resetImplementations();
-    $paths = [$name => ['pathname' => $pathname]];
-    $hook_collector = HookCollectorPass::collectAllHookImplementations($paths);
+    $hook_collector = HookCollectorPass::collectAllHookImplementations([$name => ['pathname' => $pathname]]);
     // A module freshly added will not be registered on the container yet.
     // ProceduralCall service does not yet know about it.
     // Note in HookCollectorPass:
