@@ -79,6 +79,7 @@ class LayoutBuilderToolbarTest extends WebDriverTestBase {
     $this->clickLink('Manage layout');
     // Save the defaults.
     $page->pressButton('Save layout');
+    $assert_session->waitForDocumentReady();
     $assert_session->addressEquals("$field_ui_prefix/display/default");
 
     // As the Layout Builder UI is typically displayed using the frontend theme,
@@ -92,11 +93,13 @@ class LayoutBuilderToolbarTest extends WebDriverTestBase {
 
     $this->drupalGet("$field_ui_prefix/display/default/layout/discard-changes");
     $page->pressButton('Confirm');
+    $assert_session->waitForDocumentReady();
     $this->clickLink('Back to site');
     $assert_session->addressEquals("/user/2");
 
     $this->drupalGet("$field_ui_prefix/display/default/layout/disable");
     $page->pressButton('Confirm');
+    $assert_session->waitForDocumentReady();
     $this->clickLink('Back to site');
     $assert_session->addressEquals("/user/2");
   }
