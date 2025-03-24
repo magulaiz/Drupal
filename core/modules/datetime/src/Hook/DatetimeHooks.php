@@ -27,17 +27,17 @@ class DatetimeHooks {
           ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString(),
           ':field_ui' => \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#',
         ]) . '</p>';
-  
+
         $output .= '<h2>' . $this->t('Handling Timezones') . '</h2>';
         $output .= '<p>' . $this->t('Drupal stores all Date fields in UTC format. When a user enters a date, Drupal converts it to UTC based on their timezone. During display:') . '</p>';
         $output .= '<ul>';
         $output .= '<li>' . $this->t('<strong>Logged-in users</strong> see the date in their account’s timezone.') . '</li>';
         $output .= '<li>' . $this->t('<strong>Anonymous users</strong> see the date in the site’s default timezone.') . '</li>';
         $output .= '</ul>';
-  
+
         $output .= '<h2>' . $this->t('Configuring Display') . '</h2>';
         $output .= '<p>' . $this->t('Use the Date format settings to control how dates are displayed, ensuring clarity for multi-timezone audiences.') . '</p>';
-  
+
         return $output;
     }
     return NULL;
