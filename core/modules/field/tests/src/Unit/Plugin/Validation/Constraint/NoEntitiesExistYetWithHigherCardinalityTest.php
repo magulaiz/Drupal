@@ -6,6 +6,7 @@ namespace Drupal\Tests\field\Unit\Plugin\Validation\Constraint;
 
 use Drupal\field\Plugin\Validation\Constraint\NoEntitiesExistYetWithHigherCardinality;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\Validator\Exception\MissingOptionsException as MissingOptionsExceptionAlias;
 
 /**
  * Tests the NoEntitiesExistYetWithHigherCardinality constraint.
@@ -37,7 +38,7 @@ class NoEntitiesExistYetWithHigherCardinalityTest extends UnitTestCase {
       'entityType' => 'node',
       'fieldName' => 'field_test',
     ];
-    
+
     $constraint = new NoEntitiesExistYetWithHigherCardinality($options);
 
     $this->assertEquals('node', $constraint->entityType);
@@ -52,7 +53,7 @@ class NoEntitiesExistYetWithHigherCardinalityTest extends UnitTestCase {
    * Tests the constraint initialization with missing required options.
    */
   public function testMissingOptions(): void {
-    $this->expectException(\Symfony\Component\Validator\Exception\MissingOptionsException::class);
+    $this->expectException(MissingOptionsExceptionAlias::class);
     $this->expectExceptionMessage('The options "entityType" must be set for constraint');
 
     new NoEntitiesExistYetWithHigherCardinality(['fieldName' => 'field_test']);
@@ -66,7 +67,7 @@ class NoEntitiesExistYetWithHigherCardinalityTest extends UnitTestCase {
       'entityType' => 'user',
       'fieldName' => 'field_example',
     ];
-    
+
     $constraint = new NoEntitiesExistYetWithHigherCardinality($options);
 
     $defaultConfig = $constraint->getDefaultOption();
@@ -83,7 +84,7 @@ class NoEntitiesExistYetWithHigherCardinalityTest extends UnitTestCase {
       'entityType' => $entityType,
       'fieldName' => $fieldName,
     ];
-    
+
     $constraint = new NoEntitiesExistYetWithHigherCardinality($options);
 
     // Simulate the violation building process.
@@ -93,7 +94,7 @@ class NoEntitiesExistYetWithHigherCardinalityTest extends UnitTestCase {
       '@max_delta' => (string) $maxDelta,
       '@cardinality' => (string) $cardinality,
     ];
-    
+
     $message = strtr($constraint->message, $parameters);
     $this->assertEquals($expectedMessage, $message);
   }
