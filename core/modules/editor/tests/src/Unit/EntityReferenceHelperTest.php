@@ -24,6 +24,9 @@ class EntityReferenceHelperTest extends TestCase {
    */
   protected $helper;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->helper = new EntityReferenceHelper();
