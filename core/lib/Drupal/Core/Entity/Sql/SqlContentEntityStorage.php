@@ -710,6 +710,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // Get the field name for the default revision field.
       $revision_default_field = $this->entityType->getRevisionMetadataKey('revision_default');
+
+      // Get the field name for the revision translation affected field.
+      $revision_translation_affected_field = $this->entityType->getKey('revision_translation_affected');
     }
     elseif ($this->jsonStorageCurrentRevisionTable) {
       $embedded_table = $this->jsonStorageCurrentRevisionTable;
@@ -728,6 +731,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // Get the field name for the default revision field.
       $revision_default_field = $this->entityType->getRevisionMetadataKey('revision_default');
+
+      // Get the field name for the revision translation affected field.
+      $revision_translation_affected_field = $this->entityType->getKey('revision_translation_affected');
     }
     elseif ($this->jsonStorageTranslationsTable) {
       $embedded_table = $this->jsonStorageTranslationsTable;
@@ -746,6 +752,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // There is no default revision field to be set.
       $revision_default_field = NULL;
+
+      // Get the field name for the revision translation affected field.
+      $revision_translation_affected_field = NULL;
     }
     else {
       $embedded_table = $this->baseTable;
@@ -754,6 +763,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // There is no default revision field to be set.
       $revision_default_field = NULL;
+
+      // Get the field name for the revision translation affected field.
+      $revision_translation_affected_field = NULL;
     }
 
     // Get the field names for the "created" field types
@@ -857,6 +869,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
                     }
                     else {
                       $values[$id][$revision_default_field][LanguageInterface::LANGCODE_DEFAULT] = '1';
+                    }
+                  }
+
+                  // The revision translation affected field can be TRUE or NULL.
+                  if ($field_name == $revision_translation_affected_field) {
+                    if (isset($values[$id][$field_name][$langcode]) && ($values[$id][$field_name][$langcode] === '0')) {
+                      $values[$id][$field_name][$langcode] = NULL;
                     }
                   }
                 }

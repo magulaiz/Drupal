@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\entity_test\Entity\EntityTestMulRev;
@@ -228,10 +227,7 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
       ],
     ];
     $this->assertEquals('Huron', $entity->get('non_rev_field')->value, 'Huron found on entity 1');
-    if (Database::getConnection()->driver() != 'mongodb') {
-      // @todo MongoDB should pass the assertion.
-      $this->assertEquals($expected, $entity->description->getValue());
-    }
+    $this->assertEquals($expected, $entity->description->getValue());
   }
 
 }
