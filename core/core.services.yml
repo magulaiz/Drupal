@@ -362,6 +362,7 @@ services:
     class: Drupal\Core\Cache\DrupalStaticCacheClearer
     tags:
       - { name: cache_clearer, priority: 70 }
+  Drupal\Core\Cache\DrupalStaticCacheClearer: '@cache.drupal_static_cache_clearer'
   Drupal\Core\Asset\AssetQueryStringInterface: '@asset.query_string'
   asset.query_string:
     class: Drupal\Core\Asset\AssetQueryString
@@ -742,6 +743,7 @@ services:
     arguments: ['@extension.list.theme', '@theme_handler', '@theme.manager']
     tags:
       - { name: cache_clearer, priority: 50 }
+  Drupal\Core\Extension\ThemeCacheClearer: '@cache.theme_cache_clearer'
   theme_installer:
     class: Drupal\Core\Extension\ThemeInstaller
     arguments: ['@theme_handler', '@config.factory', '@config.installer', '@module_handler', '@config.manager', '@asset.css.collection_optimizer', '@router.builder', '@logger.channel.default', '@state', '@extension.list.module', '@theme.registry', '@extension.list.theme']
@@ -1600,6 +1602,7 @@ services:
     arguments: ['@theme.manager']
     tags:
       - { name: cache_clearer, priority: 10 }
+  Drupal\Core\Theme\MaintenanceThemeCacheClearer: '@cache.maintenance_theme_cache_clearer'
   theme.initialization:
     class: Drupal\Core\Theme\ThemeInitialization
     arguments: ['%app.root%', '@theme_handler', '@cache.bootstrap', '@module_handler']
