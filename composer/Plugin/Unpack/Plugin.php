@@ -60,7 +60,8 @@ final class Plugin implements PluginInterface, EventSubscriberInterface, Capable
   public static function getSubscribedEvents(): array {
     return [
       PackageEvents::POST_PACKAGE_INSTALL => 'postPackage',
-      ScriptEvents::POST_AUTOLOAD_DUMP => 'postCmd',
+      PackageEvents::POST_PACKAGE_UPDATE => 'postPackage',
+      ScriptEvents::POST_UPDATE_CMD => 'postCmd',
     ];
   }
 
@@ -77,7 +78,7 @@ final class Plugin implements PluginInterface, EventSubscriberInterface, Capable
   }
 
   /**
-   * Post autoload event callback.
+   * Post update command event callback.
    */
   public function postCmd(): void {
     if ($this->manager->unpackOptions->options['on-install-and-update']) {

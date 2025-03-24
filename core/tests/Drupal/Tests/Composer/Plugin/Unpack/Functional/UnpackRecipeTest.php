@@ -84,6 +84,58 @@ class UnpackRecipeTest extends BuildTestBase {
   }
 
   /**
+   * Tests the dependencies unpack on dev install.
+   */
+  public function testAutomaticDevUnpack(): void {
+    $root_project_dir = 'composer-root';
+    $root_project_path = $this->fixturesDir . '/' . $root_project_dir;
+
+    // Run composer install and confirm the composer.lock was created.
+    $this->mustExec('composer install --no-ansi', $root_project_path);
+    $this->assertFileExists("$root_project_path/composer.lock");
+
+    // Install a module in require that should be moved to require-dev.
+    $this->mustExec('composer require --no-ansi --no-interaction fixtures/module-a', $root_project_path);
+    // Ensure we have added the dependency to require-dev
+    $root_composer_json = $this->getFileContents($root_project_path . '/composer.json');
+    $this->assertArrayHasKey('fixtures/module-a', $root_composer_json['require']);
+
+    // Install a recipe and unpack it.
+    $stdout = $this->mustExec('composer require --dev --no-ansi --no-interaction fixtures/recipe-a', $root_project_path);
+
+    $root_composer_json = $this->getFileContents($root_project_path . '/composer.json');
+    $root_composer_lock = $this->getFileContents($root_project_path . '/composer.lock');
+    dump($root_composer_json);
+
+    $this->assertIsArray($root_composer_json);
+    $this->assertIsArray($root_composer_lock);
+
+    $expected_unpacked = $this->dependenciesData();
+    foreach ($expected_unpacked as $package => $dependencies) {
+      $package_type = $this->getPackageType($package);
+      $this->assertNotNull($package_type);
+
+      // When the package is unpacked, the unpacked dependencies should be logged
+      // in the stdout.
+      $this->assertStringContainsString("Package $package of type $package_type was unpacked successfully.", $stdout);
+
+      // After being unpacked, the package should be removed from the root
+      // composer.json and composer.lock.
+      $this->assertArrayNotHasKey($package, $root_composer_json['require-dev']);
+      $this->assertNotTrue($this->isPackageInComposerLock($package, $root_composer_lock));
+
+      foreach ($dependencies as $dependency) {
+        $key = $dependency === 'fixtures/module-a' ? 'require' : 'require-dev';
+        // The package dependencies should be in the root composer.json.
+        $this->assertArrayHasKey($dependency, $root_composer_json[$key]);
+      }
+    }
+
+    // The dependency has not moved to require-dev.
+    $this->assertArrayNotHasKey('fixtures/module-a', $root_composer_json['require-dev']);
+  }
+
+  /**
    * Tests the dependencies unpack on using drupal:unpack.
    */
   public function testUnpackCommand(): void {
@@ -166,7 +218,7 @@ class UnpackRecipeTest extends BuildTestBase {
         $this->assertArrayHasKey($dependency, $root_composer_json['require']);
       }
     }
-    dump($root_composer_json);
+
     // The dev dependency has moved.
     $this->assertArrayNotHasKey('require-dev', $root_composer_json);
   }

@@ -54,16 +54,6 @@ final class UnpackCollection implements \IteratorAggregate {
   }
 
   /**
-   * Gets the queue of packages to unpack.
-   *
-   * @return \Composer\Package\PackageInterface[]
-   *   The queue of packages to unpack.
-   */
-  public function getPackagesQueue(): array {
-    return $this->packagesToUnpack;
-  }
-
-  /**
    * Adds a package to the list of unpacked packages.
    *
    * @param \Composer\Package\PackageInterface $package

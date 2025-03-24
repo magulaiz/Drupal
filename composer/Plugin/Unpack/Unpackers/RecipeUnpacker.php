@@ -111,24 +111,36 @@ class RecipeUnpacker implements UnpackerInterface {
     $composer_manipulator = $this->rootComposer->getComposerManipulator();
     $composer_config = $this->composer->getConfig();
 
+    $link_type = isset($composer_json['require'][$this->package->getName()]) ? 'require' : 'require-dev';
     while ($package_dependency = $this->unpackCollection->popPackageDependencies()) {
       $dependency_name = $package_dependency['name'];
 
-      if (isset($composer_json['require'][$dependency_name])) {
-        // This dependency is already in the required section.
-        continue;
+      if ($link_type === 'require-dev') {
+        if (
+          isset($composer_json['require-dev'][$dependency_name]) ||
+          isset($composer_json['require'][$dependency_name])
+        ) {
+          // This dependency is already required.
+          continue;
+        }
       }
+      else {
+        if (isset($composer_json['require'][$dependency_name])) {
+          // This dependency is already in the required section.
+          continue;
+        }
 
-      if (isset($composer_json['require-dev'][$dependency_name])) {
-        // This dependency is already in the required-dev section. We should
-        // remove it.
-        $composer_manipulator->removeSubNode('require-dev', $dependency_name);
+        if (isset($composer_json['require-dev'][$dependency_name])) {
+          // This dependency is already in the require-dev section. We will
+          // move it to the require section.
+          $composer_manipulator->removeSubNode('require-dev', $dependency_name);
+        }
       }
 
       // Add the dependency to the required section. If it cannot be added, then
       // throw an exception.
       if (!$composer_manipulator->addLink(
-          'require',
+          $link_type,
           $dependency_name,
           $package_dependency['version'],
           sortPackages: $composer_config->get('sort-packages'),
@@ -140,7 +152,7 @@ class RecipeUnpacker implements UnpackerInterface {
     }
 
     if ($this->removeSelf()) {
-      $composer_manipulator->removeSubNode('require', $this->package->getName());
+      $composer_manipulator->removeSubNode($link_type, $this->package->getName());
     }
 
     $composer_manipulator->removeMainKeyIfEmpty('require-dev');
