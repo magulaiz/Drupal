@@ -26,10 +26,9 @@ use Drupal\Core\Installer\InstallerKernel;
 /**
  * @defgroup content_flags Content markers
  * @{
- * Markers used by mark.html.twig and node_mark() to designate content.
+ * Markers used by mark.html.twig to designate content.
  *
  * @see mark.html.twig
- * @see node_mark()
  */
 
 /**
@@ -92,7 +91,7 @@ function _system_default_theme_features() {
  * @param string $path
  *   The path to search.
  */
-function drupal_find_theme_templates($cache, $extension, $path) {
+function drupal_find_theme_templates($cache, $extension, $path): array {
   $implementations = [];
 
   // Collect paths to all sub-themes grouped by base themes. These will be
@@ -1240,7 +1239,7 @@ function template_preprocess_page(&$variables): void {
  *   hook_theme_suggestions_HOOK_alter() or to $variables['attributes']['class']
  *   if the suggestions represent extra CSS classes.
  */
-function theme_get_suggestions($args, $base, $delimiter = '__') {
+function theme_get_suggestions($args, $base, $delimiter = '__'): array {
 
   // Build a list of suggested theme hooks in order of
   // specificity. One suggestion is made for every element of the current path,
