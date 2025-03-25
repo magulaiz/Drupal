@@ -69,10 +69,7 @@ if (!class_exists(TestCase::class)) {
 }
 
 if ($args['execute-test']) {
-  simpletest_script_setup_database();
-  $test_run_results_storage = simpletest_script_setup_test_run_results_storage();
-  $test_run = TestRun::get($test_run_results_storage, $args['test-id']);
-  simpletest_script_run_one_test($test_run, $args['execute-test']);
+  simpletest_script_run_phpunit($args['test-id'], $args['execute-test']);
   // Sub-process exited already; this is just for clarity.
   exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
 }
@@ -836,39 +833,35 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
 /**
  * Run a PHPUnit-based test.
  */
-function simpletest_script_run_phpunit(TestRun $test_run, $class) {
+function simpletest_script_run_phpunit(int|string $test_id, string $test_class): void {
   global $args;
 
-  $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
-  $start = microtime(TRUE);
-  $results = $runner->execute($test_run, $class, $status, $args['color']);
-  $time = microtime(TRUE) - $start;
-
-  $runner->processPhpUnitResults($test_run, $results);
-
-  $summaries = $runner->summarizeResults($results);
-  foreach ($summaries as $class => $summary) {
-    simpletest_script_reporter_display_summary($class, $summary, $time);
-  }
-  return $status;
-}
-
-/**
- * Run a single test, bootstrapping Drupal if needed.
- */
-function simpletest_script_run_one_test(TestRun $test_run, $test_class): void {
-  global $args;
+  simpletest_script_setup_database();
+  $test_run_results_storage = simpletest_script_setup_test_run_results_storage();
+  $test_run = TestRun::get($test_run_results_storage, $test_id);
 
   try {
     if ($args['suppress-deprecations']) {
       putenv('SYMFONY_DEPRECATIONS_HELPER=disabled');
     }
-    $status = simpletest_script_run_phpunit($test_run, $test_class);
+
+    $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
+    $start = microtime(TRUE);
+    $results = $runner->execute($test_run, $test_class, $status, $args['color']);
+    $time = microtime(TRUE) - $start;
+
+    $runner->processPhpUnitResults($test_run, $results);
+
+    $summaries = $runner->summarizeResults($results);
+    foreach ($summaries as $class => $summary) {
+      simpletest_script_reporter_display_summary($class, $summary, $time);
+    }
+
     exit($status);
   }
-  // DrupalTestCase::run() catches exceptions already, so this is only reached
-  // when an exception is thrown in the wrapping test runner environment.
-  catch (Exception $e) {
+  // PHPUnit catches exceptions already, so this is only reached when an
+  // exception is thrown in the wrapped test runner environment.
+  catch (\Throwable $e) {
     echo (string) $e;
     exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
   }
