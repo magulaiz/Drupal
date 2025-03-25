@@ -26,16 +26,16 @@ props:
     attributes:
       type: Drupal\Core\Template\Attribute
       name: Attributes
-  variants:
-    default:
-      label: Default
-      description: My default variant
-    green:
-      label: Green
-      description: My green variant
-    blue:
-      label: Blue
-      description: My blue variant
-    red:
-      label: Red
-      description: My red variant
+variants:
+  default:
+    label: Default
+    description: My default variant
+  green:
+    label: Green
+    description: My green variant
+  blue:
+    label: Blue
+    description: My blue variant
+  red:
+    label: Red
+    description: My red variant
