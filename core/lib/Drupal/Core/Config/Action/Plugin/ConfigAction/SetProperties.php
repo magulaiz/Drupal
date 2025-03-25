@@ -14,6 +14,10 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * @internal
+ *   This API is experimental.
+ */
 #[ConfigAction(
   id: 'setProperties',
   admin_label: new TranslatableMarkup('Set property of a config entity'),
