@@ -64,7 +64,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *   A fully qualified test class name.
    * @param bool $colors
    *   Whether to use colors in output.
-   * @param bool $disableDeprecations
+   * @param bool $suppressDeprecations
    *   If TRUE, disables the deprecation reporting.
    *
    * @return array
@@ -74,13 +74,13 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     TestRunResultsStorageInterface $test_run_results_storage,
     int|string $test_id,
     string $test_class,
-    bool $color,
+    bool $colors,
     bool $suppressDeprecations,
   ): array {
     $test_run = TestRun::get($test_run_results_storage, $test_id);
     $runner = static::create(\Drupal::getContainer());
     $start = microtime(TRUE);
-    $results = $runner->execute($test_run, $test_class, $status, $color, $suppressDeprecations);
+    $results = $runner->execute($test_run, $test_class, $status, $colors, $suppressDeprecations);
     $time = microtime(TRUE) - $start;
     $runner->processPhpUnitResults($test_run, $results);
     $summaries = $runner->summarizeResults($results);
@@ -144,7 +144,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *   array will contain the lines output by the command.
    * @param bool $colors
    *   (optional) Whether to use colors in output. Defaults to FALSE.
-   * @param bool $disableDeprecations
+   * @param bool $suppressDeprecations
    *   (optional) If TRUE, disables the deprecation reporting. Defaults to
    *   FALSE.
    *
@@ -156,7 +156,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     ?int &$status = NULL,
     ?array &$output = NULL,
     bool $colors = FALSE,
-    bool $disableDeprecations = FALSE,
+    bool $suppressDeprecations = FALSE,
   ): void {
     global $base_url;
     $process_environment_variables = [];
@@ -191,7 +191,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
       $command[] = '--colors=always';
     }
 
-    if ($disableDeprecations) {
+    if ($suppressDeprecations) {
       $process_environment_variables['SYMFONY_DEPRECATIONS_HELPER'] = 'disabled';
     }
     else {
