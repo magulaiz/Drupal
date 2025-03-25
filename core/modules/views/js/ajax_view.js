@@ -83,8 +83,7 @@
     let queryString = window.location.search || '';
     if (queryString !== '') {
       // Remove the question mark and Drupal path component if any.
-      queryString = queryString
-        .slice(1);
+      queryString = queryString.slice(1);
 
       // Remove current exposed filters.
       const params = decodeURI(queryString)
