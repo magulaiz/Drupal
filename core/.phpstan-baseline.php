@@ -30404,6 +30404,90 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewXmlCookieTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceJsonAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceJsonAnonTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceJsonAnonTest\\:\\:assertResponseWhenMissingAuthentication\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceJsonAnonTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceJsonBasicAuthTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceJsonBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceJsonBasicAuthTest\\:\\:assertResponseWhenMissingAuthentication\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceJsonBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceJsonCookieTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceJsonCookieTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceJsonCookieTest\\:\\:assertResponseWhenMissingAuthentication\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceJsonCookieTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceJsonCookieTest\\:\\:initAuthentication\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceJsonCookieTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceXmlAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceXmlAnonTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceXmlAnonTest\\:\\:assertResponseWhenMissingAuthentication\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceXmlAnonTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceXmlBasicAuthTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceXmlBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceXmlBasicAuthTest\\:\\:assertResponseWhenMissingAuthentication\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceXmlBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceXmlCookieTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceXmlCookieTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceXmlCookieTest\\:\\:assertResponseWhenMissingAuthentication\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceXmlCookieTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\WorkspaceXmlCookieTest\\:\\:initAuthentication\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/WorkspaceXmlCookieTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testAddFieldForEmbeddedTableDoesNotExist\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
