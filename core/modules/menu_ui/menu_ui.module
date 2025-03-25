@@ -42,7 +42,7 @@ function _menu_ui_node_save(NodeInterface $node, array $values): void {
       'langcode' => $node->language()->getId(),
     ]);
   }
-  $entity->enabled->value = $values['link_enabled'] ?? 1;
+  $entity->enabled->value = $values['link_enabled'] ?? TRUE;
   $entity->title->value = trim($values['title']);
   $entity->description->value = trim($values['description']);
   $entity->menu_name->value = $values['menu_name'];
@@ -151,7 +151,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
       'menu_name' => $menu_name,
       'parent' => '',
       'weight' => 0,
-      'enabled' => $node_type->getThirdPartySetting('menu_ui', 'link_enabled', (int) !empty($menu_name)),
+      'enabled' => $node_type->getThirdPartySetting('menu_ui', 'link_enabled', !empty($menu_name)),
     ];
   }
   return $defaults;

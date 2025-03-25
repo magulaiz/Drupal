@@ -192,7 +192,7 @@ class MenuUiHooks {
       '#type' => 'checkbox',
       '#title' => t('Enabled'),
       '#description' => t('A flag for whether the link should be visible in menus or hidden.'),
-      '#default_value' => $defaults['enabled'] ?? 1,
+      '#default_value' => $defaults['enabled'] ?? TRUE,
     ];
 
     foreach (array_keys($form['actions']) as $action) {
@@ -263,7 +263,7 @@ class MenuUiHooks {
     $form['menu']['link_enabled'] = [
       '#type' => 'checkbox',
       '#title' => t('Enable menu link (default)'),
-      '#default_value' => $type->getThirdPartySetting('menu_ui', 'link_enabled', 1),
+      '#default_value' => $type->getThirdPartySetting('menu_ui', 'link_enabled', TRUE),
     ];
     $form['#validate'][] = 'menu_ui_form_node_type_form_validate';
     $form['#entity_builders'][] = 'menu_ui_form_node_type_form_builder';

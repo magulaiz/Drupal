@@ -172,7 +172,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'title[0][value]' => $node_title,
       'menu[enabled]' => 1,
       'menu[title]' => 'Test preview',
-      'menu[link_enabled]' => 1,
+      'menu[link_enabled]' => TRUE,
     ];
     $this->drupalGet('node/add/page');
     $this->submitForm($edit, 'Preview');
@@ -216,7 +216,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu[enabled]' => 1,
       'menu[title]' => $node_title,
       'status[value]' => FALSE,
-      'menu[link_enabled]' => 1,
+      'menu[link_enabled]' => TRUE,
     ];
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
@@ -231,7 +231,7 @@ class MenuUiNodeTest extends BrowserTestBase {
 
     // Assert that link is not enabled / does not exist in the rendered menu
     // if link_enabled option is disabled.
-    $edit['menu[link_enabled]'] = 0;
+    $edit['menu[link_enabled]'] = FALSE;
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
     $this->drupalGet('test-page');
@@ -240,7 +240,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/menu/manage/main');
     $this->assertSession()->checkboxNotChecked("Enable $node_title menu link");
     // Re-enable link via node form and check menu.
-    $edit['menu[link_enabled]'] = 1;
+    $edit['menu[link_enabled]'] = TRUE;
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
     $this->drupalGet('test-page');
@@ -256,7 +256,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu[enabled]' => 1,
       'menu[title]' => $node_title,
       'menu[weight]' => 17,
-      'menu[link_enabled]' => 1,
+      'menu[link_enabled]' => TRUE,
     ];
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
@@ -388,7 +388,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu[enabled]' => 1,
       'menu[title]' => $node_title,
       'menu[weight]' => 17,
-      'menu[link_enabled]' => 1,
+      'menu[link_enabled]' => TRUE,
     ];
     $options = ['language' => $languages[$langcodes[0]]];
     $url = $node->toUrl('edit-form', $options);
@@ -400,7 +400,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu[enabled]' => 1,
       'menu[title]' => $translated_node_title,
       'menu[weight]' => 17,
-      'menu[link_enabled]' => 1,
+      'menu[link_enabled]' => TRUE,
     ];
     $options = ['language' => $languages[$langcodes[1]]];
     $url = $node->toUrl('edit-form', $options);
