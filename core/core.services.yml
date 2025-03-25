@@ -742,7 +742,7 @@ services:
     class: Drupal\Core\Extension\ThemeHandler
     arguments: ['%app.root%', '@config.factory', '@extension.list.theme']
     tags:
-      { name: cache_clearer, priority: 51 }
+      - { name: cache_clearer, priority: 51 }
   Drupal\Core\Extension\ThemeHandlerInterface: '@theme_handler'
   theme_installer:
     class: Drupal\Core\Extension\ThemeInstaller
