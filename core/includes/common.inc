@@ -399,7 +399,7 @@ function show(&$element) {
  *   used as a batch operation so $kernel will be an array, in this instance it
  *   will be treated as if it is NULL.
  *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:11.2.0 and is removed from drupal:11.0.0. Use
  * \Drupal\Core\Cache\ChainCacheClearer::clearCache() instead.
  * @see https://www.drupal.org/node/3014783
  *
@@ -411,7 +411,7 @@ function show(&$element) {
  *   requests.
  */
 function drupal_flush_all_caches($kernel = NULL) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Cache\ChainCacheClearer::clearCache() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Cache\ChainCacheClearer::clearCache() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Cache\CacheClearer $cacheClearer */
   $cacheClearer = \Drupal::service('cache_clearer');
   $cacheClearer->clearCache();
