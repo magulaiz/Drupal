@@ -156,7 +156,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
 
     $page->pressButton('Save configuration');
 
-    $assert_session->pageTextContains('The text format unicorn has been updated');
+    $this->assertTrue($assert_session->waitForText('The text format unicorn has been updated'));
   }
 
   /**
@@ -267,7 +267,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $allowed_with_blockquote);
 
     $page->pressButton('Save configuration');
-    $assert_session->pageTextContains('The text format ckeditor5 has been updated.');
+    $this->assertTrue($assert_session->waitForText('The text format ckeditor5 has been updated.'));
 
     // Flush caches so the updated config can be checked.
     drupal_flush_all_caches();
@@ -312,8 +312,8 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // The same validation error appears when saving the form regardless of the
     // immediate AJAX validation error above.
     $page->pressButton('Save configuration');
-    $assert_session->pageTextContains('The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Bold (<strong>)');
-    $this->assertTrue($page->find('css', '[href^="#edit-editor-settings-plugins-ckeditor5-sourceediting"]')->getParent()->hasClass('is-selected'));
+    $this->assertTrue($assert_session->waitForText('The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Bold (<strong>)'));
+    $this->assertTrue($assert_session->waitForElement('css', '[href^="#edit-editor-settings-plugins-ckeditor5-sourceediting"]')->getParent()->hasClass('is-selected'));
     $this->assertSame('true', $page->findField('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]')->getAttribute('aria-invalid'));
     $assert_session->pageTextNotContains('The text format ckeditor5 has been updated');
 
@@ -326,7 +326,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $source_edit_tags_field->setValue('<aside>');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save configuration');
-    $assert_session->pageTextContains('The text format ckeditor5 has been updated');
+    $this->assertTrue($assert_session->waitForText('The text format ckeditor5 has been updated'));
     $assert_session->pageTextNotContains('The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Bold (<strong>)');
 
     // Ensure that CKEditor can be initialized with Source Editing.
