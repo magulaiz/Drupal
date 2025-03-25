@@ -213,6 +213,7 @@ JS;
     // Confirm there are no longer any warnings.
     $assert_session->waitForElementRemoved('css', '[data-drupal-messages] [role="alert"]');
     $page->pressButton('Save configuration');
+    $this->assertSession()->waitForDocumentReady();
     $assert_session->responseContains('Added text format <em class="placeholder">ckeditor5</em>.');
   }
 
@@ -232,6 +233,7 @@ JS;
       $assert_session->assertWaitOnAjaxRequest();
     }
     $page->pressButton('Save configuration');
+    $this->assertSession()->waitForDocumentReady();
     $assert_session->responseContains('The text format <em class="placeholder">ckeditor5</em> has been updated.');
   }
 
