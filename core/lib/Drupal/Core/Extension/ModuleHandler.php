@@ -3,12 +3,12 @@
 namespace Drupal\Core\Extension;
 
 use Drupal\Component\Graph\Graph;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\Core\Hook\OrderOperation\OrderOperation;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -103,8 +103,6 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   The event dispatcher.
    * @param array<string, array<class-string, array<string, string>>> $hookImplementationsMap
    *   An array keyed by hook, classname, method and the value is the module.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger.
    * @param array<string, list<string>> $groupIncludes
    *   Lists of *.inc file paths that contain procedural implementations, keyed
    *   by hook name.
@@ -119,7 +117,6 @@ class ModuleHandler implements ModuleHandlerInterface {
     array $module_list,
     protected EventDispatcherInterface $eventDispatcher,
     protected array $hookImplementationsMap,
-    protected ?LoggerInterface $logger = NULL,
     protected array $groupIncludes = [],
     protected array $packedOrderOperations = [],
   ) {
@@ -127,10 +124,6 @@ class ModuleHandler implements ModuleHandlerInterface {
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
       $this->moduleList[$name] = new Extension($this->root, $module['type'], $module['pathname'], $module['filename']);
-    }
-    if ($this->logger === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3515207', E_USER_DEPRECATED);
-      $this->logger = \Drupal::service('logger.channel.default');
     }
   }
 
@@ -541,22 +534,22 @@ class ModuleHandler implements ModuleHandlerInterface {
             // hook.
             // The module is mostly irrelevant for alter hooks, except for its
             // impact on ordering.
-            $this->logger->warning(
+            trigger_error((string) new FormattableMarkup(
               'The @implementation is registered for more than one of the alter hooks @hooks from the current ->alter() call, on behalf of different modules @module and @other_module. Only one instance will be part of the implementation list for this hook combination. For the purpose of ordering, the module @module will be used.',
               [
                 ...$log_message_replacements,
                 '@module' => "'$module'",
                 '@other_module' => "'$other_module'",
               ],
-            );
+            ), E_USER_WARNING);
           }
           else {
             // There is no conflict, but probably one or more redundant #[Hook]
             // attributes should be removed.
-            $this->logger->notice(
+            trigger_error((string) new FormattableMarkup(
               'The @implementation is registered for more than one of the alter hooks @hooks from the current ->alter() call. Only one instance will be part of the implementation list for this hook combination.',
               $log_message_replacements,
-            );
+            ), E_USER_NOTICE);
           }
           // Don't add an identifier more than once.
           continue;

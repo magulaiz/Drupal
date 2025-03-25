@@ -10,7 +10,6 @@ use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\Core\GroupIncludesTestTrait;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -72,7 +71,7 @@ class ModuleHandlerTest extends UnitTestCase {
         'filename' => file_exists("$this->root/$path/$filename") ? $filename : NULL,
       ];
     }
-    $moduleHandler = new ModuleHandler($this->root, $moduleList, $this->eventDispatcher, $implementations, $this->createMock(LoggerInterface::class));
+    $moduleHandler = new ModuleHandler($this->root, $moduleList, $this->eventDispatcher, $implementations);
     if ($loadAll) {
       $moduleHandler->loadAll();
     }
@@ -134,7 +133,6 @@ class ModuleHandlerTest extends UnitTestCase {
             'filename' => 'module_handler_test.module',
           ],
         ], $this->eventDispatcher, [],
-        $this->createMock(LoggerInterface::class),
       ])
       ->onlyMethods(['load'])
       ->getMock();
@@ -199,7 +197,6 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
       ->setConstructorArgs([
         $this->root, [], $this->eventDispatcher, [],
-        $this->createMock(LoggerInterface::class),
       ])
       ->onlyMethods(['resetImplementations'])
       ->getMock();
@@ -230,7 +227,6 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
       ->setConstructorArgs([
         $this->root, [], $this->eventDispatcher, [],
-        $this->createMock(LoggerInterface::class),
       ])
       ->onlyMethods(['resetImplementations'])
       ->getMock();
@@ -255,7 +251,6 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
       ->setConstructorArgs([
         $this->root, [], $this->eventDispatcher, [],
-        $this->createMock(LoggerInterface::class),
       ])
       ->onlyMethods(['resetImplementations'])
       ->getMock();
@@ -294,7 +289,6 @@ class ModuleHandlerTest extends UnitTestCase {
             'filename' => 'module_handler_test.module',
           ],
         ], $this->eventDispatcher, [],
-        $this->createMock(LoggerInterface::class),
       ])
       ->onlyMethods(['loadInclude'])
       ->getMock();
@@ -394,7 +388,7 @@ class ModuleHandlerTest extends UnitTestCase {
 
     };
     $implementations['some_hook'][get_class($c)]['some_method'] = 'some_module';
-    $module_handler = new ModuleHandler($this->root, [], $this->eventDispatcher, $implementations, $this->createMock(LoggerInterface::class), []);
+    $module_handler = new ModuleHandler($this->root, [], $this->eventDispatcher, $implementations);
     $module_handler->setModuleList(['some_module' => TRUE]);
     $r = new \ReflectionObject($module_handler);
 
@@ -440,7 +434,7 @@ class ModuleHandlerTest extends UnitTestCase {
   public function testGroupIncludes(): void {
     self::setupGroupIncludes();
     $this->expectDeprecation('Autoloading hooks in the file (vfs://drupal_root/test_module.tokens.inc) is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Move the functions in this file to either the .module file or other appropriate location. See https://www.drupal.org/node/3489765');
-    $moduleHandler = new ModuleHandler('', [], new EventDispatcher(), [], $this->createMock(LoggerInterface::class), self::GROUP_INCLUDES);
+    $moduleHandler = new ModuleHandler('', [], new EventDispatcher(), [], self::GROUP_INCLUDES);
     $this->assertFalse(function_exists('_test_module_helper'));
     $moduleHandler->invokeAll('token_info');
     $this->assertTrue(function_exists('_test_module_helper'));
