@@ -617,6 +617,8 @@ function olivero_preprocess_table(&$variables): void {
       }
     }
   }
+
+  $variables['#attached']['library'][] = 'olivero/olivero.table';
 }
 
 /**
