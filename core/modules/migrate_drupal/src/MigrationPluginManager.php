@@ -104,7 +104,10 @@ class MigrationPluginManager extends BaseMigrationPluginManager {
       if (empty($definition['source']['source_module'])) {
         $source_id = $definition['source']['plugin'];
         $source_definition = $this->sourceManager->getDefinition($source_id);
-        if (in_array('migrate_drupal', $source_definition['provider'], TRUE) && empty($source_definition['source_module'])) {
+        // If the source plugin uses annotations, then the 'provider' key is the
+        // array of providers and the 'providers' key is not defined.
+        $providers = $source_definition['providers'] ?? $source_definition['provider'];
+        if (in_array('migrate_drupal', $providers, TRUE) && empty($source_definition['source_module'])) {
           throw new BadPluginDefinitionException($source_id, 'source_module');
         }
       }

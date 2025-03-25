@@ -41,7 +41,10 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
     $plugin_manager = $this->container->get('plugin.manager.migrate.source');
 
     foreach ($plugin_manager->getDefinitions() as $definition) {
-      if (in_array('migrate_drupal', $definition['provider'], TRUE)) {
+      // If the source plugin uses annotations, then the 'provider' key is the
+      // array of providers and the 'providers' key is not defined.
+      $providers = $definition['providers'] ?? $definition['provider'];
+      if (in_array('migrate_drupal', $providers, TRUE)) {
         $id = $definition['id'];
         $this->assertArrayHasKey('source_module', $definition, "No source_module property in '$id'");
       }
