@@ -627,6 +627,141 @@ function olivero_form_views_exposed_form_alter(&$form): void {
 }
 
 /**
+ * Implements hook_preprocess_pager().
+ */
+function olivero_preprocess_pager(&$variables): void {
+  if (array_key_exists('items', $variables)) {
+    $variables['items'] = _olivero_process_pager_items(
+      $variables['items'],
+      $variables['current'] ?? null
+    );
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_mini_pager().
+ */
+function olivero_preprocess_views_mini_pager(&$variables): void {
+  if (array_key_exists('items', $variables)) {
+    $variables['items'] = _olivero_process_pager_items(
+      $variables['items'],
+      $variables['current'] ?? null,
+      true
+    );
+  }
+}
+
+/**
+ * Processes pager items for pagination and returns a structured array.
+ *
+ * @param array $items
+ *   The pager items to process.
+ * @param int|null $current
+ *   The current active page number.
+ * @param bool $isMiniPager
+ *   Whether it's a mini pager. Defaults to `false`.
+ *
+ * @return array
+ *   The processed pager items.
+ */
+function _olivero_process_pager_items(array $items, ?int $current, bool $isMiniPager = false): array {
+  $processedItems = _olivero_get_navigation_pager_elements($items);
+  $page_label = (string)t('Goto page ');
+  if (!empty($items['pages'])) {
+    foreach ($items['pages'] as $key => $item) {
+      $pageLabel = $page_label . $key;
+      $processedItems['pages'][$key] = [
+        '#type' => 'component',
+        '#component' => 'olivero:pager_item',
+        '#props' => [
+          'attributes' => $item['attributes'],
+          'linkAttributes' => new Attribute([
+            'href' => $item['href'],
+            'class' => 'pager__link',
+            'aria-label' => $pageLabel,
+          ]),
+          'pageNumber' => $key,
+          'itemType' => ($key == $current) ? 'active' : 'page',
+          'text' => $page_label,
+        ],
+      ];
+    }
+  }
+
+  // Handle the mini pager current page scenario.
+  if ($isMiniPager && isset($current)) {
+    $processedItems['pages'][$current] = [
+      '#type' => 'component',
+      '#component' => 'olivero:pager_item',
+      '#props' => [
+        'pageNumber' => $current,
+        'itemType' => 'active',
+        'text' => $page_label,
+      ],
+    ];
+  }
+
+  return $processedItems;
+}
+
+/**
+ * Constructs navigation pager elements for pagination in the Olivero theme.
+ *
+ * This method processes navigation items for first, previous, next, and last pages
+ * and formats them as a structured array for use in the pagination component.
+ *
+ * @param array $items
+ *   An associative array of pager items, with keys like 'first', 'previous',
+ *   'next', and 'last', containing details such as 'href' and 'attributes' for
+ *   navigation links.
+ *
+ * @return array
+ *   A structured array of navigation pager elements, each containing attributes,
+ *   link properties, and text labels ready for rendering in Olivero's pager
+ *   component.
+ */
+function _olivero_get_navigation_pager_elements($items) {
+  $arrayResult = [];
+  // Define navigation item labels for first, previous, next, and last pages.
+  $navigationItems = [
+    'first' => (string)t('Goto first page'),
+    'previous' => (string)t('Goto previous page'),
+    'next' => (string)t('Goto next page'),
+    'last' => (string)t('Goto last page'),
+  ];
+
+  // Process navigation items and add them to the paginator.
+  foreach ($navigationItems as $key => $text) {
+    if (key_exists($key, $items)) {
+      // Create attributes for the navigation links.
+      $attributes = [
+        'href' => $items[$key]['href'],
+        'class' => 'pager__link',
+        'aria-label' => $text,
+      ];
+
+      // Add "rel" attribute for previous and next links.
+      if ($key === 'previous' || $key === 'next') {
+        $attributes['rel'] = $key;
+      }
+
+      // Add the navigation item to the paginator array.
+      $arrayResult[$key] = [
+        '#type' => 'component',
+        '#component' => 'olivero:pager_item',
+        '#props' => [
+          'attributes' => $items[$key]['attributes'],
+          'linkAttributes' => new Attribute($attributes),
+          'text' => $text,
+          'itemType' => $key,
+        ],
+      ];
+    }
+  }
+  return $arrayResult;
+}
+
+/**
  * Converts hex color strings to array of HSL values.
  *
  * @param string $hex_string

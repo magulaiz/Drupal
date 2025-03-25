@@ -4,43 +4,26 @@
  * Theme override for a views mini-pager.
  *
  * Available variables:
- * - heading_id: Pagination heading ID.
- * - pagination_heading_level: The heading level to use for the pager.
- * - items: List of pager items.
+ * - heading_id: Identifies the ID attribute of the pagination heading.
+ * - pagination_heading_level: Specifies the heading level (e.g., h2, h3) to use for the pager.
+ * - first: A pager item component representing the link to the first page.
+ * - previous: A pager item component linking to the previous page.
+ * - next: A pager item component linking to the next page.
+ * - last: A pager item component linking to the last page.
+ * - pages: Contains an array of pager item components used to generate the page links.
  *
  * @see template_preprocess_views_mini_pager()
  */
 #}
-{% if items.previous or items.next %}
-  <nav class="pager" role="navigation" aria-labelledby="{{ heading_id }}">
-    <{{ pagination_heading_level }} id="{{ heading_id }}" class="visually-hidden">{{ 'Pagination'|t }}</{{ pagination_heading_level }}>
-    <ul class="pager__items js-pager__items">
-      {# Print previous item if we are not on the first page. #}
-      {% if items.previous %}
-        <li class="pager__item pager__item--control pager__item--previous">
-          <a href="{{ items.previous.href }}" class="pager__link" title="{{ 'Go to previous page'|t }}" rel="prev"{{ items.previous.attributes|without('href', 'title', 'rel', 'class') }}>
-            <span class="visually-hidden">{{ 'Previous page'|t }}</span>
-            {%- include "@olivero/../images/pager-previous.svg" -%}
-          </a>
-        </li>
-      {% endif %}
 
-      {# Print current active page. #}
-      {% if items.current %}
-        <li class="pager__item pager__item--active">
-          {{ items.current }}
-        </li>
-      {% endif %}
+{{ include ('olivero:pager', {
+  attributes,
+  heading_id: heading_id|default('pagination-heading')|t|render,
+  pagination_heading_level: pagination_heading_level|default('h2'),
+  first: items.first,
+  previous: items.previous,
+  next: items.next,
+  last: items.last,
+  pages: items.pages
+}, with_context = false) }}
 
-      {# Print next item if we are not on the last page. #}
-      {% if items.next %}
-        <li class="pager__item pager__item--control pager__item--next">
-          <a href="{{ items.next.href }}" class="pager__link" title="{{ 'Go to next page'|t }}" rel="next"{{ items.next.attributes|without('href', 'title', 'rel') }}>
-            <span class="visually-hidden">{{ 'Next page'|t }}</span>
-            {%- include "@olivero/../images/pager-previous.svg" -%}
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-  </nav>
-{% endif %}
