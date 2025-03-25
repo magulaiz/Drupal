@@ -47,6 +47,9 @@ class UserViewsData extends EntityViewsData {
       'field' => 'uid',
       'label' => $this->t('nodes'),
     ];
+    if ($this->connection->driver() == 'mongodb') {
+      $data[$data_table]['uid']['relationship']['relationship field'] = 'node_current_revision.uid';
+    }
 
     $data[$data_table]['uid_raw'] = [
       'help' => $this->t('The raw numeric user ID.'),

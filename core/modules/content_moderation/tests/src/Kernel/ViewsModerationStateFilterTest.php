@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
-use Drupal\Core\Database\Database;
 use Drupal\entity_test\Entity\EntityTestNoBundle;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
@@ -196,7 +195,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
       'moderation_state' => 'editorial-draft',
     ]);
     $view->execute();
-    if (Database::getConnection()->driver() == 'mongodb') {
+    if (\Drupal::database()->driver() == 'mongodb') {
       $map = ['revision_id' => 'id'];
     }
     else {
@@ -209,11 +208,6 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
    * Tests the moderation state filter on an entity added via a relationship.
    */
   public function testModerationStateFilterOnJoinedEntity(): void {
-    if (Database::getConnection()->driver() == 'mongodb') {
-      // @todo Fix this test for Mongodb.
-      $this->markTestSkipped();
-    }
-
     $workflow = Workflow::load('editorial');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->save();
@@ -401,7 +395,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
     $query = $view->getQuery();
     $join = $query->getTableInfo('content_moderation_state')['join'];
     $configuration = $join->configuration;
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (\Drupal::database()->driver() == 'mongodb') {
       $this->assertEquals('content_moderation_state', $configuration['table']);
       $this->assertMatchesRegularExpression('/content_moderation_state_(.*)\.content_entity_revision_id/', $configuration['field']);
       $this->assertEquals('vid', $configuration['left_field']);
