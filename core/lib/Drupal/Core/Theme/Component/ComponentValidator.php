@@ -57,8 +57,8 @@ class ComponentValidator {
     $prop_names = array_keys($definition['props']['properties'] ?? []);
     $slot_names = array_keys($definition['slots'] ?? []);
     // @todo Validate variants.
-    $variantDefinitions = array_keys($definition['variantDefinitions'] ?? []);
-    $collisions = array_intersect($prop_names, $slot_names, $variantDefinitions);
+    $variants = array_keys($definition['variants'] ?? []);
+    $collisions = array_intersect($prop_names, $slot_names, $variants);
     if ($collisions) {
       $message = sprintf(
         'The component "%s" declared [%s] both as a prop and as a slot or variant. Make sure to use different names.',

@@ -162,7 +162,7 @@
     "slots": {
       "$ref": "metadata.schema.json#/$defs/slotDefinition"
     },
-    "variantDefinitions": {
+    "variants": {
       "$ref": "metadata.schema.json#/$defs/variantDefinition"
     },
     "template": {

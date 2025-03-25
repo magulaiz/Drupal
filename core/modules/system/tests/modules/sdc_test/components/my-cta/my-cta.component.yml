@@ -26,7 +26,7 @@ props:
     attributes:
       type: Drupal\Core\Template\Attribute
       name: Attributes
-  variantDefinitions:
+  variants:
     default:
       label: Default
       description: My default variant

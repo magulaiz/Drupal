@@ -96,7 +96,7 @@ class ComponentMetadata {
    *
    * @var array
    */
-  public readonly array $variantDefinitions;
+  public readonly array $variants;
 
   /**
    * ComponentMetadata constructor.
@@ -134,7 +134,7 @@ class ComponentMetadata {
     // Save the schemas.
     $this->parseSchemaInfo($metadata_info);
     $this->slots = $metadata_info['slots'] ?? [];
-    $this->variantDefinitions = $metadata_info['variantDefinitions'] ?? [];
+    $this->variants = $metadata_info['variants'] ?? [];
   }
 
   /**
@@ -202,7 +202,7 @@ class ComponentMetadata {
       'status' => $this->status,
       'name' => $this->name,
       'group' => $this->group,
-      'variantDefinitions' => $this->variantDefinitions,
+      'variants' => $this->variants,
     ];
   }
 

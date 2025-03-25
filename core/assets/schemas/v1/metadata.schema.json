@@ -210,7 +210,7 @@
     "slots": {
       "$ref": "#/$defs/slotDefinition"
     },
-    "variantDefinitions": {
+    "variants": {
       "$ref": "#/$defs/variantDefinition"
     },
     "libraryOverrides": {
