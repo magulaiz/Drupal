@@ -30314,6 +30314,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mongodb/src/modules/workspaces/EntityQuery/QueryAggregate.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\workspaces\\\\Workspace\\:\\:publish\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/workspaces/Workspace.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewJsonAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
