@@ -16,7 +16,7 @@ class Workspace extends CoreWorkspace {
     try {
       return parent::publish();
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Do nothing.
     }
   }
