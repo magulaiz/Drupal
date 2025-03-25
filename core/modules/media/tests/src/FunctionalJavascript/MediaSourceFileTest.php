@@ -52,6 +52,7 @@ class MediaSourceFileTest extends MediaSourceTestBase {
     $page->selectFieldOption("field_map[" . File::METADATA_ATTRIBUTE_SIZE . "]", 'field_string_file_size');
     $page->selectFieldOption("field_map[" . File::METADATA_ATTRIBUTE_MIME . "]", 'field_string_mime_type');
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     $test_filename = $this->randomMachineName() . '.txt';
     $test_filepath = 'public://' . $test_filename;
@@ -63,6 +64,7 @@ class MediaSourceFileTest extends MediaSourceTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     $assert_session->addressEquals('admin/content/media');
 
@@ -95,6 +97,7 @@ class MediaSourceFileTest extends MediaSourceTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
     $assert_session->elementAttributeContains('css', 'img', 'src', 'text--plain.png');
 
     // Check if the mapped name is automatically updated.
@@ -109,6 +112,7 @@ class MediaSourceFileTest extends MediaSourceTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
     /** @var \Drupal\media\MediaInterface $media */
     $media = \Drupal::entityTypeManager()->getStorage('media')->loadUnchanged(1);
     $this->assertEquals($new_filename, $media->getName());
