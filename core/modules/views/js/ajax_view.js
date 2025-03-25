@@ -84,8 +84,7 @@
     if (queryString !== '') {
       // Remove the question mark and Drupal path component if any.
       queryString = queryString
-        .slice(1)
-        .replace(/q=[^&]+&?|page=[^&]+&?|&?render=[^&]+/, '');
+        .slice(1);
 
       // Remove current exposed filters.
       const params = decodeURI(queryString)
@@ -98,10 +97,7 @@
             Submitting filters should reset paging and sorting
             because that is what happens without AJAX.
              */
-            name !== 'page' &&
-            name !== 'reset' &&
-            name !== 'sort' &&
-            name !== 'order'
+            ['page', 'reset', 'sort', 'order', 'q', 'render'].includes(name)
           );
         });
       queryString = encodeURI(params.join('&'));
