@@ -188,6 +188,13 @@ class MenuUiHooks {
       '#default_value' => $defaults['weight'],
       '#description' => $this->t('Menu links with lower weights are displayed before links with higher weights.'),
     ];
+    $form['menu']['link']['link_enabled'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Enabled'),
+      '#description' => t('A flag for whether the link should be visible in menus or hidden.'),
+      '#default_value' => $defaults['enabled'] ?? 1,
+    ];
+
     foreach (array_keys($form['actions']) as $action) {
       if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
         $form['actions'][$action]['#submit'][] = 'menu_ui_form_node_form_submit';
@@ -253,6 +260,11 @@ class MenuUiHooks {
       ],
     ];
     $options_cacheability->applyTo($form['menu']['menu_parent']);
+    $form['menu']['link_enabled'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Enable menu link (default)'),
+      '#default_value' => $type->getThirdPartySetting('menu_ui', 'link_enabled', 1),
+    ];
     $form['#validate'][] = 'menu_ui_form_node_type_form_validate';
     $form['#entity_builders'][] = 'menu_ui_form_node_type_form_builder';
   }

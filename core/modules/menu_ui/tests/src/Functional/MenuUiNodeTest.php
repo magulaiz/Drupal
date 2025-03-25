@@ -73,6 +73,35 @@ class MenuUiNodeTest extends BrowserTestBase {
   }
 
   /**
+   * Test correct configuring of default enabling link setting by content type.
+   */
+  public function testContentTypeLinkEnableConfiguration() {
+    // Check that unconfigured content type defaults to enabled links.
+    $this->drupalGet('node/add/page');
+    $this->assertSession()->checkboxChecked('menu[link_enabled]');
+
+    // Configure menu links to be disabled.
+    $edit = [
+      'menu_options[main]' => 1,
+      'menu_parent' => 'main:',
+      'link_enabled' => FALSE,
+    ];
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->submitForm($edit, 'Save content type');
+    $this->assertSession()->pageTextContains('The content type Basic page has been updated.');
+    $this->drupalGet('node/add/page');
+    $this->assertSession()->checkboxNotChecked('menu[link_enabled]');
+
+    // Configure menu links to be enabled.
+    $edit['link_enabled'] = TRUE;
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->submitForm($edit, 'Save content type');
+    $this->assertSession()->pageTextContains('The content type Basic page has been updated.');
+    $this->drupalGet('node/add/page');
+    $this->assertSession()->checkboxChecked('menu[link_enabled]');
+  }
+
+  /**
    * Tests creating, editing, deleting menu links via node form widget.
    */
   public function testMenuNodeFormWidget(): void {
@@ -132,6 +161,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu_options[main]' => 1,
       'menu_options[tools]' => 1,
       'menu_parent' => 'main:',
+      'link_enabled' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/page');
     $this->submitForm($edit, 'Save');
@@ -142,6 +172,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'title[0][value]' => $node_title,
       'menu[enabled]' => 1,
       'menu[title]' => 'Test preview',
+      'menu[link_enabled]' => 1,
     ];
     $this->drupalGet('node/add/page');
     $this->submitForm($edit, 'Preview');
@@ -185,6 +216,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu[enabled]' => 1,
       'menu[title]' => $node_title,
       'status[value]' => FALSE,
+      'menu[link_enabled]' => 1,
     ];
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
@@ -197,13 +229,34 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->drupalGet('test-page');
     $this->assertSession()->linkExists($node_title, 0, 'Found a menu link with the node published');
 
+    // Assert that link is not enabled / does not exist in the rendered menu
+    // if link_enabled option is disabled.
+    $edit['menu[link_enabled]'] = 0;
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
+    $this->drupalGet('test-page');
+    $this->assertSession()->linkNotExists($node_title, 'Found no menu link with the node menu link disabled');
+    // If we go to main menu we shall see the disabled menu link.
+    $this->drupalGet('admin/structure/menu/manage/main');
+    $this->assertSession()->checkboxNotChecked("Enable $node_title menu link");
+    // Re-enable link via node form and check menu.
+    $edit['menu[link_enabled]'] = 1;
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
+    $this->drupalGet('test-page');
+    // If we go to main menu we shall see the enabled menu link.
+    $this->drupalGet('admin/structure/menu/manage/main');
+    $this->assertSession()->checkboxChecked("Enable $node_title menu link");
+
     // Log back in as normal user.
     $this->drupalLogin($this->editor);
+
     // Edit the node and create a menu link.
     $edit = [
       'menu[enabled]' => 1,
       'menu[title]' => $node_title,
       'menu[weight]' => 17,
+      'menu[link_enabled]' => 1,
     ];
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
@@ -227,6 +280,8 @@ class MenuUiNodeTest extends BrowserTestBase {
     $link->set('enabled', FALSE);
     $link->save();
     $this->drupalGet($node->toUrl('edit-form'));
+    // Remove this submission value as it will re-enable menu link on save.
+    unset($edit['menu[link_enabled]']);
     $this->submitForm($edit, 'Save');
     $link = MenuLinkContent::load($link_id);
     $this->assertFalse($link->isEnabled(), 'Saving a node with a disabled menu link keeps the menu link disabled.');
@@ -333,6 +388,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu[enabled]' => 1,
       'menu[title]' => $node_title,
       'menu[weight]' => 17,
+      'menu[link_enabled]' => 1,
     ];
     $options = ['language' => $languages[$langcodes[0]]];
     $url = $node->toUrl('edit-form', $options);
@@ -344,6 +400,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu[enabled]' => 1,
       'menu[title]' => $translated_node_title,
       'menu[weight]' => 17,
+      'menu[link_enabled]' => 1,
     ];
     $options = ['language' => $languages[$langcodes[1]]];
     $url = $node->toUrl('edit-form', $options);
