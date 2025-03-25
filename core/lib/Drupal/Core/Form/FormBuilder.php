@@ -602,16 +602,17 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         return;
       }
 
-      // If $form_state->isRebuilding() returns TRUE and input has been processed
-      // without validation errors, we are in a multi-step workflow that is not yet
-      // complete. In this scenario, a new $form must be constructed based on the
-      // changes made to $form_state during this request.
+      // If $form_state->setRebuild(TRUE) was called and input has been
+      // processed without validation errors, we are in a multi-step workflow
+      // that is not yet complete. A new $form needs to be constructed based
+      // on the changes made to $form_state during this request.
       //
-      // Typically, a submit handler calls $form_state->setRebuild(TRUE) when a fully
-      // executed form requires another step. However, for forms that have not been
-      // fully executed (e.g., Ajax submissions triggered by non-buttons), there is
-      // no submit handler to invoke setRebuild(). In that case, we also rebuild
-      // error-free, non-executed forms, regardless of $form_state->isRebuilding().
+      // Typically, a submit handler calls $form_state->setRebuild(TRUE) when
+      // a fully executed form requires another step. However, for forms that
+      // have not been fully executed (e.g., AJAX submissions triggered by
+      // non-buttons), there is no submit handler to call setRebuild(). In
+      // that case, we also rebuild error-free, non-executed forms, regardless
+      // of $form_state->isRebuilding().
       // @todo Simplify this logic; considering Ajax and non-HTML front-ends,
       //   along with element-level #submit properties, it makes no sense to
       //   have divergent form execution based on whether the triggering element
