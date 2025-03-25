@@ -129,6 +129,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $this->assertLinksFormIframeNotInteractive();
 
     $page->pressButton('Save layout');
+    $assert_session->waitForDocumentReady();
     $this->clickLink('Manage layout');
 
     // Ensure the links and forms are disabled using the defaults.
