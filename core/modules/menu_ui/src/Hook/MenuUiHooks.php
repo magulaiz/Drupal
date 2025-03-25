@@ -191,7 +191,7 @@ class MenuUiHooks {
     $form['menu']['link']['link_enabled'] = [
       '#type' => 'checkbox',
       '#title' => t('Enabled'),
-      '#description' => t('A flag for whether the link should be visible in menus or hidden.'),
+      '#description' => t('A flag for whether the link should be enabled in menus or hidden.'),
       '#default_value' => $defaults['enabled'] ?? TRUE,
     ];
 
