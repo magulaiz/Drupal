@@ -90,6 +90,7 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
     // Try to fill a text longer than the allowed limit.
     $page->fillField('Menu name', $menu_id);
     $page->pressButton('Save');
+    $this->assertSession()->waitForDocumentReady();
     // Check that the menu was saved with the ID truncated to the max length.
     $menu = Menu::load(substr($menu_id, 0, MenuStorage::MAX_ID_LENGTH));
     $this->assertEquals($label, $menu->label());
@@ -145,7 +146,7 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
 
     // Add menu link.
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains('The menu link has been saved.');
+    $this->assertTrue($this->assertSession()->waitForText('The menu link has been saved.'));
 
     $storage = $this->container->get('entity_type.manager')->getStorage('menu_link_content');
     $menu_links = $storage->loadByProperties(['title' => $title]);
