@@ -109,10 +109,9 @@ module.exports = {
       'open',
     );
     browser.click('#toolbar-item-administration-tray li:nth-child(2) button');
-    browser.assert.hasClass(
-      '#toolbar-item-administration-tray li:nth-child(2)',
-      'open',
-    );
+    browser.waitForElementPresent(
+      '#toolbar-item-administration-tray li:nth-child(2).open'
+    )
     browser.assert.hasClass(
       '#toolbar-item-administration-tray li:nth-child(2) button',
       'open',
@@ -138,10 +137,9 @@ module.exports = {
     browser.click(
       '#toolbar-item-administration-tray li.menu-item.level-2 button',
     );
-    browser.assert.hasClass(
-      '#toolbar-item-administration-tray li.menu-item.level-2',
-      'open',
-    );
+    browser.waitForElementPresent(
+      '#toolbar-item-administration-tray li.menu-item.level-2.open'
+    )
     browser.assert.hasClass(
       '#toolbar-item-administration-tray li.menu-item.level-2 button',
       'open',
@@ -189,6 +187,7 @@ module.exports = {
     browser.drupalRelativeURL('/admin');
     // Don't check the visibility as stark doesn't add the .path-admin class
     // to the <body> required to display the button.
+    browser.waitForElementPresent(escapeSelector);
     browser.assert.attributeContains(escapeSelector, 'href', '/user/2');
   },
   'Aural view test: tray orientation': (browser) => {
