@@ -106,6 +106,7 @@ class SiteConfigureForm extends ConfigFormBase {
         ]));
     }
 
+    $form['#attached']['library'][] = 'core/drupal.fieldgroup';
     $form['#attached']['library'][] = 'system/drupal.system';
     // Add JavaScript time zone detection.
     $form['#attached']['library'][] = 'core/drupal.timezone';
@@ -113,11 +114,9 @@ class SiteConfigureForm extends ConfigFormBase {
     // work during installation.
     $form['#attached']['drupalSettings']['copyFieldValue']['edit-site-mail'] = ['edit-account-mail'];
 
-    // @deprecated The #type 'fieldgroup' is deprecated in drupal:11.2.0 and is
-    // removed from drupal:12.0.0.
-    // @todo Use #type 'fieldset' and add fieldgroup as class attribute instead.
     $form['site_information'] = [
-      '#type' => 'fieldgroup',
+      '#type' => 'fieldset',
+      '#attributes' => ['class' => ['fieldgroup']],
       '#title' => $this->t('Site information'),
       '#access' => empty($install_state['config_install_path']),
     ];
@@ -148,11 +147,9 @@ class SiteConfigureForm extends ConfigFormBase {
       $account_label = $this->t('Site maintenance account');
     }
 
-    // @deprecated The #type 'fieldgroup' is deprecated in drupal:11.2.0 and is
-    // removed from drupal:12.0.0.
-    // @todo Use #type 'fieldset' and add fieldgroup as class attribute instead.
     $form['admin_account'] = [
-      '#type' => 'fieldgroup',
+      '#type' => 'fieldset',
+      '#attributes' => ['class' => ['fieldgroup']],
       '#title' => $account_label,
     ];
     $form['admin_account']['account']['name'] = [
@@ -175,11 +172,9 @@ class SiteConfigureForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
-    // @deprecated The #type 'fieldgroup' is deprecated in drupal:11.2.0 and is
-    // removed from drupal:12.0.0.
-    // @todo Use #type 'fieldset' and add fieldgroup as class attribute instead.
     $form['regional_settings'] = [
-      '#type' => 'fieldgroup',
+      '#type' => 'fieldset',
+      '#attributes' => ['class' => ['fieldgroup']],
       '#title' => $this->t('Regional settings'),
       '#access' => empty($install_state['config_install_path']),
     ];
@@ -197,11 +192,9 @@ class SiteConfigureForm extends ConfigFormBase {
       '#access' => empty($install_state['config_install_path']),
     ];
 
-    // @deprecated The #type 'fieldgroup' is deprecated in drupal:11.2.0 and is
-    // removed from drupal:12.0.0.
-    // @todo Use #type 'fieldset' and add fieldgroup as class attribute instead.
     $form['update_notifications'] = [
-      '#type' => 'fieldgroup',
+      '#type' => 'fieldset',
+      '#attributes' => ['class' => ['fieldgroup']],
       '#title' => $this->t('Update notifications'),
       '#description' => $this->t('When checking for updates, your site automatically sends anonymous information to Drupal.org. See the <a href="@update-module-docs" target="_blank">Update module documentation</a> for details.', ['@update-module-docs' => 'https://www.drupal.org/node/178772']),
       '#access' => empty($install_state['config_install_path']),
