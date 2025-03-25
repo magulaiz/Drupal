@@ -376,6 +376,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     $button_save->click();
+    $assert_session->waitForDocumentReady();
     $this->drupalGet($manage_display);
 
     // Assert the third party settings.
