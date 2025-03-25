@@ -110,6 +110,7 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
     $this->waitForFieldExists('Type One')->check();
     $this->assertElementExistsAfterWait('css', '[name="settings[handler_settings][target_bundles][type_one]"][checked="checked"]');
     $page->pressButton('Save settings');
+    $assert_session->waitForDocumentReady();
     $this->drupalGet('/admin/structure/types/manage/page/form-display');
     $assert_session->fieldValueEquals('fields[field_shatner][type]', 'media_library_widget');
   }
