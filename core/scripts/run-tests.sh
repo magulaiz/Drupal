@@ -74,7 +74,26 @@ if (!Composer::upgradePHPUnitCheck(Version::id())) {
 }
 
 if ($args['execute-test']) {
-  simpletest_script_run_phpunit($args['test-id'], $args['execute-test']);
+  try {
+    [$summaries, $status, $time] = PhpUnitTestRunner::runPhpUnitOnSingleTestClass(
+      simpletest_script_setup_test_run_results_storage(),
+      $args['test-id'],
+      $args['execute-test'],
+      $args['color'],
+      $args['suppress-deprecations'],
+    );
+    foreach ($summaries as $class => $summary) {
+      simpletest_script_reporter_display_summary($class, $summary, $time);
+    }
+    exit($status);
+  }
+  catch (\Throwable $e) {
+    // PHPUnit catches exceptions already, so this is only reached when an
+    // exception is thrown in the wrapped test runner environment.
+    echo (string) $e;
+    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
+  }
+
   // Sub-process exited already; this is just for clarity.
   exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
 }
@@ -137,7 +156,7 @@ if ($args['list-files'] || $args['list-files-json']) {
   exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
 }
 
-simpletest_script_setup_database(TRUE);
+simpletest_script_setup_database();
 
 // Setup the test run results storage environment. Currently, this coincides
 // with the simpletest database schema.
@@ -609,13 +628,8 @@ function simpletest_script_init(): void {
  *   connection is retained in
  *   $databases['simpletest_original_default']['default'] and restored after
  *   each test.
- *
- * @param bool $new
- *   Whether this process is a run-tests.sh master process. If TRUE, the SQLite
- *   database file specified by --sqlite (if any) is set up. Otherwise, database
- *   connections are prepared only.
  */
-function simpletest_script_setup_database($new = FALSE): void {
+function simpletest_script_setup_database(): void {
   global $args;
 
   // If there is an existing Drupal installation that contains a database
@@ -813,43 +827,6 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
     }
   }
   return $total_status;
-}
-
-/**
- * Run a PHPUnit-based test.
- */
-function simpletest_script_run_phpunit(int|string $test_id, string $test_class): void {
-  global $args;
-
-  simpletest_script_setup_database();
-  $test_run_results_storage = simpletest_script_setup_test_run_results_storage();
-  $test_run = TestRun::get($test_run_results_storage, $test_id);
-
-  try {
-    if ($args['suppress-deprecations']) {
-      putenv('SYMFONY_DEPRECATIONS_HELPER=disabled');
-    }
-
-    $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
-    $start = microtime(TRUE);
-    $results = $runner->execute($test_run, $test_class, $status, $args['color']);
-    $time = microtime(TRUE) - $start;
-
-    $runner->processPhpUnitResults($test_run, $results);
-
-    $summaries = $runner->summarizeResults($results);
-    foreach ($summaries as $class => $summary) {
-      simpletest_script_reporter_display_summary($class, $summary, $time);
-    }
-
-    exit($status);
-  }
-  // PHPUnit catches exceptions already, so this is only reached when an
-  // exception is thrown in the wrapped test runner environment.
-  catch (\Throwable $e) {
-    echo (string) $e;
-    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-  }
 }
 
 /**
