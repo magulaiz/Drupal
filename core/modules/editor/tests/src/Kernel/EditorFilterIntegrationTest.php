@@ -63,7 +63,7 @@ class EditorFilterIntegrationTest extends KernelTestBase {
   /**
    * Tests that ::getFilterFormat() throws domain exception if format not set.
    */
-  public function testEmptyFilterFormat() {
+  public function testEmptyFilterFormat(): void {
     $format = FilterFormat::create([
       'format' => mb_strtolower($this->randomMachineName()),
       'name' => $this->randomString(),
