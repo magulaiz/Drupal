@@ -91,7 +91,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
     $this->assertEquals('Select a responsive image style. Loading attribute: lazy', $summary_text->getText());
 
     $page->pressButton('Save');
-    $assert_session->responseContains("Select a responsive image style.");
+    $this->assertTrue($assert_session->waitForText("Select a responsive image style."));
 
     // Create responsive image styles.
     $responsive_image_style = ResponsiveImageStyle::create([
@@ -141,7 +141,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
     // Save the form to save the settings.
     $page->pressButton('Save');
 
-    $assert_session->responseContains('Responsive image style: Style One');
+    $this->assertTrue($assert_session->waitForText('Responsive image style: Style One'));
     $assert_session->responseContains('Linked to content');
 
     $page->find('css', '#edit-fields-field-image-settings-edit')->click();
@@ -151,7 +151,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
     // Save the form to save the settings.
     $page->pressButton('Save');
 
-    $assert_session->responseContains('Responsive image style: Style One');
+    $this->assertTrue($assert_session->waitForText('Responsive image style: Style One'));
     $assert_session->responseContains('Linked to file');
   }
 
