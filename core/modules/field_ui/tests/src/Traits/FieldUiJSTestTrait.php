@@ -68,13 +68,11 @@ trait FieldUiJSTestTrait {
     $field_field_name->setValue($field_name);
 
     $page->findButton('Continue')->click();
-    $assert_session->waitForDocumentReady();
-    $assert_session->waitForText("These settings apply to the $label field everywhere it is used.");
+    $this->assertTrue($assert_session->waitForText("These settings apply to the $label field everywhere it is used."));
     if ($save_settings) {
       // Second step: Save field settings.
       $page->findButton('Save settings')->click();
-      $assert_session->waitForDocumentReady();
-      $assert_session->pageTextContains("Saved $label configuration.");
+      $this->assertTrue($assert_session->waitForText("Saved $label configuration."));
 
       // Check that the field appears in the overview form.
       $row = $page->find('css', '#field-' . $field_name);
