@@ -41,8 +41,8 @@ function _menu_ui_node_save(NodeInterface $node, array $values): void {
       'link' => ['uri' => 'entity:node/' . $node->id()],
       'langcode' => $node->language()->getId(),
     ]);
-    $entity->enabled->value = 1;
   }
+  $entity->enabled->value = $values['link_enabled'] ?? TRUE;
   $entity->title->value = trim($values['title']);
   $entity->description->value = trim($values['description']);
   $entity->menu_name->value = $values['menu_name'];
@@ -130,6 +130,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
         'menu_name' => $menu_link->getMenuName(),
         'parent' => $menu_link->getParentId(),
         'weight' => $menu_link->getWeight(),
+        'enabled' => $menu_link->isEnabled(),
       ];
     }
   }
@@ -150,6 +151,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
       'menu_name' => $menu_name,
       'parent' => '',
       'weight' => 0,
+      'enabled' => $node_type->getThirdPartySetting('menu_ui', 'link_enabled', !empty($menu_name)),
     ];
   }
   return $defaults;
@@ -165,7 +167,7 @@ function menu_ui_node_builder($entity_type, NodeInterface $entity, &$form, FormS
 /**
  * Form submission handler for menu item field on the node form.
  *
- * @see menu_ui_form_node_form_alter()
+ * @see \Drupal\menu_ui\Hook\MenuUiHooks::formNodeFormAlter()
  */
 function menu_ui_form_node_form_submit($form, FormStateInterface $form_state): void {
   $node = $form_state->getFormObject()->getEntity();
@@ -197,7 +199,7 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state): v
 /**
  * Validate handler for forms with menu options.
  *
- * @see menu_ui_form_node_type_form_alter()
+ * @see \Drupal\menu_ui\Hook\MenuUiHooks::formNodeTypeFormAlter()
  */
 function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_state): void {
   $available_menus = array_filter($form_state->getValue('menu_options'));
@@ -217,11 +219,12 @@ function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_s
 /**
  * Entity builder for the node type form with menu options.
  *
- * @see menu_ui_form_node_type_form_alter()
+ * @see \Drupal\menu_ui\Hook\MenuUiHooks::formNodeTypeFormAlter()
  */
 function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state): void {
   $type->setThirdPartySetting('menu_ui', 'available_menus', array_values(array_filter($form_state->getValue('menu_options'))));
   $type->setThirdPartySetting('menu_ui', 'parent', $form_state->getValue('menu_parent'));
+  $type->setThirdPartySetting('menu_ui', 'link_enabled', $form_state->getValue('link_enabled'));
 }
 
 /**
