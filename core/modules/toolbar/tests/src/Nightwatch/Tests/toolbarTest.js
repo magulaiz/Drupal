@@ -110,8 +110,8 @@ module.exports = {
     );
     browser.click('#toolbar-item-administration-tray li:nth-child(2) button');
     browser.waitForElementPresent(
-      '#toolbar-item-administration-tray li:nth-child(2).open'
-    )
+      '#toolbar-item-administration-tray li:nth-child(2).open',
+    );
     browser.assert.hasClass(
       '#toolbar-item-administration-tray li:nth-child(2) button',
       'open',
@@ -138,8 +138,8 @@ module.exports = {
       '#toolbar-item-administration-tray li.menu-item.level-2 button',
     );
     browser.waitForElementPresent(
-      '#toolbar-item-administration-tray li.menu-item.level-2.open'
-    )
+      '#toolbar-item-administration-tray li.menu-item.level-2.open',
+    );
     browser.assert.hasClass(
       '#toolbar-item-administration-tray li.menu-item.level-2 button',
       'open',
