@@ -92,14 +92,14 @@ class HookCollectorPassTest extends KernelTestBase {
     $module_installer = $this->container->get('module_installer');
     $this->assertTrue($module_installer->install(['hook_collector_on_behalf']));
     $this->assertTrue($module_installer->install(['hook_collector_on_behalf_procedural']));
-    /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
-    $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+    /** @var \Drupal\Core\Cache\CacheClearer $cacheClearer */
+    $cacheClearer = \Drupal::service('cache_clearer');
     $cacheClearer->clearCache();
     $this->assertFalse(isset($GLOBALS['on_behalf_oop']));
     $this->assertFalse(isset($GLOBALS['on_behalf_procedural']));
     $this->assertTrue($module_installer->install(['respond_install_uninstall_hook_test']));
-    /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
-    $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+    /** @var \Drupal\Core\Cache\CacheClearer $cacheClearer */
+    $cacheClearer = \Drupal::service('cache_clearer');
     $cacheClearer->clearCache();
     $this->assertTrue(isset($GLOBALS['on_behalf_oop']));
     $this->assertTrue(isset($GLOBALS['on_behalf_procedural']));
@@ -119,8 +119,8 @@ class HookCollectorPassTest extends KernelTestBase {
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_after_attribute']));
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_find']));
     $this->assertFalse(isset($GLOBALS['skipped_procedural_oop_cache_flush']));
-    /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
-    $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+    /** @var \Drupal\Core\Cache\CacheClearer $cacheClearer */
+    $cacheClearer = \Drupal::service('cache_clearer');
     $cacheClearer->clearCache();
     $this->assertFalse(isset($GLOBALS['skip_procedural_all']));
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_has_attribute']));
@@ -138,8 +138,8 @@ class HookCollectorPassTest extends KernelTestBase {
     $this->assertTrue($module_installer->install(['hook_collector_hook_attribute']));
     $this->assertFalse(isset($GLOBALS['hook_named_arguments']));
     $this->assertFalse(isset($GLOBALS['hook_invoke_method']));
-    /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
-    $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+    /** @var \Drupal\Core\Cache\CacheClearer $cacheClearer */
+    $cacheClearer = \Drupal::service('cache_clearer');
     $cacheClearer->clearCache();
     $this->assertTrue(isset($GLOBALS['hook_named_arguments']));
     $this->assertTrue(isset($GLOBALS['hook_invoke_method']));

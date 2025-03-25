@@ -38,8 +38,8 @@ function drupal_rebuild($class_loader, Request $request) {
     $request->setSession($kernel->getContainer()->get('session'));
   }
 
-  /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
-  $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+  /** @var \Drupal\Core\Cache\CacheClearer $cacheClearer */
+  $cacheClearer = \Drupal::service('cache_clearer');
   $cacheClearer->clearCache();
 
   // Disable recording of cached pages.

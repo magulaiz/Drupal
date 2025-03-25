@@ -2,12 +2,12 @@
 
 namespace Drupal\Core\Plugin;
 
-use Drupal\Core\Cache\CacheClearerInterface;
+use Drupal\Core\Cache\CacheClearableInterface;
 
 /**
  * A cache clearer for plugins.
  */
-class PluginCacheClearer implements CacheClearerInterface {
+class PluginCacheClearer implements CacheClearableInterface {
 
   public function __construct() {}
 

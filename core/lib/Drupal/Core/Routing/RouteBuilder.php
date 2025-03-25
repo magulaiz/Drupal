@@ -3,7 +3,7 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Access\CheckProviderInterface;
-use Drupal\Core\Cache\CacheClearerInterface;
+use Drupal\Core\Cache\CacheClearableInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Discovery\YamlDiscovery;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Managing class for rebuilding the router table.
  */
-class RouteBuilder implements RouteBuilderInterface, DestructableInterface, CacheClearerInterface {
+class RouteBuilder implements RouteBuilderInterface, DestructableInterface, CacheClearableInterface {
 
   /**
    * The dumper to which we should send collected routes.
@@ -252,6 +252,8 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface, Cach
    * {@inheritdoc}
    */
   public function clearCache(): void {
+    // Important: This rebuild must happen last, so the menu router is
+    // guaranteed to be based on up to date information.
     $this->rebuild();
   }
 

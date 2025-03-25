@@ -5,7 +5,7 @@ namespace Drupal\Core\Cache;
 /**
  * A cache clearer that calls drupal_static_reset().
  */
-class DrupalStaticCacheClearer implements CacheClearerInterface {
+class DrupalStaticCacheClearer implements CacheClearableInterface {
 
   /**
    * {@inheritdoc}

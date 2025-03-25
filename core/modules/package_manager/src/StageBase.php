@@ -521,8 +521,8 @@ abstract class StageBase implements LoggerAwareInterface {
     }
     // Rebuild the container and clear all caches, to ensure that new services
     // are picked up.
-    /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
-    $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+    /** @var \Drupal\Core\Cache\CacheClearer $cacheClearer */
+    $cacheClearer = \Drupal::service('cache_clearer');
     $cacheClearer->clearCache();
     // Refresh the event dispatcher so that new or changed event subscribers
     // will be called. The other services we depend on are either stateless or

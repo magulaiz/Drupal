@@ -3,9 +3,9 @@
 namespace Drupal\Core\Cache;
 
 /**
- * Provides an interface for cache clearers.
+ * Provides an interface for services with clearable caches.
  */
-interface CacheClearerInterface {
+interface CacheClearableInterface {
 
   /**
    * Clears the cache.

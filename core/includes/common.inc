@@ -403,7 +403,7 @@ function show(&$element) {
  * \Drupal\Core\Cache\ChainCacheClearer::clearCache() instead.
  * @see https://www.drupal.org/node/3014783
  *
- * @see \Drupal\Core\Cache\ChainCacheClearer::clearCache()
+ * @see \Drupal\Core\Cache\CacheClearer::clearCache()
  * @see hook_cache_flush()
  * @see hook_rebuild()
  *
@@ -412,8 +412,8 @@ function show(&$element) {
  */
 function drupal_flush_all_caches($kernel = NULL) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Cache\ChainCacheClearer::clearCache() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
-  /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
-  $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+  /** @var \Drupal\Core\Cache\CacheClearer $cacheClearer */
+  $cacheClearer = \Drupal::service('cache_clearer');
   $cacheClearer->clearCache();
 }
 

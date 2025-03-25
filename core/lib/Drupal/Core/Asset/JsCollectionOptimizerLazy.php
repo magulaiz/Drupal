@@ -4,7 +4,7 @@ namespace Drupal\Core\Asset;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Cache\CacheClearerInterface;
+use Drupal\Core\Cache\CacheClearableInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Optimizes JavaScript assets.
  */
-class JsCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterface, CacheClearerInterface {
+class JsCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterface, CacheClearableInterface {
 
   use AssetGroupSetHashTrait;
 

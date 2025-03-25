@@ -41,8 +41,8 @@ class ClearTest extends CacheTestBase {
     }
 
     // Remove all caches then make sure that they are cleared.
-    /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
-    $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+    /** @var \Drupal\Core\Cache\CacheClearer $cacheClearer */
+    $cacheClearer = \Drupal::service('cache_clearer');
     $cacheClearer->clearCache();
 
     foreach ($bins as $bin => $cache_backend) {

@@ -247,8 +247,8 @@ trait FunctionalTestSetupTrait {
    */
   protected function resetAll() {
     // Clear all database and static caches and rebuild data structures.
-    /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
-    $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+    /** @var \Drupal\Core\Cache\CacheClearer $cacheClearer */
+    $cacheClearer = \Drupal::service('cache_clearer');
     $cacheClearer->clearCache();
     $this->container = \Drupal::getContainer();
 

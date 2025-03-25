@@ -5,7 +5,7 @@ namespace Drupal\Core\Cache;
 /**
  * A cache clearer for cache bins.
  */
-class CacheBinsClearer implements CacheClearerInterface {
+class CacheBinsClearer implements CacheClearableInterface {
 
   /**
    * {@inheritdoc}

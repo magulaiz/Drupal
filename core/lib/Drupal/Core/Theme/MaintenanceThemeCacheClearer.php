@@ -2,12 +2,12 @@
 
 namespace Drupal\Core\Theme;
 
-use Drupal\Core\Cache\CacheClearerInterface;
+use Drupal\Core\Cache\CacheClearableInterface;
 
 /**
  * A cache clearer for the maintenance theme.
  */
-class MaintenanceThemeCacheClearer implements CacheClearerInterface {
+class MaintenanceThemeCacheClearer implements CacheClearableInterface {
 
   /**
    * Creates a MaintenanceThemeCacheClearer.

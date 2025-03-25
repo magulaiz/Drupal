@@ -35,8 +35,8 @@ class ClearCacheForm extends FormBase {
    * Clears the caches.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
-    $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+    /** @var \Drupal\Core\Cache\CacheClearer $cacheClearer */
+    $cacheClearer = \Drupal::service('cache_clearer');
     $cacheClearer->clearCache();
     $this->messenger()->addStatus($this->t('Caches cleared.'));
   }

@@ -3,6 +3,7 @@
 namespace Drupal\Core\Theme;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\Cache\CacheClearableInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -12,7 +13,7 @@ use Drupal\Core\Template\AttributeHelper;
 /**
  * Provides the default implementation of a theme manager.
  */
-class ThemeManager implements ThemeManagerInterface {
+class ThemeManager implements ThemeManagerInterface, CacheClearableInterface {
 
   /**
    * The theme negotiator.
@@ -505,6 +506,13 @@ class ThemeManager implements ThemeManagerInterface {
       $this->defaultVariables['directory'] = $this->getActiveTheme()->getPath();
     }
     return $this->defaultVariables;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearCache(): void {
+    $this->resetActiveTheme();
   }
 
 }

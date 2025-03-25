@@ -29,8 +29,8 @@ class TestingProfileHooksTest extends BrowserTestBase {
   public function testHookPickup(): void {
     $this->assertFalse(isset($GLOBALS['profile_procedural']));
     $this->assertFalse(isset($GLOBALS['profile_oop']));
-    /** @var \Drupal\Core\Cache\CacheClearerInterface $cacheClearer */
-    $cacheClearer = \Drupal::service('cache.chain_cache_clearer');
+    /** @var \Drupal\Core\Cache\CacheClearer $cacheClearer */
+    $cacheClearer = \Drupal::service('cache_clearer');
     $cacheClearer->clearCache();
     $this->assertTrue(isset($GLOBALS['profile_procedural']));
     $this->assertTrue(isset($GLOBALS['profile_oop']));

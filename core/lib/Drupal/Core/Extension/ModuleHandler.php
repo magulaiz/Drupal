@@ -4,6 +4,7 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\CacheClearableInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\HookCollectorPass;
@@ -12,7 +13,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * Class that manages modules in a Drupal installation.
  */
-class ModuleHandler implements ModuleHandlerInterface {
+class ModuleHandler implements ModuleHandlerInterface, CacheClearableInterface {
 
   /**
    * List of loaded files.
@@ -581,6 +582,15 @@ class ModuleHandler implements ModuleHandlerInterface {
       }
     }
     return $this->invokeMap[$hook] ?? [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearCache(): void {
+    $this->reload();
+    // Rebuild all information based on new module data.
+    $this->invokeAll('rebuild');
   }
 
 }

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Extension;
 
-use Drupal\Core\Cache\CacheClearerInterface;
+use Drupal\Core\Cache\CacheClearableInterface;
 
 /**
  * Cache clearer that invokes hook_cache_flush.
  */
-class HookCacheFlushClearer implements CacheClearerInterface {
+class HookCacheFlushClearer implements CacheClearableInterface {
 
   /**
    * Creates a new HookCacheFlushClearer.

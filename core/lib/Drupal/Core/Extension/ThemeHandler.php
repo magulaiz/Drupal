@@ -2,13 +2,14 @@
 
 namespace Drupal\Core\Extension;
 
+use Drupal\Core\Cache\CacheClearableInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 
 /**
  * Default theme handler using the config system to store installation statuses.
  */
-class ThemeHandler implements ThemeHandlerInterface {
+class ThemeHandler implements ThemeHandlerInterface, CacheClearableInterface {
 
   /**
    * A list of all currently available themes.
@@ -196,6 +197,13 @@ class ThemeHandler implements ThemeHandlerInterface {
       return TRUE;
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearCache(): void {
+    $this->refreshInfo();
   }
 
 }

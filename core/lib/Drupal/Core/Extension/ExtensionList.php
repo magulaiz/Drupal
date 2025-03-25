@@ -3,6 +3,7 @@
 namespace Drupal\Core\Extension;
 
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheClearableInterface;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\State\StateInterface;
@@ -18,7 +19,7 @@ use Drupal\Core\State\StateInterface;
  *   properties / methods will not change over time. This will be reviewed after
  *   https://www.drupal.org/project/drupal/issues/2940481
  */
-abstract class ExtensionList {
+abstract class ExtensionList implements CacheClearableInterface {
 
   /**
    * The type of the extension.
@@ -599,6 +600,13 @@ abstract class ExtensionList {
    */
   public static function sortByName(Extension $a, Extension $b): int {
     return strcasecmp($a->info['name'], $b->info['name']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearCache(): void {
+    $this->reset();
   }
 
 }
