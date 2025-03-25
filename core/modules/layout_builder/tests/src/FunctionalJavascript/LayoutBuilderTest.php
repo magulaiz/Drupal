@@ -152,6 +152,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
 
     // Save the layout, and the new block is visible.
     $page->pressButton('Save layout');
+    $this->assertSession()->waitForDocumentReady();
     $assert_session->addressEquals($node_url);
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->pageTextContains('This is the label');
@@ -189,8 +190,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
 
     // Ensure the dragged block is still in the correct position after save.
     $page->pressButton('Save layout');
-    $assert_session->waitForDocumentReady();
-    $assert_session->elementExists('css', '.layout__region--second .block-system-powered-by-block');
+    $this->assertNotNull($assert_session->waitForElement('css', '.layout__region--second .block-system-powered-by-block'));
     $assert_session->elementTextContains('css', '.layout__region--second', 'Powered by Drupal');
 
     // Reconfigure a block and ensure that the layout content is updated.
@@ -225,7 +225,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $this->assertPageNotReloaded();
 
     $page->pressButton('Save layout');
-    $assert_session->elementExists('css', '.layout');
+    $this->assertNotNull($assert_session->waitForElement('css', '.layout'));
 
     // Test deriver-based blocks.
     $this->drupalGet($layout_url);
@@ -258,6 +258,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $page->pressButton('Save layout');
 
     // Removing all sections results in no layout being used.
+    $assert_session->waitForDocumentReady();
     $assert_session->addressEquals($node_url);
     $assert_session->elementNotExists('css', '.layout');
     $assert_session->pageTextNotContains('The node body');
