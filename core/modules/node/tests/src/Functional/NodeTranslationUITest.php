@@ -250,6 +250,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
 
     // Turn off admin theme for editing, assert inheritance to translations.
     $this->config('node.settings')->set('use_admin_theme', FALSE)->save();
+    // Changing node.settings:use_admin_theme requires a route rebuild.
     $this->container->get('router.builder')->rebuild();
 
     // Verify that translation uses the frontend theme if edit is frontend.
