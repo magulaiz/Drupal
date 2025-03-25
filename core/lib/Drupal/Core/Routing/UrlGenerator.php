@@ -12,7 +12,7 @@ use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Generates URLs from route names and parameters.
@@ -448,12 +448,11 @@ class UrlGenerator implements UrlGeneratorInterface {
    * @see \Drupal\Core\Routing\RouteProviderInterface
    */
   protected function getRoute(string $name) {
-    try {
-      return clone $this->provider->getRouteByName($name);
+    $route = $this->provider->getRouteByName($name);
+    if ($route) {
+      return clone $route;
     }
-    catch (\Exception $e) {
-      throw new ResourceNotFoundException(sprintf('Route "%s" does not exist.', $name));
-    }
+    throw new RouteNotFoundException(sprintf('Route "%s" does not exist.', $name));
   }
 
 }
