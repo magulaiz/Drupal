@@ -115,7 +115,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $html = $session->getPage()->getHtml();
     $this->assertStringContainsString('Page Two', $html);
     $this->assertStringNotContainsString('Page One', $html);
-    $this->assertSession()->addressEquals('admin/content?title=Page%20Two&type=All&status=All');
+    $this->assertSession()->addressEquals('admin/content?type=All&status=All&title=Page%20Two');
 
     // Submit bulk actions form to ensure that the previous AJAX submit does not
     // break it.
