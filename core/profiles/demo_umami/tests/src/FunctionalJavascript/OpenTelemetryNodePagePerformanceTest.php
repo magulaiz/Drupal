@@ -110,7 +110,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     // Check the actual queries so that if a change simultaneously adds and
     // removes a query the change is detected.
     $expected_queries = [
-      'SELECT "config"."name" AS "name" FROM "config" "config" WHERE ("collection" = "") AND ("name" LIKE "language.entity.%" ESCAPE \'\\\\\') ORDER BY "collection" ASC, "name" ASC',
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/recipes/deep-mediterranean-quiche" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
       'SELECT "name", "route", "fit" FROM "router" WHERE "pattern_outline" IN ( "/node/1", "/node/%", "/node" ) AND "number_parts" >= 2',
       'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_uid" AS "revision_uid", "revision"."revision_timestamp" AS "revision_timestamp", "revision"."revision_log" AS "revision_log", "revision"."revision_default" AS "revision_default", "base"."nid" AS "nid", "base"."type" AS "type", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "node" "base" INNER JOIN "node_revision" "revision" ON "revision"."vid" = "base"."vid" WHERE "base"."nid" IN (1)',
@@ -178,6 +177,9 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/node/1" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("es", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
       'SELECT "menu_tree"."menu_name" AS "menu_name", "menu_tree"."route_name" AS "route_name", "menu_tree"."route_parameters" AS "route_parameters", "menu_tree"."url" AS "url", "menu_tree"."title" AS "title", "menu_tree"."description" AS "description", "menu_tree"."parent" AS "parent", "menu_tree"."weight" AS "weight", "menu_tree"."options" AS "options", "menu_tree"."expanded" AS "expanded", "menu_tree"."enabled" AS "enabled", "menu_tree"."provider" AS "provider", "menu_tree"."metadata" AS "metadata", "menu_tree"."class" AS "class", "menu_tree"."form_class" AS "form_class", "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE ("route_name" = "entity.node.canonical") AND ("route_param_key" = "node=1") AND ("menu_name" = "account") ORDER BY "depth" ASC, "weight" ASC, "id" ASC',
       'SELECT "menu_tree"."menu_name" AS "menu_name", "menu_tree"."route_name" AS "route_name", "menu_tree"."route_parameters" AS "route_parameters", "menu_tree"."url" AS "url", "menu_tree"."title" AS "title", "menu_tree"."description" AS "description", "menu_tree"."parent" AS "parent", "menu_tree"."weight" AS "weight", "menu_tree"."options" AS "options", "menu_tree"."expanded" AS "expanded", "menu_tree"."enabled" AS "enabled", "menu_tree"."provider" AS "provider", "menu_tree"."metadata" AS "metadata", "menu_tree"."class" AS "class", "menu_tree"."form_class" AS "form_class", "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE ("route_name" = "entity.node.canonical") AND ("route_param_key" = "node=1") AND ("menu_name" = "main") ORDER BY "depth" ASC, "weight" ASC, "id" ASC',
+      'SELECT "menu_tree"."menu_name" AS "menu_name", "menu_tree"."route_name" AS "route_name", "menu_tree"."route_parameters" AS "route_parameters", "menu_tree"."url" AS "url", "menu_tree"."title" AS "title", "menu_tree"."description" AS "description", "menu_tree"."parent" AS "parent", "menu_tree"."weight" AS "weight", "menu_tree"."options" AS "options", "menu_tree"."expanded" AS "expanded", "menu_tree"."enabled" AS "enabled", "menu_tree"."provider" AS "provider", "menu_tree"."metadata" AS "metadata", "menu_tree"."class" AS "class", "menu_tree"."form_class" AS "form_class", "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE ("route_name" = "entity.node.canonical") AND ("route_param_key" = "node=1") AND ("menu_name" = "footer") ORDER BY "depth" ASC, "weight" ASC, "id" ASC',
+      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/recipes" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
+      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/node" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
       'SELECT "base_table"."vid" AS "vid", "base_table"."nid" AS "nid" FROM "node_revision" "base_table" INNER JOIN "node_field_data" "node_field_data" ON "node_field_data"."nid" = "base_table"."nid" INNER JOIN "node_field_revision" "node_field_revision" ON "node_field_revision"."vid" = "base_table"."vid" AND "node_field_revision"."langcode" = "en" WHERE ("node_field_data"."nid" = "1") AND ("node_field_revision"."revision_translation_affected" = 1) GROUP BY "base_table"."vid", "base_table"."nid" ORDER BY "base_table"."vid" DESC LIMIT 1 OFFSET 0',
       'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_uid" AS "revision_uid", "revision"."revision_timestamp" AS "revision_timestamp", "revision"."revision_log" AS "revision_log", "revision"."revision_default" AS "revision_default", "base"."nid" AS "nid", "base"."type" AS "type", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "node" "base" INNER JOIN "node_revision" "revision" ON "revision"."nid" = "base"."nid" AND "revision"."vid" IN (75)',
       'SELECT "revision".* FROM "node_field_revision" "revision" WHERE ("revision"."vid" IN (75)) AND ("revision"."vid" IN ("75")) ORDER BY "revision"."vid" ASC',
@@ -275,9 +277,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'SELECT "t".* FROM "node_revision__field_summary" "t" WHERE ("revision_id" IN ("75")) AND ("deleted" = 0) AND ("langcode" IN ("en", "es", "und", "zxx")) ORDER BY "delta" ASC',
       'SELECT "t".* FROM "node_revision__field_tags" "t" WHERE ("revision_id" IN ("75")) AND ("deleted" = 0) AND ("langcode" IN ("en", "es", "und", "zxx")) ORDER BY "delta" ASC',
       'SELECT "t".* FROM "node_revision__layout_builder__layout" "t" WHERE ("revision_id" IN ("75")) AND ("deleted" = 0) AND ("langcode" IN ("en", "es", "und", "zxx")) ORDER BY "delta" ASC',
-      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/recipes" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/node" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "menu_tree"."menu_name" AS "menu_name", "menu_tree"."route_name" AS "route_name", "menu_tree"."route_parameters" AS "route_parameters", "menu_tree"."url" AS "url", "menu_tree"."title" AS "title", "menu_tree"."description" AS "description", "menu_tree"."parent" AS "parent", "menu_tree"."weight" AS "weight", "menu_tree"."options" AS "options", "menu_tree"."expanded" AS "expanded", "menu_tree"."enabled" AS "enabled", "menu_tree"."provider" AS "provider", "menu_tree"."metadata" AS "metadata", "menu_tree"."class" AS "class", "menu_tree"."form_class" AS "form_class", "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE ("route_name" = "entity.node.canonical") AND ("route_param_key" = "node=1") AND ("menu_name" = "footer") ORDER BY "depth" ASC, "weight" ASC, "id" ASC',
       'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("theme_registry:runtime:umami:Drupal\Core\Utility\ThemeRegistry", "LOCK_ID", "EXPIRE")',
       'DELETE FROM "semaphore"  WHERE ("name" = "theme_registry:runtime:umami:Drupal\Core\Utility\ThemeRegistry") AND ("value" = "LOCK_ID")',
       'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("active-trail:route:entity.node.canonical:route_parameters:a:1:{s:4:"node";s:1:"1";}:Drupal\Core\Cache\CacheCollector", "LOCK_ID", "EXPIRE")',
@@ -287,24 +286,24 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
 
     $expected = [
-      'QueryCount' => 172,
-      'CacheGetCount' => 247,
+      'QueryCount' => 171,
+      'CacheGetCount' => 255,
       'CacheGetCountByBin' => [
         'page' => 1,
         'config' => 66,
+        'bootstrap' => 10,
         'discovery' => 67,
         'data' => 13,
         'entity' => 18,
-        'bootstrap' => 8,
         'dynamic_page_cache' => 2,
-        'render' => 67,
+        'render' => 73,
         'default' => 3,
         'menu' => 2,
       ],
       'CacheSetCount' => 41,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 28,
+      'CacheTagLookupQueryCount' => 27,
       'CacheTagGroupedLookups' => [
         [
           'entity_types',
@@ -361,12 +360,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
         ['config:block.block.umami_messages'],
         ['config:block.block.umami_help'],
         [
-          'config:block.block.umami_local_tasks',
-          'config:workflows.workflow.editorial',
-        ],
-        ['config:views.view.recipes'],
-        ['config:block.block.umami_breadcrumbs'],
-        [
           'config:block.block.umami_views_block__recipe_collections_block',
           'taxonomy_term:1',
           'taxonomy_term:10',
@@ -401,8 +394,10 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
           'block_content:1',
           'config:block.block.umami_banner_home',
           'config:block.block.umami_banner_recipes',
+          'config:block.block.umami_breadcrumbs',
           'config:block.block.umami_content',
           'config:block.block.umami_languageswitcher',
+          'config:block.block.umami_local_tasks',
           'config:block.block.umami_page_title',
           'config:block.block.umami_views_block__articles_aside_block_1',
           'config:block.block.umami_views_block__promoted_items_block_1',
@@ -410,6 +405,8 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
           'config:configurable_language_list',
           'http_response',
         ],
+        ['config:views.view.recipes'],
+        ['config:workflows.workflow.editorial'],
         ['config:user.role.anonymous'],
       ],
       'ScriptCount' => 1,
