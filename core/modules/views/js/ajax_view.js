@@ -96,7 +96,7 @@
             Submitting filters should reset paging and sorting
             because that is what happens without AJAX.
              */
-            ['page', 'reset', 'sort', 'order', 'q', 'render'].includes(name)
+            !['page', 'reset', 'sort', 'order', 'q', 'render'].includes(name)
           );
         });
       queryString = encodeURI(params.join('&'));
