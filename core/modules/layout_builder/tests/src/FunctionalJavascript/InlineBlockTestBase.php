@@ -87,6 +87,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
     // Reload the page to prevent random failures.
     $this->drupalGet($this->getUrl());
     $page->pressButton('Save layout');
+    $assert_session->waitForDocumentReady();
     $this->assertNotEmpty($assert_session->waitForElement('css', '.messages--status'));
 
     if (stristr($this->getUrl(), 'admin/structure') === FALSE) {
