@@ -392,7 +392,7 @@ class FieldConfigEditForm extends EntityForm {
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   An AJAX response.
    */
-  public function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
+  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state): AjaxResponse {
     $response = new AjaxResponse();
     $response->addCommand(new RedirectCommand(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle())->toString()));
 
