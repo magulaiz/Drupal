@@ -48,6 +48,7 @@ class MediaEmbedFilterConfigurationUiAddTest extends MediaEmbedFilterTestBase {
       $page->fillField('filters[filter_html][settings][allowed_html]', $allowed_html);
     }
     $page->pressButton('Save configuration');
+    $this->assertSession()->waitForDocumentReady();
 
     if ($expected_error_message) {
       $this->assertSession()->pageTextNotContains('Added text format Another test format.');
