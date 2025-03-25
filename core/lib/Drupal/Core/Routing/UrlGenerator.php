@@ -447,8 +447,12 @@ class UrlGenerator implements UrlGeneratorInterface {
    * @see \Drupal\Core\Routing\RouteProviderInterface
    */
   protected function getRoute(string $name) {
-    $route = clone $this->provider->getRouteByName($name);
-    return $route;
+    try {
+      return clone $this->provider->getRouteByName($name);
+    }
+    catch (\Exception $e) {
+      throw new RouteNotFoundException(sprintf('Route "%s" does not exist.', $name));
+    }
   }
 
 }
