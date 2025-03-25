@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
-use Drupal\Core\Database\Database;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -90,7 +89,7 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
     ]);
     $second_node->save();
 
-    if (Database::getConnection()->driver() == 'mongodb') {
+    if (\Drupal::database()->driver() === 'mongodb') {
       // Ascending order will see 'published' followed by 'zz_draft'.
       $this->assertSortResults('test_content_moderation_state_sort_base_table', 'vid', 'ASC', [
         ['vid' => $second_node->getRevisionId()],
@@ -155,21 +154,13 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
     // coverage this is required.
     $second_aa_draft_revision_id = $translated->getRevisionId();
 
-    if (Database::getConnection()->driver() == 'mongodb') {
-      // @todo There is a sorting bug for MongoDB.
-      $skip = TRUE;
-    }
-    else {
-      $skip = FALSE;
-    }
-
     $this->assertSortResults('test_content_moderation_state_sort_revision_table', 'vid', 'ASC', [
       ['vid' => $aa_draft_revision_id],
       ['vid' => $second_aa_draft_revision_id],
       ['vid' => $draft_revision_id],
       ['vid' => $published_revision_id],
       ['vid' => $zz_draft_revision_id],
-    ], $skip);
+    ]);
 
     $this->assertSortResults('test_content_moderation_state_sort_revision_table', 'vid', 'DESC', [
       ['vid' => $zz_draft_revision_id],
@@ -177,7 +168,7 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
       ['vid' => $draft_revision_id],
       ['vid' => $aa_draft_revision_id],
       ['vid' => $second_aa_draft_revision_id],
-    ], $skip);
+    ]);
   }
 
   /**
@@ -191,12 +182,10 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
    *   The sort order.
    * @param array $expected
    *   The expected results array.
-   * @param bool $skip
-   *   (optional) Skip the last assertion. Defaults to FALSE.
    *
    * @internal
    */
-  protected function assertSortResults(string $view_id, string $column, string $order, array $expected, bool $skip = FALSE): void {
+  protected function assertSortResults(string $view_id, string $column, string $order, array $expected): void {
     // Test with exposed input.
     $view = Views::getView($view_id);
     $view->setExposedInput([
@@ -215,7 +204,9 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
     ]);
     $view->setRequest($request);
     $view->execute();
-    if (!$skip) {
+    if (\Drupal::database()->driver() !== 'mongodb') {
+      // The way that data is stored in entities makes that we cannot do this
+      // work.
       $this->assertIdenticalResultset($view, $expected, [$column => $column]);
     }
   }
