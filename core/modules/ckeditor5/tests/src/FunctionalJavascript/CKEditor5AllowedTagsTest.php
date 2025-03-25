@@ -433,6 +433,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $page->fillField('title[0][value]', 'My test content');
     $page->fillField('body[0][value]', '<foo bar="baz">⬅️✌️➡️</foo><p><a style="color:#ff0000;" foo="bar" hreflang="en" href="https://example.com"><abbr title="National Aeronautics and Space Administration">NASA</abbr> is an acronym.</a></p>');
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     // Configure Full HTML text format to use CKEditor 5.
     $this->drupalGet('admin/config/content/formats/manage/full_html');
@@ -454,10 +455,12 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $page->selectFieldOption('body[0][format]', 'full_html');
     $this->assertNotEmpty($assert_session->waitForText('Change text format?'));
     $page->pressButton('Continue');
+    $assert_session->waitForDocumentReady();
 
     // Ensure the editor is loaded and ensure that arbitrary markup is retained.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     // But note that the `style` attribute was stripped by
     // \Drupal\editor\EditorXssFilter\Standard.
@@ -469,9 +472,11 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $this->triggerKeyUp('.ckeditor5-toolbar-item-link', 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save configuration');
+    $assert_session->waitForDocumentReady();
 
     $this->drupalGet('node/1/edit');
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     $assert_session->responseContains('<p><a foo="bar" hreflang="en" href="https://example.com"><abbr title="National Aeronautics and Space Administration">NASA</abbr> is an acronym.</a></p>');
 
