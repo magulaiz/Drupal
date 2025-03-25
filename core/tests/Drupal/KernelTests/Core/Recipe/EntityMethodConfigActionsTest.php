@@ -4,21 +4,27 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Recipe;
 
+use Drupal\block\Entity\Block;
+use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 
 /**
  * @group Recipe
  */
 class EntityMethodConfigActionsTest extends KernelTestBase {
 
+  use BlockCreationTrait;
+
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['config_test', 'entity_test', 'system'];
+  protected static $modules = ['block', 'config_test', 'entity_test', 'system'];
 
   /**
    * The configuration action manager.
@@ -170,6 +176,51 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
     // by the alias.
     $plugin_id = str_replace('hide', 'remove', $action_name);
     $this->assertFalse($this->configActionManager->hasDefinition($plugin_id));
+  }
+
+  /**
+   * Test setting a nested property on a config entity.
+   */
+  public function testSetNestedProperty(): void {
+    $this->container->get(ThemeInstallerInterface::class)
+      ->install(['claro']);
+    $block = $this->placeBlock('local_tasks_block', ['theme' => 'claro']);
+
+    $this->configActionManager->applyAction(
+      'setProperties',
+      $block->getConfigDependencyName(),
+      ['settings.label' => 'Magic!'],
+    );
+    $settings = Block::load($block->id())->get('settings');
+    $this->assertSame('Magic!', $settings['label']);
+
+    // If the property is not nested, it should still work.
+    $settings['label'] = 'Mundane';
+    $this->configActionManager->applyAction(
+      'setProperties',
+      $block->getConfigDependencyName(),
+      ['settings' => $settings],
+    );
+    $settings = Block::load($block->id())->get('settings');
+    $this->assertSame('Mundane', $settings['label']);
+
+    // We can use this to set a scalar property normally.
+    $this->configActionManager->applyAction(
+      'setProperties',
+      $block->getConfigDependencyName(),
+      ['region' => 'highlighted'],
+    );
+    $this->assertSame('highlighted', Block::load($block->id())->getRegion());
+
+    // We should get an exception if we try to set a nested value on a property
+    // that isn't array.
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage('This config action can only set nested values on arrays.');
+    $this->configActionManager->applyAction(
+      'setProperties',
+      $block->getConfigDependencyName(),
+      ['theme.name' => 'stark'],
+    );
   }
 
 }

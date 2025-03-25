@@ -37,22 +37,23 @@ final class SetProperties implements ConfigActionPluginInterface, ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function apply(string $configName, mixed $value): void {
+  public function apply(string $configName, mixed $values): void {
     $entity = $this->configManager->loadConfigEntityByName($configName);
     assert($entity instanceof ConfigEntityInterface);
 
-    assert(is_array($value));
-    assert(!array_is_list($value));
+    assert(is_array($values));
+    assert(!array_is_list($values));
 
     foreach ($values as $property_name => $value) {
       $parts = explode('.', $property_name);
 
       $property_value = $entity->get($parts[0]);
       if (count($parts) > 1) {
-        if (!is_array($property_value)) {
+        if (isset($property_value) && !is_array($property_value)) {
           throw new ConfigActionException('This config action can only set nested values on arrays.');
         }
-        NestedArray::setValue($property_value, array_slice($parts, 1), $value['value']);
+        $property_value ??= [];
+        NestedArray::setValue($property_value, array_slice($parts, 1), $value);
       }
       else {
         $property_value = $value;
