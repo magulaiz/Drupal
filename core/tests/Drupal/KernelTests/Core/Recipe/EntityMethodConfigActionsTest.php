@@ -223,4 +223,22 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
     );
   }
 
+  /**
+   * Tests that the simpleConfigUpdate action cannot be used on entities.
+   *
+   * @group legacy
+   */
+  public function testSimpleConfigUpdateFailsOnEntities(): void {
+    $view_display = $this->container->get(EntityDisplayRepositoryInterface::class)
+      ->getViewDisplay('entity_test_with_bundle', 'test');
+    $view_display->save();
+
+    $this->expectDeprecation('Using the simpleConfigUpdate config action on config entities is deprecated in drupal:11.2.0 and removed in drupal:12.0.0. Use the setNested action instead. See https://www.drupal.org/node/3439713');
+    $this->configActionManager->applyAction(
+      'simpleConfigUpdate',
+      $view_display->getConfigDependencyName(),
+      ['hidden.uid' => TRUE],
+    );
+  }
+
 }
