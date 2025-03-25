@@ -28,14 +28,14 @@ props:
       name: Attributes
 variants:
   default:
-    label: Default
+    title: Default
     description: My default variant
   green:
-    label: Green
+    title: Green
     description: My green variant
   blue:
-    label: Blue
+    title: Blue
     description: My blue variant
   red:
-    label: Red
+    title: Red
     description: My red variant

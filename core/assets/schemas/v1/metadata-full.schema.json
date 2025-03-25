@@ -32,7 +32,7 @@
         "^[a-zA-Z0-9_-]$": {
           "type": "object",
           "properties": {
-            "label": {
+            "title": {
               "type": "string",
               "title": "Title"
             },
