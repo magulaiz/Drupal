@@ -113,8 +113,8 @@ class SiteConfigureForm extends ConfigFormBase {
     // work during installation.
     $form['#attached']['drupalSettings']['copyFieldValue']['edit-site-mail'] = ['edit-account-mail'];
 
-    // @deprecated The #type 'fieldgroup' is deprecated and will be removed in
-    // further Drupal releases.
+    // @deprecated The #type 'fieldgroup' is deprecated in drupal:11.2.0 and is
+    // removed from drupal:12.0.0.
     // @todo Use #type 'fieldset' and add fieldgroup as class attribute instead.
     $form['site_information'] = [
       '#type' => 'fieldgroup',
@@ -148,8 +148,8 @@ class SiteConfigureForm extends ConfigFormBase {
       $account_label = $this->t('Site maintenance account');
     }
 
-    // @deprecated The #type 'fieldgroup' is deprecated and will be removed in
-    // further Drupal releases.
+    // @deprecated The #type 'fieldgroup' is deprecated in drupal:11.2.0 and is
+    // removed from drupal:12.0.0.
     // @todo Use #type 'fieldset' and add fieldgroup as class attribute instead.
     $form['admin_account'] = [
       '#type' => 'fieldgroup',
@@ -175,8 +175,8 @@ class SiteConfigureForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
-    // @deprecated The #type 'fieldgroup' is deprecated and will be removed in
-    // further Drupal releases.
+    // @deprecated The #type 'fieldgroup' is deprecated in drupal:11.2.0 and is
+    // removed from drupal:12.0.0.
     // @todo Use #type 'fieldset' and add fieldgroup as class attribute instead.
     $form['regional_settings'] = [
       '#type' => 'fieldgroup',
@@ -197,8 +197,8 @@ class SiteConfigureForm extends ConfigFormBase {
       '#access' => empty($install_state['config_install_path']),
     ];
 
-    // @deprecated The #type 'fieldgroup' is deprecated and will be removed in
-    // further Drupal releases.
+    // @deprecated The #type 'fieldgroup' is deprecated in drupal:11.2.0 and is
+    // removed from drupal:12.0.0.
     // @todo Use #type 'fieldset' and add fieldgroup as class attribute instead.
     $form['update_notifications'] = [
       '#type' => 'fieldgroup',
