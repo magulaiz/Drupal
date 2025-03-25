@@ -85,7 +85,7 @@
       // Remove the question mark and Drupal path component if any.
       queryString = queryString
         .slice(1)
-        .replace(/q=[^&]+&?|&?render=[^&]+/, '');
+        .replace(/q=[^&]+&?|page=[^&]+&?|&?render=[^&]+/, '');
 
       // Remove current exposed filters.
       const params = decodeURI(queryString)
@@ -105,7 +105,6 @@
           );
         });
       queryString = encodeURI(params.join('&'));
-
       // If there is a '?' in ajaxPath, clean URL are on and & should be
       // used to add parameters.
       if (queryString !== '') {
