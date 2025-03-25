@@ -537,6 +537,7 @@ JS;
     $page->fillField('title[0][value]', 'My test content');
     $page->fillField('body[0][value]', '<p>This is a <em>test!</em></p>');
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     $this->addNewTextFormat();
 
@@ -548,6 +549,7 @@ JS;
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     $page->pressButton('Save');
 
+    $assert_session->waitForDocumentReady();
     $assert_session->responseContains('<p>This is a <em>test!</em></p>');
   }
 
