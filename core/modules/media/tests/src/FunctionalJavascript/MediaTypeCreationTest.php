@@ -52,6 +52,7 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
     );
 
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     // Check that source can not be changed anymore.
     $this->drupalGet("admin/structure/media/manage/{$mediaTypeMachineName}");
