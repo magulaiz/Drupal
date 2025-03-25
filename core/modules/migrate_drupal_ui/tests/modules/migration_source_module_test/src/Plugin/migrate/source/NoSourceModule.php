@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migration_source_module_test\Plugin\migrate\source;
 
 use Drupal\migrate\Attribute\MigrateSource;
