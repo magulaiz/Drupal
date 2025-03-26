@@ -224,6 +224,15 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 }
 
 /**
+ * Batch operation callback to clear all site caches.
+ *
+ * @return void
+ */
+function _update_cache_clear(): void {
+  \Drupal::service('cache_clearer')->clearCache();
+}
+
+/**
  * Executes a single hook_post_update_NAME().
  *
  * @param string $function
