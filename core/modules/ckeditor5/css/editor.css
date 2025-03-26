@@ -30,8 +30,6 @@
   border: 1px solid var(--ck-color-button-on-color);
 }
 
-.ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline.ck-focused,
-.ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline.ck-blurred,
-.ck-source-editing-area {
+.ck-focused, .ck-blurred, .ck-source-editing-area {
   word-break: break-word !important;
 }
