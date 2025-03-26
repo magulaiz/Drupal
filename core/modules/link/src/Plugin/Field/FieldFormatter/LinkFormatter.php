@@ -80,7 +80,7 @@ class LinkFormatter extends FormatterBase {
    */
   public static function defaultSettings() {
     return [
-      'trim_length' => '80',
+      'trim_length' => '',
       'url_only' => '',
       'url_plain' => '',
       'rel' => '',
