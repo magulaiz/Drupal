@@ -76,6 +76,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $page->selectFieldOption('fields[name][region]', 'content');
     $assert_session->waitForElementVisible('css', '#edit-fields-name-settings-edit');
     $page->pressButton('Save');
+    $this->assertSession()->waitForDocumentReady();
     $this->drupalGet('media/' . $media->id());
     // Verify the name is present, and its text matches what is expected. Now
     // there should be markup in the h1.
@@ -91,6 +92,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $this->assertNotEmpty($result);
     $page->fillField('field_media_image[0][alt]', 'Image Alt Text 1');
     $page->pressButton('Save');
+    $this->assertSession()->waitForDocumentReady();
     $image_media_id = $this->container
       ->get('entity_type.manager')
       ->getStorage('media')
@@ -129,6 +131,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
+    $this->assertSession()->waitForDocumentReady();
 
     // Go to the media entity view.
     $this->drupalGet($this->assertLinkToCreatedMedia());

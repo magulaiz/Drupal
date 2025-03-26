@@ -156,7 +156,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
 
     $page->pressButton('Save configuration');
 
-    $assert_session->pageTextContains('The text format unicorn has been updated');
+    $this->assertTrue($assert_session->waitForText('The text format unicorn has been updated'));
   }
 
   /**
@@ -267,7 +267,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $allowed_with_blockquote);
 
     $page->pressButton('Save configuration');
-    $assert_session->pageTextContains('The text format ckeditor5 has been updated.');
+    $this->assertTrue($assert_session->waitForText('The text format ckeditor5 has been updated.'));
 
     // Flush caches so the updated config can be checked.
     drupal_flush_all_caches();
@@ -312,8 +312,8 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // The same validation error appears when saving the form regardless of the
     // immediate AJAX validation error above.
     $page->pressButton('Save configuration');
-    $assert_session->pageTextContains('The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Bold (<strong>)');
-    $this->assertTrue($page->find('css', '[href^="#edit-editor-settings-plugins-ckeditor5-sourceediting"]')->getParent()->hasClass('is-selected'));
+    $this->assertTrue($assert_session->waitForText('The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Bold (<strong>)'));
+    $this->assertTrue($assert_session->waitForElement('css', '[href^="#edit-editor-settings-plugins-ckeditor5-sourceediting"]')->getParent()->hasClass('is-selected'));
     $this->assertSame('true', $page->findField('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]')->getAttribute('aria-invalid'));
     $assert_session->pageTextNotContains('The text format ckeditor5 has been updated');
 
@@ -326,7 +326,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $source_edit_tags_field->setValue('<aside>');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save configuration');
-    $assert_session->pageTextContains('The text format ckeditor5 has been updated');
+    $this->assertTrue($assert_session->waitForText('The text format ckeditor5 has been updated'));
     $assert_session->pageTextNotContains('The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Bold (<strong>)');
 
     // Ensure that CKEditor can be initialized with Source Editing.
@@ -433,6 +433,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $page->fillField('title[0][value]', 'My test content');
     $page->fillField('body[0][value]', '<foo bar="baz">⬅️✌️➡️</foo><p><a style="color:#ff0000;" foo="bar" hreflang="en" href="https://example.com"><abbr title="National Aeronautics and Space Administration">NASA</abbr> is an acronym.</a></p>');
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     // Configure Full HTML text format to use CKEditor 5.
     $this->drupalGet('admin/config/content/formats/manage/full_html');
@@ -454,10 +455,12 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $page->selectFieldOption('body[0][format]', 'full_html');
     $this->assertNotEmpty($assert_session->waitForText('Change text format?'));
     $page->pressButton('Continue');
+    $assert_session->waitForDocumentReady();
 
     // Ensure the editor is loaded and ensure that arbitrary markup is retained.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     // But note that the `style` attribute was stripped by
     // \Drupal\editor\EditorXssFilter\Standard.
@@ -469,9 +472,11 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $this->triggerKeyUp('.ckeditor5-toolbar-item-link', 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save configuration');
+    $assert_session->waitForDocumentReady();
 
     $this->drupalGet('node/1/edit');
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     $assert_session->responseContains('<p><a foo="bar" hreflang="en" href="https://example.com"><abbr title="National Aeronautics and Space Administration">NASA</abbr> is an acronym.</a></p>');
 

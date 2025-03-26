@@ -160,6 +160,7 @@ class CKEditor5MarkupTest extends CKEditor5TestBase {
     $page->fillField('title[0][value]', 'My test content');
     $page->fillField('body[0][value]', '<!-- Hamsters, alpacas, llamas, and kittens are cute! --><p>This is a <em>test!</em></p>');
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     FilterFormat::create([
       'format' => 'ckeditor5',
@@ -187,9 +188,11 @@ class CKEditor5MarkupTest extends CKEditor5TestBase {
     $page->selectFieldOption('body[0][format]', 'ckeditor5');
     $this->assertNotEmpty($assert_session->waitForText('Change text format?'));
     $page->pressButton('Continue');
+    $assert_session->waitForDocumentReady();
 
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     $assert_session->responseContains('<!-- Hamsters, alpacas, llamas, and kittens are cute! --><p>This is a <em>test!</em></p>');
   }
@@ -339,6 +342,7 @@ class CKEditor5MarkupTest extends CKEditor5TestBase {
       $editor->setValue($markup);
       $page->pressButton('Save');
 
+      $this->assertSession()->waitForDocumentReady();
       $assert_session->responseContains($expected_content);
     }
   }

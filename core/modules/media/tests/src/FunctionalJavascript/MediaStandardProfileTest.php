@@ -127,6 +127,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
     $audio_media_id = $this->container
       ->get('entity_type.manager')
       ->getStorage('media')
@@ -175,6 +176,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     $this->drupalGet('/node/' . $node->id());
 
@@ -215,6 +217,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $this->assertNotEmpty($result);
     $page->fillField("{$source_field_id}[0][alt]", 'Image Alt Text 1');
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
     $image_media_id = $this->container
       ->get('entity_type.manager')
       ->getStorage('media')
@@ -269,6 +272,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $this->assertNotEmpty($result);
     $page->fillField("{$source_field_id}[0][alt]", 'Image Alt Text 2');
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     $this->drupalGet('/node/' . $node->id());
 
@@ -318,6 +322,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
     $file_media_id = $this->container
       ->get('entity_type.manager')
       ->getStorage('media')
@@ -363,6 +368,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     $this->drupalGet('/node/' . $node->id());
 
@@ -406,6 +412,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     // Create a media item.
     $page->fillField("{$source_field_id}[0][value]", $video_url);
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
     $remote_video_media_id = $this->container
       ->get('entity_type.manager')
       ->getStorage('media')
@@ -452,6 +459,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $this->drupalGet('media/' . $remote_video_media_id . '/edit');
     $page->fillField("{$source_field_id}[0][value]", $video_url_updated);
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     $this->drupalGet('/node/' . $node->id());
 
@@ -503,6 +511,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $result = $assert_session->waitForButton('Remove');
     $this->assertNotEmpty($result);
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
     $video_media_id = $this->container
       ->get('entity_type.manager')
       ->getStorage('media')

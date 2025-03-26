@@ -213,6 +213,7 @@ JS;
     // Confirm there are no longer any warnings.
     $assert_session->waitForElementRemoved('css', '[data-drupal-messages] [role="alert"]');
     $page->pressButton('Save configuration');
+    $this->assertSession()->waitForDocumentReady();
     $assert_session->responseContains('Added text format <em class="placeholder">ckeditor5</em>.');
   }
 
@@ -232,6 +233,7 @@ JS;
       $assert_session->assertWaitOnAjaxRequest();
     }
     $page->pressButton('Save configuration');
+    $this->assertSession()->waitForDocumentReady();
     $assert_session->responseContains('The text format <em class="placeholder">ckeditor5</em> has been updated.');
   }
 
@@ -535,6 +537,7 @@ JS;
     $page->fillField('title[0][value]', 'My test content');
     $page->fillField('body[0][value]', '<p>This is a <em>test!</em></p>');
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     $this->addNewTextFormat();
 
@@ -546,6 +549,7 @@ JS;
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     $page->pressButton('Save');
 
+    $assert_session->waitForDocumentReady();
     $assert_session->responseContains('<p>This is a <em>test!</em></p>');
   }
 
@@ -713,7 +717,7 @@ JS;
     $editor = $page->find('css', '.ck-content');
     $editor->setValue('Very important information');
     $page->pressButton('Save');
-    $this->assertSession()->responseContains('Very important information');
+    $this->assertTrue($this->assertSession()->waitForText('Very important information'));
 
     // Test that changes only in source are saved.
     $this->drupalGet('node/1/edit');
@@ -723,7 +727,7 @@ JS;
     $editor = $page->find('css', '.ck-source-editing-area textarea');
     $editor->setValue('Text hidden in the source');
     $page->pressButton('Save');
-    $this->assertSession()->responseContains('Text hidden in the source');
+    $this->assertTrue($this->assertSession()->waitForText('Text hidden in the source'));
   }
 
 }

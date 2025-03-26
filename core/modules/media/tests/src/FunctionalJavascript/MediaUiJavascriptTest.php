@@ -193,6 +193,7 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal'));
     $assert_session->addressEquals('admin/structure/media/manage/' . $this->testMediaType->id());
     $this->click('.ui-dialog button:contains("Delete")');
+    $assert_session->waitForDocumentReady();
     $assert_session->addressEquals('admin/structure/media');
     $assert_session->pageTextContains('The media type ' . $new_name . ' has been deleted.');
 

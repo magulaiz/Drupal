@@ -174,7 +174,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Submit the form and assert that
     // hook_field_formatter_settings_summary_alter() is called.
     $button_save->click();
-    $assert_session->responseContains('field_test_field_formatter_settings_summary_alter');
+    $this->assertTrue($assert_session->waitForText('field_test_field_formatter_settings_summary_alter'));
 
     // Open the settings form for the test field.
     $field_test_settings->click();
@@ -376,6 +376,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     $button_save->click();
+    $assert_session->waitForDocumentReady();
     $this->drupalGet($manage_display);
 
     // Assert the third party settings.

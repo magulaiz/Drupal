@@ -119,6 +119,7 @@ class OptionsFieldUIAllowedValuesTest extends WebDriverTestBase {
       switch ($add_row_method) {
         case 'Press button':
           $page->pressButton('Add another item');
+          $assert->waitForDocumentReady();
           break;
 
         case 'Enter button':
@@ -171,6 +172,7 @@ class OptionsFieldUIAllowedValuesTest extends WebDriverTestBase {
       $this->assertAllowValuesRowCount($expected_rows);
     }
     $page->pressButton('Save');
+    $this->assertSession()->waitForDocumentReady();
 
     $option_labels = array_values($options);
     $this->assertCount(3, $option_labels);
@@ -189,6 +191,7 @@ class OptionsFieldUIAllowedValuesTest extends WebDriverTestBase {
     $drag_handle->dragTo($target);
     $this->assertOrder([$option_labels[1], $option_labels[2], $option_labels[0], ''], $is_string_option);
     $page->pressButton('Save');
+    $this->assertSession()->waitForDocumentReady();
 
     $this->drupalGet($this->nodeFormPath);
     $this->assertNodeFormOrder(['- None -', $option_labels[1], $option_labels[2], $option_labels[0]]);
@@ -203,6 +206,7 @@ class OptionsFieldUIAllowedValuesTest extends WebDriverTestBase {
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertOrder([$option_labels[1], $option_labels[0], ''], $is_string_option);
     $page->pressButton('Save');
+    $this->assertSession()->waitForDocumentReady();
 
     $this->drupalGet($this->nodeFormPath);
     $this->assertNodeFormOrder(['- None -', $option_labels[1], $option_labels[0]]);

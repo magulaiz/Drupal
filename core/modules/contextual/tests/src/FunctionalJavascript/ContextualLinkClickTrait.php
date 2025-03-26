@@ -32,6 +32,7 @@ trait ContextualLinkClickTrait {
     $element = $this->getSession()->getPage()->find('css', $selector);
     $element->find('css', '.contextual button')->press();
     $element->findLink($link_locator)->click();
+    $this->assertSession()->waitForDocumentReady();
 
     if ($force_visible) {
       $this->toggleContextualTriggerVisibility($selector);

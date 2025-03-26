@@ -65,6 +65,7 @@ class DevelopmentSettingsFormTest extends WebDriverTestBase {
       $this->getSession()->getPage()->uncheckField('Disable Twig cache');
     }
     $this->getSession()->getPage()->pressButton('Save settings');
+    $this->assertSession()->waitForDocumentReady();
 
     $this->drupalGet(Url::fromRoute('system.status'));
     if (!$twig_development_mode) {

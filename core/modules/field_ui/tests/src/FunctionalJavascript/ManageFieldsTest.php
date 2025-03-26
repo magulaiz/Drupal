@@ -309,6 +309,7 @@ class ManageFieldsTest extends WebDriverTestBase {
       $group_field_card = $page->find('css', "[name='new_storage_type'][value='$field_type_category']")->getParent();
       $group_field_card->click();
       $page->pressButton('Continue');
+      $this->assertSession()->waitForDocumentReady();
       $field_types = $page->findAll('css', '.subfield-option .option');
       $field_type_labels = [];
       foreach ($field_types as $field_type) {
@@ -328,6 +329,7 @@ class ManageFieldsTest extends WebDriverTestBase {
       $this->assertSame($expected_field_types, $field_type_labels);
       // Return to the first step of the form.
       $page->pressButton('Back');
+      $this->assertSession()->waitForDocumentReady();
     }
   }
 
@@ -361,13 +363,15 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
 
     $page->findButton('Continue')->click();
-    $this->assertSession()->pageTextContains('You need to select a field type.');
+    $this->assertTrue($this->assertSession()->waitForText('You need to select a field type.'));
 
     $this->assertNotEmpty($boolean_field = $page->find('xpath', '//*[text() = "Boolean (overridden by alter)"]')->getParent());
     $boolean_field->click();
+    $this->assertSession()->waitForDocumentReady();
     $page->findButton('Continue')->click();
+    $this->assertSession()->waitForDocumentReady();
     $page->findButton('Continue')->click();
-    $this->assertSession()->pageTextContains('Add new field: you need to provide a label.');
+    $this->assertTrue($this->assertSession()->waitForText('Add new field: you need to provide a label.'));
   }
 
 }

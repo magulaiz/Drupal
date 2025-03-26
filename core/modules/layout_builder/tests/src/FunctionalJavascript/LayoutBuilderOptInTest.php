@@ -73,6 +73,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
     // Check and submit allow_custom.
     $page->checkField('layout[allow_custom]');
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
     $assert_session->checkboxChecked('layout[enabled]');
     $assert_session->checkboxChecked('layout[allow_custom]');
 

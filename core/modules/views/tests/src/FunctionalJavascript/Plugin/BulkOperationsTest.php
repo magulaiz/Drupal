@@ -76,6 +76,7 @@ class BulkOperationsTest extends WebDriverTestBase {
     $this->assertSession()->pageTextContains($node_1->getTitle());
     $this->assertSession()->pageTextNotContains($node_2->getTitle());
     $this->getSession()->getPage()->pressButton('Delete');
+    $this->assertSession()->waitForDocumentReady();
 
     // Confirm that the first node was deleted.
     $this->assertSession()->pageTextNotContains($node_1->getTitle());

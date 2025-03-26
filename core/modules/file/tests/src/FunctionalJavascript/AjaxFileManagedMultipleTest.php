@@ -49,7 +49,7 @@ class AjaxFileManagedMultipleTest extends WebDriverTestBase {
     // Save entire form.
     $page->pressButton('Save');
 
-    $this->assertSession()->pageTextContains('The file ids are 1,2.');
+    $this->assertTrue($this->assertSession()->waitForText('The file ids are 1,2.'));
     $this->assertCount(2, $file_storage->loadByProperties(['filename' => $paths]));
   }
 

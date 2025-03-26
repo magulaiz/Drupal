@@ -52,6 +52,7 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
     );
 
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     // Check that source can not be changed anymore.
     $this->drupalGet("admin/structure/media/manage/{$mediaTypeMachineName}");
@@ -163,6 +164,7 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
     $page->fillField('label', 'Pastafazoul');
     $session->wait(5000, "jQuery('.machine-name-value').text() === 'pastafazoul'");
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     $label = 'Type reusing Default Field';
     $mediaTypeMachineName = str_replace(' ', '_', strtolower($label));
@@ -187,6 +189,7 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
     $session->wait(5000, "jQuery('.machine-name-value').text() === '{$mediaTypeMachineName}'");
 
     $page->pressButton('Save');
+    $assert_session->waitForDocumentReady();
 
     // Check that no new fields were created.
     $this->drupalGet("admin/structure/media/manage/{$mediaTypeMachineName}/fields");

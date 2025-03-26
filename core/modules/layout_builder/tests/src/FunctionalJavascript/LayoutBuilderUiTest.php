@@ -99,19 +99,23 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     $this->assertModifiedLayout(static::FIELD_UI_PREFIX . '/display/default/layout');
     // Discard then cancel.
     $page->pressButton('Discard changes');
+    $assert_session->waitForDocumentReady();
     $page->clickLink('Cancel');
     $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
     $assert_session->pageTextContainsOnce('You have unsaved changes.');
 
     // Discard then confirm.
     $page->pressButton('Discard changes');
+    $this->assertSession()->waitForDocumentReady();
     $page->pressButton('Confirm');
+    $this->assertSession()->waitForDocumentReady();
     $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default');
     $assert_session->pageTextNotContains('You have unsaved changes.');
 
     // Make and then save changes.
     $this->assertModifiedLayout(static::FIELD_UI_PREFIX . '/display/default/layout');
     $page->pressButton('Save layout');
+    $this->assertSession()->waitForDocumentReady();
     $assert_session->pageTextNotContains('You have unsaved changes.');
   }
 
