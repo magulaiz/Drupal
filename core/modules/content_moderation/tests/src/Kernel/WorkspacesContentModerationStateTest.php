@@ -250,7 +250,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     // Current published revisions of second entity has the same revision as
     // earlier unpublished revision of first entity.
     $this->assertEquals($entity_without_revision->getRevisionId(), $earlier_revision_id);
-    // $this->workspaces['stage']->publish();
+    $this->workspaces['stage']->publish();
   }
 
   /**
