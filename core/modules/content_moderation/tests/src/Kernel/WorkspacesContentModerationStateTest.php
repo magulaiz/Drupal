@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\node\Entity\Node;
@@ -88,11 +87,6 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
    * Tests the integration between Content Moderation and Workspaces.
    */
   public function testContentModerationIntegrationWithWorkspaces(): void {
-    if (Database::getConnection()->driver() == 'mongodb') {
-      // @todo Fri this test for MongoDB.
-      $this->markTestSkipped();
-    }
-
     $editorial = $this->createEditorialWorkflow();
     $access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('workspace');
 

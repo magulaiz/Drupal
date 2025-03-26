@@ -3,10 +3,13 @@
 namespace Drupal\mongodb\EntityQuery;
 
 use Daffie\SqlLikeToRegularExpression;
+use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Entity\Query\Sql\Query as CoreQuery;
 use Drupal\Core\Entity\Sql\TableMappingInterface;
 use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
+use Drupal\mongodb\Driver\Database\mongodb\TableInformation;
+use MongoDB\BSON\Regex;
 use MongoDB\BSON\UTCDateTime;
 
 /**
@@ -58,6 +61,11 @@ class Query extends CoreQuery {
    * @var string
    */
   protected $mongodbRevisionField;
+
+  /**
+   * @var Drupal\mongodb\Driver\Database\mongodb\TableInformation
+   */
+  protected ?TableInformation $tableInformation;
 
   /**
    * {@inheritdoc}
@@ -521,7 +529,7 @@ class Query extends CoreQuery {
   /**
    * Helper method to check if the revision matches the conditions.
    *
-   * @param Drupal\Core\Database\Query\ConditionInterface $condition_obj
+   * @param \Drupal\Core\Database\Query\ConditionInterface $condition_obj
    *   The conditions to test with.
    * @param string $embedded_table
    *   The embedded table name.
@@ -543,11 +551,31 @@ class Query extends CoreQuery {
       // Get the revision value to test for.
       $revision_value = $revision;
       $has_revision_value = TRUE;
-      if (is_string($condition['field'])) {
+      if ($condition['field'] instanceof ConditionInterface) {
+        if ($this->testRevisionForCondition($condition['field'], $embedded_table, $revision)) {
+          $results[] = TRUE;
+        }
+        else {
+          $results[] = FALSE;
+
+        }
+      }
+      elseif (is_string($condition['field'])) {
+        $table_field_data = [];
         $field_parts = explode('.', $condition['field']);
+        if (count($field_parts) == 1) {
+          $table_field_data = $this->getTableInformation()->getTableField($embedded_table, $condition['field']);
+        }
         if ($embedded_table == $field_parts[0]) {
           array_shift($field_parts);
+          if (count($field_parts) == 1) {
+            $table_field_data = $this->getTableInformation()->getTableField($embedded_table, $field_parts[0]);
+          }
+          elseif (count($field_parts) == 2) {
+            $table_field_data = $this->getTableInformation()->getTableField($field_parts[0], $field_parts[1]);
+          }
         }
+
         if (isset($field_parts[0]) && isset($revision_value[$field_parts[0]])) {
           $revision_value = $revision_value[$field_parts[0]];
           array_shift($field_parts);
@@ -570,26 +598,54 @@ class Query extends CoreQuery {
             $has_revision_value = FALSE;
           }
         }
-      }
 
-      if (!$has_revision_value) {
-        $results[] = FALSE;
-      }
-      else {
-        if ($condition['value'] instanceof UTCDateTime) {
-          $condition['value'] = (int) $condition['value']->__toString();
-          $condition['value'] = $condition['value'] / 1000;
-          $condition['value'] = (string) $condition['value'];
+        // Change the revision values to the correct type.
+        if ($table_field_data && isset($table_field_data['type'])) {
+          if (is_array($revision_value)) {
+            foreach ($revision_value as &$rev_value) {
+              switch ($table_field_data['type']) {
+                case 'int':
+                case 'serial':
+                  $rev_value = (int) $rev_value;
+                  break;
+
+                case 'varchar':
+                case 'varchar_ascii':
+                  $rev_value = (string) $rev_value;
+                  break;
+              }
+            }
+          }
+          else {
+            switch ($table_field_data['type']) {
+              case 'int':
+              case 'serial':
+                $revision_value = (int) $revision_value;
+                break;
+
+              case 'varchar':
+              case 'varchar_ascii':
+                $revision_value = (string) $revision_value;
+                break;
+            }
+          }
         }
 
-        if (!is_array($condition['value'])) {
-          $condition['value'] = [$condition['value']];
-        }
-
-        if (in_array($condition['operator'], ['=', '<', '>', '<=', '>=', '<>'], TRUE) && (reset($condition['value']) === NULL)) {
+        if (!$has_revision_value) {
           $results[] = FALSE;
         }
         else {
+          if ($condition['value'] instanceof UTCDateTime) {
+            $condition['value'] = (int) $condition['value']->__toString();
+            $condition['value'] = $condition['value'] / 1000;
+            $condition['value'] = (string) $condition['value'];
+          }
+
+          if (!is_array($condition['value'])) {
+            $condition['value'] = [$condition['value']];
+          }
+
+          // Do the condition operation.
           switch ($condition['operator']) {
             case '=':
               if ($revision_value == reset($condition['value'])) {
@@ -662,6 +718,35 @@ class Query extends CoreQuery {
               // get the wrong result when you compare string numbers with
               // integers.
               if (!in_array($revision_value, $condition['value'])) {
+                $results[] = TRUE;
+              }
+              else {
+                $results[] = FALSE;
+              }
+              break;
+
+            case 'IN BINARY':
+            case 'IN NOT BINARY':
+              $patterns = [];
+              foreach ($condition['value'] as $pattern) {
+                $patterns[] = SqlLikeToRegularExpression::convert($pattern);
+              }
+              $regexes = [];
+              foreach ($patterns as $pattern) {
+                if ($condition['operator'] == 'IN BINARY') {
+                  $regexes[] = new Regex($pattern, '');
+                }
+                else {
+                  $regexes[] = new Regex($pattern, 'i');
+                }
+              }
+              $temp_result = FALSE;
+              foreach ($regexes as $regex) {
+                if (preg_match($regex, $revision_value)) {
+                  $temp_result = TRUE;
+                }
+              }
+              if ($temp_result) {
                 $results[] = TRUE;
               }
               else {
@@ -745,11 +830,14 @@ class Query extends CoreQuery {
     }
 
     if ($conjunction == 'AND' && in_array(FALSE, $results, TRUE) === FALSE) {
-      return $revision[$revision_field] ?? NULL;
+      $return = $revision[$revision_field] ?? NULL;
+      return $return;
     }
     if ($conjunction == 'OR' && !(in_array(TRUE, $results, TRUE) === FALSE)) {
-      return $revision[$revision_field] ?? NULL;
+      $return = $revision[$revision_field] ?? NULL;
+      return $return;
     }
+    return NULL;
   }
 
   /**
@@ -859,6 +947,16 @@ class Query extends CoreQuery {
       $entity_ids[substr($associative_key, strlen($field_name_entity_key) + 2)] = (string) $entity_id;
     }
     return $entity_ids;
+  }
+
+  /**
+   * Get the table information service.
+   */
+  protected function getTableInformation(): TableInformation {
+    if (!isset($this->tableInformation)) {
+      $this->tableInformation = $this->mongodbSelect->getConnection()->tableInformation();
+    }
+    return $this->tableInformation;
   }
 
   /**
