@@ -421,9 +421,6 @@ class AttributeTest extends UnitTestCase {
     $this->assertEquals($expected, (new Attribute($attributes))->__toString());
   }
 
-  /**
-   *
-   */
   public static function providerTestAttributeValues() {
     $data = [];
 
