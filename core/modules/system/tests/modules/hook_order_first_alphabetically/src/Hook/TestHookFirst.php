@@ -24,12 +24,9 @@ class TestHookFirst {
    * This pair tests OrderFirst.
    */
   #[Hook('custom_hook_test_hook_first')]
-  public static function hookFirst(): void {
-    // This should be run after so HookFirst should not be set.
-    if (!isset($GLOBALS['HookFirst'])) {
-      $GLOBALS['HookOutOfOrderTestingHookFirst'] = 'HookOutOfOrderTestingHookFirst';
-    }
-    $GLOBALS['HookRanTestingHookFirst'] = 'HookRanTestingHookFirst';
+  public function hookFirst(): string {
+    // This should be run second, there is another hook reordering before this.
+    return __METHOD__;
   }
 
 }

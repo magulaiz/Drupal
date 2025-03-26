@@ -25,15 +25,12 @@ class TestHookReOrderHookLast {
    * This pair tests ReOrderHook.
    */
   #[Hook('custom_hook_override', order: Order::First)]
-  public static function customHookOverride(): void {
+  public function customHookOverride(): string {
     // This normally would run second.
     // We override that order here with Order::First.
     // We override, that order in hook_order_first_alphabetically with
     // ReOrderHook.
-    if (!isset($GLOBALS['HookRanTestingReOrderHookFirstAlpha'])) {
-      $GLOBALS['HookOutOfOrderTestingReOrderHook'] = 'HookOutOfOrderTestingReOrderHook';
-    }
-    $GLOBALS['HookRanTestingReOrderHookLastAlpha'] = 'HookRanTestingReOrderHookLastAlpha';
+    return __METHOD__;
   }
 
 }

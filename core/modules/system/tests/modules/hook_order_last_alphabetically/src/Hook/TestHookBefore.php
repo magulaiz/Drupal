@@ -25,8 +25,8 @@ class TestHookBefore {
    * This pair tests OrderBefore.
    */
   #[Hook('custom_hook_test_hook_before', order: new OrderBefore(['hook_order_first_alphabetically']))]
-  public static function cacheFlush(): void {
-    $GLOBALS['HookBefore'] = 'HookBefore';
+  public function hookBefore(): string {
+    return __METHOD__;
   }
 
 }

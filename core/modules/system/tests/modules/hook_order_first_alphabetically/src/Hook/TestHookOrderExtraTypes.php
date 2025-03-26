@@ -29,12 +29,9 @@ class TestHookOrderExtraTypes {
       modules: ['hook_order_last_alphabetically'],
     )
   )]
-  public static function customHookExtraTypes(): void {
-    // This should be run after so HookOrderExtraTypes should not be set.
-    if (!isset($GLOBALS['HookOrderExtraTypes'])) {
-      $GLOBALS['HookOutOfOrderTestingOrderExtraTypes'] = 'HookOutOfOrderTestingOrderExtraTypes';
-    }
-    $GLOBALS['HookRanTestingOrderExtraTypes'] = 'HookRanTestingOrderExtraTypes';
+  public function customHookExtraTypes(array &$calls): void {
+    // This should be run after.
+    $calls[] = __METHOD__;
   }
 
 }

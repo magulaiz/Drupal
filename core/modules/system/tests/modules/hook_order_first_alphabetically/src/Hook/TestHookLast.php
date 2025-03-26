@@ -25,8 +25,9 @@ class TestHookLast {
    * This pair tests OrderLast.
    */
   #[Hook('custom_hook_test_hook_last', order: Order::Last)]
-  public static function hookLast(): void {
-    $GLOBALS['HookLast'] = 'HookLast';
+  public function hookLast(): string {
+    // This should be run after.
+    return __METHOD__;
   }
 
 }

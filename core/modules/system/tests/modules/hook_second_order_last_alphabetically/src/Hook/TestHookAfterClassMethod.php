@@ -21,15 +21,12 @@ use Drupal\Core\Hook\Attribute\Hook;
 class TestHookAfterClassMethod {
 
   /**
-   * This pair tests #[HookAfter].
+   * This pair tests OrderAfter with a passed class and method.
    */
   #[Hook('custom_hook_test_hook_after_class_method')]
-  public static function hookAfterClassMethod(): void {
-    // This should be run before so HookAfter should not be set.
-    if (isset($GLOBALS['HookAfterClassMethod'])) {
-      $GLOBALS['HookOutOfOrderTestingHookAfterClassMethod'] = 'HookOutOfOrderTestingHookAfterClassMethod';
-    }
-    $GLOBALS['HookRanTestingHookAfterClassMethod'] = 'HookRanTestingHookAfterClassMethod';
+  public static function hookAfterClassMethod(): string {
+    // This should be run first since another hook overrides the natural order.
+    return __METHOD__;
   }
 
 }

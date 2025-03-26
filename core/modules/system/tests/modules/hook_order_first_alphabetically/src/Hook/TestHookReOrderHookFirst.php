@@ -35,11 +35,11 @@ class TestHookReOrderHookFirst {
       classesAndMethods: [[TestHookReOrderHookFirst::class, 'customHookOverride']],
     )
   )]
-  public static function customHookOverride(): void {
+  public function customHookOverride(): string {
     // This normally would run first.
     // We override that order in hook_order_second_alphabetically.
     // We override, that order here with ReOrderHook.
-    $GLOBALS['HookRanTestingReOrderHookFirstAlpha'] = 'HookRanTestingReOrderHookFirstAlpha';
+    return __METHOD__;
   }
 
 }

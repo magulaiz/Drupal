@@ -24,8 +24,8 @@ class TestHookOrderExtraTypes {
    * This pair tests OrderAfter with ExtraTypes.
    */
   #[Hook('custom_hook_extra_types2_alter')]
-  public static function customHookExtraTypes(): void {
-    $GLOBALS['HookOrderExtraTypes'] = 'HookOrderExtraTypes';
+  public function customHookExtraTypes(array &$calls): void {
+    $calls[] = __METHOD__;
   }
 
 }

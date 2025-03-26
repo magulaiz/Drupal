@@ -30,8 +30,8 @@ class TestHookAfterClassMethod {
       classesAndMethods: [[TestHookAfterClassMethodForAfter::class, 'hookAfterClassMethod']],
     )
   )]
-  public static function hookAfterClassMethod(): void {
-    $GLOBALS['HookAfterClassMethod'] = 'HookAfterMethod';
+  public static function hookAfterClassMethod(): string {
+    return __METHOD__;
   }
 
 }

@@ -24,12 +24,8 @@ class TestHookLast {
    * This pair tests OrderLast.
    */
   #[Hook('custom_hook_test_hook_last')]
-  public static function hookLast(): void {
-    // This should be run before so HookLast should not be set.
-    if (isset($GLOBALS['HookLast'])) {
-      $GLOBALS['HookOutOfOrderTestingHookLast'] = 'HookOutOfOrderTestingHookLast';
-    }
-    $GLOBALS['HookRanTestingHookLast'] = 'HookRanTestingHookLast';
+  public function hookLast(): string {
+    return __METHOD__;
   }
 
 }

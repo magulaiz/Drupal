@@ -24,12 +24,9 @@ class TestHookBefore {
    * This pair tests OrderBefore.
    */
   #[Hook('custom_hook_test_hook_before')]
-  public static function hookBefore(): void {
-    // This should be run after so HookBefore should not be set.
-    if (!isset($GLOBALS['HookBefore'])) {
-      $GLOBALS['HookOutOfOrderTestingHookBefore'] = 'HookOutOfOrderTestingHookBefore';
-    }
-    $GLOBALS['HookRanTestingHookBefore'] = 'HookRanTestingHookBefore';
+  public function hookBefore(): string {
+    // This should be run second, there is another hook reordering before this.
+    return __METHOD__;
   }
 
 }

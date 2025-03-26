@@ -16,21 +16,23 @@ class TestHookRemove {
    * This hook should not be run because the next hook replaces it.
    */
   #[Hook('custom_hook1')]
-  public static function hookDoNotRun(): void {
-    $GLOBALS['HookShouldNotRunTestRemove'] = 'HookShouldNotRunTestRemove';
+  public function hookDoNotRun(array $call): string {
+    // This hook should not run.
+    return __METHOD__;
   }
 
   /**
    * This hook should run and prevent custom_hook1.
    */
-  #[Hook('custom_hook2')]
+  #[Hook('custom_hook1')]
   #[RemoveHook(
     'custom_hook1',
     class: TestHookRemove::class,
     method: 'hookDoNotRun'
   )]
-  public static function hookDoRun(): void {
-    $GLOBALS['HookShouldRunTestRemove'] = 'HookShouldRunTestRemove';
+  public function hookDoRun(array $call): string {
+    // This hook should run.
+    return __METHOD__;
   }
 
 }

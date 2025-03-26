@@ -25,8 +25,8 @@ class TestHookAfter {
    * This pair tests OrderAfter.
    */
   #[Hook('custom_hook_test_hook_after', order: new OrderAfter(['hook_order_last_alphabetically']))]
-  public static function hookAfter(): void {
-    $GLOBALS['HookAfter'] = 'HookAfter';
+  public function hookAfter(): string {
+    return __METHOD__;
   }
 
 }

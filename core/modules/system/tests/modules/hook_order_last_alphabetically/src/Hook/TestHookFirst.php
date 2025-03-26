@@ -25,8 +25,8 @@ class TestHookFirst {
    * This pair tests OrderFirst.
    */
   #[Hook('custom_hook_test_hook_first', order: Order::First)]
-  public static function hookFirst(): void {
-    $GLOBALS['HookFirst'] = 'HookFirst';
+  public function hookFirst(): string {
+    return __METHOD__;
   }
 
 }
