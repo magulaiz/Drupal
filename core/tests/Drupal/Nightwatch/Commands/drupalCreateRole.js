@@ -44,6 +44,7 @@ exports.command = function drupalCreateRole(
     );
 
     // We need to resize the browser in order to grant permissions.
+    // eslint-disable-next-line no-undef
     browser.resizeWindow(1024, 768);
 
     await Promise.all(
