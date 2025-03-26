@@ -231,7 +231,7 @@ exit($status);
 /**
  * Print help text.
  */
-function simpletest_script_help() {
+function simpletest_script_help(): void {
   global $args;
 
   echo <<<EOF
@@ -484,7 +484,7 @@ function simpletest_script_parse_args() {
 /**
  * Initialize script variables and perform general setup requirements.
  */
-function simpletest_script_init() {
+function simpletest_script_init(): void {
   global $args, $php;
 
   $host = 'localhost';
@@ -644,7 +644,7 @@ function simpletest_script_init() {
  *   database file specified by --sqlite (if any) is set up. Otherwise, database
  *   connections are prepared only.
  */
-function simpletest_script_setup_database($new = FALSE) {
+function simpletest_script_setup_database($new = FALSE): void {
   global $args;
 
   // If there is an existing Drupal installation that contains a database
@@ -867,7 +867,7 @@ function simpletest_script_run_phpunit(TestRun $test_run, $class) {
 /**
  * Run a single test, bootstrapping Drupal if needed.
  */
-function simpletest_script_run_one_test(TestRun $test_run, $test_class) {
+function simpletest_script_run_one_test(TestRun $test_run, $test_class): void {
   global $args;
 
   try {
@@ -1084,7 +1084,7 @@ function simpletest_script_get_test_list() {
 /**
  * Sort tests by test type and number of public methods.
  */
-function sort_tests_by_type_and_methods(array &$tests) {
+function sort_tests_by_type_and_methods(array &$tests): void {
   uasort($tests, function ($a, $b) {
     if (get_test_type_weight($a['name']) === get_test_type_weight($b['name'])) {
       return $b['tests_count'] <=> $a['tests_count'];
@@ -1221,7 +1221,7 @@ function dump_bin_tests_sequence(int $bin, array $allTests, array $tests, array 
 /**
  * Initialize the reporter.
  */
-function simpletest_script_reporter_init() {
+function simpletest_script_reporter_init(): void {
   global $args, $test_list, $results_map, $php;
 
   $results_map = [
@@ -1262,7 +1262,7 @@ function simpletest_script_reporter_init() {
  * @param int|null $duration
  *   The time taken for the test to complete.
  */
-function simpletest_script_reporter_display_summary($class, $results, $duration = NULL) {
+function simpletest_script_reporter_display_summary($class, $results, $duration = NULL): void {
   // Output all test results vertically aligned.
   // Cut off the class name after 60 chars, and pad each group with 3 digits
   // by default (more than 999 assertions are rare).
@@ -1282,7 +1282,7 @@ function simpletest_script_reporter_display_summary($class, $results, $duration 
 /**
  * Display jUnit XML test results.
  */
-function simpletest_script_reporter_write_xml_results(TestRunResultsStorageInterface $test_run_results_storage) {
+function simpletest_script_reporter_write_xml_results(TestRunResultsStorageInterface $test_run_results_storage): void {
   global $args, $test_ids, $results_map;
 
   try {
@@ -1365,7 +1365,7 @@ function simpletest_script_reporter_write_xml_results(TestRunResultsStorageInter
 /**
  * Stop the test timer.
  */
-function simpletest_script_reporter_timer_stop() {
+function simpletest_script_reporter_timer_stop(): void {
   echo "\n";
   $end = Timer::stop('run-tests');
   echo "Test run duration: " . \Drupal::service('date.formatter')->formatInterval((int) ($end['time'] / 1000));
@@ -1375,7 +1375,7 @@ function simpletest_script_reporter_timer_stop() {
 /**
  * Display test results.
  */
-function simpletest_script_reporter_display_results(TestRunResultsStorageInterface $test_run_results_storage) {
+function simpletest_script_reporter_display_results(TestRunResultsStorageInterface $test_run_results_storage): void {
   global $args, $test_ids, $results_map;
 
   if ($args['verbose']) {
@@ -1415,7 +1415,7 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
  * @param object $result
  *   The result object to format.
  */
-function simpletest_script_format_result($result) {
+function simpletest_script_format_result($result): void {
   global $args, $results_map, $color;
 
   $summary = sprintf("%-9.9s %-10.10s %-17.17s %4.4s %-35.35s\n",
@@ -1442,7 +1442,7 @@ function simpletest_script_format_result($result) {
  * @param string $message
  *   The message to print.
  */
-function simpletest_script_print_error($message) {
+function simpletest_script_print_error($message): void {
   simpletest_script_print("  ERROR: $message\n", SIMPLETEST_SCRIPT_COLOR_FAIL);
 }
 
@@ -1454,7 +1454,7 @@ function simpletest_script_print_error($message) {
  * @param int $color_code
  *   The color code to use for coloring.
  */
-function simpletest_script_print($message, $color_code) {
+function simpletest_script_print($message, $color_code): void {
   global $args;
   if ($args['color']) {
     echo "\033[" . $color_code . "m" . $message . "\033[0m";
@@ -1507,7 +1507,7 @@ function simpletest_script_color_code($status) {
  *
  * @see http://php.net/manual/function.levenshtein.php
  */
-function simpletest_script_print_alternatives($string, $array, $degree = 4) {
+function simpletest_script_print_alternatives($string, $array, $degree = 4): void {
   $alternatives = [];
   foreach ($array as $item) {
     $lev = levenshtein($string, $item);
