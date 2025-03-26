@@ -39,7 +39,7 @@ module.exports = {
     // Set the resolution to the default desktop resolution. Ensure the default
     // toolbar is horizontal in headless mode.
     browser
-      .setWindowSize(1920, 1080)
+      .setWindowSize(1920, 1219)
       // To clear active tab/tray from previous tests
       .execute(function () {
         localStorage.clear();
@@ -177,7 +177,7 @@ module.exports = {
   },
   'Wide toolbar breakpoint': (browser) => {
     browser.waitForElementPresent(adminOrientationButton);
-    browser.window.setSize(975, 900);
+    browser.window.setSize(975, 1039);
     browser.assert.hasClass(
       itemAdministrationTray,
       'is-active toolbar-tray-vertical',
