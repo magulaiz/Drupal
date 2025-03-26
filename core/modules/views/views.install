@@ -22,7 +22,7 @@ function views_update_last_removed(): int {
 /**
  * Removes the ui.show.advanced_column setting.
  */
-function views_update_8501(): void {
+function views_update_112001(): void {
   $config = \Drupal::configFactory()->getEditable('views.settings');
   $config->clear('ui.show.advanced_column');
   $config->save();

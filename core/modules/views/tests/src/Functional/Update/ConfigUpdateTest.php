@@ -23,7 +23,7 @@ class ConfigUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * @covers views_update_8501
+   * @covers views_update_112001
    */
   public function testConfigUpdate(): void {
     $config = \Drupal::configFactory()->get('views.settings');
