@@ -7,6 +7,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
@@ -31,6 +32,11 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $configFactory;
 
   /**
+   * @var \Drupal\Core\Image\ImageFactory
+   */
+  protected $imageFactory;
+
+  /**
    * Creates a SystemBrandingBlock instance.
    *
    * @param array $configuration
@@ -42,9 +48,10 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, ImageFactory $image_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->configFactory = $config_factory;
+    $this->imageFactory = $image_factory;
   }
 
   /**
@@ -55,7 +62,8 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('image.factory')
     );
   }
 
@@ -151,12 +159,26 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
     $build = [];
     $site_config = $this->configFactory->get('system.site');
 
+    $logo_uri = theme_get_setting('logo.url');
+    if ($logo_uri !== NULL) {
+      $extension = pathinfo($logo_uri, PATHINFO_EXTENSION);
+    }
     $build['site_logo'] = [
       '#theme' => 'image',
-      '#uri' => theme_get_setting('logo.url'),
+      '#uri' => $logo_uri,
       '#alt' => $this->t('Home'),
+      '#attributes' => ['loading' => 'eager', 'fetchpriority' => 'high'],
       '#access' => $this->configuration['use_site_logo'],
     ];
+
+    // Add width and height attributes. SVGs are printed inline in the template.
+    if (isset($extension) && $extension !== 'svg') {
+      $image = $this->imageFactory->get(ltrim($logo_uri, '/'));
+      if ($image->isValid()) {
+        $build['site_logo']['#attributes']['width'] = $image->getWidth();
+        $build['site_logo']['#attributes']['height'] = $image->getHeight();
+      }
+    }
 
     $build['site_name'] = [
       '#markup' => $site_config->get('name'),
