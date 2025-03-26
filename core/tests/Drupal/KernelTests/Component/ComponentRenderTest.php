@@ -8,6 +8,11 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Tests the correct rendering of components.
+ *
+ * @group sdc
+ */
 final class ComponentRenderTest extends KernelTestBase {
 
   protected static $modules = ['system', 'sdc_test'];
