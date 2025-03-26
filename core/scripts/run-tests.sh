@@ -61,6 +61,7 @@ if ($args['help'] || $count == 0) {
   exit(($count == 0) ? SIMPLETEST_SCRIPT_EXIT_FAILURE : SIMPLETEST_SCRIPT_EXIT_SUCCESS);
 }
 
+// Initialize script variables and bootstrap Drupal kernel.
 simpletest_script_init();
 
 if (!class_exists(TestCase::class)) {
@@ -75,7 +76,8 @@ if (!Composer::upgradePHPUnitCheck(Version::id())) {
 
 if ($args['execute-test']) {
   try {
-    [$summaries, $status, $time] = PhpUnitTestRunner::runPhpUnitOnSingleTestClass(
+    $test_runner = PhpUnitTestRunner::create(\Drupal::getContainer());
+    [$summaries, $status, $time] = $test_runner->runPhpUnitOnSingleTestClass(
       simpletest_script_setup_test_run_results_storage(),
       $args['test-id'],
       $args['execute-test'],
