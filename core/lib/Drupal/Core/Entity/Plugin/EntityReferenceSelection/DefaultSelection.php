@@ -433,9 +433,11 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
 
     $violations = $entity->validate();
     if ($violations->count() > 0) {
-      $message = \sprintf(
-        "Cannot auto-create entity: Missing required fields."
-      );
+      $messages = [];
+      foreach ($violations as $violation) {
+        $messages[] = $violation->getPropertyPath() . ': ' . $violation->getMessage();
+      }
+      $message = "Cannot auto-create entity due to validation errors: " . implode('; ', $messages);
       throw new EntityStorageException($message);
     }
 
