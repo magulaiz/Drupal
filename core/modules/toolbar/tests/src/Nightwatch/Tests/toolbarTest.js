@@ -14,8 +14,6 @@ module.exports = {
   '@tags': ['core'],
   before(browser) {
     browser
-      // We need to resize the browser in order to grant permissions.
-      .setWindowSize(1024, 768)
       .drupalInstall()
       .drupalInstallModule('toolbar', true)
       .drupalCreateUser({
