@@ -94,7 +94,7 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
       $this->assertSortResults('test_content_moderation_state_sort_base_table', 'vid', 'ASC', [
         ['vid' => $second_node->getRevisionId()],
         ['vid' => $first_node->getRevisionId()],
-      ], TRUE);
+      ]);
       // Descending will reverse the order.
       $this->assertSortResults('test_content_moderation_state_sort_base_table', 'vid', 'DESC', [
         ['vid' => $first_node->getRevisionId()],
