@@ -712,8 +712,8 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
 
     // Announce the updated content to screen readers.
     if ($is_remove_button) {
-      $media_item = Media::load($field_state['removed_item_id']);
-      $announcement = $media_item->access('view label') ? new TranslatableMarkup('@label has been removed.', ['@label' => $media_item->label()]) : new TranslatableMarkup('Media has been removed.');
+      $media_item = isset($field_state['removed_item_id']) ? Media::load($field_state['removed_item_id']) : NULL;
+      $announcement = $media_item && $media_item->access('view label') ? new TranslatableMarkup('@label has been removed.', ['@label' => $media_item->label()]) : new TranslatableMarkup('Media has been removed.');
     }
     else {
       $new_items = count(static::getNewMediaItems($element, $form_state));
