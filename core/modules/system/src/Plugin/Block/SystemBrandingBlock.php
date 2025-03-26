@@ -49,6 +49,8 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The plugin implementation definition.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Image\ImageFactory $image_factory
+   *    The factory for image objects.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, ImageFactory $image_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
