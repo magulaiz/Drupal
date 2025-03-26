@@ -54,6 +54,15 @@ class AjaxTestMessageCommandForm implements FormInterface {
       ],
     ];
 
+    $form['button_safe'] = [
+      '#type' => 'submit',
+      '#name' => 'make_safe_message',
+      '#value' => 'Make Safe Message',
+      '#ajax' => [
+        'callback' => '::makeSafeMessage',
+      ],
+    ];
+
     return $form;
   }
 
@@ -102,6 +111,17 @@ class AjaxTestMessageCommandForm implements FormInterface {
   public function makeMessageWarning() {
     $response = new AjaxResponse();
     return $response->addCommand(new MessageCommand('I am a warning message in the default location.', NULL, ['type' => 'warning', 'announce' => '']));
+  }
+
+  /**
+   * Callback for testing MessageCommand safe to XSS.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The AJAX response.
+   */
+  public function makeSafeMessage() {
+    $response = new AjaxResponse();
+    return $response->addCommand(new MessageCommand('I am a warning message with script tag. <button onclick="javascript:alert(\'xss\')">Click me!</button>', NULL, ['type' => 'warning', 'announce' => '']));
   }
 
 }
