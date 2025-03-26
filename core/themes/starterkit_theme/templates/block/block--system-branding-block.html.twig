@@ -9,6 +9,7 @@
  *
  * Available variables:
  * - site_logo: Logo for site as defined in Appearance or theme settings.
+ * - site_logo_rendered: The rendered img tag.
  * - site_name: Name for site as defined in Site information settings.
  * - site_slogan: Slogan for site as defined in Site information settings.
  */
@@ -16,7 +17,11 @@
 {% block content %}
   {% if site_logo %}
     <a href="{{ path('<front>') }}" rel="home" class="site-logo">
-      <img src="{{ site_logo }}" alt="{{ 'Home'|t }}" fetchpriority="high" />
+      {% if site_logo|split('.')|last == "svg" %}
+        {% include site_logo %}
+      {% else %}
+        {{ site_logo_rendered }}
+      {% endif %}
     </a>
   {% endif %}
   {% if site_name %}
