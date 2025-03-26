@@ -44,14 +44,6 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
     $user->save();
     $this->drupalLogin($user);
 
-    // Request the front page twice to ensure all cache collectors are fully
-    // warmed. The exact contents of cache collectors depends on the order in
-    // which requests complete so this ensures that the second request completes
-    // after asset aggregates are served.
-    $this->drupalGet('');
-    sleep(1);
-    $this->drupalGet('');
-
     $url = Url::fromRoute('jsonapi.node--article.individual', ['entity' => $node->uuid()])->toString();
     $performance_data = $this->collectPerformanceData(function () use ($url) {
       $this->drupalGet($url);
