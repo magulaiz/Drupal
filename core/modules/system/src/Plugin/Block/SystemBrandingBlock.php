@@ -32,6 +32,8 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $configFactory;
 
   /**
+   * Stores the image factory.
+   *
    * @var \Drupal\Core\Image\ImageFactory
    */
   protected $imageFactory;
