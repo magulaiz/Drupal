@@ -435,7 +435,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $edit = [
       'field_name' => 'body',
       'label' => $this->randomMachineName(),
-      'new_storage_type' => 'string_long',
+      'new_storage_type' => 'formatted_text',
     ];
     $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
     $this->drupalGet($url);
@@ -453,7 +453,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $edit = [
       'field_name' => 'mary',
       'label' => $this->randomMachineName(),
-      'new_storage_type' => 'string_long',
+      'new_storage_type' => 'formatted_text',
     ];
     $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
     $this->drupalGet($url);
