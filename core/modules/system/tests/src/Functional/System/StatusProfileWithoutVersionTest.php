@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
@@ -9,7 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group system
  */
-class StatusVersionlessProfileTest extends BrowserTestBase {
+class StatusProfileWithoutVersionTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
