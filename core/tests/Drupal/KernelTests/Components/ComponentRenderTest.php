@@ -286,7 +286,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   }
 
   /**
-   * Ensure that the slots allow a render array, a scalar or a TranslatableMarkup when using the render element.
+   * Ensure that the slots allow valid input.
    */
   public function checkSlots(): void {
     $slots = [
