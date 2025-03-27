@@ -546,6 +546,11 @@ abstract class StageBase implements LoggerAwareInterface {
     // Rebuild the container and clear all caches, to ensure that new services
     // are picked up.
     drupal_flush_all_caches();
+    // If in direct write mode, we didn't "apply" any changes, so dispatching
+    // the event makes no sense.
+    if ($this->isDirectWrite()) {
+      return;
+    }
     // Refresh the event dispatcher so that new or changed event subscribers
     // will be called. The other services we depend on are either stateless or
     // unlikely to call newly added code during the current request.
