@@ -224,6 +224,12 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
   }
 
   /**
+   * Tests that the setProperties action refuses to modify entity keys.
+   */
+  public function testSetPropertiesWillNotChangeEntityKeys(): void {
+  }
+
+  /**
    * Tests that the simpleConfigUpdate action cannot be used on entities.
    *
    * @group legacy

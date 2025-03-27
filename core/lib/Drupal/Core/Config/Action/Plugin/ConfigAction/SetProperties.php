@@ -48,7 +48,11 @@ final class SetProperties implements ConfigActionPluginInterface, ContainerFacto
     assert(is_array($values));
     assert(!array_is_list($values));
 
+    $entity_keys = $entity->getEntityType()->getKeys();
     foreach ($values as $property_name => $value) {
+      if (in_array($property_value, $entity_keys, TRUE)) {
+        throw new ConfigActionException("Entity key '$property_name' cannot be changed.");
+      }
       $parts = explode('.', $property_name);
 
       $property_value = $entity->get($parts[0]);
