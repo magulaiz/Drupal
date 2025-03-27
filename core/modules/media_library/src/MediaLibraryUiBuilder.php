@@ -207,7 +207,7 @@ class MediaLibraryUiBuilder {
     // Delegate any further access checking to the opener service nominated by
     // the media library state.
     return $this->openerResolver->get($state)->checkAccess($state, $account)
-      ->andIf($can_view_media);
+      ->orIf($can_view_media);
   }
 
   /**
