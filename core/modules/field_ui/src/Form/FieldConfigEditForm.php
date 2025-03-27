@@ -365,7 +365,7 @@ class FieldConfigEditForm extends EntityForm {
    *
    * @see \Drupal\Core\Ajax\AjaxFormHelperTrait
    */
-  public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
+  public function ajaxSubmit(array &$form, FormStateInterface $form_state): AjaxResponse {
     if ($form_state->hasAnyErrors()) {
       $form['status_messages'] = [
         '#type' => 'status_messages',
