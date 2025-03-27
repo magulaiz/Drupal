@@ -106,6 +106,7 @@ default:
 .default-phpunit-job-settings: &default-phpunit-job-settings
   stage: 🪄 Lint
   before_script:
+    - docker-php-ext-enable mongodb
     - composer validate
     - composer install --optimize-autoloader
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
